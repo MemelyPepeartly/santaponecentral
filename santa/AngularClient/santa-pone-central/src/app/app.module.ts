@@ -13,6 +13,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Routes, RouterModule } from '@angular/router';
 
+const appRoutes: Routes = [
+  { path: 'profile', component: ProfileComponent },
+  {
+    path: 'splash',
+    component: SplashComponent
+  },
+  { path: '',
+    redirectTo: '/splash',
+    pathMatch: 'full'
+  }
+];
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +38,11 @@ import { Routes, RouterModule } from '@angular/router';
     BrowserAnimationsModule,
     MatMenuModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]
