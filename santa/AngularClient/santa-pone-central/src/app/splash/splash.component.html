@@ -1,18 +1,18 @@
 <div class="container">
   <div class="leftChild">
+    <mat-tab-group>
+        <mat-tab label="Login">
+        </mat-tab>
+        <mat-tab label="Sign-Up">
+          <app-signup></app-signup>
+        </mat-tab>
+        <mat-tab label="Information">
+          <app-information></app-information>
+        </mat-tab>
+    </mat-tab-group>
   </div>
   <div class="rightChild">
-      <mat-tab-group>
-          <mat-tab label="Login">
-            <app-login></app-login>
-          </mat-tab>
-          <mat-tab label="Sign-Up">
-            <app-signup></app-signup>
-          </mat-tab>
-          <mat-tab label="Information">
-            <app-information></app-information>
-          </mat-tab>
-      </mat-tab-group>
+    <app-login></app-login>
   </div>
 </div>
 
