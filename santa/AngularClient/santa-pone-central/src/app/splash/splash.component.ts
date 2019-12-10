@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-splash',
@@ -11,5 +12,5 @@ export class SplashComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
+
