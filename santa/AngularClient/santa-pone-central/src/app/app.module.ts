@@ -19,7 +19,9 @@ import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.compon
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './splash/login/login.component';
 import { SignupComponent } from './splash/signup/signup.component';
-import { InformationComponent } from './splash/information/information.component';
+import { GeneralInformationComponent } from './splash/general-information/general-information.component';
+import { WhatisInformationComponent } from './splash/whatis-information/whatis-information.component';
+import { PrivacyInformationComponent } from './splash/privacy-information/privacy-information.component';
 
 
 const appRoutes: Routes = [
@@ -45,7 +47,9 @@ const appRoutes: Routes = [
     UsernavComponent,
     LoginComponent,
     SignupComponent,
-    InformationComponent
+    GeneralInformationComponent,
+    WhatisInformationComponent,
+    PrivacyInformationComponent
   ],
   imports: [
     BrowserModule,
