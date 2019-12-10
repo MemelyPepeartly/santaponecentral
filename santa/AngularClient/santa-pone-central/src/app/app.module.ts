@@ -6,10 +6,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './core/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
 //Componenents
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SplashComponent } from './splash/splash.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SantaponecontrolComponent } from './santaponecontrol/santaponecontrol.component';
@@ -52,10 +52,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    )
+    RouterModule.forRoot(appRoutes,{ enableTracing: true })
   ],
   providers: [],
   bootstrap: [AppComponent]
