@@ -1,0 +1,18 @@
+.container
+{
+  outline: 5px solid black;
+  padding: 5px;
+}
+.leftChild{
+  outline: 5px solid green;
+  display: inline-block;
+  height: 600px;
+  width: 40%;
+}
+.rightChild{
+  outline: 5px solid green;
+  display: inline-block;
+  height: 600px;
+  width: 60%;
+}
+

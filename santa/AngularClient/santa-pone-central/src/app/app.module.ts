@@ -12,6 +12,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Routes, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
+import { UsernavComponent } from './navbar/usernav/usernav.component';
 
 const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
@@ -31,7 +34,9 @@ const appRoutes: Routes = [
     ProfileComponent,
     SantaponecontrolComponent,
     NotificationsComponent,
-    NavbarComponent
+    NavbarComponent,
+    SantaponenavComponent,
+    UsernavComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +44,7 @@ const appRoutes: Routes = [
     MatMenuModule,
     MatIconModule,
     MatToolbarModule,
+    MatButtonModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
