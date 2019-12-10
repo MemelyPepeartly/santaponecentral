@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginComponent } from './splash/login/login.component';
 import { SignupComponent } from './splash/signup/signup.component';
 import { InformationComponent } from './splash/information/information.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
@@ -57,6 +58,7 @@ const appRoutes: Routes = [
     MatTabsModule,
     MatCardModule,
     MatFormFieldModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
