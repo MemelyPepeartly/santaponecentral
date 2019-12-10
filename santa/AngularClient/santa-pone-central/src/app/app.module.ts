@@ -15,6 +15,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { LoginComponent } from './splash/login/login.component';
+import { SignupComponent } from './splash/signup/signup.component';
+import { InformationComponent } from './splash/information/information.component';
 
 const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
@@ -36,7 +42,10 @@ const appRoutes: Routes = [
     NotificationsComponent,
     NavbarComponent,
     SantaponenavComponent,
-    UsernavComponent
+    UsernavComponent,
+    LoginComponent,
+    SignupComponent,
+    InformationComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +54,9 @@ const appRoutes: Routes = [
     MatIconModule,
     MatToolbarModule,
     MatButtonModule,
+    MatTabsModule,
+    MatCardModule,
+    MatFormFieldModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
