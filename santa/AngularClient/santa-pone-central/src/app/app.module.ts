@@ -3,11 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 //Extras
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './core/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
 
 //Componenents
 import { SplashComponent } from './splash/splash.component';
@@ -23,18 +24,6 @@ import { GeneralInformationComponent } from './splash/general-information/genera
 import { WhatisInformationComponent } from './splash/whatis-information/whatis-information.component';
 import { PrivacyInformationComponent } from './splash/privacy-information/privacy-information.component';
 
-
-const appRoutes: Routes = [
-  { path: 'profile', component: ProfileComponent },
-  {
-    path: 'splash',
-    component: SplashComponent
-  },
-  { path: '',
-    redirectTo: '/splash',
-    pathMatch: 'full'
-  }
-];
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +45,8 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
-    RouterModule.forRoot(appRoutes,{ enableTracing: true })
+    AppRoutingModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
