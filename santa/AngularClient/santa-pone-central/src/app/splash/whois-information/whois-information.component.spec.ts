@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GeneralInformationComponent } from './general-information.component';
+import { WhoisInformationComponent } from './whois-information.component';
 
-describe('GeneralInformationComponent', () => {
-  let component: GeneralInformationComponent;
-  let fixture: ComponentFixture<GeneralInformationComponent>;
+describe('WhoisInformationComponent', () => {
+  let component: WhoisInformationComponent;
+  let fixture: ComponentFixture<WhoisInformationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeneralInformationComponent ]
+      declarations: [ WhoisInformationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GeneralInformationComponent);
+    fixture = TestBed.createComponent(WhoisInformationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

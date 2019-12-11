@@ -20,9 +20,11 @@ import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.compon
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './splash/login/login.component';
 import { SignupComponent } from './splash/signup/signup.component';
-import { GeneralInformationComponent } from './splash/general-information/general-information.component';
 import { WhatisInformationComponent } from './splash/whatis-information/whatis-information.component';
 import { PrivacyInformationComponent } from './splash/privacy-information/privacy-information.component';
+import { WhoisInformationComponent } from './splash/whois-information/whois-information.component';
+import { NologinInformationComponent } from './splash/nologin-information/nologin-information.component';
+import { FaqInformationComponent } from './splash/faq-information/faq-information.component';
 
 @NgModule({
   declarations: [
@@ -36,9 +38,11 @@ import { PrivacyInformationComponent } from './splash/privacy-information/privac
     UsernavComponent,
     LoginComponent,
     SignupComponent,
-    GeneralInformationComponent,
     WhatisInformationComponent,
-    PrivacyInformationComponent
+    PrivacyInformationComponent,
+    WhoisInformationComponent,
+    NologinInformationComponent,
+    FaqInformationComponent
   ],
   imports: [
     BrowserModule,

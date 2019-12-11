@@ -1,12 +1,24 @@
 <div class="container">
   <div class="leftChild">
     <mat-tab-group>
-        <mat-tab class="tabs" label="What is it?">
+        <mat-tab label="What is it?">
+          <app-whatis-information></app-whatis-information>
         </mat-tab>
-        <mat-tab class="tabs" label="Information">
+        <mat-tab label="Who is SantaPone?">
+          <app-whois-information></app-whois-information>
+        </mat-tab>
+        <mat-tab label="I don't have a login!">
+          <app-nologin-information></app-nologin-information>
+        </mat-tab>
+        <mat-tab label="/ss/ FAQ">
+            <app-faq-information></app-faq-information>
+        </mat-tab>
+        <mat-tab label="Privacy">
+          <app-privacy-information></app-privacy-information>
         </mat-tab>
     </mat-tab-group>
   </div>
+  
   <div class="rightChild">
       <app-login></app-login>
   </div>
