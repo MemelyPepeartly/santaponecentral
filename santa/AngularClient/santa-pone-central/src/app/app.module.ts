@@ -24,6 +24,9 @@ import { PrivacyInformationComponent } from './splash/privacy-information/privac
 import { WhoisInformationComponent } from './splash/whois-information/whois-information.component';
 import { NologinInformationComponent } from './splash/nologin-information/nologin-information.component';
 import { FaqInformationComponent } from './splash/faq-information/faq-information.component';
+import { DefaultnavComponent } from './navbar/defaultnav/defaultnav.component';
+import { ContactComponent } from './contact/contact.component';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { FaqInformationComponent } from './splash/faq-information/faq-informatio
     PrivacyInformationComponent,
     WhoisInformationComponent,
     NologinInformationComponent,
-    FaqInformationComponent
+    FaqInformationComponent,
+    DefaultnavComponent,
+    ContactComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
