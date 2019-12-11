@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SplashComponent } from './splash/splash.component';
+import { HomeComponent } from './splash/splash.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SantaponecontrolComponent } from './santaponecontrol/santaponecontrol.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -8,8 +8,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './splash/login/login.component';
-import { SignupComponent } from './splash/signup/signup.component';
-import { GeneralInformationComponent } from './splash/general-information/general-information.component';
+import { SignupComponent } from './signup/signup.component';
 
 const appRoutes: Routes = [
   { path: 'profile',
@@ -17,10 +16,18 @@ const appRoutes: Routes = [
   },
   {
     path: 'splash',
-    component: SplashComponent
+    component: HomeComponent
   },
   {
     path: 'santa-control',
+    component: SantaponecontrolComponent
+  },
+  {
+    path: 'signup',
+    component: SignupComponent
+  },
+  {
+    path: 'contact',
     component: SantaponecontrolComponent
   },
   { path: '',
