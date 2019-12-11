@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './splash/splash.component';
+import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SantaponecontrolComponent } from './santaponecontrol/santaponecontrol.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
-import { LoginComponent } from './splash/login/login.component';
+import { LoginComponent } from './home/login/login.component';
 import { SignupComponent } from './signup/signup.component';
 
 const appRoutes: Routes = [
@@ -15,7 +15,7 @@ const appRoutes: Routes = [
     component: ProfileComponent
   },
   {
-    path: 'splash',
+    path: 'home',
     component: HomeComponent
   },
   {
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
     component: SantaponecontrolComponent
   },
   { path: '',
-    redirectTo: '/splash',
+    redirectTo: '/home',
     pathMatch: 'full'
   }
 ];
