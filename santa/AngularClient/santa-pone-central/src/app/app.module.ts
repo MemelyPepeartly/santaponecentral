@@ -23,10 +23,16 @@ import { InformationComponent } from './splash/information/information.component
 
 
 const appRoutes: Routes = [
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile',
+    component: ProfileComponent
+  },
   {
     path: 'splash',
     component: SplashComponent
+  },
+  {
+    path: 'santa-control',
+    component: SantaponecontrolComponent
   },
   { path: '',
     redirectTo: '/splash',
