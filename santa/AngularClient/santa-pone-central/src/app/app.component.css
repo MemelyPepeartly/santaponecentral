@@ -1,0 +1,9 @@
+.title{
+    text-align: center;
+    font-size: 200%;
+    margin-top: 10px;
+}
+mat-toolbar-row{
+    display: block;
+    text-align: center;
+}
