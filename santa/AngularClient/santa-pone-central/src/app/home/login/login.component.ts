@@ -12,13 +12,13 @@ export class LoginComponent {
     username: new FormControl(''),
     password: new FormControl(''),
   });
+  @Input() error: string | null;
+
+  @Output() submitEM = new EventEmitter();
 
   submit() {
     if (this.form.valid) {
       this.submitEM.emit(this.form.value);
     }
   }
-  @Input() error: string | null;
-
-  @Output() submitEM = new EventEmitter();
 }

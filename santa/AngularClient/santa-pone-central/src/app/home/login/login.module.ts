@@ -13,5 +13,5 @@ import { CustomMaterialModule } from '../../core/material.module';
   declarations: [ AppComponent, LoginComponent ],
   bootstrap:    [ AppComponent ]
 })
-export class AppModule { 
+export class AppModule {
 }
