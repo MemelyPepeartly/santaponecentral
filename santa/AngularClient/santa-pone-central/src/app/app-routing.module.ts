@@ -9,7 +9,7 @@ import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.compon
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './splash/login/login.component';
 import { SignupComponent } from './splash/signup/signup.component';
-import { InformationComponent } from './splash/information/information.component';
+import { GeneralInformationComponent } from './splash/general-information/general-information.component';
 
 const appRoutes: Routes = [
   { path: 'profile',
