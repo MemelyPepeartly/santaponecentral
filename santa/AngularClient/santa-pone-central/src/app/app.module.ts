@@ -19,7 +19,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './splash/login/login.component';
-import { SignupComponent } from './splash/signup/signup.component';
 import { WhatisInformationComponent } from './splash/whatis-information/whatis-information.component';
 import { PrivacyInformationComponent } from './splash/privacy-information/privacy-information.component';
 import { WhoisInformationComponent } from './splash/whois-information/whois-information.component';
@@ -37,7 +36,6 @@ import { FaqInformationComponent } from './splash/faq-information/faq-informatio
     SantaponenavComponent,
     UsernavComponent,
     LoginComponent,
-    SignupComponent,
     WhatisInformationComponent,
     PrivacyInformationComponent,
     WhoisInformationComponent,
