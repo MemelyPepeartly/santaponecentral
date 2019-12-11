@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 
 //Componenents
-import { SplashComponent } from './splash/splash.component';
+import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SantaponecontrolComponent } from './santaponecontrol/santaponecontrol.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -31,7 +31,7 @@ import { SignupComponent } from './signup/signup.component';
 @NgModule({
   declarations: [
     AppComponent,
-    SplashComponent,
+    HomeComponent,
     ProfileComponent,
     SantaponecontrolComponent,
     NotificationsComponent,
