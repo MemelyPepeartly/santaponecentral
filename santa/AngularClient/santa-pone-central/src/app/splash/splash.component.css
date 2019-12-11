@@ -1,19 +1,14 @@
 .container
 {
-  outline: 5px solid black;
   padding: 10px;
 }
 .leftChild{
-  outline: 5px solid green;
   display: inline-block;
-  height: 600px;
-  width: 35%;
+  width: 55%;
 }
 .rightChild{
-  outline: 5px solid green;
   display: inline-block;
-  height: 600px;
-  width: 55%;
+  width: 35%;
   float: right;
 }
 .mat-form-field {
