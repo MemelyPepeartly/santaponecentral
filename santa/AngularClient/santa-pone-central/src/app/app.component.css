@@ -42,8 +42,6 @@ mat-toolbar{
     animation: slideBg 8s linear infinite 0s;
     animation-timing-function: ease-in-out;
 }
-#bg-nav mat-toolbar-row.buttons {
-}
 
 
 
