@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SantaponecontrolComponent } from './santaponecontrol.component';
+import { AdminnavComponent } from './adminnav.component';
 
-describe('SantaponecontrolComponent', () => {
-  let component: SantaponecontrolComponent;
-  let fixture: ComponentFixture<SantaponecontrolComponent>;
+describe('AdminnavComponent', () => {
+  let component: AdminnavComponent;
+  let fixture: ComponentFixture<AdminnavComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SantaponecontrolComponent ]
+      declarations: [ AdminnavComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SantaponecontrolComponent);
+    fixture = TestBed.createComponent(AdminnavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,3 +1,11 @@
-<app-santaponenav *ngIf="showSanta"></app-santaponenav>
-<app-usernav *ngIf="showUser"></app-usernav>
-<app-defaultnav *ngIf="!showUser && !showSanta"></app-defaultnav>
+
+<div>
+    <button mat-button [routerLink]="'/home'" class="button">
+        <mat-label>Home</mat-label>
+    </button>
+</div>
+<div class='navmenu'>
+    <app-adminnav *ngIf="showSanta"></app-adminnav>
+    <app-usernav *ngIf="showUser"></app-usernav>
+    <app-defaultnav *ngIf="!showUser && !showSanta"></app-defaultnav>
+</div>

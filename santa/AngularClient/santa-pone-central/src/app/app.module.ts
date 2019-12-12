@@ -13,10 +13,8 @@ import { AppRoutingModule } from './app-routing.module';
 // Componenents
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
-import { SantaponecontrolComponent } from './santaponecontrol/santaponecontrol.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { SantaponenavComponent } from './navbar/santaponenav/santaponenav.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './home/login/login.component';
 import { WhatisInformationComponent } from './home/whatis-information/whatis-information.component';
@@ -27,17 +25,15 @@ import { FaqInformationComponent } from './home/faq-information/faq-information.
 import { DefaultnavComponent } from './navbar/defaultnav/defaultnav.component';
 import { ContactComponent } from './contact/contact.component';
 import { SignupComponent } from './signup/signup.component';
+import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 
 @NgModule({
   declarations: [
-    BrowserModule,
     AppComponent,
     HomeComponent,
     ProfileComponent,
-    SantaponecontrolComponent,
     NotificationsComponent,
     NavbarComponent,
-    SantaponenavComponent,
     UsernavComponent,
     LoginComponent,
     WhatisInformationComponent,
@@ -47,7 +43,8 @@ import { SignupComponent } from './signup/signup.component';
     FaqInformationComponent,
     DefaultnavComponent,
     ContactComponent,
-    SignupComponent
+    SignupComponent,
+    AdminnavComponent
   ],
   imports: [
     BrowserModule,
