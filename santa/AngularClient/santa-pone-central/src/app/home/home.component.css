@@ -1,35 +1,28 @@
 .container
 {
   padding: 10px;
+  display: block;
+  text-align: center;
 }
 .leftChild{
   display: inline-block;
   width: 55%;
 }
-.rightChild{
-  display: inline-block;
-  width: 35%;
-  float: right;
-}
-.mat-form-field {
-  width: 100%;
-  min-width: 300px;
-}
-
-mat-card-title,
-mat-card-content {
+.small-box, .large-box {
   display: flex;
+  align-items: center;
   justify-content: center;
-}
-
-.error {
+  margin: 16px;
   padding: 16px;
-  width: 300px;
-  color: white;
-  background-color: red;
+  border-radius: 8px;
 }
 
-.button {
-  display: flex;
-  justify-content: flex-end;
+.small-box {
+  height: 100px;
+  width: 100px;
+}
+
+.large-box {
+  height: 300px;
+  width: 300px;
 }

@@ -17,11 +17,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { NavbarComponent } from './navbar/navbar.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './home/login/login.component';
-import { WhatisInformationComponent } from './home/whatis-information/whatis-information.component';
-import { PrivacyInformationComponent } from './home/privacy-information/privacy-information.component';
 import { WhoisInformationComponent } from './home/whois-information/whois-information.component';
-import { NologinInformationComponent } from './home/nologin-information/nologin-information.component';
-import { FaqInformationComponent } from './home/faq-information/faq-information.component';
 import { DefaultnavComponent } from './navbar/defaultnav/defaultnav.component';
 import { ContactComponent } from './contact/contact.component';
 import { SignupComponent } from './signup/signup.component';
