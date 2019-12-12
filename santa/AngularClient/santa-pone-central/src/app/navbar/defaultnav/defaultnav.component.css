@@ -1,4 +1,10 @@
 .navButton{
     margin-right: 10px;
     background-color: #5c6bc0;
+    transition: 0.3s;
+}
+.navButton:hover
+{
+    padding: 10px;
+    font-size: 13pt;
 }

@@ -36,6 +36,9 @@ import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
     SignupComponent,
     AdminnavComponent
   ],
+  entryComponents: [
+    LoginComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

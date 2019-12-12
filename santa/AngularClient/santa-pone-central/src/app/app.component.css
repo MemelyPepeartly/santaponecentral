@@ -6,7 +6,7 @@
 mat-toolbar-row{
     display: block;
     text-align: center;
-    height: auto;
+    height: 130px;
     margin-bottom: 10px;
 }
 mat-toolbar{
