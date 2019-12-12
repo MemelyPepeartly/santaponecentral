@@ -1,15 +1,69 @@
 .title{
     text-align: center;
-    font-size: 200%;
-    margin-top: 10px;
+    font-size: 400%;
+    margin-top: 2%;
+    font-family: 'Lilita One', cursive;
+    font-style: italic;
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 8s; /* Safari 4.0 - 8.0 */
+    animation-name: example;
+    animation-duration: 8s;
+    animation-iteration-count: infinite
 }
 mat-toolbar-row{
     display: block;
     text-align: center;
-    height: 130px;
-    margin-bottom: 10px;
+    height: fit-content;
+
 }
 mat-toolbar{
     background-color: #f06292;
     color: white;
+}
+
+.bg-nav
+{
+  background-image: url("./../assets/snow.gif");
+    /* Add the blur effect */
+    /* filter: blur(8px);
+    -webkit-filter: blur(8px); */
+
+    /* Full height */
+    height: relative;
+    width: 100%;
+
+    /* Center and scale the image nicely */
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    backface-visibility: hidden;
+    animation: slideBg 8s linear infinite 0s;
+    animation-timing-function: ease-in-out;
+
+}
+
+
+
+@-webkit-keyframes example {
+  0% {
+    color: red;
+    opacity: 1.0;
+
+  }
+  33% {
+    color: rgb(0, 0, 248);
+    opacity: 0.75;
+
+  }
+  67% {
+    color: rgb(0, 255, 0);
+    opacity: 0.5;
+
+  }
+  100% {
+    color: red;
+    opacity: 1.0;
+
+  }
 }

@@ -16,3 +16,11 @@ mat-radio-button {
 .rightChild {
     width: 45%;
 }
+
+.leftChild div {
+  width: 100%;
+}
+
+.message {
+  width: 70%;
+}
