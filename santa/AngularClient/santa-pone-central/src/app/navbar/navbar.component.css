@@ -1,13 +1,40 @@
-button{
-    margin: 10px;
 
-    background-color: transparent;
-    transition: 0.3s;
-}
 button:hover
 {
-    padding: 10px;
-    font-size: 15pt;
+  color: red;
+  -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+  -webkit-animation-duration: 3s; /* Safari 4.0 - 8.0 */
+  animation-name: example;
+  animation-duration: 3s;
+  animation-iteration-count: infinite
+}
+
+mat-label
+{
+  font-size: large;
+}
+
+@-webkit-keyframes example {
+  0% {
+    color: red;
+    opacity: 1.0;
+
+  }
+  33% {
+    color: rgb(0, 0, 248);
+    opacity: 0.75;
+
+  }
+  67% {
+    color: rgb(0, 255, 0);
+    opacity: 0.5;
+
+  }
+  100% {
+    color: red;
+    opacity: 1.0;
+
+  }
 }
 
 .navmenu
