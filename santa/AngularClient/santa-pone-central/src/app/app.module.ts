@@ -21,6 +21,12 @@ import { DefaultnavComponent } from './navbar/defaultnav/defaultnav.component';
 import { ContactComponent } from './contact/contact.component';
 import { SignupComponent } from './signup/signup.component';
 import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
+import { HeadquartersComponent } from './headquarters/headquarters.component';
+import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-anons.component'
+import { InTransitComponent } from './headquarters/in-transit/in-transit.component'
+import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component'
+import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component'
+
 
 @NgModule({
   declarations: [
@@ -34,7 +40,12 @@ import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
     DefaultnavComponent,
     ContactComponent,
     SignupComponent,
-    AdminnavComponent
+    AdminnavComponent,
+    HeadquartersComponent,
+    ApprovedAnonsComponent,
+    InTransitComponent,
+    IncomingCorrespondenceComponent,
+    IncomingSignupsComponent
   ],
   entryComponents: [
     LoginComponent

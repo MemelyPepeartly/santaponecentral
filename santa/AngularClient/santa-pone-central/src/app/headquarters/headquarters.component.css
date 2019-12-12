@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    border-radius: 8px;
+    height: auto;
+    
+}
+.contentDiv {
+    margin: auto;
+    justify-items: center;
+}
+.small-box, .large-box {
+    align-items: center;
+    justify-content: center;
+    margin: 15px;
+    padding: 16px;
+    border-radius: 8px;
+    min-width: 150px;
+}
+.small-box {
+    text-align: center;
+    height: auto;
+    width: auto;
+}
+.large-box {
+    height: 300px;
+    width: 300px;
+}
