@@ -9,7 +9,8 @@ import { LoginComponent } from './home/login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 import { ContactComponent } from './contact/contact.component';
-import { HeadquartersComponent } from './headquarters/headquarters.component'
+import { HeadquartersComponent } from './headquarters/headquarters.component';
+import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component';
 
 const appRoutes: Routes = [
   { path: 'profile',
@@ -34,6 +35,10 @@ const appRoutes: Routes = [
   {
     path: 'headquarters',
     component: HeadquartersComponent
+  },
+  {
+    path: 'correspondence',
+    component: IncomingCorrespondenceComponent
   },
   { path: '',
     redirectTo: '/home',

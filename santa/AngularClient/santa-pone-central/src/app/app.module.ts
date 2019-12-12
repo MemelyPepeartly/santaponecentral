@@ -25,7 +25,9 @@ import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-anons.component'
 import { InTransitComponent } from './headquarters/in-transit/in-transit.component'
 import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component'
-import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component'
+import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component';
+import { ShippingCorrespondenceComponent } from './headquarters/incoming-correspondence/shipping-correspondence/shipping-correspondence.component';
+import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component'
 
 
 @NgModule({
@@ -45,7 +47,9 @@ import { IncomingSignupsComponent } from './headquarters/incoming-signups/incomi
     ApprovedAnonsComponent,
     InTransitComponent,
     IncomingCorrespondenceComponent,
-    IncomingSignupsComponent
+    IncomingSignupsComponent,
+    ShippingCorrespondenceComponent,
+    GeneralCorrespondenceComponent
   ],
   entryComponents: [
     LoginComponent
