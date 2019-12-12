@@ -9,20 +9,23 @@
   width: 55%;
 }
 .small-box, .large-box {
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: center;
   margin: 16px;
   padding: 16px;
   border-radius: 8px;
 }
-
 .small-box {
-  height: 100px;
-  width: 100px;
+  text-align: center;
+  height: auto;
+  width: auto;
 }
 
 .large-box {
   height: 300px;
   width: 300px;
+}
+.contentBox{
+  padding: 25px;
 }

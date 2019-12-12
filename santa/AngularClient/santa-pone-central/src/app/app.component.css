@@ -9,3 +9,7 @@ mat-toolbar-row{
     height: auto;
     margin-bottom: 10px;
 }
+mat-toolbar{
+    background-color: #9c27b0;
+    color: white;
+}
