@@ -4,17 +4,19 @@
     margin: 15px;
     border-radius: 8px;
     height: auto;
-    
 }
 .contentDiv {
-    margin: auto;
+    margin: 15px;
     justify-items: center;
+    border-radius: 8px;
+    height: auto;
+    
 }
-.small-box, .large-box {
+.small-box {
     align-items: center;
     justify-content: center;
     margin: 15px;
-    padding: 16px;
+    padding: 10px;
     border-radius: 8px;
     min-width: 150px;
 }
@@ -22,8 +24,4 @@
     text-align: center;
     height: auto;
     width: auto;
-}
-.large-box {
-    height: 300px;
-    width: 300px;
 }
