@@ -1,4 +1,10 @@
 button{
     margin: 10px;
     background-color: #9c27b0;
+    transition: 0.3s;
+}
+button:hover
+{
+    padding: 10px;
+    font-size: 15pt;
 }

@@ -13,9 +13,11 @@ export class DefaultnavComponent implements OnInit {
   username = '';
   password = '';
 
-  constructor( ) { }
+  constructor( public dialog: MatDialog ) { }
 
-
+  openDialog() {
+    this.dialog.open(LoginComponent);
+  }
   ngOnInit() {
   }
 }
