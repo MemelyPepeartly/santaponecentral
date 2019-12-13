@@ -4,12 +4,12 @@
 </mat-paginator>
 
 <mat-list>
-    <mat-card mat-list-item *ngFor="let request of requests">
+    <mat-card mat-list-item *ngFor="let request of requests" class="mat-elevation-z3">
         <mat-card-title>
             {{ request.realName }}
         </mat-card-title>
-        <mat-card-content>
-            {{ request.address }}
-        </mat-card-content>
+        <mat-card-subtitle>
+            {{ request.email }}
+        </mat-card-subtitle>
     </mat-card>
 </mat-list>
