@@ -29,11 +29,11 @@ export class ApprovedAnonsComponent implements OnInit {
     otherInfo: 'REEEEEEEEE'
     },
     {
-    realName: 'Virgin',
+    realName: 'Boomer',
     address: this.address,
-    wishlist: 'I dont want much...',
-    email: 'virgin@anon.non',
-    otherInfo: 'Im... er... nevermind...'
+    wishlist: 'Quaaludes',
+    email: 'boomer@aol.com',
+    otherInfo: 'Hehe yup... Zoomers gonna zoom...'
     },
     ];
 
