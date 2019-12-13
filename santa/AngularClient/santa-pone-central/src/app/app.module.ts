@@ -22,12 +22,13 @@ import { ContactComponent } from './contact/contact.component';
 import { SignupComponent } from './signup/signup.component';
 import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
-import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-anons.component'
-import { InTransitComponent } from './headquarters/in-transit/in-transit.component'
-import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component'
+import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-anons.component';
+import { InTransitComponent } from './headquarters/in-transit/in-transit.component';
+import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component';
 import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component';
 import { ShippingCorrespondenceComponent } from './headquarters/incoming-correspondence/shipping-correspondence/shipping-correspondence.component';
-import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component'
+import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component';
+import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspo
     IncomingCorrespondenceComponent,
     IncomingSignupsComponent,
     ShippingCorrespondenceComponent,
-    GeneralCorrespondenceComponent
+    GeneralCorrespondenceComponent,
+    MaterialElevationDirective
   ],
   entryComponents: [
     LoginComponent
