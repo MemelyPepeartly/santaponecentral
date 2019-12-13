@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Anon } from '../../../interfaces/anon';
 import { Address } from '../../../interfaces/address';
-import { MaterialElevationDirective } from '../material-elevation.directive';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -9,9 +8,6 @@ import { MaterialElevationDirective } from '../material-elevation.directive';
   styleUrls: ['./incoming-signups.component.css']
 })
 export class IncomingSignupsComponent implements OnInit {
-
-  defaultElevation = 2;
-  raisedElevation = 8;
 
   constructor() { }
 
