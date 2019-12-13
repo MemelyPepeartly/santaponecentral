@@ -9,6 +9,7 @@ export class IncomingSignupsComponent implements OnInit {
 
   constructor() { }
 
+
   ngOnInit() {
   }
 

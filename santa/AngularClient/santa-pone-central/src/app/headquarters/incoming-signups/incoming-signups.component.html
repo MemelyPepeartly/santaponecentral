@@ -2,3 +2,14 @@
               [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+
+<mat-list>
+    <mat-card mat-list-item *ngFor="let request of requests">
+        <mat-card-title>
+            {{ request.realName }}
+        </mat-card-title>
+        <mat-card-content>
+            {{ request.address }}
+        </mat-card-content>
+    </mat-card>
+</mat-list>
