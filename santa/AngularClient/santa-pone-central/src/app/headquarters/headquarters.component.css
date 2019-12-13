@@ -3,15 +3,18 @@
     justify-content: center;
     flex: 3;
     border-radius: 8px;
+    margin-top: 15px;
     height: auto;
     flex-wrap: wrap;
+    background-color:white;
+    opacity: 1.0;
 }
 .contentDiv {
     margin: 15px;
     justify-items: center;
     border-radius: 8px;
     height: auto;
-    
+    color: white;
 }
 .small-box {
     display: block;
