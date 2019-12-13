@@ -24,7 +24,7 @@ mat-toolbar{
 #bg-nav
 {
   background-image: url("./../assets/snow.gif");
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));;
+  /*mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));;
     /* Add the blur effect */
     /* filter: blur(8px);
     -webkit-filter: blur(8px); */
