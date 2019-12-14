@@ -1,0 +1,35 @@
+
+<mat-horizontal-stepper #stepper>
+    <mat-step>
+        <form>
+        <ng-template matStepLabel>Fill out your information</ng-template>
+        <mat-form-field>
+            <input matInput placeholder="Last name, First name" required>
+            <input matInput placeholder="email@domain.com" required>
+        </mat-form-field>
+        <div>
+            <button mat-button matStepperNext>Next</button>
+        </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <form>
+        <ng-template matStepLabel>Hearthswarming</ng-template>
+        <h4>What do you want for Hearthswarming?</h4>
+        <mat-form-field>
+                <textarea matInput placeholder="Wishlist"></textarea>
+        </mat-form-field>
+        <div>
+            <button mat-button matStepperNext>Next</button>
+        </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done.
+        <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button>Reset</button>
+        </div>
+    </mat-step>
+    </mat-horizontal-stepper>
