@@ -10,7 +10,7 @@ export class NavbarComponent implements OnInit {
   constructor() { }
 
   showUser = false;
-  showSanta = true;
+  showSanta = false;
 
   ngOnInit() {
   }

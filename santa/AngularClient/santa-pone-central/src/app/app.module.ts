@@ -9,6 +9,7 @@ import { CustomMaterialModule } from './core/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Componenents
 import { HomeComponent } from './home/home.component';
@@ -61,6 +62,7 @@ import { MaterialElevationDirective } from './headquarters/material-elevation.di
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     RouterModule
   ],
