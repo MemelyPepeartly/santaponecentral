@@ -1,4 +1,4 @@
-import { Input, Component, Output, EventEmitter } from '@angular/core';
+import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 
@@ -8,6 +8,13 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
+  constructor() { }
+
+  showSpinner = false;
+  username = '';
+  password = '';
+
   form: FormGroup = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -20,5 +27,8 @@ export class LoginComponent {
     if (this.form.valid) {
       this.submitEM.emit(this.form.value);
     }
+  }
+  login() {
+    console.log('Logging in');
   }
 }
