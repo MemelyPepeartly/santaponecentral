@@ -9,6 +9,7 @@ import { CustomMaterialModule } from './core/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Componenents
 import { HomeComponent } from './home/home.component';
@@ -29,6 +30,7 @@ import { IncomingSignupsComponent } from './headquarters/incoming-signups/incomi
 import { ShippingCorrespondenceComponent } from './headquarters/incoming-correspondence/shipping-correspondence/shipping-correspondence.component';
 import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component';
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
+import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import { MaterialElevationDirective } from './headquarters/material-elevation.di
     IncomingSignupsComponent,
     ShippingCorrespondenceComponent,
     GeneralCorrespondenceComponent,
-    MaterialElevationDirective
+    MaterialElevationDirective,
+    SignupFormComponent
   ],
   entryComponents: [
     LoginComponent
@@ -61,6 +64,7 @@ import { MaterialElevationDirective } from './headquarters/material-elevation.di
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     RouterModule
   ],
