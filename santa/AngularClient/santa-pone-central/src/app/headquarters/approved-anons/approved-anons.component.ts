@@ -23,6 +23,7 @@ export class ApprovedAnonsComponent implements OnInit {
     santas: Anon[] = [
     {
     realName: 'Pepe',
+    holidayID: 'Probably Racist Pepe',
     address: this.address,
     wishlist: 'I want to feel!',
     email: 'pepe@anon.non',
@@ -30,6 +31,7 @@ export class ApprovedAnonsComponent implements OnInit {
     },
     {
     realName: 'Boomer',
+    holidayID: 'Okay Boomer',
     address: this.address,
     wishlist: 'Quaaludes',
     email: 'boomer@aol.com',
