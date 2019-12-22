@@ -1,4 +1,4 @@
-<mat-toolbar>General Correspondence</mat-toolbar>
+<mat-toolbar>Shipping Correspondence</mat-toolbar>
 <mat-paginator [length]="100"
               [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]"
@@ -8,10 +8,10 @@
 <mat-list>
     <mat-card mat-list-item *ngFor="let shippingMessage of shippingMessages" appMaterialElevation>
         <mat-card-title>
-            {{ message.anonInfo.holidayID }}
+            {{ shippingMessage.anonInfo.holidayID }}
         </mat-card-title>
         <mat-card-subtitle>
-            {{ message.subject }}
+            New Shipping Number: {{ shippingMessage.shippingNumber }}
         </mat-card-subtitle>
     </mat-card>
 </mat-list>
