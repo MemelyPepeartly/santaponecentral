@@ -9,10 +9,23 @@ export class NavbarComponent implements OnInit {
 
   constructor() { }
 
-  showUser = false;
-  showSanta = false;
+  showUserNav = false;
+  showAdminNav = false;
 
   ngOnInit() {
+  }
+
+  showAdmin() {
+    this.showAdminNav = true;
+    this.showUserNav = false;
+  }
+  showNewUser() {
+    this.showAdminNav = false;
+    this.showUserNav = false;
+  }
+  showExistingUser() {
+    this.showAdminNav = false;
+    this.showUserNav = true;
   }
 
 }
