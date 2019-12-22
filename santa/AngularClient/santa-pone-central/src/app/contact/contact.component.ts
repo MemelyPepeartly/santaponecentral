@@ -11,5 +11,8 @@ export class ContactComponent implements OnInit {
 
   ngOnInit() {
   }
+  onSubmit() {
+    console.log('Submitting...');
+  }
 
 }

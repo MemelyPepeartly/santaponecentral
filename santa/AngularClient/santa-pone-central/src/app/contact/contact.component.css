@@ -9,15 +9,12 @@ mat-radio-button {
     display: flex;
     justify-content: center;
   }
-.leftChild {
+.child {
     width: 35%;
     margin: 10px;
 }
-.rightChild {
-    width: 45%;
-}
 
-.leftChild div {
+.child div {
   width: 100%;
 }
 
