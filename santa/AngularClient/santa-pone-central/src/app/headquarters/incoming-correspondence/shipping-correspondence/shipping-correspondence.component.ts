@@ -41,14 +41,14 @@ export class ShippingCorrespondenceComponent implements OnInit {
 
     Shippingmessages: ShippingMessage[] = [
       {
-        anonInfo = this.anons[0],
-        shippingNumber = '0000000000',
-        message = 'Here is my shipping number'
+        anonInfo: this.anons[0],
+        shippingNumber: '0000000000',
+        message: 'Here is my shipping number'
       },
       {
-        anonInfo =this.anons[1],
-        shippingNumber = '111111111',
-        message = 'Haha look, I aint a grinch'
+        anonInfo: this.anons[1],
+        shippingNumber: '111111111',
+        message: 'Haha look, I aint a grinch'
       }];
 
   ngOnInit() {
