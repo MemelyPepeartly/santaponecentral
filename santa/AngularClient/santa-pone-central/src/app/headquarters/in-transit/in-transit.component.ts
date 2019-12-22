@@ -24,6 +24,7 @@ export class InTransitComponent implements OnInit {
   santas: Anon[] = [
   {
   realName: 'Chad',
+  holidayID: 'Chipper Chad',
   address: this.address,
   wishlist: 'I want ponies!',
   email: 'chad@anon.non',
@@ -31,6 +32,7 @@ export class InTransitComponent implements OnInit {
   },
   {
   realName: 'Stacy',
+  holidayID: 'Sticky Stacy',
   address: this.address,
   wishlist: 'I want to die!',
   email: 'stacy@anon.non',
