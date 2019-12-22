@@ -15,6 +15,7 @@ import { IncomingCorrespondenceComponent } from './headquarters/incoming-corresp
 const appRoutes: Routes = [
   { path: 'profile',
     component: ProfileComponent
+    
   },
   {
     path: 'home',
