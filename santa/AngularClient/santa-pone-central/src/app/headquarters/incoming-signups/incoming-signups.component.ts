@@ -23,6 +23,7 @@ export class IncomingSignupsComponent implements OnInit {
   requests: Anon[] = [
   {
   realName: 'Zoomer',
+  holidayID: 'Zippy Zoomer',
   address: this.address,
   wishlist: 'I want ponies!',
   email: 'anon@anon.non',
@@ -30,6 +31,7 @@ export class IncomingSignupsComponent implements OnInit {
   },
   {
   realName: 'Wojak',
+  holidayID: 'Wilin Wojak',
   address: this.address,
   wishlist: 'I want to die!',
   email: 'wojak@anon.non',
