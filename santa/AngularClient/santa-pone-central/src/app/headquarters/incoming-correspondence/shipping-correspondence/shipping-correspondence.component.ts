@@ -39,7 +39,7 @@ export class ShippingCorrespondenceComponent implements OnInit {
     otherInfo: 'Im allergic to happiness'
     }];
 
-    Shippingmessages: ShippingMessage[] = [
+    shippingMessages: ShippingMessage[] = [
       {
         anonInfo: this.anons[0],
         shippingNumber: '0000000000',
