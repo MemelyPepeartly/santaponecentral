@@ -8,10 +8,13 @@
 <mat-list>
     <mat-card mat-list-item *ngFor="let request of requests" appMaterialElevation>
         <mat-card-title>
-            {{ request.realName }}
+            {{ request.holidayID }}
         </mat-card-title>
         <mat-card-subtitle>
             {{ request.email }}
         </mat-card-subtitle>
+        <mat-card-content>
+            Wishlist: {{ request.wishlist }}
+        </mat-card-content>
     </mat-card>
 </mat-list>
