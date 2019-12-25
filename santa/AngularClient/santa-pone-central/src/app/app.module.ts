@@ -31,6 +31,7 @@ import { ShippingCorrespondenceComponent } from './headquarters/incoming-corresp
 import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component';
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
+import { AdminHelpComponent } from './admin-help/admin-help.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { SignupFormComponent } from './signup/signup-form/signup-form.component'
     ShippingCorrespondenceComponent,
     GeneralCorrespondenceComponent,
     MaterialElevationDirective,
-    SignupFormComponent
+    SignupFormComponent,
+    AdminHelpComponent
   ],
   entryComponents: [
     LoginComponent

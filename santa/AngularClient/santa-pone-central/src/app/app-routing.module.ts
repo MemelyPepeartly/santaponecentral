@@ -11,6 +11,7 @@ import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 import { ContactComponent } from './contact/contact.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component';
+import { AdminHelpComponent } from './admin-help/admin-help.component'
 
 const appRoutes: Routes = [
   { path: 'profile',
@@ -41,12 +42,16 @@ const appRoutes: Routes = [
     path: 'correspondence',
     component: IncomingCorrespondenceComponent
   },
+  {
+    path: 'help',
+    component: AdminHelpComponent
+  },
   { path: '',
     redirectTo: '/home',
     pathMatch: 'full'
   },
   { path: '**',
-  redirectTo: '/home'
+    redirectTo: '/home'
   }
 ];
 
