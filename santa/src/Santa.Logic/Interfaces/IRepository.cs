@@ -38,7 +38,10 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyResponses
-
+        Task<Logic.Objects.Event> CreateSurveyResponseAsync();
+        Task<Logic.Objects.Event> GetSurveyResponseByIDAsync();
+        Task<Logic.Objects.Event> UpdateSurveyResponseByIDAsync();
+        Task<Logic.Objects.Event> DeleteSurveyResponseByIDAsync();
         #endregion
     }
 }
