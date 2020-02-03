@@ -13,6 +13,12 @@ namespace Santa.Data.Repository
 {
     public class Repository : IRepository
     {
+        private readonly SantaBaseContext santaContext;
+
+        public Repository(SantaBaseContext _context)
+        {
+            santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
+        }
         public Task<Logic.Objects.Client> CreateClientAsync()
         {
             throw new NotImplementedException();
