@@ -18,7 +18,7 @@ namespace Santa.Logic.Objects
             nickname = _nickname;
             email = _email;
         }
-
+        public Client () { }
 
     }
 }
