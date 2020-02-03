@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+using Santa.Data.Entities;
+using Santa.Data.Repository;
 
 namespace Santa.Data.Repository
 {
     public class Repository : IRepository
     {
-        public Task<Client> CreateClientAsync()
+        public Task<Logic.Objects.Client> CreateClientAsync()
         {
             throw new NotImplementedException();
         }
@@ -36,7 +38,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Client> DeleteClientByIDAsync()
+        public Task<Logic.Objects.Client> DeleteClientByIDAsync()
         {
             throw new NotImplementedException();
         }
@@ -61,12 +63,12 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Client> GetClientByEmailAsync()
+        public Task<Logic.Objects.Client> GetClientByEmailAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Client> GetClientByID()
+        public Task<Logic.Objects.Client> GetClientByID()
         {
             throw new NotImplementedException();
         }
@@ -91,7 +93,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Client> UpdateClientByIDAsync()
+        public Task<Logic.Objects.Client> UpdateClientByIDAsync()
         {
             throw new NotImplementedException();
         }
