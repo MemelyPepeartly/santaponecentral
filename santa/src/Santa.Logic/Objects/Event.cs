@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Santa.Logic.Objects
 {
-    class Event
+    public class Event
     {
     }
 }
