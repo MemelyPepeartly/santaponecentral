@@ -28,11 +28,13 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Event> GetSurveyOptionByIDAsync();
         Task<Logic.Objects.Event> UpdateSurveyOptionByIDAsync();
         Task<Logic.Objects.Event> DeleteSurveyOptionByIDAsync();
-
         #endregion
 
         #region SurveyQuestions
-
+        Task<Logic.Objects.Event> CreateSurveyQuestionAsync();
+        Task<Logic.Objects.Event> GetSurveyQuestionByIDAsync();
+        Task<Logic.Objects.Event> UpdateSurveyQuestionByIDAsync();
+        Task<Logic.Objects.Event> DeleteSurveyQuestionByIDAsync();
         #endregion
 
         #region SurveyResponses
