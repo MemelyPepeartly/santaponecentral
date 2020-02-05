@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -19,9 +20,9 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Client
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<Logic.Objects.Client> Get()
         {
-            return new string[] { "value1", "value2" };
+            return repository.GetAllClients();
         }
 
         // GET: api/Client/5
@@ -32,9 +33,46 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/Client
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("new", Name = "NewClient")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<ApiClient> Post([FromBody] ApiClient client)
         {
+            try
+            {
+                var newClient = new Logic.Objects.Client()
+                {
+                    clientID = client.clientID.GetValueOrDefault(),
+                    clientName = client.clientName,
+                    email = client.email,
+                    nickname = client.nickname,
+                    address = new Logic.Objects.Address()
+                    {
+                        addressLineOne = client.addressLineOne,
+                        addressLineTwo = client.addressLineTwo,
+                        city = client.city,
+                        state = client.state,
+                        postalCode = client.postalCode,
+                        country = client.country
+                    }
+                };
+
+
+                return Created($"api/Client/{newClient.clientID}", newClient);
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+            catch (InvalidOperationException e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
         }
 
         // PUT: api/Client/5
