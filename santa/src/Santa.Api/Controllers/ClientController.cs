@@ -3,16 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Interfaces;
+using Newtonsoft.Json;
 
 namespace Santa.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ClientController : Controller
     {
-        // GET: Client
-        public ActionResult Index()
+        private readonly IRepository repository;
+
+        public ClientController(IRepository _repository)
         {
-            return View();
+            repository = _repository;
+        }
+        // GET: api/Client
+        [HttpGet]
+        public ActionResult<object> GetAllClients()
+        {
+            try
+            {
+                List<Logic.Objects.Client> clients = repository.GetAllClients();
+                return Ok(clients);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // GET: Client/Details/5

@@ -12,6 +12,7 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Client> CreateClientAsync();
         Task<Logic.Objects.Client> GetClientByID();
         Task<Logic.Objects.Client> GetClientByEmailAsync();
+        List<Logic.Objects.Client> GetAllClients();
         Task<Logic.Objects.Client> UpdateClientByIDAsync();
         Task<Logic.Objects.Client> DeleteClientByIDAsync();
         #endregion
