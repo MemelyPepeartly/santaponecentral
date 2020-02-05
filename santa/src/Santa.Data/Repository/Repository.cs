@@ -69,6 +69,20 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        public List<Logic.Objects.Client> GetAllClients()
+        {
+            try
+            {
+                List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
+                clientList = santaContext.Client.Select(Mapper.MapClient).ToList();
+                return clientList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public Task<Logic.Objects.Client> GetClientByEmailAsync()
         {
             throw new NotImplementedException();
