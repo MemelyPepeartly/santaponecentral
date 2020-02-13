@@ -12,7 +12,7 @@ namespace Santa.Data.Entities
         }
 
         public Guid SurveyId { get; set; }
-        public int EventTypeId { get; set; }
+        public Guid EventTypeId { get; set; }
         public string SurveyDescription { get; set; }
         public bool IsActive { get; set; }
 

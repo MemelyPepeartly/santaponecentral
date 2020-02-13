@@ -7,7 +7,7 @@ namespace Santa.Data.Entities
     {
         public Guid SenderClientId { get; set; }
         public Guid RecipientClientId { get; set; }
-        public int EventTypeId { get; set; }
+        public Guid EventTypeId { get; set; }
 
         public virtual EventType EventType { get; set; }
         public virtual Client RecipientClient { get; set; }
