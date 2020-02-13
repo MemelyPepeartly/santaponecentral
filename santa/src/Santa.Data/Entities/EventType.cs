@@ -11,7 +11,7 @@ namespace Santa.Data.Entities
             Survey = new HashSet<Survey>();
         }
 
-        public int EventTypeId { get; set; }
+        public Guid EventTypeId { get; set; }
         public string EventDescription { get; set; }
         public bool IsActive { get; set; }
 

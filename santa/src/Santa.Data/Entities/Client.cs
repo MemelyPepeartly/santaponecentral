@@ -13,7 +13,7 @@ namespace Santa.Data.Entities
         }
 
         public Guid ClientId { get; set; }
-        public int ClientStatusId { get; set; }
+        public Guid ClientStatusId { get; set; }
         public string ClientName { get; set; }
         public string Nickname { get; set; }
         public string Email { get; set; }

@@ -12,7 +12,7 @@ namespace Santa.Data.Entities
         }
 
         public Guid SurveyOptionId { get; set; }
-        public int DisplayText { get; set; }
+        public string DisplayText { get; set; }
         public string SurveyOptionValue { get; set; }
 
         public virtual ICollection<SurveyQuestionOptionXref> SurveyQuestionOptionXref { get; set; }

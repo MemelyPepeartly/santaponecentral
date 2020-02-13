@@ -8,7 +8,7 @@ namespace Santa.Data.Entities
         public Guid SurveyId { get; set; }
         public Guid SurveyQuestionId { get; set; }
         public string SortOrder { get; set; }
-        public bool IsAction { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual Survey Survey { get; set; }
         public virtual SurveyQuestion SurveyQuestion { get; set; }

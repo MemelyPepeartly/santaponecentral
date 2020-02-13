@@ -10,7 +10,7 @@ namespace Santa.Data.Entities
             Client = new HashSet<Client>();
         }
 
-        public int ClientStatusId { get; set; }
+        public Guid ClientStatusId { get; set; }
         public string StatusDescription { get; set; }
 
         public virtual ICollection<Client> Client { get; set; }
