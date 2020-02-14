@@ -7,7 +7,7 @@ namespace Santa.Logic.Objects
     public class Client
     {
         private Guid _clientID;
-        public int clientStatusID { get; set; }
+        public Guid clientStatusID { get; set; }
         public string clientName { get; set; }
         public string nickname { get; set; }
         public string email { get; set; }

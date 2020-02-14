@@ -30,6 +30,7 @@ CREATE TABLE app.EventType
 );
 CREATE TABLE app.ClientRelationXref
 (
+    clientRelationXrefID INT IDENTITY(1,1) PRIMARY KEY,
     senderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     recipientClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL
@@ -64,6 +65,7 @@ CREATE TABLE app.SurveyResponse
 );
 CREATE TABLE app.SurveyQuestionXref
 (
+    surveyQuestionXrefID INT IDENTITY(1,1) PRIMARY KEY,
     surveyID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Survey(surveyID) NOT NULL,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
     sortOrder NVARCHAR(5) NOT NULL,
@@ -71,6 +73,7 @@ CREATE TABLE app.SurveyQuestionXref
 );
 CREATE TABLE app.SurveyQuestionOptionXref
 (
+    surveyQuestionOptionXref INT IDENTITY(1,1) PRIMARY KEY,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID) NOT NULL,
     sortOrder NVARCHAR(5) NOT NULL,

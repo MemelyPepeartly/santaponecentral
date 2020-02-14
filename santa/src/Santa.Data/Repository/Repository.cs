@@ -88,9 +88,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Logic.Objects.Client> GetClientByID()
+        public async Task<Logic.Objects.Client> GetClientByID(Guid clientId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientId));
+                return logicClient;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public Task<Event> GetEventByIDAsync()
