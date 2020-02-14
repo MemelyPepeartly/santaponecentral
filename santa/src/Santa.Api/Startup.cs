@@ -30,7 +30,7 @@ namespace Santa.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
+            string connectionString = Configuration.GetConnectionString("value");
 
 
             services.AddDbContext<Santa.Data.Entities.SantaBaseContext>(options =>
