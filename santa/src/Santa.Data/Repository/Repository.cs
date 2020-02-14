@@ -138,7 +138,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey.FirstOrDefaultAsync(s => s.SurveyId == surveyId));
+                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey.AsNoTracking()
+                    .Include(p => p.SurveyQuestionXref.Select(q => q.SurveyId == surveyId))
+                    .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
                 return logicSurvey;
             }
             catch (Exception e)
