@@ -24,13 +24,12 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                var clients = repository.GetAllClients();
+                List<Logic.Objects.Client> clients = repository.GetAllClients();
                 if (clients == null)
                 {
                     throw new ArgumentNullException();
                 }
-                string jobj = Newtonsoft.Json.JsonConvert.SerializeObject(clients);
-                return Ok(new { results = clients });
+                return Ok(clients);
             }
             catch (ArgumentNullException e)
             {
