@@ -83,7 +83,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task<Event> GetAllEvents()
+        public List<Event> GetAllEvents()
         {
             try
             {

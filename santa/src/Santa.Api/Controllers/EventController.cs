@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
@@ -11,13 +12,18 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
+        private readonly IRepository repository;
+        public EventController(IRepository _repository)
+        {
+            repository = _repository;
+        }
         // GET: api/Event
         [HttpGet]
         public ActionResult<List<Logic.Objects.Event>> Get()
         {
             try
             {
-
+                return Ok(repository.GetAllEvents());
             }
             catch (Exception e)
             {
@@ -26,7 +32,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Event/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";

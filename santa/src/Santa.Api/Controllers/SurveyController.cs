@@ -32,7 +32,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Survey/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public ActionResult<Logic.Objects.Survey> Get(Guid id)
         {
             try

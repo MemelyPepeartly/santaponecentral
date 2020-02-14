@@ -19,7 +19,7 @@ namespace Santa.Logic.Interfaces
 
         #region Event
         Task<Logic.Objects.Event> CreateEventAsync();
-        Task<Logic.Objects.Event> GetAllEvents();
+        List<Logic.Objects.Event> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync();
         Task<Logic.Objects.Event> UpdateEventByIDAsync();
         Task<Logic.Objects.Event> DeleteEventByIDAsync();

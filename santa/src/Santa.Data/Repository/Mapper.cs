@@ -38,8 +38,11 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Event logicEvent = new Logic.Objects.Event()
             {
-                
-            }
+                eventTypeID = contextEventType.EventTypeId,
+                eventDescription = contextEventType.EventDescription,
+                active = contextEventType.IsActive
+            };
+            return logicEvent;
         }
         
     }
