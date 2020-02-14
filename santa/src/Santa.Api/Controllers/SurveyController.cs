@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
@@ -11,6 +12,11 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class SurveyController : ControllerBase
     {
+        private readonly IRepository repository;
+        public SurveyController(IRepository _repository)
+        {
+            repository = _repository;
+        }
         // GET: api/Survey
         [HttpGet]
         public IEnumerable<string> Get()
