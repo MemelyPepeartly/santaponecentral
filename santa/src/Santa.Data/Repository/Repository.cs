@@ -134,6 +134,19 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<Logic.Objects.Survey> getSurveyByID(Guid surveyId)
+        {
+            try
+            {
+                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey.FirstOrDefaultAsync(s => s.SurveyId == surveyId));
+                return logicSurvey;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public Task<Event> GetSurveyOptionByIDAsync()
         {
             throw new NotImplementedException();
