@@ -13,9 +13,16 @@ namespace Santa.Api.Controllers
     {
         // GET: api/Event
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Event>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // GET: api/Event/5

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Santa.Data.Entities;
 using Santa.Logic.Objects;
 
 namespace Santa.Data.Repository
@@ -10,7 +11,7 @@ namespace Santa.Data.Repository
         #region Client
         public static Logic.Objects.Client MapClient (Entities.Client contextCharacter)
         {
-            Logic.Objects.Client LogicClient = new Client()
+            Logic.Objects.Client logicClient = new Logic.Objects.Client()
             {
                 clientID = contextCharacter.ClientId,
                 clientStatusID = contextCharacter.ClientStatusId,
@@ -29,8 +30,17 @@ namespace Santa.Data.Repository
 
             };
 
-            return LogicClient;
+            return logicClient;
         }
         #endregion
+
+        public static Logic.Objects.Event MapEvent(Entities.EventType contextEventType)
+        {
+            Logic.Objects.Event logicEvent = new Logic.Objects.Event()
+            {
+                
+            }
+        }
+        
     }
 }

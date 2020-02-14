@@ -83,6 +83,20 @@ namespace Santa.Data.Repository
             }
         }
 
+        public Task<Event> GetAllEvents()
+        {
+            try
+            {
+                List<Logic.Objects.Event> eventList = new List<Logic.Objects.Event>();
+                eventList = santaContext.EventType.Select(Mapper.MapEvent).ToList();
+                return eventList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public Task<Logic.Objects.Client> GetClientByEmailAsync()
         {
             throw new NotImplementedException();
