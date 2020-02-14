@@ -19,16 +19,30 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Survey
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Survey>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok("something");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // GET: api/Survey/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public ActionResult<Logic.Objects.Survey> Get(Guid id)
         {
-            return "value";
+            try
+            {
+                return Ok("something");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // POST: api/Survey
