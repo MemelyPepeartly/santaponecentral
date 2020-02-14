@@ -33,11 +33,11 @@ namespace Santa.Api.Controllers
 
         // GET: api/Survey/5
         [HttpGet("{id}")]
-        public ActionResult<Logic.Objects.Survey> Get(Guid id)
+        public async Task<ActionResult<Logic.Objects.Survey>> GetAsync(Guid id)
         {
             try
             {
-                return Ok("something");
+                return Ok(await repository.getSurveyByID(id));
             }
             catch (Exception e)
             {

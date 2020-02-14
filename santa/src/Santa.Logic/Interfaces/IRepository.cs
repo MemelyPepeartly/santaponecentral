@@ -25,6 +25,10 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Event> DeleteEventByIDAsync();
         #endregion
 
+        #region Surveys
+
+        Task<Logic.Objects.Survey> getSurveyByID(Guid id);
+
         #region SurveyOptions
         Task<Logic.Objects.Event> CreateSurveyOptionAsync();
         Task<Logic.Objects.Event> GetSurveyOptionByIDAsync();
@@ -45,6 +49,7 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Event> GetSurveyResponseByIDAsync();
         Task<Logic.Objects.Event> UpdateSurveyResponseByIDAsync();
         Task<Logic.Objects.Event> DeleteSurveyResponseByIDAsync();
+        #endregion
         #endregion
     }
 }
