@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Santa.Data.Entities;
 using Santa.Logic.Objects;
@@ -26,7 +27,10 @@ namespace Santa.Data.Repository
                     country = contextCharacter.Country,
                     state = contextCharacter.State,
                     postalCode = contextCharacter.State
-                }
+                },
+                senders = contextCharacter.ClientRelationXrefSenderClient.Select(s => MapClient(s.SenderClient)).ToList(),
+                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(r => MapClient(r.RecipientClient)).ToList()
+
 
             };
 
