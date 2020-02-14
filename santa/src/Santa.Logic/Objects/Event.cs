@@ -6,5 +6,6 @@ namespace Santa.Logic.Objects
 {
     public class Event
     {
+
     }
 }
