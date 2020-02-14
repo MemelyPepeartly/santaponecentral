@@ -39,7 +39,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Client/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientAsync(Guid id)
         {
             try
