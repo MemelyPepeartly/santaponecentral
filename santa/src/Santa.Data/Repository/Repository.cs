@@ -120,7 +120,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientId));
+                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
+                    .AsNoTracking()
+                    .Include(s => s.ClientRelationXrefSenderClient)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
+                    .FirstOrDefaultAsync(c => c.ClientId == clientId));
                 return logicClient;
             }
             catch (Exception e)
