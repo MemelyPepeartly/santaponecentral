@@ -10,7 +10,7 @@ namespace Santa.Logic.Interfaces
     {
         #region Client
         Task<Logic.Objects.Client> CreateClientAsync();
-        Task<Logic.Objects.Client> GetClientByID();
+        Task<Logic.Objects.Client> GetClientByID(Guid clientId);
         Task<Logic.Objects.Client> GetClientByEmailAsync();
         List<Logic.Objects.Client> GetAllClients();
         Task<Logic.Objects.Client> UpdateClientByIDAsync();

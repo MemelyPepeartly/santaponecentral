@@ -20,16 +20,39 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Client
         [HttpGet]
-        public List<Logic.Objects.Client> Get()
+        public ActionResult<List<Logic.Objects.Client>> Get()
         {
-            return repository.GetAllClients();
+            try
+            {
+                var clients = repository.GetAllClients();
+                if (clients == null)
+                {
+                    throw new ArgumentNullException();
+                }
+                string jobj = Newtonsoft.Json.JsonConvert.SerializeObject(clients);
+                return Ok(new { results = clients });
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            
         }
 
         // GET: api/Client/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Logic.Objects.Client>> GetClientAsync(Guid id)
         {
-            return "value";
+            try
+            {
+                Logic.Objects.Client client = await repository.GetClientByID(id);
+                return Ok(client);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            
         }
 
         // POST: api/Client

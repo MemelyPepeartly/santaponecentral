@@ -31,6 +31,8 @@ namespace Santa.Api
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
+
+
             services.AddDbContext<Santa.Data.Entities.SantaBaseContext>(options =>
             {
                 options.UseSqlServer(connectionString);
