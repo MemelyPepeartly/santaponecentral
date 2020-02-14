@@ -97,6 +97,20 @@ namespace Santa.Data.Repository
             }
         }
 
+        public List<Logic.Objects.Survey> getAllSurveys()
+        {
+            try
+            {
+                List<Logic.Objects.Survey> surveyList = new List<Logic.Objects.Survey>();
+                surveyList = santaContext.Survey.Select(Mapper.MapSurvey).ToList();
+                return surveyList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public Task<Logic.Objects.Client> GetClientByEmailAsync()
         {
             throw new NotImplementedException();

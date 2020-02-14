@@ -44,6 +44,17 @@ namespace Santa.Data.Repository
             };
             return logicEvent;
         }
-        
+
+        public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
+        {
+            Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
+            {
+                surveyID = contextSurvey.SurveyId,
+                eventTypeID = contextSurvey.EventTypeId,
+                surveyDescription = contextSurvey.SurveyDescription,
+                active = contextSurvey.IsActive
+            };
+            return logicSurvey;
+        }
     }
 }
