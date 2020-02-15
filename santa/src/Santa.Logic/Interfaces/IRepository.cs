@@ -27,7 +27,7 @@ namespace Santa.Logic.Interfaces
 
         #region Surveys
 
-        Task<Logic.Objects.Survey> getSurveyByID(Guid id);
+        Task<Logic.Objects.Survey> GetSurveyByID(Guid id);
 
         #region SurveyOptions
         Task<Logic.Objects.Event> CreateSurveyOptionAsync();
@@ -38,8 +38,8 @@ namespace Santa.Logic.Interfaces
 
         #region SurveyQuestions
         Task<Logic.Objects.Event> CreateSurveyQuestionAsync();
-        List<Logic.Objects.Survey> getAllSurveys();
-        Task<Logic.Objects.Event> GetSurveyQuestionByIDAsync();
+        List<Logic.Objects.Survey> GetAllSurveys();
+        Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid id);
         Task<Logic.Objects.Event> UpdateSurveyQuestionByIDAsync();
         Task<Logic.Objects.Event> DeleteSurveyQuestionByIDAsync();
         #endregion
