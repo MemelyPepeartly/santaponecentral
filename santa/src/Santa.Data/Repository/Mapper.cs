@@ -10,7 +10,7 @@ namespace Santa.Data.Repository
     public static class Mapper
     {
         #region Client
-        public static Logic.Objects.Client MapClient (Entities.Client contextCharacter)
+        public static Logic.Objects.Client MapClient(Entities.Client contextCharacter)
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
             {
@@ -56,9 +56,21 @@ namespace Santa.Data.Repository
                 surveyID = contextSurvey.SurveyId,
                 eventTypeID = contextSurvey.EventTypeId,
                 surveyDescription = contextSurvey.SurveyDescription,
-                active = contextSurvey.IsActive
-            };
+                active = contextSurvey.IsActive,
+                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList()
+        };
             return logicSurvey;
+        }
+        public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
+        {
+            Logic.Objects.Question logicQuestion = new Question()
+            {
+                questionID = contextSurveyQuestion.SurveyQuestionId,
+                questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,
+                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList
+
+            };
+            return logicQuestion;
         }
     }
 }
