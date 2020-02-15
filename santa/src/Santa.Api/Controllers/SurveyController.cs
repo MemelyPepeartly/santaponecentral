@@ -23,7 +23,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                return Ok(repository.getAllSurveys());
+                return Ok(repository.GetAllSurveys());
             }
             catch (Exception e)
             {
