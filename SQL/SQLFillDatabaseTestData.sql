@@ -1,5 +1,7 @@
 DECLARE @eventTypeIDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestionIDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion1IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion2IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyIDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionIDGUID UNIQUEIDENTIFIER;
 DECLARE @firstClientStatusIDGUID UNIQUEIDENTIFIER;
@@ -9,7 +11,9 @@ DECLARE @recipientClientIDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyResponseIDGUID UNIQUEIDENTIFIER;
 
 SET @eventTypeIDGUID = NEWID();
-SET @surveyQuestionIDGUID = NEWID();
+SET @surveyQuestion1IDGUID = NEWID();
+SET @surveyQuestion2IDGUID = NEWID();
+SET @surveyQuestion3IDGUID = NEWID();
 SET @surveyIDGUID = NEWID();
 SET @surveyOptionIDGUID = NEWID();
 SET @surveyResponseIDGUID = NEWID();
@@ -21,7 +25,9 @@ SET @senderClientIDGUID = NEWID();
 SET @recipientClientIDGUID = NEWID();
 
 PRINT N'eventTypeIDGUID:------------ ' + (CAST (@eventTypeIDGUID AS NVARCHAR(50)));
-PRINT N'surveyQuestionIDGUID:------- ' + (CAST (@surveyQuestionIDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion1IDGUID:------ ' + (CAST (@surveyQuestion1IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion2IDGUID:------ ' + (CAST (@surveyQuestion2IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion3IDGUID:------ ' + (CAST (@surveyQuestion3IDGUID AS NVARCHAR(50)));
 PRINT N'surveyIDGUID:--------------- ' + (CAST (@surveyIDGUID AS NVARCHAR(50)));
 PRINT N'surveyOptionIDGUID:--------- ' + (CAST (@surveyOptionIDGUID AS NVARCHAR(50)));
 PRINT N'surveyResponseIDGUID:------- ' + (CAST (@surveyResponseIDGUID AS NVARCHAR(50)));
@@ -41,7 +47,9 @@ VALUES
 
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
 VALUES
-    (@surveyQuestionIDGUID,'Question 1',1);
+    (@surveyQuestion1IDGUID,'Question 1',1),
+    (@surveyQuestion2IDGUID,'Question 2',1),
+    (@surveyQuestion3IDGUID,'Question 3',1);
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
@@ -53,11 +61,13 @@ VALUES
 
 INSERT INTO app.SurveyQuestionXref (surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
-    (@surveyIDGUID, @surveyQuestionIDGUID, 'asc', 1);
+    (@surveyIDGUID, @surveyQuestion1IDGUID, 'asc', 1),
+    (@surveyIDGUID, @surveyQuestion2IDGUID, 'asc', 1),
+    (@surveyIDGUID, @surveyQuestion3IDGUID, 'asc', 1);
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (@surveyQuestionIDGUID, @surveyOptionIDGUID, 'asc', 1);
+    (@surveyQuestion1IDGUID, @surveyOptionIDGUID, 'asc', 1);
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
@@ -71,7 +81,7 @@ VALUES
 
 INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
 VALUES
-    (@surveyResponseIDGUID, @surveyIDGUID, @senderClientIDGUID, @surveyQuestionIDGUID, @surveyOptionIDGUID, 'Response Text');
+    (@surveyResponseIDGUID, @surveyIDGUID, @senderClientIDGUID, @surveyQuestion1IDGUID, @surveyOptionIDGUID, 'Response Text');
     
 INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
 VALUES
