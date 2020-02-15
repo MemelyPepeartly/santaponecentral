@@ -97,7 +97,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public List<Logic.Objects.Survey> getAllSurveys()
+        public List<Logic.Objects.Survey> GetAllSurveys()
         {
             try
             {
@@ -138,7 +138,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<Logic.Objects.Survey> getSurveyByID(Guid surveyId)
+        public async Task<Logic.Objects.Survey> GetSurveyByID(Guid surveyId)
         {
             try
             {
@@ -158,9 +158,16 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Event> GetSurveyQuestionByIDAsync()
+        public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Task<Event> GetSurveyResponseByIDAsync()

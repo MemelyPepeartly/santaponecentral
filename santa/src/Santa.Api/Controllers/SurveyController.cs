@@ -37,7 +37,21 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                return Ok(await repository.getSurveyByID(id));
+                return Ok(await repository.GetSurveyByID(id));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        // GET: api/Survey/5/SurveyQuestions
+        [HttpGet("{id}/SurveyQuestions")]
+        public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsAsync(Guid id)
+        {
+            try
+            {
+                return Ok(await repository.GetSurveyByID(id));
             }
             catch (Exception e)
             {

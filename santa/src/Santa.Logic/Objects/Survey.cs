@@ -10,5 +10,6 @@ namespace Santa.Logic.Objects
         public Guid eventTypeID { get; set; }
         public string surveyDescription { get; set; }
         public bool active { get; set; }
+        public List<Question> surveyQuestions { get; set; }
     }
 }
