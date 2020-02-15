@@ -97,12 +97,16 @@ namespace Santa.Data.Repository
             }
         }
 
-        public List<Logic.Objects.Survey> getAllSurveys()
+        public List<Logic.Objects.Survey> GetAllSurveys()
         {
             try
             {
                 List<Logic.Objects.Survey> surveyList = new List<Logic.Objects.Survey>();
-                surveyList = santaContext.Survey.Select(Mapper.MapSurvey).ToList();
+                surveyList = santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                    .Select(Mapper.MapSurvey).ToList();
+
                 return surveyList;
             }
             catch (Exception e)
@@ -138,12 +142,14 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<Logic.Objects.Survey> getSurveyByID(Guid surveyId)
+        public async Task<Logic.Objects.Survey> GetSurveyByID(Guid surveyId)
         {
             try
             {
-                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey.AsNoTracking()
-                    .Include(p => p.SurveyQuestionXref.Select(q => q.SurveyId == surveyId))
+                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
                 return logicSurvey;
             }
@@ -158,9 +164,16 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Event> GetSurveyQuestionByIDAsync()
+        public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public Task<Event> GetSurveyResponseByIDAsync()
