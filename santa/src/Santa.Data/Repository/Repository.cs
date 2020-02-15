@@ -102,7 +102,11 @@ namespace Santa.Data.Repository
             try
             {
                 List<Logic.Objects.Survey> surveyList = new List<Logic.Objects.Survey>();
-                surveyList = santaContext.Survey.Select(Mapper.MapSurvey).ToList();
+                surveyList = santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                    .Select(Mapper.MapSurvey).ToList();
+
                 return surveyList;
             }
             catch (Exception e)
