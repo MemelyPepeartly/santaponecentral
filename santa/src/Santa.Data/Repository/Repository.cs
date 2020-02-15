@@ -142,8 +142,10 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey.AsNoTracking()
-                    .Include(p => p.SurveyQuestionXref.Select(q => q.SurveyId == surveyId))
+                Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
                 return logicSurvey;
             }
