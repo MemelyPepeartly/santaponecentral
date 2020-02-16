@@ -91,8 +91,27 @@ namespace Santa.Api.Controllers
             }
         }
         [HttpPost("{id}/SurveyQuestions")]
-        public async Task<ActionResult<ApiSurvey>> PostSurveyQuestions([FromBody] string value)
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid id,[FromBody, Bind("questionText, isSurveyOptionList")] Logic.Objects.Question question)
         {
+            try
+            {
+                Logic.Objects.Question newQuestion = question;
+                question.questionID = Guid.NewGuid();
+
+                try
+                {
+                    await repository.SaveAsync();
+                    return Created($"api/Survey/{id}", id);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // PUT: api/Survey/5
