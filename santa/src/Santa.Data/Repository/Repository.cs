@@ -19,9 +19,16 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public Task<Logic.Objects.Client> CreateClientAsync()
+        public void CreateClientAsync(Logic.Objects.Client newClient)
         {
-            throw new NotImplementedException();
+            try
+            {
+                santaContext.Add(Mapper.MapClient(newClient));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<Event> CreateEventAsync()

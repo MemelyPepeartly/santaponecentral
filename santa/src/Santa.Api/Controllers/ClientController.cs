@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -26,7 +27,7 @@ namespace Santa.Api.Controllers
                 List<Logic.Objects.Client> clients = repository.GetAllClients();
                 if (clients == null)
                 {
-                    throw new ArgumentNullException();
+                    return NotFound();
                 }
                 return Ok(clients);
             }
@@ -46,7 +47,7 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Client client = await repository.GetClientByID(id);
                 if (client == null)
                 {
-                    throw new ArgumentNullException();
+                    return NotFound();
                 }
                 return Ok(client);
             }
@@ -59,31 +60,30 @@ namespace Santa.Api.Controllers
 
         // POST: api/Client
 
-        /*
-        [HttpPost("new", Name = "NewClient")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<ApiClient> Post([FromBody] ApiClient client)
+        public ActionResult<ApiClient> Post([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
             {
-                var newClient = new Logic.Objects.Client()
+                Logic.Objects.Client newClient = new Logic.Objects.Client()
                 {
-                    clientID = client.clientID.GetValueOrDefault(),
+                    clientID = Guid.NewGuid(),
                     clientName = client.clientName,
-                    email = client.email,
-                    nickname = client.nickname,
+                    email = client.clientEmail,
+                    nickname = client.clientNickname,
                     address = new Logic.Objects.Address()
                     {
-                        addressLineOne = client.addressLineOne,
-                        addressLineTwo = client.addressLineTwo,
-                        city = client.city,
-                        state = client.state,
-                        postalCode = client.postalCode,
-                        country = client.country
+                        addressLineOne = client.clientAddressLine1,
+                        addressLineTwo = client.clientAddressLine2,
+                        city = client.clientCity,
+                        state = client.clientState,
+                        postalCode = client.clientPostalCode,
+                        country = client.clientCountry
                     }
                 };
-
+                repository.CreateClientAsync(newClient);
 
                 return Created($"api/Client/{newClient.clientID}", newClient);
             }
@@ -101,7 +101,6 @@ namespace Santa.Api.Controllers
             }
 
         }
-        */
 
         // PUT: api/Client/5
         [HttpPut("{id}")]

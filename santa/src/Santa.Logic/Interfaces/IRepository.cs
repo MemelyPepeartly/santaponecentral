@@ -9,7 +9,7 @@ namespace Santa.Logic.Interfaces
     public interface IRepository
     {
         #region Client
-        Task<Logic.Objects.Client> CreateClientAsync();
+        void CreateClientAsync(Client newClient);
         Task<Logic.Objects.Client> GetClientByID(Guid clientId);
         Task<Logic.Objects.Client> GetClientByEmailAsync();
         List<Logic.Objects.Client> GetAllClients();
