@@ -74,12 +74,17 @@ namespace Santa.Data.Repository
             try
             {
                 List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
-                clientList = santaContext.Client.Select(Mapper.MapClient).ToList();
+                clientList = santaContext.Client
+                    .Include(s => s.ClientRelationXrefSenderClient)
+                        .ThenInclude(u => u.SenderClient)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
+                        .ThenInclude(u => u.RecipientClient)
+                    .Select(Mapper.MapClient).ToList();
                 return clientList;
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -127,7 +132,9 @@ namespace Santa.Data.Repository
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
                     .AsNoTracking()
                     .Include(s => s.ClientRelationXrefSenderClient)
+                        .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
+                        .ThenInclude(u => u.RecipientClient)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
                 return logicClient;
             }
