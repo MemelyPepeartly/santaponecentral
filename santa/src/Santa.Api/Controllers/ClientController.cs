@@ -44,6 +44,10 @@ namespace Santa.Api.Controllers
             try
             {
                 Logic.Objects.Client client = await repository.GetClientByID(id);
+                if (client == null)
+                {
+                    throw new ArgumentNullException();
+                }
                 return Ok(client);
             }
             catch (Exception e)

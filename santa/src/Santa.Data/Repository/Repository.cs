@@ -130,7 +130,6 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                    .AsNoTracking()
                     .Include(s => s.ClientRelationXrefSenderClient)
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
