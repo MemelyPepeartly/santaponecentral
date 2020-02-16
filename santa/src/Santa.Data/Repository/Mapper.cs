@@ -56,6 +56,8 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Event
+
         public static Logic.Objects.Event MapEvent(Entities.EventType contextEventType)
         {
             Logic.Objects.Event logicEvent = new Logic.Objects.Event()
@@ -66,7 +68,8 @@ namespace Santa.Data.Repository
             };
             return logicEvent;
         }
-
+        #endregion
+        #region Survey
         public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
         {
             Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
@@ -79,6 +82,8 @@ namespace Santa.Data.Repository
         };
             return logicSurvey;
         }
+        #endregion
+        #region Question
         public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
         {
             Logic.Objects.Question logicQuestion = new Question()
@@ -90,5 +95,6 @@ namespace Santa.Data.Repository
             };
             return logicQuestion;
         }
+        #endregion
     }
 }
