@@ -19,11 +19,12 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public void CreateClientAsync(Logic.Objects.Client newClient)
+        public async Task CreateClientAsync(Logic.Objects.Client newClient)
         {
             try
             {
                 santaContext.Add(Mapper.MapClient(newClient));
+                await SaveAsync();
             }
             catch (Exception e)
             {
