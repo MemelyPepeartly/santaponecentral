@@ -19,6 +19,10 @@ namespace Santa.Api.Controllers
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
         // GET: api/Client
+        /// <summary>
+        /// Gets all clients
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<List<Logic.Objects.Client>> Get()
         {
@@ -39,6 +43,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Client/5
+        /// <summary>
+        /// Gets a client by an ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientAsync(Guid id)
         {
@@ -59,7 +68,11 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/Client
-
+        /// <summary>
+        /// Posts a new client. Binds the ApiClient model for input
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,10 +106,7 @@ namespace Santa.Api.Controllers
                 catch (Exception e)
                 {
                     return BadRequest(e.Message);
-                }
-                
-
-                
+                }          
             }
             catch (ArgumentException)
             {
