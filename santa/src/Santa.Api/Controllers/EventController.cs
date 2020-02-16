@@ -18,6 +18,10 @@ namespace Santa.Api.Controllers
             repository = _repository;
         }
         // GET: api/Event
+        /// <summary>
+        /// Gets list of events
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<List<Logic.Objects.Event>> Get()
         {
@@ -32,6 +36,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Event/5
+        /// <summary>
+        /// Gets event by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public string Get(int id)
         {

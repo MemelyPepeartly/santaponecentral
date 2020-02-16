@@ -19,6 +19,10 @@ namespace Santa.Api.Controllers
             repository = _repository;
         }
         // GET: api/Survey
+        /// <summary>
+        /// Gets list of surveys
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<List<Logic.Objects.Survey>> Get()
         {
@@ -33,6 +37,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Survey/5
+        /// <summary>
+        /// Gets survey by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Logic.Objects.Survey>> GetAsync(Guid id)
         {
@@ -47,6 +56,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Survey/5/SurveyQuestions
+        /// <summary>
+        /// Gets surveyquestions within a given survey by surveyID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}/SurveyQuestions")]
         public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsAsync(Guid id)
         {
@@ -61,6 +75,11 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/Survey
+        /// <summary>
+        /// Posts new survey. Binds on the ApiSurvey model
+        /// </summary>
+        /// <param name="survey"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ApiSurvey>> Post([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
         {
@@ -90,6 +109,13 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        // POST: api/Survey/5/SurveyQuestions
+        /// <summary>
+        /// Posts new question to a survey using its surveyID. Binds to the ApiQuestion model.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="question"></param>
+        /// <returns></returns>
         [HttpPost("{surveyID}/SurveyQuestions")]
         public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
         {
