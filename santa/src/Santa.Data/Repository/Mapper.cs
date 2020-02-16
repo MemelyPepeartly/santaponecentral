@@ -87,7 +87,7 @@ namespace Santa.Data.Repository
         #region Question
         public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
         {
-            Logic.Objects.Question logicQuestion = new Question()
+            Logic.Objects.Question logicQuestion = new Question(contextSurveyQuestion.SurveyId)
             {
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,

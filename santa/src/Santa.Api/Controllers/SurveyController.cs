@@ -95,7 +95,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Question newQuestion = new Logic.Objects.Question()
+                Logic.Objects.Question newQuestion = new Logic.Objects.Question(surveyID)
                 {
                     questionID = Guid.NewGuid(),
                     questionText = question.questionText,
@@ -108,7 +108,7 @@ namespace Santa.Api.Controllers
                 try
                 {
                     await repository.CreateSurveyQuestionAsync(newQuestion);
-                    await repository.CreateSurveyQuestionXref(surveyID, newQuestion);
+                    await repository.CreateSurveyQuestionXref(newQuestion);
                     await repository.SaveAsync();
                     return Created($"api/Survey/{surveyID}", surveyID);
                 }
