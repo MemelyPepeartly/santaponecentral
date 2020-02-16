@@ -84,7 +84,7 @@ namespace Santa.Api.Controllers
                         country = client.clientCountry
                     }
                 };
-                repository.CreateClient(newClient);
+                await repository.CreateClient(newClient);
                 try
                 {
                     await repository.SaveAsync();
