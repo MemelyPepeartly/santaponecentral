@@ -62,7 +62,7 @@ namespace Santa.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
+        public ActionResult<ApiClient> Post([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
             {
@@ -83,7 +83,6 @@ namespace Santa.Api.Controllers
                     }
                 };
                 repository.CreateClientAsync(newClient);
-                await repository.SaveAsync();
 
                 return Created($"api/Client/{newClient.clientID}", newClient);
             }
