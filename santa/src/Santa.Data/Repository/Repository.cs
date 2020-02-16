@@ -76,7 +76,9 @@ namespace Santa.Data.Repository
                 List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
                 clientList = santaContext.Client
                     .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(u => u.RecipientClientId)
+                        .ThenInclude(u => u.RecipientClient)
+                    .Include(s => s.ClientRelationXrefSenderClient)
+                        .ThenInclude(u => u.SenderClient)
                     .Select(Mapper.MapClient).ToList();
                 return clientList;
             }
