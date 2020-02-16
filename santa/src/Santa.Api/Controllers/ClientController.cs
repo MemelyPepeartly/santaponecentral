@@ -62,13 +62,15 @@ namespace Santa.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<ApiClient> Post([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
             {
                 Logic.Objects.Client newClient = new Logic.Objects.Client()
                 {
                     clientID = Guid.NewGuid(),
+                    clientStatusID = client.clientStatusID,
                     clientName = client.clientName,
                     email = client.clientEmail,
                     nickname = client.clientNickname,
@@ -82,7 +84,16 @@ namespace Santa.Api.Controllers
                         country = client.clientCountry
                     }
                 };
-                repository.CreateClientAsync(newClient);
+                repository.CreateClient(newClient);
+                try
+                {
+                    await repository.SaveAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+                
 
                 return Created($"api/Client/{newClient.clientID}", newClient);
             }

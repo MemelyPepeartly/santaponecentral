@@ -19,12 +19,12 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public async Task CreateClientAsync(Logic.Objects.Client newClient)
+        public void CreateClient(Logic.Objects.Client newClient)
         {
             try
             {
-                santaContext.Add(Mapper.MapClient(newClient));
-                await SaveAsync();
+                var contextClient = Mapper.MapClient(newClient);
+                santaContext.Add(contextClient);
             }
             catch (Exception e)
             {
@@ -110,6 +110,10 @@ namespace Santa.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Gets all surveys
+        /// </summary>
+        /// <returns></returns>
         public List<Logic.Objects.Survey> GetAllSurveys()
         {
             try
@@ -133,6 +137,11 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a client by their ID
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         public async Task<Logic.Objects.Client> GetClientByID(Guid clientId)
         {
             try
@@ -156,6 +165,11 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a survey by its ID
+        /// </summary>
+        /// <param name="surveyId"></param>
+        /// <returns></returns>
         public async Task<Logic.Objects.Survey> GetSurveyByID(Guid surveyId)
         {
             try
@@ -195,9 +209,21 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Saves changes to the context
+        /// </summary>
+        /// <returns></returns>
         public async Task SaveAsync()
         {
-            await santaContext.SaveChangesAsync();
+            try
+            {
+                await santaContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
 
         public Task<Logic.Objects.Client> UpdateClientByIDAsync()
