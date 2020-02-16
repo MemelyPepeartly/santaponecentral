@@ -194,6 +194,11 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        public async Task SaveAsync()
+        {
+            await santaContext.SaveChangesAsync();
+        }
+
         public Task<Logic.Objects.Client> UpdateClientByIDAsync()
         {
             throw new NotImplementedException();

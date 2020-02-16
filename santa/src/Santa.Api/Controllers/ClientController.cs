@@ -16,7 +16,7 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         public ClientController(IRepository _repository)
         {
-            repository = _repository;
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository)); ;
         }
         // GET: api/Client
         [HttpGet]
@@ -62,8 +62,7 @@ namespace Santa.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<ApiClient> Post([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
+        public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
             {
@@ -84,6 +83,7 @@ namespace Santa.Api.Controllers
                     }
                 };
                 repository.CreateClientAsync(newClient);
+                await repository.SaveAsync();
 
                 return Created($"api/Client/{newClient.clientID}", newClient);
             }

@@ -51,5 +51,7 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
         #endregion
         #endregion
+
+        public Task SaveAsync();
     }
 }
