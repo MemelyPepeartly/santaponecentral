@@ -117,7 +117,7 @@ namespace Santa.Api.Controllers
         /// <param name="question"></param>
         /// <returns></returns>
         [HttpPost("{surveyID}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
         {
             try
             {
@@ -125,7 +125,9 @@ namespace Santa.Api.Controllers
                 {
                     questionID = Guid.NewGuid(),
                     questionText = question.questionText,
-                    isSurveyOptionList = question.isSurveyOptionList
+                    isSurveyOptionList = question.isSurveyOptionList,
+                    isActive = question.isActive,
+                    sortOrder = question.sortOrder
                 };
 
                 //gives the new GUID in the question to send to the creation of the Xref

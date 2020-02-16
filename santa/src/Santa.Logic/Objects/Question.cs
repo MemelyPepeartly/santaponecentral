@@ -16,6 +16,8 @@ namespace Santa.Logic.Objects
 
         public Guid questionID { get; set; }
         public Guid surveyID { get; set; }
+        public string sortOrder { get; set; }
+        public bool isActive { get; set; }
         public string questionText { get; set; }
         public bool isSurveyOptionList { get; set; }
     }

@@ -29,7 +29,7 @@ namespace Santa.Data.Repository
             try
             {
                 var contextClient = Mapper.MapClient(newClient);
-                await santaContext.AddAsync(contextClient);
+                await santaContext.Client.AddAsync(contextClient);
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace Santa.Data.Repository
             try
             {
                 Entities.SurveyQuestion contextQuestion = Mapper.MapQuestion(newQuestion);
-                await santaContext.AddAsync(contextQuestion);
+                await santaContext.SurveyQuestion.AddAsync(contextQuestion);
             }
             catch (Exception e)
             {
@@ -74,11 +74,12 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="contextQuestion"></param>
         /// <returns></returns>
-        public Task CreateSurveyQuestionXref(Question contextQuestion)
+        public async Task CreateSurveyQuestionXref(Question logicQuestion)
         {
             try
             {
-                throw new NotImplementedException();
+                Data.Entities.SurveyQuestionXref contextQuestionXref = Mapper.MapQuestionXref(logicQuestion);
+                await santaContext.SurveyQuestionXref.AddAsync(contextQuestionXref);
             }
             catch (Exception e)
             {
