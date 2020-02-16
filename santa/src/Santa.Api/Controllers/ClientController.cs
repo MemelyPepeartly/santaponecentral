@@ -88,6 +88,7 @@ namespace Santa.Api.Controllers
                 try
                 {
                     await repository.SaveAsync();
+                    return Created($"api/Client/{newClient.clientID}", newClient);
                 }
                 catch (Exception e)
                 {
@@ -95,7 +96,7 @@ namespace Santa.Api.Controllers
                 }
                 
 
-                return Created($"api/Client/{newClient.clientID}", newClient);
+                
             }
             catch (ArgumentException)
             {
