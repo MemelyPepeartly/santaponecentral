@@ -6,8 +6,12 @@ DECLARE @surveyIDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionIDGUID UNIQUEIDENTIFIER;
 DECLARE @firstClientStatusIDGUID UNIQUEIDENTIFIER;
 DECLARE @secondClientStatusIDGUID UNIQUEIDENTIFIER;
-DECLARE @senderClientIDGUID UNIQUEIDENTIFIER;
-DECLARE @recipientClientIDGUID UNIQUEIDENTIFIER;
+
+DECLARE @client1IDGUID UNIQUEIDENTIFIER;
+DECLARE @client2IDGUID UNIQUEIDENTIFIER;
+DECLARE @client3IDGUID UNIQUEIDENTIFIER;
+DECLARE @client4IDGUID UNIQUEIDENTIFIER;
+
 DECLARE @surveyResponseIDGUID UNIQUEIDENTIFIER;
 
 SET @eventTypeIDGUID = NEWID();
@@ -21,8 +25,11 @@ SET @surveyResponseIDGUID = NEWID();
 SET @firstClientStatusIDGUID = NEWID();
 SET @secondClientStatusIDGUID = NEWID();
 
-SET @senderClientIDGUID = NEWID();
-SET @recipientClientIDGUID = NEWID();
+
+SET @client1IDGUID = NEWID();
+SET @client2IDGUID = NEWID();
+SET @client3IDGUID = NEWID();
+SET @client4IDGUID = NEWID();
 
 PRINT N'eventTypeIDGUID:------------ ' + (CAST (@eventTypeIDGUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion1IDGUID:------ ' + (CAST (@surveyQuestion1IDGUID AS NVARCHAR(50)));
@@ -35,8 +42,10 @@ PRINT N'surveyResponseIDGUID:------- ' + (CAST (@surveyResponseIDGUID AS NVARCHA
 PRINT N'firstClientStatusIDGUID:---- ' + (CAST (@firstClientStatusIDGUID AS NVARCHAR(50)));
 PRINT N'secondClientStatusIDGUID:--- ' + (CAST (@secondClientStatusIDGUID AS NVARCHAR(50)));
 
-PRINT N'senderClientIDGUID:--------- ' + (CAST (@senderClientIDGUID AS NVARCHAR(50)));
-PRINT N'recipientClientIDGUID:------ ' + (CAST (@recipientClientIDGUID AS NVARCHAR(50)));
+PRINT N'client1IDGUID:--------- ' + (CAST (@client1IDGUID AS NVARCHAR(50)));
+PRINT N'client2IDGUID:--------- ' + (CAST (@client2IDGUID AS NVARCHAR(50)));
+PRINT N'client3IDGUID:--------- ' + (CAST (@client3IDGUID AS NVARCHAR(50)));
+PRINT N'client4IDGUID:--------- ' + (CAST (@client4IDGUID AS NVARCHAR(50)));
 
 
 
@@ -76,16 +85,21 @@ VALUES
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
-    (@senderClientIDGUID, @firstClientStatusIDGUID, 'Sender Client Name', 'First Nickname', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@recipientClientIDGUID, @secondClientStatusIDGUID, 'Recipient Client Name', 'Second Nickname', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client1IDGUID, @firstClientStatusIDGUID, 'First Client Name', 'First Nickname', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client2IDGUID, @secondClientStatusIDGUID, 'Second Client Name', 'Second Nickname', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client3IDGUID, @firstClientStatusIDGUID, 'Third Client Name', 'Third Nickname', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client4IDGUID, @secondClientStatusIDGUID, 'Fourth Client Name', 'Fourth Nickname', 'fourthemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
 VALUES
-    (@surveyResponseIDGUID, @surveyIDGUID, @senderClientIDGUID, @surveyQuestion1IDGUID, @surveyOptionIDGUID, 'Response Text');
+    (@surveyResponseIDGUID, @surveyIDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionIDGUID, 'Response Text');
     
 INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
 VALUES
-    (@senderClientIDGUID, @recipientClientIDGUID, @eventTypeIDGUID);
+    (@client1IDGUID, @client2IDGUID, @eventTypeIDGUID),
+    (@client2IDGUID, @client3IDGUID, @eventTypeIDGUID),
+    (@client2IDGUID, @client4IDGUID, @eventTypeIDGUID),
+    (@client4IDGUID, @client1IDGUID, @eventTypeIDGUID);
 
 
 

@@ -25,8 +25,7 @@ namespace Santa.Logic.Objects
             }
         }
         public Address address { get; set; }
-        public List<Guid> senders { get; set; } = new List<Guid>();
-        public List<Guid> recipients { get; set; } = new List<Guid>();
+        public List<Logic.Objects.Client> recipients { get; set; } = new List<Client>();
 
         //Constructor
         public Client(string _nickname, string _email)

@@ -28,8 +28,7 @@ namespace Santa.Data.Repository
                     state = contextCharacter.State,
                     postalCode = contextCharacter.State
                 },
-                senders = contextCharacter.ClientRelationXrefSenderClient.Select(s => MapClient(s.SenderClient).clientID).ToList(),
-                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(r => MapClient(r.RecipientClient).clientID).ToList()
+                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(r => Mapper.MapClient(r.RecipientClient)).ToList()
 
 
             };
