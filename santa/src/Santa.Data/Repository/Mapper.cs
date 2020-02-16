@@ -96,6 +96,17 @@ namespace Santa.Data.Repository
             };
             return logicQuestion;
         }
+        public static SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
+        {
+            
+            Entities.SurveyQuestion contextQuestion = new SurveyQuestion()
+            {
+                SurveyQuestionId = newQuestion.questionID,
+                QuestionText = newQuestion.questionText,
+                IsSurveyOptionList = newQuestion.isSurveyOptionList
+            };
+            return contextQuestion;
+        }
         #endregion
     }
 }

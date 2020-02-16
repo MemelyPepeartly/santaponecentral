@@ -19,12 +19,12 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public void CreateClient(Logic.Objects.Client newClient)
+        public async Task CreateClient(Logic.Objects.Client newClient)
         {
             try
             {
                 var contextClient = Mapper.MapClient(newClient);
-                santaContext.Add(contextClient);
+                await santaContext.AddAsync(contextClient);
             }
             catch (Exception e)
             {
@@ -47,11 +47,12 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Question> CreateSurveyQuestionAsync(Guid surveyID, Question newQuestion)
+        public async Task CreateSurveyQuestionAsync(Question newQuestion)
         {
             try
             {
-                throw new NotImplementedException();
+                Entities.SurveyQuestion contextQuestion = Mapper.MapQuestion(newQuestion);
+                await santaContext.AddAsync(contextQuestion);
             }
             catch (Exception e)
             {
