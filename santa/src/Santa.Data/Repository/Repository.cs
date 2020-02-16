@@ -19,9 +19,17 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public Task<Logic.Objects.Client> CreateClientAsync()
+        public void CreateClient(Logic.Objects.Client newClient)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var contextClient = Mapper.MapClient(newClient);
+                santaContext.Add(contextClient);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<Event> CreateEventAsync()
@@ -102,6 +110,10 @@ namespace Santa.Data.Repository
             }
         }
 
+        /// <summary>
+        /// Gets all surveys
+        /// </summary>
+        /// <returns></returns>
         public List<Logic.Objects.Survey> GetAllSurveys()
         {
             try
@@ -125,12 +137,16 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a client by their ID
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         public async Task<Logic.Objects.Client> GetClientByID(Guid clientId)
         {
             try
             {
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                    .AsNoTracking()
                     .Include(s => s.ClientRelationXrefSenderClient)
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
@@ -149,6 +165,11 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a survey by its ID
+        /// </summary>
+        /// <param name="surveyId"></param>
+        /// <returns></returns>
         public async Task<Logic.Objects.Survey> GetSurveyByID(Guid surveyId)
         {
             try
@@ -186,6 +207,23 @@ namespace Santa.Data.Repository
         public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Saves changes to the context
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveAsync()
+        {
+            try
+            {
+                await santaContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
 
         public Task<Logic.Objects.Client> UpdateClientByIDAsync()
