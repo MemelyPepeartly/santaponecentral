@@ -30,25 +30,25 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Survey> GetSurveyByID(Guid id);
 
         #region SurveyOptions
-        Task<Logic.Objects.Event> CreateSurveyOptionAsync();
-        Task<Logic.Objects.Event> GetSurveyOptionByIDAsync();
-        Task<Logic.Objects.Event> UpdateSurveyOptionByIDAsync();
-        Task<Logic.Objects.Event> DeleteSurveyOptionByIDAsync();
+        Task<Logic.Objects.Question> CreateSurveyOptionAsync();
+        Task<Logic.Objects.Question> GetSurveyOptionByIDAsync();
+        Task<Logic.Objects.Question> UpdateSurveyOptionByIDAsync();
+        Task<Logic.Objects.Question> DeleteSurveyOptionByIDAsync();
         #endregion
 
         #region SurveyQuestions
-        Task<Logic.Objects.Event> CreateSurveyQuestionAsync();
+        Task<Logic.Objects.Question> CreateSurveyQuestionAsync();
         List<Logic.Objects.Survey> GetAllSurveys();
         Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid id);
-        Task<Logic.Objects.Event> UpdateSurveyQuestionByIDAsync();
-        Task<Logic.Objects.Event> DeleteSurveyQuestionByIDAsync();
+        Task<Logic.Objects.Question> UpdateSurveyQuestionByIDAsync();
+        Task<Logic.Objects.Question> DeleteSurveyQuestionByIDAsync();
         #endregion
 
         #region SurveyResponses
-        Task<Logic.Objects.Event> CreateSurveyResponseAsync();
-        Task<Logic.Objects.Event> GetSurveyResponseByIDAsync();
-        Task<Logic.Objects.Event> UpdateSurveyResponseByIDAsync();
-        Task<Logic.Objects.Event> DeleteSurveyResponseByIDAsync();
+        Task<Logic.Objects.Response> CreateSurveyResponseAsync();
+        Task<Logic.Objects.Response> GetSurveyResponseByIDAsync();
+        Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync();
+        Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
         #endregion
         #endregion
     }
