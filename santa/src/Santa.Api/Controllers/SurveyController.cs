@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -61,7 +62,36 @@ namespace Santa.Api.Controllers
 
         // POST: api/Survey
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<ApiSurvey>> Post([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
+        {
+            try
+            {
+                Logic.Objects.Survey newSurvey = new Logic.Objects.Survey()
+                {
+                    surveyID = Guid.NewGuid(),
+                    eventTypeID = survey.eventTypeID,
+                    surveyDescription = survey.surveyDescription,
+                    active = survey.active
+                };
+                repository.CreateSurvey(newSurvey);
+                try
+                {
+                    await repository.SaveAsync();
+                    return Created($"api/Survey/{newSurvey.surveyID}", newSurvey);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        [HttpPost("{id}/SurveyQuestions")]
+        public async Task<ActionResult<ApiSurvey>> PostSurveyQuestions([FromBody] string value)
         {
         }
 

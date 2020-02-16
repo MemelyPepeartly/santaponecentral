@@ -37,6 +37,11 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
+        public void CreateSurvey(Logic.Objects.Survey newSurvey)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Question> CreateSurveyOptionAsync()
         {
             throw new NotImplementedException();
