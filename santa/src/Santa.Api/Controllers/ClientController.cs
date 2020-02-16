@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -55,6 +54,8 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/Client
+
+        /*
         [HttpPost("new", Name = "NewClient")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,6 +97,7 @@ namespace Santa.Api.Controllers
             }
 
         }
+        */
 
         // PUT: api/Client/5
         [HttpPut("{id}")]
