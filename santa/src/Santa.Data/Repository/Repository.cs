@@ -29,17 +29,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Event> CreateSurveyOptionAsync()
+        public Task<Question> CreateSurveyOptionAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> CreateSurveyQuestionAsync()
+        public Task<Question> CreateSurveyQuestionAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> CreateSurveyResponseAsync()
+        public Task<Logic.Objects.Response> CreateSurveyResponseAsync()
         {
             throw new NotImplementedException();
         }
@@ -54,17 +54,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Event> DeleteSurveyOptionByIDAsync()
+        public Task<Question> DeleteSurveyOptionByIDAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> DeleteSurveyQuestionByIDAsync()
+        public Task<Question> DeleteSurveyQuestionByIDAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> DeleteSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync()
         {
             throw new NotImplementedException();
         }
@@ -164,7 +164,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task<Event> GetSurveyOptionByIDAsync()
+        public Task<Question> GetSurveyOptionByIDAsync()
         {
             throw new NotImplementedException();
         }
@@ -181,7 +181,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task<Event> GetSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync()
         {
             throw new NotImplementedException();
         }
@@ -196,17 +196,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Event> UpdateSurveyOptionByIDAsync()
+        public Task<Question> UpdateSurveyOptionByIDAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> UpdateSurveyQuestionByIDAsync()
+        public Task<Question> UpdateSurveyQuestionByIDAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Event> UpdateSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync()
         {
             throw new NotImplementedException();
         }
