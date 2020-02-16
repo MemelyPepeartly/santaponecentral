@@ -98,6 +98,8 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Question newQuestion = question;
                 question.questionID = Guid.NewGuid();
 
+                await repository.CreateSurveyQuestionAsync(id, newQuestion);
+
                 try
                 {
                     await repository.SaveAsync();

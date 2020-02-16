@@ -47,9 +47,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Question> CreateSurveyQuestionAsync()
+        public Task<Question> CreateSurveyQuestionAsync(Guid surveyID, Question newQuestion)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
 
         public Task<Logic.Objects.Response> CreateSurveyResponseAsync()
