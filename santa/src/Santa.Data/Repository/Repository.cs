@@ -19,6 +19,11 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
+        /// <summary>
+        /// Creates a new client and adds it to the context
+        /// </summary>
+        /// <param name="newClient"></param>
+        /// <returns></returns>
         public async Task CreateClient(Logic.Objects.Client newClient)
         {
             try
@@ -46,7 +51,11 @@ namespace Santa.Data.Repository
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Creates a survey question and adds it to the context
+        /// </summary>
+        /// <param name="newQuestion"></param>
+        /// <returns></returns>
         public async Task CreateSurveyQuestionAsync(Question newQuestion)
         {
             try
@@ -60,7 +69,11 @@ namespace Santa.Data.Repository
             }
             
         }
-
+        /// <summary>
+        /// Creates the cross reference between a survey and the questions it has and adds it to the context
+        /// </summary>
+        /// <param name="contextQuestion"></param>
+        /// <returns></returns>
         public Task CreateSurveyQuestionXref(Question contextQuestion)
         {
             try
@@ -103,7 +116,10 @@ namespace Santa.Data.Repository
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Gets a list of all clients
+        /// </summary>
+        /// <returns></returns>
         public List<Logic.Objects.Client> GetAllClients()
         {
             try
@@ -122,7 +138,10 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
+        /// <summary>
+        /// Gets a list of all events
+        /// </summary>
+        /// <returns></returns>
         public List<Event> GetAllEvents()
         {
             try
@@ -237,7 +256,7 @@ namespace Santa.Data.Repository
         }
 
         /// <summary>
-        /// Saves changes to the context
+        /// Saves changes made to the context
         /// </summary>
         /// <returns></returns>
         public async Task SaveAsync()
