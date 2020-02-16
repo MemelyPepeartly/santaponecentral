@@ -4,37 +4,47 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
-    /// <summary>
-    /// RESTful API for Santapone
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class SantaController : ControllerBase
+    public class EventController : ControllerBase
     {
-        // GET: api/Santa
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IRepository repository;
+        public EventController(IRepository _repository)
         {
-            return new string[] { "value1", "value2" };
+            repository = _repository;
+        }
+        // GET: api/Event
+        [HttpGet]
+        public ActionResult<List<Logic.Objects.Event>> Get()
+        {
+            try
+            {
+                return Ok(repository.GetAllEvents());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
-        // GET: api/Santa/5
-        [HttpGet("{id}", Name = "Get")]
+        // GET: api/Event/5
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Santa
+        // POST: api/Event
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/Santa/5
+        // PUT: api/Event/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {

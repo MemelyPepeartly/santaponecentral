@@ -8,10 +8,13 @@
 <mat-list>
     <mat-card mat-list-item *ngFor="let santa of santas" appMaterialElevation>
         <mat-card-title>
-            {{ santa.realName }}
+            {{ santa.holidayID }}
         </mat-card-title>
         <mat-card-subtitle>
             {{ santa.email }}
         </mat-card-subtitle>
+        <mat-card-content>
+            Wishlist: {{ santa.wishlist }}
+        </mat-card-content>
     </mat-card>
 </mat-list>

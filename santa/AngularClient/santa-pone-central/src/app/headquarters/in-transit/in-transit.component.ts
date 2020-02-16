@@ -26,7 +26,7 @@ export class InTransitComponent implements OnInit {
   realName: 'Chad',
   holidayID: 'Chipper Chad',
   address: this.address,
-  wishlist: 'I want ponies!',
+  wishlist: 'Bulge :^)',
   email: 'chad@anon.non',
   otherInfo: 'Im allergic to normies'
   },
@@ -34,7 +34,7 @@ export class InTransitComponent implements OnInit {
   realName: 'Stacy',
   holidayID: 'Sticky Stacy',
   address: this.address,
-  wishlist: 'I want to die!',
+  wishlist: 'I want popularity 8)',
   email: 'stacy@anon.non',
   otherInfo: 'Im allergic to happiness'
   },
