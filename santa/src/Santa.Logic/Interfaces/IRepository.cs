@@ -38,7 +38,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyQuestions
-        Task CreateSurveyQuestionXref(Guid surveyId, Logic.Objects.Question contextQuestion);
+        Task CreateSurveyQuestionXref(Logic.Objects.Question logicQuestion);
         Task CreateSurveyQuestionAsync(Question newQuestion);
         List<Logic.Objects.Survey> GetAllSurveys();
         Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid id);

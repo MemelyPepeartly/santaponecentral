@@ -16,7 +16,7 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         public ClientController(IRepository _repository)
         {
-            repository = _repository ?? throw new ArgumentNullException(nameof(_repository)); ;
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
         // GET: api/Client
         [HttpGet]

@@ -61,7 +61,7 @@ namespace Santa.Data.Repository
             
         }
 
-        public Task CreateSurveyQuestionXref(Guid surveyId, Question contextQuestion)
+        public Task CreateSurveyQuestionXref(Question contextQuestion)
         {
             try
             {
