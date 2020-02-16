@@ -10,6 +10,11 @@ namespace Santa.Data.Repository
     public static class Mapper
     {
         #region Client
+        /// <summary>
+        /// maps a logic client to a context client
+        /// </summary>
+        /// <param name="logicClient"></param>
+        /// <returns></returns>
         public static Data.Entities.Client MapClient(Logic.Objects.Client logicClient)
         {
             Entities.Client contextClient = new Entities.Client()
@@ -30,6 +35,11 @@ namespace Santa.Data.Repository
             };
             return contextClient;
         }
+        /// <summary>
+        /// Maps a context client to a logic client
+        /// </summary>
+        /// <param name="contextCharacter"></param>
+        /// <returns></returns>
         public static Logic.Objects.Client MapClient(Entities.Client contextCharacter)
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
@@ -71,6 +81,11 @@ namespace Santa.Data.Repository
         }
         #endregion
         #region Survey
+        /// <summary>
+        /// Maps context survey to a logic survey
+        /// </summary>
+        /// <param name="contextSurvey"></param>
+        /// <returns></returns>
         public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
         {
             Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
@@ -85,6 +100,11 @@ namespace Santa.Data.Repository
         }
         #endregion
         #region Question
+        /// <summary>
+        /// Maps a context question to a logic question
+        /// </summary>
+        /// <param name="contextSurveyQuestion"></param>
+        /// <returns></returns>
         public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
         {
             Logic.Objects.Question logicQuestion = new Question(contextSurveyQuestion.SurveyId)
@@ -96,7 +116,12 @@ namespace Santa.Data.Repository
             };
             return logicQuestion;
         }
-        public static SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
+        /// <summary>
+        /// maps a logic question to a context question
+        /// </summary>
+        /// <param name="newQuestion"></param>
+        /// <returns></returns>
+        public static Data.Entities.SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
         {
             
             Entities.SurveyQuestion contextQuestion = new SurveyQuestion()
