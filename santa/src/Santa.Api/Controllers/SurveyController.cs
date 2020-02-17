@@ -92,9 +92,10 @@ namespace Santa.Api.Controllers
                     surveyDescription = survey.surveyDescription,
                     active = survey.active
                 };
-                repository.CreateSurvey(newSurvey);
+                
                 try
                 {
+                    await repository.CreateSurvey(newSurvey);
                     await repository.SaveAsync();
                     return Created($"api/Survey/{newSurvey.surveyID}", newSurvey);
                 }
@@ -113,21 +114,21 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Posts new question to a survey using its surveyID. Binds to the ApiQuestion model.
         /// </summary>
-        /// <param name="surveyID"></param>
+        /// <param name="id"></param>
         /// <param name="question"></param>
         /// <returns></returns>
-        [HttpPost("{surveyID}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
+        [HttpPost("{id}/SurveyQuestions")]
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid id,[FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
         {
             try
             {
-                Logic.Objects.Question newQuestion = new Logic.Objects.Question(surveyID)
+                Logic.Objects.Question newQuestion = new Logic.Objects.Question(id)
                 {
                     questionID = Guid.NewGuid(),
                     questionText = question.questionText,
                     isSurveyOptionList = question.isSurveyOptionList,
                     isActive = question.isActive,
-                    sortOrder = question.sortOrder
+                    sortOrder = question.sortOrder,
                 };
 
                 //gives the new GUID in the question to send to the creation of the Xref
@@ -138,7 +139,7 @@ namespace Santa.Api.Controllers
                     await repository.CreateSurveyQuestionAsync(newQuestion);
                     await repository.CreateSurveyQuestionXref(newQuestion);
                     await repository.SaveAsync();
-                    return Created($"api/Survey/{surveyID}", surveyID);
+                    return Created($"api/Survey/{id}", id);
                 }
                 catch (Exception e)
                 {
