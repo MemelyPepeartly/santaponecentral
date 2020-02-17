@@ -73,6 +73,11 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        [HttpGet("{id}/SurveyQuestions")]
+        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync()
+        {
+
+        }
 
         // POST: api/Survey
         /// <summary>
