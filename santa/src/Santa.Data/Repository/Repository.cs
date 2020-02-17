@@ -161,7 +161,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -183,7 +183,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -211,7 +211,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -238,7 +238,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
