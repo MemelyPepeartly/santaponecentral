@@ -40,14 +40,14 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Gets survey by ID
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="surveyID"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Logic.Objects.Survey>> GetAsync(Guid id)
+        [HttpGet("{surveyID}")]
+        public async Task<ActionResult<Logic.Objects.Survey>> GetAsync(Guid surveyID)
         {
             try
             {
-                return Ok(await repository.GetSurveyByID(id));
+                return Ok(await repository.GetSurveyByID(surveyID));
             }
             catch (Exception e)
             {
@@ -59,14 +59,14 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Gets surveyquestions within a given survey by surveyID
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="surveyID"></param>
         /// <returns></returns>
-        [HttpGet("{id}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsAsync(Guid id)
+        [HttpGet("{surveyID}/SurveyQuestions")]
+        public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsAsync(Guid surveyID)
         {
             try
             {
-                return Ok(await repository.GetSurveyByID(id));
+                return Ok(await repository.GetSurveyByID(surveyID));
             }
             catch (Exception e)
             {
@@ -74,8 +74,8 @@ namespace Santa.Api.Controllers
             }
         }
         //GET: api/Survey/5/SurveyQuestions/5/SurveyOptions
-        [HttpGet("{surveyId}/SurveyQuestions/{surveyQuestionId}/SurveyOptions")]
-        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync(Guid surveyId, Guid surveyQuestionId)
+        [HttpGet("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
+        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync(Guid surveyID, Guid surveyQuestionID)
         {
             try
             {
@@ -127,15 +127,15 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Posts new question to a survey using its surveyID. Binds to the ApiQuestion model.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="surveyID"></param>
         /// <param name="question"></param>
         /// <returns></returns>
-        [HttpPost("{id}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid id,[FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
+        [HttpPost("{surveyID}/SurveyQuestions")]
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
         {
             try
             {
-                Logic.Objects.Question newQuestion = new Logic.Objects.Question(id)
+                Logic.Objects.Question newQuestion = new Logic.Objects.Question(surveyID)
                 {
                     questionID = Guid.NewGuid(),
                     questionText = question.questionText,
@@ -152,7 +152,7 @@ namespace Santa.Api.Controllers
                     await repository.CreateSurveyQuestionAsync(newQuestion);
                     await repository.CreateSurveyQuestionXref(newQuestion);
                     await repository.SaveAsync();
-                    return Created($"api/Survey/{id}", id);
+                    return Created($"api/Survey/{surveyID}", surveyID);
                 }
                 catch (Exception e)
                 {
