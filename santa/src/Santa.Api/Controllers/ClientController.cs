@@ -84,10 +84,11 @@ namespace Santa.Api.Controllers
                         country = client.clientCountry
                     }
                 };
-                repository.CreateClient(newClient);
+                await repository.CreateClient(newClient);
                 try
                 {
                     await repository.SaveAsync();
+                    return Created($"api/Client/{newClient.clientID}", newClient);
                 }
                 catch (Exception e)
                 {
@@ -95,7 +96,7 @@ namespace Santa.Api.Controllers
                 }
                 
 
-                return Created($"api/Client/{newClient.clientID}", newClient);
+                
             }
             catch (ArgumentException)
             {
