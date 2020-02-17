@@ -35,6 +35,7 @@ namespace Santa.Data.Repository
             };
             return contextClient;
         }
+
         /// <summary>
         /// Maps a context client to a logic client
         /// </summary>
@@ -95,8 +96,19 @@ namespace Santa.Data.Repository
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
                 surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList()
-        };
+            };
             return logicSurvey;
+        }
+        public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
+        {
+            Data.Entities.Survey contextSurvey = new Entities.Survey()
+            {
+                SurveyId = logicSurvey.surveyID,
+                EventTypeId = logicSurvey.eventTypeID,
+                SurveyDescription = logicSurvey.surveyDescription,
+                IsActive = logicSurvey.active
+            };
+            return contextSurvey;
         }
         #endregion
         #region Question

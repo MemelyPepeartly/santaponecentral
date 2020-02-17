@@ -42,9 +42,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public void CreateSurvey(Logic.Objects.Survey newSurvey)
+        public async Task CreateSurvey(Logic.Objects.Survey newSurvey)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Survey contextSurvey = Mapper.MapSurvey(newSurvey);
+                await santaContext.Survey.AddAsync(contextSurvey);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<Question> CreateSurveyOptionAsync()
