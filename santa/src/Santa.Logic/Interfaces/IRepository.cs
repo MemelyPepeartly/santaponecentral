@@ -9,7 +9,7 @@ namespace Santa.Logic.Interfaces
     public interface IRepository
     {
         #region Client
-        void CreateClient(Client newClient);
+        Task CreateClient(Client newClient);
         Task<Logic.Objects.Client> GetClientByID(Guid clientId);
         Task<Logic.Objects.Client> GetClientByEmailAsync();
         List<Logic.Objects.Client> GetAllClients();
@@ -28,6 +28,7 @@ namespace Santa.Logic.Interfaces
         #region Surveys
 
         Task<Logic.Objects.Survey> GetSurveyByID(Guid id);
+        void CreateSurvey(Survey newSurvey);
 
         #region SurveyOptions
         Task<Logic.Objects.Question> CreateSurveyOptionAsync();
@@ -37,7 +38,8 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyQuestions
-        Task<Logic.Objects.Question> CreateSurveyQuestionAsync();
+        Task CreateSurveyQuestionXref(Guid surveyId, Logic.Objects.Question contextQuestion);
+        Task CreateSurveyQuestionAsync(Question newQuestion);
         List<Logic.Objects.Survey> GetAllSurveys();
         Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid id);
         Task<Logic.Objects.Question> UpdateSurveyQuestionByIDAsync();
@@ -53,5 +55,6 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         public Task SaveAsync();
+        
     }
 }

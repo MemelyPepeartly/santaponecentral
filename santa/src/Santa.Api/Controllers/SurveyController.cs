@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -61,8 +62,65 @@ namespace Santa.Api.Controllers
 
         // POST: api/Survey
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<ApiSurvey>> Post([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
         {
+            try
+            {
+                Logic.Objects.Survey newSurvey = new Logic.Objects.Survey()
+                {
+                    surveyID = Guid.NewGuid(),
+                    eventTypeID = survey.eventTypeID,
+                    surveyDescription = survey.surveyDescription,
+                    active = survey.active
+                };
+                repository.CreateSurvey(newSurvey);
+                try
+                {
+                    await repository.SaveAsync();
+                    return Created($"api/Survey/{newSurvey.surveyID}", newSurvey);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        [HttpPost("{surveyID}/SurveyQuestions")]
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID,[FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
+        {
+            try
+            {
+                Logic.Objects.Question newQuestion = new Logic.Objects.Question()
+                {
+                    questionID = Guid.NewGuid(),
+                    questionText = question.questionText,
+                    isSurveyOptionList = question.isSurveyOptionList
+                };
+
+                //gives the new GUID in the question to send to the creation of the Xref
+                question.questionID = newQuestion.questionID;
+                
+                try
+                {
+                    await repository.CreateSurveyQuestionAsync(newQuestion);
+                    await repository.CreateSurveyQuestionXref(surveyID, newQuestion);
+                    await repository.SaveAsync();
+                    return Created($"api/Survey/{surveyID}", surveyID);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // PUT: api/Survey/5
