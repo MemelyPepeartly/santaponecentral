@@ -73,10 +73,18 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
-        [HttpGet("{id}/SurveyQuestions")]
-        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync()
+        //GET: api/Survey/5/SurveyQuestions/5/SurveyOptions
+        [HttpGet("{surveyId}/SurveyQuestions/{surveyQuestionId}/SurveyOptions")]
+        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync(Guid surveyId, Guid surveyQuestionId)
         {
-
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch
+            {
+                throw new NotImplementedException();
+            }
         }
 
         // POST: api/Survey
