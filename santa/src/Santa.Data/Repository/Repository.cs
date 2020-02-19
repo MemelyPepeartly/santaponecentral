@@ -19,12 +19,17 @@ namespace Santa.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
+        /// <summary>
+        /// Creates a new client and adds it to the context
+        /// </summary>
+        /// <param name="newClient"></param>
+        /// <returns></returns>
         public async Task CreateClient(Logic.Objects.Client newClient)
         {
             try
             {
                 var contextClient = Mapper.MapClient(newClient);
-                await santaContext.AddAsync(contextClient);
+                await santaContext.Client.AddAsync(contextClient);
             }
             catch (Exception e)
             {
@@ -37,22 +42,34 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public void CreateSurvey(Logic.Objects.Survey newSurvey)
+        public async Task CreateSurvey(Logic.Objects.Survey newSurvey)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Survey contextSurvey = Mapper.MapSurvey(newSurvey);
+                await santaContext.Survey.AddAsync(contextSurvey);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<Question> CreateSurveyOptionAsync()
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Creates a survey question and adds it to the context
+        /// </summary>
+        /// <param name="newQuestion"></param>
+        /// <returns></returns>
         public async Task CreateSurveyQuestionAsync(Question newQuestion)
         {
             try
             {
                 Entities.SurveyQuestion contextQuestion = Mapper.MapQuestion(newQuestion);
-                await santaContext.AddAsync(contextQuestion);
+                await santaContext.SurveyQuestion.AddAsync(contextQuestion);
             }
             catch (Exception e)
             {
@@ -60,12 +77,17 @@ namespace Santa.Data.Repository
             }
             
         }
-
-        public Task CreateSurveyQuestionXref(Guid surveyId, Question contextQuestion)
+        /// <summary>
+        /// Creates the cross reference between a survey and the questions it has and adds it to the context
+        /// </summary>
+        /// <param name="contextQuestion"></param>
+        /// <returns></returns>
+        public async Task CreateSurveyQuestionXref(Question logicQuestion)
         {
             try
             {
-                throw new NotImplementedException();
+                Data.Entities.SurveyQuestionXref contextQuestionXref = Mapper.MapQuestionXref(logicQuestion);
+                await santaContext.SurveyQuestionXref.AddAsync(contextQuestionXref);
             }
             catch (Exception e)
             {
@@ -103,7 +125,10 @@ namespace Santa.Data.Repository
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Gets a list of all clients
+        /// </summary>
+        /// <returns></returns>
         public List<Logic.Objects.Client> GetAllClients()
         {
             try
@@ -122,7 +147,10 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
+        /// <summary>
+        /// Gets a list of all events
+        /// </summary>
+        /// <returns></returns>
         public List<Event> GetAllEvents()
         {
             try
@@ -133,7 +161,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -155,7 +183,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -183,7 +211,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -210,13 +238,28 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
-        public Task<Question> GetSurveyOptionByIDAsync()
+        public async Task<Logic.Objects.Survey> GetSurveyOptionsBySurveyQuestionIDAsync(Guid surveyID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //trying to figure out how to pull option stuff
+                Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey();
+                logicSurvey = Mapper.MapSurvey(await santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                        .ThenInclude(x =>x.SurveyQuestionOptionXref)
+                    .FirstOrDefaultAsync(s => s.SurveyId == surveyID));
+
+                return logicSurvey;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)
@@ -237,7 +280,7 @@ namespace Santa.Data.Repository
         }
 
         /// <summary>
-        /// Saves changes to the context
+        /// Saves changes made to the context
         /// </summary>
         /// <returns></returns>
         public async Task SaveAsync()

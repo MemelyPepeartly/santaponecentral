@@ -10,6 +10,11 @@ namespace Santa.Data.Repository
     public static class Mapper
     {
         #region Client
+        /// <summary>
+        /// maps a logic client to a context client
+        /// </summary>
+        /// <param name="logicClient"></param>
+        /// <returns></returns>
         public static Data.Entities.Client MapClient(Logic.Objects.Client logicClient)
         {
             Entities.Client contextClient = new Entities.Client()
@@ -30,6 +35,12 @@ namespace Santa.Data.Repository
             };
             return contextClient;
         }
+
+        /// <summary>
+        /// Maps a context client to a logic client
+        /// </summary>
+        /// <param name="contextCharacter"></param>
+        /// <returns></returns>
         public static Logic.Objects.Client MapClient(Entities.Client contextCharacter)
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
@@ -71,6 +82,11 @@ namespace Santa.Data.Repository
         }
         #endregion
         #region Survey
+        /// <summary>
+        /// Maps context survey to a logic survey
+        /// </summary>
+        /// <param name="contextSurvey"></param>
+        /// <returns></returns>
         public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
         {
             Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
@@ -79,24 +95,47 @@ namespace Santa.Data.Repository
                 eventTypeID = contextSurvey.EventTypeId,
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
-                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList()
-        };
+                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList(),
+            };
             return logicSurvey;
+        }
+        public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
+        {
+            Data.Entities.Survey contextSurvey = new Entities.Survey()
+            {
+                SurveyId = logicSurvey.surveyID,
+                EventTypeId = logicSurvey.eventTypeID,
+                SurveyDescription = logicSurvey.surveyDescription,
+                IsActive = logicSurvey.active
+            };
+            return contextSurvey;
         }
         #endregion
         #region Question
+        /// <summary>
+        /// Maps a context question to a logic question
+        /// </summary>
+        /// <param name="contextSurveyQuestion"></param>
+        /// <returns></returns>
         public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
         {
-            Logic.Objects.Question logicQuestion = new Question()
+
+            Logic.Objects.Question logicQuestion = new Question(contextSurveyQuestion.SurveyId)
             {
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,
-                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList
-
+                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList,
+                surveyOptionList = contextSurveyQuestion.SurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
             };
             return logicQuestion;
         }
-        public static SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
+
+        /// <summary>
+        /// maps a logic question to a context question
+        /// </summary>
+        /// <param name="newQuestion"></param>
+        /// <returns></returns>
+        public static Data.Entities.SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
         {
             
             Entities.SurveyQuestion contextQuestion = new SurveyQuestion()
@@ -106,6 +145,28 @@ namespace Santa.Data.Repository
                 IsSurveyOptionList = newQuestion.isSurveyOptionList
             };
             return contextQuestion;
+        }
+        public static SurveyQuestionXref MapQuestionXref(Logic.Objects.Question logicQuestion)
+        {
+            Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
+            {
+                SurveyId = logicQuestion.surveyID,
+                SurveyQuestionId = logicQuestion.questionID,
+                IsActive = logicQuestion.isActive,
+                SortOrder = logicQuestion.sortOrder
+            };
+            return contextQuestionXref;
+        }
+
+        public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
+        {
+            Logic.Objects.Option logicOption = new Option()
+            {
+                surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
+                displayText = contextQuestionOption.SurveyOption.DisplayText,
+                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue
+            };
+            return logicOption;
         }
         #endregion
     }
