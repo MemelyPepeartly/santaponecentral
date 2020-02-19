@@ -28,17 +28,18 @@ namespace Santa.Logic.Interfaces
         #region Surveys
 
         Task<Logic.Objects.Survey> GetSurveyByID(Guid id);
-        Task CreateSurvey(Survey newSurvey);
+        Task CreateSurveyAsync(Survey newSurvey);
 
         #region SurveyOptions
-        Task<Logic.Objects.Question> CreateSurveyOptionAsync();
+        Task CreateSurveyOptionAsync(Option newQuestionOption);
+        Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption);
         Task<Logic.Objects.Survey> GetSurveyOptionsBySurveyQuestionIDAsync(Guid surveyID);
         Task<Logic.Objects.Question> UpdateSurveyOptionByIDAsync();
         Task<Logic.Objects.Question> DeleteSurveyOptionByIDAsync();
         #endregion
 
         #region SurveyQuestions
-        Task CreateSurveyQuestionXref(Logic.Objects.Question logicQuestion);
+        Task CreateSurveyQuestionXrefAsync(Logic.Objects.Question logicQuestion);
         Task CreateSurveyQuestionAsync(Question newQuestion);
         List<Logic.Objects.Survey> GetAllSurveys();
         Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid id);

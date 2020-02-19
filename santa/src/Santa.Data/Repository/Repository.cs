@@ -42,7 +42,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task CreateSurvey(Logic.Objects.Survey newSurvey)
+        public async Task CreateSurveyAsync(Logic.Objects.Survey newSurvey)
         {
             try
             {
@@ -55,10 +55,24 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task<Question> CreateSurveyOptionAsync()
+        public async Task CreateSurveyOptionAsync(Option newSurveyOption)
+        {
+            try
+            {
+                Data.Entities.SurveyOption contextQuestionOption = Mapper.MapSurveyOption(newSurveyOption);
+                await santaContext.SurveyOption.AddAsync(contextQuestionOption);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption)
         {
             throw new NotImplementedException();
         }
+
         /// <summary>
         /// Creates a survey question and adds it to the context
         /// </summary>
@@ -82,7 +96,7 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="contextQuestion"></param>
         /// <returns></returns>
-        public async Task CreateSurveyQuestionXref(Question logicQuestion)
+        public async Task CreateSurveyQuestionXrefAsync(Question logicQuestion)
         {
             try
             {
@@ -232,6 +246,7 @@ namespace Santa.Data.Repository
                 Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey
                     .Include(s => s.SurveyQuestionXref)
                         .ThenInclude(q => q.SurveyQuestion)
+                        .ThenInclude(x => x.SurveyQuestionOptionXref)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
                 return logicSurvey;
