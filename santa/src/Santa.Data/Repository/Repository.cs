@@ -41,7 +41,11 @@ namespace Santa.Data.Repository
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Creates a survey and adds it to the context
+        /// </summary>
+        /// <param name="newSurvey"></param>
+        /// <returns></returns>
         public async Task CreateSurveyAsync(Logic.Objects.Survey newSurvey)
         {
             try
@@ -54,7 +58,11 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
+        /// <summary>
+        /// Creates a SurveyOption and adds it to the context
+        /// </summary>
+        /// <param name="newSurveyOption"></param>
+        /// <returns></returns>
         public async Task CreateSurveyOptionAsync(Option newSurveyOption)
         {
             try
@@ -67,7 +75,11 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
+        /// <summary>
+        /// Creates the Xref between a Survey Question and a Survey Option
+        /// </summary>
+        /// <param name="newQuestionOption"></param>
+        /// <returns></returns>
         public Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption)
         {
             throw new NotImplementedException();
