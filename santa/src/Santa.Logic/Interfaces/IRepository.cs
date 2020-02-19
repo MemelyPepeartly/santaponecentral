@@ -32,7 +32,7 @@ namespace Santa.Logic.Interfaces
 
         #region SurveyOptions
         Task<Logic.Objects.Question> CreateSurveyOptionAsync();
-        Task<Logic.Objects.Question> GetSurveyOptionByIDAsync();
+        Task<Logic.Objects.Survey> GetSurveyOptionsBySurveyQuestionIDAsync(Guid surveyID);
         Task<Logic.Objects.Question> UpdateSurveyOptionByIDAsync();
         Task<Logic.Objects.Question> DeleteSurveyOptionByIDAsync();
         #endregion

@@ -242,9 +242,24 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task<Question> GetSurveyOptionByIDAsync()
+        public async Task<Logic.Objects.Survey> GetSurveyOptionsBySurveyQuestionIDAsync(Guid surveyID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //trying to figure out how to pull option stuff
+                Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey();
+                logicSurvey = Mapper.MapSurvey(await santaContext.Survey
+                    .Include(s => s.SurveyQuestionXref)
+                        .ThenInclude(q => q.SurveyQuestion)
+                        .ThenInclude(x =>x.SurveyQuestionOptionXref)
+                    .FirstOrDefaultAsync(s => s.SurveyId == surveyID));
+
+                return logicSurvey;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)

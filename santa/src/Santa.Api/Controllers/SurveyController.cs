@@ -79,7 +79,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                return Ok(await repository.GetSurveyOptionsBySurveyQuestionIDAsync(surveyID));
             }
             catch
             {

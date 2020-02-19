@@ -95,7 +95,7 @@ namespace Santa.Data.Repository
                 eventTypeID = contextSurvey.EventTypeId,
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
-                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList()
+                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList(),
             };
             return logicSurvey;
         }
@@ -119,15 +119,17 @@ namespace Santa.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
         {
+
             Logic.Objects.Question logicQuestion = new Question(contextSurveyQuestion.SurveyId)
             {
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,
-                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList
-
+                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList,
+                surveyOptionList = contextSurveyQuestion.SurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
             };
             return logicQuestion;
         }
+
         /// <summary>
         /// maps a logic question to a context question
         /// </summary>
@@ -154,6 +156,17 @@ namespace Santa.Data.Repository
                 SortOrder = logicQuestion.sortOrder
             };
             return contextQuestionXref;
+        }
+
+        public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
+        {
+            Logic.Objects.Option logicOption = new Option()
+            {
+                surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
+                displayText = contextQuestionOption.SurveyOption.DisplayText,
+                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue
+            };
+            return logicOption;
         }
         #endregion
     }
