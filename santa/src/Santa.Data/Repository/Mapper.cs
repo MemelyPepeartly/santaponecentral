@@ -157,10 +157,10 @@ namespace Santa.Data.Repository
             };
             return contextQuestionXref;
         }
-
+        #region QuestionOption
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
-            Logic.Objects.Option logicOption = new Option()
+            Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)
             {
                 surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
                 displayText = contextQuestionOption.SurveyOption.DisplayText,
@@ -168,6 +168,17 @@ namespace Santa.Data.Repository
             };
             return logicOption;
         }
+        public static SurveyOption MapSurveyOption(Option newSurveyOption)
+        {
+            Entities.SurveyOption contextSurveyOption = new SurveyOption()
+            {
+                SurveyOptionId = newSurveyOption.surveyOptionID,
+                DisplayText = newSurveyOption.displayText,
+                SurveyOptionValue = newSurveyOption.surveyOptionValue
+            };
+            return contextSurveyOption;
+        }
+        #endregion
         #endregion
     }
 }
