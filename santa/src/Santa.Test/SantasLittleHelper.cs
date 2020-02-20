@@ -6,6 +6,7 @@ using Santa.Data.Repository;
 using Santa.Logic.Objects;
 using Santa.Logic.Interfaces;
 using Santa.Api.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace Santa.Test
 {
@@ -32,12 +33,19 @@ namespace Santa.Test
         public SantasLittleHelper()
         {
             SetUpRecipients();
+            SetUpAddress();
             SetUpSenders();
             SetUpClients();
             SetUpQuestionOptions();
             SetUpQuestions();
             SetUpSurveys();
-            
+            SetUpMocks();
+        }
+        /// <summary>
+        /// Sets up a test address
+        /// </summary>
+        private void SetUpAddress()
+        {
             TestAddress = new Address
             {
                 addressLineOne = "123 Test Street",
@@ -48,7 +56,9 @@ namespace Santa.Test
                 country = "USA"
             };
         }
-
+        /// <summary>
+        /// Sets up recipients
+        /// </summary>
         private void SetUpRecipients()
         {
             Recipients = new List<Recipient>
@@ -67,7 +77,10 @@ namespace Santa.Test
             RecipientGUIDList = new List<Guid>();
             RecipientGUIDList.Add(Recipients[0].recipientClientID);
             RecipientGUIDList.Add(Recipients[1].recipientClientID);
-        }    
+        }
+        /// <summary>
+        /// Sets up senders
+        /// </summary>
         private void SetUpSenders()
         {
             Senders = new List<Sender>
@@ -87,7 +100,9 @@ namespace Santa.Test
             SenderGUIDList.Add(Senders[0].senderClientID);
             SenderGUIDList.Add(Senders[1].senderClientID);
         }
-
+        /// <summary>
+        /// Sets up clients
+        /// </summary>
         private void SetUpClients()
         {
             Clients = new List<Client>
@@ -121,6 +136,9 @@ namespace Santa.Test
                 }
             };
         }
+        /// <summary>
+        /// Sets up question options
+        /// </summary>
         private void SetUpQuestionOptions()
         {
             QuestionOptions = new List<Option>
@@ -141,6 +159,9 @@ namespace Santa.Test
                 }
             };
         }
+        /// <summary>
+        /// Sets up questions
+        /// </summary>
         private void SetUpQuestions()
         {
             Questions = new List<Question>
@@ -162,6 +183,9 @@ namespace Santa.Test
                 }
             };
         }
+        /// <summary>
+        /// Sets up surveys
+        /// </summary>
         private void SetUpSurveys()
         {
             Surveys = new List<Survey>
@@ -177,6 +201,35 @@ namespace Santa.Test
                     surveyDescription = "Survey Description 2",
                     active = false,
                     surveyQuestions = Questions
+                }
+            };
+        }
+        /// <summary>
+        /// Sets up Mocks
+        /// </summary>
+        private void SetUpMocks()
+        {
+            Repository = new Mock<IRepository>();
+
+            ClientController = new ClientController(Repository.Object)
+            {
+                ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+            EventController = new EventController(Repository.Object)
+            {
+                ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+            SurveyController = new SurveyController(Repository.Object)
+            {
+                ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
                 }
             };
         }
