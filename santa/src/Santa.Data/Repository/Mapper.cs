@@ -158,6 +158,18 @@ namespace Santa.Data.Repository
             return contextQuestionXref;
         }
         #region QuestionOption
+
+        public static SurveyQuestionOptionXref MapQuestionOptionXref(Option newQuestionOption)
+        {
+            Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
+            {
+                SurveyQuestionId = newQuestionOption.questionID,
+                SurveyOptionId = newQuestionOption.surveyOptionID,
+                SortOrder = newQuestionOption.sortOrder,
+                IsActive = newQuestionOption.isActive
+            };
+            return contextQuestionOptionXref;
+        }
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
             Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)

@@ -80,9 +80,18 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="newQuestionOption"></param>
         /// <returns></returns>
-        public Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption)
+        public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = Mapper.MapQuestionOptionXref(newQuestionOption);
+                await santaContext.SurveyQuestionOptionXref.AddAsync(contextQuestionOptionXref);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
         }
 
         /// <summary>
