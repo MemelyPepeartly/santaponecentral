@@ -28,8 +28,8 @@ namespace Santa.Test
         public SantasLittleHelper()
         {
             SetUpClients();
-            SetUpQuestions();
             SetUpQuestionOptions();
+            SetUpQuestions();
             SetUpSurveys();
             
             TestAddress = new Address
@@ -69,23 +69,46 @@ namespace Santa.Test
                 }
             };
         }
+        private void SetUpQuestionOptions()
+        {
+            QuestionOptions = new List<Option>
+            {
+                new Option(Guid.NewGuid())
+                {
+                    displayText = "Option 1 Text",
+                    surveyOptionValue = "Option 1 Value",
+                    sortOrder = "asc",
+                    isActive = true
+                },
+                new Option(Guid.NewGuid())
+                {
+                    displayText = "Option 2 Text",
+                    surveyOptionValue = "Option 2 Value",
+                    sortOrder = "asc",
+                    isActive = false
+                }
+            };
+        }
         private void SetUpQuestions()
         {
             Questions = new List<Question>
             {
-                new Question
+                new Question(Guid.NewGuid())
                 {
-
+                    questionText = "Question 1 Text",
+                    isActive = true,
+                    isSurveyOptionList = true,
+                    surveyOptionList = QuestionOptions,
+                    sortOrder = "asc"
                 },
-                new Question
+                new Question(Guid.NewGuid())
                 {
-
+                    questionText = "Question 2 Text",
+                    isActive = false,
+                    isSurveyOptionList = false,
+                    sortOrder = "asc"
                 }
             };
-        }
-        private void SetUpQuestionOptions()
-        {
-
         }
         private void SetUpSurveys()
         {
