@@ -145,7 +145,7 @@ namespace Santa.Api.Controllers
                 };
 
                 //gives the new GUID in the question to send to the creation of the Xref
-                //question.questionID = newQuestion.questionID;
+                question.questionID = newQuestion.questionID;
 
                 try
                 {
@@ -167,7 +167,7 @@ namespace Santa.Api.Controllers
 
         //POST: api/Survey/5/SurveyQuestions/5/SurveyOptions
         [HttpPost("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
-        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyID, Guid surveyQuestionID, [FromBody, Bind("")] Models.ApiQuestionOption questionOption)
+        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyID, Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
         {
             try
             {
@@ -175,14 +175,17 @@ namespace Santa.Api.Controllers
                 {
                     surveyOptionID = Guid.NewGuid(),
                     displayText = questionOption.displayText,
-                    surveyOptionValue = questionOption.surveyOptionValue
+                    surveyOptionValue = questionOption.surveyOptionValue,
+                    sortOrder = questionOption.sortOrder,
+                    isActive = questionOption.isActive
                 };
                 try
                 {
                     await repository.CreateSurveyOptionAsync(logicSurveyOption);
+                    await repository.SaveAsync();
                     await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption);
                     await repository.SaveAsync();
-                    return CreatedAtAction($"api/Survey/{surveyID}/SurveyQuestions/{surveyQuestionID}", surveyID, surveyQuestionID);
+                    return Ok(logicSurveyOption);
                 }
                 catch (Exception e)
                 {
