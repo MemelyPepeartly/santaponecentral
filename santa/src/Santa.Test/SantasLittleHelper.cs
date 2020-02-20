@@ -20,6 +20,10 @@ namespace Santa.Test
 
         //Lists of Logic objects
         public List<Client> Clients { get; private set; }
+        public List<Recipient> Recipients { get; private set; }
+        public List<Sender> Senders { get; private set; }
+        public List<Guid> RecipientGUIDList { get; private set; }
+        public List<Guid> SenderGUIDList { get; private set; }
         public List<Survey> Surveys { get; private set; }
         public List<Question> Questions { get; private set; }
         public List<Option> QuestionOptions { get; private set; }
@@ -27,6 +31,8 @@ namespace Santa.Test
 
         public SantasLittleHelper()
         {
+            SetUpRecipients();
+            SetUpSenders();
             SetUpClients();
             SetUpQuestionOptions();
             SetUpQuestions();
@@ -42,6 +48,46 @@ namespace Santa.Test
                 country = "USA"
             };
         }
+
+        private void SetUpRecipients()
+        {
+            Recipients = new List<Recipient>
+            {
+                new Recipient
+                {
+                    recipientClientID = Guid.NewGuid(),
+                    recipientName = "Test Recipient 1"
+                },
+                new Recipient
+                {
+                    recipientClientID = Guid.NewGuid(),
+                    recipientName = "Test Recipient 2"
+                }
+            };
+            RecipientGUIDList = new List<Guid>();
+            RecipientGUIDList.Add(Recipients[0].recipientClientID);
+            RecipientGUIDList.Add(Recipients[1].recipientClientID);
+        }    
+        private void SetUpSenders()
+        {
+            Senders = new List<Sender>
+            {
+                new Sender
+                {
+                    senderClientID = Guid.NewGuid(),
+                    senderName = "Test Sender 1"
+                },
+                new Sender
+                {
+                    senderClientID = Guid.NewGuid(),
+                    senderName = "Test Sender 2"
+                }
+            };
+            SenderGUIDList = new List<Guid>();
+            SenderGUIDList.Add(Senders[0].senderClientID);
+            SenderGUIDList.Add(Senders[1].senderClientID);
+        }
+
         private void SetUpClients()
         {
             Clients = new List<Client>
@@ -51,21 +97,27 @@ namespace Santa.Test
                     clientName = "Test Name 1",
                     email = "test1@test.com",
                     nickname = "Test Nickname 1",
-                    address = TestAddress
+                    address = TestAddress,
+                    senders = SenderGUIDList,
+                    recipients = RecipientGUIDList
                 },
                 new Client
                 {
                     clientName = "Test Name 2",
                     email = "test2@test.com",
                     nickname = "Test Nickname 2",
-                    address = TestAddress
+                    address = TestAddress,
+                    senders = SenderGUIDList,
+                    recipients = RecipientGUIDList
                 },
                 new Client
                 {
                     clientName = "Test Name 3",
                     email = "test3@test.com",
                     nickname = "Test Nickname 3",
-                    address = TestAddress
+                    address = TestAddress,
+                    senders = SenderGUIDList,
+                    recipients = RecipientGUIDList
                 }
             };
         }
