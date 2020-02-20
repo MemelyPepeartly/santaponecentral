@@ -49,7 +49,7 @@ namespace Santa.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Logic.Objects.Client>> GetClientAsync(Guid id)
+        public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid id)
         {
             try
             {
