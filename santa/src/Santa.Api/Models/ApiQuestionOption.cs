@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Santa.Logic.Objects
+namespace Santa.Api.Models
 {
-    public class Option
+    public class ApiQuestionOption
     {
-        public Option(Guid _questionID)
-        {
-            questionID = _questionID;
-        }
-        public Guid questionID { get; set; }
         public Guid surveyOptionID { get; set; }
         public string displayText { get; set; }
         public string surveyOptionValue { get; set; }

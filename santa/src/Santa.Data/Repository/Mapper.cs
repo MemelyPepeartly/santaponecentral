@@ -157,10 +157,22 @@ namespace Santa.Data.Repository
             };
             return contextQuestionXref;
         }
+        #region QuestionOption
 
+        public static SurveyQuestionOptionXref MapQuestionOptionXref(Option newQuestionOption)
+        {
+            Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
+            {
+                SurveyQuestionId = newQuestionOption.questionID,
+                SurveyOptionId = newQuestionOption.surveyOptionID,
+                SortOrder = newQuestionOption.sortOrder,
+                IsActive = newQuestionOption.isActive
+            };
+            return contextQuestionOptionXref;
+        }
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
-            Logic.Objects.Option logicOption = new Option()
+            Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)
             {
                 surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
                 displayText = contextQuestionOption.SurveyOption.DisplayText,
@@ -168,6 +180,17 @@ namespace Santa.Data.Repository
             };
             return logicOption;
         }
+        public static SurveyOption MapSurveyOption(Option newSurveyOption)
+        {
+            Entities.SurveyOption contextSurveyOption = new SurveyOption()
+            {
+                SurveyOptionId = newSurveyOption.surveyOptionID,
+                DisplayText = newSurveyOption.displayText,
+                SurveyOptionValue = newSurveyOption.surveyOptionValue
+            };
+            return contextSurveyOption;
+        }
+        #endregion
         #endregion
     }
 }
