@@ -13,6 +13,7 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
+
         private readonly IRepository repository;
         public ClientController(IRepository _repository)
         {

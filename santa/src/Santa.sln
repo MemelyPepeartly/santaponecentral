@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santa.Logic", "Santa.Logic\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santa.Data", "Santa.Data\Santa.Data.csproj", "{80E765FE-5366-456E-8B08-1BE3405775F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Santa.Test", "Santa.Test\Santa.Test.csproj", "{78DAD024-E6F1-4E97-9695-5F9B18D63EAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santa.Test", "Santa.Test\Santa.Test.csproj", "{78DAD024-E6F1-4E97-9695-5F9B18D63EAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
