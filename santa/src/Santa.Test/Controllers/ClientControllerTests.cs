@@ -7,6 +7,8 @@ using Santa.Test;
 using System.Threading.Tasks;
 using System.Linq;
 using Moq;
+using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers.Tests
 {
@@ -31,14 +33,17 @@ namespace Santa.Api.Controllers.Tests
             Guid clientId = helper.Clients[0].clientID;
 
             helper.Repository.Setup(x => x.GetClientByID(clientId))
-                .ReturnsAsync(helper.Clients.FirstOrDefault(c => c.clientID == clientId));
+                .ReturnsAsync(helper.Clients.First(c => c.clientID == clientId));
             // Act
             var testClient = await helper.ClientController.GetClientByIDAsync(clientId);
 
+            var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(testClient.Result);
+            var client = Assert.IsAssignableFrom<Client>(okObjectResult.Value);
+
             // Assert
-            
+
             //This is the assert. I need to get the guid to equal the one in test client
-            //Assert.Equal(clientId.ToString(), testClient.Result.ToString());
+            Assert.Equal(clientId.ToString(), client.clientID.ToString());
 
         }
 
