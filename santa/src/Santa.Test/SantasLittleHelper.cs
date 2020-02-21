@@ -109,6 +109,7 @@ namespace Santa.Test
             {
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 1",
                     email = "test1@test.com",
                     nickname = "Test Nickname 1",
@@ -118,6 +119,7 @@ namespace Santa.Test
                 },
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 2",
                     email = "test2@test.com",
                     nickname = "Test Nickname 2",
@@ -127,6 +129,7 @@ namespace Santa.Test
                 },
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 3",
                     email = "test3@test.com",
                     nickname = "Test Nickname 3",
