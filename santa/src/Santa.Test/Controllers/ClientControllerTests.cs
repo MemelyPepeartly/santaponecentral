@@ -3,6 +3,10 @@ using Santa.Api.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Santa.Test;
+using System.Threading.Tasks;
+using System.Linq;
+using Moq;
 
 namespace Santa.Api.Controllers.Tests
 {
@@ -21,9 +25,16 @@ namespace Santa.Api.Controllers.Tests
         }
 
         [Fact()]
-        public void GetClientByIDAsyncTest()
+        public async System.Threading.Tasks.Task GetClientByIDAsyncTestAsync()
         {
-            throw new NotImplementedException();
+            SantasLittleHelper helper = new SantasLittleHelper();
+            Guid clientId = helper.Clients[0].clientID;
+
+            helper.Repository
+                .Setup(x => x.GetClientByID(It.IsAny<Guid>()))
+                .Returns(Task.Run(() => helper.Clients.Where(c => c.clientID == clientId).FirstOrDefault()));
+
+            Assert.NotNull(await helper.ClientController.GetClientByIDAsync(clientId));
         }
 
         [Fact()]
