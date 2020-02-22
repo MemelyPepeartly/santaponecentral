@@ -35,6 +35,7 @@ namespace Santa.Api.Controllers.Tests
 
             // Assert
             Assert.Equal(testClients.ToArray().Length, clientGUIDs.ToArray().Length);
+            Assert.NotNull(testClients);
 
             foreach(Client tc in testClients)
             {
