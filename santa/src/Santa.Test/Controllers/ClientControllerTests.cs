@@ -25,41 +25,37 @@ namespace Santa.Api.Controllers.Tests
         {
             // Arrange
             SantasLittleHelper helper = new SantasLittleHelper();
-
-            List<Guid> clientGUIDs = new List<Guid>();
-            foreach(Client c in helper.Clients)
-            {
-                clientGUIDs.Add(c.clientID);
-            }
-
-            
-            List<Guid> clientIDs = helper.Clients.Select(c => c.clientID).ToList();
-
+            List<Guid> clientGUIDs = helper.Clients.Select(c => c.clientID).ToList();
             helper.Repository.Setup(x => x.GetAllClients()).Returns(helper.Clients);
 
+            // Act
             var clientsList = helper.ClientController.GetAllClients();
-
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(clientsList.Result);
-            var testClients = Assert.IsAssignableFrom<List<Client>>(okObjectResult.Value);
+            List<Client> testClients = Assert.IsAssignableFrom<List<Client>>(okObjectResult.Value);
 
+            // Assert
             Assert.Equal(testClients.ToArray().Length, clientGUIDs.ToArray().Length);
 
-            Assert.NotNull(testClients.Select(c => c.clientStatusID));
-            Assert.NotNull(testClients.Select(c => c.clientName));
-            Assert.NotNull(testClients.Select(c => c.address));
-            Assert.NotNull(testClients.Select(c => c.clientStatusID));
-            Assert.NotNull(testClients.Select(c => c.email));
-            Assert.NotNull(testClients.Select(c => c.nickname));
-            Assert.NotNull(testClients.Select(c => c.recipients));
-            Assert.NotNull(testClients.Select(c => c.senders));
-
-
-            /*
-            foreach (Client c in testClients)
+            foreach(Client tc in testClients)
             {
-                Assert.Equal(c.clientID.ToString(), clientGUIDs.Where(g => g.Equals(c.clientID)).ToString());
+                if(testClients.Contains(helper.Clients.First(c => c.clientID == tc.clientID)))
+                {
+                    Client comparisonClient = helper.Clients.First(c => c.clientID == tc.clientID);
+
+                    Assert.Equal(comparisonClient.clientID, tc.clientID);
+                    Assert.Equal(comparisonClient.address, tc.address);
+                    Assert.Equal(comparisonClient.clientName, tc.clientName);
+                    Assert.Equal(comparisonClient.clientStatusID, tc.clientStatusID);
+                    Assert.Equal(comparisonClient.email, tc.email);
+                    Assert.Equal(comparisonClient.nickname, tc.nickname);
+                    Assert.Equal(comparisonClient.recipients, tc.recipients);
+                    Assert.Equal(comparisonClient.senders, tc.senders);
+                }
+                else
+                {
+                    throw new Exception();
+                }
             }
-            */
         }
 
         [Fact()]
