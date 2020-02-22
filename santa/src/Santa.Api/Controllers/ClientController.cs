@@ -25,7 +25,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Client>> Get()
+        public ActionResult<List<Logic.Objects.Client>> GetAllClients()
         {
             try
             {

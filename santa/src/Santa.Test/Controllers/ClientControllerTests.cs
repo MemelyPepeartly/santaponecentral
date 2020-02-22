@@ -21,14 +21,41 @@ namespace Santa.Api.Controllers.Tests
         }
 
         [Fact()]
-        public void GetTest()
+        public void GetAllClientsTest()
         {
-            throw new NotImplementedException();
+            // Arrange
+            SantasLittleHelper helper = new SantasLittleHelper();
+
+            List<Guid> clientGUIDs = new List<Guid>();
+            foreach(Client c in helper.Clients)
+            {
+                clientGUIDs.Add(c.clientID);
+            }
+
+            
+            List<Guid> clientIDs = helper.Clients.Select(c => c.clientID).ToList();
+
+            helper.Repository.Setup(x => x.GetAllClients()).Returns(helper.Clients);
+
+            var clientsList = helper.ClientController.GetAllClients();
+
+            var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(clientsList.Result);
+            var testClients = Assert.IsAssignableFrom<List<Client>>(okObjectResult.Value);
+
+            Assert.Equal(testClients.ToArray().Length, clientGUIDs.ToArray().Length);
+
+            /*
+            foreach (Client c in testClients)
+            {
+                Assert.Equal(c.clientID.ToString(), clientGUIDs.Where(g => g.Equals(c.clientID)).ToString());
+            }
+            */
         }
 
         [Fact()]
         public async System.Threading.Tasks.Task GetClientByIDAsyncTestAsync()
         {
+            // Arrange
             SantasLittleHelper helper = new SantasLittleHelper();
             Guid clientId = helper.Clients[0].clientID;
 
