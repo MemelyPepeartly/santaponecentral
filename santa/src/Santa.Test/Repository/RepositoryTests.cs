@@ -1,8 +1,14 @@
 ﻿using Xunit;
-using Santa.Data.Repository;
+using Santa.Api.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Santa.Test;
+using System.Threading.Tasks;
+using System.Linq;
+using Moq;
+using Microsoft.AspNetCore.Mvc;
+using Santa.Logic.Objects;
 
 namespace Santa.Data.Repository.Tests
 {
