@@ -171,6 +171,11 @@ namespace Santa.Data.Repository
             };
             return contextQuestionOptionXref;
         }
+        /// <summary>
+        /// Takes a context question option Xref and returns a logic option 
+        /// </summary>
+        /// <param name="contextQuestionOption"></param>
+        /// <returns></returns>
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
             Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)
@@ -181,6 +186,11 @@ namespace Santa.Data.Repository
             };
             return logicOption;
         }
+        /// <summary>
+        /// Takes a logic survey option and returns a context survey option
+        /// </summary>
+        /// <param name="newSurveyOption"></param>
+        /// <returns></returns>
         public static SurveyOption MapSurveyOption(Option newSurveyOption)
         {
             Entities.SurveyOption contextSurveyOption = new SurveyOption()
