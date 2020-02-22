@@ -9,6 +9,7 @@ namespace Santa.Data.Repository
 {
     public static class Mapper
     {
+
         #region Client
         /// <summary>
         /// maps a logic client to a context client
