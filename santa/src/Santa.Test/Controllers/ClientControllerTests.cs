@@ -44,6 +44,16 @@ namespace Santa.Api.Controllers.Tests
 
             Assert.Equal(testClients.ToArray().Length, clientGUIDs.ToArray().Length);
 
+            Assert.NotNull(testClients.Select(c => c.clientStatusID));
+            Assert.NotNull(testClients.Select(c => c.clientName));
+            Assert.NotNull(testClients.Select(c => c.address));
+            Assert.NotNull(testClients.Select(c => c.clientStatusID));
+            Assert.NotNull(testClients.Select(c => c.email));
+            Assert.NotNull(testClients.Select(c => c.nickname));
+            Assert.NotNull(testClients.Select(c => c.recipients));
+            Assert.NotNull(testClients.Select(c => c.senders));
+
+
             /*
             foreach (Client c in testClients)
             {
