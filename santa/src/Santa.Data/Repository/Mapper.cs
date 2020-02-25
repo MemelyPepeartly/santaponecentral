@@ -87,6 +87,16 @@ namespace Santa.Data.Repository
             };
             return logicEvent;
         }
+        public static Entities.EventType MapEvent(Logic.Objects.Event logicEvent)
+        {
+            Entities.EventType contextEvent = new EventType()
+            {
+                EventTypeId = logicEvent.eventTypeID,
+                EventDescription = logicEvent.eventDescription,
+                IsActive = logicEvent.active
+            };
+            return contextEvent;
+        }
         #endregion
         #region Survey
         /// <summary>
@@ -106,6 +116,7 @@ namespace Santa.Data.Repository
             };
             return logicSurvey;
         }
+
         public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
         {
             Data.Entities.Survey contextSurvey = new Entities.Survey()

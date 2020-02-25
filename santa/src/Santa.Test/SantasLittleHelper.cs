@@ -115,7 +115,9 @@ namespace Santa.Test
                     nickname = "Test Nickname 1",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 1"
                 },
                 new Client
                 {
@@ -125,7 +127,9 @@ namespace Santa.Test
                     nickname = "Test Nickname 2",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 2"
                 },
                 new Client
                 {
@@ -135,7 +139,9 @@ namespace Santa.Test
                     nickname = "Test Nickname 3",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 3"
                 }
             };
         }

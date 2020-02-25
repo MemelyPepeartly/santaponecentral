@@ -102,9 +102,25 @@ namespace Santa.Data.Repository.Tests
         /// Logic event to context event
         /// </summary>
         [Fact()]
-        public void MapEventTest()
+        public void MapLogicEventToContextEventTest()
         {
-            throw new NotImplementedException();
+            // Arrange
+            Logic.Objects.Event logicEvent = new Logic.Objects.Event()
+            {
+                eventTypeID = Guid.NewGuid(),
+                eventDescription = "Test event description",
+                active = true,
+            };
+            // Act
+            var mappedEvent = Mapper.MapEvent(logicEvent);
+
+            // Assert
+            Assert.NotNull(mappedEvent);
+            Assert.IsType<Entities.EventType>(mappedEvent);
+
+            Assert.NotNull(logicEvent.eventDescription);
+            Assert.IsType<bool>(logicEvent.active);
+            Assert.NotEqual(Guid.Empty,logicEvent.eventTypeID);
         }
 
         /// <summary>
