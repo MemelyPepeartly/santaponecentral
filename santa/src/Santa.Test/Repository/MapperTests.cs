@@ -37,8 +37,8 @@ namespace Santa.Data.Repository.Tests
             Assert.NotNull(mappedClient.Email);
             Assert.NotNull(mappedClient.Nickname);
 
-            Assert.NotEqual(Guid.NewGuid(), mappedClient.ClientId);
-            Assert.NotEqual(Guid.NewGuid(), mappedClient.ClientStatusId);
+            Assert.NotEqual(Guid.Empty, mappedClient.ClientId);
+            Assert.NotEqual(Guid.Empty, mappedClient.ClientStatusId);
         }
 
         /// <summary>
@@ -47,7 +47,55 @@ namespace Santa.Data.Repository.Tests
         [Fact()]
         public void MapClientTest1()
         {
-            throw new NotImplementedException();
+            // Arrange
+            Guid clientStatusID = Guid.NewGuid();
+            Entities.Client contextClient = new Entities.Client()
+            {
+                ClientId = Guid.NewGuid(),
+                ClientStatusId = clientStatusID,
+                Email = "test email",
+                Nickname = "test nickname",
+                ClientName = "test client name",
+
+                AddressLine1 = "Test Address 1",
+                AddressLine2 = "Test Address 2",
+                City = "Test City",
+                Country = "Test Country",
+                State = "Test State",
+                PostalCode = "Test Postal Code",
+
+                ClientStatus = new Entities.ClientStatus()
+                {
+                    ClientStatusId = clientStatusID,
+                    StatusDescription = "test status description"
+                },
+                ClientRelationXrefRecipientClient = new List<Entities.ClientRelationXref>(),
+                ClientRelationXrefSenderClient = new List<Entities.ClientRelationXref>()
+            };
+
+            // Act
+            var mappedClient = Mapper.MapClient(contextClient);
+
+            // Assert
+
+            Assert.NotNull(mappedClient);
+            Assert.IsType<Logic.Objects.Client>(mappedClient);
+
+            Assert.NotNull(mappedClient.address.addressLineOne);
+            Assert.NotNull(mappedClient.address.addressLineTwo);
+            Assert.NotNull(mappedClient.address.city);
+            Assert.NotNull(mappedClient.address.country);
+            Assert.NotNull(mappedClient.address.postalCode);
+            Assert.NotNull(mappedClient.address.state);
+            Assert.NotNull(mappedClient.clientName);
+            Assert.NotNull(mappedClient.clientStatusDescription);
+            Assert.NotNull(mappedClient.email);
+            Assert.NotNull(mappedClient.nickname);
+            Assert.NotNull(mappedClient.recipients);
+            Assert.NotNull(mappedClient.senders);
+
+            Assert.NotEqual(Guid.Empty, mappedClient.clientID);
+            Assert.NotEqual(Guid.Empty, mappedClient.clientStatusID);
         }
 
         /// <summary>
