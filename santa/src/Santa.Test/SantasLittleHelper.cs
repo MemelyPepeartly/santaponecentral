@@ -109,30 +109,39 @@ namespace Santa.Test
             {
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 1",
                     email = "test1@test.com",
                     nickname = "Test Nickname 1",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 1"
                 },
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 2",
                     email = "test2@test.com",
                     nickname = "Test Nickname 2",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 2"
                 },
                 new Client
                 {
+                    clientID = Guid.NewGuid(),
                     clientName = "Test Name 3",
                     email = "test3@test.com",
                     nickname = "Test Nickname 3",
                     address = TestAddress,
                     senders = SenderGUIDList,
-                    recipients = RecipientGUIDList
+                    recipients = RecipientGUIDList,
+                    clientStatusID = Guid.NewGuid(),
+                    clientStatusDescription = "Test Status Description 3"
                 }
             };
         }
