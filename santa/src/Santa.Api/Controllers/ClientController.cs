@@ -13,6 +13,7 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
+
         private readonly IRepository repository;
         public ClientController(IRepository _repository)
         {
@@ -24,7 +25,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Client>> Get()
+        public ActionResult<List<Logic.Objects.Client>> GetAllClients()
         {
             try
             {

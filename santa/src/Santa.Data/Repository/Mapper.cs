@@ -9,6 +9,7 @@ namespace Santa.Data.Repository
 {
     public static class Mapper
     {
+
         #region Client
         /// <summary>
         /// maps a logic client to a context client
@@ -24,6 +25,11 @@ namespace Santa.Data.Repository
                 Email = logicClient.email,
                 Nickname = logicClient.nickname,
                 ClientStatusId = logicClient.clientStatusID,
+                ClientStatus = new ClientStatus()
+                    {
+                        ClientStatusId = logicClient.clientStatusID,
+                        StatusDescription = logicClient.clientStatusDescription
+                    },
 
                 AddressLine1 = logicClient.address.addressLineOne,
                 AddressLine2 = logicClient.address.addressLineTwo,
@@ -45,8 +51,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
             {
-                clientID = contextCharacter.ClientId,
-                clientStatusID = contextCharacter.ClientStatusId,
+                clientID = contextCharacter.ClientId,      
                 email = contextCharacter.Email,
                 nickname = contextCharacter.Nickname,
                 clientName = contextCharacter.ClientName,
@@ -59,6 +64,8 @@ namespace Santa.Data.Repository
                     state = contextCharacter.State,
                     postalCode = contextCharacter.State
                 },
+                clientStatusID = contextCharacter.ClientStatusId,
+                clientStatusDescription = contextCharacter.ClientStatus.StatusDescription,
 
                 recipients = contextCharacter.ClientRelationXrefSenderClient.Select(s => s.RecipientClientId).ToList(),
                 senders = contextCharacter.ClientRelationXrefRecipientClient.Select(r => r.SenderClientId).ToList()
@@ -80,6 +87,16 @@ namespace Santa.Data.Repository
             };
             return logicEvent;
         }
+        public static Entities.EventType MapEvent(Logic.Objects.Event logicEvent)
+        {
+            Entities.EventType contextEvent = new EventType()
+            {
+                EventTypeId = logicEvent.eventTypeID,
+                EventDescription = logicEvent.eventDescription,
+                IsActive = logicEvent.active
+            };
+            return contextEvent;
+        }
         #endregion
         #region Survey
         /// <summary>
@@ -99,6 +116,7 @@ namespace Santa.Data.Repository
             };
             return logicSurvey;
         }
+
         public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
         {
             Data.Entities.Survey contextSurvey = new Entities.Survey()
@@ -170,6 +188,11 @@ namespace Santa.Data.Repository
             };
             return contextQuestionOptionXref;
         }
+        /// <summary>
+        /// Takes a context question option Xref and returns a logic option 
+        /// </summary>
+        /// <param name="contextQuestionOption"></param>
+        /// <returns></returns>
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
             Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)
@@ -180,6 +203,11 @@ namespace Santa.Data.Repository
             };
             return logicOption;
         }
+        /// <summary>
+        /// Takes a logic survey option and returns a context survey option
+        /// </summary>
+        /// <param name="newSurveyOption"></param>
+        /// <returns></returns>
         public static SurveyOption MapSurveyOption(Option newSurveyOption)
         {
             Entities.SurveyOption contextSurveyOption = new SurveyOption()
