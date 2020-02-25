@@ -122,6 +122,31 @@ namespace Santa.Data.Repository.Tests
             Assert.IsType<bool>(logicEvent.active);
             Assert.NotEqual(Guid.Empty,logicEvent.eventTypeID);
         }
+        /// <summary>
+        /// Context event to logic event
+        /// </summary>
+        [Fact()]
+        public void MapContextEventToContextEventTest()
+        {
+            // Arrange
+            Entities.EventType contextEvent = new Entities.EventType()
+            {
+                EventTypeId = Guid.NewGuid(),
+                IsActive = true,
+                EventDescription = "Test Event Description"
+            };
+
+            // Act
+            var mappedEvent = Mapper.MapEvent(contextEvent);
+
+            // Assert
+            Assert.NotNull(mappedEvent);
+            Assert.IsType<Logic.Objects.Event>(mappedEvent);
+
+            Assert.NotNull(mappedEvent.eventDescription);
+            Assert.NotEqual(Guid.Empty, mappedEvent.eventTypeID);
+            Assert.IsType<bool>(mappedEvent.active);
+        }
 
         /// <summary>
         /// Logic suvey to context survey
