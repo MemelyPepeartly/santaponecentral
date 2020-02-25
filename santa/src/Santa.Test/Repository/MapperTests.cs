@@ -14,7 +14,31 @@ namespace Santa.Data.Repository.Tests
         [Fact()]
         public void MapClientTest()
         {
-            throw new NotImplementedException();
+            // Arrange    
+            Test.SantasLittleHelper helper = new Test.SantasLittleHelper();
+            Logic.Objects.Client logicClient = helper.Clients[0];
+
+            // Act
+            var mappedClient = Mapper.MapClient(logicClient);
+
+            // Assert 
+            Assert.NotNull(mappedClient);
+            Assert.IsType<Entities.Client>(mappedClient);
+
+            Assert.NotNull(mappedClient.AddressLine1);
+            Assert.NotNull(mappedClient.AddressLine2);
+            Assert.NotNull(mappedClient.City);
+            Assert.NotNull(mappedClient.Country);
+            Assert.NotNull(mappedClient.PostalCode);
+            Assert.NotNull(mappedClient.State);
+            Assert.NotNull(mappedClient.SurveyResponse);
+            Assert.NotNull(mappedClient.ClientName);
+            Assert.NotNull(mappedClient.ClientStatus);
+            Assert.NotNull(mappedClient.Email);
+            Assert.NotNull(mappedClient.Nickname);
+
+            Assert.NotEqual(Guid.NewGuid(), mappedClient.ClientId);
+            Assert.NotEqual(Guid.NewGuid(), mappedClient.ClientStatusId);
         }
 
         /// <summary>
