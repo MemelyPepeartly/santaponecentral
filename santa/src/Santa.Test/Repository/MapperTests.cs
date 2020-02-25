@@ -12,7 +12,7 @@ namespace Santa.Data.Repository.Tests
         /// Logic Client to context client
         /// </summary>
         [Fact()]
-        public void MapClientTest()
+        public void MapLogicClientToContextClientTest()
         {
             // Arrange    
             Test.SantasLittleHelper helper = new Test.SantasLittleHelper();
@@ -45,7 +45,7 @@ namespace Santa.Data.Repository.Tests
         /// Context client to logic client
         /// </summary>
         [Fact()]
-        public void MapClientTest1()
+        public void MapContextClientToLogicTest()
         {
             // Arrange
             Guid clientStatusID = Guid.NewGuid();
