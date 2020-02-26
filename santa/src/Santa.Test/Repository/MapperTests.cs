@@ -152,9 +152,24 @@ namespace Santa.Data.Repository.Tests
         /// Logic suvey to context survey
         /// </summary>
         [Fact()]
-        public void MapSurveyTest()
+        public void MapLogicSurveyToContextSurveyTest()
         {
-            throw new NotImplementedException();
+            // Arrange
+            Test.SantasLittleHelper helper = new Test.SantasLittleHelper();
+            Logic.Objects.Survey logicSurvey = helper.Surveys[0];
+
+            // Act
+            var mappedSurvey = Mapper.MapSurvey(logicSurvey);
+
+            // Assert
+            Assert.NotNull(mappedSurvey);
+            Assert.IsType<Entities.Survey>(mappedSurvey);
+
+            Assert.NotEqual(Guid.Empty, mappedSurvey.SurveyId);
+            Assert.NotNull(mappedSurvey.SurveyDescription);
+            Assert.NotEqual(Guid.Empty, mappedSurvey.EventTypeId);
+            Assert.IsType<bool>(mappedSurvey.IsActive);
+
         }
 
         /// <summary>
