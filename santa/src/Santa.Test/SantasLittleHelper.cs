@@ -201,15 +201,19 @@ namespace Santa.Test
             {
                 new Survey
                 {
+                    surveyID = Guid.NewGuid(),
                     surveyDescription = "Survey Description 1",
                     active = true,
-                    surveyQuestions = Questions
+                    surveyQuestions = Questions,
+                    eventTypeID = Guid.NewGuid()
                 },
                 new Survey
                 {
+                    surveyID = Guid.NewGuid(),
                     surveyDescription = "Survey Description 2",
                     active = false,
-                    surveyQuestions = Questions
+                    surveyQuestions = Questions,
+                    eventTypeID = Guid.NewGuid()
                 }
             };
         }
