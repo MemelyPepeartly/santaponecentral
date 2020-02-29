@@ -86,14 +86,12 @@ namespace Santa.Data.Repository.Tests
             Assert.NotNull(mappedClient.address.postalCode);
             Assert.NotNull(mappedClient.address.state);
             Assert.NotNull(mappedClient.clientName);
-            Assert.NotNull(mappedClient.clientStatusDescription);
             Assert.NotNull(mappedClient.email);
             Assert.NotNull(mappedClient.nickname);
             Assert.NotNull(mappedClient.recipients);
             Assert.NotNull(mappedClient.senders);
 
             Assert.NotEqual(Guid.Empty, mappedClient.clientID);
-            Assert.NotEqual(Guid.Empty, mappedClient.clientStatusID);
         }
 
         /// <summary>

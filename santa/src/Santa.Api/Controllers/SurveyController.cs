@@ -18,6 +18,7 @@ namespace Santa.Api.Controllers
         {
             repository = _repository;
         }
+
         // GET: api/Survey
         /// <summary>
         /// Gets list of surveys
