@@ -8,6 +8,7 @@ namespace Santa.Api.Models
         public string clientEmail { get; set; }
         public string clientNickname { get; set; }
         public Guid clientStatusID { get; set; }
+        public Guid? clientID { get; set; }
         public string clientAddressLine1 { get; set; }
         public string clientAddressLine2 { get; set; }
         public string clientCity { get; set; }
