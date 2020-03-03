@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Santa.Api.Models;
 using Santa.Logic.Interfaces;
 
@@ -33,7 +34,7 @@ namespace Santa.Api.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(clients);
+                return Ok(JsonConvert.SerializeObject(clients, Formatting.Indented));
             }
             catch (ArgumentNullException e)
             {
@@ -58,7 +59,7 @@ namespace Santa.Api.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(client);
+                return Ok(JsonConvert.SerializeObject(client, Formatting.Indented));
             }
             catch (Exception e)
             {
