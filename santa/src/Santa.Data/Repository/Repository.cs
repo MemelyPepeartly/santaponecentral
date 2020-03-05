@@ -210,7 +210,10 @@ namespace Santa.Data.Repository
                 List<Logic.Objects.Survey> surveyList = new List<Logic.Objects.Survey>();
                 surveyList = santaContext.Survey
                     .Include(s => s.SurveyQuestionXref)
-                        .ThenInclude(q => q.SurveyQuestion)
+                        .ThenInclude(sqx => sqx.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(so => so.SurveyOption)
+                    .AsNoTracking()
                     .Select(Mapper.MapSurvey).ToList();
 
                 return surveyList;
@@ -248,10 +251,22 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
-        public Task<Event> GetEventByIDAsync()
+        /// <summary>
+        /// Gets an event by a given ID
+        /// </summary>
+        /// <param name="eventID"></param>
+        /// <returns></returns>
+        public async Task<Event> GetEventByIDAsync(Guid eventID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType.FirstOrDefaultAsync(e => e.EventTypeId == eventID));
+                return logicEvent;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -265,8 +280,9 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Survey logicSurvey = Mapper.MapSurvey(await santaContext.Survey
                     .Include(s => s.SurveyQuestionXref)
-                        .ThenInclude(q => q.SurveyQuestion)
-                        .ThenInclude(x => x.SurveyQuestionOptionXref)
+                        .ThenInclude(sqx => sqx.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
                 return logicSurvey;
@@ -276,27 +292,6 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-
-        public async Task<Logic.Objects.Survey> GetSurveyOptionsBySurveyQuestionIDAsync(Guid surveyID)
-        {
-            try
-            {
-                //trying to figure out how to pull option stuff
-                Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey();
-                logicSurvey = Mapper.MapSurvey(await santaContext.Survey
-                    .Include(s => s.SurveyQuestionXref)
-                        .ThenInclude(q => q.SurveyQuestion)
-                        .ThenInclude(x =>x.SurveyQuestionOptionXref)
-                    .FirstOrDefaultAsync(s => s.SurveyId == surveyID));
-
-                return logicSurvey;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
         public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)
         {
             try

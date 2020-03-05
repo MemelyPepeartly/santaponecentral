@@ -22,7 +22,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Event>> Get()
+        public ActionResult<List<Logic.Objects.Event>> GetAllEvents()
         {
             try
             {
@@ -40,10 +40,17 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{eventID}")]
+        public async Task<ActionResult<Logic.Objects.Event>> GetEventByID(Guid eventID)
         {
-            return "value";
+            try
+            {
+                return Ok(await repository.GetEventByIDAsync(eventID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // POST: api/Event
