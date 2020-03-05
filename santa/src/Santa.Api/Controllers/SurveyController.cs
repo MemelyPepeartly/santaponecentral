@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Survey>> Get()
+        public ActionResult<List<Logic.Objects.Survey>> GetAllSurveys()
         {
             try
             {
@@ -44,7 +45,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}")]
-        public async Task<ActionResult<Logic.Objects.Survey>> GetAsync(Guid surveyID)
+        public async Task<ActionResult<Logic.Objects.Survey>> GetSurveyByIDAsync(Guid surveyID)
         {
             try
             {
@@ -67,7 +68,8 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                return Ok(await repository.GetSurveyByID(surveyID));
+                Logic.Objects.Survey logicSurvey = await repository.GetSurveyByID(surveyID);
+                return Ok(logicSurvey.surveyQuestions);
             }
             catch (Exception e)
             {
@@ -80,7 +82,9 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                return Ok(await repository.GetSurveyOptionsBySurveyQuestionIDAsync(surveyID));
+                Logic.Objects.Survey logicSurvey = await repository.GetSurveyByID(surveyID);
+                IEnumerable<Logic.Objects.Question> questionOptions = logicSurvey.surveyQuestions.Where(q => q.questionID == surveyQuestionID);
+                return Ok(questionOptions);
             }
             catch
             {

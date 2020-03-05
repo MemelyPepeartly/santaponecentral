@@ -102,7 +102,7 @@ namespace Santa.Data.Repository
         /// <param name="contextSurvey"></param>
         /// <returns></returns>
         public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
-        {
+      {
             Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
             {
                 surveyID = contextSurvey.SurveyId,
@@ -140,6 +140,9 @@ namespace Santa.Data.Repository
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList,
+                isActive = contextSurveyQuestion.IsActive,
+                sortOrder = contextSurveyQuestion.SortOrder,
+                surveyID = contextSurveyQuestion.SurveyId,
                 surveyOptionList = contextSurveyQuestion.SurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
             };
             return logicQuestion;
@@ -196,7 +199,10 @@ namespace Santa.Data.Repository
             {
                 surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
                 displayText = contextQuestionOption.SurveyOption.DisplayText,
-                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue
+                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue,
+                sortOrder = contextQuestionOption.SortOrder,
+                isActive = contextQuestionOption.IsActive,
+                questionID = contextQuestionOption.SurveyQuestionId
             };
             return logicOption;
         }
