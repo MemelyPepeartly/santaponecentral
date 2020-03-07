@@ -17,7 +17,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Event
-        Task<Logic.Objects.Event> CreateEventAsync();
+        Task CreateEventAsync(Event newEvent);
         List<Logic.Objects.Event> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync(Guid eventID);
         Task<Logic.Objects.Event> UpdateEventByIDAsync();

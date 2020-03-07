@@ -29,12 +29,12 @@ namespace Santa.Data.Repository
         {
             try
             {
-                var contextClient = Mapper.MapClient(newClient);
+                Entities.Client contextClient = Mapper.MapClient(newClient);
                 await santaContext.Client.AddAsync(contextClient);
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public Task<Logic.Objects.Client> DeleteClientByIDAsync()
@@ -94,9 +94,17 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Event
-        public Task<Event> CreateEventAsync()
+        public async Task CreateEventAsync(Event newEvent)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.EventType contextEvent = Mapper.MapEvent(newEvent);
+                await santaContext.EventType.AddAsync(contextEvent);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         public Task<Event> DeleteEventByIDAsync()
         {
@@ -410,7 +418,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
 
         }

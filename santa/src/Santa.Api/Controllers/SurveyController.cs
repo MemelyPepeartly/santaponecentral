@@ -154,7 +154,8 @@ namespace Santa.Api.Controllers
                     await repository.CreateSurveyQuestionAsync(newQuestion);
                     await repository.CreateSurveyQuestionXrefAsync(newQuestion);
                     await repository.SaveAsync();
-                    return Created($"api/Survey/{surveyID}", surveyID);
+                    var survey = await repository.GetSurveyByID(surveyID);
+                    return Ok(survey.surveyQuestions.Where(q => q.questionID == newQuestion.questionID));
                 }
                 catch (Exception e)
                 {
@@ -167,9 +168,9 @@ namespace Santa.Api.Controllers
             }
         }
 
-        //POST: api/Survey/5/SurveyQuestions/5/SurveyOptions
-        [HttpPost("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
-        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyID, Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
+        //POST: api/Survey/SurveyQuestions/5/SurveyOptions
+        [HttpPost("SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
+        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
         {
             try
             {

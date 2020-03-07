@@ -55,8 +55,31 @@ namespace Santa.Api.Controllers
 
         // POST: api/Event
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody, Bind("eventDescription, isActive")]Models.ApiEvent newEvent)
         {
+            try
+            {
+                Logic.Objects.Event logicEvent = new Logic.Objects.Event()
+                {
+                    eventTypeID = Guid.NewGuid(),
+                    eventDescription = newEvent.eventDescription,
+                    active = newEvent.isActive
+                };
+                try
+                {
+                    await repository.CreateEventAsync(logicEvent);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetEventByIDAsync(logicEvent.eventTypeID));
+                }
+                catch(Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // PUT: api/Event/5

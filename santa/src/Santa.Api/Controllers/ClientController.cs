@@ -80,10 +80,10 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Client newClient = new Logic.Objects.Client()
                 {
                     clientID = Guid.NewGuid(),
-                    clientStatus = await repository.GetClientStatusByID(client.clientStatusID),
                     clientName = client.clientName,
                     email = client.clientEmail,
                     nickname = client.clientNickname,
+                    clientStatus = await repository.GetClientStatusByID(client.clientStatusID),
                     address = new Logic.Objects.Address()
                     {
                         addressLineOne = client.clientAddressLine1,
