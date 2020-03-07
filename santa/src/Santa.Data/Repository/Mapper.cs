@@ -23,7 +23,7 @@ namespace Santa.Data.Repository
                 ClientName = logicClient.clientName,
                 Email = logicClient.email,
                 Nickname = logicClient.nickname,
-                ClientStatusId = logicClient.clientStatus.statusID,
+                ClientStatus = MapStatus(logicClient.clientStatus),
                 AddressLine1 = logicClient.address.addressLineOne,
                 AddressLine2 = logicClient.address.addressLineTwo,
                 City = logicClient.address.city,
@@ -79,7 +79,7 @@ namespace Santa.Data.Repository
             };
             return logicStatus;
         }
-        public static Data.Entities.ClientStatus MapStatus(Status logicStatus)
+        public static Data.Entities.ClientStatus MapStatus(Logic.Objects.Status logicStatus)
         {
             Entities.ClientStatus contextStatus = new ClientStatus()
             {
