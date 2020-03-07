@@ -140,7 +140,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Client/5/Address
         [HttpPut("{clientID}/Address")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiAddress address)
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClientAddress address)
         {
             try
             {
@@ -158,7 +158,7 @@ namespace Santa.Api.Controllers
 
                     try
                     {
-                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.UpdateClientByIDAsync(targetClient);
                         await repository.SaveAsync();
                         Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
                         return Ok(updatedClient);
@@ -192,7 +192,7 @@ namespace Santa.Api.Controllers
 
                     try
                     {
-                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.UpdateClientByIDAsync(targetClient);
                         await repository.SaveAsync();
                         Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
                         return Ok(updatedClient);
@@ -214,7 +214,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Nickname
         [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiNickname nickname)
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientNickname nickname)
         {
             try
             {
@@ -226,7 +226,7 @@ namespace Santa.Api.Controllers
 
                     try
                     {
-                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.UpdateClientByIDAsync(targetClient);
                         await repository.SaveAsync();
                         Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
                         return Ok(updatedClient);
@@ -246,7 +246,40 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+        // PUT: api/Client/5/Name
+        [HttpPut("{clientID}/Name", Name = "PutName")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
+        {
+            try
+            {
 
+                try
+                {
+                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                    targetClient.clientName = name.clientName;
+
+                    try
+                    {
+                        await repository.UpdateClientByIDAsync(targetClient);
+                        await repository.SaveAsync();
+                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                        return Ok(updatedClient);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e.InnerException;
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
