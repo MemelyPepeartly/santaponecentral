@@ -47,18 +47,14 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Gets a client by an ID
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="clientID"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid id)
+        [HttpGet("{clientID}")]
+        public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
             {
-                Logic.Objects.Client client = await repository.GetClientByID(id);
-                if (client == null)
-                {
-                    return NotFound();
-                }
+                Logic.Objects.Client client = await repository.GetClientByID(clientID);
                 return Ok(JsonConvert.SerializeObject(client, Formatting.Indented));
             }
             catch (Exception e)
@@ -98,9 +94,10 @@ namespace Santa.Api.Controllers
                         country = client.clientCountry
                     }
                 };
-                await repository.CreateClient(newClient);
+                
                 try
                 {
+                    await repository.CreateClient(newClient);
                     await repository.SaveAsync();
                     return Created($"api/Client/{newClient.clientID}", newClient);
                 }
