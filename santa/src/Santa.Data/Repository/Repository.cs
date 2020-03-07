@@ -344,7 +344,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<Status> GetStatusByID(Guid clientStatusID)
+        public async Task<Status> GetClientStatusByID(Guid clientStatusID)
         {
             try
             {
@@ -353,6 +353,19 @@ namespace Santa.Data.Repository
                 return logicStatus;
             }
             catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<Status> GetAllClientStatus()
+        {
+            try
+            {
+                List<Logic.Objects.Status> logicStatusList = santaContext.ClientStatus.Select(Mapper.MapStatus).ToList();
+                return logicStatusList;
+            }
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }

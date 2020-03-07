@@ -21,16 +21,30 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Status
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Status>> Get()
+        public ActionResult<List<Logic.Objects.Status>> GetAllClientStatus()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(repository.GetAllClientStatus());
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         // GET: api/Status/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<ActionResult<Logic.Objects.Status>> GetClientStatusByID(Guid clientStatusID)
         {
-            return "value";
+            try
+            {
+                return Ok(await repository.GetClientStatusByID(clientStatusID));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         // POST: api/Status
