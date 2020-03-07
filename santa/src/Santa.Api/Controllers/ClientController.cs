@@ -138,7 +138,7 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // PUT: api/Client/Address/5
+        // PUT: api/Client/5/Address
         [HttpPut("{clientID}/Address")]
         public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiAddress address)
         {
@@ -167,9 +167,6 @@ namespace Santa.Api.Controllers
                     {
                         throw e.InnerException;
                     }
-                    
-
-
                 }
                 catch(Exception e)
                 {
@@ -181,8 +178,42 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
-        // PUT: api/Client/Nickname/5
-        [HttpPut("{clientID}/Nickname", Name ="PutNickname")]
+        // PUT: api/Client/5/Email
+        [HttpPut("{clientID}/Email", Name ="PutEmail")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody, Bind("clientEmail")] ApiClientEmail email)
+        {
+            try
+            {
+
+                try
+                {
+                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                    targetClient.email = email.clientEmail;
+
+                    try
+                    {
+                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.SaveAsync();
+                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                        return Ok(updatedClient);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e.InnerException;
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // PUT: api/Client/5/Nickname
+        [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
         public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiNickname nickname)
         {
             try
