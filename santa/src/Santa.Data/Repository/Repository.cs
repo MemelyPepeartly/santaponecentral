@@ -174,7 +174,6 @@ namespace Santa.Data.Repository
                     .Include(sc => sc.ClientRelationXrefSenderClient)
                         .ThenInclude(crx => crx.SenderClient)
                     .Include(s => s.ClientStatus)
-                    .AsNoTracking()
                     .Select(Mapper.MapClient).ToList();
                 return clientList;
             }
@@ -246,7 +245,6 @@ namespace Santa.Data.Repository
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(u => u.RecipientClient)
                     .Include(s => s.ClientStatus)
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
                 return logicClient;
             }

@@ -34,7 +34,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Status/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{clientStatusID}")]
         public async Task<ActionResult<Logic.Objects.Status>> GetClientStatusByID(Guid clientStatusID)
         {
             try
