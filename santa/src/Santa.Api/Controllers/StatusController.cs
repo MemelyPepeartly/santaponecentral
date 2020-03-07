@@ -82,14 +82,12 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Status changedLogicStatus = new Logic.Objects.Status()
-                {
-                    statusID = clientStatusID,
-                    statusDescription = changedStatus.statusDescription
-                };
                 try
                 {
-                    await repository.UpdateStatusByIDAsync(clientStatusID, changedLogicStatus);
+                    Logic.Objects.Status targetStatus = await repository.GetClientStatusByID(clientStatusID);
+                    targetStatus.statusDescription = changedStatus.statusDescription;
+
+                    await repository.UpdateStatusByIDAsync(targetStatus);
                     await repository.SaveAsync();
                     return Ok(await repository.GetClientStatusByID(clientStatusID));
                 }
