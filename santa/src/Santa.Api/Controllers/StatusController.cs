@@ -77,15 +77,48 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Status/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{clientStatusID}")]
+        public async Task<ActionResult<Logic.Objects.Status>> Put(Guid clientStatusID, [FromBody, Bind("statusDescription")] Models.ApiClientStatus changedStatus)
         {
+            try
+            {
+                Logic.Objects.Status changedLogicStatus = new Logic.Objects.Status()
+                {
+                    statusID = clientStatusID,
+                    statusDescription = changedStatus.statusDescription
+                };
+                try
+                {
+                    await repository.UpdateStatusByIDAsync(clientStatusID, changedLogicStatus);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetClientStatusByID(clientStatusID));
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{clientStatusID}")]
+        public async Task<ActionResult<Logic.Objects.Status>> Delete(Guid clientStatusID)
         {
+            try
+            {
+                await repository.DeleteStatusByIDAsync(clientStatusID);
+                await repository.SaveAsync();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
