@@ -52,7 +52,9 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
         #endregion
         #endregion
-
+        #region Status
+        Task<Status> GetStatusByID(Guid clientStatusID);
+        #endregion
         public Task SaveAsync();
         
     }
