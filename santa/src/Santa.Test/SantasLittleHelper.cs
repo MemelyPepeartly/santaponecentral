@@ -116,8 +116,7 @@ namespace Santa.Test
                     address = TestAddress,
                     senders = SenderGUIDList,
                     recipients = RecipientGUIDList,
-                    clientStatusID = Guid.NewGuid(),
-                    clientStatusDescription = "Test Status Description 1"
+                    clientStatus = new Status()
                 },
                 new Client
                 {
@@ -128,8 +127,7 @@ namespace Santa.Test
                     address = TestAddress,
                     senders = SenderGUIDList,
                     recipients = RecipientGUIDList,
-                    clientStatusID = Guid.NewGuid(),
-                    clientStatusDescription = "Test Status Description 2"
+                    clientStatus = new Status()
                 },
                 new Client
                 {
@@ -140,8 +138,7 @@ namespace Santa.Test
                     address = TestAddress,
                     senders = SenderGUIDList,
                     recipients = RecipientGUIDList,
-                    clientStatusID = Guid.NewGuid(),
-                    clientStatusDescription = "Test Status Description 3"
+                    clientStatus = new Status()
                 }
             };
         }

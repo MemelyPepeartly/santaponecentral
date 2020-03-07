@@ -46,7 +46,6 @@ namespace Santa.Api.Controllers.Tests
                     Assert.Equal(comparisonClient.clientID, tc.clientID);
                     Assert.Equal(comparisonClient.address, tc.address);
                     Assert.Equal(comparisonClient.clientName, tc.clientName);
-                    Assert.Equal(comparisonClient.clientStatusID, tc.clientStatusID);
                     Assert.Equal(comparisonClient.email, tc.email);
                     Assert.Equal(comparisonClient.nickname, tc.nickname);
                     Assert.Equal(comparisonClient.recipients, tc.recipients);
