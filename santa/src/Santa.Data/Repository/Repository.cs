@@ -381,5 +381,37 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
+
+        public async Task UpdateStatusByIDAsync(Guid clientStatusID, Status changedLogicStatus)
+        {
+            try
+            {
+                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+                if (targetStatus == null)
+                {
+                    throw new Exception("Client Status was not found. Update failed for status");
+                }
+                targetStatus.StatusDescription = changedLogicStatus.statusDescription;
+                santaContext.ClientStatus.Update(targetStatus);
+                    
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task DeleteStatusByIDAsync(Guid clientStatusID)
+        {
+            try
+            {
+                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+                santaContext.ClientStatus.Remove(targetStatus);
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
