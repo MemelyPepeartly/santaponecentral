@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Santa.Api.Models;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
@@ -11,9 +14,14 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
+        private readonly IRepository repository;
+        public StatusController(IRepository _repository)
+        {
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+        }
         // GET: api/Status
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Status>> Get()
         {
             return new string[] { "value1", "value2" };
         }

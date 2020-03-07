@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Santa.Data.Entities;
 using Santa.Logic.Objects;
 
@@ -21,11 +22,10 @@ namespace Santa.Data.Repository
                 ClientName = logicClient.clientName,
                 Email = logicClient.email,
                 Nickname = logicClient.nickname,
-                ClientStatusId = logicClient.clientStatusID,
                 ClientStatus = new ClientStatus()
                     {
-                        ClientStatusId = logicClient.clientStatusID,
-                        StatusDescription = logicClient.clientStatusDescription
+                        ClientStatusId = logicClient.clientStatus.statusID,
+                        StatusDescription = logicClient.clientStatus.statusDescription
                     },
 
                 AddressLine1 = logicClient.address.addressLineOne,
@@ -62,7 +62,7 @@ namespace Santa.Data.Repository
                     postalCode = contextCharacter.State
                 },
                 
-                clientStatusID = contextCharacter.ClientStatusId,
+                clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
                 
                 recipients = contextCharacter.ClientRelationXrefSenderClient.Select(s => s.RecipientClientId).ToList(),
                 senders = contextCharacter.ClientRelationXrefRecipientClient.Select(r => r.SenderClientId).ToList()
@@ -70,8 +70,20 @@ namespace Santa.Data.Repository
 
             return logicClient;
         }
-        #endregion
 
+
+        #endregion
+        #region Status
+        public static Status MapStatus(ClientStatus contextStatus)
+        {
+            Logic.Objects.Status logicStatus = new Status()
+            {
+                statusID = contextStatus.ClientStatusId,
+                statusDescription = contextStatus.StatusDescription
+            };
+            return logicStatus;
+        }
+        #endregion
         #region Event
 
         public static Logic.Objects.Event MapEvent(Entities.EventType contextEventType)

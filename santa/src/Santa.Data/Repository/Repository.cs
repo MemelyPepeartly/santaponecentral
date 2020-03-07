@@ -170,9 +170,11 @@ namespace Santa.Data.Repository
                 List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
                 clientList = santaContext.Client
                     .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(u => u.RecipientClient)
-                    .Include(s => s.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.SenderClient)
+                        .ThenInclude(crx => crx.RecipientClient)
+                    .Include(sc => sc.ClientRelationXrefSenderClient)
+                        .ThenInclude(crx => crx.SenderClient)
+                    .Include(s => s.ClientStatus)
+                    .AsNoTracking()
                     .Select(Mapper.MapClient).ToList();
                 return clientList;
             }
@@ -243,6 +245,8 @@ namespace Santa.Data.Repository
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(u => u.RecipientClient)
+                    .Include(s => s.ClientStatus)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
                 return logicClient;
             }
@@ -338,6 +342,20 @@ namespace Santa.Data.Repository
         public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Status> GetStatusByID(Guid clientStatusID)
+        {
+            try
+            {
+                Logic.Objects.Status logicStatus = Mapper.MapStatus(await santaContext.ClientStatus
+                    .FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID));
+                return logicStatus;
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
