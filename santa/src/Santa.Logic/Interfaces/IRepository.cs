@@ -22,7 +22,13 @@ namespace Santa.Logic.Interfaces
         List<Logic.Objects.Event> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync(Guid eventID);
         Task<Logic.Objects.Event> UpdateEventByIDAsync();
+       
         Task<Logic.Objects.Event> DeleteEventByIDAsync();
+        #endregion
+
+        #region Status
+        Task<Status> GetClientStatusByID(Guid clientStatusID);
+        List<Status> GetAllClientStatus();
         #endregion
 
         #region Surveys
@@ -51,9 +57,6 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync();
         Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
         #endregion
-        #endregion
-        #region Status
-        Task<Status> GetStatusByID(Guid clientStatusID);
         #endregion
         public Task SaveAsync();
         
