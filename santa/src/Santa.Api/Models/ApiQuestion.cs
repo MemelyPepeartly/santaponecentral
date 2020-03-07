@@ -7,7 +7,6 @@ namespace Santa.Api.Models
 {
     public class ApiQuestion
     {
-        public Guid questionID { get; set; }
         public string questionText { get; set; }
         public bool isSurveyOptionList { get; set; }
 
