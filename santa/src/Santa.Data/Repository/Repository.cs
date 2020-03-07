@@ -101,11 +101,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public void UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
+        public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             try
             {
-                Data.Entities.Client contextOldClient = santaContext.Client.FirstOrDefault(c => c.ClientId == targetLogicClient.clientID);
+                Data.Entities.Client contextOldClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == targetLogicClient.clientID);
 
                 contextOldClient.ClientName = targetLogicClient.clientName;
 
@@ -257,9 +257,21 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Event> UpdateEventByIDAsync()
+        public async Task UpdateEventByIDAsync(Event targetEvent)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.EventType oldContextEvent = await santaContext.EventType.FirstOrDefaultAsync(e => e.EventTypeId == targetEvent.eventTypeID);
+
+                oldContextEvent.EventDescription = targetEvent.eventDescription;
+                oldContextEvent.IsActive = targetEvent.active;
+
+                santaContext.Update(oldContextEvent);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 

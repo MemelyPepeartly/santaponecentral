@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models.Event_Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -83,9 +84,54 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Event/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{eventID}/Description")]
+        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventDescription description)
         {
+            try
+            {
+                Logic.Objects.Event targetEvent = await repository.GetEventByIDAsync(eventID);
+                targetEvent.eventDescription = description.eventDescription;
+                try
+                {
+                    await repository.UpdateEventByIDAsync(targetEvent);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetEventByIDAsync(eventID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // PUT: api/Event/5
+        [HttpPut("{eventID}/Active")]
+        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventActive active)
+        {
+            try
+            {
+                Logic.Objects.Event targetEvent = await repository.GetEventByIDAsync(eventID);
+                targetEvent.active = active.eventIsActive;
+                try
+                {
+                    await repository.UpdateEventByIDAsync(targetEvent);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetEventByIDAsync(eventID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // DELETE: api/ApiWithActions/5

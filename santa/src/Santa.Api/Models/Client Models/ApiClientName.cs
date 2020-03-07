@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models
 {
-    public class ApiNickname
+    public class ApiClientName
     {
-        public string clientNickname { get; set; }
+        public string clientName { get; set; }
     }
 }
