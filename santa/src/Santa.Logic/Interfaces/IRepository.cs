@@ -11,7 +11,6 @@ namespace Santa.Logic.Interfaces
         #region Client
         Task CreateClient(Client newClient);
         Task<Logic.Objects.Client> GetClientByID(Guid clientId);
-        Task<Logic.Objects.Client> GetClientByEmailAsync();
         List<Logic.Objects.Client> GetAllClients();
         Task<Logic.Objects.Client> UpdateClientByIDAsync();
         Task<Logic.Objects.Client> DeleteClientByIDAsync();
