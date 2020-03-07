@@ -83,8 +83,8 @@ namespace Santa.Api.Controllers
             try
             {
                 Logic.Objects.Survey logicSurvey = await repository.GetSurveyByID(surveyID);
-                IEnumerable<Logic.Objects.Question> questionOptions = logicSurvey.surveyQuestions.Where(q => q.questionID == surveyQuestionID);
-                return Ok(questionOptions);
+                Logic.Objects.Question logicQuestion = logicSurvey.surveyQuestions.FirstOrDefault(q => q.questionID == surveyQuestionID);
+                return Ok(logicQuestion.surveyOptionList);
             }
             catch
             {
