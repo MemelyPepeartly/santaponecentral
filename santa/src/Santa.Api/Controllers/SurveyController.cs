@@ -149,9 +149,6 @@ namespace Santa.Api.Controllers
                     sortOrder = question.sortOrder,
                 };
 
-                //gives the new GUID in the question to send to the creation of the Xref
-                question.questionID = newQuestion.questionID;
-
                 try
                 {
                     await repository.CreateSurveyQuestionAsync(newQuestion);
