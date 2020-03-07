@@ -123,7 +123,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Client/5
         [HttpPut("{clientID}")]
-        public async Task<ActionResult<ApiClient>> Put(Guid clientID, [FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry, clientSenders, clientRecipients")] ApiClient client)
+        public async Task<ActionResult<ApiClient>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiAddress address)
         {
             try
             {
@@ -132,21 +132,12 @@ namespace Santa.Api.Controllers
                 {
                     Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
 
-                    targetClient.clientName = client.clientName;
-                    targetClient.email = client.clientEmail;
-                    targetClient.nickname = client.clientNickname;
-
-                    targetClient.address.addressLineOne = client.clientAddressLine1;
-                    targetClient.address.addressLineTwo = client.clientAddressLine2;
-                    targetClient.address.city = client.clientCity;
-                    targetClient.address.country = client.clientCountry;
-                    targetClient.address.state = client.clientState;
-                    targetClient.address.postalCode = client.clientPostalCode;
-
-                    targetClient.senders = client.clientSenders;
-                    targetClient.recipients = client.clientRecipients;
-
-                    targetClient.clientStatus = await repository.GetClientStatusByID(client.clientStatusID);
+                    targetClient.address.addressLineOne = address.clientAddressLine1;
+                    targetClient.address.addressLineTwo = address.clientAddressLine2;
+                    targetClient.address.city = address.clientCity;
+                    targetClient.address.country = address.clientCountry;
+                    targetClient.address.state = address.clientState;
+                    targetClient.address.postalCode = address.clientPostalCode;
 
                     try
                     {
@@ -173,6 +164,7 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]

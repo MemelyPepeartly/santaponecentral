@@ -91,12 +91,99 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Data.Entities.Client mappedTargetContextClient = Mapper.MapClient(targetLogicClient);
-                santaContext.Client.Update(mappedTargetContextClient);
+                Data.Entities.Client testPutClient = santaContext.Client.FirstOrDefault(c => c.ClientId == targetLogicClient.clientID);
+
+                testPutClient.ClientName = targetLogicClient.clientName;
+
+                testPutClient.AddressLine1 = targetLogicClient.address.addressLineOne;
+                testPutClient.AddressLine2 = targetLogicClient.address.addressLineTwo;
+                testPutClient.City = targetLogicClient.address.city;
+                testPutClient.State = targetLogicClient.address.state;
+                testPutClient.Country = targetLogicClient.address.country;
+                testPutClient.PostalCode = targetLogicClient.address.postalCode;
+
+                testPutClient.ClientStatusId = targetLogicClient.clientStatus.statusID;
+
+                testPutClient.Email = targetLogicClient.email;
+                testPutClient.Nickname = targetLogicClient.nickname;
+
+                santaContext.Client.Update(testPutClient);
             }
             catch(Exception e)
             {
                 throw e.InnerException;
+            }
+        }
+        #endregion
+
+        #region ClientStatus
+        public List<Status> GetAllClientStatus()
+        {
+            try
+            {
+                List<Logic.Objects.Status> logicStatusList = santaContext.ClientStatus.Select(Mapper.MapStatus).ToList();
+                return logicStatusList;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        public async Task<Status> GetClientStatusByID(Guid clientStatusID)
+        {
+            try
+            {
+                Logic.Objects.Status logicStatus = Mapper.MapStatus(await santaContext.ClientStatus
+                    .FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID));
+                return logicStatus;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        public async Task CreateStatusAsync(Status newStatus)
+        {
+            try
+            {
+                Data.Entities.ClientStatus contextStatus = Mapper.MapStatus(newStatus);
+                await santaContext.ClientStatus.AddAsync(contextStatus);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
+        {
+            try
+            {
+                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == changedLogicStatus.statusID);
+                if (targetStatus == null)
+                {
+                    throw new Exception("Client Status was not found. Update failed for status");
+                }
+                targetStatus.StatusDescription = changedLogicStatus.statusDescription;
+                santaContext.ClientStatus.Update(targetStatus);
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task DeleteStatusByIDAsync(Guid clientStatusID)
+        {
+            try
+            {
+                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+                santaContext.ClientStatus.Remove(targetStatus);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
         #endregion
@@ -341,77 +428,7 @@ namespace Santa.Data.Repository
         }
         #endregion
         
-        #region ClientStatus
-        public List<Status> GetAllClientStatus()
-        {
-            try
-            {
-                List<Logic.Objects.Status> logicStatusList = santaContext.ClientStatus.Select(Mapper.MapStatus).ToList();
-                return logicStatusList;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-        public async Task<Status> GetClientStatusByID(Guid clientStatusID)
-        {
-            try
-            {
-                Logic.Objects.Status logicStatus = Mapper.MapStatus(await santaContext.ClientStatus
-                    .FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID));
-                return logicStatus;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-        public async Task CreateStatusAsync(Status newStatus)
-        {
-            try
-            {
-                Data.Entities.ClientStatus contextStatus = Mapper.MapStatus(newStatus);
-                await santaContext.ClientStatus.AddAsync(contextStatus);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
-        {
-            try
-            {
-                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == changedLogicStatus.statusID);
-                if (targetStatus == null)
-                {
-                    throw new Exception("Client Status was not found. Update failed for status");
-                }
-                targetStatus.StatusDescription = changedLogicStatus.statusDescription;
-                santaContext.ClientStatus.Update(targetStatus);
-
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        public async Task DeleteStatusByIDAsync(Guid clientStatusID)
-        {
-            try
-            {
-                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
-                santaContext.ClientStatus.Remove(targetStatus);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-        #endregion
+        
 
         #region Utility
         /// <summary>
