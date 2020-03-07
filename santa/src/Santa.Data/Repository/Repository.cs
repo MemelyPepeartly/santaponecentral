@@ -87,9 +87,17 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-        public Task<Logic.Objects.Client> UpdateClientByIDAsync()
+        public void UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Client mappedTargetContextClient = Mapper.MapClient(targetLogicClient);
+                santaContext.Client.Update(mappedTargetContextClient);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 
@@ -372,11 +380,11 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task UpdateStatusByIDAsync(Guid clientStatusID, Status changedLogicStatus)
+        public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
         {
             try
             {
-                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == changedLogicStatus.statusID);
                 if (targetStatus == null)
                 {
                     throw new Exception("Client Status was not found. Update failed for status");

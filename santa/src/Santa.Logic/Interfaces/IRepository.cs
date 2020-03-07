@@ -12,7 +12,7 @@ namespace Santa.Logic.Interfaces
         Task CreateClient(Client newClient);
         Task<Logic.Objects.Client> GetClientByID(Guid clientId);
         List<Logic.Objects.Client> GetAllClients();
-        Task<Logic.Objects.Client> UpdateClientByIDAsync();
+        void UpdateClientByIDAsync(Client targetClient);
         Task<Logic.Objects.Client> DeleteClientByIDAsync();
         #endregion
 
@@ -29,7 +29,7 @@ namespace Santa.Logic.Interfaces
         Task CreateStatusAsync(Status newStatus);
         Task<Status> GetClientStatusByID(Guid clientStatusID);
         List<Status> GetAllClientStatus();
-        Task UpdateStatusByIDAsync(Guid clientStatusID, Status changedLogicStatus);
+        Task UpdateStatusByIDAsync(Status targetStatus);
         Task DeleteStatusByIDAsync(Guid clientStatusID);
         #endregion
 

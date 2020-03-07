@@ -122,9 +122,56 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Client/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{clientID}")]
+        public async Task<ActionResult<ApiClient>> Put(Guid clientID, [FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry, clientSenders, clientRecipients")] ApiClient client)
         {
+            try
+            {
+                
+                try
+                {
+                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+
+                    targetClient.clientName = client.clientName;
+                    targetClient.email = client.clientEmail;
+                    targetClient.nickname = client.clientNickname;
+
+                    targetClient.address.addressLineOne = client.clientAddressLine1;
+                    targetClient.address.addressLineTwo = client.clientAddressLine2;
+                    targetClient.address.city = client.clientCity;
+                    targetClient.address.country = client.clientCountry;
+                    targetClient.address.state = client.clientState;
+                    targetClient.address.postalCode = client.clientPostalCode;
+
+                    targetClient.senders = client.clientSenders;
+                    targetClient.recipients = client.clientRecipients;
+
+                    targetClient.clientStatus = await repository.GetClientStatusByID(client.clientStatusID);
+
+                    try
+                    {
+                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.SaveAsync();
+                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                        return Ok(updatedClient);
+                    }
+                    catch(Exception e)
+                    {
+                        throw e.InnerException;
+                    }
+                    
+
+
+                }
+                catch(Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
