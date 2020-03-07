@@ -10,6 +10,7 @@ namespace Santa.Logic.Interfaces
     {
         #region Client
         Task CreateClient(Client newClient);
+        Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
         Task<Logic.Objects.Client> GetClientByID(Guid clientId);
         List<Logic.Objects.Client> GetAllClients();
         void UpdateClientByIDAsync(Client targetClient);
@@ -61,5 +62,6 @@ namespace Santa.Logic.Interfaces
         #endregion
         #endregion
         public Task SaveAsync();
+        
     }
 }

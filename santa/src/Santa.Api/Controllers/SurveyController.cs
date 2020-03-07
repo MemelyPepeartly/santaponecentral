@@ -99,7 +99,7 @@ namespace Santa.Api.Controllers
         /// <param name="survey"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<ApiSurvey>> Post([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
+        public async Task<ActionResult<ApiSurvey>> PostSurvey([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
         {
             try
             {

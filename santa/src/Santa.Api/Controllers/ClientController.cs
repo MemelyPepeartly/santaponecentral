@@ -121,9 +121,26 @@ namespace Santa.Api.Controllers
 
         }
 
-        // PUT: api/Client/5
-        [HttpPut("{clientID}")]
-        public async Task<ActionResult<ApiClient>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiAddress address)
+        // POST: api/Client/5/Relationship
+        [HttpPost("{clientID}/Relationship", Name = "PostRelationship")]
+        public async Task<ActionResult<Logic.Objects.Client>> PostRelationship(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
+        {
+            try
+            {
+                await repository.CreateClientRelationByID(clientID, relationship.recieverClientID, relationship.eventTypeID);
+                await repository.SaveAsync();
+                Logic.Objects.Client updatedClient = await repository.GetClientByID(clientID);
+                return Ok(updatedClient);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        // PUT: api/Client/Address/5
+        [HttpPut("{clientID}/Address")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiAddress address)
         {
             try
             {
@@ -164,7 +181,40 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+        // PUT: api/Client/Nickname/5
+        [HttpPut("{clientID}/Nickname", Name ="PutNickname")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiNickname nickname)
+        {
+            try
+            {
 
+                try
+                {
+                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                    targetClient.nickname = nickname.clientNickname;
+
+                    try
+                    {
+                        repository.UpdateClientByIDAsync(targetClient);
+                        await repository.SaveAsync();
+                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                        return Ok(updatedClient);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e.InnerException;
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]

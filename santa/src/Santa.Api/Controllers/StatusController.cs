@@ -29,7 +29,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -43,7 +43,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -66,13 +66,13 @@ namespace Santa.Api.Controllers
                 }
                 catch(Exception e)
                 {
-                    throw new Exception(e.Message);
+                    throw e.InnerException;
                 }
                 
             }
             catch(Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -93,13 +93,13 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message);
+                    throw e.InnerException;
                 }
 
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -115,7 +115,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
     }
