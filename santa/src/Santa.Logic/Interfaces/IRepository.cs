@@ -29,6 +29,7 @@ namespace Santa.Logic.Interfaces
         #region Status
         Task<Status> GetClientStatusByID(Guid clientStatusID);
         List<Status> GetAllClientStatus();
+        Task CreateStatusAsync(Status newStatus);
         #endregion
 
         #region Surveys

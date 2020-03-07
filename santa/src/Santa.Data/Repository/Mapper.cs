@@ -84,6 +84,15 @@ namespace Santa.Data.Repository
             };
             return logicStatus;
         }
+        public static Data.Entities.ClientStatus MapStatus(Status logicStatus)
+        {
+            Entities.ClientStatus contextStatus = new ClientStatus()
+            {
+                ClientStatusId = logicStatus.statusID,
+                StatusDescription = logicStatus.statusDescription
+            };
+            return contextStatus;
+        }
         #endregion
         #region Event
 

@@ -49,8 +49,31 @@ namespace Santa.Api.Controllers
 
         // POST: api/Status
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Logic.Objects.Status>> PostStatus([FromBody, Bind("statusDescription")] Models.ApiClientStatus clientStatus)
         {
+            try
+            {
+                Logic.Objects.Status newStatus = new Logic.Objects.Status()
+                {
+                    statusID = Guid.NewGuid(),
+                    statusDescription = clientStatus.statusDescription
+                };
+                try
+                {
+                    await repository.CreateStatusAsync(newStatus);
+                    await repository.SaveAsync();
+                    return Ok(newStatus);
+                }
+                catch(Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+                
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         // PUT: api/Status/5

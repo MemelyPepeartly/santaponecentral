@@ -368,5 +368,18 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
+
+        public async Task CreateStatusAsync(Status newStatus)
+        {
+            try
+            {
+                Data.Entities.ClientStatus contextStatus = Mapper.MapStatus(newStatus);
+                await santaContext.ClientStatus.AddAsync(contextStatus);
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
