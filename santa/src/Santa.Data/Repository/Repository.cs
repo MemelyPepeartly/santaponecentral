@@ -37,10 +37,24 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Logic.Objects.Client> DeleteClientByIDAsync()
+        public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.ClientRelationXref contexRelation = new ClientRelationXref()
+                {
+                    SenderClientId = senderClientID,
+                    RecipientClientId = recipientClientID,
+                    EventTypeId = eventTypeID
+                };
+                await santaContext.ClientRelationXref.AddAsync(contexRelation);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
+        
         /// <summary>
         /// Gets a list of all clients
         /// </summary>
@@ -61,7 +75,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         /// <summary>
@@ -84,35 +98,39 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public void UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             try
             {
-                Data.Entities.Client testPutClient = santaContext.Client.FirstOrDefault(c => c.ClientId == targetLogicClient.clientID);
+                Data.Entities.Client contextOldClient = santaContext.Client.FirstOrDefault(c => c.ClientId == targetLogicClient.clientID);
 
-                testPutClient.ClientName = targetLogicClient.clientName;
+                contextOldClient.ClientName = targetLogicClient.clientName;
 
-                testPutClient.AddressLine1 = targetLogicClient.address.addressLineOne;
-                testPutClient.AddressLine2 = targetLogicClient.address.addressLineTwo;
-                testPutClient.City = targetLogicClient.address.city;
-                testPutClient.State = targetLogicClient.address.state;
-                testPutClient.Country = targetLogicClient.address.country;
-                testPutClient.PostalCode = targetLogicClient.address.postalCode;
+                contextOldClient.AddressLine1 = targetLogicClient.address.addressLineOne;
+                contextOldClient.AddressLine2 = targetLogicClient.address.addressLineTwo;
+                contextOldClient.City = targetLogicClient.address.city;
+                contextOldClient.State = targetLogicClient.address.state;
+                contextOldClient.Country = targetLogicClient.address.country;
+                contextOldClient.PostalCode = targetLogicClient.address.postalCode;
 
-                testPutClient.ClientStatusId = targetLogicClient.clientStatus.statusID;
+                contextOldClient.ClientStatusId = targetLogicClient.clientStatus.statusID;
 
-                testPutClient.Email = targetLogicClient.email;
-                testPutClient.Nickname = targetLogicClient.nickname;
+                contextOldClient.Email = targetLogicClient.email;
+                contextOldClient.Nickname = targetLogicClient.nickname;
 
-                santaContext.Client.Update(testPutClient);
+                santaContext.Client.Update(contextOldClient);
             }
             catch(Exception e)
             {
                 throw e.InnerException;
             }
+        }
+        public Task<Logic.Objects.Client> DeleteClientByIDAsync()
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
@@ -126,7 +144,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public async Task<Status> GetClientStatusByID(Guid clientStatusID)
@@ -139,7 +157,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public async Task CreateStatusAsync(Status newStatus)
@@ -151,7 +169,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -170,7 +188,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -183,7 +201,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         #endregion
@@ -219,7 +237,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         /// <summary>
@@ -236,7 +254,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public Task<Event> UpdateEventByIDAsync()
@@ -260,7 +278,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         /// <summary>
@@ -284,7 +302,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         /// <summary>
@@ -307,7 +325,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
 
@@ -328,7 +346,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
         }
         public Task<Question> DeleteSurveyOptionByIDAsync()
@@ -356,7 +374,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
 
         }
@@ -377,7 +395,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
 
         }
@@ -395,7 +413,7 @@ namespace Santa.Data.Repository
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e.InnerException;
             }
 
         }
@@ -428,8 +446,6 @@ namespace Santa.Data.Repository
         }
         #endregion
         
-        
-
         #region Utility
         /// <summary>
         /// Saves changes made to the context
