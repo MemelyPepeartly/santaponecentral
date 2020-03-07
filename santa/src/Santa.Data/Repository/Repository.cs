@@ -292,17 +292,6 @@ namespace Santa.Data.Repository
                 throw new Exception(e.Message);
             }
         }
-        public Task<List<Question>> GetSurveyQuestionsBySurveyIDAsync(Guid surveyId)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch
-            {
-                return null;
-            }
-        }
 
         public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync()
         {
