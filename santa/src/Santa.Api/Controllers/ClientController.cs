@@ -252,7 +252,6 @@ namespace Santa.Api.Controllers
         {
             try
             {
-
                 try
                 {
                     Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);

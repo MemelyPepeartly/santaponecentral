@@ -103,8 +103,9 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Status/5
         [HttpDelete("{clientStatusID}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<Logic.Objects.Status>> Delete(Guid clientStatusID)
         {
             try

@@ -128,7 +128,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Logic.Objects.Client> DeleteClientByIDAsync()
+        public Task<Logic.Objects.Client> DeleteClientByIDAsync(Guid clientID)
         {
             throw new NotImplementedException();
         }
@@ -196,8 +196,8 @@ namespace Santa.Data.Repository
         {
             try
             {
-                ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
-                santaContext.ClientStatus.Remove(targetStatus);
+                ClientStatus contextStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+                santaContext.ClientStatus.Remove(contextStatus);
             }
             catch (Exception e)
             {
@@ -219,9 +219,17 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Event> DeleteEventByIDAsync()
+        public async Task DeleteEventByIDAsync(Guid eventID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.EventType contextEvent = await santaContext.EventType.FirstOrDefaultAsync(e => e.EventTypeId == eventID);
+                santaContext.EventType.Remove(contextEvent);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         /// <summary>
         /// Gets a list of all events

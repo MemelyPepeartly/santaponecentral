@@ -134,10 +134,21 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE: api/Event/5
+        [HttpDelete("{eventID}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Delete(Guid eventID)
         {
+            try
+            {
+                await repository.DeleteEventByIDAsync(eventID);
+                await repository.SaveAsync();
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }
