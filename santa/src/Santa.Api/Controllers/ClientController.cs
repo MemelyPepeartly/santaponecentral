@@ -218,23 +218,15 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                targetClient.nickname = nickname.clientNickname;
 
                 try
                 {
-                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
-                    targetClient.nickname = nickname.clientNickname;
-
-                    try
-                    {
-                        await repository.UpdateClientByIDAsync(targetClient);
-                        await repository.SaveAsync();
-                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
-                        return Ok(updatedClient);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException;
-                    }
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
@@ -252,27 +244,20 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                targetClient.clientName = name.clientName;
                 try
                 {
-                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
-                    targetClient.clientName = name.clientName;
-
-                    try
-                    {
-                        await repository.UpdateClientByIDAsync(targetClient);
-                        await repository.SaveAsync();
-                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
-                        return Ok(updatedClient);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException;
-                    }
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
                     throw e.InnerException;
                 }
+                
             }
             catch (Exception e)
             {

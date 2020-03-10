@@ -348,7 +348,21 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public async Task UpdateSurveyByIDAsync(Logic.Objects.Survey targetSurvey)
+        {
+            try
+            {
+                Data.Entities.Survey contextOldSurvey = await santaContext.Survey.FirstOrDefaultAsync(s => s.SurveyId == targetSurvey.surveyID);
+                contextOldSurvey.SurveyDescription = targetSurvey.surveyDescription;
+                contextOldSurvey.IsActive = targetSurvey.active;
+                santaContext.Update(contextOldSurvey);
 
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         #endregion
 
         #region SurveyOption
@@ -483,6 +497,7 @@ namespace Santa.Data.Repository
             }
 
         }
+        
         #endregion
     }
 }
