@@ -184,23 +184,15 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                targetClient.email = email.clientEmail;
 
                 try
                 {
-                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
-                    targetClient.email = email.clientEmail;
-
-                    try
-                    {
-                        await repository.UpdateClientByIDAsync(targetClient);
-                        await repository.SaveAsync();
-                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
-                        return Ok(updatedClient);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException;
-                    }
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
