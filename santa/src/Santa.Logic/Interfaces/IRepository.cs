@@ -38,6 +38,7 @@ namespace Santa.Logic.Interfaces
 
         Task<Logic.Objects.Survey> GetSurveyByID(Guid id);
         Task CreateSurveyAsync(Survey newSurvey);
+        Task UpdateSurveyByIDAsync(Survey targetSurvey);
 
         #region SurveyOptions
         Task CreateSurveyOptionAsync(Option newQuestionOption);

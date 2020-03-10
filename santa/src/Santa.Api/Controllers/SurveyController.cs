@@ -76,7 +76,14 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        
         //GET: api/Survey/5/SurveyQuestions/5/SurveyOptions
+        /// <summary>
+        /// Gets a list of question options from a question within a given survey
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="surveyQuestionID"></param>
+        /// <returns></returns>
         [HttpGet("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
         public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync(Guid surveyID, Guid surveyQuestionID)
         {
@@ -128,9 +135,10 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+
         // POST: api/Survey/5/SurveyQuestions
         /// <summary>
-        /// Posts new question to a survey using its surveyID. Binds to the ApiQuestion model.
+        /// Posts new question. Binds on the ApiQuestion model
         /// </summary>
         /// <param name="surveyID"></param>
         /// <param name="question"></param>
@@ -169,6 +177,12 @@ namespace Santa.Api.Controllers
         }
 
         //POST: api/Survey/SurveyQuestions/5/SurveyOptions
+        /// <summary>
+        /// Posts a new surveyOption for a question given a surveyQuestionID. Binds on the ApiQuestionOption model.
+        /// </summary>
+        /// <param name="surveyQuestionID"></param>
+        /// <param name="questionOption"></param>
+        /// <returns></returns>
         [HttpPost("SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
         public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
         {
@@ -203,9 +217,65 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Survey/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        /// <summary>
+        /// Put updates a survey's description by survey ID. Binds to ApiSurveyDescription model.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        [HttpPut("{surveyID}/Description")]
+        public async Task<ActionResult<Logic.Objects.Survey>> PutSurveyDescription(Guid surveyID, [FromBody, Bind("surveyDescription")] Models.Survey_Models.ApiSurveyDescription description)
         {
+            try
+            {
+                Logic.Objects.Survey targetSurvey = await repository.GetSurveyByID(surveyID);
+                targetSurvey.surveyDescription = description.surveyDescription;
+                try
+                {
+                    await repository.UpdateSurveyByIDAsync(targetSurvey);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyByID(surveyID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        // PUT: api/Survey/5
+        /// <summary>
+        /// Put updates a survey's active status. Binds to the ApiSurveyActive model.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        [HttpPut("{surveyID}/Active")]
+        public async Task<ActionResult<Logic.Objects.Survey>> PutSurveyActive(Guid surveyID, [FromBody, Bind("isActive")] Models.Survey_Models.ApiSurveyActive active)
+        {
+            try
+            {
+                Logic.Objects.Survey targetSurvey = await repository.GetSurveyByID(surveyID);
+                targetSurvey.active = active.isActive;
+                try
+                {
+                    await repository.UpdateSurveyByIDAsync(targetSurvey);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyByID(surveyID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
