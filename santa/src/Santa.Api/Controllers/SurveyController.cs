@@ -278,10 +278,42 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE: api/Survey/5
+        /// <summary>
+        /// Delete's a question within a survey by deleting it's Xref relationship.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="surveyQuestionID"></param>
+        /// <returns></returns>
+        [HttpDelete("{surveyID}/SurveyQuestions/{surveyQuestionID}")]
+        public async Task<ActionResult> DeleteSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
         {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // DELETE: api/Survey/5
+        /// <summary>
+        /// Deletes a survey by its surveyID
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <returns></returns>
+        [HttpDelete("{surveyID}")]
+        public async Task<ActionResult> DeleteSurvey(Guid surveyID)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }
