@@ -363,6 +363,30 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public async Task DeleteSurveyByIDAsync(Guid surveyID)
+        {
+            try
+            {
+                Data.Entities.Survey contextSurvey = await santaContext.Survey.FirstOrDefaultAsync(s => s.SurveyId == surveyID);
+                santaContext.Survey.Remove(contextSurvey);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(Guid surveyID, Guid surveyQuestionID)
+        {
+            try
+            {
+                Data.Entities.SurveyQuestionXref contextSurveyQuestionXref = await santaContext.SurveyQuestionXref.FirstOrDefaultAsync(sqx => sqx.SurveyId == surveyID && sqx.SurveyQuestionId == surveyQuestionID);
+                santaContext.SurveyQuestionXref.Remove(contextSurveyQuestionXref);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         #endregion
 
         #region SurveyOption
@@ -497,7 +521,6 @@ namespace Santa.Data.Repository
             }
 
         }
-        
         #endregion
     }
 }
