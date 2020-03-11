@@ -42,11 +42,16 @@ namespace Santa.Logic.Interfaces
         Task DeleteSurveyByIDAsync(Guid surveyID);
         Task DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(Guid surveyID, Guid surveyQuestionID);
 
-        #region SurveyOptions
-        Task CreateSurveyOptionAsync(Option newQuestionOption);
+        #region SurveyOption
+        List<Option> GetAllSurveyOption();
+        Task<Option> GetSurveyOptionByIDAsync(Guid questionOptionID);
+        #endregion
+
+        #region SurveyQuestionOptionXref
+        Task CreateQuestionOptionAsync(Option newQuestionOption);
         Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption);
-        Task<Logic.Objects.Question> UpdateSurveyOptionByIDAsync();
-        Task<Logic.Objects.Question> DeleteSurveyOptionByIDAsync();
+        Task<Question> UpdateQuestionOptionByIDAsync();
+        Task<Question> DeleteQuestionOptionByIDAsync();
         #endregion
 
         #region SurveyQuestions

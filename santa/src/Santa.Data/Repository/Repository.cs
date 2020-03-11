@@ -406,12 +406,38 @@ namespace Santa.Data.Repository
         #endregion
 
         #region SurveyOption
+
+        public List<Option> GetAllSurveyOption()
+        {
+            try
+            {
+                return santaContext.SurveyOption.Include(s=>s.SurveyQuestionOptionXref).Select(Mapper.MapSurveyOption).ToList();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Option> GetSurveyOptionByIDAsync(Guid questionOptionID)
+        {
+            try
+            {
+                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).FirstOrDefaultAsync(so => so.SurveyOptionId == questionOptionID));
+                return logicOption;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         /// <summary>
         /// Creates a SurveyOption and adds it to the context
         /// </summary>
         /// <param name="newSurveyOption"></param>
         /// <returns></returns>
-        public async Task CreateSurveyOptionAsync(Option newSurveyOption)
+        public async Task CreateQuestionOptionAsync(Option newSurveyOption)
         {
             try
             {
@@ -423,17 +449,17 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Question> DeleteSurveyOptionByIDAsync()
+        public Task<Question> DeleteQuestionOptionByIDAsync()
         {
             throw new NotImplementedException();
         }
-        public Task<Question> UpdateSurveyOptionByIDAsync()
+        public Task<Question> UpdateQuestionOptionByIDAsync()
         {
             throw new NotImplementedException();
         }
         #endregion
 
-        #region QuestionOption
+        #region SurveyQuestionOptionXref
         /// <summary>
         /// Creates the Xref between a Survey Question and a Survey Option
         /// </summary>
@@ -512,7 +538,7 @@ namespace Santa.Data.Repository
         /// <summary>
         /// Creates the cross reference between a survey and the questions it has and adds it to the context
         /// </summary>
-        /// <param name="contextQuestion"></param>
+        /// <param name="logicQuestion"></param>
         /// <returns></returns>
         public async Task CreateSurveyQuestionXrefAsync(Question logicQuestion)
         {
@@ -573,6 +599,7 @@ namespace Santa.Data.Repository
             }
 
         }
+        
         #endregion
     }
 }
