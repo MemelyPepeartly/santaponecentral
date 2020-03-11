@@ -286,17 +286,20 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpDelete("{surveyID}/SurveyQuestions/{surveyQuestionID}")]
-        public async Task<ActionResult> DeleteSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
+        public async Task<ActionResult<Logic.Objects.Survey>> DeleteSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
         {
             try
             {
-                throw new NotImplementedException();
+                await repository.DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(surveyID, surveyQuestionID);
+                await repository.SaveAsync();
+                return Ok(await repository.GetSurveyByID(surveyID));
             }
             catch(Exception e)
             {
                 throw e.InnerException;
             }
         }
+
         // DELETE: api/Survey/5
         /// <summary>
         /// Deletes a survey by its surveyID
@@ -308,7 +311,9 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                await repository.DeleteSurveyByIDAsync(surveyID);
+                await repository.SaveAsync();
+                return NoContent();
             }
             catch (Exception e)
             {
