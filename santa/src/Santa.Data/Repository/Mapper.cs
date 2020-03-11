@@ -157,7 +157,7 @@ namespace Santa.Data.Repository
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
-                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
+                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList()
             };
             return logicQuestion;
         }
@@ -187,37 +187,7 @@ namespace Santa.Data.Repository
             };
             return contextQuestionXref;
         }
-        #region QuestionOption
-
-        public static SurveyQuestionOptionXref MapQuestionOptionXref(Option newQuestionOption)
-        {
-            Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
-            {
-                SurveyQuestionId = newQuestionOption.questionID,
-                SurveyOptionId = newQuestionOption.surveyOptionID,
-                SortOrder = newQuestionOption.sortOrder,
-                IsActive = newQuestionOption.isActive
-            };
-            return contextQuestionOptionXref;
-        }
-        /// <summary>
-        /// Takes a context question option Xref and returns a logic option 
-        /// </summary>
-        /// <param name="contextQuestionOption"></param>
-        /// <returns></returns>
-        public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
-        {
-            Logic.Objects.Option logicOption = new Option()
-            {
-                surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
-                displayText = contextQuestionOption.SurveyOption.DisplayText,
-                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue,
-                sortOrder = contextQuestionOption.SortOrder,
-                isActive = contextQuestionOption.IsActive,
-                questionID = contextQuestionOption.SurveyQuestionId
-            };
-            return logicOption;
-        }
+        #region SurveyOption
         /// <summary>
         /// Takes a logic survey option and returns a context survey option
         /// </summary>
@@ -232,6 +202,43 @@ namespace Santa.Data.Repository
                 SurveyOptionValue = newSurveyOption.surveyOptionValue
             };
             return contextSurveyOption;
+        }
+        public static Option MapSurveyOption(SurveyOption contextSurveyOption)
+        {
+            Logic.Objects.Option logicSurveyOption = new Option()
+            {
+                surveyOptionID = contextSurveyOption.SurveyOptionId,
+                displayText = contextSurveyOption.DisplayText,
+                surveyOptionValue = contextSurveyOption.SurveyOptionValue
+            };
+            return logicSurveyOption;
+        }
+        #endregion
+        #region QuestionOptionXref
+
+        public static SurveyQuestionOptionXref MapQuestionOptionXref(Option newQuestionOption)
+        {
+            Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
+            {
+                SurveyOptionId = newQuestionOption.surveyOptionID
+#warning Gonna cause problems here probably too
+            };
+            return contextQuestionOptionXref;
+        }
+        /// <summary>
+        /// Takes a context question option Xref and returns a logic option 
+        /// </summary>
+        /// <param name="contextQuestionOption"></param>
+        /// <returns></returns>
+        public static Logic.Objects.Option MapSurveyQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
+        {
+            Logic.Objects.Option logicOption = new Option()
+            {
+                surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
+                displayText = contextQuestionOption.SurveyOption.DisplayText,
+                surveyOptionValue = contextQuestionOption.SurveyOption.SurveyOptionValue
+            };
+            return logicOption;
         }
         #endregion
         #endregion

@@ -19,28 +19,58 @@ namespace Santa.Api.Controllers
         }
         // GET: api/SurveyOption
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Option>> GetAllSurveyOptions()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(repository.GetAllSurveyOption());
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // GET: api/SurveyOption/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{surveyOptionID}")]
+        public async Task<ActionResult<Logic.Objects.Option>> GetSurveyOptionByIDAsync(Guid surveyOptionID)
         {
-            return "value";
+            try
+            {
+                return Ok(await repository.GetSurveyOptionByIDAsync(surveyOptionID));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // PUT: api/SurveyOption/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }

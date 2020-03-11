@@ -106,16 +106,13 @@ namespace Santa.Api.Controllers
             {
                 Logic.Objects.Option logicSurveyOption = new Logic.Objects.Option()
                 {
-                    questionID = surveyQuestionID,
                     surveyOptionID = Guid.NewGuid(),
                     displayText = questionOption.displayText,
-                    surveyOptionValue = questionOption.surveyOptionValue,
-                    sortOrder = questionOption.sortOrder,
-                    isActive = questionOption.isActive
+                    surveyOptionValue = questionOption.surveyOptionValue
                 };
                 try
                 {
-                    await repository.CreateSurveyOptionAsync(logicSurveyOption);
+                    await repository.CreateQuestionOptionAsync(logicSurveyOption);
                     await repository.SaveAsync();
                     await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption);
                     await repository.SaveAsync();
