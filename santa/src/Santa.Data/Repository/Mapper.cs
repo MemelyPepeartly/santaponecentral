@@ -126,7 +126,7 @@ namespace Santa.Data.Repository
                 eventTypeID = contextSurvey.EventTypeId,
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
-                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(Mapper.MapQuestion).ToList(),
+                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(q => Mapper.MapQuestion(q.SurveyQuestion)).ToList(),
             };
             return logicSurvey;
         }
@@ -149,18 +149,15 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="contextSurveyQuestion"></param>
         /// <returns></returns>
-        public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestionXref contextSurveyQuestion)
+        public static Logic.Objects.Question MapQuestion(Entities.SurveyQuestion contextSurveyQuestion)
         {
 
-            Logic.Objects.Question logicQuestion = new Question(contextSurveyQuestion.SurveyId)
+            Logic.Objects.Question logicQuestion = new Question()
             {
                 questionID = contextSurveyQuestion.SurveyQuestionId,
-                questionText = contextSurveyQuestion.SurveyQuestion.QuestionText,
-                isSurveyOptionList = contextSurveyQuestion.SurveyQuestion.IsSurveyOptionList,
-                isActive = contextSurveyQuestion.IsActive,
-                sortOrder = contextSurveyQuestion.SortOrder,
-                surveyID = contextSurveyQuestion.SurveyId,
-                surveyOptionList = contextSurveyQuestion.SurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
+                questionText = contextSurveyQuestion.QuestionText,
+                isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
+                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapQuestionOption).ToList()
             };
             return logicQuestion;
         }
@@ -185,10 +182,8 @@ namespace Santa.Data.Repository
         {
             Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
             {
-                SurveyId = logicQuestion.surveyID,
                 SurveyQuestionId = logicQuestion.questionID,
-                IsActive = logicQuestion.isActive,
-                SortOrder = logicQuestion.sortOrder
+#warning might be a cause of problems here
             };
             return contextQuestionXref;
         }
@@ -212,7 +207,7 @@ namespace Santa.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.Option MapQuestionOption(SurveyQuestionOptionXref contextQuestionOption)
         {
-            Logic.Objects.Option logicOption = new Option(contextQuestionOption.SurveyQuestionId)
+            Logic.Objects.Option logicOption = new Option()
             {
                 surveyOptionID = contextQuestionOption.SurveyOption.SurveyOptionId,
                 displayText = contextQuestionOption.SurveyOption.DisplayText,

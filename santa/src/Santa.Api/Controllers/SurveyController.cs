@@ -57,6 +57,7 @@ namespace Santa.Api.Controllers
             }
         }
 
+
         // GET: api/Survey/5/SurveyQuestions
         /// <summary>
         /// Gets surveyquestions within a given survey by surveyID
@@ -64,7 +65,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsAsync(Guid surveyID)
+        public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsFromSurveyAsync(Guid surveyID)
         {
             try
             {
@@ -85,7 +86,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
-        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionAsync(Guid surveyID, Guid surveyQuestionID)
+        public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionFromQuestionInSurveyAsync(Guid surveyID, Guid surveyQuestionID)
         {
             try
             {
@@ -136,86 +137,8 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/Survey/5/SurveyQuestions
-        /// <summary>
-        /// Posts new question. Binds on the ApiQuestion model
-        /// </summary>
-        /// <param name="surveyID"></param>
-        /// <param name="question"></param>
-        /// <returns></returns>
-        [HttpPost("{surveyID}/SurveyQuestions")]
-        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestions(Guid surveyID, [FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
-        {
-            try
-            {
-                Logic.Objects.Question newQuestion = new Logic.Objects.Question(surveyID)
-                {
-                    questionID = Guid.NewGuid(),
-                    questionText = question.questionText,
-                    isSurveyOptionList = question.isSurveyOptionList,
-                    isActive = question.isActive,
-                    sortOrder = question.sortOrder,
-                };
-
-                try
-                {
-                    await repository.CreateSurveyQuestionAsync(newQuestion);
-                    await repository.CreateSurveyQuestionXrefAsync(newQuestion);
-                    await repository.SaveAsync();
-                    var survey = await repository.GetSurveyByID(surveyID);
-                    return Ok(survey.surveyQuestions.Where(q => q.questionID == newQuestion.questionID));
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
-
-        //POST: api/Survey/SurveyQuestions/5/SurveyOptions
-        /// <summary>
-        /// Posts a new surveyOption for a question given a surveyQuestionID. Binds on the ApiQuestionOption model.
-        /// </summary>
-        /// <param name="surveyQuestionID"></param>
-        /// <param name="questionOption"></param>
-        /// <returns></returns>
-        [HttpPost("SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
-        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
-        {
-            try
-            {
-                Logic.Objects.Option logicSurveyOption = new Logic.Objects.Option(surveyQuestionID)
-                {
-                    surveyOptionID = Guid.NewGuid(),
-                    displayText = questionOption.displayText,
-                    surveyOptionValue = questionOption.surveyOptionValue,
-                    sortOrder = questionOption.sortOrder,
-                    isActive = questionOption.isActive
-                };
-                try
-                {
-                    await repository.CreateSurveyOptionAsync(logicSurveyOption);
-                    await repository.SaveAsync();
-                    await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption);
-                    await repository.SaveAsync();
-                    return Ok(logicSurveyOption);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }
-
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
-
+  
+        
         // PUT: api/Survey/5
         /// <summary>
         /// Put updates a survey's description by survey ID. Binds to ApiSurveyDescription model.

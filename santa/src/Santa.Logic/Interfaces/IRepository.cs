@@ -50,6 +50,8 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyQuestions
+        List<Question> GetAllSurveyQuestions();
+        Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
         Task CreateSurveyQuestionXrefAsync(Logic.Objects.Question logicQuestion);
         Task CreateSurveyQuestionAsync(Question newQuestion);
         
@@ -62,6 +64,7 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Response> GetSurveyResponseByIDAsync();
         Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync();
         Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
+        
         #endregion
         #endregion
         public Task SaveAsync();

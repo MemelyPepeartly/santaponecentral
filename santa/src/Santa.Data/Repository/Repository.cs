@@ -348,6 +348,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Updates a survey with targetSurvey information
+        /// </summary>
+        /// <param name="targetSurvey"></param>
+        /// <returns></returns>
         public async Task UpdateSurveyByIDAsync(Logic.Objects.Survey targetSurvey)
         {
             try
@@ -363,6 +368,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Deletes a survey by its ID
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <returns></returns>
         public async Task DeleteSurveyByIDAsync(Guid surveyID)
         {
             try
@@ -375,6 +385,12 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Deletes a relationship between a survey and the question in it, taking it off of the survey, but not deleting the question.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="surveyQuestionID"></param>
+        /// <returns></returns>
         public async Task DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(Guid surveyID, Guid surveyQuestionID)
         {
             try
@@ -439,6 +455,42 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Question
+        /// <summary>
+        /// Gets a list of all surveyQuestions
+        /// </summary>
+        /// <returns></returns>
+        public List<Question> GetAllSurveyQuestions()
+        {
+            try
+            {
+                List<Question> listLogicQuestion = santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyQuestionOptionXref)
+                        .ThenInclude(so => so.SurveyOption)
+                    .AsNoTracking()
+                    .Select(Mapper.MapQuestion).ToList();
+                return listLogicQuestion;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task<Question> GetSurveyQuestionByIDAsync(Guid questionID)
+        {
+            try
+            {
+                Logic.Objects.Question logicQuestion = Mapper.MapQuestion(await santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyQuestionOptionXref)
+                        .ThenInclude(so => so.SurveyOption)
+                    .FirstOrDefaultAsync(q => q.SurveyQuestionId == questionID));
+                return logicQuestion;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         /// <summary>
         /// Creates a survey question and adds it to the context
         /// </summary>

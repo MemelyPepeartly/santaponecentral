@@ -9,9 +9,6 @@ namespace Santa.Api.Models
     {
         public string questionText { get; set; }
         public bool isSurveyOptionList { get; set; }
-
-        public Guid surveyID { get; set; }
-        public string sortOrder { get; set; }
         public bool isActive { get; set; }
     }
 }
