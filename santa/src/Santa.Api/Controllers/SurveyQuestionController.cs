@@ -100,7 +100,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionOption"></param>
         /// <returns></returns>
         [HttpPost("{surveyQuestionID}/SurveyOption")]
-        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiQuestionOption questionOption)
+        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiSurveyOption questionOption)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace Santa.Api.Controllers
                 };
                 try
                 {
-                    await repository.CreateQuestionOptionAsync(logicSurveyOption);
+                    await repository.CreateSurveyOptionAsync(logicSurveyOption);
                     await repository.SaveAsync();
                     await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption);
                     await repository.SaveAsync();
@@ -137,7 +137,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <param name="questionText"></param>
         /// <returns></returns>
-        [HttpPut("{surveyQuestionID}/Text")]
+        [HttpPut("{surveyQuestionID}/QuestionText")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionText(Guid surveyQuestionID, [FromBody, Bind("questionText")] Models.Question_Models.ApiQuestionText questionText)
         {
             try
@@ -169,7 +169,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionIsSurveyOptionList"></param>
         /// <returns></returns>
         [HttpPut("{surveyQuestionID}/HasOptions")]
-        public async Task<ActionResult<Logic.Objects.Option>> PutQuestionIsSurveyOptionList(Guid surveyQuestionID, [FromBody, Bind("isSurveyOptionList")] Models.Question_Models.ApiQuestionSurveyOptionList questionIsSurveyOptionList)
+        public async Task<ActionResult<Logic.Objects.Option>> PutQuestionIsSurveyOptionList(Guid surveyQuestionID, [FromBody, Bind("isSurveyOptionList")] Models.Question_Models.ApiQuestionIsSurveyOptionList questionIsSurveyOptionList)
         {
             try
             {

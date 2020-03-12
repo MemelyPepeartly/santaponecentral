@@ -419,11 +419,11 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task<Option> GetSurveyOptionByIDAsync(Guid questionOptionID)
+        public async Task<Option> GetSurveyOptionByIDAsync(Guid surveyOptionID)
         {
             try
             {
-                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).FirstOrDefaultAsync(so => so.SurveyOptionId == questionOptionID));
+                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).FirstOrDefaultAsync(so => so.SurveyOptionId == surveyOptionID));
                 return logicOption;
             }
             catch (Exception e)
@@ -437,7 +437,7 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="newSurveyOption"></param>
         /// <returns></returns>
-        public async Task CreateQuestionOptionAsync(Option newSurveyOption)
+        public async Task CreateSurveyOptionAsync(Option newSurveyOption)
         {
             try
             {
@@ -449,13 +449,32 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Question> DeleteQuestionOptionByIDAsync()
+        public async Task UpdateSurveyOptionByIDAsync(Option targetSurveyOption)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyOption oldOption = await santaContext.SurveyOption.FirstOrDefaultAsync(o => o.SurveyOptionId == targetSurveyOption.surveyOptionID);
+
+                oldOption.DisplayText = targetSurveyOption.displayText;
+                oldOption.SurveyOptionValue = targetSurveyOption.surveyOptionValue;
+
+                santaContext.SurveyOption.Update(oldOption);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
-        public Task<Question> UpdateQuestionOptionByIDAsync()
+        public async Task DeleteSurveyOptionByIDAsync(Guid surveyOptionID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                santaContext.SurveyOption.Remove(await santaContext.SurveyOption.FirstOrDefaultAsync(o => o.SurveyOptionId == surveyOptionID));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 

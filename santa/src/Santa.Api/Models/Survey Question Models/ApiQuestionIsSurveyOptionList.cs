@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Question_Models
 {
-    public class ApiQuestionSurveyOptionList
+    public class ApiQuestionIsSurveyOptionList
     {
         public bool isSurveyOptionList { get; set; }
     }

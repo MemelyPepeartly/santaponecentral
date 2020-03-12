@@ -45,13 +45,48 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // PUT: api/SurveyOption/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT: api/SurveyOption/5/DisplayText
+        [HttpPut("{surveyOptionID}/DisplayText")]
+        public async Task<ActionResult<Logic.Objects.Option>> PutDisplayText(Guid surveyOptionID, [FromBody, Bind("surveyOptionDisplayText")] Models.Survey_Option_Models.ApiSurveyOptionDisplayText displayText)
         {
             try
             {
-
+                Logic.Objects.Option logicOption = await repository.GetSurveyOptionByIDAsync(surveyOptionID);
+                logicOption.displayText = displayText.surveyOptionDisplayText;
+                try
+                {
+                    await repository.UpdateSurveyOptionByIDAsync(logicOption);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyOptionByIDAsync(surveyOptionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // PUT: api/SurveyOption/5/Value
+        [HttpPut("{surveyOptionID}/Value")]
+        public async Task<ActionResult<Logic.Objects.Option>> PutValue(Guid surveyOptionID, [FromBody, Bind("surveyOptionValue")] Models.Survey_Option_Models.ApiSurveyOptionValue value)
+        {
+            try
+            {
+                Logic.Objects.Option logicOption = await repository.GetSurveyOptionByIDAsync(surveyOptionID);
+                logicOption.surveyOptionValue = value.surveyOptionValue;
+                try
+                {
+                    await repository.UpdateSurveyOptionByIDAsync(logicOption);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyOptionByIDAsync(surveyOptionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
             }
             catch (Exception e)
             {
@@ -60,12 +95,14 @@ namespace Santa.Api.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{surveyOptionID}")]
+        public async Task<ActionResult> Delete(Guid surveyOptionID)
         {
             try
             {
-
+                await repository.DeleteSurveyOptionByIDAsync(surveyOptionID);
+                await repository.SaveAsync();
+                return NoContent();
             }
             catch (Exception e)
             {
