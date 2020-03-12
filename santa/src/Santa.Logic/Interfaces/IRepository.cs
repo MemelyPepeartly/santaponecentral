@@ -42,6 +42,16 @@ namespace Santa.Logic.Interfaces
         Task DeleteSurveyByIDAsync(Guid surveyID);
         Task DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(Guid surveyID, Guid surveyQuestionID);
 
+
+        #region SurveyResponses
+        Task<Logic.Objects.Response> CreateSurveyResponseAsync();
+        Task<Logic.Objects.Response> GetSurveyResponseByIDAsync();
+        Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync();
+        Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
+
+        #endregion
+        #endregion
+
         #region SurveyOption
         List<Option> GetAllSurveyOption();
         Task<Option> GetSurveyOptionByIDAsync(Guid questionOptionID);
@@ -59,19 +69,11 @@ namespace Santa.Logic.Interfaces
         Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
         Task CreateSurveyQuestionXrefAsync(Logic.Objects.Question logicQuestion);
         Task CreateSurveyQuestionAsync(Question newQuestion);
-        
-        Task<Logic.Objects.Question> UpdateSurveyQuestionByIDAsync();
-        Task<Logic.Objects.Question> DeleteSurveyQuestionByIDAsync();
+
+        Task UpdateSurveyQuestionByIDAsync(Question targetQuestion);
+        Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID);
         #endregion
 
-        #region SurveyResponses
-        Task<Logic.Objects.Response> CreateSurveyResponseAsync();
-        Task<Logic.Objects.Response> GetSurveyResponseByIDAsync();
-        Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync();
-        Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync();
-        
-        #endregion
-        #endregion
         public Task SaveAsync();
         
     }
