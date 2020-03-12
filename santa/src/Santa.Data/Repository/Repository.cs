@@ -449,6 +449,12 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        
+        /// <summary>
+        /// Updates a survey option by its ID and queues that update in the context.
+        /// </summary>
+        /// <param name="targetSurveyOption"></param>
+        /// <returns></returns>
         public async Task UpdateSurveyOptionByIDAsync(Option targetSurveyOption)
         {
             try
@@ -465,6 +471,12 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        
+        /// <summary>
+        /// Dletes a survey option by ID and queues the update in the context.
+        /// </summary>
+        /// <param name="surveyOptionID"></param>
+        /// <returns></returns>
         public async Task DeleteSurveyOptionByIDAsync(Guid surveyOptionID)
         {
             try
