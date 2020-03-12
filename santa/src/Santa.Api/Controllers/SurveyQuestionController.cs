@@ -130,16 +130,87 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // PUT: api/SurveyQuestion/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT: api/SurveyQuestion/5/Text
+        /// <summary>
+        /// Puts an updated question text to a surveyQuestion given its ID. Binds to the ApiQuestionText model
+        /// </summary>
+        /// <param name="surveyQuestionID"></param>
+        /// <param name="questionText"></param>
+        /// <returns></returns>
+        [HttpPut("{surveyQuestionID}/Text")]
+        public async Task<ActionResult<Logic.Objects.Option>> PutQuestionText(Guid surveyQuestionID, [FromBody, Bind("questionText")] Models.Question_Models.ApiQuestionText questionText)
         {
+            try
+            {
+                Logic.Objects.Question logicQuestion = await repository.GetSurveyQuestionByIDAsync(surveyQuestionID);
+                logicQuestion.questionText = questionText.questionText;
+                try
+                {
+                    await repository.UpdateSurveyQuestionByIDAsync(logicQuestion);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyQuestionByIDAsync(surveyQuestionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // PUT: api/SurveyQuestion/5/HasOptions
+        /// <summary>
+        /// Puts an updated true/false type that signified if a survey question is an option list or not. Binds to the ApiQuestionSurveyOptionList model.
+        /// </summary>
+        /// <param name="surveyQuestionID"></param>
+        /// <param name="questionIsSurveyOptionList"></param>
+        /// <returns></returns>
+        [HttpPut("{surveyQuestionID}/HasOptions")]
+        public async Task<ActionResult<Logic.Objects.Option>> PutQuestionIsSurveyOptionList(Guid surveyQuestionID, [FromBody, Bind("isSurveyOptionList")] Models.Question_Models.ApiQuestionSurveyOptionList questionIsSurveyOptionList)
         {
+            try
+            {
+                Logic.Objects.Question logicQuestion = await repository.GetSurveyQuestionByIDAsync(surveyQuestionID);
+                logicQuestion.isSurveyOptionList = questionIsSurveyOptionList.isSurveyOptionList;
+                try
+                {
+                    await repository.UpdateSurveyQuestionByIDAsync(logicQuestion);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyQuestionByIDAsync(surveyQuestionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        // DELETE: api/SurveyQuestion/5
+        /// <summary>
+        /// Deletes an existing survey question by its ID.
+        /// </summary>
+        /// <param name="surveyQuestionID"></param>
+        /// <returns></returns>
+        [HttpDelete("{surveyQuestionID}")]
+        public async Task<ActionResult> Delete(Guid surveyQuestionID)
+        {
+            try
+            {
+                await repository.DeleteSurveyQuestionByIDAsync(surveyQuestionID);
+                await repository.SaveAsync();
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }

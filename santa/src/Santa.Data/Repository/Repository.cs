@@ -553,13 +553,32 @@ namespace Santa.Data.Repository
             }
 
         }
-        public Task<Question> DeleteSurveyQuestionByIDAsync()
+        public async Task UpdateSurveyQuestionByIDAsync(Question targetQuestion)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyQuestion oldQuestion = await santaContext.SurveyQuestion.FirstOrDefaultAsync(q => q.SurveyQuestionId == targetQuestion.questionID);
+
+                oldQuestion.QuestionText = targetQuestion.questionText;
+                oldQuestion.IsSurveyOptionList = targetQuestion.isSurveyOptionList;
+
+                santaContext.SurveyQuestion.Update(oldQuestion);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
-        public Task<Question> UpdateSurveyQuestionByIDAsync()
+        public async Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                santaContext.SurveyQuestion.Remove(await santaContext.SurveyQuestion.FirstOrDefaultAsync(q => q.SurveyQuestionId == surveyQuestionID));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 
