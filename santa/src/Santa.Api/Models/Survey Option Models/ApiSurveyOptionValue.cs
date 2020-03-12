@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Santa.Api.Models
+namespace Santa.Api.Models.Survey_Option_Models
 {
-    public class ApiQuestionOption
+    public class ApiSurveyOptionValue
     {
-        public string displayText { get; set; }
         public string surveyOptionValue { get; set; }
     }
 }
