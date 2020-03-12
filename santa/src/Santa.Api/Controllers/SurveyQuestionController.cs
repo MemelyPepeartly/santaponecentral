@@ -65,7 +65,7 @@ namespace Santa.Api.Controllers
         /// <param name="question"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestion([FromBody, Bind("questionText, isSurveyOptionList, sortOrder, isActive")] Models.ApiQuestion question)
+        public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestion([FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionOption"></param>
         /// <returns></returns>
         [HttpPost("{surveyQuestionID}/SurveyOption")]
-        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue, sortOrder, isActive")] Models.ApiSurveyOption questionOption)
+        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue")] Models.ApiSurveyOption questionOption)
         {
             try
             {
@@ -108,13 +108,13 @@ namespace Santa.Api.Controllers
                 {
                     surveyOptionID = Guid.NewGuid(),
                     displayText = questionOption.displayText,
-                    surveyOptionValue = questionOption.surveyOptionValue
+                    surveyOptionValue = questionOption.surveyOptionValue,
                 };
                 try
                 {
                     await repository.CreateSurveyOptionAsync(logicSurveyOption);
                     await repository.SaveAsync();
-                    await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption);
+                    await repository.CreateSurveyQuestionOptionXrefAsync(logicSurveyOption, surveyQuestionID ,questionOption.isActive, questionOption.sortOrder);
                     await repository.SaveAsync();
                     return Ok(logicSurveyOption);
                 }
