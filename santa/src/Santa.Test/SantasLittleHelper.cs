@@ -149,19 +149,17 @@ namespace Santa.Test
         {
             QuestionOptions = new List<Option>
             {
-                new Option(Guid.NewGuid())
+                new Option()
                 {
+                    surveyOptionID = Guid.NewGuid(),
                     displayText = "Option 1 Text",
-                    surveyOptionValue = "Option 1 Value",
-                    sortOrder = "asc",
-                    isActive = true
+                    surveyOptionValue = "Option 1 Value"
                 },
-                new Option(Guid.NewGuid())
+                new Option()
                 {
+                    surveyOptionID = Guid.NewGuid(),
                     displayText = "Option 2 Text",
-                    surveyOptionValue = "Option 2 Value",
-                    sortOrder = "asc",
-                    isActive = false
+                    surveyOptionValue = "Option 2 Value"
                 }
             };
         }
@@ -172,20 +170,17 @@ namespace Santa.Test
         {
             Questions = new List<Question>
             {
-                new Question(Guid.NewGuid())
+                new Question()
                 {
+                    questionID = Guid.NewGuid(),
                     questionText = "Question 1 Text",
-                    isActive = true,
                     isSurveyOptionList = true,
-                    surveyOptionList = QuestionOptions,
-                    sortOrder = "asc"
+                    surveyOptionList = QuestionOptions
                 },
-                new Question(Guid.NewGuid())
+                new Question()
                 {
                     questionText = "Question 2 Text",
-                    isActive = false,
-                    isSurveyOptionList = false,
-                    sortOrder = "asc"
+                    isSurveyOptionList = false
                 }
             };
         }
