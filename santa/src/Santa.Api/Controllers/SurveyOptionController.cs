@@ -17,7 +17,12 @@ namespace Santa.Api.Controllers
         {
             repository = _repository;
         }
+        
         // GET: api/SurveyOption
+        /// <summary>
+        /// Gets a list of all survey options
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<List<Logic.Objects.Option>> GetAllSurveyOptions()
         {
@@ -32,6 +37,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/SurveyOption/5
+        /// <summary>
+        /// Gets survey option by a given surveyOptionID
+        /// </summary>
+        /// <param name="surveyOptionID"></param>
+        /// <returns></returns>
         [HttpGet("{surveyOptionID}")]
         public async Task<ActionResult<Logic.Objects.Option>> GetSurveyOptionByIDAsync(Guid surveyOptionID)
         {
@@ -45,7 +55,40 @@ namespace Santa.Api.Controllers
             }
         }
 
+        public async Task<ActionResult<Logic.Objects.Option>> PostSurveyOption([FromBody, Bind("")] Models.ApiSurveyOption newSurveyOption)
+        {
+            try
+            {
+                Logic.Objects.Option logicOption = new Logic.Objects.Option()
+                {
+                    surveyOptionID = Guid.NewGuid(),
+                    displayText = newSurveyOption.displayText,
+                    surveyOptionValue = newSurveyOption.surveyOptionValue
+                };
+                try
+                {
+                    await repository.CreateSurveyOptionAsync(logicOption);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyOptionByIDAsync(logicOption.surveyOptionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         // PUT: api/SurveyOption/5/DisplayText
+        /// <summary>
+        /// Puts a new display text for a survey option by surveyOptionID. Binds to the ApiSurveyOptionDisplayText model.
+        /// </summary>
+        /// <param name="surveyOptionID"></param>
+        /// <param name="displayText"></param>
+        /// <returns></returns>
         [HttpPut("{surveyOptionID}/DisplayText")]
         public async Task<ActionResult<Logic.Objects.Option>> PutDisplayText(Guid surveyOptionID, [FromBody, Bind("surveyOptionDisplayText")] Models.Survey_Option_Models.ApiSurveyOptionDisplayText displayText)
         {
@@ -69,7 +112,14 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+        
         // PUT: api/SurveyOption/5/Value
+        /// <summary>
+        /// Puts a new value for a survey option by surveyOptionID. Binds to the ApiSurveyOptionValue model.
+        /// </summary>
+        /// <param name="surveyOptionID"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPut("{surveyOptionID}/Value")]
         public async Task<ActionResult<Logic.Objects.Option>> PutValue(Guid surveyOptionID, [FromBody, Bind("surveyOptionValue")] Models.Survey_Option_Models.ApiSurveyOptionValue value)
         {
@@ -94,7 +144,12 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/SurveyOption/5
+        /// <summary>
+        /// Deletes a survey option by a given surveyOptionID.
+        /// </summary>
+        /// <param name="surveyOptionID"></param>
+        /// <returns></returns>
         [HttpDelete("{surveyOptionID}")]
         public async Task<ActionResult> Delete(Guid surveyOptionID)
         {
