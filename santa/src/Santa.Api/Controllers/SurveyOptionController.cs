@@ -55,6 +55,13 @@ namespace Santa.Api.Controllers
             }
         }
 
+        // POST: api/SurveyOption
+        /// <summary>
+        /// Posts a new survey option
+        /// </summary>
+        /// <param name="newSurveyOption"></param>
+        /// <returns></returns>
+        [HttpPost]
         public async Task<ActionResult<Logic.Objects.Option>> PostSurveyOption([FromBody, Bind("")] Models.ApiSurveyOption newSurveyOption)
         {
             try

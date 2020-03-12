@@ -191,7 +191,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Deletes a status by a given ID
+        /// </summary>
+        /// <param name="clientStatusID"></param>
+        /// <returns></returns>
         public async Task DeleteStatusByIDAsync(Guid clientStatusID)
         {
             try
@@ -496,11 +500,14 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="newQuestionOption"></param>
         /// <returns></returns>
-        public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption)
+        public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, string sortOrder)
         {
             try
             {
                 Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = Mapper.MapQuestionOptionXref(newQuestionOption);
+                contextQuestionOptionXref.SurveyQuestionId = surveyQuestionID;
+                contextQuestionOptionXref.IsActive = isActive;
+                contextQuestionOptionXref.SortOrder = sortOrder;
                 await santaContext.SurveyQuestionOptionXref.AddAsync(contextQuestionOptionXref);
             }
             catch (Exception e)
