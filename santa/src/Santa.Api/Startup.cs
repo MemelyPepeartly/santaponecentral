@@ -43,7 +43,7 @@ namespace Santa.Api
                 options.AddPolicy("AllowAngular",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:5001", "http://dev-santaponecentral.azurewebsites.net")
+                    builder.WithOrigins("http://localhost:4200", "http://dev-santaponecentral.azurewebsites.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
