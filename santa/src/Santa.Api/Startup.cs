@@ -38,6 +38,18 @@ namespace Santa.Api
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:5001", "http://dev-santaponecentral.azurewebsites.net")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+
             services.AddScoped<IRepository, Repository>();
 
             services.AddControllers();
