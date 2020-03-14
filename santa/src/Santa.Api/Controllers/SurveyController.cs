@@ -138,14 +138,14 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/Survey/
+        // POST: api/Survey/5/SurveyQuestions/5
         /// <summary>
         /// Posts a new relation between a survey and an existing question by surveyID and surveyQuestionID
         /// </summary>
         /// <param name="surveyID"></param>
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
-        [HttpPost("{surveyID}/SurveyQuestions/{surveyQuestionID}")]
+        [HttpPost("{surveyID}/Relationship")]
         public async Task<ActionResult<ApiSurvey>> PostSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
         {
             try
