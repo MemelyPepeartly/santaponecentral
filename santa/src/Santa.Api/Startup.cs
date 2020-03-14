@@ -73,8 +73,9 @@ namespace Santa.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthorization();
+
+            app.UseCors("AllowAngular");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
