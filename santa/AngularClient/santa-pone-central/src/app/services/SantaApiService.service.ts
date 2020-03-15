@@ -14,7 +14,7 @@ const httpOptions = {
   providedIn: 'root'
 
 })
-export class RestService {
+export class SantaApiService {
 
   constructor(private http: HttpClient) { }
   private extractData(res: Response) {
