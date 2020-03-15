@@ -1,7 +1,7 @@
 // Necessary
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // Extras
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
+
+// Services
+import { LoaderService } from './services/loader.service';
+
+// Interceptors
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 // Componenents
 import { HomeComponent } from './home/home.component';
@@ -40,6 +46,7 @@ import { EventComponent } from './api/event/event.component';
 import { SurveyComponent } from './api/survey/survey.component';
 import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
+import { LoaderComponent } from './shared/loader/loader.component';
 
 
 @NgModule({
@@ -71,7 +78,8 @@ import { ResponseComponent } from './api/response/response.component';
     EventComponent,
     SurveyComponent,
     QuestionComponent,
-    ResponseComponent
+    ResponseComponent,
+    LoaderComponent
   ],
   entryComponents: [
     LoginComponent
@@ -86,7 +94,10 @@ import { ResponseComponent } from './api/response/response.component';
     RouterModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    LoaderService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

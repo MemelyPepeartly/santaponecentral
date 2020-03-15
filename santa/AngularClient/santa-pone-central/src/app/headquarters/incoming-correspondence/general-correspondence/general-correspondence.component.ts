@@ -12,7 +12,7 @@ export class GeneralCorrespondenceComponent implements OnInit {
 
   constructor() { }
 
-  //test data
+  // test data
 
   address: Address = 
   {

@@ -23,7 +23,7 @@ namespace Santa.Data.Repository
                 ClientName = logicClient.clientName,
                 Email = logicClient.email,
                 Nickname = logicClient.nickname,
-                ClientStatus = MapStatus(logicClient.clientStatus),
+                ClientStatusId = logicClient.clientStatus.statusID,
                 AddressLine1 = logicClient.address.addressLineOne,
                 AddressLine2 = logicClient.address.addressLineTwo,
                 City = logicClient.address.city,

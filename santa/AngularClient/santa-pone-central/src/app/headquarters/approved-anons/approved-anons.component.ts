@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Anon } from '../../../interfaces/anon';
 import { Address } from '../../../interfaces/address';
+import { SantaApiService } from '../../services/SantaApiService.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-approved-anons',
@@ -9,37 +11,13 @@ import { Address } from '../../../interfaces/address';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor() { }
-
-    // test data
-  
-    address: Address = 
-    {
-      streetAddress: '123 Test Street',
-      city: 'TestCity',
-      state: 'TS',
-      zipcode: '12345'
-    };
-    santas: Anon[] = [
-    {
-    realName: 'Pepe',
-    holidayID: 'Probably Racist Pepe',
-    address: this.address,
-    wishlist: 'I want to feel!',
-    email: 'pepe@anon.non',
-    otherInfo: 'REEEEEEEEE'
-    },
-    {
-    realName: 'Boomer',
-    holidayID: 'Okay Boomer',
-    address: this.address,
-    wishlist: 'Quaaludes',
-    email: 'boomer@aol.com',
-    otherInfo: 'Hehe yup... Zoomers gonna zoom...'
-    },
-    ];
+  constructor(public SantaApi: SantaApiService, public Loader: LoaderService) { }
+  approvedClients: any = [];
 
   ngOnInit() {
+    this.SantaApi.getAllClients().subscribe((data: {}) => {
+      console.log(data);
+      this.approvedClients = data;
+    });
   }
-
 }

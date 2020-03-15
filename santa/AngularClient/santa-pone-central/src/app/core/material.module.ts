@@ -22,7 +22,8 @@ MatToolbarModule, MatMenuModule, MatIconModule, MatProgressSpinnerModule, MatTab
   MatStepperModule,
   MatRadioModule,
   MatPaginatorModule,
-  MatListModule
+  MatListModule,
+  MatProgressSpinnerModule
   ],
   exports: [
   CommonModule,
@@ -40,7 +41,8 @@ MatToolbarModule, MatMenuModule, MatIconModule, MatProgressSpinnerModule, MatTab
    MatStepperModule,
    MatRadioModule,
    MatPaginatorModule,
-   MatListModule
+   MatListModule,
+   MatProgressSpinnerModule
    ],
 })
 export class CustomMaterialModule { }
