@@ -1,6 +1,7 @@
 // Necessary
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 // Extras
 import { RouterModule } from '@angular/router';
@@ -82,7 +83,8 @@ import { ResponseComponent } from './api/response/response.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
