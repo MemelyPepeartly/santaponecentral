@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
   showUserNav = false;
   showAdminNav = false;
   showApiNav = false;
+  showNewUserNav = true;
 
   ngOnInit() {
   }
@@ -21,20 +22,24 @@ export class NavbarComponent implements OnInit {
     this.showAdminNav = true;
     this.showUserNav = false;
     this.showApiNav = false;
+    this.showNewUserNav = false;
   }
   showNewUser() {
     this.showAdminNav = false;
     this.showUserNav = false;
     this.showApiNav = false;
+    this.showNewUserNav = true;
   }
   showExistingUser() {
     this.showAdminNav = false;
     this.showUserNav = true;
     this.showApiNav = false;
+    this.showNewUserNav = false;
   }
   showApi() {
     this.showApiNav = true;
     this.showAdminNav = false;
     this.showUserNav = false;
+    this.showNewUserNav = false;
   }
 }
