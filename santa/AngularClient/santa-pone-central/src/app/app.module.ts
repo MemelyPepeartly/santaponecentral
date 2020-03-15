@@ -33,6 +33,12 @@ import { MaterialElevationDirective } from './headquarters/material-elevation.di
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { ApinavComponent } from './navbar/apinav/apinav.component';
+import { ApiComponent } from './api/api.component';
+import { UserComponent } from './api/user/user.component';
+import { EventComponent } from './api/event/event.component';
+import { SurveyComponent } from './api/survey/survey.component';
+import { QuestionComponent } from './api/question/question.component';
+import { ResponseComponent } from './api/response/response.component';
 
 
 @NgModule({
@@ -58,7 +64,13 @@ import { ApinavComponent } from './navbar/apinav/apinav.component';
     MaterialElevationDirective,
     SignupFormComponent,
     AdminHelpComponent,
-    ApinavComponent
+    ApinavComponent,
+    ApiComponent,
+    UserComponent,
+    EventComponent,
+    SurveyComponent,
+    QuestionComponent,
+    ResponseComponent
   ],
   entryComponents: [
     LoginComponent
