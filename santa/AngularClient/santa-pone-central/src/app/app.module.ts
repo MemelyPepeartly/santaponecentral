@@ -32,6 +32,7 @@ import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspo
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
+import { ApinavComponent } from './navbar/apinav/apinav.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { AdminHelpComponent } from './admin-help/admin-help.component';
     GeneralCorrespondenceComponent,
     MaterialElevationDirective,
     SignupFormComponent,
-    AdminHelpComponent
+    AdminHelpComponent,
+    ApinavComponent
   ],
   entryComponents: [
     LoginComponent
