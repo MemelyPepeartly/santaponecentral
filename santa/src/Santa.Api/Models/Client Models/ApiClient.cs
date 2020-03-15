@@ -15,7 +15,5 @@ namespace Santa.Api.Models
         public string clientState { get; set; }
         public string clientPostalCode { get; set; }
         public string clientCountry { get; set; }
-        public List<Guid> clientSenders { get; set; }
-        public List<Guid> clientRecipients { get; set; }
     }
 }

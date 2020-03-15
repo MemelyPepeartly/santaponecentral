@@ -10,7 +10,7 @@ export class UserComponent implements OnInit {
 
   constructor(public SantaApi: SantaApiService) { }
 
-  users: any = [];
+  clients: any = [];
   ngOnInit()
   {
 
@@ -18,7 +18,8 @@ export class UserComponent implements OnInit {
   getUsers()
   {
     this.SantaApi.getAllClients().subscribe((data: {}) => {
-      this.users = data;
+      console.log(data);
+      this.clients = data;
     });
   }
 

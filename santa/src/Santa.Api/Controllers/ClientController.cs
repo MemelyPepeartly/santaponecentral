@@ -92,7 +92,9 @@ namespace Santa.Api.Controllers
                         state = client.clientState,
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
-                    }
+                    },
+                    recipients = new List<Guid>(),
+                    senders = new List<Guid>()
                 };
                 
                 try
