@@ -42,6 +42,7 @@ import { EventComponent } from './api/event/event.component';
 import { SurveyComponent } from './api/survey/survey.component';
 import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
+import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { ResponseComponent } from './api/response/response.component';
     EventComponent,
     SurveyComponent,
     QuestionComponent,
-    ResponseComponent
+    ResponseComponent,
+    LoadingSpinComponent
   ],
   entryComponents: [
     LoginComponent

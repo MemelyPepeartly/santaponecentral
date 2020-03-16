@@ -1,7 +1,7 @@
-import { Anon } from './anon';
+import { Client } from './client';
 
 export interface ShippingMessage {
-    anonInfo: Anon;
+    anonInfo: Client;
     shippingNumber: string;
     message: string;
 }

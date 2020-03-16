@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Anon } from '../../../interfaces/anon';
+import { Component, OnInit, Output } from '@angular/core';
+import { Client } from '../../../interfaces/client';
 import { Address } from '../../../interfaces/address';
 import { SantaApiService } from '../../services/SantaApiService.service';
-import { EventEmitter } from 'protractor';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-approved-anons',
@@ -12,13 +12,20 @@ import { EventEmitter } from 'protractor';
 export class ApprovedAnonsComponent implements OnInit {
 
   constructor(public SantaApi: SantaApiService) { }
+
+  @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   approvedClients: any = [];
+  showSpinner: boolean = true;
 
-  ngOnInit() {
-    this.SantaApi.getAllClients().subscribe((data: {}) => {
-      console.log(data);
-      this.approvedClients = data;
+  async ngOnInit() {
+    
+    await this.SantaApi.getAllClients().subscribe(res => {
+      this.approvedClients = res;
+      this.showSpinner = false;
     });
-
+  }
+  showCardInfo(client)
+  {
+    this.clickedClient.emit(client);
   }
 }
