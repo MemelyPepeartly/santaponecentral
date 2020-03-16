@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Anon } from '../../../interfaces/anon';
 import { Address } from '../../../interfaces/address';
 import { SantaApiService } from '../../services/SantaApiService.service';
-import { LoaderService } from '../../services/loader.service';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'app-approved-anons',
@@ -11,7 +11,7 @@ import { LoaderService } from '../../services/loader.service';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService, public Loader: LoaderService) { }
+  constructor(public SantaApi: SantaApiService) { }
   approvedClients: any = [];
 
   ngOnInit() {
@@ -19,5 +19,6 @@ export class ApprovedAnonsComponent implements OnInit {
       console.log(data);
       this.approvedClients = data;
     });
+
   }
 }
