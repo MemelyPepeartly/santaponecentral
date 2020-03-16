@@ -1,8 +1,9 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { Client } from '../../../interfaces/client';
-import { Address } from '../../../interfaces/address';
+import { Client } from '../../../classes/client';
+import { Address } from '../../../classes/address';
 import { SantaApiService } from '../../services/SantaApiService.service';
 import { EventEmitter } from '@angular/core';
+import { MapEventService } from '../../services/map-event.service';
 
 @Component({
   selector: 'app-approved-anons',
@@ -11,16 +12,22 @@ import { EventEmitter } from '@angular/core';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService) { }
+  constructor(public SantaApi: SantaApiService, public mapper: MapEventService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
-  approvedClients: any = [];
+  approvedClients: Array<Client> = [];
   showSpinner: boolean = true;
 
   async ngOnInit() {
     
     await this.SantaApi.getAllClients().subscribe(res => {
-      this.approvedClients = res;
+      res.forEach(client => {
+        var c = this.mapper.mapClient(client);
+        if(c.clientStatus.statusDescription == "Approved")
+        {
+          this.approvedClients.push(c);
+        }
+      });
       this.showSpinner = false;
     });
   }

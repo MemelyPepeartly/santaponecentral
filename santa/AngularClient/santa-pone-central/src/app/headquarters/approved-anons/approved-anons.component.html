@@ -10,7 +10,7 @@
 <mat-list>
     <mat-card mat-list-item *ngFor="let client of approvedClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
-            {{ client.nickname }}
+            {{ client.clientNickname }}
         </mat-card-title>
         <mat-card-subtitle>
             {{ client.email }}

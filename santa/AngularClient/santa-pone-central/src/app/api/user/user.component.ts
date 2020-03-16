@@ -18,7 +18,6 @@ export class UserComponent implements OnInit {
   getUsers()
   {
     this.SantaApi.getAllClients().subscribe((data: {}) => {
-      console.log(data);
       this.clients = data;
     });
   }

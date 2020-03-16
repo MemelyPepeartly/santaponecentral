@@ -1,7 +1,7 @@
 import { Client } from './client';
 
-export interface ShippingMessage {
+export class Message {
     anonInfo: Client;
-    shippingNumber: string;
+    subject: string;
     message: string;
 }
