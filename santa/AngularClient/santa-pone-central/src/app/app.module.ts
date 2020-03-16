@@ -43,6 +43,7 @@ import { SurveyComponent } from './api/survey/survey.component';
 import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
+import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.compone
     SurveyComponent,
     QuestionComponent,
     ResponseComponent,
-    LoadingSpinComponent
+    LoadingSpinComponent,
+    SelectedAnonComponent
   ],
   entryComponents: [
     LoginComponent
