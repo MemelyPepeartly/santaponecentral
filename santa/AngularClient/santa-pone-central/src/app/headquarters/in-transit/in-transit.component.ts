@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Client } from '../../../interfaces/client';
-import { Address } from '../../../interfaces/address';
+import { Client } from '../../../classes/client';
+import { Address } from '../../../classes/address';
 
 
 @Component({

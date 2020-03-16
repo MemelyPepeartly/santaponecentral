@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-selected-anon',
@@ -9,7 +10,10 @@ export class SelectedAnonComponent implements OnInit {
 
   constructor() { }
 
+  @Input() client: Client = new Client();
+
   ngOnInit() {
+    console.log(this.client)
   }
 
 }

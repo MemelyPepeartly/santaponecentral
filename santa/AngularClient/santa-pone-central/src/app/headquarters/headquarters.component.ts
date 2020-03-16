@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Client } from '../../interfaces/client'
+import { Client } from '../../classes/client';
+import { MapEventService } from '../services/map-event.service';
+import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-headquarters',
@@ -8,15 +10,21 @@ import { Client } from '../../interfaces/client'
 })
 export class HeadquartersComponent implements OnInit {
 
-  constructor() { }
+  constructor(public mapper: MapEventService) {}
 
-  showClientCard: boolean = false;
-  currentClient: Client;
+  public showClientCard: boolean = false;
+  public currentClient: Client;
 
   ngOnInit() {
   }
+
   showClientWindow(client)
   {
-    console.log(client);
+    this.currentClient = this.mapper.mapClient(client);
+    this.showClientCard = true;
+  }
+  hideClientWindow()
+  {
+    this.showClientCard = false;
   }
 }
