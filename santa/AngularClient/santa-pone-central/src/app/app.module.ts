@@ -13,10 +13,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Services
-import { LoaderService } from './services/loader.service';
-
-// Interceptors
-import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 // Componenents
 import { HomeComponent } from './home/home.component';
@@ -46,7 +42,6 @@ import { EventComponent } from './api/event/event.component';
 import { SurveyComponent } from './api/survey/survey.component';
 import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
-import { LoaderComponent } from './shared/loader/loader.component';
 
 
 @NgModule({
@@ -78,8 +73,7 @@ import { LoaderComponent } from './shared/loader/loader.component';
     EventComponent,
     SurveyComponent,
     QuestionComponent,
-    ResponseComponent,
-    LoaderComponent
+    ResponseComponent
   ],
   entryComponents: [
     LoginComponent
@@ -95,8 +89,6 @@ import { LoaderComponent } from './shared/loader/loader.component';
     HttpClientModule
   ],
   providers: [
-    LoaderService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

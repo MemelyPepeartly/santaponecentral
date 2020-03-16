@@ -4,17 +4,16 @@
               [pageSizeOptions]="[5, 10, 25, 100]"
               class="mat-elevation-z4">
 </mat-paginator>
-<app-loader></app-loader>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let santa of approvedClients" appMaterialElevation>
+    <mat-card mat-list-item *ngFor="let client of approvedClients" appMaterialElevation>
         <mat-card-title>
-            {{ santa.nickname }}
+            {{ client.nickname }}
         </mat-card-title>
         <mat-card-subtitle>
-            {{ santa.email }}
+            {{ client.email }}
         </mat-card-subtitle>
         <mat-card-content>
-            Client Name: {{ santa.clientName }}
+            Client Name: {{ client.clientName }}
         </mat-card-content>
     </mat-card>
 </mat-list>

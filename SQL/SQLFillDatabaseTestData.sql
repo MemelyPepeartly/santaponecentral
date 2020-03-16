@@ -80,8 +80,8 @@ VALUES
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
-    (@firstClientStatusIDGUID, 'Status Description 1'),
-    (@secondClientStatusIDGUID, 'Status Description 2');
+    (@firstClientStatusIDGUID, 'Awaiting'),
+    (@secondClientStatusIDGUID, 'Approved');
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
