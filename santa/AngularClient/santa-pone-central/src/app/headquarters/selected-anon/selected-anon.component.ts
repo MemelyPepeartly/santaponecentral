@@ -13,7 +13,7 @@ export class SelectedAnonComponent implements OnInit {
   @Input() client: Client = new Client();
 
   ngOnInit() {
-    console.log(this.client)
+    
   }
 
 }
