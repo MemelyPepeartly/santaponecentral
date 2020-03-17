@@ -1,35 +1,50 @@
+<form #ClientForm="ngForm" (ngSubmit)="onSubmit(ClientForm)" novalidate>
+    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Fill out your information</ng-template>
+                <mat-form-field>
+                    <mat-label>First Name</mat-label>
+                    <input matInput placeholder="First Name" formControlName="firstCtrl" required>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+            </form>
+        </mat-step>
 
-<mat-horizontal-stepper #stepper>
-    <mat-step>
-        <form>
-        <ng-template matStepLabel>Fill out your information</ng-template>
-        <mat-form-field>
-            <input matInput placeholder="Last name, First name" required>
-            <input matInput placeholder="email@domain.com" required>
-        </mat-form-field>
-        <div>
-            <button mat-button matStepperNext>Next</button>
-        </div>
-        </form>
-    </mat-step>
-    <mat-step>
-        <form>
-        <ng-template matStepLabel>Hearthswarming</ng-template>
-        <h4>What do you want for Hearthswarming?</h4>
-        <mat-form-field>
-                <textarea matInput placeholder="Wishlist"></textarea>
-        </mat-form-field>
-        <div>
-            <button mat-button matStepperNext>Next</button>
-        </div>
-        </form>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Done</ng-template>
-        You are now done.
-        <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button>Reset</button>
-        </div>
-    </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Shipping Address</ng-template>
+                <mat-form-field>
+                    <input matInput formControlName="addressLineOne" placeholder="Street Address" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="addressLineTwo" placeholder="Second Street Address (Option)">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="city" placeholder="City" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="state" placeholder="State" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="postalCode" placeholder="Postal Code" required>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            <p>You are now done.</p>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+                <button mat-button type="submit" (click)="onSubmit()">Submit</button>
+            </div>
+        </mat-step>
     </mat-horizontal-stepper>
+</form>

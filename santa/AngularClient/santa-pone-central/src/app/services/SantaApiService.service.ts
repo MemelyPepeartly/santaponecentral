@@ -13,7 +13,6 @@ const httpOptions = {
 
 @Injectable({
   providedIn: 'root'
-
 })
 export class SantaApiGetService {
 
@@ -47,6 +46,9 @@ export class SantaApiGetService {
       map(this.extractData));
   }
 }
+@Injectable({
+  providedIn: 'root'
+})
 export class SantaApiPostService {
 
   constructor(private http: HttpClient) { }
