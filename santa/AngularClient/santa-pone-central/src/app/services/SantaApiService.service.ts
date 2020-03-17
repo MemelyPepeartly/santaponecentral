@@ -52,10 +52,6 @@ export class SantaApiGetService {
 export class SantaApiPostService {
 
   constructor(private http: HttpClient) { }
-  private extractData(res: Response) {
-    const body = res;
-    return body || { };
-  }
   postClient(clientID: string, client: ClientResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + clientID, client);
   }
