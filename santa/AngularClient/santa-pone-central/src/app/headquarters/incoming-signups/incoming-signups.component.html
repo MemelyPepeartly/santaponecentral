@@ -4,17 +4,19 @@
               [pageSizeOptions]="[5, 10, 25, 100]"
               class="mat-elevation-z4">
 </mat-paginator>
-
+<div class="spinnerWrap" *ngIf="showSpinner">
+    <app-loading-spin></app-loading-spin>
+</div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let request of requests" appMaterialElevation>
+    <mat-card mat-list-item *ngFor="let client of awaitingClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
-            {{ request.holidayID }}
+            {{ client.clientNickname }}
         </mat-card-title>
         <mat-card-subtitle>
-            {{ request.email }}
+            {{ client.email }}
         </mat-card-subtitle>
         <mat-card-content>
-            Wishlist: {{ request.wishlist }}
+            Client Name: {{ client.clientName }}
         </mat-card-content>
     </mat-card>
 </mat-list>

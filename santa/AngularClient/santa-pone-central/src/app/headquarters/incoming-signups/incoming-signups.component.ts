@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
+import { SantaApiService } from 'src/app/services/SantaApiService.service';
+import { MapEventService } from 'src/app/services/map-event.service';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -9,9 +11,27 @@ import { Address } from '../../../classes/address';
 })
 export class IncomingSignupsComponent implements OnInit {
 
-  constructor() { }
+  constructor(public SantaApi: SantaApiService, public mapper: MapEventService) { }
 
-  ngOnInit() {
+  @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  awaitingClients: Array<Client> = [];
+  showSpinner: boolean = true;
+
+  async ngOnInit() {
+    await this.SantaApi.getAllClients().subscribe(res => {
+      res.forEach(client => {
+        var c = this.mapper.mapClient(client);
+        if(c.clientStatus.statusDescription == "Awaiting")
+        {
+          this.awaitingClients.push(c);
+        }
+      });
+      this.showSpinner = false;
+    });
+  }
+  showCardInfo(client)
+  {
+    this.clickedClient.emit(client);
   }
 
 }
