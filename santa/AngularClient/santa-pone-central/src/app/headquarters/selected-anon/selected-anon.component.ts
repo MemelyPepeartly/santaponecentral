@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Client } from 'src/classes/client';
+import { Client } from 'src/classes/Client';
 
 @Component({
   selector: 'app-selected-anon',

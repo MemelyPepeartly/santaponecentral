@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from '../../../../classes/message';
-import { Address } from '../../../../classes/address';
-import { Client } from '../../../../classes/client';
+import { Address } from '../../../../classes/Address';
+import { Client } from '../../../../classes/Client';
 
 @Component({
   selector: 'app-general-correspondence',
