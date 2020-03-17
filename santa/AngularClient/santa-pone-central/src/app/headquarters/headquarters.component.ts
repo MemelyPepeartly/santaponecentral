@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Client } from '../../classes/Client';
-import { MapEventService } from '../services/map-event.service';
+import { MapService } from '../services/MapService.service';
 import { ConstantPool } from '@angular/compiler';
 
 @Component({
@@ -10,7 +10,7 @@ import { ConstantPool } from '@angular/compiler';
 })
 export class HeadquartersComponent implements OnInit {
 
-  constructor(public mapper: MapEventService) {}
+  constructor(public mapper: MapService) {}
 
   public showClientCard: boolean = false;
   public currentClient: Client;

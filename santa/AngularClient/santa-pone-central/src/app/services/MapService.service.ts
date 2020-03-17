@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Client } from '../../classes/Client';
+import { Status } from 'src/classes/Status';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MapEventService {
+export class MapService {
 
   constructor() { }
 
@@ -30,5 +31,13 @@ export class MapEventService {
     mappedClient.senders = client.senders;
     return mappedClient;
   }
+  mapStatus(status)
+  {
+    let mappedStatus = new Status;
+    
+    mappedStatus.statusID = status.statusID;
+    mappedStatus.statusDescription = status.statusDescription;
 
+    return mappedStatus;
+  }
 }

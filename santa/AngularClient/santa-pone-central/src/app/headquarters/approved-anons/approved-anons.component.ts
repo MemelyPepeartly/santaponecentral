@@ -3,7 +3,7 @@ import { Client } from '../../../classes/Client';
 import { Address } from '../../../classes/Address';
 import { SantaApiService } from '../../services/SantaApiService.service';
 import { EventEmitter } from '@angular/core';
-import { MapEventService } from '../../services/map-event.service';
+import { MapService } from '../../services/MapService.service';
 
 @Component({
   selector: 'app-approved-anons',
@@ -12,7 +12,7 @@ import { MapEventService } from '../../services/map-event.service';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService, public mapper: MapEventService) { }
+  constructor(public SantaApi: SantaApiService, public mapper: MapService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   approvedClients: Array<Client> = [];

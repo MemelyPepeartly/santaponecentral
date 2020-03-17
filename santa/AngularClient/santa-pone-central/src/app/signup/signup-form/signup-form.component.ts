@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Client } from 'src/classes/Client';
 import { SantaApiService } from 'src/app/services/SantaApiService.service';
+import { EventType } from 'src/classes/EventType';
+import { Status } from 'src/classes/Status';
+import { MapService } from '../../services/MapService.service';
 
 
 @Component({
@@ -11,12 +14,18 @@ import { SantaApiService } from 'src/app/services/SantaApiService.service';
 })
 export class SignupFormComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService) { }
+  constructor(public SantaApi: SantaApiService, public mapper: MapService) { }
 
   private client: Client = new Client();
-  private events: EventType = new EventType();
+  private events: Array<EventType> = [];
+  private statuses: Array<Status> = [];
 
   ngOnInit() {
+    this.SantaApi.getAllStatuses().subscribe(res => {
+      res.forEach(status => {
+        this.statuses.push(this.mapper.mapStatus(status))
+      });
+    });
   }
   public onSubmit(clientForm: NgForm)
   {
@@ -28,7 +37,7 @@ export class SignupFormComponent implements OnInit {
     this.client.address.state = clientForm.value.state;
     this.client.address.state = clientForm.value.state;
 
-    this.client.clientStatus = this.SantaApi.
+    this.client.clientStatus = 
     console.log(this.client);
   }
 }

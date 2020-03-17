@@ -1,16 +1,16 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { MapEventService } from './map-event.service';
+import { MapService } from './MapService.service';
 
 describe('Service: MapEvent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapEventService]
+      providers: [MapService]
     });
   });
 
-  it('should ...', inject([MapEventService], (service: MapEventService) => {
+  it('should ...', inject([MapService], (service: MapService) => {
     expect(service).toBeTruthy();
   }));
 });
