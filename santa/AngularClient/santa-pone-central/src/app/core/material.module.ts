@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
-  MatButtonModule, MatCardModule, MatDialogModule, MatInputModule, MatTableModule, MatRadioModule, MatPaginatorModule, MatListModule,
+MatButtonModule, MatCardModule, MatDialogModule, MatInputModule, MatTableModule, MatRadioModule, MatPaginatorModule, MatListModule,
 MatToolbarModule, MatMenuModule, MatIconModule, MatProgressSpinnerModule, MatTabsModule, MatDividerModule, MatStepperModule
 } from '@angular/material';
 
@@ -23,7 +24,8 @@ MatToolbarModule, MatMenuModule, MatIconModule, MatProgressSpinnerModule, MatTab
   MatRadioModule,
   MatPaginatorModule,
   MatListModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  DragDropModule
   ],
   exports: [
   CommonModule,
@@ -42,7 +44,8 @@ MatToolbarModule, MatMenuModule, MatIconModule, MatProgressSpinnerModule, MatTab
    MatRadioModule,
    MatPaginatorModule,
    MatListModule,
-   MatProgressSpinnerModule
+   MatProgressSpinnerModule,
+   DragDropModule
    ],
 })
 export class CustomMaterialModule { }
