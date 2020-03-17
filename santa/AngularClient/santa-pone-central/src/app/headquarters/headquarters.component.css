@@ -48,11 +48,8 @@
 {
     position: fixed;
     margin: auto;
-    left: 50%;
-    top: 50%;
     z-index: 100;
-    margin-top: -200px;
-
+    left: 0;
+    right: 0;
     width: 60%;
-    margin-left: -300px;
 }

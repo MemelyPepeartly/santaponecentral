@@ -20,7 +20,7 @@ export class HeadquartersComponent implements OnInit {
 
   showClientWindow(client)
   {
-    this.currentClient = this.mapper.mapClient(client);
+    this.currentClient = client;
     this.showClientCard = true;
   }
   hideClientWindow()
