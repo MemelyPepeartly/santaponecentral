@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Client } from '../../../classes/client';
-import { Address } from '../../../classes/address';
+import { Client } from '../../../classes/Client';
+import { Address } from '../../../classes/Address';
 import { SantaApiService } from 'src/app/services/SantaApiService.service';
 import { MapEventService } from 'src/app/services/map-event.service';
 
