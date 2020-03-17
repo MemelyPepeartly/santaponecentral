@@ -37,4 +37,12 @@ export class SantaApiService {
     return this.http.get(endpoint + 'Event/' + id).pipe(
       map(this.extractData));
   }
+  getAllStatuses(): Observable<any> {
+    return this.http.get(endpoint + 'Status').pipe(
+      map(this.extractData));
+  }
+  getStatus(id): Observable<any> {
+    return this.http.get(endpoint + 'Status/' + id).pipe(
+      map(this.extractData));
+  }
 }
