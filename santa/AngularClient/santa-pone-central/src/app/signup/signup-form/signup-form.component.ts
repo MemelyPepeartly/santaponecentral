@@ -26,15 +26,14 @@ export class SignupFormComponent implements OnInit {
   private statuses: Array<Status> = [];
   private constants: EventConstants = new EventConstants();
 
-  public firstFormGroup: FormGroup;
-  public secondFormGroup: FormGroup;
+  public clientFormGroup: FormGroup;
 
   ngOnInit() {
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    
-    this.secondFormGroup = this.formBuilder.group({
+    this.clientFormGroup = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', Validators.required],
+
       addressLineOne: ['', Validators.required],
       addressLineTwo: ['', Validators.required],
       city: ['', Validators.required],
@@ -50,6 +49,7 @@ export class SignupFormComponent implements OnInit {
     });
     console.log("Statuses");
     console.log(this.statuses);
+
     //API Call for getting events
     this.SantaGet.getAllEvents().subscribe(res => {
       res.forEach(eventType => {
@@ -59,26 +59,30 @@ export class SignupFormComponent implements OnInit {
     console.log("Events");
     console.log(this.events);
   }
-  public onSubmit(clientForm: NgForm)
+  public onSubmit()
   {
-    console.log(this.firstFormGroup);
-    console.log(this.secondFormGroup);
-    console.log(clientForm);
+    console.log(this.clientFormGroup);
     let newClient: ClientResponse = new ClientResponse();
-    newClient.clientName = clientForm.value.firstName + " " + clientForm.value.lastName;
-    newClient.email = clientForm.value.email;
+    newClient.clientName = this.clientFormGroup.value.firstName + " " + this.clientFormGroup.value.lastName;
+    newClient.email = this.clientFormGroup.value.email;
 
-    newClient.address.addressLineOne = clientForm.value.addressLineOne;
-    newClient.address.addressLineTwo = clientForm.value.addressLineTwo;
-    newClient.address.city = clientForm.value.city;
-    newClient.address.state = clientForm.value.state;
-    newClient.address.state = clientForm.value.state;
+    newClient.address.addressLineOne = this.clientFormGroup.value.addressLineOne;
+    newClient.address.addressLineTwo = this.clientFormGroup.value.addressLineTwo;
+    newClient.address.city = this.clientFormGroup.value.city;
+    newClient.address.state = this.clientFormGroup.value.state;
+    newClient.address.postalCode = this.clientFormGroup.value.postalCode;
+    newClient.address.country = this.clientFormGroup.value.country;
 
-    newClient.clientStatusID = this.statuses.find(status => status.statusDescription == this.constants.AWAITING).statusID;
+    var awaitingStatusID = this.statuses.find(status => status.statusDescription == "Awaiting");
+    newClient.clientStatusID = awaitingStatusID.statusID
     
-    this.SantaPost.postClient(Guid.create().toString(), newClient).subscribe(createRes => {
+    var newClientID = Guid.create().toString()
+
+    
+    /*
+    this.SantaPost.postClient(newClientID, newClient).subscribe(createRes => {
       console.log(createRes);
-      clientForm.resetForm();
     });
+    */
   }
 }
