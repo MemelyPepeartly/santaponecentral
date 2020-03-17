@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client } from '../../classes/Client';
 import { Status } from 'src/classes/Status';
+import { EventType } from 'src/classes/EventType';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class MapService {
   mapClient(client)
   { 
     let mappedClient = new Client;
+    
     mappedClient.clientID = client.clientID;
     mappedClient.clientName = client.clientName;
     mappedClient.email = client.email;
@@ -29,15 +31,26 @@ export class MapService {
 
     mappedClient.recipients = client.recipients;
     mappedClient.senders = client.senders;
+
     return mappedClient;
   }
   mapStatus(status)
   {
     let mappedStatus = new Status;
-    
+
     mappedStatus.statusID = status.statusID;
     mappedStatus.statusDescription = status.statusDescription;
 
     return mappedStatus;
+  }
+  mapEvent(event)
+  {
+    let mappedEventType = new EventType;
+
+    mappedEventType.eventTypeID = event.eventTypeID;
+    mappedEventType.eventDescription = event.eventDescription;
+    mappedEventType.isActive = event.isActive;
+
+    return mappedEventType;
   }
 }

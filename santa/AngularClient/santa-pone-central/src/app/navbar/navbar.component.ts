@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SantaApiService } from '../services/SantaApiService.service';
+import { SantaApiGetService } from '../services/SantaApiService.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +8,7 @@ import { SantaApiService } from '../services/SantaApiService.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(public rest: SantaApiService) { }
+  constructor(public rest: SantaApiGetService) { }
 
   showUserNav = false;
   showAdminNav = false;
