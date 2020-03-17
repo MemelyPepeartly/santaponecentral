@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Client } from '../../../classes/Client';
 import { Address } from '../../../classes/Address';
-import { SantaApiService } from 'src/app/services/SantaApiService.service';
+import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
 import { MapService } from 'src/app/services/MapService.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { MapService } from 'src/app/services/MapService.service';
 })
 export class IncomingSignupsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService, public mapper: MapService) { }
+  constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   awaitingClients: Array<Client> = [];

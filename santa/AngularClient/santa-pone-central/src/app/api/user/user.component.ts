@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SantaApiService } from '../../services/SantaApiService.service';
+import { SantaApiGetService } from '../../services/SantaApiService.service';
 
 @Component({
   selector: 'app-user',
@@ -8,7 +8,7 @@ import { SantaApiService } from '../../services/SantaApiService.service';
 })
 export class UserComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiService) { }
+  constructor(public SantaApi: SantaApiGetService) { }
 
   clients: any = [];
   ngOnInit()

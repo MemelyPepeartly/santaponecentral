@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { Client, ClientResponse } from 'src/classes/Client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 const httpOptions = {
@@ -14,7 +15,7 @@ const httpOptions = {
   providedIn: 'root'
 
 })
-export class SantaApiService {
+export class SantaApiGetService {
 
   constructor(private http: HttpClient) { }
   private extractData(res: Response) {
@@ -44,5 +45,16 @@ export class SantaApiService {
   getStatus(id): Observable<any> {
     return this.http.get(endpoint + 'Status/' + id).pipe(
       map(this.extractData));
+  }
+}
+export class SantaApiPostService {
+
+  constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
+  postClient(clientID: string, client: ClientResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/' + clientID, client);
   }
 }

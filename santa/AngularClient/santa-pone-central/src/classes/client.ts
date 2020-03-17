@@ -11,3 +11,16 @@ export class Client {
     recipients: Array<string>;
     email: string;
 }
+export class ClientResponse {
+    clientID: string;
+    clientStatusID: string;
+    clientName: string;
+    clientNickname: string;
+    address = new Address;
+    email: string;
+
+    toJSON()
+    {
+        return 
+    }
+}
