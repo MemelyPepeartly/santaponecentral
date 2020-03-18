@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { Client, ClientResponse } from 'src/classes/Client';
+import { Client, ClientResponse } from '../../classes/Client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 const httpOptions = {

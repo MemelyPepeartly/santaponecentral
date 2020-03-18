@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client } from '../../classes/Client';
-import { Status } from 'src/classes/Status';
-import { EventType } from 'src/classes/EventType';
+import { Status } from '../../classes/Status';
+import { EventType } from '../../classes/EventType';
 
 @Injectable({
   providedIn: 'root'
