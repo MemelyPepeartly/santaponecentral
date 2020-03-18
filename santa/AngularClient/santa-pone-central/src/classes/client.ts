@@ -12,15 +12,14 @@ export class Client {
     email: string;
 }
 export class ClientResponse {
-    clientID: string;
     clientStatusID: string;
     clientName: string;
+    clientEmail: string;
     clientNickname: string;
-    address = new Address;
-    email: string;
-
-    toJSON()
-    {
-        return 
-    }
+    clientAddressLine1: string;
+    clientAddressLine2: string;
+    clientCity: string;
+    clientState: string;
+    clientPostalCode: string;
+    clientCountry: string;
 }

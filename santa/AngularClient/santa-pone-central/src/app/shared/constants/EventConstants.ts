@@ -1,5 +1,5 @@
-export class EventConstants {
-    readonly AWAITING: "Awaiting";
-    readonly APPROVED: "Approved";
-    readonly GRINCH: "Grinch";
+export enum EventConstants {
+    AWAITING = "Awaiting",
+    APPROVED = "Approved",
+    GRINCH ="Grinch",
 }

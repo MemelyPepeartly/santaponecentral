@@ -24,7 +24,7 @@ export class SignupFormComponent implements OnInit {
   private client: Client = new Client();
   private events: Array<EventType> = [];
   private statuses: Array<Status> = [];
-  private constants: EventConstants = new EventConstants();
+  public isLinear: boolean = true;
 
   public clientFormGroup: FormGroup;
 
@@ -34,11 +34,12 @@ export class SignupFormComponent implements OnInit {
       lastName: ['', Validators.required],
       email: ['', Validators.required],
 
-      addressLineOne: ['', Validators.required],
-      addressLineTwo: ['', Validators.required],
+      addressLine1: ['', Validators.required],
+      addressLine2: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
       postalCode: ['', Validators.required],
+      country: ['', Validators.required],
     });
 
     //API Call for getting statuses
@@ -64,25 +65,20 @@ export class SignupFormComponent implements OnInit {
     console.log(this.clientFormGroup);
     let newClient: ClientResponse = new ClientResponse();
     newClient.clientName = this.clientFormGroup.value.firstName + " " + this.clientFormGroup.value.lastName;
-    newClient.email = this.clientFormGroup.value.email;
+    newClient.clientEmail = this.clientFormGroup.value.email;
 
-    newClient.address.addressLineOne = this.clientFormGroup.value.addressLineOne;
-    newClient.address.addressLineTwo = this.clientFormGroup.value.addressLineTwo;
-    newClient.address.city = this.clientFormGroup.value.city;
-    newClient.address.state = this.clientFormGroup.value.state;
-    newClient.address.postalCode = this.clientFormGroup.value.postalCode;
-    newClient.address.country = this.clientFormGroup.value.country;
+    newClient.clientAddressLine1 = this.clientFormGroup.value.addressLine1;
+    newClient.clientAddressLine2 = this.clientFormGroup.value.addressLine2;
+    newClient.clientCity = this.clientFormGroup.value.city;
+    newClient.clientState = this.clientFormGroup.value.state;
+    newClient.clientPostalCode = this.clientFormGroup.value.postalCode;
+    newClient.clientCountry = this.clientFormGroup.value.country;
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == "Awaiting");
     newClient.clientStatusID = awaitingStatusID.statusID
-    
-    var newClientID = Guid.create().toString()
 
-    
-    /*
-    this.SantaPost.postClient(newClientID, newClient).subscribe(createRes => {
+    this.SantaPost.postClient(newClient).subscribe(createRes => {
       console.log(createRes);
     });
-    */
   }
 }
