@@ -2,3 +2,7 @@ mat-form-field
 {
     display: block;
 }
+#backHomeBtn
+{
+    padding: 10px;
+}

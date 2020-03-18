@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Client, ClientResponse } from '../../../classes/client';
+import { Client } from '../../../classes/client';
+import { ClientResponse } from '../../../classes/responseTypes'
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
 import { EventType } from '../../../classes/EventType';
 import { Status } from '../../../classes/status';
@@ -26,6 +27,8 @@ export class SignupFormComponent implements OnInit {
   private statuses: Array<Status> = [];
   public isLinear: boolean = true;
 
+  public showSpinner: boolean = false;
+  public showFinished: boolean = false;
   public clientFormGroup: FormGroup;
 
   ngOnInit() {
@@ -62,10 +65,11 @@ export class SignupFormComponent implements OnInit {
   }
   public onSubmit()
   {
-    console.log(this.clientFormGroup);
+    this.showSpinner = true;
     let newClient: ClientResponse = new ClientResponse();
     newClient.clientName = this.clientFormGroup.value.firstName + " " + this.clientFormGroup.value.lastName;
     newClient.clientEmail = this.clientFormGroup.value.email;
+    newClient.clientNickname = "Anon"
 
     newClient.clientAddressLine1 = this.clientFormGroup.value.addressLine1;
     newClient.clientAddressLine2 = this.clientFormGroup.value.addressLine2;
@@ -79,6 +83,15 @@ export class SignupFormComponent implements OnInit {
 
     this.SantaPost.postClient(newClient).subscribe(createRes => {
       console.log(createRes);
+      this.showSpinner = false;
+      this.showFinished = true;
     });
+    this.clientFormGroup.reset();
+  }
+  public resetSubmitBools()
+  {
+    this.showFinished = false;
+    this.showSpinner = false;
+    this.clientFormGroup.reset();
   }
 }
