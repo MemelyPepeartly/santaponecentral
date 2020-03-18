@@ -12,7 +12,7 @@ CREATE TABLE app.Client
     clientID UNIQUEIDENTIFIER PRIMARY KEY,
     clientStatusID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientStatus(clientStatusID) NOT NULL,
     clientName NVARCHAR(50) NOT NULL,
-    nickname NVARCHAR(50) UNIQUE,
+    nickname NVARCHAR(50),
     email NVARCHAR(50) NOT NULL UNIQUE,
     addressLine1 NVARCHAR(50) NOT NULL,
     addressLine2 NVARCHAR(50),

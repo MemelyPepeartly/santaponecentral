@@ -33,11 +33,7 @@ namespace Santa.Data.Entities
                 entity.ToTable("Client", "app");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Client__AB6E6164CCF3343B")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Nickname)
-                    .HasName("UQ__Client__5CF1C59BDD97DFB1")
+                    .HasName("UQ__Client__AB6E6164375F8B99")
                     .IsUnique();
 
                 entity.Property(e => e.ClientId)
@@ -93,7 +89,7 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.Client)
                     .HasForeignKey(d => d.ClientStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Client__clientSt__515009E6");
+                    .HasConstraintName("FK__Client__clientSt__56D3D912");
             });
 
             modelBuilder.Entity<ClientRelationXref>(entity =>
@@ -112,19 +108,19 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.ClientRelationXref)
                     .HasForeignKey(d => d.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__event__57FD0775");
+                    .HasConstraintName("FK__ClientRel__event__5D80D6A1");
 
                 entity.HasOne(d => d.RecipientClient)
                     .WithMany(p => p.ClientRelationXrefRecipientClient)
                     .HasForeignKey(d => d.RecipientClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__recip__5708E33C");
+                    .HasConstraintName("FK__ClientRel__recip__5C8CB268");
 
                 entity.HasOne(d => d.SenderClient)
                     .WithMany(p => p.ClientRelationXrefSenderClient)
                     .HasForeignKey(d => d.SenderClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__sende__5614BF03");
+                    .HasConstraintName("FK__ClientRel__sende__5B988E2F");
             });
 
             modelBuilder.Entity<ClientStatus>(entity =>
@@ -178,7 +174,7 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.Survey)
                     .HasForeignKey(d => d.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Survey__eventTyp__5AD97420");
+                    .HasConstraintName("FK__Survey__eventTyp__605D434C");
             });
 
             modelBuilder.Entity<SurveyOption>(entity =>
@@ -219,7 +215,7 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<SurveyQuestionOptionXref>(entity =>
             {
                 entity.HasKey(e => e.SurveyQuestionOptionXref1)
-                    .HasName("PK__SurveyQu__1BAA3BB10C3AB3C7");
+                    .HasName("PK__SurveyQu__1BAA3BB13B9DFC42");
 
                 entity.ToTable("SurveyQuestionOptionXref", "app");
 
@@ -240,13 +236,13 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyQuestionOptionXref)
                     .HasForeignKey(d => d.SurveyOptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__6C040022");
+                    .HasConstraintName("FK__SurveyQue__surve__7187CF4E");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionOptionXref)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__6B0FDBE9");
+                    .HasConstraintName("FK__SurveyQue__surve__7093AB15");
             });
 
             modelBuilder.Entity<SurveyQuestionXref>(entity =>
@@ -270,13 +266,13 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyQuestionXref)
                     .HasForeignKey(d => d.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__673F4B05");
+                    .HasConstraintName("FK__SurveyQue__surve__6CC31A31");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionXref)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__68336F3E");
+                    .HasConstraintName("FK__SurveyQue__surve__6DB73E6A");
             });
 
             modelBuilder.Entity<SurveyResponse>(entity =>
@@ -304,25 +300,25 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__clien__627A95E8");
+                    .HasConstraintName("FK__SurveyRes__clien__67FE6514");
 
                 entity.HasOne(d => d.Survey)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__618671AF");
+                    .HasConstraintName("FK__SurveyRes__surve__670A40DB");
 
                 entity.HasOne(d => d.SurveyOption)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyOptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__6462DE5A");
+                    .HasConstraintName("FK__SurveyRes__surve__69E6AD86");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__636EBA21");
+                    .HasConstraintName("FK__SurveyRes__surve__68F2894D");
             });
 
             OnModelCreatingPartial(modelBuilder);
