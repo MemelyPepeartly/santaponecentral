@@ -1,5 +1,5 @@
-import { Address } from './Address';
-import { Status } from './Status';
+import { Address } from './address';
+import { Status } from './status';
 
 export class Client {
     clientID: string;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Address } from '../../../../classes/Address';
-import { Client } from '../../../../classes/Client';
+import { Address } from '../../../../classes/address';
+import { Client } from '../../../../classes/client';
 
 @Component({
   selector: 'app-shipping-correspondence',
