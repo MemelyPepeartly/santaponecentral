@@ -1,0 +1,27 @@
+button {
+    background-color: #ec407a;
+    color:white
+}
+mat-radio-button {
+    margin-left: 10px;
+}
+.container {
+    display: flex;
+    justify-content: center;
+  }
+.child {
+    width: 35%;
+    margin: 10px;
+}
+
+.child div {
+  width: 100%;
+}
+
+.message {
+  width: 70%;
+}
+#faqCard
+{
+  margin: 10px;
+}
