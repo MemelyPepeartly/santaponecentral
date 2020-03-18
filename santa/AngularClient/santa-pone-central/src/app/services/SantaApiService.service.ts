@@ -53,7 +53,6 @@ export class SantaApiPostService {
 
   constructor(private http: HttpClient) { }
   postClient(client: ClientResponse): Observable<any> {
-    console.log(JSON.stringify(client));
     return this.http.post(endpoint + 'Client', client);
   }
 }

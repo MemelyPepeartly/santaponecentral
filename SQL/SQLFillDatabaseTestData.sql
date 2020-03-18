@@ -97,9 +97,9 @@ VALUES
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
-    (@client1IDGUID, @firstClientStatusIDGUID, 'Wobble Wub', 'DJ Fucknasty', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client1IDGUID, @firstClientStatusIDGUID, 'Wobble Wub', 'Anon', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client3IDGUID, @firstClientStatusIDGUID, 'Venport', 'Vampire Nigga', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client3IDGUID, @firstClientStatusIDGUID, 'Venport', 'Anon', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'OC Fag', 'fourthemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
