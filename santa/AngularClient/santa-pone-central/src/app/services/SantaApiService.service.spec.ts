@@ -1,16 +1,14 @@
-/* tslint:disable:no-unused-variable */
-
 import { TestBed, async, inject } from '@angular/core/testing';
-import { SantaApiServiceService } from './SantaApiService.service';
+import { SantaApiGetService } from './SantaApiService.service';
 
 describe('Service: SantaApiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SantaApiServiceService]
+      providers: [SantaApiGetService]
     });
   });
 
-  it('should ...', inject([SantaApiServiceService], (service: SantaApiServiceService) => {
+  it('should ...', inject([SantaApiGetService], (service: SantaApiGetService) => {
     expect(service).toBeTruthy();
   }));
 });
