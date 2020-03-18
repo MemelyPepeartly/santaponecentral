@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ShippingMessage } from '../../../../classes/shipping-message';
 import { Address } from '../../../../classes/Address';
 import { Client } from '../../../../classes/Client';
 
