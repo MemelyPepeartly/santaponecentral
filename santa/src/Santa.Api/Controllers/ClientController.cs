@@ -101,7 +101,7 @@ namespace Santa.Api.Controllers
                 {
                     await repository.CreateClient(newClient);
                     await repository.SaveAsync();
-                    return Created($"api/Client/{newClient.clientID}", newClient);
+                    return Ok(await repository.GetClientByID(newClient.clientID));
                 }
                 catch (Exception e)
                 {
