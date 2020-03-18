@@ -1,5 +1,5 @@
-<form #ClientForm="ngForm" [formGroup]="clientFormGroup" novalidate>
-    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+<form #ClientForm="ngForm" [formGroup]="clientFormGroup" *ngIf="showFinished==false" validate>
+    <mat-horizontal-stepper linear="true" #stepper>
         <mat-step>
             <ng-template matStepLabel>Fill out your information</ng-template>
             <mat-form-field>
@@ -46,8 +46,9 @@
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>
-            <p>You are now done.</p>
-            <div>
+            <p>Verify your information and change anything as necessary. When you are ready, click "Submit"</p>
+            <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
+            <div *ngIf="showSpinner==false && showFinished==false">
                 <button mat-button matStepperPrevious>Back</button>
                 <button mat-button (click)="stepper.reset()">Reset</button>
                 <button mat-button type="submit" (click)="onSubmit()">Submit</button>
@@ -55,3 +56,6 @@
         </mat-step>
     </mat-horizontal-stepper>
 </form>
+<div *ngIf="showSpinner==false && showFinished==true" id="backHomeBtn">
+    <button mat-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>
+</div>
