@@ -17,8 +17,8 @@ export class IncomingSignupsComponent implements OnInit {
   awaitingClients: Array<Client> = [];
   showSpinner: boolean = true;
 
-  async ngOnInit() {
-    await this.SantaApi.getAllClients().subscribe(res => {
+  ngOnInit() {
+    this.SantaApi.getAllClients().subscribe(res => {
       res.forEach(client => {
         var c = this.mapper.mapClient(client);
         if(c.clientStatus.statusDescription == "Awaiting")
