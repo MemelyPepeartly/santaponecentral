@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Client, ClientResponse } from '../../../classes/Client';
+import { Client, ClientResponse } from '../../../classes/client';
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
-import { EventType } from '../../../classes/EventType';
-import { Status } from '../../../classes/Status';
+import { EventType } from '../../../classes/eventType';
+import { Status } from '../../../classes/status';
 import { MapService } from '../../services/MapService.service';
 import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";

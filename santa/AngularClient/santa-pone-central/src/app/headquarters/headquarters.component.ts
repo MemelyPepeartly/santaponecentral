@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Client } from '../../classes/Client';
+import { Client } from '../../classes/client';
 import { MapService } from '../services/MapService.service';
 import { ConstantPool } from '@angular/compiler';
 
