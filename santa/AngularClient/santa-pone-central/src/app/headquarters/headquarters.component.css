@@ -17,8 +17,9 @@
     margin-right: auto;
     border-radius: 8px;
     height: auto;
-    color: white;
+    background-color: white;
     width: 60%;
+    min-width: 400px;
 }
 .small-box {
     display: block;
@@ -28,11 +29,10 @@
     padding: 10px;
     border-radius: 8px;
     min-width: 150px;
-}
-.small-box {
     text-align: center;
     height: auto;
     width: auto;
+    background-color: white;
 }
 #overlay
 {
