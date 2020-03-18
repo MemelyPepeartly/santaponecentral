@@ -1,0 +1,57 @@
+<form #ClientForm="ngForm" [formGroup]="clientFormGroup" novalidate>
+    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+        <mat-step>
+            <ng-template matStepLabel>Fill out your information</ng-template>
+            <mat-form-field>
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName" placeholder="First Name" required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName" placeholder="Last Name" required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="email@domain.com" required>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+        <mat-step>
+            <ng-template matStepLabel>Shipping Address</ng-template>
+            <mat-form-field>
+                <input matInput formControlName="addressLine1" placeholder="Street Address" required>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="addressLine2" placeholder="Second Street Address (Option)">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="city" placeholder="City" required>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="state" placeholder="State" required>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="country" placeholder="Country" required>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput formControlName="postalCode" placeholder="Postal Code" required>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            <p>You are now done.</p>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+                <button mat-button type="submit" (click)="onSubmit()">Submit</button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</form>

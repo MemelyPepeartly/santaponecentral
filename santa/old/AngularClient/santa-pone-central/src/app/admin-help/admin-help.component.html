@@ -1,0 +1,67 @@
+
+
+<div class="container">
+    <div class="mat-elevation-z6 child">
+        <mat-card>
+            <mat-card-title>
+                Contact Dev Team
+            </mat-card-title>
+            <mat-card-content>
+                <form>
+                <!--<form #myform = "ngForm" (ngSubmit) = "onSubmit(myform)" > -->
+                    <div>
+                        <mat-form-field>
+                            <input matInput type = "text" name = "fullName" placeholder = "Your name">
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput name = "email" placeholder = "Your email">
+                        </mat-form-field>
+                    </div>
+                    <div >
+                        <mat-form-field class = "message">
+                            <textarea matInput   name = "message" placeholder = "Your message"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <h3>Purpose of contact</h3>
+                        <mat-radio-group aria-label="Select an option">
+                            <mat-radio-button value="1">General Questions</mat-radio-button>
+                            <mat-radio-button value="2">Bug Report</mat-radio-button>
+                            <mat-radio-button value="2">Security Query</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+
+                    <button mat-button value = "Send"></button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="mat-elevation-z6 child">
+        <mat-card id="faqCard">
+            <mat-card-title>
+                FAQ 1
+            </mat-card-title>
+            <mat-card-content>
+                <ul mat-list role="list">
+                    <mat-list-item role="listitem">Item 1</mat-list-item>
+                    <mat-list-item role="listitem">Item 2</mat-list-item>
+                    <mat-list-item role="listitem">Item 3</mat-list-item>
+                </ul>
+            </mat-card-content>
+        </mat-card>
+        <mat-card id="faqCard">
+            <mat-card-title>
+                FAQ 2
+            </mat-card-title>
+            <mat-card-content>
+                <ul mat-list role="list">
+                    <mat-list-item role="listitem">Item 1</mat-list-item>
+                    <mat-list-item role="listitem">Item 2</mat-list-item>
+                    <mat-list-item role="listitem">Item 3</mat-list-item>
+                </ul>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

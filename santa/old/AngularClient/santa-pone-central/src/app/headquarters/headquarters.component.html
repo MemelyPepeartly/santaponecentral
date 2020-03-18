@@ -1,0 +1,24 @@
+<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow()">
+</div>
+<div class="container mat-elevation-z2 clientCard" *ngIf="showClientCard == true">
+    <div class="contentDiv mat-elevation-z2">
+        <app-selected-anon [client]=currentClient></app-selected-anon>
+    </div>
+</div>
+<div class="container mat-elevation-z2">
+    <div class="contentDiv mat-elevation-z4">
+        <div class="small-box mat-elevation-z3">
+            <app-incoming-signups (clickedClient)="showClientWindow($event)"></app-incoming-signups>
+        </div>
+    </div>
+    <div class="contentDiv mat-elevation-z2">
+        <div class="small-box mat-elevation-z3">
+            <app-approved-anons (clickedClient)="showClientWindow($event)"></app-approved-anons>
+        </div>
+    </div>
+    <div class="contentDiv mat-elevation-z2">
+        <div class="small-box mat-elevation-z3">
+            <app-in-transit></app-in-transit>
+        </div>
+    </div>
+</div>
