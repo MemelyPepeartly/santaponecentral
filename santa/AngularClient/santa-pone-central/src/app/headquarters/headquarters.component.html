@@ -1,4 +1,4 @@
-<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow()">
+<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow()" [@simpleFadeAnimation]="'in'">
 </div>
 <div class="container mat-elevation-z2 clientCard" *ngIf="showClientCard == true">
     <div class="contentDiv mat-elevation-z2">
