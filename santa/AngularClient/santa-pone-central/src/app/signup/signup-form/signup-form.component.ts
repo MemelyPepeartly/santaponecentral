@@ -23,7 +23,7 @@ export class SignupFormComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   private client: Client = new Client();
-  private events: Array<EventType> = [];
+  public events: Array<EventType> = [];
   private statuses: Array<Status> = [];
   isLinear = true;
 
@@ -59,7 +59,10 @@ export class SignupFormComponent implements OnInit {
     //API Call for getting events
     this.SantaGet.getAllEvents().subscribe(res => {
       res.forEach(eventType => {
-        this.events.push(this.mapper.mapEvent(eventType))
+        if(eventType.active == true)
+        {
+          this.events.push(this.mapper.mapEvent(eventType))
+        }
       });
     });
     console.log("Events");
