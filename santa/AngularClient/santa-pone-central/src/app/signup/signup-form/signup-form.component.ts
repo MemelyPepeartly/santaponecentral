@@ -22,16 +22,19 @@ export class SignupFormComponent implements OnInit {
     public mapper: MapService,
     private formBuilder: FormBuilder) { }
 
-  private client: Client = new Client();
   public events: Array<EventType> = [];
   private statuses: Array<Status> = [];
-  public isLinear: boolean = true;
 
+  //Shows and hides the spinner
   public showSpinner: boolean = false;
+  //Shows and hides the finished dialogue when the form is properly filled out
   public showFinished: boolean = false;
+  //Shows the dialogue where something is wrong in the form to be edited again
   public showSomethingWrong: boolean = false;
+  //Shows a loading spinner until the form is done loading to be filled out
   public isDoneLoading: boolean = false;
-  public showAddressLine2: boolean = false;
+  //For setting the form to a linear format
+  public isLinear: boolean = true;
 
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
@@ -110,17 +113,5 @@ export class SignupFormComponent implements OnInit {
     this.showSpinner = false;
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
-  }
-  public checkIfSecondAddress(clickEvent: boolean)
-  {
-    if(clickEvent)
-    {
-      this.showAddressLine2 = true;
-    }
-    else
-    {
-      this.showAddressLine2 = false;
-    }
-    
   }
 }
