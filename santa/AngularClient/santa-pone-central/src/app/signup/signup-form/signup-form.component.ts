@@ -30,7 +30,8 @@ export class SignupFormComponent implements OnInit {
   public showSpinner: boolean = false;
   public showFinished: boolean = false;
   public showSomethingWrong: boolean = false;
-  public doneLoading: boolean = false;
+  public isDoneLoading: boolean = false;
+  public showAddressLine2: boolean = false;
 
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
@@ -45,7 +46,7 @@ export class SignupFormComponent implements OnInit {
     });
     this.clientAddressFormGroup = this.formBuilder.group({
       addressLine1: ['', Validators.required],
-      addressLine2: ['', Validators.required],
+      addressLine2: ['', Validators.nullValidator],
       city: ['', Validators.required],
       state: ['', Validators.required],
       postalCode: ['', Validators.required],
@@ -69,7 +70,7 @@ export class SignupFormComponent implements OnInit {
           this.events.push(this.mapper.mapEvent(eventType))
         }
       });
-      this.doneLoading = true;
+      this.isDoneLoading = true;
     });
   }
   public onSubmit()
@@ -109,5 +110,17 @@ export class SignupFormComponent implements OnInit {
     this.showSpinner = false;
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
+  }
+  public checkIfSecondAddress(clickEvent: boolean)
+  {
+    if(clickEvent)
+    {
+      this.showAddressLine2 = true;
+    }
+    else
+    {
+      this.showAddressLine2 = false;
+    }
+    
   }
 }

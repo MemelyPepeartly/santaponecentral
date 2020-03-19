@@ -1,52 +1,49 @@
 <div *ngIf="showFinished==false">
-    <div class="loaderDiv" *ngIf="doneLoading == false">
+    <div class="loaderDiv" *ngIf="isDoneLoading == false">
         <app-loading-spin></app-loading-spin>
     </div>
-    <div>
-        <mat-vertical-stepper #stepper [linear]="true">
+    <div *ngIf="isDoneLoading == true">
+        <mat-vertical-stepper #stepper [linear]="true" validate>
             <mat-step [stepControl]="clientInfoFormGroup">
                 <form [formGroup]="clientInfoFormGroup">
                     <ng-template matStepLabel>Fill out your information</ng-template>
                     <mat-form-field>
                         <mat-label>First Name</mat-label>
-                        <input matInput formControlName="firstName" placeholder="First Name" maxlength="20" required>
+                        <input matInput formControlName="firstName" placeholder="First Name" maxlength="20" pattern="[A-Za-z]{1,20}" required>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Last Name</mat-label>
-                        <input matInput formControlName="lastName" placeholder="Last Name" maxlength="20" required>
+                        <input matInput formControlName="lastName" placeholder="Last Name" maxlength="20" pattern="[A-Za-z]{1,20}" required>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" placeholder="email@domain.com"
-                            pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
+                        <input matInput formControlName="email" placeholder="email@domain.com" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
                     </mat-form-field>
                     <div>
                         <button mat-button matStepperNext>Next</button>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="clientAddressFormGroup">
+            <mat-step [stepControl]="clientAddressFormGroup" validate>
                 <form [formGroup]="clientAddressFormGroup">
                     <ng-template matStepLabel>Shipping Address</ng-template>
                     <mat-form-field>
-                        <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50"
-                            required>
+                        <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="addressLine2" placeholder="Second Street Address (Option)"
-                            maxlength="50" optional>
+                        <input matInput #secondLine formControlName="addressLine2"  placeholder="Second Street Address (Optional)" pattern="[A-Za-z0-9 ]" maxlength="50" maxlength="50" minlength="0">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="city" placeholder="City" maxlength="50" required>
+                        <input matInput formControlName="city" placeholder="City" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="state" placeholder="State" maxlength="50" required>
+                        <input matInput formControlName="state" placeholder="State" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="country" placeholder="Country" maxlength="50" required>
+                        <input matInput formControlName="country" placeholder="Country" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25" required>
+                        <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25" pattern="[0-9]{1,25}">
                     </mat-form-field>
                     <div>
                         <button mat-button matStepperPrevious>Back</button>
