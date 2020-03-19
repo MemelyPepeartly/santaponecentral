@@ -1,6 +1,6 @@
 <form #ClientForm="ngForm" [formGroup]="clientFormGroup" *ngIf="showFinished==false" >
-    <mat-vertical-stepper [linear]="isLinear" #stepper>
-        <mat-step>
+    <mat-vertical-stepper #stepper>
+        <mat-step linear>
             <ng-template matStepLabel>Fill out your information</ng-template>
             <mat-form-field>
                 <mat-label>First Name</mat-label>
@@ -18,7 +18,6 @@
                 <button mat-button matStepperNext>Next</button>
             </div>
         </mat-step>
-
         <mat-step>
             <ng-template matStepLabel>Shipping Address</ng-template>
             <mat-form-field>
@@ -43,6 +42,15 @@
                 <button mat-button matStepperPrevious>Back</button>
                 <button mat-button matStepperNext>Next</button>
             </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Event</ng-template>
+
+            <h3>What event are you participating in?</h3>
+            <mat-radio-group aria-label="Select an event" >
+                <mat-radio-button *ngFor="let event of events" [value]="event.eventDescription">{{ event.eventDescription }}</mat-radio-button>
+            </mat-radio-group>
+
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>

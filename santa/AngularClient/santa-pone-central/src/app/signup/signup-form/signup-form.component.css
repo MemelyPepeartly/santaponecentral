@@ -2,6 +2,10 @@ mat-form-field
 {
     display: block;
 }
+.mat-radio-button ~ .mat-radio-button 
+{
+    margin-left: 16px;
+}
 #backHomeBtn
 {
     padding: 10px;
