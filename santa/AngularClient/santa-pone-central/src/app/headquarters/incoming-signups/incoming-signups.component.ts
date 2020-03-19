@@ -3,11 +3,30 @@ import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
 import { MapService } from 'src/app/services/MapService.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-incoming-signups',
   templateUrl: './incoming-signups.component.html',
-  styleUrls: ['./incoming-signups.component.css']
+  styleUrls: ['./incoming-signups.component.css'],
+  animations: [
+    // the fade-in/fade-out animation.
+    trigger('simpleFadeAnimation', [
+
+      // the "in" style determines the "resting" state of the element when it is visible.
+      state('in', style({opacity: 1})),
+
+      // fade in when created. this could also be written as transition('void => *')
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(600 )
+      ]),
+
+      // fade out when destroyed. this could also be written as transition('void => *')
+      transition(':leave',
+        animate(600, style({opacity: 0})))
+    ])
+  ]
 })
 export class IncomingSignupsComponent implements OnInit {
 
