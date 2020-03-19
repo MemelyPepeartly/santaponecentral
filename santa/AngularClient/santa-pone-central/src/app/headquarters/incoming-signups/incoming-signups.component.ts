@@ -33,8 +33,12 @@ export class IncomingSignupsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+
   awaitingClients: Array<Client> = [];
   showSpinner: boolean = true;
+
+  public pageSize: number;
+  public pageLength: number;
 
   ngOnInit() {
     this.SantaApi.getAllClients().subscribe(res => {
@@ -46,6 +50,7 @@ export class IncomingSignupsComponent implements OnInit {
         }
       });
       this.showSpinner = false;
+      this.pageLength = this.awaitingClients.length;
     });
   }
   showCardInfo(client)

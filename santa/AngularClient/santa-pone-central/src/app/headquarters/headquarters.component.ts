@@ -33,6 +33,7 @@ export class HeadquartersComponent implements OnInit {
 
   public showClientCard: boolean = false;
   public currentClient: Client;
+  
 
   ngOnInit() {
   }
