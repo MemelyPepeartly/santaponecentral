@@ -12,6 +12,7 @@ button{
     flex-wrap: wrap;
     background-color:white;
     opacity: 1.0;
+    overflow:auto;
 }
 .contentDiv {
     margin: 15px;

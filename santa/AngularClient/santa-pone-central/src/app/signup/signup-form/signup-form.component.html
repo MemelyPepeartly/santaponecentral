@@ -1,18 +1,18 @@
 <form #ClientForm="ngForm" [formGroup]="clientFormGroup" *ngIf="showFinished==false" >
-    <mat-horizontal-stepper linear="true" #stepper>
+    <mat-vertical-stepper [linear]="isLinear" #stepper>
         <mat-step>
             <ng-template matStepLabel>Fill out your information</ng-template>
             <mat-form-field>
                 <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" placeholder="First Name" required>
+                <input matInput formControlName="firstName" placeholder="First Name">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" placeholder="Last Name" required>
+                <input matInput formControlName="lastName" placeholder="Last Name">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input matInput formControlName="email" placeholder="email@domain.com" required>
+                <input matInput formControlName="email" placeholder="email@domain.com">
             </mat-form-field>
             <div>
                 <button mat-button matStepperNext>Next</button>
@@ -46,7 +46,8 @@
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>
-            <p>Verify your information and change anything as necessary. When you are ready, click "Submit"</p>
+            <p *ngIf="showSomethingWrong==false">Verify your information and change anything as necessary. When you are ready, click "Submit"</p>
+            <p *ngIf="showSomethingWrong==true">Something is wrong with the information provided that doesnt allow it to be put into the database. Check again and verify you havnt put any values that are not acceptable</p>
             <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
             <div *ngIf="showSpinner==false && showFinished==false">
                 <button mat-button matStepperPrevious>Back</button>
@@ -54,7 +55,7 @@
                 <button mat-button type="submit" (click)="onSubmit()">Submit</button>
             </div>
         </mat-step>
-    </mat-horizontal-stepper>
+    </mat-vertical-stepper>
 </form>
 <div *ngIf="showSpinner==false && showFinished==true" id="backHomeBtn">
     <button mat-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>

@@ -25,13 +25,15 @@ export class SignupFormComponent implements OnInit {
   private client: Client = new Client();
   private events: Array<EventType> = [];
   private statuses: Array<Status> = [];
-  public isLinear: boolean = true;
+  isLinear = true;
 
   public showSpinner: boolean = false;
   public showFinished: boolean = false;
+  public showSomethingWrong: boolean = false;
   public clientFormGroup: FormGroup;
 
   ngOnInit() {
+    this.isLinear = true;
     this.clientFormGroup = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -81,13 +83,18 @@ export class SignupFormComponent implements OnInit {
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == "Awaiting");
     newClient.clientStatusID = awaitingStatusID.statusID
 
-    this.SantaPost.postClient(newClient).subscribe(createRes => {
-      console.log(createRes);
+    this.SantaPost.postClient(newClient).subscribe(
+      createRes => {
+        this.showSomethingWrong = false;
+        this.showSpinner = false;
+        this.showFinished = true;
+        this.clientFormGroup.reset();
+    },
+    err => {
+      this.showSomethingWrong = true;
       this.showSpinner = false;
-      this.showFinished = true;
-    });
-    this.clientFormGroup.reset();
-  }
+    }
+    )};
   public resetSubmitBools()
   {
     this.showFinished = false;
