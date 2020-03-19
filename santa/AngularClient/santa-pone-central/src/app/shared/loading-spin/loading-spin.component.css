@@ -2,3 +2,9 @@ mat-spinner
 {
     text-align: center;
 }
+.center
+{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}

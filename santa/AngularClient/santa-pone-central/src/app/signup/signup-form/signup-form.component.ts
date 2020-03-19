@@ -25,36 +25,41 @@ export class SignupFormComponent implements OnInit {
   private client: Client = new Client();
   public events: Array<EventType> = [];
   private statuses: Array<Status> = [];
-  isLinear = true;
+  public isLinear: boolean = true;
 
   public showSpinner: boolean = false;
   public showFinished: boolean = false;
   public showSomethingWrong: boolean = false;
-  public clientFormGroup: FormGroup;
+  public doneLoading: boolean = false;
+
+  public clientInfoFormGroup: FormGroup;
+  public clientAddressFormGroup: FormGroup;
+  public clientEventFormGroup: FormGroup;
 
   ngOnInit() {
     this.isLinear = true;
-    this.clientFormGroup = this.formBuilder.group({
+    this.clientInfoFormGroup = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      email: ['', Validators.required],
-
+      email: ['', Validators.required]
+    });
+    this.clientAddressFormGroup = this.formBuilder.group({
       addressLine1: ['', Validators.required],
       addressLine2: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
       postalCode: ['', Validators.required],
-      country: ['', Validators.required],
+      country: ['', Validators.required]
     });
-
+    this.clientEventFormGroup = this.formBuilder.group({
+      eventDescription: ['', Validators.required]
+    });
     //API Call for getting statuses
     this.SantaGet.getAllStatuses().subscribe(res => {
       res.forEach(status => {
         this.statuses.push(this.mapper.mapStatus(status))
       });
     });
-    console.log("Statuses");
-    console.log(this.statuses);
 
     //API Call for getting events
     this.SantaGet.getAllEvents().subscribe(res => {
@@ -64,24 +69,23 @@ export class SignupFormComponent implements OnInit {
           this.events.push(this.mapper.mapEvent(eventType))
         }
       });
+      this.doneLoading = true;
     });
-    console.log("Events");
-    console.log(this.events);
   }
   public onSubmit()
   {
     this.showSpinner = true;
     let newClient: ClientResponse = new ClientResponse();
-    newClient.clientName = this.clientFormGroup.value.firstName + " " + this.clientFormGroup.value.lastName;
-    newClient.clientEmail = this.clientFormGroup.value.email;
+    newClient.clientName = this.clientInfoFormGroup.value.firstName + " " + this.clientInfoFormGroup.value.lastName;
+    newClient.clientEmail = this.clientInfoFormGroup.value.email;
     newClient.clientNickname = "Anon"
 
-    newClient.clientAddressLine1 = this.clientFormGroup.value.addressLine1;
-    newClient.clientAddressLine2 = this.clientFormGroup.value.addressLine2;
-    newClient.clientCity = this.clientFormGroup.value.city;
-    newClient.clientState = this.clientFormGroup.value.state;
-    newClient.clientPostalCode = this.clientFormGroup.value.postalCode;
-    newClient.clientCountry = this.clientFormGroup.value.country;
+    newClient.clientAddressLine1 = this.clientAddressFormGroup.value.addressLine1;
+    newClient.clientAddressLine2 = this.clientAddressFormGroup.value.addressLine2;
+    newClient.clientCity = this.clientAddressFormGroup.value.city;
+    newClient.clientState = this.clientAddressFormGroup.value.state;
+    newClient.clientPostalCode = this.clientAddressFormGroup.value.postalCode;
+    newClient.clientCountry = this.clientAddressFormGroup.value.country;
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == "Awaiting");
     newClient.clientStatusID = awaitingStatusID.statusID
@@ -91,7 +95,8 @@ export class SignupFormComponent implements OnInit {
         this.showSomethingWrong = false;
         this.showSpinner = false;
         this.showFinished = true;
-        this.clientFormGroup.reset();
+        this.clientInfoFormGroup.reset();
+        this.clientAddressFormGroup.reset();
     },
     err => {
       this.showSomethingWrong = true;
@@ -102,6 +107,7 @@ export class SignupFormComponent implements OnInit {
   {
     this.showFinished = false;
     this.showSpinner = false;
-    this.clientFormGroup.reset();
+    this.clientInfoFormGroup.reset();
+    this.clientAddressFormGroup.reset();
   }
 }

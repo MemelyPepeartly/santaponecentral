@@ -1,4 +1,5 @@
-DECLARE @eventTypeIDGUID UNIQUEIDENTIFIER;
+DECLARE @eventTypeID1GUID UNIQUEIDENTIFIER;
+DECLARE @eventTypeID2GUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion1IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion2IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
@@ -18,7 +19,8 @@ DECLARE @client4IDGUID UNIQUEIDENTIFIER;
 
 DECLARE @surveyResponseIDGUID UNIQUEIDENTIFIER;
 
-SET @eventTypeIDGUID = NEWID();
+SET @eventTypeID1GUID = NEWID();
+SET @eventTypeID2GUID = NEWID();
 SET @surveyQuestion1IDGUID = NEWID();
 SET @surveyQuestion2IDGUID = NEWID();
 SET @surveyQuestion3IDGUID = NEWID();
@@ -37,7 +39,8 @@ SET @client2IDGUID = NEWID();
 SET @client3IDGUID = NEWID();
 SET @client4IDGUID = NEWID();
 
-PRINT N'eventTypeIDGUID:------------ ' + (CAST (@eventTypeIDGUID AS NVARCHAR(50)));
+PRINT N'eventTypeID1GUID:------------ ' + (CAST (@eventTypeID1GUID AS NVARCHAR(50)));
+PRINT N'eventTypeID2GUID:------------ ' + (CAST (@eventTypeID2GUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion1IDGUID:------ ' + (CAST (@surveyQuestion1IDGUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion2IDGUID:------ ' + (CAST (@surveyQuestion2IDGUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion3IDGUID:------ ' + (CAST (@surveyQuestion3IDGUID AS NVARCHAR(50)));
@@ -60,7 +63,8 @@ PRINT N'client4IDGUID:--------- ' + (CAST (@client4IDGUID AS NVARCHAR(50)));
 
 INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
 VALUES
-    (@eventTypeIDGUID,'Gift Exchange', 1);
+    (@eventTypeID1GUID,'Gift Exchange', 1),
+    (@eventTypeID2GUID,'Card Exchange', 1);
 
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
 VALUES
@@ -70,7 +74,7 @@ VALUES
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
-    (@surveyIDGUID, @eventTypeIDGUID, 'Favorite Pony', 1);
+    (@surveyIDGUID, @eventTypeID1GUID, 'Favorite Pony', 1);
 
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
@@ -108,10 +112,10 @@ VALUES
     
 INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
 VALUES
-    (@client1IDGUID, @client2IDGUID, @eventTypeIDGUID),
-    (@client2IDGUID, @client3IDGUID, @eventTypeIDGUID),
-    (@client2IDGUID, @client4IDGUID, @eventTypeIDGUID),
-    (@client4IDGUID, @client1IDGUID, @eventTypeIDGUID);
+    (@client1IDGUID, @client2IDGUID, @eventTypeID1GUID),
+    (@client2IDGUID, @client3IDGUID, @eventTypeID1GUID),
+    (@client2IDGUID, @client4IDGUID, @eventTypeID1GUID),
+    (@client4IDGUID, @client1IDGUID, @eventTypeID1GUID);
 
 
 

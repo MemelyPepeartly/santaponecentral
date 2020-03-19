@@ -1,70 +1,91 @@
-<form #ClientForm="ngForm" [formGroup]="clientFormGroup" *ngIf="showFinished==false" >
-    <mat-vertical-stepper #stepper>
-        <mat-step linear>
-            <ng-template matStepLabel>Fill out your information</ng-template>
-            <mat-form-field>
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" placeholder="First Name">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" placeholder="Last Name">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input matInput formControlName="email" placeholder="email@domain.com">
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Shipping Address</ng-template>
-            <mat-form-field>
-                <input matInput formControlName="addressLine1" placeholder="Street Address" required>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="addressLine2" placeholder="Second Street Address (Option)">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="city" placeholder="City" required>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="state" placeholder="State" required>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="country" placeholder="Country" required>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput formControlName="postalCode" placeholder="Postal Code" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Event</ng-template>
+<div *ngIf="showFinished==false">
+    <div class="loaderDiv" *ngIf="doneLoading == false">
+        <app-loading-spin></app-loading-spin>
+    </div>
+    <div>
+        <mat-vertical-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="clientInfoFormGroup">
+                <form [formGroup]="clientInfoFormGroup">
+                    <ng-template matStepLabel>Fill out your information</ng-template>
+                    <mat-form-field>
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" placeholder="First Name" maxlength="20" required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName" placeholder="Last Name" maxlength="20" required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" placeholder="email@domain.com"
+                            pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="clientAddressFormGroup">
+                <form [formGroup]="clientAddressFormGroup">
+                    <ng-template matStepLabel>Shipping Address</ng-template>
+                    <mat-form-field>
+                        <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50"
+                            required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="addressLine2" placeholder="Second Street Address (Option)"
+                            maxlength="50" optional>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="city" placeholder="City" maxlength="50" required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="state" placeholder="State" maxlength="50" required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="country" placeholder="Country" maxlength="50" required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25" required>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Event</ng-template>
+                <h3>What event are you participating in?</h3>
+                <form [formGroup]="clientEventFormGroup">
+                    <mat-radio-group aria-label="Select an event">
+                        <mat-radio-button *ngFor="let event of events" [value]="event.eventDescription">
+                            {{ event.eventDescription }}</mat-radio-button>
+                    </mat-radio-group>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
 
-            <h3>What event are you participating in?</h3>
-            <mat-radio-group aria-label="Select an event" >
-                <mat-radio-button *ngFor="let event of events" [value]="event.eventDescription">{{ event.eventDescription }}</mat-radio-button>
-            </mat-radio-group>
-
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Done</ng-template>
-            <p *ngIf="showSomethingWrong==false">Verify your information and change anything as necessary. When you are ready, click "Submit"</p>
-            <p *ngIf="showSomethingWrong==true">Something is wrong with the information provided that doesnt allow it to be put into the database. Check again and verify you havnt put any values that are not acceptable</p>
-            <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
-            <div *ngIf="showSpinner==false && showFinished==false">
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
-                <button mat-button type="submit" (click)="onSubmit()">Submit</button>
-            </div>
-        </mat-step>
-    </mat-vertical-stepper>
-</form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p *ngIf="showSomethingWrong==false">Verify your information and change anything as necessary. When you
+                    are ready, click "Submit"</p>
+                <p *ngIf="showSomethingWrong==true">Something is wrong with the information provided that doesnt allow
+                    it to be put into the database.</p>
+                <p>Double check your information and try submitting again</p>
+                <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
+                <div *ngIf="showSpinner==false && showFinished==false">
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                    <button mat-button type="submit" (click)="onSubmit()">Submit</button>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+</div>
 <div *ngIf="showSpinner==false && showFinished==true" id="backHomeBtn">
     <button mat-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>
 </div>
