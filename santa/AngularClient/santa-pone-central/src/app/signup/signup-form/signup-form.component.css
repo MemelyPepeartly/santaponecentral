@@ -10,3 +10,10 @@ mat-form-field
 {
     padding: 10px;
 }
+.loaderDiv
+{
+    display: block;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+}
