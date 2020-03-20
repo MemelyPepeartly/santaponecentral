@@ -1,32 +1,29 @@
+mat-card
+{
+    display: inline-block;
+    margin: 10px;
+}
+mat-divider
+{
+    width: 80%;
+}
 .container {
-    display: flex;
-    justify-content: center;
-    flex: 3;
-    border-radius: 8px;
-    margin-top: 15px;
-    height: auto;
-    flex-wrap: wrap;
-    background-color:white;
-    opacity: 1.0;
+    display: inline-block;
+    overflow: scroll;
+    align-content: center;
 }
-.contentDiv {
-    margin: 15px;
-    justify-items: center;
-    border-radius: 8px;
-    height: auto;
-    color: white;
-}
-.small-box {
+.optionDiv
+{
     display: block;
-    align-items: center;
-    justify-content: center;
-    margin: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    min-width: 150px;
-}
-.small-box {
+    padding-top:10px;
     text-align: center;
-    height: auto;
-    width: auto;
+}
+.optionSub
+{
+    display: block;
+    padding: 5px;
+}
+.infoCard
+{
+    display: inline-block;
 }
