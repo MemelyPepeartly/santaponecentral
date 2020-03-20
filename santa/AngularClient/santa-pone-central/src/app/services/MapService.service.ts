@@ -23,7 +23,7 @@ export class MapService {
     mappedClient.clientStatus.statusDescription = client.clientStatus.statusDescription;
 
     mappedClient.address.addressLineOne = client.address.addressLineOne;
-    mappedClient.address.addressLineTwo = client.address.addressLineOne;
+    mappedClient.address.addressLineTwo = client.address.addressLineTwo;
     mappedClient.address.city = client.address.city;
     mappedClient.address.state = client.address.state;
     mappedClient.address.country = client.address.country;
