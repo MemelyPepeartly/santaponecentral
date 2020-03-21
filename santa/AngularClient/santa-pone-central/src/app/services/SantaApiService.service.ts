@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse } from '../../classes/responseTypes';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 const httpOptions = {
@@ -54,5 +54,28 @@ export class SantaApiPostService {
   constructor(private http: HttpClient) { }
   postClient(client: ClientResponse): Observable<any> {
     return this.http.post(endpoint + 'Client', client);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SantaApiPutService {
+
+  constructor(private http: HttpClient) { }
+  putClientNickname(id: string, client: ClientAddressResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Address', client);
+  }
+  putClientEmail(id: string, client: ClientEmailResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Email', client);
+  }
+  putClientName(id: string, client: ClientNicknameResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Nickname', client);
+  }
+  putClientAddress(id: string, client: ClientNameResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Name', client);
+  }
+  putClientStatus(id: string, client: ClientStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Status', client);
   }
 }

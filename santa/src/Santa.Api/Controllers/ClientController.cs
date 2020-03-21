@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Santa.Api.Models;
+using Santa.Api.Models.Client_Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -252,6 +253,32 @@ namespace Santa.Api.Controllers
                     throw e.InnerException;
                 }
                 
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // PUT: api/Client/5/Name
+        [HttpPut("{clientID}/Status", Name = "PutStatus")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody, Bind("clientStatusID")] ApiClientStatus status)
+        {
+            try
+            {
+                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                targetClient.clientStatus.statusID = status.clientStatusID;
+                try
+                {
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    return Ok(updatedClient);
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+
             }
             catch (Exception e)
             {
