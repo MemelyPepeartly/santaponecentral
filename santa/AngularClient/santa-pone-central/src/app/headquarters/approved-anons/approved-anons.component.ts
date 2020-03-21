@@ -18,9 +18,9 @@ export class ApprovedAnonsComponent implements OnInit {
   approvedClients: Array<Client> = [];
   showSpinner: boolean = true;
 
-  async ngOnInit() {
+  ngOnInit() {
     
-    await this.SantaApi.getAllClients().subscribe(res => {
+    this.SantaApi.getAllClients().subscribe(res => {
       res.forEach(client => {
         var c = this.mapper.mapClient(client);
         if(c.clientStatus.statusDescription == "Approved")
@@ -34,5 +34,20 @@ export class ApprovedAnonsComponent implements OnInit {
   showCardInfo(client)
   {
     this.clickedClient.emit(client);
+  }
+  refreshApprovedClientList()
+  {
+    this.approvedClients = [];
+    this.showSpinner = true;
+    this.SantaApi.getAllClients().subscribe(res => {
+      res.forEach(client => {
+        var c = this.mapper.mapClient(client);
+        if(c.clientStatus.statusDescription == "Approved")
+        {
+          this.approvedClients.push(c);
+        }
+      });
+      this.showSpinner = false;
+    });
   }
 }

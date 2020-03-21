@@ -63,19 +63,19 @@ export class SantaApiPostService {
 export class SantaApiPutService {
 
   constructor(private http: HttpClient) { }
-  putClientNickname(id: string, client: ClientAddressResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Address', client);
+  putClientNickname(id: string, updatedClient: ClientAddressResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient);
   }
-  putClientEmail(id: string, client: ClientEmailResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Email', client);
+  putClientEmail(id: string, updatedClient: ClientEmailResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient);
   }
-  putClientName(id: string, client: ClientNicknameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Nickname', client);
+  putClientName(id: string, updatedClient: ClientNicknameResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient);
   }
-  putClientAddress(id: string, client: ClientNameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Name', client);
+  putClientAddress(id: string, updatedClient: ClientNameResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient);
   }
-  putClientStatus(id: string, client: ClientStatusResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Status', client);
+  putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
   }
 }

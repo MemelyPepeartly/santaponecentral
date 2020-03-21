@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Client } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
+import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse } from 'src/classes/responseTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,48 @@ export class MapService {
     mappedEventType.isActive = event.isActive;
 
     return mappedEventType;
+  }
+}
+@Injectable({
+  providedIn: 'root'
+})
+export class MapResponse
+{
+  mapClientEmailResponse(client: Client)
+  {
+    let clientEmailResponse: ClientEmailResponse = new ClientEmailResponse();
+    clientEmailResponse.clientEmail = client.email
+    return clientEmailResponse;
+  }
+  mapClientNicknameResponse(client: Client)
+  {
+    let clientNicknameResponse: ClientNicknameResponse = new ClientNicknameResponse();
+    clientNicknameResponse.clientNickname = client.clientNickname;
+    return clientNicknameResponse;
+  }
+  mapClientNameResponse(client: Client)
+  {
+    let clientNameResponse: ClientNameResponse = new ClientNameResponse();
+    clientNameResponse.clientName = client.clientName;
+    return clientNameResponse;
+  }
+  mapClientAddressResponse(client: Client)
+  {
+    let clientAddressResponse: ClientAddressResponse = new ClientAddressResponse();
+
+    clientAddressResponse.clientAddressLine1 = client.address.addressLineOne;
+    clientAddressResponse.clientAddressLine2 = client.address.addressLineTwo;
+    clientAddressResponse.clientCity = client.address.city;
+    clientAddressResponse.clientState = client.address.state;
+    clientAddressResponse.clientCountry = client.address.country;
+    clientAddressResponse.clientPostalCode = client.address.postalCode;
+    
+    return clientAddressResponse
+  }
+  mapClientStatusResponse(client: Client)
+  {
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = client.clientStatus.statusID;
+    return clientStatusResponse;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Client } from '../../classes/client';
 import { MapService } from '../services/MapService.service';
 import { ConstantPool } from '@angular/compiler';
@@ -30,6 +30,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class HeadquartersComponent implements OnInit {
 
   constructor(public mapper: MapService) {}
+
 
   public showClientCard: boolean = false;
   public currentClient: Client;
