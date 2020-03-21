@@ -1,5 +1,6 @@
-<div class="container mat-elevation-z2" [@simpleFadeAnimation]="'in'">
+<div class="shell scrollbar scrollbar-primary mat-elevation-z2" [@simpleFadeAnimation]="'in'">
     <mat-card class="infoCard mat-elevation-z5">
+
         <mat-card-header>
             <mat-card-title>{{ client.clientNickname }}</mat-card-title>
             <mat-card-subtitle>{{ client.clientName }}</mat-card-subtitle>
@@ -13,6 +14,22 @@
             <button mat-raised-button>Other Options</button>
         </mat-card-actions>
     </mat-card>
+
+    <mat-card class="infoCard mat-elevation-z5">
+        <mat-card-header>
+            <mat-card-title>Shipping Address</mat-card-title>
+            <mat-card-subtitle>Address that Anon's would use to send something to this Anon</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ client.address.addressLineOne }}</p>
+            <p>{{ client.address.addressLineTwo }}</p>
+            <p>{{ client.address.city }}</p>
+            <p>{{ client.address.state }}</p>
+            <p>{{ client.address.postalCode }}</p>
+            <p>{{ client.address.country }}</p>
+        </mat-card-content>
+    </mat-card>
+
     <mat-card class="infoCard mat-elevation-z5">
         <mat-card-header>
             <mat-card-title>Profile Actions</mat-card-title>
@@ -24,7 +41,7 @@
                 <mat-card-subtitle class="optionSub">
                     <p>Send a message to the client</p>
                 </mat-card-subtitle>
-                <mat-divider></mat-divider>
+                <mat-divider [inset]="true"></mat-divider>
             </div>
 
             <div class="optionDiv">
@@ -32,7 +49,15 @@
                 <mat-card-subtitle class="optionSub">
                     <p>Adds people the Anon is sending to</p>
                 </mat-card-subtitle>
-                <mat-divider></mat-divider>
+                <mat-divider [inset]="true"></mat-divider>
+            </div>
+
+            <div class="optionDiv">
+                <button mat-raised-button>Change Nickname</button>
+                <mat-card-subtitle class="optionSub">
+                    <p>Assign the Anon a proper or different Holiday Nickname</p>
+                </mat-card-subtitle>
+                <mat-divider [inset]="true"></mat-divider>
             </div>
 
             <div class="optionDiv">
@@ -40,21 +65,8 @@
                 <mat-card-subtitle class="optionSub">
                     <p>Add tags to a client</p>
                 </mat-card-subtitle>
-                <mat-divider></mat-divider>
             </div>
         </mat-card-actions>
-    </mat-card>
-    <mat-card class="infoCard mat-elevation-z5">
-        <mat-card-header>
-            <mat-card-title>Shipping Address</mat-card-title>
-            <mat-card-subtitle>Address that Anon's would use to send something to this Anon</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <p>{{ client.address.addressLineOne }}</p>
-            <p>{{ client.address.addressLineTwo }}</p>
-            <p>{{ client.address.city }}</p>
-            <p>{{ client.address.state }}</p>
-        </mat-card-content>
     </mat-card>
     <!-- Good place for an ngFor all the events the client is a part of that they are joining in for -->
 </div>
