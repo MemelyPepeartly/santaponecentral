@@ -55,7 +55,7 @@ namespace Santa.Data.Repository
                     city = contextCharacter.City,
                     country = contextCharacter.Country,
                     state = contextCharacter.State,
-                    postalCode = contextCharacter.State
+                    postalCode = contextCharacter.PostalCode
                 },
                 
                 clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
