@@ -37,9 +37,6 @@ export class IncomingSignupsComponent implements OnInit {
   awaitingClients: Array<Client> = [];
   showSpinner: boolean = true;
 
-  public pageSize: number;
-  public pageLength: number;
-
   ngOnInit() {
     this.SantaApi.getAllClients().subscribe(res => {
       res.forEach(client => {
@@ -50,12 +47,25 @@ export class IncomingSignupsComponent implements OnInit {
         }
       });
       this.showSpinner = false;
-      this.pageLength = this.awaitingClients.length;
     });
   }
   showCardInfo(client)
   {
     this.clickedClient.emit(client);
   }
-
+  refreshSignupClientList()
+  {
+    this.awaitingClients = [];
+    this.showSpinner = true;
+    this.SantaApi.getAllClients().subscribe(res => {
+      res.forEach(client => {
+        var c = this.mapper.mapClient(client);
+        if(c.clientStatus.statusDescription == "Awaiting")
+        {
+          this.awaitingClients.push(c);
+        }
+      });
+      this.showSpinner = false;
+    });  
+  }
 }
