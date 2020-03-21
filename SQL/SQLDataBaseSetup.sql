@@ -24,7 +24,7 @@ CREATE TABLE app.Client
 CREATE TABLE app.EventType
 (
     eventTypeID UNIQUEIDENTIFIER PRIMARY KEY,
-    eventDescription NVARCHAR(100) NOT NULL,
+    eventDescription NVARCHAR(100) UNIQUE NOT NULL,
     isActive BIT NOT NULL
 
 );
