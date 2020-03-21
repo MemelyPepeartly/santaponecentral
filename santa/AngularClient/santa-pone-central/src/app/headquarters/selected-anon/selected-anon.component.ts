@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
+import { SantaApiGetService, SantaApiPutService } from 'src/app/services/SantaApiService.service';
 import { MapService } from 'src/app/services/MapService.service';
 
 @Component({
@@ -29,7 +29,7 @@ import { MapService } from 'src/app/services/MapService.service';
 })
 export class SelectedAnonComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
+  constructor(public SantaApiGet: SantaApiGetService, public SantaApiPut: SantaApiPutService, public mapper: MapService) { }
 
   @Input() client: Client = new Client();
   public senders: Array<Client> = new Array<Client>();
@@ -37,18 +37,21 @@ export class SelectedAnonComponent implements OnInit {
 
   ngOnInit() {
     this.client.senders.forEach(clientID => {
-      this.SantaApi.getClient(clientID).subscribe(client => {
+      this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.mapper.mapClient(client); 
         this.senders.push(c);
       });
     });
     console.log(this.client.recipients);
     this.client.recipients.forEach(clientID => {
-      this.SantaApi.getClient(clientID).subscribe(client => {
+      this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.mapper.mapClient(client);
         this.recievers.push(c);
       });
     });
   }
-
+  public approveAnon()
+  {
+    
+  }
 }

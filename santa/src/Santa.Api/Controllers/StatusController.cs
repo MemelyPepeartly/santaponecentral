@@ -49,7 +49,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Status
         [HttpPost]
-        public async Task<ActionResult<Logic.Objects.Status>> PostStatus([FromBody, Bind("statusDescription")] Models.ApiClientStatus clientStatus)
+        public async Task<ActionResult<Logic.Objects.Status>> PostStatus([FromBody, Bind("statusDescription")] Models.ApiStatusDescription clientStatus)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Status/5
         [HttpPut("{clientStatusID}")]
-        public async Task<ActionResult<Logic.Objects.Status>> Put(Guid clientStatusID, [FromBody, Bind("statusDescription")] Models.ApiClientStatus changedStatus)
+        public async Task<ActionResult<Logic.Objects.Status>> Put(Guid clientStatusID, [FromBody, Bind("statusDescription")] Models.ApiStatusDescription changedStatus)
         {
             try
             {
