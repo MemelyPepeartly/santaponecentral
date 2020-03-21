@@ -7,6 +7,29 @@ mat-divider
 {
     width: 80%;
 }
+#relationDiv
+{
+    display: inline-block;
+    width: 100%;
+}
+#senderCard
+{
+    vertical-align: top;
+    margin-top: 0;
+    margin-left: 17%;
+    width: 30%;
+    padding: 10px;
+}
+#recieverCard
+{
+    vertical-align: top;
+    margin-top: 0;
+    margin-right: 17%;
+    width: 30%;
+    padding: 10px;
+    float: right;
+
+}
 .shell
 {
     border-radius: 8px;

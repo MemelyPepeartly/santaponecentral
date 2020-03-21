@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
+import { MapService } from 'src/app/services/MapService.service';
 
 @Component({
   selector: 'app-selected-anon',
@@ -27,12 +29,26 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class SelectedAnonComponent implements OnInit {
 
-  constructor() { }
+  constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
 
   @Input() client: Client = new Client();
+  public senders: Array<Client> = new Array<Client>();
+  public recievers: Array<Client> = new Array<Client>();
 
   ngOnInit() {
-    
+    this.client.senders.forEach(clientID => {
+      this.SantaApi.getClient(clientID).subscribe(client => {
+        var c = this.mapper.mapClient(client); 
+        this.senders.push(c);
+      });
+    });
+    console.log(this.client.recipients);
+    this.client.recipients.forEach(clientID => {
+      this.SantaApi.getClient(clientID).subscribe(client => {
+        var c = this.mapper.mapClient(client);
+        this.recievers.push(c);
+      });
+    });
   }
 
 }
