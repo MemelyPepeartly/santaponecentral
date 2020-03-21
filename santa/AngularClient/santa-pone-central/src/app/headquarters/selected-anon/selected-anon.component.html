@@ -9,8 +9,8 @@
             <p>Content</p>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button>Approve</button>
-            <button mat-raised-button>Deny</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
             <button mat-raised-button>Other Options</button>
         </mat-card-actions>
     </mat-card>
@@ -29,6 +29,41 @@
             <p>{{ client.address.country }}</p>
         </mat-card-content>
     </mat-card>
+
+    <div id="relationDiv">
+        <mat-card id="senderCard">
+            <mat-card-header>
+                <mat-card-title>Client Senders</mat-card-title>
+                <mat-card-subtitle>People who are sending to the Anon</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let sender of senders">
+                      <mat-expansion-panel-header>
+                        {{sender.clientNickname}}
+                      </mat-expansion-panel-header>
+                        {{sender.clientName}}
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-card-content> 
+        </mat-card>
+        <mat-card id="recieverCard">
+            <mat-card-header>
+                <mat-card-title>Client Recievers</mat-card-title>
+                <mat-card-subtitle>People the Anon is sending to</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let reciever of recievers">
+                      <mat-expansion-panel-header>
+                        {{reciever.clientNickname}}
+                      </mat-expansion-panel-header>
+                        {{reciever.clientName}}
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-card-content>
+        </mat-card>
+    </div>
 
     <mat-card class="infoCard mat-elevation-z5">
         <mat-card-header>
