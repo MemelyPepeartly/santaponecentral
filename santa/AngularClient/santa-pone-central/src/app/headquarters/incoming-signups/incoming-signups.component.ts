@@ -36,6 +36,8 @@ export class IncomingSignupsComponent implements OnInit {
 
   awaitingClients: Array<Client> = [];
   showSpinner: boolean = true;
+  actionTaken: boolean = false;
+  
 
   ngOnInit() {
     this.SantaApi.getAllClients().subscribe(res => {
@@ -55,17 +57,26 @@ export class IncomingSignupsComponent implements OnInit {
   }
   refreshSignupClientList()
   {
-    this.awaitingClients = [];
-    this.showSpinner = true;
-    this.SantaApi.getAllClients().subscribe(res => {
-      res.forEach(client => {
-        var c = this.mapper.mapClient(client);
-        if(c.clientStatus.statusDescription == "Awaiting")
-        {
-          this.awaitingClients.push(c);
-        }
-      });
-      this.showSpinner = false;
-    });  
+    if(this.actionTaken)
+    {
+      this.SantaApi.getAllClients().subscribe(res => {
+        this.awaitingClients = [];
+        this.showSpinner = true;
+        res.forEach(client => {
+          var c = this.mapper.mapClient(client);
+          if(c.clientStatus.statusDescription == "Awaiting")
+          {
+            this.awaitingClients.push(c);
+          }
+        });
+        this.showSpinner = false;
+        this.actionTaken = false;
+      }); 
+    }
+     
+  }
+  setAction(event: boolean)
+  {
+    this.actionTaken = event;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService } from 'src/app/services/SantaApiService.service';
@@ -36,12 +36,15 @@ export class SelectedAnonComponent implements OnInit {
   constructor(public SantaApiGet: SantaApiGetService, public SantaApiPut: SantaApiPutService, public ApiMapper: MapService, public responseMapper: MapResponse) { }
 
   @Input() client: Client = new Client();
+  @Output() action: EventEmitter<any> = new EventEmitter();
+
   public senders: Array<Client> = new Array<Client>();
   public recievers: Array<Client> = new Array<Client>();
 
   public showSpinner: boolean = false;
   public showSuccess: boolean = false;
   public showFail: boolean = false;
+  public actionTaken: boolean = false;
 
   ngOnInit() {
     this.client.senders.forEach(clientID => {
@@ -50,7 +53,6 @@ export class SelectedAnonComponent implements OnInit {
         this.senders.push(c);
       });
     });
-    console.log(this.client.recipients);
     this.client.recipients.forEach(clientID => {
       this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.ApiMapper.mapClient(client);
@@ -60,6 +62,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   public approveAnon()
   {
+    
     this.showSpinner = true;
     var putClient: Client = this.client;
     var approvedStatus: Status = new Status;
@@ -75,13 +78,17 @@ export class SelectedAnonComponent implements OnInit {
           this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(res => {
             this.showSpinner = false;
             this.showSuccess = true;
+            this.actionTaken = true;
+            this.action.emit(this.actionTaken);
           },
           err => {
             console.log(err);
             this.showSpinner = false;
             this.showFail = true;
+            this.actionTaken = false;
+            this.action.emit(this.actionTaken);
           });
-        } 
+        }
       });
     });
   }
