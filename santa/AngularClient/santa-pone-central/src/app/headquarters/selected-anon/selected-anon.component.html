@@ -12,7 +12,7 @@
         <p *ngIf="showFail">Error approving Anon</p>
         <p *ngIf="showSuccess">{{ client.clientNickname }} has been approved!</p>
         <mat-card-actions *ngIf="!showSpinner">
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'" (click)="approveAnon()">Approve</button>
+            <button mat-raised-button (click)="approveAnon()" *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
             <button mat-raised-button>Other Options</button>
         </mat-card-actions>

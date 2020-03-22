@@ -17,6 +17,7 @@ export class ApprovedAnonsComponent implements OnInit {
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   approvedClients: Array<Client> = [];
   showSpinner: boolean = true;
+  actionTaken: boolean = false;
 
   ngOnInit() {
     
@@ -37,17 +38,25 @@ export class ApprovedAnonsComponent implements OnInit {
   }
   refreshApprovedClientList()
   {
-    this.approvedClients = [];
-    this.showSpinner = true;
-    this.SantaApi.getAllClients().subscribe(res => {
-      res.forEach(client => {
-        var c = this.mapper.mapClient(client);
-        if(c.clientStatus.statusDescription == "Approved")
-        {
-          this.approvedClients.push(c);
-        }
+    if(this.actionTaken)
+    {
+      this.SantaApi.getAllClients().subscribe(res => {
+        this.approvedClients = [];
+        this.showSpinner = true;
+        res.forEach(client => {
+          var c = this.mapper.mapClient(client);
+          if(c.clientStatus.statusDescription == "Approved")
+          {
+            this.approvedClients.push(c);
+          }
+        });
+        this.showSpinner = false;
+        this.actionTaken = false;
       });
-      this.showSpinner = false;
-    });
+    }
+  }
+  setAction(event: boolean)
+  {
+    this.actionTaken = event;
   }
 }
