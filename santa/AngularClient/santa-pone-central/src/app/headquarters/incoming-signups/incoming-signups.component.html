@@ -1,6 +1,20 @@
-<mat-toolbar>Incoming Sign-Ups</mat-toolbar>
-<mat-paginator class="mat-elevation-z4">
-</mat-paginator>
+<mat-toolbar>
+    <mat-toolbar-row>
+        Incoming Sign-Ups
+        
+    </mat-toolbar-row>
+    <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
+        <div id="iconDiv">
+            <mat-icon title="Refresh Clients" id="refreshIcon" class="icons">refresh</mat-icon>
+            <mat-icon title="Save Excel File" id="csvIcon" class="icons">save_alt</mat-icon>
+        </div>
+        <div id="paginatorDiv" >
+            <mat-paginator></mat-paginator>
+        </div> 
+    </mat-toolbar-row>
+</mat-toolbar>
+
+
 <div class="spinnerWrap" *ngIf="showSpinner">
     <app-loading-spin></app-loading-spin>
 </div>
