@@ -8,10 +8,10 @@
         <mat-card-content>
             <p>Content</p>
         </mat-card-content>
-        <app-loading-spin *ngIf="showSpinner"></app-loading-spin>
+        <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <p *ngIf="showFail">Error approving Anon</p>
-        <p *ngIf="showSuccess">{{ client.clientNickname }} has been approved!</p>
-        <mat-card-actions *ngIf="!showSpinner">
+        <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
+        <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button (click)="approveAnon()" *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
             <button mat-raised-button>Other Options</button>
@@ -91,10 +91,16 @@
             </div>
 
             <div class="optionDiv">
-                <button mat-raised-button>Change Nickname</button>
+                <button mat-raised-button (click) ="changeNickname()">Change Nickname</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Assign the Anon a proper or different Holiday Nickname</p>
                 </mat-card-subtitle>
+                <app-loading-spin *ngIf="showNickSpinner"></app-loading-spin>
+                <p id="nickSuccess" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
+                <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField" *ngIf="!showNickSpinner">
+                    <mat-label>New Nickname</mat-label>
+                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname">
+                </mat-form-field>
                 <mat-divider [inset]="true"></mat-divider>
             </div>
 

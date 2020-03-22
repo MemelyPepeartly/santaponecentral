@@ -30,6 +30,20 @@ mat-divider
     float: right;
 
 }
+#nickField
+{
+    display: inline-block;
+    border-radius: 8px;
+    height: fit-content;
+    min-height: 80px;
+    width: 50%;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+#nickSuccess
+{
+    color: rgb(0, 90, 0);
+}
 .shell
 {
     border-radius: 8px;

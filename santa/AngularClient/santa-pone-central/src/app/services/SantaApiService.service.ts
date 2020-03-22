@@ -63,16 +63,16 @@ export class SantaApiPostService {
 export class SantaApiPutService {
 
   constructor(private http: HttpClient) { }
-  putClientNickname(id: string, updatedClient: ClientAddressResponse): Observable<any> {
+  putClientAddress(id: string, updatedClient: ClientAddressResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient);
   }
   putClientEmail(id: string, updatedClient: ClientEmailResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient);
   }
-  putClientName(id: string, updatedClient: ClientNicknameResponse): Observable<any> {
+  putClientNickname(id: string, updatedClient: ClientNicknameResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient);
   }
-  putClientAddress(id: string, updatedClient: ClientNameResponse): Observable<any> {
+  putClientName(id: string, updatedClient: ClientNameResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient);
   }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
