@@ -5,7 +5,8 @@ import { SantaApiGetService, SantaApiPutService } from 'src/app/services/SantaAp
 import { MapService, MapResponse } from 'src/app/services/MapService.service';
 import { EventConstants } from 'src/app/shared/constants/EventConstants';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse } from 'src/classes/responseTypes';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-selected-anon',
@@ -33,7 +34,11 @@ import { ClientStatusResponse } from 'src/classes/responseTypes';
 
 export class SelectedAnonComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public SantaApiPut: SantaApiPutService, public ApiMapper: MapService, public responseMapper: MapResponse) { }
+  constructor(public SantaApiGet: SantaApiGetService,
+    public SantaApiPut: SantaApiPutService,
+    public ApiMapper: MapService,
+    public responseMapper: MapResponse,
+    private formBuilder: FormBuilder) { }
 
   @Input() client: Client = new Client();
   @Output() action: EventEmitter<any> = new EventEmitter();
@@ -41,10 +46,14 @@ export class SelectedAnonComponent implements OnInit {
   public senders: Array<Client> = new Array<Client>();
   public recievers: Array<Client> = new Array<Client>();
 
-  public showSpinner: boolean = false;
-  public showSuccess: boolean = false;
+  public showButtonSpinner: boolean = false;
+  public showNickSpinner: boolean = false;
+  public showApproveSuccess: boolean = false;
+  public showNicnameSuccess: boolean = false;
   public showFail: boolean = false;
   public actionTaken: boolean = false;
+
+  public clientNicknameFormGroup: FormGroup;
 
   ngOnInit() {
     this.client.senders.forEach(clientID => {
@@ -59,11 +68,14 @@ export class SelectedAnonComponent implements OnInit {
         this.recievers.push(c);
       });
     });
+    this.clientNicknameFormGroup = this.formBuilder.group({
+      newNickname: ['', Validators.nullValidator],
+    });
   }
   public approveAnon()
   {
     
-    this.showSpinner = true;
+    this.showButtonSpinner = true;
     var putClient: Client = this.client;
     var approvedStatus: Status = new Status;
 
@@ -76,20 +88,38 @@ export class SelectedAnonComponent implements OnInit {
           var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient)
     
           this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(res => {
-            this.showSpinner = false;
-            this.showSuccess = true;
+            this.showButtonSpinner = false;
+            this.showApproveSuccess = true;
             this.actionTaken = true;
             this.action.emit(this.actionTaken);
           },
           err => {
             console.log(err);
-            this.showSpinner = false;
+            this.showButtonSpinner = false;
             this.showFail = true;
             this.actionTaken = false;
             this.action.emit(this.actionTaken);
           });
         }
       });
+    });
+  }
+  public changeNickname()
+  {
+    this.showNickSpinner = true;
+    var putClient: Client = this.client;
+    var newNick: string = this.clientNicknameFormGroup.value.newNickname;
+
+    putClient.clientNickname = newNick;
+    var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+    this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).subscribe(res => {
+      this.showNickSpinner = false;
+      this.clientNicknameFormGroup.reset();
+      this.showNicnameSuccess = true;
+    },
+    err => {
+      this.showNickSpinner = false;
+      this.clientNicknameFormGroup.reset();
     });
   }
 }
