@@ -82,6 +82,7 @@ export class IncomingSignupsComponent implements OnInit {
   manualRefresh()
   {
     this.actionTaken = true;
+    this.showSpinner = true;
     this.refreshSignupClientList();
   }
 }
