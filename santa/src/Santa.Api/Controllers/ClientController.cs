@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Santa.Api.Models;
 using Santa.Api.Models.Client_Models;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -94,8 +95,8 @@ namespace Santa.Api.Controllers
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
                     },
-                    recipients = new List<Guid>(),
-                    senders = new List<Guid>()
+                    recipients = new List<Recipient>(),
+                    senders = new List<Sender>()
                 };
                 
                 try

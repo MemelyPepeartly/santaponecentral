@@ -60,13 +60,32 @@ namespace Santa.Data.Repository
                 
                 clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
                 
-                recipients = contextCharacter.ClientRelationXrefSenderClient.Select(s => s.RecipientClientId).ToList(),
-                senders = contextCharacter.ClientRelationXrefRecipientClient.Select(r => r.SenderClientId).ToList()
+                senders = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
+                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
             };
 
             return logicClient;
         }
-
+        public static Logic.Objects.Recipient MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
+        {
+            Logic.Objects.Recipient logicRecipient = new Recipient()
+            {
+                recipientClientID = contextRecipientXref.RecipientClientId,
+                recipientName = contextRecipientXref.RecipientClient.ClientName,
+                recipientEvent = contextRecipientXref.EventTypeId
+            };
+            return logicRecipient;
+        }
+        public static Logic.Objects.Sender MapRelationSenderXref(Data.Entities.ClientRelationXref contextSenderXref)
+        {
+            Logic.Objects.Sender logicSender = new Sender()
+            {
+                senderClientID = contextSenderXref.SenderClientId,
+                senderName = contextSenderXref.SenderClient.ClientName,
+                senderEvent = contextSenderXref.EventTypeId
+            };
+            return logicSender;
+        }
 
         #endregion
         #region Status

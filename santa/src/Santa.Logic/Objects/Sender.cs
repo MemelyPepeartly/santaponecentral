@@ -8,5 +8,6 @@ namespace Santa.Logic.Objects
     {
         public Guid senderClientID { get; set; }
         public string senderName { get; set; }
+        public Guid senderEvent { get; set; }
     }
 }

@@ -15,6 +15,11 @@ mat-radio-button
 {
     padding: 10px;
 }
+mat-panel-description
+{
+    display: inline-block;
+    text-align: right;
+}
 #noClientSub
 {
     padding: 7px;
