@@ -30,3 +30,7 @@ export class ClientNameResponse {
 export class ClientStatusResponse {
     clientStatusID: string;
 }
+export class ClientRelationshipResponse {
+    recieverClientID: string;
+    eventTypeID: string;
+}

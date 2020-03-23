@@ -43,6 +43,7 @@ import { SurveyComponent } from './api/survey/survey.component';
 import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
+import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
 
 
@@ -77,7 +78,8 @@ import { SelectedAnonComponent } from './headquarters/selected-anon/selected-ano
     QuestionComponent,
     ResponseComponent,
     LoadingSpinComponent,
-    SelectedAnonComponent
+    SelectedAnonComponent,
+    SmallLoadingSpinComponent
   ],
   entryComponents: [
     LoginComponent

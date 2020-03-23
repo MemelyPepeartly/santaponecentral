@@ -1,12 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService, SantaApiPutService } from 'src/app/services/SantaApiService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/MapService.service';
 import { EventConstants } from 'src/app/shared/constants/EventConstants';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { EventType } from 'src/classes/EventType';
 
 @Component({
   selector: 'app-selected-anon',
@@ -36,6 +37,7 @@ export class SelectedAnonComponent implements OnInit {
 
   constructor(public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
+    public SantaApiPost: SantaApiPostService,
     public ApiMapper: MapService,
     public responseMapper: MapResponse,
     private formBuilder: FormBuilder) { }
@@ -46,26 +48,41 @@ export class SelectedAnonComponent implements OnInit {
   public senders: Array<Client> = new Array<Client>();
   public recievers: Array<Client> = new Array<Client>();
   public approvedClients: Array<Client> = new Array<Client>();
+  public selectedRecipients: Array<Client> = new Array<Client>();
+  public events: Array<EventType> = new Array<EventType>();
+
+  public selectedRecipientEvent: EventType = new EventType();
 
   public showButtonSpinner: boolean = false;
   public showNickSpinner: boolean = false;
-  public showRecipientListSpinner: boolean = false;
+  public showRecipientListPostingSpinner: boolean = false;
+  
   public showApproveSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
+  public addRecipientSuccess: boolean = false;
+
   public showFiller: boolean = false;
   public recipientOpen: boolean = false;
   public showFail: boolean = false;
   public actionTaken: boolean = false;
+  public clientApproved: boolean = false;
 
   public clientNicknameFormGroup: FormGroup;
 
   ngOnInit() {
+    //Tells card if client is approved to hide or show the recipient add profile control
+    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    {
+      this.clientApproved = true;
+    }
+    //Gets all the senders form the anon
     this.client.senders.forEach(clientID => {
       this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.ApiMapper.mapClient(client); 
         this.senders.push(c);
       });
     });
+    //Gets all the recievers form the anon
     this.client.recipients.forEach(clientID => {
       this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.ApiMapper.mapClient(client);
@@ -75,6 +92,7 @@ export class SelectedAnonComponent implements OnInit {
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
     });
+
     //Gets all clients that are both approved, not the client, and does not include the client ID already in the list of recipients
     this.SantaApiGet.getAllClients().subscribe(res => { 
       res.forEach(client => {
@@ -84,7 +102,16 @@ export class SelectedAnonComponent implements OnInit {
           this.approvedClients.push(c);
         }
       });
-      this.showRecipientListSpinner = false;
+    });
+
+    //API Call for getting events
+    this.SantaApiGet.getAllEvents().subscribe(res => {
+      res.forEach(eventType => {
+        if(eventType.active == true)
+        {
+          this.events.push(this.ApiMapper.mapEvent(eventType))
+        }
+      });
     });
   }
   public approveAnon()
@@ -131,10 +158,34 @@ export class SelectedAnonComponent implements OnInit {
       this.showNickSpinner = false;
       this.clientNicknameFormGroup.reset();
       this.showNicnameSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
     },
     err => {
       this.showNickSpinner = false;
       this.clientNicknameFormGroup.reset();
+    });
+  }
+  addRecipientsToClient()
+  {
+    var relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
+    
+    this.selectedRecipients.forEach(recievingClient => {
+      relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
+      relationshipResponse.recieverClientID = recievingClient.clientID
+      this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).subscribe(res => {
+        this.actionTaken = true;
+        this.action.emit(this.actionTaken);
+        this.showRecipientListPostingSpinner = false;
+        this.addRecipientSuccess = true;
+      },
+      err =>{
+        console.log(err);
+        this.actionTaken = false;
+        this.action.emit(this.actionTaken);
+      });
+      
+
     });
   }
 }
