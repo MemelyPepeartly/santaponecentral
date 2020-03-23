@@ -50,6 +50,8 @@ export class SelectedAnonComponent implements OnInit {
   public showNickSpinner: boolean = false;
   public showApproveSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
+  public showFiller: boolean = false;
+  public recipientOpen: boolean = false;
   public showFail: boolean = false;
   public actionTaken: boolean = false;
 
