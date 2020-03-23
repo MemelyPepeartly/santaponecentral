@@ -83,19 +83,16 @@
             </div>
             <mat-divider [inset]="true"></mat-divider>
             <!--Change Nickname Card-->
-            <div class="optionDiv" id="recipientOptionDiv">
+            <div class="optionDiv" id="recipientOptionDiv" *ngIf="clientApproved">
                 <div>
                     <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
                                                       'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
                         <mat-drawer #drawer class="recipientNav" mode="side">
-                            <mat-selection-list #shoes>
-                                <mat-list-option *ngFor="let client of approvedClients">{{client.clientNickname}}
-                                </mat-list-option>
+                            <mat-selection-list #recipientList [(ngModel)]="selectedRecipients">
+                                <mat-list-option *ngFor="let client of approvedClients" [value]="client">{{client.clientNickname}}</mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
-
-                        <div
-                            [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
+                        <div [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
                             <div id="toggleDiv">
                                 <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen"
                                     mat-raised-button>Add reciepients</button>
@@ -104,8 +101,16 @@
                                 </mat-card-subtitle>
                             </div>
                             <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button>Confirm Selection</button>
+                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()">Confirm Selection</button>
                             </div>
+                            <div *ngIf="recipientOpen" id="eventRadioDiv">
+                                <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent">
+                                    <mat-radio-button *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <p *ngIf="addRecipientSuccess" class="success">Added recipients to {{ client.clientNickname }}!</p>
+                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
+
                         </div>
                     </mat-drawer-container>
                 </div>
@@ -119,7 +124,7 @@
                 </mat-card-subtitle>
 
                 <app-loading-spin *ngIf="showNickSpinner"></app-loading-spin>
-                <p id="nickSuccess" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been
+                <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been
                     successfully updated to {{ client.clientNickname }}!</p>
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
