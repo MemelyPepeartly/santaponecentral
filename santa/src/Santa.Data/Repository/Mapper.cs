@@ -71,8 +71,8 @@ namespace Santa.Data.Repository
             Logic.Objects.Recipient logicRecipient = new Recipient()
             {
                 recipientClientID = contextRecipientXref.RecipientClientId,
-                recipientName = contextRecipientXref.RecipientClient.ClientName,
-                recipientEvent = contextRecipientXref.EventTypeId
+                recipientNickname = contextRecipientXref.RecipientClient.Nickname,
+                recipientEventTypeID = contextRecipientXref.EventTypeId
             };
             return logicRecipient;
         }
@@ -81,8 +81,8 @@ namespace Santa.Data.Repository
             Logic.Objects.Sender logicSender = new Sender()
             {
                 senderClientID = contextSenderXref.SenderClientId,
-                senderName = contextSenderXref.SenderClient.ClientName,
-                senderEvent = contextSenderXref.EventTypeId
+                senderNickname = contextSenderXref.SenderClient.Nickname,
+                senderEventTypeID = contextSenderXref.EventTypeId
             };
             return logicSender;
         }
