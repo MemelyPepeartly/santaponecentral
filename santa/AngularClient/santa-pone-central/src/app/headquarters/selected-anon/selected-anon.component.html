@@ -130,7 +130,7 @@
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
-                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname">
+                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                 </mat-form-field>
             </div>
             <mat-divider [inset]="true"></mat-divider>
