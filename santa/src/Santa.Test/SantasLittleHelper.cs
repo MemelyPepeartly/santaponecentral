@@ -114,8 +114,8 @@ namespace Santa.Test
                     email = "test1@test.com",
                     nickname = "Test Nickname 1",
                     address = TestAddress,
-                    senders = SenderGUIDList,
-                    recipients = RecipientGUIDList,
+                    senders = new List<Sender>(),
+                    recipients = new List<Recipient>(),
                     clientStatus = new Status()
                 },
                 new Client
@@ -125,8 +125,8 @@ namespace Santa.Test
                     email = "test2@test.com",
                     nickname = "Test Nickname 2",
                     address = TestAddress,
-                    senders = SenderGUIDList,
-                    recipients = RecipientGUIDList,
+                    senders = new List<Sender>(),
+                    recipients = new List<Recipient>(),
                     clientStatus = new Status()
                 },
                 new Client
@@ -136,8 +136,8 @@ namespace Santa.Test
                     email = "test3@test.com",
                     nickname = "Test Nickname 3",
                     address = TestAddress,
-                    senders = SenderGUIDList,
-                    recipients = RecipientGUIDList,
+                    senders = new List<Sender>(),
+                    recipients = new List<Recipient>(),
                     clientStatus = new Status()
                 }
             };
