@@ -45,9 +45,11 @@ export class SelectedAnonComponent implements OnInit {
 
   public senders: Array<Client> = new Array<Client>();
   public recievers: Array<Client> = new Array<Client>();
+  public approvedClients: Array<Client> = new Array<Client>();
 
   public showButtonSpinner: boolean = false;
   public showNickSpinner: boolean = false;
+  public showRecipientListSpinner: boolean = false;
   public showApproveSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public showFiller: boolean = false;
@@ -72,6 +74,17 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
+    });
+    //Gets all clients that are both approved, not the client, and does not include the client ID already in the list of recipients
+    this.SantaApiGet.getAllClients().subscribe(res => { 
+      res.forEach(client => {
+        var c = this.ApiMapper.mapClient(client);
+        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID && !this.client.recipients.includes(c.clientID))
+        {
+          this.approvedClients.push(c);
+        }
+      });
+      this.showRecipientListSpinner = false;
     });
   }
   public approveAnon()

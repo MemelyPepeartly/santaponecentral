@@ -89,20 +89,16 @@
                                                       'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
                         <mat-drawer #drawer class="recipientNav" mode="side">
                             <mat-selection-list #shoes>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
-                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option *ngFor="let client of approvedClients">{{client.clientNickname}}
+                                </mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
-    
-                        <div [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
+
+                        <div
+                            [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
                             <div id="toggleDiv">
-                                <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen" mat-raised-button>Add reciepients</button>
+                                <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen"
+                                    mat-raised-button>Add reciepients</button>
                                 <mat-card-subtitle class="optionSub">
                                     <p>Adds people the Anon is sending to</p>
                                 </mat-card-subtitle>
