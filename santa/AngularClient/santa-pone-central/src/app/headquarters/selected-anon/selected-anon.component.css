@@ -70,6 +70,7 @@ mat-drawer-container
     margin-right: auto;
     max-width: 70%;
     height: auto;
+    clear: both;
 }
 
 .scrollbar {
