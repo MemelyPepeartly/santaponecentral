@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
   MatListModule,
   MatProgressSpinnerModule,
   DragDropModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatSidenavModule
   ],
   exports: [
   CommonModule,
@@ -59,7 +61,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
    MatListModule,
    MatProgressSpinnerModule,
    DragDropModule,
-   MatExpansionModule
+   MatExpansionModule,
+   MatSidenavModule
    ],
 })
 export class CustomMaterialModule { }

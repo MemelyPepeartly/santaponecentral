@@ -12,7 +12,8 @@
         <p *ngIf="showFail">Error approving Anon</p>
         <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
         <mat-card-actions *ngIf="!showButtonSpinner">
-            <button mat-raised-button (click)="approveAnon()" *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
+            <button mat-raised-button (click)="approveAnon()"
+                *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
             <button mat-raised-button>Other Options</button>
         </mat-card-actions>
@@ -42,13 +43,13 @@
             <mat-card-content>
                 <mat-accordion>
                     <mat-expansion-panel *ngFor="let sender of senders">
-                      <mat-expansion-panel-header>
-                        {{sender.clientNickname}}
-                      </mat-expansion-panel-header>
+                        <mat-expansion-panel-header>
+                            {{sender.clientNickname}}
+                        </mat-expansion-panel-header>
                         {{sender.clientName}}
                     </mat-expansion-panel>
                 </mat-accordion>
-            </mat-card-content> 
+            </mat-card-content>
         </mat-card>
         <mat-card id="recieverCard">
             <mat-card-header>
@@ -58,9 +59,9 @@
             <mat-card-content>
                 <mat-accordion>
                     <mat-expansion-panel *ngFor="let reciever of recievers">
-                      <mat-expansion-panel-header>
-                        {{reciever.clientNickname}}
-                      </mat-expansion-panel-header>
+                        <mat-expansion-panel-header>
+                            {{reciever.clientNickname}}
+                        </mat-expansion-panel-header>
                         {{reciever.clientName}}
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -79,31 +80,58 @@
                 <mat-card-subtitle class="optionSub">
                     <p>Send a message to the client</p>
                 </mat-card-subtitle>
-                <mat-divider [inset]="true"></mat-divider>
             </div>
-
-            <div class="optionDiv">
-                <button mat-raised-button>Add reciepients</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Adds people the Anon is sending to</p>
-                </mat-card-subtitle>
-                <mat-divider [inset]="true"></mat-divider>
+            <mat-divider [inset]="true"></mat-divider>
+            <!--Change Nickname Card-->
+            <div class="optionDiv" id="recipientOptionDiv">
+                <div>
+                    <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
+                                                      'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
+                        <mat-drawer #drawer class="recipientNav" mode="side">
+                            <mat-selection-list #shoes>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                                <mat-list-option>Test Option</mat-list-option>
+                            </mat-selection-list>
+                        </mat-drawer>
+    
+                        <div [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
+                            <div id="toggleDiv">
+                                <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen" mat-raised-button>Add reciepients</button>
+                                <mat-card-subtitle class="optionSub">
+                                    <p>Adds people the Anon is sending to</p>
+                                </mat-card-subtitle>
+                            </div>
+                            <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
+                                <button mat-raised-button>Confirm Selection</button>
+                            </div>
+                        </div>
+                    </mat-drawer-container>
+                </div>
             </div>
-
+            <mat-divider [inset]="true"></mat-divider>
+            <!--Change Nickname Card-->
             <div class="optionDiv">
-                <button mat-raised-button (click) ="changeNickname()">Change Nickname</button>
+                <button mat-raised-button (click)="changeNickname()">Change Nickname</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Assign the Anon a proper or different Holiday Nickname</p>
                 </mat-card-subtitle>
+
                 <app-loading-spin *ngIf="showNickSpinner"></app-loading-spin>
-                <p id="nickSuccess" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
-                <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField" *ngIf="!showNickSpinner">
+                <p id="nickSuccess" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been
+                    successfully updated to {{ client.clientNickname }}!</p>
+                <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
+                    *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
                     <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname">
                 </mat-form-field>
-                <mat-divider [inset]="true"></mat-divider>
             </div>
-
+            <mat-divider [inset]="true"></mat-divider>
             <div class="optionDiv">
                 <button mat-raised-button>Add client tags</button>
                 <mat-card-subtitle class="optionSub">
