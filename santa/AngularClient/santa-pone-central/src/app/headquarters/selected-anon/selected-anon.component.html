@@ -102,7 +102,7 @@
                                 </mat-card-subtitle>
                             </div>
                             <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()" [disabled]="selectedRecipients == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm Selection</button>
+                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()" [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm Selection</button>
                             </div>
                             <div *ngIf="recipientOpen" id="eventRadioDiv">
                                 <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent">
