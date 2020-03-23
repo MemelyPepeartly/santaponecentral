@@ -66,12 +66,12 @@ namespace Santa.Test
                 new Recipient
                 {
                     recipientClientID = Guid.NewGuid(),
-                    recipientName = "Test Recipient 1"
+                    recipientNickname = "Test Recipient 1"
                 },
                 new Recipient
                 {
                     recipientClientID = Guid.NewGuid(),
-                    recipientName = "Test Recipient 2"
+                    recipientNickname = "Test Recipient 2"
                 }
             };
             RecipientGUIDList = new List<Guid>();
@@ -88,12 +88,12 @@ namespace Santa.Test
                 new Sender
                 {
                     senderClientID = Guid.NewGuid(),
-                    senderName = "Test Sender 1"
+                    senderNickname = "Test Sender 1"
                 },
                 new Sender
                 {
                     senderClientID = Guid.NewGuid(),
-                    senderName = "Test Sender 2"
+                    senderNickname = "Test Sender 2"
                 }
             };
             SenderGUIDList = new List<Guid>();
