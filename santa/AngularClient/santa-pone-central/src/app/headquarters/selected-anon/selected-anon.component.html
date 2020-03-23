@@ -89,6 +89,7 @@
                                                       'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
                         <mat-drawer #drawer class="recipientNav" mode="side">
                             <mat-selection-list #recipientList [(ngModel)]="selectedRecipients">
+                                <mat-card-subtitle id="noClientSub" *ngIf="approvedClients?.length == 0">No clients available for adding!</mat-card-subtitle>
                                 <mat-list-option *ngFor="let client of approvedClients" [value]="client">{{client.clientNickname}}</mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
@@ -101,7 +102,7 @@
                                 </mat-card-subtitle>
                             </div>
                             <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()">Confirm Selection</button>
+                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()" [disabled]="selectedRecipients == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm Selection</button>
                             </div>
                             <div *ngIf="recipientOpen" id="eventRadioDiv">
                                 <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent">

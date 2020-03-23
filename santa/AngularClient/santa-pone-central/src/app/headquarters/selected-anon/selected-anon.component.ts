@@ -48,9 +48,9 @@ export class SelectedAnonComponent implements OnInit {
   public senders: Array<Client> = new Array<Client>();
   public recievers: Array<Client> = new Array<Client>();
   public approvedClients: Array<Client> = new Array<Client>();
-  public selectedRecipients: Array<Client> = new Array<Client>();
   public events: Array<EventType> = new Array<EventType>();
 
+  public selectedRecipients: Array<Client> = new Array<Client>();
   public selectedRecipientEvent: EventType = new EventType();
 
   public showButtonSpinner: boolean = false;
