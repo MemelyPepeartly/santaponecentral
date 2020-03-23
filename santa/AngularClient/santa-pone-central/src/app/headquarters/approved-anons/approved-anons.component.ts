@@ -59,4 +59,9 @@ export class ApprovedAnonsComponent implements OnInit {
   {
     this.actionTaken = event;
   }
+  manualRefresh()
+  {
+    this.actionTaken = true;
+    this.refreshApprovedClientList();
+  }
 }

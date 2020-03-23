@@ -79,4 +79,9 @@ export class IncomingSignupsComponent implements OnInit {
   {
     this.actionTaken = event;
   }
+  manualRefresh()
+  {
+    this.actionTaken = true;
+    this.refreshSignupClientList();
+  }
 }
