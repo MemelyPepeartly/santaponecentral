@@ -37,6 +37,13 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Creates relation between a two clients by an event. A sender and a reciever
+        /// </summary>
+        /// <param name="senderClientID"></param>
+        /// <param name="recipientClientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
         public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID)
         {
             try

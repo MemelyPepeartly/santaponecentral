@@ -119,15 +119,17 @@ VALUES
 
 
 
-SELECT * FROM app.EventType;
+
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;
 SELECT * FROM app.SurveyOption;
 SELECT * FROM app.SurveyQuestionXref;
 SELECT * FROM app.SurveyQuestionOptionXref;
 SELECT * FROM app.ClientStatus;
-SELECT * FROM app.Client;
 SELECT * FROM app.SurveyResponse;
+
+SELECT * FROM app.EventType;
+SELECT * FROM app.Client;
 SELECT * FROM app.ClientRelationXref;
 
 
