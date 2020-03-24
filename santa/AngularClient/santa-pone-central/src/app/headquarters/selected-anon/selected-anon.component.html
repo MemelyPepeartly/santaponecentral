@@ -36,7 +36,7 @@
 
 
     <div id="relationDiv" *ngFor="let event of events">
-        <mat-toolbar>
+        <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
                 {{event.eventDescription}}
             </mat-toolbar-row>
@@ -55,6 +55,7 @@
                                 <mat-icon>email</mat-icon>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <p>{{sender.clientName}}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-card-content>
@@ -73,6 +74,7 @@
                                 <mat-icon>email</mat-icon>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+                        <p>{{recipient.clientName}}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-card-content>
