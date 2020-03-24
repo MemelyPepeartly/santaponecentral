@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client } from '../../classes/client';
+import { Client, Recipient, Sender } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse } from 'src/classes/responseTypes';
@@ -30,10 +30,35 @@ export class MapService {
     mappedClient.address.country = client.address.country;
     mappedClient.address.postalCode = client.address.postalCode;
 
-    mappedClient.recipients = client.recipients;
-    mappedClient.senders = client.senders;
+    client.recipients.forEach(recipient => {
+      mappedClient.recipients.push(this.mapRecipient(recipient))
+    });
+
+    client.senders.forEach(sender => {
+      mappedClient.senders.push(this.mapSender(sender))
+    });
 
     return mappedClient;
+  }
+  mapRecipient(recipient)
+  {
+    let mappedRecipient = new Recipient;
+
+    mappedRecipient.recipientClientID = recipient.recipientClientID;
+    mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
+    mappedRecipient.recipientNickname = recipient.recipientNickname;
+
+    return mappedRecipient
+  }
+  mapSender(sender)
+  {
+    let mappedSender = new Sender;
+
+    mappedSender.senderClientID = sender.senderClientID;
+    mappedSender.senderEventTypeID = sender.senderEventTypeID;
+    mappedSender.senderNickname = sender.senderNickname;
+
+    return mappedSender
   }
   mapStatus(status)
   {

@@ -35,8 +35,12 @@
     </mat-card>
 
 
-    <!--<div id="relationDiv" *ngFor="let event of events">-->
-        <div id="relationDiv">
+    <div id="relationDiv" *ngFor="let event of events">
+        <mat-toolbar>
+            <mat-toolbar-row>
+                {{event.eventDescription}}
+            </mat-toolbar-row>
+        </mat-toolbar>
         <mat-card id="senderCard">
             <mat-card-header>
                 <mat-card-title>Client Senders</mat-card-title>
@@ -44,12 +48,13 @@
             </mat-card-header>
             <mat-card-content>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let sender of senders">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
-                            <mat-panel-description><mat-icon>email</mat-icon></mat-panel-description>
+                    <mat-expansion-panel *ngFor="let sender of client.senders">
+                        <mat-expansion-panel-header *ngIf="sender.senderEventTypeID == event.eventTypeID">
+                            <mat-panel-title>{{sender.senderNickname}}</mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon>email</mat-icon>
+                            </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <p>{{sender.clientName}}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-card-content>
@@ -61,12 +66,13 @@
             </mat-card-header>
             <mat-card-content>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let reciever of recievers">
+                    <mat-expansion-panel *ngFor="let recipient of client.recipients">
                         <mat-expansion-panel-header>
-                            <mat-panel-title>{{reciever.clientNickname}}</mat-panel-title>
-                            <mat-panel-description><mat-icon>email</mat-icon></mat-panel-description>
+                            <mat-panel-title>{{recipient.recipientNickname}}</mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon>email</mat-icon>
+                            </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <p>{{reciever.clientName}}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-card-content>
@@ -93,11 +99,14 @@
                                                       'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
                         <mat-drawer #drawer class="recipientNav" mode="side">
                             <mat-selection-list #recipientList [(ngModel)]="selectedRecipients">
-                                <mat-card-subtitle id="noClientSub" *ngIf="approvedClients?.length == 0">No clients available for adding!</mat-card-subtitle>
-                                <mat-list-option *ngFor="let client of approvedClients" [value]="client">{{client.clientNickname}}</mat-list-option>
+                                <mat-card-subtitle id="noClientSub" *ngIf="approvedClients?.length == 0">No clients
+                                    available for adding!</mat-card-subtitle>
+                                <mat-list-option *ngFor="let client of approvedClients" [value]="client">
+                                    {{client.clientNickname}}</mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
-                        <div [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
+                        <div
+                            [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
                             <div id="toggleDiv">
                                 <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen"
                                     mat-raised-button>Add reciepients</button>
@@ -106,14 +115,19 @@
                                 </mat-card-subtitle>
                             </div>
                             <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;" (click)="addRecipientsToClient()" [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm Selection</button>
+                                <button mat-raised-button (click)="showRecipientListPostingSpinner = true;"
+                                    (click)="addRecipientsToClient()"
+                                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm
+                                    Selection</button>
                             </div>
                             <div *ngIf="recipientOpen" id="eventRadioDiv">
                                 <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent">
-                                    <mat-radio-button *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-radio-button>
+                                    <mat-radio-button *ngFor="let event of events" [value]="event">
+                                        {{ event.eventDescription }}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
-                            <p *ngIf="addRecipientSuccess" class="success">Added recipients to {{ client.clientNickname }}!</p>
+                            <p *ngIf="addRecipientSuccess" class="success">Added recipients to
+                                {{ client.clientNickname }}!</p>
                             <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
 
                         </div>
@@ -134,7 +148,8 @@
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
-                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
+                        maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
                 </mat-form-field>
             </div>
             <mat-divider [inset]="true"></mat-divider>
