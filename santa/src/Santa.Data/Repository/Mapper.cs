@@ -60,8 +60,8 @@ namespace Santa.Data.Repository
                 
                 clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
                 
-                senders = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
+                senders = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
+                recipients = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList()
             };
 
             return logicClient;
