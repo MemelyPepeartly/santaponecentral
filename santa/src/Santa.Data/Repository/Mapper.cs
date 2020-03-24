@@ -70,8 +70,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Recipient logicRecipient = new Recipient()
             {
-                recipientClientID = contextRecipientXref.RecipientClientId,
-                recipientNickname = contextRecipientXref.RecipientClient.Nickname,
+                recipientClientID = contextRecipientXref.SenderClientId,
                 recipientEventTypeID = contextRecipientXref.EventTypeId
             };
             return logicRecipient;
@@ -80,8 +79,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Sender logicSender = new Sender()
             {
-                senderClientID = contextSenderXref.SenderClientId,
-                senderNickname = contextSenderXref.SenderClient.Nickname,
+                senderClientID = contextSenderXref.RecipientClientId,
                 senderEventTypeID = contextSenderXref.EventTypeId
             };
             return logicSender;
