@@ -111,8 +111,8 @@
                             <!--<mat-card-subtitle id="noClientSub" *ngIf="approvedClients?.length == 0">No clients available for adding!</mat-card-subtitle>-->
 
                             <!-- For each event in the list of all events -->
-                            <mat-selection-list #recipientList [(ngModel)]="selectedRecipients" *ngFor="let clientRecipientOption of approvedRecipientClients">
-                                <mat-list-option [value]="client">{{ clientRecipientOption.clientNickname }}</mat-list-option>
+                            <mat-selection-list #recipientList [(ngModel)]="selectedRecipients">
+                                <mat-list-option *ngFor="let clientRecipientOption of approvedRecipientClients" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
                         <div
