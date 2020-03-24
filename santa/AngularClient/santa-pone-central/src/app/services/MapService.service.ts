@@ -46,7 +46,7 @@ export class MapService {
 
     mappedRelationship.clientID = client.clientID;
     mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientName;
+    mappedRelationship.clientNickname = client.nickname;
     mappedRelationship.clientEventTypeID = eventTypeID;
 
     return mappedRelationship;
