@@ -158,8 +158,6 @@ export class SelectedAnonComponent implements OnInit {
   addRecipientsToClient()
   {
     var relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
-    console.log(this.selectedRecipients);
-    
     
     this.selectedRecipients.forEach(recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
