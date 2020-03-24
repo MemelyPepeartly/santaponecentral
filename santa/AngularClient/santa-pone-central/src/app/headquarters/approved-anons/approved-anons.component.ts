@@ -4,6 +4,7 @@ import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/SantaApiService.service';
 import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/MapService.service';
+import { EventConstants } from 'src/app/shared/constants/EventConstants';
 
 @Component({
   selector: 'app-approved-anons',
@@ -24,7 +25,7 @@ export class ApprovedAnonsComponent implements OnInit {
     this.SantaApi.getAllClients().subscribe(res => {
       res.forEach(client => {
         var c = this.mapper.mapClient(client);
-        if(c.clientStatus.statusDescription == "Approved")
+        if(c.clientStatus.statusDescription == EventConstants.APPROVED)
         {
           this.approvedClients.push(c);
         }
@@ -45,7 +46,7 @@ export class ApprovedAnonsComponent implements OnInit {
         this.showSpinner = true;
         res.forEach(client => {
           var c = this.mapper.mapClient(client);
-          if(c.clientStatus.statusDescription == "Approved")
+          if(c.clientStatus.statusDescription == EventConstants.APPROVED)
           {
             this.approvedClients.push(c);
           }
