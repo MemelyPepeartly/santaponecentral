@@ -93,15 +93,11 @@ export class SelectedAnonComponent implements OnInit {
       newNickname: ['', Validators.nullValidator],
     });
 
-    //Gets all clients that are both approved, not the client, and does not include the client ID already in the list of recipients
+    //Gets all clients that are both approved, and not the client
     this.SantaApiGet.getAllClients().subscribe(res => { 
       res.forEach(client => {
         var c = this.ApiMapper.mapClient(client);
-        var recipientIDList
-        this.client.recipients.forEach(recipient => {
-          recipientIDList.push(recipient.recipientClientID)
-        })
-        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID && !recipientIDList.includes(c.clientID))
+        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID)
         {
           this.approvedClients.push(c);
         }
