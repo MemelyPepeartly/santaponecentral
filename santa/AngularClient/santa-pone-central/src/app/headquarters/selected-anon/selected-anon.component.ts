@@ -46,7 +46,7 @@ export class SelectedAnonComponent implements OnInit {
   @Output() action: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<Client> = new Array<Client>();
-  public recievers: Array<Client> = new Array<Client>();
+  public recipients: Array<Client> = new Array<Client>();
   public approvedClients: Array<Client> = new Array<Client>();
   public events: Array<EventType> = new Array<EventType>();
 
@@ -86,7 +86,7 @@ export class SelectedAnonComponent implements OnInit {
     this.client.recipients.forEach(clientID => {
       this.SantaApiGet.getClient(clientID).subscribe(client => {
         var c = this.ApiMapper.mapClient(client);
-        this.recievers.push(c);
+        this.recipients.push(c);
       });
     });
     this.clientNicknameFormGroup = this.formBuilder.group({
@@ -97,7 +97,11 @@ export class SelectedAnonComponent implements OnInit {
     this.SantaApiGet.getAllClients().subscribe(res => { 
       res.forEach(client => {
         var c = this.ApiMapper.mapClient(client);
-        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID && !this.client.recipients.includes(c.clientID))
+        var recipientIDList
+        this.client.recipients.forEach(recipient => {
+          recipientIDList.push(recipient.recipientClientID)
+        })
+        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID && !recipientIDList.includes(c.clientID))
         {
           this.approvedClients.push(c);
         }
