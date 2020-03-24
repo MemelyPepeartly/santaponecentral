@@ -60,29 +60,29 @@ namespace Santa.Data.Repository
                 
                 clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
                 
-                senders = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                recipients = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
+                recipients = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
+                senders = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
             };
 
             return logicClient;
         }
-        public static Logic.Objects.Recipient MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
-        {
-            Logic.Objects.Recipient logicRecipient = new Recipient()
-            {
-                recipientClientID = contextRecipientXref.SenderClientId,
-                recipientEventTypeID = contextRecipientXref.EventTypeId
-            };
-            return logicRecipient;
-        }
-        public static Logic.Objects.Sender MapRelationSenderXref(Data.Entities.ClientRelationXref contextSenderXref)
+        public static Logic.Objects.Sender MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
         {
             Logic.Objects.Sender logicSender = new Sender()
             {
-                senderClientID = contextSenderXref.RecipientClientId,
-                senderEventTypeID = contextSenderXref.EventTypeId
+                senderClientID = contextRecipientXref.SenderClientId,
+                senderEventTypeID = contextRecipientXref.EventTypeId
             };
             return logicSender;
+        }
+        public static Logic.Objects.Recipient MapRelationSenderXref(Data.Entities.ClientRelationXref contextSenderXref)
+        {
+            Logic.Objects.Recipient logicRecipient = new Recipient()
+            {
+                recipientClientID = contextSenderXref.RecipientClientId,
+                recipientEventTypeID = contextSenderXref.EventTypeId
+            };
+            return logicRecipient;
         }
 
         #endregion
