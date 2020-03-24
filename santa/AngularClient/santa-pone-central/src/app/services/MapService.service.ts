@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Recipient, Sender } from '../../classes/client';
+import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse } from 'src/classes/responseTypes';
@@ -40,13 +40,24 @@ export class MapService {
 
     return mappedClient;
   }
+  mapClientRelationship(client, eventTypeID: string)
+  {
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientName;
+    mappedRelationship.clientEventTypeID = eventTypeID;
+
+    return mappedRelationship;
+
+  }
   mapRecipient(recipient)
   {
     let mappedRecipient = new Recipient;
 
     mappedRecipient.recipientClientID = recipient.recipientClientID;
     mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
-    mappedRecipient.recipientNickname = recipient.recipientNickname;
 
     return mappedRecipient
   }
@@ -56,7 +67,6 @@ export class MapService {
 
     mappedSender.senderClientID = sender.senderClientID;
     mappedSender.senderEventTypeID = sender.senderEventTypeID;
-    mappedSender.senderNickname = sender.senderNickname;
 
     return mappedSender
   }

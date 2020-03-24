@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Client } from '../../../classes/client';
+import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/MapService.service';
@@ -45,8 +45,8 @@ export class SelectedAnonComponent implements OnInit {
   @Input() client: Client = new Client();
   @Output() action: EventEmitter<any> = new EventEmitter();
 
-  public senders: Array<Client> = new Array<Client>();
-  public recipients: Array<Client> = new Array<Client>();
+  public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
+  public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public approvedClients: Array<Client> = new Array<Client>();
   public events: Array<EventType> = new Array<EventType>();
 
@@ -76,16 +76,16 @@ export class SelectedAnonComponent implements OnInit {
       this.clientApproved = true;
     }
     //Gets all the senders form the anon
-    this.client.senders.forEach(clientID => {
-      this.SantaApiGet.getClient(clientID).subscribe(client => {
-        var c = this.ApiMapper.mapClient(client); 
+    this.client.senders.forEach(sender => {
+      this.SantaApiGet.getClient(sender.senderClientID).subscribe(client => {
+        var c = this.ApiMapper.mapClientRelationship(client, sender.senderEventTypeID); 
         this.senders.push(c);
       });
     });
     //Gets all the recievers form the anon
-    this.client.recipients.forEach(clientID => {
-      this.SantaApiGet.getClient(clientID).subscribe(client => {
-        var c = this.ApiMapper.mapClient(client);
+    this.client.recipients.forEach(reciever => {
+      this.SantaApiGet.getClient(reciever.recipientClientID).subscribe(client => {
+        var c = this.ApiMapper.mapClientRelationship(client, reciever.recipientEventTypeID);
         this.recipients.push(c);
       });
     });

@@ -48,9 +48,9 @@
             </mat-card-header>
             <mat-card-content>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let sender of client.senders">
-                        <mat-expansion-panel-header *ngIf="sender.senderEventTypeID == event.eventTypeID">
-                            <mat-panel-title>{{sender.senderNickname}}</mat-panel-title>
+                    <mat-expansion-panel *ngFor="let sender of senders">
+                        <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
+                            <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
                             <mat-panel-description>
                                 <mat-icon>email</mat-icon>
                             </mat-panel-description>
@@ -66,9 +66,9 @@
             </mat-card-header>
             <mat-card-content>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let recipient of client.recipients">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{recipient.recipientNickname}}</mat-panel-title>
+                    <mat-expansion-panel *ngFor="let recipient of recipients">
+                        <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
+                            <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
                             <mat-panel-description>
                                 <mat-icon>email</mat-icon>
                             </mat-panel-description>

@@ -1,5 +1,6 @@
 import { Address } from './address';
 import { Status } from './status';
+import { EventType } from './EventType';
 
 export class Client {
     clientID: string;
@@ -13,12 +14,16 @@ export class Client {
 }
 export class Sender {
     senderClientID: string;
-    senderNickname: string;
     senderEventTypeID: string;
 }
 export class Recipient {
     recipientClientID: string;
-    recipientNickname: string;
     recipientEventTypeID: string;
+}
+export class ClientSenderRecipientRelationship {
+    clientID: string;
+    clientNickname: string;
+    clientName: string;
+    clientEventTypeID: string;
 }
 
