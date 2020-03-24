@@ -95,8 +95,8 @@ namespace Santa.Api.Controllers
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
                     },
-                    recipients = new List<Sender>(),
-                    senders = new List<Recipient>()
+                    recipients = new List<Recipient>(),
+                    senders = new List<Sender>()
                 };
                 
                 try

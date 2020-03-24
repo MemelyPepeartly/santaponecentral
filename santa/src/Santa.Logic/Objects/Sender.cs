@@ -7,7 +7,6 @@ namespace Santa.Logic.Objects
     public class Sender
     {
         public Guid senderClientID { get; set; }
-        public string senderNickname { get; set; }
         public Guid senderEventTypeID { get; set; }
     }
 }
