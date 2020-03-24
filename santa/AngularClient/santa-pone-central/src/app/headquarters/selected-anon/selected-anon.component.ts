@@ -47,7 +47,7 @@ export class SelectedAnonComponent implements OnInit {
 
   public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
-  public approvedClients: Array<Client> = new Array<Client>();
+  public approvedRecipientClients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public events: Array<EventType> = new Array<EventType>();
 
   public selectedRecipients: Array<Client> = new Array<Client>();
@@ -91,17 +91,6 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
-    });
-
-    //Gets all clients that are both approved, and not the client
-    this.SantaApiGet.getAllClients().subscribe(res => { 
-      res.forEach(client => {
-        var c = this.ApiMapper.mapClient(client);
-        if(c.clientStatus.statusDescription == EventConstants.APPROVED && c.clientID != this.client.clientID)
-        {
-          this.approvedClients.push(c);
-        }
-      });
     });
 
     //API Call for getting events
@@ -184,8 +173,45 @@ export class SelectedAnonComponent implements OnInit {
         this.actionTaken = false;
         this.action.emit(this.actionTaken);
       });
-      
+    });
+  }
+  getAllowedRecipientsByEvent(eventType)
+  {
+    this.approvedRecipientClients = [];
 
+    console.log("################");
+    console.log("Event type chosen: " + eventType.eventDescription);
+    console.log("################");
+
+    //Gets all clients that are both approved, and not the client
+    //Used for determining who is able to give and recieve
+    this.SantaApiGet.getAllClients().subscribe(res => {
+      res.forEach(client => {
+        var mappedClient = this.ApiMapper.mapClient(client);
+        var recipientIDList = []
+
+        this.recipients.forEach(relationship => {
+          if(relationship.clientEventTypeID == eventType.eventTypeID)
+          {
+            recipientIDList.push(relationship.clientID);
+          }
+        });
+
+        console.log("Client: " + mappedClient.clientNickname);
+        console.log("Client approved: " + (mappedClient.clientStatus.statusDescription == EventConstants.APPROVED));
+        console.log("Client not equal to selected client: " + (mappedClient.clientID != this.client.clientID));
+        console.log("RecipientID list already include this client for the event: " + (recipientIDList.includes(mappedClient.clientID)));
+
+        if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
+        {
+          console.log("All things are true. Adding " + mappedClient.clientNickname + " to approvedRecipientList...");
+          
+          this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(mappedClient, eventType.eventTypeID));
+        }
+        console.log(this.approvedRecipientClients);
+        console.log("---------------------------------------------------");
+        recipientIDList = [];
+      });   
     });
   }
 }

@@ -44,8 +44,7 @@ export class IncomingSignupsComponent implements OnInit {
     this.SantaApi.getAllClients().subscribe(res => {
       res.forEach(client => {
         var c = this.mapper.mapClient(client);
-        console.log(c);
-        if(c.clientStatus.statusDescription == EventConstants.APPROVED)
+        if(c.clientStatus.statusDescription == EventConstants.AWAITING)
         {
           this.awaitingClients.push(c);
         }
@@ -66,7 +65,7 @@ export class IncomingSignupsComponent implements OnInit {
         this.showSpinner = true;
         res.forEach(client => {
           var c = this.mapper.mapClient(client);
-          if(c.clientStatus.statusDescription == EventConstants.APPROVED)
+          if(c.clientStatus.statusDescription == EventConstants.AWAITING)
           {
             this.awaitingClients.push(c);
           }
