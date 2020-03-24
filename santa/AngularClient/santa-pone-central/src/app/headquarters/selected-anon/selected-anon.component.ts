@@ -158,10 +158,14 @@ export class SelectedAnonComponent implements OnInit {
   addRecipientsToClient()
   {
     var relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
+    console.log(this.selectedRecipients);
+    
     
     this.selectedRecipients.forEach(recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = recievingClient.clientID
+
+      
       this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).subscribe(res => {
         this.actionTaken = true;
         this.action.emit(this.actionTaken);
@@ -178,10 +182,7 @@ export class SelectedAnonComponent implements OnInit {
   getAllowedRecipientsByEvent(eventType)
   {
     this.approvedRecipientClients = [];
-
-    console.log("################");
-    console.log("Event type chosen: " + eventType.eventDescription);
-    console.log("################");
+    this.selectedRecipientEvent = eventType;
 
     //Gets all clients that are both approved, and not the client
     //Used for determining who is able to give and recieve
@@ -197,19 +198,19 @@ export class SelectedAnonComponent implements OnInit {
           }
         });
 
+        //Logging for debugging purposes
+        /*
         console.log("Client: " + mappedClient.clientNickname);
         console.log("Client approved: " + (mappedClient.clientStatus.statusDescription == EventConstants.APPROVED));
         console.log("Client not equal to selected client: " + (mappedClient.clientID != this.client.clientID));
         console.log("RecipientID list already include this client for the event: " + (recipientIDList.includes(mappedClient.clientID)));
+        */
 
         if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
         {
-          console.log("All things are true. Adding " + mappedClient.clientNickname + " to approvedRecipientList...");
           
           this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(mappedClient, eventType.eventTypeID));
         }
-        console.log(this.approvedRecipientClients);
-        console.log("---------------------------------------------------");
         recipientIDList = [];
       });   
     });
