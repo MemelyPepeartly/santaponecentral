@@ -66,6 +66,7 @@ export class SelectedAnonComponent implements OnInit {
   public showFail: boolean = false;
   public actionTaken: boolean = false;
   public clientApproved: boolean = false;
+  public recipientsAreLoaded: boolean = true;
 
   public clientNicknameFormGroup: FormGroup;
 
@@ -82,6 +83,7 @@ export class SelectedAnonComponent implements OnInit {
         this.senders.push(c);
       });
     });
+
     //Gets all the recievers form the anon
     this.client.recipients.forEach(reciever => {
       this.SantaApiGet.getClient(reciever.recipientClientID).subscribe(client => {
@@ -89,6 +91,8 @@ export class SelectedAnonComponent implements OnInit {
         this.recipients.push(c);
       });
     });
+    console.log(this.recipients);
+    
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
     });
@@ -179,6 +183,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   getAllowedRecipientsByEvent(eventType)
   {
+    this.recipientsAreLoaded = false;
     this.approvedRecipientClients = [];
     this.selectedRecipientEvent = eventType;
 
@@ -207,9 +212,10 @@ export class SelectedAnonComponent implements OnInit {
         if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
         {
           
-          this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(mappedClient, eventType.eventTypeID));
+          this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(client, eventType.eventTypeID));
         }
         recipientIDList = [];
+        this.recipientsAreLoaded=true
       });   
     });
   }
