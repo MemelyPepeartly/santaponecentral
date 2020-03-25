@@ -91,7 +91,6 @@ export class SelectedAnonComponent implements OnInit {
         this.recipients.push(c);
       });
     });
-    console.log(this.recipients);
     
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
