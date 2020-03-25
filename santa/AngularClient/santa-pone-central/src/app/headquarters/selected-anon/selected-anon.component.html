@@ -134,7 +134,7 @@
                                 </button>
                             </div>
                             <div *ngIf="recipientOpen" id="eventRadioDiv">
-                                <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent">
+                                <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent" *ngIf="recipientsAreLoaded">
                                     <mat-radio-button *ngFor="let event of events" [value]="event" (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
