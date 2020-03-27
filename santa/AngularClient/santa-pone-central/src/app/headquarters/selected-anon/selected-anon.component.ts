@@ -44,6 +44,7 @@ export class SelectedAnonComponent implements OnInit {
 
   @Input() client: Client = new Client();
   @Output() action: EventEmitter<any> = new EventEmitter();
+  @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
@@ -71,39 +72,18 @@ export class SelectedAnonComponent implements OnInit {
   public clientNicknameFormGroup: FormGroup;
 
   ngOnInit() {
-    //Tells card if client is approved to hide or show the recipient add profile control
+    //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
     {
       this.clientApproved = true;
     }
-    //Gets all the senders form the anon
-    this.client.senders.forEach(sender => {
-      this.SantaApiGet.getClient(sender.senderClientID).subscribe(client => {
-        var c = this.ApiMapper.mapClientRelationship(client, sender.senderEventTypeID); 
-        this.senders.push(c);
-      });
-    });
 
-    //Gets all the recievers form the anon
-    this.client.recipients.forEach(reciever => {
-      this.SantaApiGet.getClient(reciever.recipientClientID).subscribe(client => {
-        var c = this.ApiMapper.mapClientRelationship(client, reciever.recipientEventTypeID);
-        this.recipients.push(c);
-      });
-    });
+    this.gatherSenders();
+    this.gatherRecipients();
+    this.gatherEvents();
     
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.nullValidator],
-    });
-
-    //API Call for getting events
-    this.SantaApiGet.getAllEvents().subscribe(res => {
-      res.forEach(eventType => {
-        if(eventType.active == true)
-        {
-          this.events.push(this.ApiMapper.mapEvent(eventType))
-        }
-      });
     });
   }
   public approveAnon()
@@ -147,6 +127,7 @@ export class SelectedAnonComponent implements OnInit {
     putClient.clientNickname = newNick;
     var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
     this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).subscribe(res => {
+      
       this.showNickSpinner = false;
       this.clientNicknameFormGroup.reset();
       this.showNicnameSuccess = true;
@@ -160,38 +141,43 @@ export class SelectedAnonComponent implements OnInit {
   }
   addRecipientsToClient()
   {
-    var relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
+    let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
     
     this.selectedRecipients.forEach(recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = recievingClient.clientID
 
+      //console.log("Client in selected anon");
+      //console.log(this.client)
+      //console.log("Adding " + recievingClient.clientNickname + " to client recipient for the " + this.selectedRecipientEvent.eventDescription);
+
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+      this.showRecipientListPostingSpinner = false;
+      this.addRecipientSuccess = true;
+
       
-      this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).subscribe(res => {
-        this.actionTaken = true;
-        this.action.emit(this.actionTaken);
-        this.showRecipientListPostingSpinner = false;
-        this.addRecipientSuccess = true;
-      },
-      err =>{
-        console.log(err);
-        this.actionTaken = false;
-        this.action.emit(this.actionTaken);
-      });
+      this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).toPromise();
+      this.refreshSelectedClient.emit(this.client.clientID);
+      this.gatherRecipients();
+      this.gatherSenders;
+      //console.log("###################################");
     });
   }
   getAllowedRecipientsByEvent(eventType)
   {
     this.recipientsAreLoaded = false;
-    this.approvedRecipientClients = [];
     this.selectedRecipientEvent = eventType;
+
+    this.approvedRecipientClients = [];
+    var recipientIDList = [];
 
     //Gets all clients that are both approved, and not the client
     //Used for determining who is able to give and recieve
     this.SantaApiGet.getAllClients().subscribe(res => {
       res.forEach(client => {
+        //Client from DB
         var mappedClient = this.ApiMapper.mapClient(client);
-        var recipientIDList = []
 
         this.recipients.forEach(relationship => {
           if(relationship.clientEventTypeID == eventType.eventTypeID)
@@ -208,14 +194,43 @@ export class SelectedAnonComponent implements OnInit {
         console.log("RecipientID list already include this client for the event: " + (recipientIDList.includes(mappedClient.clientID)));
         */
 
+        //If the mapped client status is approved (&&) the ID is not the currently selected client's ID (&&) the client from DB is not in the list of the selected client's recipient ID list by event already
         if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
         {
-          
           this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(client, eventType.eventTypeID));
         }
-        recipientIDList = [];
-        this.recipientsAreLoaded=true
-      });   
+        this.recipientsAreLoaded=true;
+      });
+    });
+  }
+  async gatherRecipients()
+  {
+    this.recipients = [];
+    //Gets all the recievers form the anon
+    this.client.recipients.forEach(async reciever => {
+      this.recipients.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(reciever.recipientClientID).toPromise(), reciever.recipientEventTypeID));
+    });
+  }
+  async gatherSenders()
+  {
+    this.senders = [];
+
+    //Gets all the senders form the anon
+    this.client.senders.forEach(async sender => {
+      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(sender.senderClientID).toPromise(), sender.senderEventTypeID));
+    });
+  }
+  gatherEvents()
+  {
+    this.events = [];
+    //API Call for getting events
+    this.SantaApiGet.getAllEvents().subscribe(res => {
+      res.forEach(eventType => {
+        if(eventType.active == true)
+        {
+          this.events.push(this.ApiMapper.mapEvent(eventType))
+        }
+      });
     });
   }
 }

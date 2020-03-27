@@ -3,6 +3,7 @@ import { Client } from '../../classes/client';
 import { MapService } from '../services/MapService.service';
 import { ConstantPool } from '@angular/compiler';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { SantaApiGetService } from '../services/SantaApiService.service';
 
 @Component({
   selector: 'app-headquarters',
@@ -29,7 +30,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class HeadquartersComponent implements OnInit {
 
-  constructor(public mapper: MapService) {}
+  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService) {}
 
 
   public showClientCard: boolean = false;
@@ -47,5 +48,11 @@ export class HeadquartersComponent implements OnInit {
   hideClientWindow()
   {
     this.showClientCard = false;
+  }
+  async updateSelectedClient(clientID: string)
+  {
+    console.log("Got to updateSelectedClient")
+
+    this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
   }
 }
