@@ -130,7 +130,7 @@
                                 <button mat-raised-button
                                     (click)="showRecipientListPostingSpinner = true;"
                                     (click)="addRecipientsToClient()"
-                                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined">Confirm Selection
+                                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
                                 </button>
                             </div>
                             <div *ngIf="recipientOpen" id="eventRadioDiv">
