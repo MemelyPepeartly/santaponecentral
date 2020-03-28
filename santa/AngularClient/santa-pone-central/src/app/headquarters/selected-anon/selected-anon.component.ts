@@ -143,6 +143,7 @@ export class SelectedAnonComponent implements OnInit {
   {
     let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
     
+    
     this.selectedRecipients.forEach(async recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = recievingClient.clientID
@@ -156,9 +157,10 @@ export class SelectedAnonComponent implements OnInit {
       this.action.emit(this.actionTaken);
       this.showRecipientListPostingSpinner = false;
       this.addRecipientSuccess = true;
+      this.refreshSelectedClient.emit(this.client.clientID);
       this.gatherRecipients();
       this.gatherSenders();
-    });
+    }); 
     this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
   }
   async getAllowedRecipientsByEvent(eventType: EventType)

@@ -51,8 +51,6 @@ export class HeadquartersComponent implements OnInit {
   }
   async updateSelectedClient(clientID: string)
   {
-    console.log("Got to updateSelectedClient")
-
     this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
   }
 }
