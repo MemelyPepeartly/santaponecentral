@@ -142,8 +142,9 @@ export class SelectedAnonComponent implements OnInit {
   async addRecipientsToClient()
   {
     let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
-    
-    this.selectedRecipients.forEach(recievingClient => {
+
+    this.showRecipientListPostingSpinner = true;
+    this.selectedRecipients.forEach(async recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = recievingClient.clientID
 
@@ -151,27 +152,16 @@ export class SelectedAnonComponent implements OnInit {
       //console.log(this.client)
       //console.log("Adding " + recievingClient.clientNickname + " to client recipient for the " + this.selectedRecipientEvent.eventDescription);
 
-      this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).subscribe(async res => {
-        this.client = this.ApiMapper.mapClient(res);
-
-        this.actionTaken = true;
-        this.action.emit(this.actionTaken);
-        this.showRecipientListPostingSpinner = false;
-        this.addRecipientSuccess = true;
-        await this.gatherRecipients();
-        await this.gatherSenders;
-        this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
-      },
-      err => {
-        console.log(err);
-        this.actionTaken = false;
-        this.action.emit(this.actionTaken);
-        this.showRecipientListPostingSpinner = false;
-        this.addRecipientSuccess = false;
-      });
-      
-      //console.log("###################################");
+      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).toPromise().catch(err => {console.log(err);this.addRecipientSuccess = false;}));
+      console.log(this.client)
+      this.actionTaken = true;
     });
+    this.refreshSelectedClient.emit(true);
+    await this.gatherRecipients();
+    await this.gatherSenders();
+    await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
+    this.action.emit(this.actionTaken);
+    this.showRecipientListPostingSpinner = false;
   }
   getAllowedRecipientsByEvent(eventType)
   {
@@ -180,9 +170,9 @@ export class SelectedAnonComponent implements OnInit {
     //Used for determining who is able to give and recieve
     this.SantaApiGet.getAllClients().subscribe(res => {
       this.selectedRecipientEvent = eventType;
-
       this.approvedRecipientClients = [];
       var recipientIDList = [];
+      
       res.forEach(client => {
         //Client from DB
         var mappedClient = this.ApiMapper.mapClient(client);
