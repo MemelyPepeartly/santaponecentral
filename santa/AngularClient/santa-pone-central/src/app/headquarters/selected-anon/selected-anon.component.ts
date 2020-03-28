@@ -142,8 +142,7 @@ export class SelectedAnonComponent implements OnInit {
   async addRecipientsToClient()
   {
     let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
-
-    this.showRecipientListPostingSpinner = true;
+    
     this.selectedRecipients.forEach(async recievingClient => {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = recievingClient.clientID
@@ -152,54 +151,50 @@ export class SelectedAnonComponent implements OnInit {
       //console.log(this.client)
       //console.log("Adding " + recievingClient.clientNickname + " to client recipient for the " + this.selectedRecipientEvent.eventDescription);
 
-      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).toPromise().catch(err => {console.log(err);this.addRecipientSuccess = false;}));
-      console.log(this.client)
+      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).toPromise().catch(err => {console.log(err)}));
       this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+      this.showRecipientListPostingSpinner = false;
+      this.addRecipientSuccess = true;
+      this.gatherRecipients();
+      this.gatherSenders();
     });
-    this.refreshSelectedClient.emit(true);
-    await this.gatherRecipients();
-    await this.gatherSenders();
-    await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
-    this.action.emit(this.actionTaken);
-    this.showRecipientListPostingSpinner = false;
+    this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
   }
-  getAllowedRecipientsByEvent(eventType)
+  async getAllowedRecipientsByEvent(eventType: EventType)
   {
     this.recipientsAreLoaded = false;
-    //Gets all clients that are both approved, and not the client
-    //Used for determining who is able to give and recieve
-    this.SantaApiGet.getAllClients().subscribe(res => {
-      this.selectedRecipientEvent = eventType;
-      this.approvedRecipientClients = [];
-      var recipientIDList = [];
-      
-      res.forEach(client => {
-        //Client from DB
-        var mappedClient = this.ApiMapper.mapClient(client);
+    this.selectedRecipientEvent = eventType;
+    this.approvedRecipientClients = [];
+    var recipientIDList = [];
 
-        this.recipients.forEach(relationship => {
-          if(relationship.clientEventTypeID == eventType.eventTypeID)
-          {
-            recipientIDList.push(relationship.clientID);
-          }
-        });
+    var recievingClient: Client = new Client();
 
-        //Logging for debugging purposes
-        /*
-        console.log("Client: " + mappedClient.clientNickname);
-        console.log("Client approved: " + (mappedClient.clientStatus.statusDescription == EventConstants.APPROVED));
-        console.log("Client not equal to selected client: " + (mappedClient.clientID != this.client.clientID));
-        console.log("RecipientID list already include this client for the event: " + (recipientIDList.includes(mappedClient.clientID)));
-        */
-
-        //If the mapped client status is approved (&&) the ID is not the currently selected client's ID (&&) the client from DB is not in the list of the selected client's recipient ID list by event already
-        if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
-        {
-          this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(client, eventType.eventTypeID));
-        }
-        this.recipientsAreLoaded=true;
-      });
+    //Foreach relationship in recipients, if the relationshipID is equal to the eventTypeID, add it to an ID list of recipients already in the client profile.
+    this.recipients.forEach(async relationship => {
+      if(relationship.clientEventTypeID == eventType.eventTypeID)
+      {
+        recipientIDList.push(relationship.clientID);
+      }
     });
+
+    //Grab all the members in the DB
+    var clientsInDBRes = await this.SantaApiGet.getAllClients().toPromise();
+
+    //For all the clients in the response,
+    //If the mapped client status is approved (&&)
+    //the ID is not the currently selected client's ID (&&)
+    //the client from DB is not in the list of the selected client's recipient ID list by event already
+    //Push a new relationship into the approvedRecipientClient's list
+    clientsInDBRes.forEach(client => {
+      var mappedClient: Client = this.ApiMapper.mapClient(client);
+
+      if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
+      {
+        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(client, eventType.eventTypeID));
+      }
+    });
+    this.recipientsAreLoaded=true;
   }
   async gatherRecipients()
   {
