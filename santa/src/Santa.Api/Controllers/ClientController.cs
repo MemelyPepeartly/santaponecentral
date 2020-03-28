@@ -133,8 +133,7 @@ namespace Santa.Api.Controllers
             {
                 await repository.CreateClientRelationByID(clientID, relationship.recieverClientID, relationship.eventTypeID);
                 await repository.SaveAsync();
-                Logic.Objects.Client updatedClient = await repository.GetClientByID(clientID);
-                return Ok(updatedClient);
+                return Ok(await repository.GetClientByID(clientID));
             }
             catch (Exception e)
             {

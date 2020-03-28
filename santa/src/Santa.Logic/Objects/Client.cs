@@ -5,7 +5,7 @@ namespace Santa.Logic.Objects
 {
     public class Client
     {
-        public Guid clientID;
+        public Guid clientID { get; set; }
         public Status clientStatus { get; set; }
         public string clientName { get; set; }
         public string nickname { get; set; }
@@ -13,14 +13,6 @@ namespace Santa.Logic.Objects
         public Address address { get; set; }
         public List<Recipient> recipients { get; set; }
         public List<Sender> senders { get; set; }
-
-        //Constructor
-        public Client(string _nickname, string _email)
-        {
-            nickname = _nickname;
-            email = _email;
-        }
-        public Client () { }
 
     }
 }
