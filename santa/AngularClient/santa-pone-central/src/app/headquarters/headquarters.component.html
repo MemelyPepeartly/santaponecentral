@@ -2,7 +2,7 @@
 </div>
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
     <div class="fixedDiv mat-elevation-z6">
-        <app-selected-anon [client]="currentClient" (action)="signups.setAction($event); approved.setAction($event)" ></app-selected-anon>
+        <app-selected-anon [client]="currentClient" (action)="signups.setAction($event); approved.setAction($event)" (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
     </div>
 </div>
 
