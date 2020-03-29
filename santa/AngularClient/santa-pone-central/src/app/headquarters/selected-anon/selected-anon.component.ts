@@ -141,6 +141,8 @@ export class SelectedAnonComponent implements OnInit {
   }
   async addRecipientsToClient()
   {
+    this.showRecipientListPostingSpinner = true;
+
     let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
     var currentEvent = this.selectedRecipientEvent;
     var currentSelectedClientID = this.client.clientID;
@@ -167,25 +169,20 @@ export class SelectedAnonComponent implements OnInit {
 
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
-      this.showRecipientListPostingSpinner = false;
       this.addRecipientSuccess = true;
     }
     
 
-    console.log("Step 2: getAllowedRecipientsByEvent started");
-    await this.getAllowedRecipientsByEvent(currentEvent);
+  console.log("Step 2: getAllowedRecipientsByEvent started");
+  await this.getAllowedRecipientsByEvent(currentEvent);
 
-    
-    console.log("---------------END OF PROCESS---------------");
-    console.log("Recipients: ");
-    console.log("    -" + this.recipients.length);
-    console.log("Senders: ");
-    console.log("    -" + this.senders.length);
-    
-    
-    
-    
-    
+  
+  console.log("---------------END OF PROCESS---------------");
+  console.log("Recipients: ");
+  console.log("    -" + this.recipients.length);
+  console.log("Senders: ");
+  console.log("    -" + this.senders.length);
+   this.showRecipientListPostingSpinner = false; 
   }
   async getAllowedRecipientsByEvent(eventType: EventType)
   {
