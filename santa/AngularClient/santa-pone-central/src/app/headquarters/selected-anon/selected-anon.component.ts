@@ -142,44 +142,71 @@ export class SelectedAnonComponent implements OnInit {
   async addRecipientsToClient()
   {
     let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
-    
-    
-    this.selectedRecipients.forEach(async recievingClient => {
+    var currentEvent = this.selectedRecipientEvent;
+    var currentSelectedClientID = this.client.clientID;
+    console.log("---------------START OF PROCESS---------------");
+    console.log("Recipients: ");
+    console.log("    -" + this.recipients.length);
+    console.log("Senders: ");
+    console.log("    -" + this.senders.length);
+
+    console.log("Step 1: Post requests");
+
+    for (let i = 0; i < this.selectedRecipients.length; i++) {
+      console.log(this.selectedRecipients[i]);
+      
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
-      relationshipResponse.recieverClientID = recievingClient.clientID
+      relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID
 
-      //console.log("Client in selected anon");
-      //console.log(this.client)
-      //console.log("Adding " + recievingClient.clientNickname + " to client recipient for the " + this.selectedRecipientEvent.eventDescription);
+      console.log("    Posting " + this.selectedRecipients[i].clientNickname);
+      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err)));
 
-      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(this.client.clientID, relationshipResponse).toPromise().catch(err => {console.log(err)}));
+      console.log("    Gathering recipients and senders");
+      await this.gatherRecipients();
+      await this.gatherSenders();
+
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
       this.showRecipientListPostingSpinner = false;
       this.addRecipientSuccess = true;
-      this.refreshSelectedClient.emit(this.client.clientID);
-      this.gatherRecipients();
-      this.gatherSenders();
-    }); 
-    this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
+    }
+    
+
+    console.log("Step 2: getAllowedRecipientsByEvent started");
+    await this.getAllowedRecipientsByEvent(currentEvent);
+
+    
+    console.log("---------------END OF PROCESS---------------");
+    console.log("Recipients: ");
+    console.log("    -" + this.recipients.length);
+    console.log("Senders: ");
+    console.log("    -" + this.senders.length);
+    
+    
+    
+    
+    
   }
   async getAllowedRecipientsByEvent(eventType: EventType)
   {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
+    console.log("Step 3: Clear approved recipients");
     this.approvedRecipientClients = [];
     var recipientIDList = [];
 
-    var recievingClient: Client = new Client();
-
     //Foreach relationship in recipients, if the relationshipID is equal to the eventTypeID, add it to an ID list of recipients already in the client profile.
-    this.recipients.forEach(async relationship => {
-      if(relationship.clientEventTypeID == eventType.eventTypeID)
+    console.log("Step 4: Put recipient ID's into a list");
+    
+    for (let i = 0; i < this.recipients.length; i++) {
+      if(this.recipients[i].clientEventTypeID == eventType.eventTypeID)
       {
-        recipientIDList.push(relationship.clientID);
+        console.log("    Relationship added: " + this.recipients[i].clientNickname);
+        recipientIDList.push(this.recipients[i].clientID);
       }
-    });
+    }
 
+    console.log("Step 5: Grab all the members in DB");
     //Grab all the members in the DB
     var clientsInDBRes = await this.SantaApiGet.getAllClients().toPromise();
 
@@ -187,33 +214,43 @@ export class SelectedAnonComponent implements OnInit {
     //If the mapped client status is approved (&&)
     //the ID is not the currently selected client's ID (&&)
     //the client from DB is not in the list of the selected client's recipient ID list by event already
-    //Push a new relationship into the approvedRecipientClient's list
-    clientsInDBRes.forEach(client => {
-      var mappedClient: Client = this.ApiMapper.mapClient(client);
+    //Push a new possible relationship into the approvedRecipientClient's list
+
+    console.log("Step 6: Foreach client in the response, get the approved ones for the list");
+
+    for(let i = 0; i< clientsInDBRes.length; i++)
+    {
+      var mappedClient: Client = this.ApiMapper.mapClient(clientsInDBRes[i]);
 
       if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
       {
-        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(client, eventType.eventTypeID));
+        console.log("    Adding " + mappedClient.clientNickname + " to approvedRecipientClients");
+        
+        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(clientsInDBRes[i], eventType.eventTypeID));
       }
-    });
+    }
     this.recipientsAreLoaded=true;
   }
   async gatherRecipients()
   {
     this.recipients = [];
     //Gets all the recievers form the anon
-    this.client.recipients.forEach(async reciever => {
-      this.recipients.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(reciever.recipientClientID).toPromise(), reciever.recipientEventTypeID));
-    });
+    for(let i = 0; i < this.client.recipients.length; i++)
+    {
+      this.recipients.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise(), this.client.recipients[i].recipientEventTypeID));
+    }
+    console.log("        Finished gathering recipients");
   }
   async gatherSenders()
   {
     this.senders = [];
 
     //Gets all the senders form the anon
-    this.client.senders.forEach(async sender => {
-      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(sender.senderClientID).toPromise(), sender.senderEventTypeID));
-    });
+    for(let i = 0; i < this.client.senders.length; i++)
+    {
+      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderClientID));
+    }
+    console.log("        Finished gathering senders");
   }
   gatherEvents()
   {
