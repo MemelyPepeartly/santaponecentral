@@ -113,7 +113,8 @@
                             <!--<mat-card-subtitle id="noClientSub" *ngIf="approvedClients?.length == 0">No clients available for adding!</mat-card-subtitle>-->
 
                             <!-- For each event in the list of all events -->
-                            <mat-selection-list #recipientList [(ngModel)]="selectedRecipients">
+                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
+                            <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
                                 <mat-list-option *ngFor="let clientRecipientOption of approvedRecipientClients" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
                             </mat-selection-list>
                         </mat-drawer>
