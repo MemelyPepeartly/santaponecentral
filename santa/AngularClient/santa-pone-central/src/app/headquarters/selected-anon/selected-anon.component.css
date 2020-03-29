@@ -20,6 +20,10 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+#relationDiv
+{
+    clear:both;
+}
 #relationshipEventHeader
 {
     display: block;

@@ -49,8 +49,6 @@ export class MapService {
     mappedRelationship.clientNickname = client.nickname;
     mappedRelationship.clientEventTypeID = eventTypeID;
 
-    console.log(mappedRelationship)
-
     return mappedRelationship;
 
   }

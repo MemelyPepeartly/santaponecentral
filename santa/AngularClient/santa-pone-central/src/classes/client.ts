@@ -12,14 +12,17 @@ export class Client {
     recipients: Array<Recipient> = [];
     email: string;
 }
+// Class used for holding sender and event ID information
 export class Sender {
     senderClientID: string;
     senderEventTypeID: string;
 }
+// Class used for holding recipient and event ID information
 export class Recipient {
     recipientClientID: string;
     recipientEventTypeID: string;
 }
+// Class used for holding smaller amounts of data for clients in the sender/reciever lists for a client. More data can be recieved by using API get methods with the clientID
 export class ClientSenderRecipientRelationship {
     clientID: string;
     clientNickname: string;
