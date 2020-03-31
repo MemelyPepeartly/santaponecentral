@@ -285,10 +285,20 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Client/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(Guid clientID)
         {
+            try
+            {
+                await repository.DeleteClientByIDAsync(clientID);
+                await repository.SaveAsync();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }
