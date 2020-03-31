@@ -9,7 +9,7 @@ namespace Santa.Data.Entities
         public Guid SurveyId { get; set; }
         public Guid ClientId { get; set; }
         public Guid SurveyQuestionId { get; set; }
-        public Guid SurveyOptionId { get; set; }
+        public Guid? SurveyOptionId { get; set; }
         public string ResponseText { get; set; }
 
         public virtual Client Client { get; set; }
