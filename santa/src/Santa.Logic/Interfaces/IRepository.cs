@@ -46,10 +46,10 @@ namespace Santa.Logic.Interfaces
         #region SurveyResponses
         List<Logic.Objects.Response> GetAllSurveyResponses();
         List<Logic.Objects.Response> GetAllSurveyResponsesByClientID(Guid clientID);
-        Task<Logic.Objects.Response> CreateSurveyResponseAsync(Response newResponse);
+        Task CreateSurveyResponseAsync(Response newResponse);
         Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID);
-        Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync(Response targetResponse);
-        Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync(Guid surveyResponseID);
+        Task UpdateSurveyResponseByIDAsync(Response targetResponse);
+        Task DeleteSurveyResponseByIDAsync(Guid surveyResponseID);
 
         #endregion
         #endregion

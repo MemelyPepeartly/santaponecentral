@@ -636,13 +636,29 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Response
-        public Task<Logic.Objects.Response> CreateSurveyResponseAsync(Response newResponse)
+        public async Task CreateSurveyResponseAsync(Response newResponse)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyResponse contextResponse = Mapper.MapResponse(newResponse);
+                await santaContext.SurveyResponse.AddAsync(contextResponse);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
-        public Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync(Guid surveyResponseID)
+        public async Task DeleteSurveyResponseByIDAsync(Guid surveyResponseID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyResponse contextResponse = await santaContext.SurveyResponse.FirstOrDefaultAsync(r => r.SurveyResponseId == surveyResponseID);
+                santaContext.Remove(contextResponse);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         public async Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
         {
@@ -680,9 +696,20 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync(Response targetResponse)
+        public async Task UpdateSurveyResponseByIDAsync(Response targetResponse)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.SurveyResponse contextOldResponse = await santaContext.SurveyResponse.FirstOrDefaultAsync(r => r.SurveyResponseId == targetResponse.surveyResponseID);
+
+                contextOldResponse.ResponseText = targetResponse.responseText;
+
+                santaContext.SurveyResponse.Update(contextOldResponse);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
         

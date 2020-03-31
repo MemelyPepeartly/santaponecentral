@@ -4,32 +4,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Santa.Data.Entities;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SurveyResponsesController : ControllerBase
+    public class SurveyResponseController : ControllerBase
     {
         private readonly IRepository repository;
-        public SurveyResponsesController(IRepository _repository)
+        public SurveyResponseController(IRepository _repository)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
-
+        
         // GET: api/SurveyResponses
         [HttpGet]
         public ActionResult<List<Logic.Objects.Response>> GetSurveyResponse()
         {
             return Ok(repository.GetAllSurveyResponses());
         }
-
+        
         // GET: api/SurveyResponses/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SurveyResponse>> GetSurveyResponse(Guid surveyResponseID)
+        [HttpGet("{surveyResponseID}")]
+        public async Task<ActionResult<Response>> GetSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
 
@@ -44,7 +43,7 @@ namespace Santa.Api.Controllers
         // PUT: api/SurveyResponses/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}/ResponseText")]
+        [HttpPut("{surveyResponseID}/ResponseText")]
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
             
@@ -68,7 +67,7 @@ namespace Santa.Api.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<SurveyResponse>> PostSurveyResponse([FromBody, Bind("surveyID, clientID, surveyQuestionID, surveyOptionID, responseText")] Models.Survey_Response_Models.ApiSurveyResponse response)
+        public async Task<ActionResult<Response>> PostSurveyResponse([FromBody, Bind("surveyID, clientID, surveyQuestionID, surveyOptionID, responseText")] Models.Survey_Response_Models.ApiSurveyResponse response)
         {
             try
             {
@@ -86,10 +85,6 @@ namespace Santa.Api.Controllers
 
                 return Ok(await repository.GetSurveyResponseByIDAsync(logicResponse.surveyResponseID));
             }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
             catch(Exception e)
             {
                 throw e.InnerException;
@@ -97,7 +92,7 @@ namespace Santa.Api.Controllers
         }
 
         // DELETE: api/SurveyResponses/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{surveyResponseID}")]
         public async Task<ActionResult> DeleteSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
