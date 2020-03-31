@@ -656,6 +656,18 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public List<Logic.Objects.Response> GetAllSurveyResponsesByClientID(Guid clientID)
+        {
+            try
+            {
+                List<Response> listLogicResponse = santaContext.SurveyResponse.Select(Mapper.MapResponse).Where(r => r.clientID == clientID).ToList();
+                return listLogicResponse;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public List<Logic.Objects.Response> GetAllSurveyResponses()
         {
             try
