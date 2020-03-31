@@ -636,19 +636,23 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Response
-        public Task<Logic.Objects.Response> CreateSurveyResponseAsync()
+        public Task<Logic.Objects.Response> CreateSurveyResponseAsync(Response newResponse)
         {
             throw new NotImplementedException();
         }
-        public Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> DeleteSurveyResponseByIDAsync(Guid surveyResponseID)
         {
             throw new NotImplementedException();
         }
-        public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
         {
             throw new NotImplementedException();
         }
-        public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync()
+        public Task<Logic.Objects.Response> GetAllSurveyResponses()
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync(Response targetResponse)
         {
             throw new NotImplementedException();
         }
