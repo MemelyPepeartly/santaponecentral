@@ -151,19 +151,18 @@
             
             <!--Change Nickname Card-->
             <div class="optionDiv">
-                <button mat-raised-button (click)="changeNickname()">Change Nickname</button>
+                <button mat-raised-button [disabled]="!clientNicknameFormGroup.valid" (click)="changeNickname()">Change Nickname</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Assign the Anon a proper or different Holiday Nickname</p>
                 </mat-card-subtitle>
 
                 <app-loading-spin *ngIf="showNickSpinner"></app-loading-spin>
-                <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been
-                    successfully updated to {{ client.clientNickname }}!</p>
+                <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
-                    <input matInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
-                        maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                    <input matInput #nicknameInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
+                        maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}" required>
                 </mat-form-field>
             </div>
             <mat-divider [inset]="true"></mat-divider>

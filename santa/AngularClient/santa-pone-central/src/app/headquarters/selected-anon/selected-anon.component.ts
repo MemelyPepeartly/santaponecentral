@@ -68,23 +68,26 @@ export class SelectedAnonComponent implements OnInit {
   public actionTaken: boolean = false;
   public clientApproved: boolean = false;
   public recipientsAreLoaded: boolean = true;
+  public nicknameInvalid: boolean = false;
 
   public clientNicknameFormGroup: FormGroup;
 
-  ngOnInit() {
+  async ngOnInit() {
     //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
     {
       this.clientApproved = true;
     }
+    this.clientNicknameFormGroup = this.formBuilder.group({
+      newNickname: ['', Validators.required && Validators.pattern],
+    });
 
-    this.gatherSenders();
-    this.gatherRecipients();
+    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
+    await this.gatherSenders();
+    await this.gatherRecipients();
     this.gatherEvents();
     
-    this.clientNicknameFormGroup = this.formBuilder.group({
-      newNickname: ['', Validators.nullValidator],
-    });
+    
   }
   public approveAnon()
   {
@@ -118,26 +121,30 @@ export class SelectedAnonComponent implements OnInit {
       });
     });
   }
-  public changeNickname()
+  public async changeNickname()
   {
-    this.showNickSpinner = true;
-    var putClient: Client = this.client;
-    var newNick: string = this.clientNicknameFormGroup.value.newNickname;
+    if(this.clientNicknameFormGroup.value.newNickname != undefined && this.clientNicknameFormGroup.valid)
+    {
+      this.nicknameInvalid = false;
+      this.showNickSpinner = true;
+      var putClient: Client = this.client;
+      var newNick: string = this.clientNicknameFormGroup.value.newNickname;
 
-    putClient.clientNickname = newNick;
-    var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
-    this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).subscribe(res => {
+      putClient.clientNickname = newNick;
+      var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+      await this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).toPromise();
       
-      this.showNickSpinner = false;
-      this.clientNicknameFormGroup.reset();
-      this.showNicnameSuccess = true;
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
-    },
-    err => {
-      this.showNickSpinner = false;
       this.clientNicknameFormGroup.reset();
-    });
+
+      this.showNicnameSuccess = true;
+      this.showNickSpinner = false;
+    }
+    else
+    {
+      this.nicknameInvalid = true;
+    }
   }
   async addRecipientsToClient()
   {
@@ -223,13 +230,17 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.events = [];
     //API Call for getting events
+
     this.SantaApiGet.getAllEvents().subscribe(res => {
-      res.forEach(eventType => {
+      for(let i =0; i< res.length; i++)
+      {
+        var eventType = res[i];
+        
         if(eventType.active == true)
         {
           this.events.push(this.ApiMapper.mapEvent(eventType))
         }
-      });
+      }
     });
   }
 }
