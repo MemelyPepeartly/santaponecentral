@@ -3,6 +3,7 @@ import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '..
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse } from 'src/classes/responseTypes';
+import { Survey, Question, SurveyOption } from 'src/classes/survey';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +89,45 @@ export class MapService {
     mappedEventType.isActive = event.isActive;
 
     return mappedEventType;
+  }
+  mapSurvey(survey)
+  {
+    let mappedSurvey = new Survey;
+
+    mappedSurvey.surveyID = survey.surveyID;
+    mappedSurvey.eventTypeID = survey.eventTypeID;
+    mappedSurvey.surveyDescription = survey.surveyDescription;
+    mappedSurvey.active = survey.active;
+    for(let i = 0; i<survey.surveyQuestions.length; i++)
+    {
+      mappedSurvey.surveyQuestions.push(this.mapQuestion(survey.surveyQuestions[i]));
+    }
+
+    return mappedSurvey;
+  }
+  mapQuestion(question)
+  {
+    let mappedQuestion = new Question;
+
+    mappedQuestion.questionID = question.questionID;
+    mappedQuestion.questionText = question.questionText;
+    mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
+    for(let i = 0; i<question.surveyOptionList.length; i++)
+    {
+      question.surveyOptionList.push(this.mapSurveyOption(question.surveyOptionList[i]));
+    }
+
+    return mappedQuestion;
+  }
+  mapSurveyOption(surveyOption)
+  {
+    let mappedSurveyOption = new SurveyOption;
+
+    mappedSurveyOption.surveyOptionID = surveyOption.surveyOptionID;
+    mappedSurveyOption.displayText = surveyOption.displayText;
+    mappedSurveyOption.surveyOptionValue = surveyOption.surveyOptionValue;
+
+    return mappedSurveyOption;
   }
 }
 @Injectable({
