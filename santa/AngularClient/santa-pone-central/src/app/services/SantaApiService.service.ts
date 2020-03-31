@@ -45,6 +45,38 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Status/' + id).pipe(
       map(this.extractData));
   }
+  getAllSurveys(): Observable<any> {
+    return this.http.get(endpoint + 'Survey').pipe(
+      map(this.extractData));
+  }
+  getSurvey(id): Observable<any> {
+    return this.http.get(endpoint + 'Survey/' + id).pipe(
+      map(this.extractData));
+  }
+  getAllSurveyQuestions(): Observable<any> {
+    return this.http.get(endpoint + 'SurveyQuestion').pipe(
+      map(this.extractData));
+  }
+  getSurveyQuestion(id): Observable<any> {
+    return this.http.get(endpoint + 'SurveyQuestion/' + id).pipe(
+      map(this.extractData));
+  }
+  getAllSurveyOptions(): Observable<any> {
+    return this.http.get(endpoint + 'SurveyOption').pipe(
+      map(this.extractData));
+  }
+  getSurveyOption(id): Observable<any> {
+    return this.http.get(endpoint + 'SurveyOption/' + id).pipe(
+      map(this.extractData));
+  }
+  getAllSurveyResponses(): Observable<any> {
+    return this.http.get(endpoint + 'SurveyResponse').pipe(
+      map(this.extractData));
+  }
+  getSurveyResponse(id): Observable<any> {
+    return this.http.get(endpoint + 'SurveyResponse/' + id).pipe(
+      map(this.extractData));
+  }
 }
 @Injectable({
   providedIn: 'root'
