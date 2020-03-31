@@ -135,9 +135,17 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public Task<Logic.Objects.Client> DeleteClientByIDAsync(Guid clientID)
+        public async Task DeleteClientByIDAsync(Guid clientID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Client contextClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID);
+                santaContext.Client.Remove(contextClient);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 
