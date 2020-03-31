@@ -65,13 +65,14 @@ namespace Santa.Api.Controllers
             }
             
         }
+        
         // GET: api/Client/5/Response
         /// <summary>
-        /// Gets a client by an ID
+        /// Gets a list of responses by a client's ID
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
-        [HttpGet("{clientID}")]
+        [HttpGet("{clientID}/Response")]
         public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID)
         {
             try

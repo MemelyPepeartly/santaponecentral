@@ -7,7 +7,6 @@ namespace Santa.Api.Models.Survey_Response_Models
 {
     public class ApiSurveyResponse
     {
-        public Guid surveyResponseID { get; set; }
         public Guid surveyID { get; set; }
         public Guid clientID { get; set; }
         public Guid surveyQuestionID { get; set; }
