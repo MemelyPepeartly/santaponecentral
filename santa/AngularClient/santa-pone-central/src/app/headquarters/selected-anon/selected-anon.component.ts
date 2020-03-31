@@ -83,11 +83,9 @@ export class SelectedAnonComponent implements OnInit {
     });
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
-    await this.gatherSenders();
-    await this.gatherRecipients();
+    this.gatherSenders();
+    this.gatherRecipients();
     this.gatherEvents();
-    
-    
   }
   public approveAnon()
   {
@@ -155,12 +153,12 @@ export class SelectedAnonComponent implements OnInit {
     var currentSelectedClientID = this.client.clientID;
 
     for (let i = 0; i < this.selectedRecipients.length; i++) {
-      console.log(this.selectedRecipients[i]);
       
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID
 
-      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRelation(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err)));
+      await this.SantaApiPost.postClientRelation(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err));
+      this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise())
       
       await this.gatherRecipients();
       await this.gatherSenders();
@@ -223,7 +221,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the senders form the anon
     for(let i = 0; i < this.client.senders.length; i++)
     {
-      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderClientID));
+      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderEventTypeID));
     }
   }
   gatherEvents()
