@@ -8,6 +8,7 @@ import { Status } from '../../../classes/status';
 import { MapService } from '../../services/MapService.service';
 import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";
+import { Survey } from 'src/classes/survey';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class SignupFormComponent implements OnInit {
 
   public events: Array<EventType> = [];
   private statuses: Array<Status> = [];
+  private surveys: Array<Survey> = [];
 
   //Shows and hides the spinner
   public showSpinner: boolean = false;
@@ -59,21 +61,33 @@ export class SignupFormComponent implements OnInit {
       eventDescription: ['', Validators.required]
     });
 
+    this.isDoneLoading = false;
+
     //API Call for getting statuses
-    var statusResponse = await this.SantaGet.getAllStatuses().toPromise();
-    for(let i =0; i<statusResponse.length; i++)
+    var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
+    for(let i =0; i<statusApiResponse.length; i++)
     {
-      this.statuses.push(this.mapper.mapStatus(statusResponse[i]));
+      this.statuses.push(this.mapper.mapStatus(statusApiResponse[i]));
     }
 
     //API Call for getting events
-    var eventResponse = await this.SantaGet.getAllEvents().toPromise();
-    for(let i =0; i<eventResponse.length; i++)
+    var eventApiResponse = await this.SantaGet.getAllEvents().toPromise();
+    for(let i =0; i<eventApiResponse.length; i++)
     {
-      if(eventResponse[i].active == true)
+      if(eventApiResponse[i].active == true)
         {
-          this.events.push(this.mapper.mapEvent(eventResponse[i]))
+          this.events.push(this.mapper.mapEvent(eventApiResponse[i]))
         }
+    }
+
+    //API Call for getting surveys
+    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise();
+    for(let i =0; i<surveyApiResponse.length; i++)
+    {
+      if(surveyApiResponse[i].isActive == true)
+      {
+        this.surveys.push(this.mapper.mapSurvey(surveyApiResponse[i]))
+      }
     }
     
     this.isDoneLoading = true;
