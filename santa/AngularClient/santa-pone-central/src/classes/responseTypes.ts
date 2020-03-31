@@ -34,3 +34,10 @@ export class ClientRelationshipResponse {
     recieverClientID: string;
     eventTypeID: string;
 }
+export class SurveyAnswerResponse {
+    surveyID: string;
+    cliendID: string;
+    surveyQuestionID: string;
+    surveyOptionID?: string;
+    responseText: string;
+}
