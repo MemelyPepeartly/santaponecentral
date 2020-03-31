@@ -40,7 +40,7 @@ export class SignupFormComponent implements OnInit {
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isLinear = true;
     this.clientInfoFormGroup = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -58,23 +58,25 @@ export class SignupFormComponent implements OnInit {
     this.clientEventFormGroup = this.formBuilder.group({
       eventDescription: ['', Validators.required]
     });
+
     //API Call for getting statuses
-    this.SantaGet.getAllStatuses().subscribe(res => {
-      res.forEach(status => {
-        this.statuses.push(this.mapper.mapStatus(status))
-      });
-    });
+    var statusResponse = await this.SantaGet.getAllStatuses().toPromise();
+    for(let i =0; i<statusResponse.length; i++)
+    {
+      this.statuses.push(this.mapper.mapStatus(statusResponse[i]));
+    }
 
     //API Call for getting events
-    this.SantaGet.getAllEvents().subscribe(res => {
-      res.forEach(eventType => {
-        if(eventType.active == true)
+    var eventResponse = await this.SantaGet.getAllEvents().toPromise();
+    for(let i =0; i<eventResponse.length; i++)
+    {
+      if(eventResponse[i].active == true)
         {
-          this.events.push(this.mapper.mapEvent(eventType))
+          this.events.push(this.mapper.mapEvent(eventResponse[i]))
         }
-      });
-      this.isDoneLoading = true;
-    });
+    }
+    
+    this.isDoneLoading = true;
   }
   public onSubmit()
   {
