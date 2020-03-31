@@ -65,6 +65,25 @@ namespace Santa.Api.Controllers
             }
             
         }
+        // GET: api/Client/5/Response
+        /// <summary>
+        /// Gets a client by an ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}")]
+        public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID)
+        {
+            try
+            {
+                return Ok(repository.GetAllSurveyResponsesByClientID(clientID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
+        }
 
         // POST: api/Client
         /// <summary>
