@@ -644,13 +644,29 @@ namespace Santa.Data.Repository
         {
             throw new NotImplementedException();
         }
-        public Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
+        public async Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.Response logicResponse = Mapper.MapResponse(await santaContext.SurveyResponse.FirstAsync(r => r.SurveyResponseId == surveyResponseID));
+                return logicResponse;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
-        public Task<Logic.Objects.Response> GetAllSurveyResponses()
+        public List<Logic.Objects.Response> GetAllSurveyResponses()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Response> listLogicResponse = santaContext.SurveyResponse.Select(Mapper.MapResponse).ToList();
+                return listLogicResponse;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         public Task<Logic.Objects.Response> UpdateSurveyResponseByIDAsync(Response targetResponse)
         {

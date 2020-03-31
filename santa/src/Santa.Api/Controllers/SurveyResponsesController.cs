@@ -22,9 +22,9 @@ namespace Santa.Api.Controllers
 
         // GET: api/SurveyResponses
         [HttpGet]
-        public async Task<ActionResult<List<Logic.Objects.Response>>> GetSurveyResponse()
+        public ActionResult<List<Logic.Objects.Response>> GetSurveyResponse()
         {
-            return Ok(await repository.GetAllSurveyResponses());
+            return Ok(repository.GetAllSurveyResponses());
         }
 
         // GET: api/SurveyResponses/5

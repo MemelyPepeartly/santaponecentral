@@ -258,6 +258,21 @@ namespace Santa.Data.Repository
             return logicOption;
         }
         #endregion
+        #region SurveyResponse
+        public static Logic.Objects.Response MapResponse(Data.Entities.SurveyResponse contextResponse)
+        {
+            Logic.Objects.Response logicResponse = new Response()
+            {
+                surveyResponseID = contextResponse.SurveyResponseId,
+                clientID = contextResponse.ClientId,
+                surveyID = contextResponse.SurveyId,
+                surveyQuestionID = contextResponse.SurveyQuestionId,
+                surveyOptionID = contextResponse.SurveyOptionId,
+                responseText = contextResponse.ResponseText
+            };
+            return logicResponse;
+        }
+        #endregion
         #endregion
     }
 }
