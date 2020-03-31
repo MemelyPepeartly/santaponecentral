@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Santa.Logic.Objects
+namespace Santa.Api.Models.Survey_Response_Models
 {
-    public class Response
+    public class ApiSurveyResponse
     {
         public Guid surveyResponseID { get; set; }
         public Guid surveyID { get; set; }
