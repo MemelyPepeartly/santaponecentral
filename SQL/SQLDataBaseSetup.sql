@@ -60,7 +60,7 @@ CREATE TABLE app.SurveyResponse
     surveyID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Survey(surveyID) NOT NULL,
     clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
-    surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID) NOT NULL,
+    surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
     responseText NVARCHAR(150) NOT NULL
 );
 CREATE TABLE app.SurveyQuestionXref
