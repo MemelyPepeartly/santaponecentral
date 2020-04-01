@@ -24,8 +24,8 @@ export class SignupFormComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   public events: Array<EventType> = [];
-  private statuses: Array<Status> = [];
-  private surveys: Array<Survey> = [];
+  public statuses: Array<Status> = [];
+  public surveys: Array<Survey> = [];
 
   //Shows and hides the spinner
   public showSpinner: boolean = false;
@@ -81,14 +81,16 @@ export class SignupFormComponent implements OnInit {
     }
 
     //API Call for getting surveys
-    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise();
+    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise().catch(err => {console.log(err)});
+
     for(let i =0; i<surveyApiResponse.length; i++)
     {
-      if(surveyApiResponse[i].isActive == true)
-      {
-        this.surveys.push(this.mapper.mapSurvey(surveyApiResponse[i]))
-      }
+      console.log(surveyApiResponse[i]);
+      
+      var mappedsurvey = this.mapper.mapSurvey(surveyApiResponse[i]);
+      this.surveys.push(mappedsurvey);
     }
+    console.log(this.surveys);
     
     this.isDoneLoading = true;
   }

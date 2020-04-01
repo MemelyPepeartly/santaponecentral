@@ -98,10 +98,9 @@ export class MapService {
     mappedSurvey.eventTypeID = survey.eventTypeID;
     mappedSurvey.surveyDescription = survey.surveyDescription;
     mappedSurvey.active = survey.active;
-    for(let i = 0; i<survey.surveyQuestions.length; i++)
-    {
-      mappedSurvey.surveyQuestions.push(this.mapQuestion(survey.surveyQuestions[i]));
-    }
+    survey.surveyQuestions.forEach(question => {
+      mappedSurvey.surveyQuestions.push(this.mapQuestion(question));
+    });
 
     return mappedSurvey;
   }
@@ -112,10 +111,9 @@ export class MapService {
     mappedQuestion.questionID = question.questionID;
     mappedQuestion.questionText = question.questionText;
     mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
-    for(let i = 0; i<question.surveyOptionList.length; i++)
-    {
-      question.surveyOptionList.push(this.mapSurveyOption(question.surveyOptionList[i]));
-    }
+    question.surveyOptionList.forEach(surveyOption => {
+      mappedQuestion.surveyOptionList.push(this.mapSurveyOption(surveyOption));
+    });
 
     return mappedQuestion;
   }
