@@ -64,6 +64,12 @@
                         <button mat-button matStepperNext>Next</button>
                     </div>
                 </form>
+                <mat-horizontal-stepper>
+                    <mat-step *ngFor="let survey of surveys">
+                        <h3>Event</h3>
+                        <p>{{ survey.surveyDescription }}</p>
+                    </mat-step>
+                </mat-horizontal-stepper>
 
             </mat-step>
             <mat-step>
