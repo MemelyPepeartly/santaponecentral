@@ -41,6 +41,7 @@ export class SignupFormComponent implements OnInit {
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
+  public surveyFormGroup: FormGroup
 
   async ngOnInit() {
     this.isLinear = true;
