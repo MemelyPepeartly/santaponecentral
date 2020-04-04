@@ -9,15 +9,18 @@
                     <ng-template matStepLabel>Fill out your information</ng-template>
                     <mat-form-field>
                         <mat-label>First Name</mat-label>
-                        <input matInput formControlName="firstName" placeholder="First Name" maxlength="20" pattern="[A-Za-z]{1,20}" required>
+                        <input matInput formControlName="firstName" placeholder="First Name" maxlength="20"
+                            pattern="[A-Za-z]{1,20}" required>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Last Name</mat-label>
-                        <input matInput formControlName="lastName" placeholder="Last Name" maxlength="20" pattern="[A-Za-z]{1,20}" required>
+                        <input matInput formControlName="lastName" placeholder="Last Name" maxlength="20"
+                            pattern="[A-Za-z]{1,20}" required>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" placeholder="email@domain.com" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
+                        <input matInput formControlName="email" placeholder="email@domain.com"
+                            pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
                     </mat-form-field>
                     <div>
                         <button mat-button matStepperNext>Next</button>
@@ -28,22 +31,29 @@
                 <form [formGroup]="clientAddressFormGroup">
                     <ng-template matStepLabel>Shipping Address</ng-template>
                     <mat-form-field>
-                        <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                        <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50"
+                            pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput #secondLine formControlName="addressLine2"  placeholder="Second Street Address (Optional)" pattern="[A-Za-z0-9 ]" maxlength="50" maxlength="50" minlength="0">
+                        <input matInput #secondLine formControlName="addressLine2"
+                            placeholder="Second Street Address (Optional)" pattern="[A-Za-z0-9 ]" maxlength="50"
+                            maxlength="50" minlength="0">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="city" placeholder="City" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                        <input matInput formControlName="city" placeholder="City" maxlength="50"
+                            pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="state" placeholder="State" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                        <input matInput formControlName="state" placeholder="State" maxlength="50"
+                            pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="country" placeholder="Country" maxlength="50" pattern="[A-Za-z0-9 ]{1,50}">
+                        <input matInput formControlName="country" placeholder="Country" maxlength="50"
+                            pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25" pattern="[0-9]{1,25}">
+                        <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25"
+                            pattern="[0-9]{1,25}">
                     </mat-form-field>
                     <div>
                         <button mat-button matStepperPrevious>Back</button>
@@ -53,24 +63,25 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Event</ng-template>
-                <h3>What event are you participating in?</h3>
-                <form [formGroup]="clientEventFormGroup">
-                    <mat-radio-group aria-label="Select an event">
-                        <mat-radio-button *ngFor="let event of events" [value]="event.eventDescription">
-                            {{ event.eventDescription }}</mat-radio-button>
-                    </mat-radio-group>
-                    <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext>Next</button>
-                    </div>
-                </form>
-                <mat-horizontal-stepper>
-                    <mat-step *ngFor="let survey of surveys">
-                        <h3>Event</h3>
-                        <p>{{ survey.surveyDescription }}</p>
-                    </mat-step>
-                </mat-horizontal-stepper>
-
+                <h3>What events are you participating in?</h3>
+                <mat-selection-list [(ngModel)]="clientEventFormGroup">
+                    <mat-list-option *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-list-option>
+                </mat-selection-list>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+                <br>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Questions</ng-template>
+                <ng-container *ngFor="let event of events">
+                    <mat-card-title>{{event.eventDescription}}</mat-card-title>
+                    <ng-container *ngFor="let survey of surveys">
+                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true"
+                            [questions]="survey.surveyQuestions"></app-survey-form>
+                    </ng-container>
+                </ng-container>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Done</ng-template>
