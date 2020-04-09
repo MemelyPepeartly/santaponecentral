@@ -1,17 +1,16 @@
-<mat-horizontal-stepper #stepper>
-  <mat-step *ngFor="let question of questions">
-    <form>
+<mat-horizontal-stepper>
+  <mat-step *ngFor="let question of questions" [(ngModel)]="onQuestion">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
         <mat-label>{{ question.questionText }}</mat-label>
-        <input *ngIf="!question.isSurveyOptionList" matInput placeholder="Answer" formControlName="firstCtrl" required>
-        <mat-radio-group *ngIf="question.isSurveyOptionList">
+        <input *ngIf="!question.isSurveyOptionList" matInput placeholder="Answer" [(ngModel)]="inputAnswers" required>
+        <mat-radio-group *ngIf="question.isSurveyOptionList" [(ngModel)]="optionAnswers">
           <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
             {{option.displayText}}
           </mat-radio-button>
         </mat-radio-group>
       <div>
         <button mat-button matStepperNext>Next</button>
+        <button mat-button (click)="showThing()">Test</button>
       </div>
-    </form>
   </mat-step>
 </mat-horizontal-stepper>

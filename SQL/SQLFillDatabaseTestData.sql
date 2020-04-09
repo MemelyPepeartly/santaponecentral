@@ -3,7 +3,9 @@ DECLARE @eventTypeID2GUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion1IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion2IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyIDGUID UNIQUEIDENTIFIER;
+DECLARE @survey1IDGUID UNIQUEIDENTIFIER;
+DECLARE @survey2IDGUID UNIQUEIDENTIFIER;
+
 
 DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER;
@@ -17,18 +19,21 @@ DECLARE @client2IDGUID UNIQUEIDENTIFIER;
 DECLARE @client3IDGUID UNIQUEIDENTIFIER;
 DECLARE @client4IDGUID UNIQUEIDENTIFIER;
 
-DECLARE @surveyResponseIDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyResponse1IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyResponse2IDGUID UNIQUEIDENTIFIER;
 
 SET @eventTypeID1GUID = NEWID();
 SET @eventTypeID2GUID = NEWID();
 SET @surveyQuestion1IDGUID = NEWID();
 SET @surveyQuestion2IDGUID = NEWID();
 SET @surveyQuestion3IDGUID = NEWID();
-SET @surveyIDGUID = NEWID();
+SET @survey1IDGUID = NEWID();
+SET @survey2IDGUID = NEWID();
 SET @surveyOptionID1GUID = NEWID();
 SET @surveyOptionID2GUID = NEWID();
 SET @surveyOptionID3GUID = NEWID();
-SET @surveyResponseIDGUID = NEWID();
+SET @surveyResponse1IDGUID = NEWID();
+SET @surveyResponse2IDGUID = NEWID();
 
 SET @firstClientStatusIDGUID = NEWID();
 SET @secondClientStatusIDGUID = NEWID();
@@ -41,22 +46,25 @@ SET @client4IDGUID = NEWID();
 
 PRINT N'eventTypeID1GUID:------------ ' + (CAST (@eventTypeID1GUID AS NVARCHAR(50)));
 PRINT N'eventTypeID2GUID:------------ ' + (CAST (@eventTypeID2GUID AS NVARCHAR(50)));
-PRINT N'surveyQuestion1IDGUID:------ ' + (CAST (@surveyQuestion1IDGUID AS NVARCHAR(50)));
-PRINT N'surveyQuestion2IDGUID:------ ' + (CAST (@surveyQuestion2IDGUID AS NVARCHAR(50)));
-PRINT N'surveyQuestion3IDGUID:------ ' + (CAST (@surveyQuestion3IDGUID AS NVARCHAR(50)));
-PRINT N'surveyIDGUID:--------------- ' + (CAST (@surveyIDGUID AS NVARCHAR(50)));
-PRINT N'surveyOptionID1GUID:-------- ' + (CAST (@surveyOptionID1GUID AS NVARCHAR(50)));
-PRINT N'surveyOptionID2GUID:-------- ' + (CAST (@surveyOptionID2GUID AS NVARCHAR(50)));
-PRINT N'surveyOptionID3GUID:-------- ' + (CAST (@surveyOptionID3GUID AS NVARCHAR(50)));
-PRINT N'surveyResponseIDGUID:------- ' + (CAST (@surveyResponseIDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion1IDGUID:------- ' + (CAST (@surveyQuestion1IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion2IDGUID:------- ' + (CAST (@surveyQuestion2IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion3IDGUID:------- ' + (CAST (@surveyQuestion3IDGUID AS NVARCHAR(50)));
+PRINT N'survey1IDGUID:--------------- ' + (CAST (@survey1IDGUID AS NVARCHAR(50)));
+PRINT N'survey2IDGUID:--------------- ' + (CAST (@survey2IDGUID AS NVARCHAR(50)));
+PRINT N'surveyOptionID1GUID:--------- ' + (CAST (@surveyOptionID1GUID AS NVARCHAR(50)));
+PRINT N'surveyOptionID2GUID:--------- ' + (CAST (@surveyOptionID2GUID AS NVARCHAR(50)));
+PRINT N'surveyOptionID3GUID:--------- ' + (CAST (@surveyOptionID3GUID AS NVARCHAR(50)));
 
-PRINT N'firstClientStatusIDGUID:---- ' + (CAST (@firstClientStatusIDGUID AS NVARCHAR(50)));
-PRINT N'secondClientStatusIDGUID:--- ' + (CAST (@secondClientStatusIDGUID AS NVARCHAR(50)));
+PRINT N'surveyResponse1IDGUID:------- ' + (CAST (@surveyResponse1IDGUID AS NVARCHAR(50)));
+PRINT N'surveyResponse2IDGUID:------- ' + (CAST (@surveyResponse2IDGUID AS NVARCHAR(50)));
 
-PRINT N'client1IDGUID:--------- ' + (CAST (@client1IDGUID AS NVARCHAR(50)));
-PRINT N'client2IDGUID:--------- ' + (CAST (@client2IDGUID AS NVARCHAR(50)));
-PRINT N'client3IDGUID:--------- ' + (CAST (@client3IDGUID AS NVARCHAR(50)));
-PRINT N'client4IDGUID:--------- ' + (CAST (@client4IDGUID AS NVARCHAR(50)));
+PRINT N'firstClientStatusIDGUID:----- ' + (CAST (@firstClientStatusIDGUID AS NVARCHAR(50)));
+PRINT N'secondClientStatusIDGUID:---- ' + (CAST (@secondClientStatusIDGUID AS NVARCHAR(50)));
+
+PRINT N'client1IDGUID:--------------- ' + (CAST (@client1IDGUID AS NVARCHAR(50)));
+PRINT N'client2IDGUID:--------------- ' + (CAST (@client2IDGUID AS NVARCHAR(50)));
+PRINT N'client3IDGUID:--------------- ' + (CAST (@client3IDGUID AS NVARCHAR(50)));
+PRINT N'client4IDGUID:--------------- ' + (CAST (@client4IDGUID AS NVARCHAR(50)));
 
 
 
@@ -69,12 +77,13 @@ VALUES
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
 VALUES
     (@surveyQuestion1IDGUID,'Who is your favorite pony?',1),
-    (@surveyQuestion2IDGUID,'Question 2',0),
-    (@surveyQuestion3IDGUID,'Question 3',0);
+    (@surveyQuestion2IDGUID,'Gift Question 2',0),
+    (@surveyQuestion3IDGUID,'Card Question 1',0);
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
-    (@surveyIDGUID, @eventTypeID1GUID, 'Favorite Pony', 1);
+    (@survey1IDGUID, @eventTypeID1GUID, 'Gift Survey', 1),
+    (@survey2IDGUID, @eventTypeID2GUID, 'Card Survey', 1);
 
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
@@ -84,9 +93,9 @@ VALUES
 
 INSERT INTO app.SurveyQuestionXref (surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
-    (@surveyIDGUID, @surveyQuestion1IDGUID, 'asc', 1),
-    (@surveyIDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (@surveyIDGUID, @surveyQuestion3IDGUID, 'asc', 1);
+    (@survey1IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
+    (@survey1IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
+    (@survey2IDGUID, @surveyQuestion3IDGUID, 'asc', 1);
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
@@ -108,7 +117,8 @@ VALUES
 
 INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
 VALUES
-    (@surveyResponseIDGUID, @surveyIDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionID1GUID, 'Response Text');
+    (@surveyResponse1IDGUID, @survey1IDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionID1GUID, 'Pinkie Pie'),
+    (@surveyResponse2IDGUID, @survey2IDGUID, @client1IDGUID, @surveyQuestion3IDGUID, null , 'This is my card answer');
     
 -- INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
 -- VALUES

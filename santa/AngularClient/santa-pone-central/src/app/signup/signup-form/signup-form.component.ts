@@ -24,6 +24,8 @@ export class SignupFormComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   public events: Array<EventType> = [];
+  public selectedEvents: Array<EventType> = new Array<EventType>();
+
   public statuses: Array<Status> = [];
   public surveys: Array<Survey> = [];
 
@@ -42,6 +44,8 @@ export class SignupFormComponent implements OnInit {
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
   public surveyFormGroup: FormGroup
+
+  public surveyAnswers: any;
 
   async ngOnInit() {
     this.isLinear = true;
@@ -132,5 +136,9 @@ export class SignupFormComponent implements OnInit {
     this.showSpinner = false;
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
+  }
+  public displayAnswersSelected()
+  {
+    console.log(this.surveyAnswers);
   }
 }

@@ -64,24 +64,24 @@
             <mat-step>
                 <ng-template matStepLabel>Event</ng-template>
                 <h3>What events are you participating in?</h3>
-                <mat-selection-list [(ngModel)]="clientEventFormGroup">
+                <mat-selection-list [(ngModel)]="selectedEvents">
                     <mat-list-option *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-list-option>
                 </mat-selection-list>
                 <div>
                     <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
+                    <button mat-button matStepperNext [disabled]="selectedEvents?.length == 0">Next</button>
                 </div>
                 <br>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Questions</ng-template>
-                <ng-container *ngFor="let event of events">
+                <ng-container *ngFor="let event of selectedEvents">
                     <mat-card-title>{{event.eventDescription}}</mat-card-title>
                     <ng-container *ngFor="let survey of surveys">
-                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true"
-                            [questions]="survey.surveyQuestions"></app-survey-form>
+                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true" [questions]="survey.surveyQuestions"></app-survey-form>
                     </ng-container>
                 </ng-container>
+                <button mat-button (click)="displayAnswersSelected()">Test</button>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Done</ng-template>

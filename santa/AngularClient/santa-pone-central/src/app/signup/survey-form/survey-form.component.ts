@@ -15,13 +15,23 @@ export class SurveyFormComponent implements OnInit {
   @Input() events: Array<EventType>;
   @Input() questions: Array<Question>;
 
+  inputAnswers: Array<any>;
+  optionAnswers: Array<any>;
+  onQuestion: Question = new Question();
+
   //Two way binding
   @Output() formEmit: EventEmitter<FormGroup> = new EventEmitter();
 
   ngOnInit() {
   }
-  set form(value)
+  showThing()
   {
+    console.log("Question");
+    console.log(this.onQuestion);
+    console.log("inputAnswers");
+    console.log(this.inputAnswers);
+    console.log("OptionAnswers");
+    console.log(this.optionAnswers);
     
   }
 }

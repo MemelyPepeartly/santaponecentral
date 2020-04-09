@@ -38,30 +38,30 @@ namespace Santa.Data.Repository
         /// <summary>
         /// Maps a context client to a logic client
         /// </summary>
-        /// <param name="contextCharacter"></param>
+        /// <param name="contextClient"></param>
         /// <returns></returns>
-        public static Logic.Objects.Client MapClient(Entities.Client contextCharacter)
+        public static Logic.Objects.Client MapClient(Entities.Client contextClient)
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
             {
-                clientID = contextCharacter.ClientId,      
-                email = contextCharacter.Email,
-                nickname = contextCharacter.Nickname,
-                clientName = contextCharacter.ClientName,
+                clientID = contextClient.ClientId,      
+                email = contextClient.Email,
+                nickname = contextClient.Nickname,
+                clientName = contextClient.ClientName,
                 address = new Address
                 {
-                    addressLineOne = contextCharacter.AddressLine1,
-                    addressLineTwo = contextCharacter.AddressLine2,
-                    city = contextCharacter.City,
-                    country = contextCharacter.Country,
-                    state = contextCharacter.State,
-                    postalCode = contextCharacter.PostalCode
+                    addressLineOne = contextClient.AddressLine1,
+                    addressLineTwo = contextClient.AddressLine2,
+                    city = contextClient.City,
+                    country = contextClient.Country,
+                    state = contextClient.State,
+                    postalCode = contextClient.PostalCode
                 },
                 
-                clientStatus = Mapper.MapStatus(contextCharacter.ClientStatus),
+                clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
                 
-                recipients = contextCharacter.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                senders = contextCharacter.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
+                senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
             };
 
             return logicClient;
