@@ -19,25 +19,6 @@ export class SurveyFormComponent implements OnInit {
   inputAnswers: Array<any>=[];
   optionAnswers: Array<SurveyOption>=[];
 
-  answers: Array<SurveyAnswerResponse>=[];
-
   ngOnInit() {
-    for(let i =0; i<this.questions.length;i++)
-    {
-
-    }
-  }
-  showThing()
-  {
-    console.log("inputAnswers");
-    console.log(this.inputAnswers);
-    console.log("OptionAnswers");
-    console.log(this.optionAnswers);
-    console.log("------------------------------");
-    
-  }
-  placeInputResponse (question: Question)
-  {
-    
   }
 }
