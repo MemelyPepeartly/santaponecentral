@@ -306,7 +306,7 @@ namespace Santa.Api.Controllers
             }
         }
         // DELETE: api/Client/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{clientID}")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
             try

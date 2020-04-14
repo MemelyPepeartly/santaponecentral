@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Client } from '../../../classes/client';
 import { ClientResponse } from '../../../classes/responseTypes'
@@ -9,6 +9,7 @@ import { MapService } from '../../services/MapService.service';
 import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";
 import { Survey } from 'src/classes/survey';
+import { SurveyFormComponent } from '../survey-form/survey-form.component';
 
 
 @Component({
@@ -46,6 +47,8 @@ export class SignupFormComponent implements OnInit {
   public surveyFormGroup: FormGroup
 
   public surveyAnswers: any;
+
+  @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
 
   async ngOnInit() {
     this.isLinear = true;
@@ -139,6 +142,10 @@ export class SignupFormComponent implements OnInit {
   }
   public displayAnswersSelected()
   {
-    console.log(this.surveyAnswers);
+    this.surveyForms.forEach(thing => {
+      console.log("-------------------------------")
+      console.log(thing.inputAnswers);
+      console.log(thing.optionAnswers);
+    });
   }
 }
