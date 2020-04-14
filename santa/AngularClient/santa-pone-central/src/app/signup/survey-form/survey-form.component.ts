@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Question, SurveyOption } from 'src/classes/survey';
+import { Question, SurveyOption, SurveyResponse } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SurveyAnswerResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-survey-form',
@@ -12,26 +13,31 @@ export class SurveyFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { }
 
-  @Input() events: Array<EventType>;
+  @Input() surveyID: string;
   @Input() questions: Array<Question>;
 
-  inputAnswers: Array<any>;
-  optionAnswers: Array<any>;
-  onQuestion: Question = new Question();
+  inputAnswers: Array<any>=[];
+  optionAnswers: Array<SurveyOption>=[];
 
-  //Two way binding
-  @Output() formEmit: EventEmitter<FormGroup> = new EventEmitter();
+  answers: Array<SurveyAnswerResponse>=[];
 
   ngOnInit() {
+    for(let i =0; i<this.questions.length;i++)
+    {
+
+    }
   }
   showThing()
   {
-    console.log("Question");
-    console.log(this.onQuestion);
     console.log("inputAnswers");
     console.log(this.inputAnswers);
     console.log("OptionAnswers");
     console.log(this.optionAnswers);
+    console.log("------------------------------");
+    
+  }
+  placeInputResponse (question: Question)
+  {
     
   }
 }

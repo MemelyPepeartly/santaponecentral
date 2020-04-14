@@ -2,14 +2,17 @@
   <mat-step *ngFor="let question of questions">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
         <mat-label>{{ question.questionText }}</mat-label>
+
         <mat-form-field *ngIf="!question.isSurveyOptionList">
           <input (blur)="placeInputResponse(question)" matInput placeholder="Answer" [(ngModel)]="inputAnswers" required>
         </mat-form-field>
+
         <mat-radio-group *ngIf="question.isSurveyOptionList" [(ngModel)]="optionAnswers">
           <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
             {{option.displayText}}
           </mat-radio-button>
         </mat-radio-group>
+        
       <div>
         <button mat-button matStepperNext>Next</button>
         <button mat-button (click)="showThing()">Test</button>
