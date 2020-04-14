@@ -93,12 +93,9 @@ export class SignupFormComponent implements OnInit {
 
     for(let i =0; i<surveyApiResponse.length; i++)
     {
-      console.log(surveyApiResponse[i]);
-      
       var mappedsurvey = this.mapper.mapSurvey(surveyApiResponse[i]);
       this.surveys.push(mappedsurvey);
     }
-    console.log(this.surveys);
     
     this.isDoneLoading = true;
   }
@@ -143,7 +140,7 @@ export class SignupFormComponent implements OnInit {
   public displayAnswersSelected()
   {
     this.surveyForms.forEach(thing => {
-      console.log("-------------------------------")
+      console.log("---------------ANSWERS----------------")
       console.log(thing.inputAnswers);
       console.log(thing.optionAnswers);
     });
