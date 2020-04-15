@@ -8,7 +8,7 @@
         </mat-form-field>
 
         <mat-radio-group *ngIf="question.isSurveyOptionList">
-          <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList">
+          <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
             {{option.optionText}}
           </mat-radio-button>
         </mat-radio-group>
