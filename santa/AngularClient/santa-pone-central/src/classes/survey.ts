@@ -24,4 +24,19 @@ export class SurveyOption {
     displayText: string;
     surveyOptionValue: number;
 }
+// Below classes for making responses with necessary information in the surveyform component
+export class SurveyFormQuestion 
+{
+    clientID: string;
+    surveyQuestionID: string;
+    questionText: string;
+    responseText: string;
+    surveyOptionList: Array<SurveyFormOption> = [];
+}
+
+export class SurveyFormOption 
+{
+    surveyOptionID: string;
+    optionText: string;
+}
 

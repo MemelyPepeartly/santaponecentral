@@ -78,7 +78,9 @@
                 <ng-container *ngFor="let event of selectedEvents">
                     <mat-card-title>{{event.eventDescription}}</mat-card-title>
                     <ng-container *ngFor="let survey of surveys">
-                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true" [questions]="survey.surveyQuestions" [surveyID]="survey.surveyID"></app-survey-form>
+                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true"
+                        [questions]="survey.surveyQuestions"
+                        [surveyID]="survey.surveyID"></app-survey-form>
                     </ng-container>
                 </ng-container>
                 <button mat-button (click)="displayAnswersSelected()">Test</button>
