@@ -31,6 +31,7 @@ export class SurveyFormQuestion
     surveyQuestionID: string;
     questionText: string;
     responseText: string;
+    isSurveyOptionList: boolean;
     surveyOptionList: Array<SurveyFormOption> = [];
 }
 
