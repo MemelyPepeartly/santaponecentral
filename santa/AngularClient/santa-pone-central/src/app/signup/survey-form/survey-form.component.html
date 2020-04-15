@@ -1,5 +1,5 @@
 <mat-horizontal-stepper>
-  <mat-step *ngFor="let question of questions">
+  <mat-step *ngFor="let question of formQuestionsFormatted">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
         <mat-label>{{ question.questionText }}</mat-label>
 
@@ -9,7 +9,7 @@
 
         <mat-radio-group *ngIf="question.isSurveyOptionList">
           <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList">
-            {{option.displayText}}
+            {{option.optionText}}
           </mat-radio-button>
         </mat-radio-group>
         
