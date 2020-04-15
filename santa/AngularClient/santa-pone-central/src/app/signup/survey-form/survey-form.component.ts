@@ -32,6 +32,7 @@ export class SurveyFormComponent implements OnInit {
     {
       let q = new SurveyFormQuestion();
       q.surveyQuestionID = questions[i].questionID;
+      q.questionText = questions[i].questionText;
       if(questions[i].isSurveyOptionList)
       q.isSurveyOptionList = questions[i].isSurveyOptionList;
       {
