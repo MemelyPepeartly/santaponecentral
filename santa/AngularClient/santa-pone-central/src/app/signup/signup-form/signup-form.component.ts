@@ -141,8 +141,7 @@ export class SignupFormComponent implements OnInit {
   {
     this.surveyForms.forEach(thing => {
       console.log("---------------ANSWERS----------------")
-      console.log(thing.inputAnswers);
-      console.log(thing.optionAnswers);
+      console.log(thing.formQuestionsFormatted);
     });
   }
 }
