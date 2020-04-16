@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyAnswerResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse } from '../../classes/responseTypes';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 const httpOptions = {
@@ -90,7 +90,7 @@ export class SantaApiPostService {
   postClientRelation(id: string, relationship: ClientRelationshipResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + '/Relationship', relationship);
   }
-  postSurveyResponse(id: string, surveyResponse: SurveyAnswerResponse): Observable<any> {
+  postSurveyResponse(id: string, surveyResponse: SurveyApiResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + '/Relationship', surveyResponse);
   }
 }
