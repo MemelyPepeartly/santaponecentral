@@ -28,6 +28,7 @@ export class SurveyOption {
 export class SurveyFormQuestion 
 {
     clientID: string;
+    surveyID: string;
     surveyQuestionID: string;
     questionText: string;
     responseInputText: string;

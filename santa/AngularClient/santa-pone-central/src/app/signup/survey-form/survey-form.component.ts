@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyOption, SurveyResponse, SurveyFormQuestion, SurveyFormOption } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
-import { SurveyAnswerResponse } from 'src/classes/responseTypes';
+import { SurveyApiResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-survey-form',
@@ -24,12 +24,11 @@ export class SurveyFormComponent implements OnInit {
   }
   public setQuestions(questions: Array<Question>)
   {
-    console.log("Got to setQuestions");
-    
     let formQuestions = new Array<SurveyFormQuestion>();
     for(let i =0; i<questions.length; i++)
     {
       let q = new SurveyFormQuestion();
+      q.surveyID = this.surveyID;
       q.surveyQuestionID = questions[i].questionID;
       q.questionText = questions[i].questionText;
       if(questions[i].isSurveyOptionList)
