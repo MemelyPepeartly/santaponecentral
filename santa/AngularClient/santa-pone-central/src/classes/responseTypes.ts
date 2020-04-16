@@ -34,7 +34,7 @@ export class ClientRelationshipResponse {
     recieverClientID: string;
     eventTypeID: string;
 }
-export class SurveyAnswerResponse {
+export class SurveyApiResponse {
     surveyID: string;
     cliendID: string;
     surveyQuestionID: string;
