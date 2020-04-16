@@ -118,12 +118,21 @@ export class SignupFormComponent implements OnInit {
     newClient.clientStatusID = awaitingStatusID.statusID
 
     this.SantaPost.postClient(newClient).subscribe(
-      createRes => {
+      clientRes => {
         this.showSomethingWrong = false;
         this.showSpinner = false;
         this.showFinished = true;
         this.clientInfoFormGroup.reset();
         this.clientAddressFormGroup.reset();
+
+        let newClient = this.mapper.mapClient(clientRes);
+
+        // Posts client responses to surveys if the client response has a new client
+        for(let i =0; i<this.surveyForms.length; i++)
+        {
+          //let surveyResponse = //mapperstuff
+          //this.SantaPost.postSurveyResponse()
+        }
     },
     err => {
       this.showSomethingWrong = true;
