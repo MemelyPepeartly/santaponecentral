@@ -14,10 +14,7 @@ export class SurveyFormComponent implements OnInit {
 
   @Input() surveyID: string;
   @Input() questions: Array<Question>;
-  formQuestionsFormatted: Array<SurveyFormQuestion>
-
-  inputAnswers: Array<any>=[];
-  optionAnswers: Array<SurveyOption>=[];
+  public formQuestionsFormatted: Array<SurveyFormQuestion>
 
   ngOnInit() {
     this.formQuestionsFormatted = this.setQuestions(this.questions)

@@ -130,10 +130,10 @@ VALUES
     (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'fourthemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
-INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
-VALUES
-    (@surveyResponse1IDGUID, @survey1IDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionID1GUID, 'Pinkie Pie'),
-    (@surveyResponse2IDGUID, @survey2IDGUID, @client1IDGUID, @surveyQuestion3IDGUID, null , 'This is my card answer');
+-- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
+-- VALUES
+--     (@surveyResponse1IDGUID, @survey1IDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionID1GUID, 'Pinkie Pie'),
+--     (@surveyResponse2IDGUID, @survey2IDGUID, @client1IDGUID, @surveyQuestion3IDGUID, null , 'This is my card answer');
     
 -- INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
 -- VALUES
