@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
-import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse } from 'src/classes/responseTypes';
-import { Survey, Question, SurveyOption } from 'src/classes/survey';
+import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse } from 'src/classes/responseTypes';
+import { Survey, Question, SurveyOption, SurveyFormQuestion } from 'src/classes/survey';
 
 @Injectable({
   providedIn: 'root'
@@ -169,5 +169,21 @@ export class MapResponse
     let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
     clientStatusResponse.clientStatusID = client.clientStatus.statusID;
     return clientStatusResponse;
+  }
+  mapSurveyApiResponse(response: SurveyFormQuestion)
+  {
+    let surveyApiResponse: SurveyApiResponse = new SurveyApiResponse();
+    surveyApiResponse.cliendID = response.clientID;
+    surveyApiResponse.surveyID = response.surveyID;
+    if(response.isSurveyOptionList)
+    {
+      surveyApiResponse.responseText = response.responseOptionSelected.optionText
+      surveyApiResponse.surveyOptionID = response.responseOptionSelected.surveyOptionID;
+    }
+    else
+    {
+      surveyApiResponse.responseText = response.responseInputText;
+    }
+    return surveyApiResponse;
   }
 }
