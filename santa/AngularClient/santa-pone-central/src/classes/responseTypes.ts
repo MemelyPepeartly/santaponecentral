@@ -36,8 +36,8 @@ export class ClientRelationshipResponse {
 }
 export class SurveyApiResponse {
     surveyID: string;
-    cliendID: string;
+    clientID: string;
     surveyQuestionID: string;
-    surveyOptionID?: string;
+    surveyOptionID?: string = null;
     responseText: string;
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Client } from '../../../classes/client';
-import { ClientResponse } from '../../../classes/responseTypes'
+import { ClientResponse, SurveyApiResponse } from '../../../classes/responseTypes'
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
 import { EventType } from '../../../classes/EventType';
 import { Status } from '../../../classes/status';
-import { MapService } from '../../services/MapService.service';
+import { MapService, MapResponse } from '../../services/MapService.service';
 import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyFormQuestion } from 'src/classes/survey';
@@ -21,7 +21,8 @@ export class SignupFormComponent implements OnInit {
 
   constructor(public SantaGet: SantaApiGetService,
     public SantaPost: SantaApiPostService,
-    public mapper: MapService,
+    public objectMapper: MapService,
+    public responseMapper: MapResponse,
     private formBuilder: FormBuilder) { }
 
   public events: Array<EventType> = [];
@@ -45,8 +46,6 @@ export class SignupFormComponent implements OnInit {
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
   public surveyFormGroup: FormGroup
-
-  public surveyAnswers: any;
 
   @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
 
@@ -75,7 +74,7 @@ export class SignupFormComponent implements OnInit {
     var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
     for(let i =0; i<statusApiResponse.length; i++)
     {
-      this.statuses.push(this.mapper.mapStatus(statusApiResponse[i]));
+      this.statuses.push(this.objectMapper.mapStatus(statusApiResponse[i]));
     }
 
     //API Call for getting events
@@ -84,7 +83,7 @@ export class SignupFormComponent implements OnInit {
     {
       if(eventApiResponse[i].active == true)
         {
-          this.events.push(this.mapper.mapEvent(eventApiResponse[i]))
+          this.events.push(this.objectMapper.mapEvent(eventApiResponse[i]))
         }
     }
 
@@ -93,7 +92,7 @@ export class SignupFormComponent implements OnInit {
 
     for(let i =0; i<surveyApiResponse.length; i++)
     {
-      var mappedsurvey = this.mapper.mapSurvey(surveyApiResponse[i]);
+      var mappedsurvey = this.objectMapper.mapSurvey(surveyApiResponse[i]);
       this.surveys.push(mappedsurvey);
     }
     
@@ -119,20 +118,28 @@ export class SignupFormComponent implements OnInit {
 
     this.SantaPost.postClient(newClient).subscribe(
       clientRes => {
+        let newClient = this.objectMapper.mapClient(clientRes);
+
+        // Posts client responses to surveys if the client response has a new client
+        this.surveyForms.forEach(surveyForm => {
+          console.log("---Posting response for client--");
+          for(let i =0; i<surveyForm.formQuestionsFormatted.length; i++)
+          {
+            let surveyApiResponse: SurveyApiResponse = this.responseMapper.mapSurveyApiResponse(surveyForm.formQuestionsFormatted[i]);
+            surveyApiResponse.clientID = newClient.clientID
+
+            console.log(surveyApiResponse);
+            
+          
+            this.SantaPost.postSurveyResponse(surveyApiResponse).toPromise().catch(err => {console.log(err)});
+          }
+        });
+          
         this.showSomethingWrong = false;
         this.showSpinner = false;
         this.showFinished = true;
         this.clientInfoFormGroup.reset();
         this.clientAddressFormGroup.reset();
-
-        let newClient = this.mapper.mapClient(clientRes);
-
-        // Posts client responses to surveys if the client response has a new client
-        for(let i =0; i<this.surveyForms.length; i++)
-        {
-          //let surveyResponse = //mapperstuff
-          //this.SantaPost.postSurveyResponse()
-        }
     },
     err => {
       this.showSomethingWrong = true;

@@ -173,17 +173,20 @@ export class MapResponse
   mapSurveyApiResponse(response: SurveyFormQuestion)
   {
     let surveyApiResponse: SurveyApiResponse = new SurveyApiResponse();
-    surveyApiResponse.cliendID = response.clientID;
+
     surveyApiResponse.surveyID = response.surveyID;
+    surveyApiResponse.clientID = response.clientID;
+    surveyApiResponse.surveyQuestionID = response.surveyQuestionID;
     if(response.isSurveyOptionList)
     {
-      surveyApiResponse.responseText = response.responseOptionSelected.optionText
       surveyApiResponse.surveyOptionID = response.responseOptionSelected.surveyOptionID;
+      surveyApiResponse.responseText = response.responseOptionSelected.optionText;
     }
     else
     {
       surveyApiResponse.responseText = response.responseInputText;
     }
+    
     return surveyApiResponse;
   }
 }
