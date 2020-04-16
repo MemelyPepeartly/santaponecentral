@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyOption, SurveyResponse, SurveyFormQuestion, SurveyFormOption } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { SurveyAnswerResponse } from 'src/classes/responseTypes';
 
 @Component({
@@ -11,7 +10,7 @@ import { SurveyAnswerResponse } from 'src/classes/responseTypes';
 })
 export class SurveyFormComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor() { }
 
   @Input() surveyID: string;
   @Input() questions: Array<Question>;
