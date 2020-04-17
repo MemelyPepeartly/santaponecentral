@@ -48,8 +48,9 @@
                             pattern="[A-Za-z0-9 ]{1,50}">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput formControlName="country" placeholder="Country" maxlength="50"
-                            pattern="[A-Za-z0-9 ]{1,50}">
+                        <mat-select name="country" formControlName="country"> 
+                            <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25"

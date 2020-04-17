@@ -18,6 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   MatProgressSpinnerModule,
   DragDropModule,
   MatExpansionModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatSelectModule
   ],
   exports: [
   CommonModule,
@@ -62,7 +64,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
    MatProgressSpinnerModule,
    DragDropModule,
    MatExpansionModule,
-   MatSidenavModule
+   MatSidenavModule,
+   MatSelectModule
    ],
 })
 export class CustomMaterialModule { }

@@ -10,6 +10,7 @@ import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyFormQuestion } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
+import { CountriesService } from 'src/app/services/Countries.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class SignupFormComponent implements OnInit {
     public SantaPost: SantaApiPostService,
     public objectMapper: MapService,
     public responseMapper: MapResponse,
+    public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
 
   public events: Array<EventType> = [];
@@ -30,6 +32,7 @@ export class SignupFormComponent implements OnInit {
 
   public statuses: Array<Status> = [];
   public surveys: Array<Survey> = [];
+  public countries: Array<any>=[];
 
   //Shows and hides the spinner
   public showSpinner: boolean = false;
@@ -51,6 +54,7 @@ export class SignupFormComponent implements OnInit {
 
   async ngOnInit() {
     this.isLinear = true;
+
     this.clientInfoFormGroup = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -67,8 +71,11 @@ export class SignupFormComponent implements OnInit {
     this.clientEventFormGroup = this.formBuilder.group({
       eventDescription: ['', Validators.required]
     });
-
     this.isDoneLoading = false;
+
+    // JSON call for getting country data
+    this.getCountries();
+    console.log(this.countries);
 
     //API Call for getting statuses
     var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
@@ -159,5 +166,17 @@ export class SignupFormComponent implements OnInit {
       console.log("---------------ANSWERS----------------")
       console.log(thing.formQuestionsFormatted);
     });
+    
+  }
+  public getCountries(){
+    this.countryService.allCountries().
+    subscribe(
+      data2 => {
+        this.countries=data2.Countries;
+        console.log('Data:', this.countries);
+      },
+      err => console.log(err),
+      () => console.log('complete')
+    )
   }
 }
