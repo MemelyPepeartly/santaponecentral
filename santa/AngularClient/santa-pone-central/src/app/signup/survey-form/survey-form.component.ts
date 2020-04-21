@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyOption, SurveyResponse, SurveyFormQuestion, SurveyFormOption } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
 import { SurveyApiResponse } from 'src/classes/responseTypes';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-survey-form',
@@ -10,14 +11,23 @@ import { SurveyApiResponse } from 'src/classes/responseTypes';
 })
 export class SurveyFormComponent implements OnInit {
 
-  constructor() { }
+  constructor(private formBuilder: FormBuilder) { }
 
   @Input() surveyID: string;
   @Input() questions: Array<Question>;
+  @Output() isCompleted: EventEmitter<boolean>= new EventEmitter;
+
   public formQuestionsFormatted: Array<SurveyFormQuestion>
+
+  public surveyFormGroup: FormGroup;
 
   ngOnInit() {
     this.formQuestionsFormatted = this.setQuestions(this.questions)
+
+    this.surveyFormGroup = this.formBuilder.group({
+      inputQuestion: ['', Validators.required],
+      selectOption: ['', Validators.required]
+    });
   }
   public setQuestions(questions: Array<Question>)
   {
@@ -43,5 +53,21 @@ export class SurveyFormComponent implements OnInit {
       formQuestions.push(q);
     }
     return formQuestions;
+  }
+  public checkIfComplete()
+  {
+    
+    if(this.surveyFormGroup.status == "VALID")
+    {
+      this.isCompleted.emit(true);
+    }
+    else
+    {
+      this.isCompleted.emit(false);
+    }
+  }
+  public IsItValid()
+  {
+    console.log(this.surveyFormGroup.status);
   }
 }
