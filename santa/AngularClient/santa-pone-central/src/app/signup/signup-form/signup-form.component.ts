@@ -44,6 +44,8 @@ export class SignupFormComponent implements OnInit {
   public isDoneLoading: boolean = false;
   //For setting the form to a linear format
   public isLinear: boolean = true;
+  //For determining of all questions on the surveys selected are answered
+  public allQuestionsAnswered: boolean = false;
 
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
@@ -75,7 +77,6 @@ export class SignupFormComponent implements OnInit {
 
     // JSON call for getting country data
     this.getCountries();
-    console.log(this.countries);
 
     //API Call for getting statuses
     var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
@@ -173,10 +174,8 @@ export class SignupFormComponent implements OnInit {
     subscribe(
       data2 => {
         this.countries=data2.Countries;
-        console.log('Data:', this.countries);
+        //console.log('Data:', this.countries);
       },
-      err => console.log(err),
-      () => console.log('complete')
-    )
+      err => console.log(err))
   }
 }
