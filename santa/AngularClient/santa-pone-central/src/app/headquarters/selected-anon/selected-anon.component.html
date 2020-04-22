@@ -35,13 +35,12 @@
     </mat-card>
 
     <!-- Response Cards -->
-    <mat-toolbar id="relationshipEventHeader">
-        <mat-toolbar-row>
-            Answers
-        </mat-toolbar-row>
-    </mat-toolbar>
-
     <ng-container *ngIf="clientApproved">
+        <mat-toolbar id="relationshipEventHeader">
+            <mat-toolbar-row>
+                Answers
+            </mat-toolbar-row>
+        </mat-toolbar>
         <div class="responseContainer">
             <div class="responseCard" *ngFor="let event of events">
                 <mat-card>
