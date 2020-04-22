@@ -1,16 +1,22 @@
 <mat-horizontal-stepper>
-  <mat-step *ngFor="let question of formQuestionsFormatted">
-    <ng-template matStepLabel>{{ question.questionText}}</ng-template>
-      <mat-label>{{ question.questionText }}</mat-label>
+  <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
+    <form [formGroup]="surveyFormGroup">
+      <ng-template matStepLabel>{{ question.questionText}}</ng-template>
+        <mat-label>{{ question.questionText }}</mat-label>
 
-      <mat-form-field class="inputForm" *ngIf="!question.isSurveyOptionList">
-        <input matInput formControlName="inputQuestion" placeholder="Answer" [(ngModel)]="question.responseInputText">
-      </mat-form-field>
+        <mat-form-field class="inputForm" *ngIf="!question.isSurveyOptionList">
+          <input matInput formControlName="inputQuestion" (blur)="checkIfComplete()" placeholder="Answer" [(ngModel)]="question.responseInputText">
+        </mat-form-field>
 
-      <mat-radio-group *ngIf="question.isSurveyOptionList" formControlName="selectOption" [(ngModel)]="question.responseOptionSelected">
-        <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
-          {{option.optionText}}
-        </mat-radio-button>
-      </mat-radio-group>
+        <mat-radio-group *ngIf="question.isSurveyOptionList" formControlName="selectOption" [(ngModel)]="question.responseOptionSelected">
+          <mat-radio-button (change)="checkIfComplete()" class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
+            {{option.optionText}}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div>
+          <button mat-button (click)="IsItValid()">Test Valid</button>
+        </div>
+    </form>
   </mat-step>
 </mat-horizontal-stepper>
