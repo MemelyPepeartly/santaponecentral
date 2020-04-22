@@ -3,7 +3,7 @@ import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '..
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse } from 'src/classes/responseTypes';
-import { Survey, Question, SurveyOption, SurveyFormQuestion } from 'src/classes/survey';
+import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +127,19 @@ export class MapService {
 
     return mappedSurveyOption;
   }
+  mapResponse(surveyResponse)
+  {
+    let mappedSurveyResponse = new SurveyResponse;
+
+    mappedSurveyResponse.surveyResponseID = surveyResponse.surveyResponseID;
+    mappedSurveyResponse.surveyID = surveyResponse.surveyID;
+    mappedSurveyResponse.clientID = surveyResponse.clientID;
+    mappedSurveyResponse.surveyQuestionID = surveyResponse.surveyQuestionID;
+    mappedSurveyResponse.surveyOptionID = surveyResponse.surveyOptionID;
+    mappedSurveyResponse.responseText = surveyResponse.responseText;
+
+    return mappedSurveyResponse;
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -170,7 +183,7 @@ export class MapResponse
     clientStatusResponse.clientStatusID = client.clientStatus.statusID;
     return clientStatusResponse;
   }
-  mapSurveyApiResponse(response: SurveyFormQuestion)
+  mapSurveyApiResponse(response: SurveyQA)
   {
     let surveyApiResponse: SurveyApiResponse = new SurveyApiResponse();
 

@@ -8,6 +8,7 @@ import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/EventType';
+import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
 
 @Component({
   selector: 'app-selected-anon',
@@ -50,6 +51,9 @@ export class SelectedAnonComponent implements OnInit {
   public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public approvedRecipientClients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
   public events: Array<EventType> = new Array<EventType>();
+  public surveys: Array<Survey> = new Array<Survey>();
+  public questions: Array<Question> = new Array<Question>();
+  public responses: Array<SurveyResponse> = new Array<SurveyResponse>();
 
   public selectedRecipients: Array<Client> = new Array<Client>();
   public selectedRecipientEvent: EventType = new EventType();
@@ -72,7 +76,7 @@ export class SelectedAnonComponent implements OnInit {
 
   public clientNicknameFormGroup: FormGroup;
 
-  async ngOnInit() {
+  public async ngOnInit() {
     //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
     {
@@ -83,9 +87,11 @@ export class SelectedAnonComponent implements OnInit {
     });
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
-    this.gatherSenders();
-    this.gatherRecipients();
-    this.gatherEvents();
+    await this.gatherSenders();
+    await this.gatherRecipients();
+    await this.gatherSurveys();
+    await this.gatherEvents();
+    await this.gatherResponses();
   }
   public approveAnon()
   {
@@ -144,7 +150,7 @@ export class SelectedAnonComponent implements OnInit {
       this.nicknameInvalid = true;
     }
   }
-  async addRecipientsToClient()
+  public async addRecipientsToClient()
   {
     this.showRecipientListPostingSpinner = true;
 
@@ -172,7 +178,7 @@ export class SelectedAnonComponent implements OnInit {
     this.showRecipientListPostingSpinner = false; 
   }
 
-  async getAllowedRecipientsByEvent(eventType: EventType)
+  public async getAllowedRecipientsByEvent(eventType: EventType)
   {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
@@ -205,7 +211,7 @@ export class SelectedAnonComponent implements OnInit {
     }
     this.recipientsAreLoaded=true;
   }
-  async gatherRecipients()
+  public async gatherRecipients()
   {
     this.recipients = [];
     //Gets all the recievers form the anon
@@ -214,7 +220,7 @@ export class SelectedAnonComponent implements OnInit {
       this.recipients.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise(), this.client.recipients[i].recipientEventTypeID));
     }
   }
-  async gatherSenders()
+  public async gatherSenders()
   {
     this.senders = [];
 
@@ -224,21 +230,78 @@ export class SelectedAnonComponent implements OnInit {
       this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderEventTypeID));
     }
   }
-  gatherEvents()
+  public async gatherEvents()
   {
     this.events = [];
-    //API Call for getting events
 
-    this.SantaApiGet.getAllEvents().subscribe(res => {
+    //API Call for getting events
+    var res = await this.SantaApiGet.getAllEvents().toPromise();
+    for(let i =0; i< res.length; i++)
+    {
+      var eventType = res[i];
+      
+      if(eventType.active == true)
+      {
+        this.events.push(this.ApiMapper.mapEvent(eventType))
+      }
+    }
+  }
+  public async gatherResponses()
+  {
+    this.responses = [];
+
+    //API call for getting responses
+    this.SantaApiGet.getAllSurveyResponses().subscribe(res => {
       for(let i =0; i< res.length; i++)
       {
-        var eventType = res[i];
-        
-        if(eventType.active == true)
+        if(res[i].clientID == this.client.clientID)
         {
-          this.events.push(this.ApiMapper.mapEvent(eventType))
+          var mappedAnswer = this.ApiMapper.mapResponse(res[i]);
+
+          for(let j =0; j< this.surveys.length; j++)
+          {
+            //If a survey in the list matches the ID of an answer's surveyID, set the eventType as the right ID it's from
+            if(mappedAnswer.surveyID == this.surveys[j].surveyID)
+            {
+              mappedAnswer.eventTypeID = this.surveys[j].eventTypeID;
+
+              //For each question answered, populate the actual question text
+              for(let k =0; k< this.surveys[j].surveyQuestions.length; k++)
+              {
+                if(mappedAnswer.surveyQuestionID == this.surveys[j].surveyQuestions[k].questionID)
+                {
+                  mappedAnswer.questionText = this.surveys[j].surveyQuestions[k].questionText;
+                }
+              }
+            }
+          }
+          this.responses.push(mappedAnswer);
         }
       }
+      console.log(this.responses);
     });
+  }
+  public async gatherQuestions()
+  {
+    this.questions = [];
+
+    var res = await this.SantaApiGet.getAllSurveyQuestions().toPromise();
+    for(let i =0; i< res.length; i++)
+    {
+      this.questions.push(this.ApiMapper.mapQuestion(res[i]));
+    }
+  }
+  public async gatherSurveys()
+  {
+    this.surveys = [];
+
+    //API call for getting responses
+    var apiSurveys = await this.SantaApiGet.getAllSurveys().toPromise();
+
+    for(let i =0; i< apiSurveys.length; i++)
+    {
+      this.surveys.push(this.ApiMapper.mapSurvey(apiSurveys[i]));
+    }
+
   }
 }

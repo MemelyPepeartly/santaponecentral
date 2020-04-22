@@ -8,7 +8,7 @@ import { Status } from '../../../classes/status';
 import { MapService, MapResponse } from '../../services/MapService.service';
 import { EventConstants } from '../../shared/constants/EventConstants';
 import { Guid } from "guid-typescript";
-import { Survey, Question, SurveyFormQuestion } from 'src/classes/survey';
+import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/Countries.service';
 

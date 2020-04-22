@@ -9,8 +9,10 @@ export class SurveyResponse {
     surveyResponseID: string;
     surveyID: string;
     clientID: string;
+    eventTypeID?: string;
     surveyQuestionID: string;
     surveyOptionID?: string;
+    questionText?: string;
     responseText: string;
 }
 export class Question {
@@ -25,11 +27,12 @@ export class SurveyOption {
     surveyOptionValue: number;
 }
 // Below classes for making responses with necessary information in the surveyform component
-export class SurveyFormQuestion 
+export class SurveyQA 
 {
     clientID: string;
     surveyID: string;
     surveyQuestionID: string;
+    eventTypeID: string;
     questionText: string;
     responseInputText: string;
     responseOptionSelected: SurveyFormOption;
