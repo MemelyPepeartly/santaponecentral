@@ -90,7 +90,7 @@ namespace Santa.Data.Repository
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
-        public async Task<Logic.Objects.Client> GetClientByID(Guid clientId)
+        public async Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId)
         {
             try
             {
@@ -172,14 +172,23 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Logic.Objects.Tag> GetTagByID(Guid tagID)
+        public Task<Logic.Objects.Tag> GetTagByIDAsync(Guid tagID)
         {
             throw new NotImplementedException();
         }
 
         public List<Logic.Objects.Tag> GetAllTags()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Logic.Objects.Tag> logicTags = new List<Logic.Objects.Tag>();
+
+                return logicTags;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public Task UpdateTagByIDAsync(Guid tagID)

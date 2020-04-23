@@ -11,7 +11,7 @@ namespace Santa.Logic.Interfaces
         #region Client
         Task CreateClient(Client newClient);
         Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
-        Task<Logic.Objects.Client> GetClientByID(Guid clientId);
+        Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
         List<Logic.Objects.Client> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
         Task DeleteClientByIDAsync(Guid eventID);
@@ -20,7 +20,7 @@ namespace Santa.Logic.Interfaces
         #region Tag
         Task CreateTag(Tag newTag);
         Task CreateClientTagRelationByID(Guid clientID, Guid tagID);
-        Task<Tag> GetTagByID(Guid tagID);
+        Task<Tag> GetTagByIDAsync(Guid tagID);
         List<Tag> GetAllTags();
         Task UpdateTagByIDAsync(Guid tagID);
         Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID);
