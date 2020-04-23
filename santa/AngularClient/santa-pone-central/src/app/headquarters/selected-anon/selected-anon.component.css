@@ -20,6 +20,11 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+#switchSpin
+{
+    width: 100%;
+    text-align: center;
+}
 .expansionPanelButton
 {
     margin-left: 10px;

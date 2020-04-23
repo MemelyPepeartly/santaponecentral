@@ -74,6 +74,7 @@ export class SelectedAnonComponent implements OnInit {
   public clientApproved: boolean = false;
   public recipientsAreLoaded: boolean = true;
   public nicknameInvalid: boolean = false;
+  public beingSwitched: boolean = false;
 
   public clientNicknameFormGroup: FormGroup;
 
@@ -307,6 +308,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async switchAnon(anon: ClientSenderRecipientRelationship)
   {
+    this.beingSwitched = true;
     let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
     this.client = switchClient;
 
@@ -319,6 +321,7 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSurveys();
     await this.gatherEvents();
     await this.gatherResponses();
+    this.beingSwitched = false;
   }
   public async removeRecipient(anon: ClientSenderRecipientRelationship)
   {
