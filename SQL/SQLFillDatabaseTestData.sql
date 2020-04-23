@@ -7,6 +7,10 @@ DECLARE @surveyQuestion4IDGUID UNIQUEIDENTIFIER;
 DECLARE @survey1IDGUID UNIQUEIDENTIFIER;
 DECLARE @survey2IDGUID UNIQUEIDENTIFIER;
 
+DECLARE @tag1IDGUID UNIQUEIDENTIFIER;
+DECLARE @tag2IDGUID UNIQUEIDENTIFIER;
+DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
+
 
 DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER;
@@ -41,6 +45,10 @@ SET @surveyOptionID5GUID = NEWID();
 SET @surveyResponse1IDGUID = NEWID();
 SET @surveyResponse2IDGUID = NEWID();
 
+SET @tag1IDGUID = NEWID();
+SET @tag2IDGUID = NEWID();
+SET @tag3IDGUID = NEWID();
+
 SET @firstClientStatusIDGUID = NEWID();
 SET @secondClientStatusIDGUID = NEWID();
 
@@ -63,6 +71,11 @@ PRINT N'surveyOptionID2GUID:--------- ' + (CAST (@surveyOptionID2GUID AS NVARCHA
 PRINT N'surveyOptionID3GUID:--------- ' + (CAST (@surveyOptionID3GUID AS NVARCHAR(50)));
 PRINT N'surveyOptionID4GUID:--------- ' + (CAST (@surveyOptionID3GUID AS NVARCHAR(50)));
 PRINT N'surveyOptionID5GUID:--------- ' + (CAST (@surveyOptionID3GUID AS NVARCHAR(50)));
+
+PRINT N'tag1IDGUID:------------------ ' + (CAST (@tag1IDGUID AS NVARCHAR(50)));
+PRINT N'tag2IDGUID:------------------ ' + (CAST (@tag2IDGUID AS NVARCHAR(50)));
+PRINT N'tag3IDGUID:------------------ ' + (CAST (@tag3IDGUID AS NVARCHAR(50)));
+
 
 PRINT N'surveyResponse1IDGUID:------- ' + (CAST (@surveyResponse1IDGUID AS NVARCHAR(50)));
 PRINT N'surveyResponse2IDGUID:------- ' + (CAST (@surveyResponse2IDGUID AS NVARCHAR(50)));
@@ -142,6 +155,21 @@ VALUES
 --     (@client2IDGUID, @client4IDGUID, @eventTypeID1GUID),
 --     (@client4IDGUID, @client1IDGUID, @eventTypeID1GUID);
 
+INSERT INTO app.Tag (tagID, tagName)
+VALUES
+    (@tag1IDGUID, 'Grinch'),
+    (@tag2IDGUID, 'Mass Mailer'),
+    (@tag3IDGUID, 'Twifag');
+
+INSERT INTO app.ClientTagXref (clientID, tagID)
+VALUES
+    (@client1IDGUID, @tag1IDGUID),
+    (@client1IDGUID, @tag2IDGUID),
+    (@client2IDGUID, @tag3IDGUID),
+    (@client3IDGUID, @tag1IDGUID);
+
+
+
 
 
 
@@ -156,6 +184,9 @@ SELECT * FROM app.SurveyResponse;
 SELECT * FROM app.EventType;
 SELECT * FROM app.Client;
 SELECT * FROM app.ClientRelationXref;
+
+SELECT * FROM app.Tag;
+SELECT * FROM app.ClientTagXref;
 
 
 
