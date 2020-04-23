@@ -179,7 +179,14 @@ namespace Santa.Data.Repository
 
         public List<Logic.Objects.Tag> GetAllTags()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return new List<Logic.Objects.Tag>();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public Task UpdateTagByIDAsync(Guid tagID)
