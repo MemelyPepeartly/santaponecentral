@@ -304,4 +304,19 @@ export class SelectedAnonComponent implements OnInit {
     }
 
   }
+  public async switchAnon(anon: ClientSenderRecipientRelationship)
+  {
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
+    this.client = switchClient;
+
+    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    {
+      this.clientApproved = true;
+    }
+    await this.gatherSenders();
+    await this.gatherRecipients();
+    await this.gatherSurveys();
+    await this.gatherEvents();
+    await this.gatherResponses();
+  }
 }

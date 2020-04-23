@@ -108,6 +108,17 @@
                                     <mat-icon>email</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
+                            <div class="expansionPanelButtonContainer">
+                                <button class="expansionPanelButton" mat-raised-button
+                                matTooltip="Switch to this Anon"
+                                [matTooltipPosition]="'left'"
+                                (click)="switchAnon(recipient)">Switch</button>
+
+                                <button class="expansionPanelButton" mat-raised-button
+                                matTooltip="Remove the anon as a recipient"
+                                color="warn"
+                                [matTooltipPosition]="'right'">Remove</button>
+                            </div>
                             <p>{{recipient.clientName}}</p>
                         </mat-expansion-panel>
                     </mat-accordion>
@@ -123,7 +134,9 @@
         </mat-card-header>
         <mat-card-actions>
             <div class="optionDiv">
-                <button mat-raised-button>Contact</button>
+                <button mat-raised-button
+                matTooltip="Send the Anon a contact message (Not implimented yet)"
+                [matTooltipPosition]="'right'">Contact</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Send a message to the client</p>
                 </mat-card-subtitle>
@@ -156,16 +169,21 @@
                         <div
                             [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
                             <div id="toggleDiv">
-                                <button (click)="drawer.toggle();" (click)="recipientOpen = !recipientOpen"
-                                    mat-raised-button>Add reciepients</button>
+                                <button mat-raised-button
+                                    matTooltip="Shows the list of assignable Anon's"
+                                    [matTooltipPosition]="'right'"
+                                    (click)="drawer.toggle()"
+                                    (click)="recipientOpen = !recipientOpen">Add reciepients</button>
                                 <mat-card-subtitle class="optionSub">
                                     <p>Adds people the Anon is sending to</p>
                                 </mat-card-subtitle>
                             </div>
                             <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
                                 <button mat-raised-button
+                                    matTooltip="Confirm the selected Anon's as recipients"
                                     (click)="showRecipientListPostingSpinner = true;"
                                     (click)="addRecipientsToClient()"
+                                    [matTooltipPosition]="'right'"
                                     [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
                                 </button>
                             </div>
@@ -185,7 +203,11 @@
             
             <!--Change Nickname Card-->
             <div class="optionDiv">
-                <button mat-raised-button [disabled]="!clientNicknameFormGroup.valid" (click)="changeNickname()">Change Nickname</button>
+                <button mat-raised-button
+                    matTooltip="Change the nickname of the anon"
+                    [matTooltipPosition]="'right'"
+                    [disabled]="!clientNicknameFormGroup.valid"
+                    (click)="changeNickname()">Change Nickname</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Assign the Anon a proper or different Holiday Nickname</p>
                 </mat-card-subtitle>
@@ -201,7 +223,9 @@
             </div>
             <mat-divider [inset]="true"></mat-divider>
             <div class="optionDiv">
-                <button mat-raised-button>Add client tags</button>
+                <button mat-raised-button
+                matTooltip="Add a number of tags to a client (Not implimented yet)"
+                [matTooltipPosition]="'right'">Add client tags</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Add tags to a client</p>
                 </mat-card-subtitle>
