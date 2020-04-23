@@ -15,8 +15,17 @@ namespace Santa.Logic.Interfaces
         List<Logic.Objects.Client> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
         Task DeleteClientByIDAsync(Guid eventID);
+        Task DeleteRecieverXref(Guid clientID, Guid recipientID);
         #endregion
-
+        #region Tag
+        Task CreateTag(Tag newTag);
+        Task CreateClientTagRelationByID(Guid clientID, Guid tagID);
+        Task<Tag> GetTagByID(Guid tagID);
+        List<Tag> GetAllTags();
+        Task UpdateTagByIDAsync(Guid tagID);
+        Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID);
+        Task DeleteTagByIDAsync(Guid tagID);
+        #endregion
         #region Event
         Task CreateEventAsync(Event newEvent);
         List<Logic.Objects.Event> GetAllEvents();
@@ -77,6 +86,6 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         public Task SaveAsync();
-        Task DeleteRecieverXref(Guid clientID, Guid recipientID);
+        
     }
 }

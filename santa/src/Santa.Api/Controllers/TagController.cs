@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
@@ -11,11 +13,28 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
+        private readonly IRepository repository;
+        public TagController(IRepository _repository)
+        {
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+        }
         // GET: api/Tag
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Tag>> GetAllTags()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                List<Logic.Objects.Tag> logicTags = repository.GetAllTags();
+                if (logicTags == null)
+                {
+                    return NotFound();
+                }
+                return Ok(logicTags);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         // GET: api/Tag/5
