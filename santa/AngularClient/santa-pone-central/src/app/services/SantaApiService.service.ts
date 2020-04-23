@@ -117,3 +117,12 @@ export class SantaApiPutService {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
   }
 }
+@Injectable({
+  providedIn: 'root'
+})
+export class SantaApiDeleteService {
+  constructor(private http: HttpClient) { }
+  deleteClientRecipientRelation() {
+    this.http.delete("");
+  }
+}

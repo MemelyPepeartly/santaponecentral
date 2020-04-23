@@ -120,11 +120,11 @@
                                 (click)="switchAnon(recipient)">Switch</button>
 
                                 <button class="expansionPanelButton" mat-raised-button
-                                matTooltip="Remove the anon as a recipient"
+                                matTooltip="Remove the anon as a recipient (Not implimented yet)"
                                 color="warn"
-                                [matTooltipPosition]="'right'">Remove</button>
+                                [matTooltipPosition]="'right'"
+                                (click)="removeRecipient(recipient)">Remove</button>
                             </div>
-                            <p>{{recipient.clientName}}</p>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-card-content>
