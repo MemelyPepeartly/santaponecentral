@@ -19,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import {MatSelectModule} from '@angular/material/select';
   DragDropModule,
   MatExpansionModule,
   MatSidenavModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTooltipModule
   ],
   exports: [
   CommonModule,
@@ -65,7 +67,8 @@ import {MatSelectModule} from '@angular/material/select';
    DragDropModule,
    MatExpansionModule,
    MatSidenavModule,
-   MatSelectModule
+   MatSelectModule,
+   MatTooltipModule
    ],
 })
 export class CustomMaterialModule { }
