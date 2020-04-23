@@ -89,7 +89,12 @@
                                     <mat-icon>email</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <p>{{sender.clientName}}</p>
+                            <div class="expansionPanelButtonContainer">
+                                <button class="expansionPanelButton" mat-raised-button
+                                matTooltip="Switch to this Anon"
+                                [matTooltipPosition]="'left'"
+                                (click)="switchAnon(sender)">Switch</button>
+                            </div>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-card-content>
