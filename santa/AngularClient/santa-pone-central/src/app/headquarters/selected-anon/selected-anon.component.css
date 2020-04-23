@@ -20,6 +20,16 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+.expansionPanelButton
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.expansionPanelButtonContainer
+{
+    width: 100%;
+    text-align: center;
+}
 .responseContainer
 {
     width: 100%;
