@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/SantaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/MapService.service';
 import { EventConstants } from 'src/app/shared/constants/EventConstants';
 import { Status } from 'src/classes/status';
@@ -39,6 +39,7 @@ export class SelectedAnonComponent implements OnInit {
   constructor(public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
+    public SantaApiDelete: SantaApiDeleteService,
     public ApiMapper: MapService,
     public responseMapper: MapResponse,
     private formBuilder: FormBuilder) { }
@@ -318,5 +319,10 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSurveys();
     await this.gatherEvents();
     await this.gatherResponses();
+  }
+  public async removeRecipient(anon: ClientSenderRecipientRelationship)
+  {
+    //Not implimented on the API yet
+    this.SantaApiDelete.deleteClientRecipientRelation();
   }
 }
