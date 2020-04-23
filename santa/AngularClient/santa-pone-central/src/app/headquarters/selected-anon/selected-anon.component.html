@@ -1,4 +1,8 @@
-<div class="shell scrollbar scrollbar-primary mat-elevation-z2" [@simpleFadeAnimation]="'in'">
+<div id="switchSpin">
+    <app-loading-spin *ngIf="beingSwitched"></app-loading-spin>
+</div>
+
+<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched">
     <mat-card class="infoCard mat-elevation-z5">
 
         <mat-card-header>
@@ -86,7 +90,7 @@
                             <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
                                 <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
                                 <mat-panel-description>
-                                    <mat-icon>email</mat-icon>
+                                    <mat-icon>card_giftcard</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <div class="expansionPanelButtonContainer">
@@ -110,7 +114,7 @@
                             <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
                                 <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
                                 <mat-panel-description>
-                                    <mat-icon>email</mat-icon>
+                                    <mat-icon>card_giftcard</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <div class="expansionPanelButtonContainer">
@@ -173,6 +177,7 @@
                         </mat-drawer>
                         <div
                             [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
+                            <mat-icon>person_add</mat-icon> 
                             <div id="toggleDiv">
                                 <button mat-raised-button
                                     matTooltip="Shows the list of assignable Anon's"
