@@ -77,6 +77,6 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         public Task SaveAsync();
-        
+        Task DeleteRecieverXref(Guid clientID, Guid recipientID);
     }
 }

@@ -320,5 +320,20 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+        // DELETE: api/Client/5
+        [HttpDelete("{clientID}/Recipient")]
+        public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID)
+        {
+            try
+            {
+                await repository.DeleteRecieverXref(clientID, recipientID);
+                await repository.SaveAsync();
+                return (await repository.GetClientByID(clientID));
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
     }
 }
