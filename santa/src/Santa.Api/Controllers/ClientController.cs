@@ -56,7 +56,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Client client = await repository.GetClientByID(clientID);
+                Logic.Objects.Client client = await repository.GetClientByIDAsync(clientID);
                 return Ok(JsonConvert.SerializeObject(client, Formatting.Indented));
             }
             catch (Exception e)
@@ -123,7 +123,7 @@ namespace Santa.Api.Controllers
                 {
                     await repository.CreateClient(newClient);
                     await repository.SaveAsync();
-                    return Ok(await repository.GetClientByID(newClient.clientID));
+                    return Ok(await repository.GetClientByIDAsync(newClient.clientID));
                 }
                 catch (Exception e)
                 {
@@ -153,7 +153,7 @@ namespace Santa.Api.Controllers
             {
                 await repository.CreateClientRelationByID(clientID, relationship.recieverClientID, relationship.eventTypeID);
                 await repository.SaveAsync();
-                return Ok(await repository.GetClientByID(clientID));
+                return Ok(await repository.GetClientByIDAsync(clientID));
             }
             catch (Exception e)
             {
@@ -170,7 +170,7 @@ namespace Santa.Api.Controllers
                 
                 try
                 {
-                    Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                    Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
 
                     targetClient.address.addressLineOne = address.clientAddressLine1;
                     targetClient.address.addressLineTwo = address.clientAddressLine2;
@@ -183,7 +183,7 @@ namespace Santa.Api.Controllers
                     {
                         await repository.UpdateClientByIDAsync(targetClient);
                         await repository.SaveAsync();
-                        Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                        Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                         return Ok(updatedClient);
                     }
                     catch(Exception e)
@@ -207,14 +207,14 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.email = email.clientEmail;
 
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
@@ -233,14 +233,14 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.nickname = nickname.clientNickname;
 
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
@@ -259,13 +259,13 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.clientName = name.clientName;
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
@@ -285,13 +285,13 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                Logic.Objects.Client targetClient = await repository.GetClientByID(clientID);
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.clientStatus.statusID = status.clientStatusID;
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByID(targetClient.clientID);
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
@@ -328,7 +328,7 @@ namespace Santa.Api.Controllers
             {
                 await repository.DeleteRecieverXref(clientID, recipientID);
                 await repository.SaveAsync();
-                return (await repository.GetClientByID(clientID));
+                return (await repository.GetClientByIDAsync(clientID));
             }
             catch(Exception e)
             {

@@ -38,10 +38,18 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Tag/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "Get Tag")]
+        public async Task<ActionResult<Logic.Objects.Tag>> GetTagByID(Guid tagID)
         {
-            return "value";
+            try
+            {
+                Logic.Objects.Tag logicTag = await repository.GetTagByIDAsync(tagID);
+                return Ok(logicTag);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // POST: api/Tag
