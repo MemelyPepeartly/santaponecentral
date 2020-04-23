@@ -70,7 +70,11 @@ const appRoutes: Routes = [
   {
     path: 'api/response',
     component: ResponseComponent
-  }
+  },
+  {
+		path: "**",
+		redirectTo: "home"
+	}
 ];
 
 @NgModule({
