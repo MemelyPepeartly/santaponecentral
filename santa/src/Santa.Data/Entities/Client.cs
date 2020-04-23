@@ -9,6 +9,7 @@ namespace Santa.Data.Entities
         {
             ClientRelationXrefRecipientClient = new HashSet<ClientRelationXref>();
             ClientRelationXrefSenderClient = new HashSet<ClientRelationXref>();
+            ClientTagXref = new HashSet<ClientTagXref>();
             SurveyResponse = new HashSet<SurveyResponse>();
         }
 
@@ -27,6 +28,7 @@ namespace Santa.Data.Entities
         public virtual ClientStatus ClientStatus { get; set; }
         public virtual ICollection<ClientRelationXref> ClientRelationXrefRecipientClient { get; set; }
         public virtual ICollection<ClientRelationXref> ClientRelationXrefSenderClient { get; set; }
+        public virtual ICollection<ClientTagXref> ClientTagXref { get; set; }
         public virtual ICollection<SurveyResponse> SurveyResponse { get; set; }
     }
 }
