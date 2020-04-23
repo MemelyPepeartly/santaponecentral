@@ -161,6 +161,43 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Tag
+        public Task CreateTag(Logic.Objects.Tag newTag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Logic.Objects.Tag> GetTagByID(Guid tagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Logic.Objects.Tag> GetAllTags()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateTagByIDAsync(Guid tagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteTagByIDAsync(Guid tagID)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region ClientStatus
         public List<Status> GetAllClientStatus()
         {
