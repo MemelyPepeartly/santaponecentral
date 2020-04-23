@@ -147,6 +147,18 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public async Task DeleteRecieverXref(Guid clientID, Guid recipientID)
+        {
+            try
+            {
+                Data.Entities.ClientRelationXref contextRelation = await santaContext.ClientRelationXref.FirstOrDefaultAsync(r => r.SenderClientId == clientID && r.RecipientClientId == recipientID);
+                santaContext.ClientRelationXref.Remove(contextRelation);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         #endregion
 
         #region ClientStatus
@@ -730,7 +742,7 @@ namespace Santa.Data.Repository
             }
 
         }
-        
+
         #endregion
     }
 }
