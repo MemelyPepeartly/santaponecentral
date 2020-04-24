@@ -33,7 +33,7 @@ namespace Santa.Api
             string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
 
 
-            services.AddDbContext<Santa.Data.Entities.SantaBaseContext>(options =>
+            services.AddDbContext<Santa.Data.Entities.SantaPoneCentralDatabaseContext>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
