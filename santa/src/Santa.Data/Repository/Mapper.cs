@@ -44,7 +44,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Client logicClient = new Logic.Objects.Client()
             {
-                clientID = contextClient.ClientId,      
+                clientID = contextClient.ClientId,
                 email = contextClient.Email,
                 nickname = contextClient.Nickname,
                 clientName = contextClient.ClientName,
@@ -57,11 +57,12 @@ namespace Santa.Data.Repository
                     state = contextClient.State,
                     postalCode = contextClient.PostalCode
                 },
-                
+
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
-                
+
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList()
+                senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
+                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
             };
 
             return logicClient;
@@ -105,9 +106,18 @@ namespace Santa.Data.Repository
             };
             return contextTag;
         }
+        public static Logic.Objects.Tag MapTagRelationXref(Data.Entities.ClientTagXref contextTagXref)
+        {
+            Logic.Objects.Tag logicTag = new Logic.Objects.Tag()
+            {
+                tagId = contextTagXref.TagId,
+                tagName = contextTagXref.Tag.TagName
+            };
+            return logicTag;
+        }
         #endregion
-        #region Status
-        public static Status MapStatus(ClientStatus contextStatus)
+    #region Status
+    public static Status MapStatus(ClientStatus contextStatus)
         {
             Logic.Objects.Status logicStatus = new Status()
             {

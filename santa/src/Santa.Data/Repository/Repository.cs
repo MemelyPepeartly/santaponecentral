@@ -76,6 +76,8 @@ namespace Santa.Data.Repository
                         .ThenInclude(crx => crx.RecipientClient)
                     .Include(sc => sc.ClientRelationXrefSenderClient)
                         .ThenInclude(crx => crx.SenderClient)
+                    .Include(tx => tx.ClientTagXref)
+                        .ThenInclude(t => t.Tag)
                     .Include(s => s.ClientStatus)
                     .Select(Mapper.MapClient).ToList();
                 return clientList;
@@ -99,6 +101,8 @@ namespace Santa.Data.Repository
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(u => u.RecipientClient)
+                    .Include(tx => tx.ClientTagXref)
+                        .ThenInclude(t => t.Tag)
                     .Include(s => s.ClientStatus)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
                 return logicClient;
@@ -162,6 +166,11 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Tag
+        /// <summary>
+        /// Creates a new tag
+        /// </summary>
+        /// <param name="newTag"></param>
+        /// <returns></returns>
         public async Task CreateTag(Logic.Objects.Tag newTag)
         {
             try
@@ -174,12 +183,21 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Creates a new relationship between a client and a tag
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         public Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Gets a tag by its ID
+        /// </summary>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         public async Task<Logic.Objects.Tag> GetTagByIDAsync(Guid tagID)
         {
             try
@@ -192,7 +210,10 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Gets a list of all tags
+        /// </summary>
+        /// <returns></returns>
         public List<Logic.Objects.Tag> GetAllTags()
         {
             try
@@ -207,7 +228,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Updates a tag's name by its ID
+        /// </summary>
+        /// <param name="targetLogicTag"></param>
+        /// <returns></returns>
         public async Task UpdateTagNameByIDAsync(Logic.Objects.Tag targetLogicTag)
         {
             try
@@ -223,12 +248,21 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Deletes a client tag relationship
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         public Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Deletes a tag
+        /// </summary>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         public async Task DeleteTagByIDAsync(Guid tagID)
         {
             try
