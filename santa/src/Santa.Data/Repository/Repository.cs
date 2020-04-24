@@ -162,9 +162,17 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Tag
-        public Task CreateTag(Logic.Objects.Tag newTag)
+        public async Task CreateTag(Logic.Objects.Tag newTag)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Tag contextTag = Mapper.MapTag(newTag);
+                await santaContext.Tag.AddAsync(contextTag);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
@@ -200,9 +208,20 @@ namespace Santa.Data.Repository
             }
         }
 
-        public Task UpdateTagByIDAsync(Guid tagID)
+        public async Task UpdateTagNameByIDAsync(Logic.Objects.Tag targetLogicTag)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Tag contextOldTag = await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == targetLogicTag.tagId);
+
+                contextOldTag.TagName = targetLogicTag.tagName;
+
+                santaContext.Tag.Update(contextOldTag);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
@@ -210,9 +229,17 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task DeleteTagByIDAsync(Guid tagID)
+        public async Task DeleteTagByIDAsync(Guid tagID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.Tag contextTag = await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == tagID);
+                santaContext.Tag.Remove(contextTag);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 

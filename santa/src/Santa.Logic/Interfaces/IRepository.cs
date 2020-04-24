@@ -17,15 +17,17 @@ namespace Santa.Logic.Interfaces
         Task DeleteClientByIDAsync(Guid eventID);
         Task DeleteRecieverXref(Guid clientID, Guid recipientID);
         #endregion
+
         #region Tag
         Task CreateTag(Tag newTag);
         Task CreateClientTagRelationByID(Guid clientID, Guid tagID);
         Task<Tag> GetTagByIDAsync(Guid tagID);
         List<Tag> GetAllTags();
-        Task UpdateTagByIDAsync(Guid tagID);
+        Task UpdateTagNameByIDAsync(Tag logicTag);
         Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID);
         Task DeleteTagByIDAsync(Guid tagID);
         #endregion
+
         #region Event
         Task CreateEventAsync(Event newEvent);
         List<Logic.Objects.Event> GetAllEvents();
