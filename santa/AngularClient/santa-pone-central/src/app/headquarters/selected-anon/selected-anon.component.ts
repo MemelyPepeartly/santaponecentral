@@ -75,6 +75,7 @@ export class SelectedAnonComponent implements OnInit {
   public recipientsAreLoaded: boolean = true;
   public nicknameInvalid: boolean = false;
   public beingSwitched: boolean = false;
+  public beingRemoved: boolean = false;
 
   public clientNicknameFormGroup: FormGroup;
 
@@ -325,10 +326,11 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async removeRecipient(anon: ClientSenderRecipientRelationship)
   {
+    this.beingRemoved = true;
     var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
     this.client = this.ApiMapper.mapClient(res);
     await this.gatherSenders();
     await this.gatherRecipients();
-
+    this.beingRemoved = false;
   }
 }
