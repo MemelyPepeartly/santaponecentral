@@ -254,9 +254,17 @@ namespace Santa.Data.Repository
         /// <param name="clientID"></param>
         /// <param name="tagID"></param>
         /// <returns></returns>
-        public Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
+        public async Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.ClientTagXref contextClientTagXref = await santaContext.ClientTagXref.FirstOrDefaultAsync(tx => tx.ClientId == clientID && tx.TagId == tagID);
+                santaContext.ClientTagXref.Remove(contextClientTagXref);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         /// <summary>
         /// Deletes a tag
