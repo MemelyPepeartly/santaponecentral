@@ -117,7 +117,10 @@
                                     <mat-icon>card_giftcard</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <div class="expansionPanelButtonContainer">
+                            <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
+                                <app-small-loading-spin></app-small-loading-spin>
+                            </div>
+                            <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved">
                                 <button class="expansionPanelButton" mat-raised-button
                                 matTooltip="Switch to this Anon"
                                 [matTooltipPosition]="'left'"
