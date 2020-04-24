@@ -189,9 +189,21 @@ namespace Santa.Data.Repository
         /// <param name="clientID"></param>
         /// <param name="tagID"></param>
         /// <returns></returns>
-        public Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
+        public async Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.ClientTagXref contextClientRelationXref = new ClientTagXref()
+                {
+                    ClientId = clientID,
+                    TagId = tagID
+                };
+                await santaContext.ClientTagXref.AddAsync(contextClientRelationXref);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         /// <summary>
         /// Gets a tag by its ID
