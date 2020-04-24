@@ -165,7 +165,7 @@ export class SelectedAnonComponent implements OnInit {
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
       relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID
 
-      await this.SantaApiPost.postClientRelation(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err));
+      await this.SantaApiPost.postClientRecipient(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err));
       this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise())
       
       await this.gatherRecipients();
@@ -325,7 +325,10 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async removeRecipient(anon: ClientSenderRecipientRelationship)
   {
-    //Not implimented on the API yet
-    this.SantaApiDelete.deleteClientRecipientRelation();
+    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
+    this.client = this.ApiMapper.mapClient(res);
+    await this.gatherSenders();
+    await this.gatherRecipients();
+
   }
 }

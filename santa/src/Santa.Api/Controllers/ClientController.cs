@@ -337,11 +337,11 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5/Recipient
         [HttpDelete("{clientID}/Recipient")]
-        public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID)
+        public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
         {
             try
             {
-                await repository.DeleteRecieverXref(clientID, recipientID);
+                await repository.DeleteRecieverXref(clientID, recipientID, eventID);
                 await repository.SaveAsync();
                 return (await repository.GetClientByIDAsync(clientID));
             }

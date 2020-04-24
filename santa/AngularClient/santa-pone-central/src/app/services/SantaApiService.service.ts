@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse } from '../../classes/responseTypes';
+import { ClientSenderRecipientRelationship } from 'src/classes/client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 const httpOptions = {
@@ -87,7 +88,7 @@ export class SantaApiPostService {
   postClient(client: ClientResponse): Observable<any> {
     return this.http.post(endpoint + 'Client', client);
   }
-  postClientRelation(id: string, relationship: ClientRelationshipResponse): Observable<any> {
+  postClientRecipient(id: string, relationship: ClientRelationshipResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + '/Recipient', relationship);
   }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
@@ -121,8 +122,9 @@ export class SantaApiPutService {
   providedIn: 'root'
 })
 export class SantaApiDeleteService {
+  
   constructor(private http: HttpClient) { }
-  deleteClientRecipientRelation() {
-    this.http.delete("");
+  deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationship): Observable<any> {
+    return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
   }
 }
