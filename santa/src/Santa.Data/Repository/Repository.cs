@@ -12,9 +12,9 @@ namespace Santa.Data.Repository
 {
     public class Repository : IRepository
     {
-        private readonly SantaBaseContext santaContext;
+        private readonly SantaPoneCentralDatabaseContext santaContext;
 
-        public Repository(SantaBaseContext _context)
+        public Repository(SantaPoneCentralDatabaseContext _context)
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
@@ -172,16 +172,27 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Logic.Objects.Tag> GetTagByIDAsync(Guid tagID)
+        public async Task<Logic.Objects.Tag> GetTagByIDAsync(Guid tagID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.Tag logicTag = Mapper.MapTag(await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == tagID));
+                return logicTag;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public List<Logic.Objects.Tag> GetAllTags()
         {
             try
             {
-                return new List<Logic.Objects.Tag>();
+                List<Logic.Objects.Tag> logicTags = new List<Logic.Objects.Tag>();
+                logicTags = santaContext.Tag.Select(Mapper.MapTag).ToList();
+
+                return logicTags;
             }
             catch(Exception e)
             {
