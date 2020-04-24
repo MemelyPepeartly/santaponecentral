@@ -151,11 +151,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task DeleteRecieverXref(Guid clientID, Guid recipientID)
+        public async Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID)
         {
             try
             {
-                Data.Entities.ClientRelationXref contextRelation = await santaContext.ClientRelationXref.FirstOrDefaultAsync(r => r.SenderClientId == clientID && r.RecipientClientId == recipientID);
+                Data.Entities.ClientRelationXref contextRelation = await santaContext.ClientRelationXref.FirstOrDefaultAsync(r => r.SenderClientId == clientID && r.RecipientClientId == recipientID && r.EventTypeId == eventID);
                 santaContext.ClientRelationXref.Remove(contextRelation);
             }
             catch(Exception e)
