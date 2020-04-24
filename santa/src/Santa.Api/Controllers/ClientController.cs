@@ -145,13 +145,28 @@ namespace Santa.Api.Controllers
 
         }
 
-        // POST: api/Client/5/Relationship
-        [HttpPost("{clientID}/Relationship", Name = "PostRelationship")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostRelationship(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
+        // POST: api/Client/5/Recipient
+        [HttpPost("{clientID}/Recipient", Name = "PostRecipient")]
+        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
         {
             try
             {
                 await repository.CreateClientRelationByID(clientID, relationship.recieverClientID, relationship.eventTypeID);
+                await repository.SaveAsync();
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // POST: api/Client/5/Tag
+        [HttpPost("{clientID}/Tag")]
+        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
+        {
+            try
+            {
+                await repository.CreateClientTagRelationByID(clientID, tagID);
                 await repository.SaveAsync();
                 return Ok(await repository.GetClientByIDAsync(clientID));
             }
@@ -320,7 +335,7 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
-        // DELETE: api/Client/5
+        // DELETE: api/Client/5/Recipient
         [HttpDelete("{clientID}/Recipient")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID)
         {
@@ -331,6 +346,21 @@ namespace Santa.Api.Controllers
                 return (await repository.GetClientByIDAsync(clientID));
             }
             catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // DELETE: api/Client/5/Tag
+        [HttpDelete("{clientID}/Tag")]
+        public async Task<ActionResult<Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
+        {
+            try
+            {
+                await repository.DeleteClientTagRelationshipByID(clientID, tagID);
+                await repository.SaveAsync();
+                return (await repository.GetClientByIDAsync(clientID));
+            }
+            catch (Exception e)
             {
                 throw e.InnerException;
             }
