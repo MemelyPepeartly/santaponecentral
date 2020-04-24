@@ -96,6 +96,15 @@ namespace Santa.Data.Repository
             };
             return logicTag;
         }
+        public static Data.Entities.Tag MapTag(Logic.Objects.Tag logicTag)
+        {
+            Data.Entities.Tag contextTag = new Entities.Tag()
+            {
+                TagId = logicTag.tagId,
+                TagName = logicTag.tagName
+            };
+            return contextTag;
+        }
         #endregion
         #region Status
         public static Status MapStatus(ClientStatus contextStatus)

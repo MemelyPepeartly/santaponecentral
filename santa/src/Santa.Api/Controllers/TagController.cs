@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Santa.Api.Models.Tag_Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -38,7 +39,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Tag/5
-        [HttpGet("{id}")]
+        [HttpGet("{tagID}")]
         public async Task<ActionResult<Logic.Objects.Tag>> GetTagByID(Guid tagID)
         {
             try
@@ -53,20 +54,65 @@ namespace Santa.Api.Controllers
 
         // POST: api/Tag
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Logic.Objects.Tag>> PostTag([FromBody, Bind("tagName")] ApiTag tag)
         {
+            try
+            {
+                Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
+                {
+                    tagId = Guid.NewGuid(),
+                    tagName = tag.tagName
+                };
+                await repository.CreateTag(newLogicTag);
+                await repository.SaveAsync();
+                return Ok(await repository.GetTagByIDAsync(newLogicTag.tagId));
+
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // PUT: api/Tag/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{tagID}")]
+        public async Task<ActionResult<Logic.Objects.Tag>> PutTagName(Guid tagID, [FromBody, Bind("tagName")] ApiTag tag)
         {
+            try
+            {
+                Logic.Objects.Tag logicTag = await repository.GetTagByIDAsync(tagID);
+                logicTag.tagName = tag.tagName;
+                try
+                {
+                    await repository.UpdateTagNameByIDAsync(logicTag);
+                    await repository.SaveAsync();
+                    return (await repository.GetTagByIDAsync(tagID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{tagID}")]
+        public async Task<ActionResult> DeleteTag(Guid tagID)
         {
+            try
+            {
+                await repository.DeleteTagByIDAsync(tagID);
+                await repository.SaveAsync();
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }
