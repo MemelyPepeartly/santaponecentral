@@ -88,7 +88,7 @@ export class SantaApiPostService {
     return this.http.post(endpoint + 'Client', client);
   }
   postClientRelation(id: string, relationship: ClientRelationshipResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/' + id + '/Relationship', relationship);
+    return this.http.post(endpoint + 'Client/' + id + '/Recipient', relationship);
   }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
     return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
