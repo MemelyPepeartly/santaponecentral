@@ -10,7 +10,17 @@
             <mat-card-subtitle>{{ client.clientName }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p>Content</p>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Client Tags</mat-card-title>
+                    <mat-card-subtitle>All of the tags held by the selected client</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let tag of client.tags">{{tag}}</mat-chip>
+                    </mat-chip-list>
+                </mat-card-content>
+            </mat-card>
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <p *ngIf="showFail">Error approving Anon</p>

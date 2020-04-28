@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
   MatExpansionModule,
   MatSidenavModule,
   MatSelectModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatChipsModule
   ],
   exports: [
   CommonModule,
@@ -68,7 +70,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
    MatExpansionModule,
    MatSidenavModule,
    MatSelectModule,
-   MatTooltipModule
+   MatTooltipModule,
+   MatChipsModule
    ],
 })
 export class CustomMaterialModule { }

@@ -4,6 +4,7 @@ import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
+import { Tag } from 'src/classes/tag';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,10 @@ export class MapService {
 
     client.senders.forEach(sender => {
       mappedClient.senders.push(this.mapSender(sender))
+    });
+
+    client.tags.forEach(tag => {
+      mappedClient.tags.push(this.mapTag(tag))
     });
 
     return mappedClient;
@@ -139,6 +144,15 @@ export class MapService {
     mappedSurveyResponse.responseText = surveyResponse.responseText;
 
     return mappedSurveyResponse;
+  }
+  mapTag(tag)
+  {
+    let mappedTag = new Tag;
+
+    mappedTag.tagID = tag.tagId;
+    mappedTag.tagName = tag.tagName;
+
+    return mappedTag;
   }
 }
 @Injectable({

@@ -1,6 +1,7 @@
 import { Address } from './address';
 import { Status } from './status';
 import { EventType } from './EventType';
+import { Tag } from './tag';
 
 export class Client {
     clientID: string;
@@ -8,9 +9,10 @@ export class Client {
     clientNickname: string;
     clientStatus = new Status;
     address = new Address;
+    email: string;
     senders: Array<Sender> = [];
     recipients: Array<Recipient> = [];
-    email: string;
+    tags: Array<Tag> = [];
 }
 // Class used for holding sender and event ID information
 export class Sender {
