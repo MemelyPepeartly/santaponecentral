@@ -20,6 +20,22 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+#headerContentContainer
+{
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+#tagCard
+{
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+#tagButton
+{
+    margin-top: 10px;
+}
 #switchSpin
 {
     width: 100%;
