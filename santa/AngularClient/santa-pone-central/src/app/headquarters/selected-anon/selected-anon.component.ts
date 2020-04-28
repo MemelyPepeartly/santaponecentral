@@ -5,10 +5,11 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/MapService.service';
 import { EventConstants } from 'src/app/shared/constants/EventConstants';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/EventType';
 import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
+import { Tag } from 'src/classes/tag';
 
 @Component({
   selector: 'app-selected-anon',
@@ -76,6 +77,8 @@ export class SelectedAnonComponent implements OnInit {
   public nicknameInvalid: boolean = false;
   public beingSwitched: boolean = false;
   public beingRemoved: boolean = false;
+  public tagRemovable: boolean = true;
+  public editingTags: boolean = false;
 
   public clientNicknameFormGroup: FormGroup;
 
@@ -214,6 +217,55 @@ export class SelectedAnonComponent implements OnInit {
     }
     this.recipientsAreLoaded=true;
   }
+  public async switchAnon(anon: ClientSenderRecipientRelationship)
+  {
+    this.beingSwitched = true;
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
+    this.client = switchClient;
+
+    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    {
+      this.clientApproved = true;
+    }
+    await this.gatherSenders();
+    await this.gatherRecipients();
+    await this.gatherSurveys();
+    await this.gatherEvents();
+    await this.gatherResponses();
+    this.beingSwitched = false;
+  }
+  public async removeRecipient(anon: ClientSenderRecipientRelationship)
+  {
+    this.beingRemoved = true;
+    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
+    this.client = this.ApiMapper.mapClient(res);
+    await this.gatherSenders();
+    await this.gatherRecipients();
+    this.beingRemoved = false;
+  }
+  public async removeTagFromClient(tag: Tag)
+  {
+    this.editingTags = true;
+
+    let relationship = new ClientTagRelationshipResponse;
+    relationship.clientID = this.client.clientID;
+    relationship.tagID = tag.tagID;
+    var res = await this.SantaApiDelete.deleteTagFromClient(relationship).toPromise();
+    this.client = this.ApiMapper.mapClient(res);
+    this.action.emit(true);
+
+    this.editingTags = false;
+
+  }
+  public async gatherTags()
+  {
+    this.editingTags = true;
+
+    var res = await this.SantaApiGet.getClient(this.client.clientID).toPromise();
+    this.client = this.ApiMapper.mapClient(res);
+
+    this.editingTags = false;
+  }
   public async gatherRecipients()
   {
     this.recipients = [];
@@ -306,31 +358,5 @@ export class SelectedAnonComponent implements OnInit {
       this.surveys.push(this.ApiMapper.mapSurvey(apiSurveys[i]));
     }
 
-  }
-  public async switchAnon(anon: ClientSenderRecipientRelationship)
-  {
-    this.beingSwitched = true;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
-    this.client = switchClient;
-
-    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
-    {
-      this.clientApproved = true;
-    }
-    await this.gatherSenders();
-    await this.gatherRecipients();
-    await this.gatherSurveys();
-    await this.gatherEvents();
-    await this.gatherResponses();
-    this.beingSwitched = false;
-  }
-  public async removeRecipient(anon: ClientSenderRecipientRelationship)
-  {
-    this.beingRemoved = true;
-    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
-    this.client = this.ApiMapper.mapClient(res);
-    await this.gatherSenders();
-    await this.gatherRecipients();
-    this.beingRemoved = false;
   }
 }

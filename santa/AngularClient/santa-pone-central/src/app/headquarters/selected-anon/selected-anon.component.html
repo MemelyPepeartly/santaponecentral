@@ -9,16 +9,24 @@
             <mat-card-title>{{ client.clientNickname }}</mat-card-title>
             <mat-card-subtitle>{{ client.clientName }}</mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
-            <mat-card>
+        <mat-card-content id="headerContentContainer">
+            <mat-card id="tagCard">
                 <mat-card-header>
                     <mat-card-title>Client Tags</mat-card-title>
                     <mat-card-subtitle>All of the tags held by the selected client</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
-                    <mat-chip-list>
-                        <mat-chip *ngFor="let tag of client.tags">{{tag}}</mat-chip>
+                    <app-small-loading-spin *ngIf="editingTags"></app-small-loading-spin>
+                    <mat-chip-list *ngIf="!editingTags">
+                        <mat-chip *ngFor="let tag of client.tags"
+                        [selectable]="true"
+                        [removable]="tagRemovable">{{tag.tagName}}<mat-icon matChipRemove (click)="removeTagFromClient(tag)" *ngIf="tagRemovable">cancel</mat-icon>
+                        </mat-chip>
                     </mat-chip-list>
+                    <button *ngIf="!editingTags" id="tagButton" 
+                        mat-raised-button
+                        matTooltip="Add tag to the Anon (Not Implimented yet)"
+                        [matTooltipPosition]="'left'">Add Tags</button>
                 </mat-card-content>
             </mat-card>
         </mat-card-content>
