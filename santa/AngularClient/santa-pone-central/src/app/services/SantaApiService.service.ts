@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
@@ -102,6 +102,12 @@ export class SantaApiPostService {
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
     return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
   }
+  postTag(tagResponse: TagResponse): Observable<any> {
+    return this.http.post(endpoint + 'Tag', tagResponse);
+  }
+  postTagToClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/'+ clientTagRelationship.clientID + "/Tag?tagID=" + clientTagRelationship.tagID, null);
+  }
 }
 
 @Injectable({
@@ -134,5 +140,8 @@ export class SantaApiDeleteService {
   constructor(private http: HttpClient) { }
   deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationship): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
+  }
+  deleteTagFromClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
+    return this.http.delete(endpoint + 'Client/' + clientTagRelationship.clientID + '/Tag?tagID=' + clientTagRelationship.tagID);
   }
 }
