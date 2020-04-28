@@ -60,12 +60,12 @@ namespace Santa.Api.Controllers
             {
                 Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
                 {
-                    tagId = Guid.NewGuid(),
+                    tagID = Guid.NewGuid(),
                     tagName = tag.tagName
                 };
                 await repository.CreateTag(newLogicTag);
                 await repository.SaveAsync();
-                return Ok(await repository.GetTagByIDAsync(newLogicTag.tagId));
+                return Ok(await repository.GetTagByIDAsync(newLogicTag.tagID));
 
             }
             catch(Exception e)

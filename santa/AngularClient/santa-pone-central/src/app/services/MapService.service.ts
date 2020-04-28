@@ -149,7 +149,7 @@ export class MapService {
   {
     let mappedTag = new Tag;
 
-    mappedTag.tagID = tag.tagId;
+    mappedTag.tagID = tag.tagID;
     mappedTag.tagName = tag.tagName;
 
     return mappedTag;

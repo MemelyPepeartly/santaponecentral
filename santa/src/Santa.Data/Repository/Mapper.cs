@@ -92,7 +92,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Tag logicTag = new Logic.Objects.Tag()
             {
-                tagId = contextTag.TagId,
+                tagID = contextTag.TagId,
                 tagName = contextTag.TagName
             };
             return logicTag;
@@ -101,7 +101,7 @@ namespace Santa.Data.Repository
         {
             Data.Entities.Tag contextTag = new Entities.Tag()
             {
-                TagId = logicTag.tagId,
+                TagId = logicTag.tagID,
                 TagName = logicTag.tagName
             };
             return contextTag;
@@ -110,7 +110,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.Tag logicTag = new Logic.Objects.Tag()
             {
-                tagId = contextTagXref.TagId,
+                tagID = contextTagXref.TagId,
                 tagName = contextTagXref.Tag.TagName
             };
             return logicTag;
