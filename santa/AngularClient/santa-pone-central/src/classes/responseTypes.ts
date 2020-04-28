@@ -41,3 +41,10 @@ export class SurveyApiResponse {
     surveyOptionID?: string = null;
     responseText: string;
 }
+export class TagResponse {
+    tagName: string;
+}
+export class ClientTagRelationshipResponse {
+    clientID: string;
+    tagID: string;
+}
