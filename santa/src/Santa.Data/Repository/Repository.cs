@@ -249,7 +249,7 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Data.Entities.Tag contextOldTag = await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == targetLogicTag.tagId);
+                Data.Entities.Tag contextOldTag = await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == targetLogicTag.tagID);
 
                 contextOldTag.TagName = targetLogicTag.tagName;
 

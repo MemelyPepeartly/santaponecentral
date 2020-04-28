@@ -6,7 +6,7 @@ namespace Santa.Logic.Objects
 {
     public class Tag
     {
-        public Guid tagId { get; set; }
+        public Guid tagID { get; set; }
         public string tagName { get; set; }
     }
 }
