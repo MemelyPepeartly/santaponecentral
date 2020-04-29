@@ -78,6 +78,7 @@ namespace Santa.Api
             services.AddMvc();
 
 
+
             services.AddControllers();
             services.AddHttpClient();
         }

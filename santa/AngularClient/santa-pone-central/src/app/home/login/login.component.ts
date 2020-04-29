@@ -1,5 +1,6 @@
 import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
@@ -9,7 +10,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class LoginComponent {
 
-  constructor() { }
+  constructor(public auth: AuthService) { }
 
   showSpinner = false;
   username = '';
