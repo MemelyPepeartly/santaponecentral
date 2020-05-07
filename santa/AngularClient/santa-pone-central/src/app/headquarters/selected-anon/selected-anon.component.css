@@ -32,14 +32,30 @@ mat-panel-description
     margin-bottom: 20px;
 
 }
-#tagButton
+.tagButton
 {
     margin-top: 10px;
+    margin-right: 5px;
+
+}
+#tagButtonContainer
+{
+    display: block;
 }
 #switchSpin
 {
     width: 100%;
     text-align: center;
+}
+#tagSelectionList
+{
+    display: block;
+    margin-bottom:5px;
+}
+#tagChipList
+{
+    display: block;
+    margin-bottom:5px;
 }
 .expansionPanelButton
 {

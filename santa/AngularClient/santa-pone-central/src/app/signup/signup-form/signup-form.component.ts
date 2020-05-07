@@ -161,6 +161,7 @@ export class SignupFormComponent implements OnInit {
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
   }
+  //Logging method
   public displayAnswersSelected()
   {
     this.surveyForms.forEach(thing => {

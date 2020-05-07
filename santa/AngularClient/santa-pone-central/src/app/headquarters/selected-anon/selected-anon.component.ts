@@ -10,6 +10,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/EventType';
 import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-selected-anon',
@@ -57,7 +58,14 @@ export class SelectedAnonComponent implements OnInit {
   public questions: Array<Question> = new Array<Question>();
   public responses: Array<SurveyResponse> = new Array<SurveyResponse>();
 
+  //Tag arrays
+  public allTags: Array<Tag> = new Array<Tag>();
+  public availableTags: Array<Tag> = new Array<Tag>();
+  public currentTags: Array<Tag> = new Array<Tag>();
+
+
   public selectedRecipients: Array<Client> = new Array<Client>();
+  public selectedTags: Array<Tag> = new Array<Tag>();
   public selectedRecipientEvent: EventType = new EventType();
 
   public showButtonSpinner: boolean = false;
@@ -78,11 +86,16 @@ export class SelectedAnonComponent implements OnInit {
   public beingSwitched: boolean = false;
   public beingRemoved: boolean = false;
   public tagRemovable: boolean = true;
+  public gettingTags: boolean = false;
   public editingTags: boolean = false;
+  public modyingTagRelationships: boolean = false;
+  public initializing: boolean = false;
+
 
   public clientNicknameFormGroup: FormGroup;
 
   public async ngOnInit() {
+    this.initializing = true;
     //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
     {
@@ -93,11 +106,26 @@ export class SelectedAnonComponent implements OnInit {
     });
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
-    await this.gatherSenders();
-    await this.gatherRecipients();
-    await this.gatherSurveys();
-    await this.gatherEvents();
+
+    /* ---- CLIENT GATHERS ---- */
+    //Gathers all client responses
     await this.gatherResponses();
+    //Gathers all client senders
+    await this.gatherSenders();
+    //Gathers all client recipients
+    await this.gatherRecipients();
+    //Gathers all client surveys
+    await this.gatherSurveys();
+    //Gathers all client tags
+    await this.gatherAllTags();
+
+    /* ---- GENERAL GATHERS ---- */
+    //Gathers all events
+    await this.gatherAllEvents();
+    //Gathers all tags
+    await this.gatherAllTags();
+
+    this.initializing = false;
   }
   public approveAnon()
   {
@@ -230,7 +258,7 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSenders();
     await this.gatherRecipients();
     await this.gatherSurveys();
-    await this.gatherEvents();
+    await this.gatherAllEvents();
     await this.gatherResponses();
     this.beingSwitched = false;
   }
@@ -245,7 +273,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async removeTagFromClient(tag: Tag)
   {
-    this.editingTags = true;
+    this.modyingTagRelationships = true;
 
     let relationship = new ClientTagRelationshipResponse;
     relationship.clientID = this.client.clientID;
@@ -254,17 +282,65 @@ export class SelectedAnonComponent implements OnInit {
     this.client = this.ApiMapper.mapClient(res);
     this.action.emit(true);
 
-    this.editingTags = false;
+    await this.gatherTags();
+    await this.showAvailableTags();
 
+    this.editingTags = false;
+    this.modyingTagRelationships = false;
+  }
+  public async showAvailableTags()
+  {
+    this.editingTags = true;
+    this.availableTags = [];
+    await this.gatherTags()
+    await this.gatherAllTags();
+
+    for(let i = 0; i < this.allTags.length; i++)
+    {
+      // If the current tags do not contain the a tag in all tags, add it to the list of available tags for the user to select for the anon
+      if(!this.currentTags.some(tag => tag.tagID == this.allTags[i].tagID))
+      {
+        this.availableTags.push(this.allTags[i]);
+      }
+    }
+  }
+  public async addTagsToClient()
+  {
+    this.modyingTagRelationships = true;
+    console.log("Doing the thing");
+    for(let i = 0; i < this.selectedTags.length; i++)
+    {
+      let clientTagRelationship = new ClientTagRelationshipResponse();
+      clientTagRelationship.clientID = this.client.clientID;
+      clientTagRelationship.tagID = this.selectedTags[i].tagID;
+      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagToClient(clientTagRelationship).toPromise());
+    }
+    await this.gatherTags();
+    await this.showAvailableTags();
+    this.modyingTagRelationships = false;
+    this.editingTags = false;
+  }
+  public async cancelTagAction()
+  {
+    this.editingTags = false;
   }
   public async gatherTags()
   {
-    this.editingTags = true;
+    this.gettingTags = true;
+    this.currentTags = [];
 
-    var res = await this.SantaApiGet.getClient(this.client.clientID).toPromise();
-    this.client = this.ApiMapper.mapClient(res);
+    this.currentTags = this.client.tags;
 
-    this.editingTags = false;
+    this.gettingTags = false;
+  }
+  public async gatherAllTags()
+  {
+    this.allTags = [];
+    var tagRes = await this.SantaApiGet.getAllTags().toPromise();
+    for(let i = 0; i < tagRes.length; i++)
+    {
+      this.allTags.push(this.ApiMapper.mapTag(tagRes[i]))
+    }
   }
   public async gatherRecipients()
   {
@@ -285,7 +361,7 @@ export class SelectedAnonComponent implements OnInit {
       this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderEventTypeID));
     }
   }
-  public async gatherEvents()
+  public async gatherAllEvents()
   {
     this.events = [];
 
@@ -333,7 +409,6 @@ export class SelectedAnonComponent implements OnInit {
           this.responses.push(mappedAnswer);
         }
       }
-      console.log(this.responses);
     });
   }
   public async gatherQuestions()
@@ -357,6 +432,5 @@ export class SelectedAnonComponent implements OnInit {
     {
       this.surveys.push(this.ApiMapper.mapSurvey(apiSurveys[i]));
     }
-
   }
 }
