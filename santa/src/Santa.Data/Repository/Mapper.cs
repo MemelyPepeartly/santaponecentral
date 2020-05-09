@@ -116,7 +116,7 @@ namespace Santa.Data.Repository
             return logicTag;
         }
         #endregion
-    #region Status
+        #region Status
     public static Status MapStatus(ClientStatus contextStatus)
         {
             Logic.Objects.Status logicStatus = new Status()
