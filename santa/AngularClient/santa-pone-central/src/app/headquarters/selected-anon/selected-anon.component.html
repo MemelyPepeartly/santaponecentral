@@ -48,6 +48,7 @@
                         mat-raised-button
                         matTooltip="Confirm Tag Selection"
                         (click)="addTagsToClient()"
+                        [disabled]="selectedTags?.length == 0"
                         [matTooltipPosition]="'left'">Confirm Tag Selection</button>
                     <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton" 
                         mat-raised-button
