@@ -46,6 +46,7 @@ import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.compone
 import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
+import { AdminControlComponent } from './admin-control/admin-control.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { SurveyFormComponent } from './signup/survey-form/survey-form.component'
     LoadingSpinComponent,
     SelectedAnonComponent,
     SmallLoadingSpinComponent,
-    SurveyFormComponent
+    SurveyFormComponent,
+    AdminControlComponent
   ],
   entryComponents: [
     LoginComponent
