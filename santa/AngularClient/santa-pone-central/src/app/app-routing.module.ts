@@ -17,6 +17,7 @@ import { QuestionComponent } from './api/question/question.component';
 import { ResponseComponent } from './api/response/response.component';
 import { SurveyComponent } from './api/survey/survey.component';
 import { UserComponent} from './api/user/user.component';
+import { AdminControlComponent } from './admin-control/admin-control.component';
 
 const appRoutes: Routes = [
   { path: 'profile',
@@ -52,6 +53,10 @@ const appRoutes: Routes = [
     component: AdminHelpComponent
   },
   {
+    path: 'admin-control',
+    component: AdminControlComponent
+  },
+  {
     path: 'api/user',
     component: UserComponent
   },
@@ -73,8 +78,12 @@ const appRoutes: Routes = [
   },
   {
 		path: "**",
-		redirectTo: "home"
-	}
+		redirectTo: "/home"
+  },
+  { 
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full' }
 ];
 
 @NgModule({
