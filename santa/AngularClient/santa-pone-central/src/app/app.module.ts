@@ -47,6 +47,9 @@ import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loa
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
 import { AdminControlComponent } from './admin-control/admin-control.component';
+import { TagControlComponent } from './admin-control/tag-control/tag-control.component';
+import { QuestionControlComponent } from './admin-control/question-control/question-control.component';
+import { OptionControlComponent } from './admin-control/question-control/option-control/option-control.component';
 
 
 @NgModule({
@@ -83,7 +86,10 @@ import { AdminControlComponent } from './admin-control/admin-control.component';
     SelectedAnonComponent,
     SmallLoadingSpinComponent,
     SurveyFormComponent,
-    AdminControlComponent
+    AdminControlComponent,
+    TagControlComponent,
+    QuestionControlComponent,
+    OptionControlComponent
   ],
   entryComponents: [
     LoginComponent

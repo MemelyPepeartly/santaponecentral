@@ -1,0 +1,23 @@
+.api-card 
+{
+    max-width: 400px;
+}
+.tagButton
+{
+    margin-top: 10px;
+    margin-right: 5px;
+}
+#tagField
+{
+    margin: 10px;
+}
+#tagChipList
+{
+display: block;
+margin:5px;
+width: 100%;
+}
+#component-container
+{
+padding:10px;
+}

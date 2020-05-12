@@ -1,0 +1,25 @@
+mat-drawer
+{
+  background-color: transparent;
+  width: 200px;
+}
+mat-drawer-content
+{
+  width: 100%;
+  align-content: center;
+}
+.sidenav-container
+{
+  height: 100%;
+}
+#component-div
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+#component-container
+{
+  height: 100%;
+}
