@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Question } from 'src/classes/survey';
 
 @Component({
   selector: 'app-question-control',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class QuestionControlComponent implements OnInit {
 
   constructor() { }
+
+  @Input() allQuestions: Array<Question> = [];
 
   ngOnInit(): void {
   }
