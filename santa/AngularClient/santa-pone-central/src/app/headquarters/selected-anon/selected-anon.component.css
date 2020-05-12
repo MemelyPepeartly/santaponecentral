@@ -66,7 +66,7 @@ mat-panel-description
     width: 100%;
     text-align: center;
 }
-.responseContainer
+.infoContainer
 {
     width: 100%;
     text-align: center;
@@ -93,21 +93,13 @@ mat-panel-description
 }
 #senderCard
 {
+    display: inline-block;
     vertical-align: top;
-    margin-top: 0;
-    margin-left: 17%;
-    width: 30%;
-    padding: 10px;
 }
 #recieverCard
 {
+    display: inline-block;
     vertical-align: top;
-    margin-top: 0;
-    margin-right: 17%;
-    width: 30%;
-    padding: 10px;
-    float: right;
-
 }
 #nickField
 {
