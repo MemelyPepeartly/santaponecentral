@@ -108,14 +108,14 @@ export class SelectedAnonComponent implements OnInit {
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
 
     /* ---- CLIENT GATHERS ---- */
+    //Gathers all client surveys (Must come before gatherResponses)
+    await this.gatherSurveys();
     //Gathers all client responses
     await this.gatherResponses();
     //Gathers all client senders
     await this.gatherSenders();
     //Gathers all client recipients
     await this.gatherRecipients();
-    //Gathers all client surveys
-    await this.gatherSurveys();
     //Gathers all client tags
     await this.gatherAllTags();
 
@@ -382,32 +382,29 @@ export class SelectedAnonComponent implements OnInit {
     this.responses = [];
 
     //API call for getting responses
-    this.SantaApiGet.getAllSurveyResponses().subscribe(res => {
+    this.SantaApiGet.getSurveyResponseByClientID(this.client.clientID).subscribe(res => {
       for(let i =0; i< res.length; i++)
       {
-        if(res[i].clientID == this.client.clientID)
+        var mappedAnswer = this.ApiMapper.mapResponse(res[i]);
+
+        for(let j =0; j< this.surveys.length; j++)
         {
-          var mappedAnswer = this.ApiMapper.mapResponse(res[i]);
-
-          for(let j =0; j< this.surveys.length; j++)
+          //If a survey in the list matches the ID of an answer's surveyID, set the eventType as the right ID it's from
+          if(mappedAnswer.surveyID == this.surveys[j].surveyID)
           {
-            //If a survey in the list matches the ID of an answer's surveyID, set the eventType as the right ID it's from
-            if(mappedAnswer.surveyID == this.surveys[j].surveyID)
-            {
-              mappedAnswer.eventTypeID = this.surveys[j].eventTypeID;
+            mappedAnswer.eventTypeID = this.surveys[j].eventTypeID;
 
-              //For each question answered, populate the actual question text
-              for(let k =0; k< this.surveys[j].surveyQuestions.length; k++)
+            //For each question answered, populate the actual question text
+            for(let k =0; k< this.surveys[j].surveyQuestions.length; k++)
+            {
+              if(mappedAnswer.surveyQuestionID == this.surveys[j].surveyQuestions[k].questionID)
               {
-                if(mappedAnswer.surveyQuestionID == this.surveys[j].surveyQuestions[k].questionID)
-                {
-                  mappedAnswer.questionText = this.surveys[j].surveyQuestions[k].questionText;
-                }
+                mappedAnswer.questionText = this.surveys[j].surveyQuestions[k].questionText;
               }
             }
           }
-          this.responses.push(mappedAnswer);
         }
+        this.responses.push(mappedAnswer);
       }
     });
   }
