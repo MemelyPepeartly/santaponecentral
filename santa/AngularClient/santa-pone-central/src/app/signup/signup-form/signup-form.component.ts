@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
 import { ClientResponse, SurveyApiResponse } from '../../../classes/responseTypes'
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
@@ -11,6 +11,7 @@ import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/Countries.service';
+import { Address } from 'src/classes/address';
 
 
 @Component({
@@ -56,72 +57,71 @@ export class SignupFormComponent implements OnInit {
 
   async ngOnInit() {
     this.isLinear = true;
-
-    this.clientInfoFormGroup = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', Validators.required]
-    });
-    this.clientAddressFormGroup = this.formBuilder.group({
-      addressLine1: ['', Validators.required],
-      addressLine2: ['', Validators.nullValidator],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      country: ['', Validators.required]
-    });
-    this.clientEventFormGroup = this.formBuilder.group({
-      eventDescription: ['', Validators.required]
-    });
     this.isDoneLoading = false;
+
+    // Creates form groups
+    this.createFormGroups();
 
     // JSON call for getting country data
     this.getCountries();
 
-    //API Call for getting statuses
-    var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
-    for(let i =0; i<statusApiResponse.length; i++)
-    {
-      this.statuses.push(this.objectMapper.mapStatus(statusApiResponse[i]));
-    }
+    // API Call for getting statuses
+    await this.gatherStatuses();
 
-    //API Call for getting events
-    var eventApiResponse = await this.SantaGet.getAllEvents().toPromise();
-    for(let i =0; i<eventApiResponse.length; i++)
-    {
-      if(eventApiResponse[i].active == true)
-        {
-          this.events.push(this.objectMapper.mapEvent(eventApiResponse[i]))
-        }
-    }
-
-    //API Call for getting surveys
-    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise().catch(err => {console.log(err)});
-
-    for(let i =0; i<surveyApiResponse.length; i++)
-    {
-      var mappedsurvey = this.objectMapper.mapSurvey(surveyApiResponse[i]);
-      this.surveys.push(mappedsurvey);
-    }
+    // API Call for getting events
+    await this.gatherEvents();
+    
+    // API Call for getting surveys
+    await this.gatherSurveys();
     
     this.isDoneLoading = true;
+  }
+  get clientName() 
+  {
+    var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
+    var formControlLast = this.clientInfoFormGroup.get('lastName') as FormControl
+    let clientName: string = formControlFirst.value + " " + formControlLast.value
+    return clientName;
+  }
+  get clientEmail()
+  {
+    var formControlEmail = this.clientInfoFormGroup.get('email') as FormControl
+    return formControlEmail.value;
+  }
+  get clientAddress() 
+  {
+    let address: Address = new Address();
+    var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
+    var formControlLine2 = this.clientAddressFormGroup.get('addressLine2') as FormControl;
+    var formControlCity = this.clientAddressFormGroup.get('city') as FormControl;
+    var formControlState = this.clientAddressFormGroup.get('state') as FormControl;
+    var formControlPostal = this.clientAddressFormGroup.get('postalCode') as FormControl;
+    var formControlCountry = this.clientAddressFormGroup.get('country') as FormControl;
+
+    address.addressLineOne = formControlLine1.value;
+    address.addressLineTwo = formControlLine2.value;
+    address.city = formControlCity.value;
+    address.state = formControlState.value;
+    address.postalCode = formControlPostal.value;
+    address.country = formControlCountry.value;
+    return address;
   }
   public onSubmit()
   {
     this.showSpinner = true;
     let newClient: ClientResponse = new ClientResponse();
-    newClient.clientName = this.clientInfoFormGroup.value.firstName + " " + this.clientInfoFormGroup.value.lastName;
-    newClient.clientEmail = this.clientInfoFormGroup.value.email;
+    newClient.clientName = this.clientName;
+    newClient.clientEmail = this.clientEmail;
     newClient.clientNickname = "Anon"
 
-    newClient.clientAddressLine1 = this.clientAddressFormGroup.value.addressLine1;
-    newClient.clientAddressLine2 = this.clientAddressFormGroup.value.addressLine2;
-    newClient.clientCity = this.clientAddressFormGroup.value.city;
-    newClient.clientState = this.clientAddressFormGroup.value.state;
-    newClient.clientPostalCode = this.clientAddressFormGroup.value.postalCode;
-    newClient.clientCountry = this.clientAddressFormGroup.value.country;
+    newClient.clientAddressLine1 = this.clientAddress.addressLineOne;
+    newClient.clientAddressLine2 = this.clientAddress.addressLineTwo;
+    newClient.clientCity = this.clientAddress.city;
+    newClient.clientState = this.clientAddress.state
+    newClient.clientPostalCode = this.clientAddress.postalCode;
+    newClient.clientCountry = this.clientAddress.country;
 
-    var awaitingStatusID = this.statuses.find(status => status.statusDescription == "Awaiting");
+    var awaitingStatusID = this.statuses.find(status => status.statusDescription == EventConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
 
     this.SantaPost.postClient(newClient).subscribe(
@@ -178,5 +178,49 @@ export class SignupFormComponent implements OnInit {
         //console.log('Data:', this.countries);
       },
       err => console.log(err))
+  }
+  public async gatherSurveys() {
+    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise().catch(err => {console.log(err)});
+    for(let i =0; i<surveyApiResponse.length; i++)
+    {
+      var mappedsurvey = this.objectMapper.mapSurvey(surveyApiResponse[i]);
+      this.surveys.push(mappedsurvey);
+    }
+  }
+  public async gatherEvents() {
+    var eventApiResponse = await this.SantaGet.getAllEvents().toPromise();
+    for(let i =0; i<eventApiResponse.length; i++)
+    {
+      if(eventApiResponse[i].active == true)
+        {
+          this.events.push(this.objectMapper.mapEvent(eventApiResponse[i]))
+        }
+    }
+  }
+  public async gatherStatuses() {
+    var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
+    for(let i =0; i<statusApiResponse.length; i++)
+    {
+      this.statuses.push(this.objectMapper.mapStatus(statusApiResponse[i]));
+    }
+  }
+  public createFormGroups()
+  {
+    this.clientInfoFormGroup = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', Validators.required]
+    });
+    this.clientAddressFormGroup = this.formBuilder.group({
+      addressLine1: ['', Validators.required],
+      addressLine2: ['', Validators.nullValidator],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      postalCode: ['', Validators.required],
+      country: ['', Validators.required]
+    });
+    this.clientEventFormGroup = this.formBuilder.group({
+      eventDescription: ['', Validators.required]
+    });
   }
 }

@@ -30,6 +30,10 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client/' + id).pipe(
       map(this.extractData));
   }
+  getSurveyResponseByClientID(id): Observable<any> {
+    return this.http.get(endpoint + 'Client/'+ id + '/Response').pipe(
+      map(this.extractData));
+  }
   getAllEvents(): Observable<any> {
     return this.http.get(endpoint + 'Event').pipe(
       map(this.extractData));
@@ -73,7 +77,7 @@ export class SantaApiGetService {
   getAllSurveyResponses(): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse').pipe(
       map(this.extractData));
-  }
+  } 
   getSurveyResponse(id): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse/' + id).pipe(
       map(this.extractData));
