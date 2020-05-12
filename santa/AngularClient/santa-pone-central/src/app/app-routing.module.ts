@@ -12,11 +12,6 @@ import { ContactComponent } from './contact/contact.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
-import { EventComponent } from './api/event/event.component';
-import { QuestionComponent } from './api/question/question.component';
-import { ResponseComponent } from './api/response/response.component';
-import { SurveyComponent } from './api/survey/survey.component';
-import { UserComponent} from './api/user/user.component';
 import { AdminControlComponent } from './admin-control/admin-control.component';
 
 const appRoutes: Routes = [
@@ -55,26 +50,6 @@ const appRoutes: Routes = [
   {
     path: 'admin-control',
     component: AdminControlComponent
-  },
-  {
-    path: 'api/user',
-    component: UserComponent
-  },
-  {
-    path: 'api/event',
-    component: EventComponent
-  },
-  {
-    path: 'api/survey',
-    component: SurveyComponent
-  },
-  {
-    path: 'api/question',
-    component: QuestionComponent
-  },
-  {
-    path: 'api/response',
-    component: ResponseComponent
   },
   {
 		path: "**",
