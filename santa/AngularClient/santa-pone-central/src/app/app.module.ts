@@ -50,6 +50,8 @@ import { AdminControlComponent } from './admin-control/admin-control.component';
 import { TagControlComponent } from './admin-control/tag-control/tag-control.component';
 import { QuestionControlComponent } from './admin-control/question-control/question-control.component';
 import { OptionControlComponent } from './admin-control/question-control/option-control/option-control.component';
+import { EventControlComponent } from './admin-control/event-control/event-control.component';
+import { SurveyControlComponent } from './admin-control/survey-control/survey-control.component';
 
 
 @NgModule({
@@ -89,7 +91,9 @@ import { OptionControlComponent } from './admin-control/question-control/option-
     AdminControlComponent,
     TagControlComponent,
     QuestionControlComponent,
-    OptionControlComponent
+    OptionControlComponent,
+    EventControlComponent,
+    SurveyControlComponent
   ],
   entryComponents: [
     LoginComponent
