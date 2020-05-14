@@ -86,7 +86,7 @@
     </mat-card>
 
     <!-- Response Cards -->
-    <ng-container *ngIf="clientApproved">
+    <ng-container *ngIf="clientApproved && responses?.length != 0">
         <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
                 Answers
