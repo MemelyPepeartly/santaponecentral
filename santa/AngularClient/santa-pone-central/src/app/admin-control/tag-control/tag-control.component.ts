@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/SantaApiService.service';
 import { MapService } from 'src/app/services/MapService.service';
 import { TagResponse } from 'src/classes/responseTypes';
+import { GathererService } from 'src/app/services/Gatherer.service';
 
 @Component({
   selector: 'app-tag-control',
