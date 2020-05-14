@@ -20,7 +20,7 @@
 
                     <!--Tag Chip list-->
                     <div id="tagChipList">
-                        <mat-chip-list *ngIf="!gettingTags && !modyingTagRelationships && !initializing">
+                        <mat-chip-list *ngIf="!settingClientTags && !modyingTagRelationships && !initializing">
                             <mat-chip *ngFor="let tag of client.tags"
                             [selectable]="true"
                             [removable]="tagRemovable">{{tag.tagName}}<mat-icon matChipRemove (click)="removeTagFromClient(tag)" *ngIf="tagRemovable">cancel</mat-icon>
@@ -41,7 +41,7 @@
                         <button *ngIf="!editingTags && !modyingTagRelationships" class="tagButton" 
                         mat-raised-button
                         matTooltip="Add tag to the Anon"
-                        [disabled]="gettingTags || initializing"
+                        [disabled]="settingClientTags || initializing"
                         (click)="showAvailableTags()"
                         [matTooltipPosition]="'left'">Add Tags</button>
                     <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton" 
