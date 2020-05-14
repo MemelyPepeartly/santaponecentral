@@ -46,13 +46,13 @@ export class MapService {
 
     return mappedClient;
   }
-  mapClientRelationship(client, eventTypeID: string)
+  mapClientRelationship(client: Client, eventTypeID: string)
   {
     let mappedRelationship = new ClientSenderRecipientRelationship;
 
     mappedRelationship.clientID = client.clientID;
     mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.nickname;
+    mappedRelationship.clientNickname = client.clientNickname;
     mappedRelationship.clientEventTypeID = eventTypeID;
 
     return mappedRelationship;
