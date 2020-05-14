@@ -103,6 +103,7 @@ export class SelectedAnonComponent implements OnInit {
 
   public async ngOnInit() {
     this.initializing = true;
+    this.gatherer.onSelectedClient = true;
     //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
     {
@@ -144,11 +145,6 @@ export class SelectedAnonComponent implements OnInit {
     });
 
     this.initializing = false;
-
-    console.log(this.events);
-    console.log(this.allTags);
-
-    
   }
   public approveAnon()
   {

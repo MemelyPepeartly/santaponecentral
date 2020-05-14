@@ -14,11 +14,27 @@ export class GathererService {
 
   constructor(public SantaApiGet: SantaApiGetService, public ApiMapper: MapService) { }
 
+  public gatheringAllClients: boolean = false;
+  public gatheringAllTags: boolean = false;
+  public gatheringAllSurveys: boolean = false;
+  public gatheringAllQuestions: boolean = false;
+  public gatheringAllEvents: boolean = false;
+
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
   private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([])
   private _allSurveys: BehaviorSubject<Array<Survey>> = new BehaviorSubject([])
   private _allQuestions: BehaviorSubject<Array<Question>> = new BehaviorSubject([])
   private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([])
+
+  private _onSelectedClient: boolean = false;
+  get onSelectedClient(): boolean
+  {
+    return this._onSelectedClient;
+  }
+  set onSelectedClient(value: boolean)
+  {
+    this._onSelectedClient = value;
+  }
 
   get allClients()
   {
@@ -64,14 +80,6 @@ export class GathererService {
   {
     this._allEvents.next(eventArray);
   }
-
-  public gatheringAllClients: boolean = false;
-  public gatheringAllTags: boolean = false;
-  public gatheringAllSurveys: boolean = false;
-  public gatheringAllQuestions: boolean = false;
-  public gatheringAllEvents: boolean = false;
-
-
   
   public async gatherAllClients()
   {
