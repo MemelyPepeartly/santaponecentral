@@ -45,16 +45,10 @@ export class IncomingSignupsComponent implements OnInit {
     this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
       if(!this.gatherer.onSelectedClient)
       {
-        this.awaitingClients = [];
-        clientArray.forEach((client: Client) => {
-          if(client.clientStatus.statusDescription == EventConstants.AWAITING)
-          {
-            this.awaitingClients.push(client);
-          }
-        });
+        this.awaitingClients = clientArray.filter(filterByStatus)
+        function filterByStatus(client: Client) {return (client.clientStatus.statusDescription == EventConstants.AWAITING);} 
       }
     });
-    this.gatherer.gatherAllClients();
   }
   showCardInfo(client)
   {

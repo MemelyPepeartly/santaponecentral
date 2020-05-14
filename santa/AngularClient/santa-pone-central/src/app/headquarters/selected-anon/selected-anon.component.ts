@@ -12,6 +12,7 @@ import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { GathererService } from 'src/app/services/Gatherer.service';
+import { LoginComponent } from 'src/app/home/login/login.component';
 
 @Component({
   selector: 'app-selected-anon',
@@ -121,7 +122,7 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
       this.allClients = clientArray;
-    })
+    });
 
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
     //Gathers all client responses
@@ -142,6 +143,9 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
+    this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
+      this.statuses = statusArray;
+    })
 
     //Runs all gather services
     await this.gatherer.allGather();
@@ -159,9 +163,10 @@ export class SelectedAnonComponent implements OnInit {
       {
         if (status.statusDescription == EventConstants.APPROVED)
         {
+          approvedStatus = status;
           putClient.clientStatus.statusID = approvedStatus.statusID;
           var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
-
+          
           this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
             this.showButtonSpinner = false;
             this.showApproveSuccess = true;
