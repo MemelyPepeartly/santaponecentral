@@ -60,13 +60,12 @@ export class SelectedAnonComponent implements OnInit {
   public questions: Array<Question> = new Array<Question>();
   public responses: Array<SurveyResponse> = new Array<SurveyResponse>();
   public statuses: Array<Status> = new Array<Status>();
-
+  public allClients: Array<Client> = new Array<Client>();
 
   //Tag arrays
   public allTags: Array<Tag> = new Array<Tag>();
   public availableTags: Array<Tag> = new Array<Tag>();
   public currentTags: Array<Tag> = new Array<Tag>();
-
   
   public selectedRecipients: Array<Client> = new Array<Client>();
   public selectedTags: Array<Tag> = new Array<Tag>();
@@ -115,14 +114,14 @@ export class SelectedAnonComponent implements OnInit {
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
 
-    //Runs all gather services
-    await this.gatherer.allGather();
-
     /* ---- CLIENT SUBSCRIBES ---- */
     //Gathers all client surveys (Must come before gatherResponses)
     this.gatherer.allSurveys.subscribe((surveyArray: Array<Survey>) => {
       this.surveys = surveyArray;
     });
+    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
+      this.allClients = clientArray;
+    })
 
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
     //Gathers all client responses
@@ -143,6 +142,9 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
+
+    //Runs all gather services
+    await this.gatherer.allGather();
 
     this.initializing = false;
   }
@@ -233,34 +235,55 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
-    this.approvedRecipientClients = [];
-    var recipientIDList = [];
-    
-    for (let i = 0; i < this.recipients.length; i++) {
-      if(this.recipients[i].clientEventTypeID == eventType.eventTypeID)
-      {
-        recipientIDList.push(this.recipients[i].clientID);
-      }
-    }
-    //Grab all the members in the DB
-    var clientsInDBRes = await this.SantaApiGet.getAllClients().toPromise();
 
-    //For all the clients in the response,
-    //If the mapped client status is approved (&&)
+    this.approvedRecipientClients = [];
+
+    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter(filterByEvent)
+    function filterByEvent(relationship: ClientSenderRecipientRelationship) {
+      
+      return (relationship.clientEventTypeID == eventType.eventTypeID); 
+    } 
+    let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
+
+    console.log(recipientIDList);
+    console.log(recipientList);
+
+    
+    //refresh all API clients
+    await this.gatherer.gatherAllClients();
+    console.log("Finished gathering clients: " + this.allClients.length);
+    
+
+    //For all the clients in the DB,
+    //If the client status is approved (&&)
     //the ID is not the currently selected client's ID (&&)
     //the client from DB is not in the list of the selected client's recipient ID list by event already
     //Push a new possible relationship into the approvedRecipientClient's list
 
-    for(let i = 0; i< clientsInDBRes.length; i++)
+    for(let i = 0; i < this.allClients.length; i++)
     {
-      var mappedClient: Client = this.ApiMapper.mapClient(clientsInDBRes[i]);
-
-      if(mappedClient.clientStatus.statusDescription == EventConstants.APPROVED && mappedClient.clientID != this.client.clientID && recipientIDList.includes(mappedClient.clientID) == false)
+      if(this.allClients[i].clientStatus.statusDescription == EventConstants.APPROVED &&
+        this.allClients[i].clientID != this.client.clientID &&
+        !recipientIDList.includes(this.allClients[i].clientID))
       {
-        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(clientsInDBRes[i], eventType.eventTypeID));
+        
+        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
+    console.log(this.approvedRecipientClients);
+    
+
+
     this.recipientsAreLoaded=true;
+  }
+  public relationListToIDList(relationList: Array<ClientSenderRecipientRelationship>): Array<string>
+  {
+    let IDList: Array<string> = []
+    for(let i = 0; i < relationList.length; i++)
+    {
+      IDList.push(relationList[i].clientID);
+    }
+    return IDList;
   }
   public async switchAnon(anon: ClientSenderRecipientRelationship)
   {
@@ -272,10 +295,10 @@ export class SelectedAnonComponent implements OnInit {
     {
       this.clientApproved = true;
     }
-    await this.gatherSenders();
-    await this.gatherRecipients();
     this.gatherer.gatherAllSurveys();
     this.gatherer.gatherAllEvents();
+    await this.gatherSenders();
+    await this.gatherRecipients();
     await this.gatherResponses();
     this.beingSwitched = false;
   }
@@ -310,21 +333,21 @@ export class SelectedAnonComponent implements OnInit {
     this.editingTags = true;
     this.availableTags = [];
     await this.setClientTags()
-    this.gatherer.gatherAllTags();
-
+    
+    
     for(let i = 0; i < this.allTags.length; i++)
     {
-      // If the current tags do not contain the a tag in all tags, add it to the list of available tags for the user to select for the anon
+      // If the current tags do not contain the tag in all tags, add it to the list of available tags for the user to select for the anon
       if(!this.currentTags.some(tag => tag.tagID == this.allTags[i].tagID))
       {
         this.availableTags.push(this.allTags[i]);
       }
     }
+    
   }
   public async addTagsToClient()
   {
     this.modyingTagRelationships = true;
-    console.log("Doing the thing");
     for(let i = 0; i < this.selectedTags.length; i++)
     {
       let clientTagRelationship = new ClientTagRelationshipResponse();
@@ -356,8 +379,10 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the recievers form the anon
     for(let i = 0; i < this.client.recipients.length; i++)
     {
-      this.recipients.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise(), this.client.recipients[i].recipientEventTypeID));
+      var foundClient = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
+      this.recipients.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.recipients[i].recipientEventTypeID));
     }
+    
   }
   public async gatherSenders()
   {
@@ -366,7 +391,8 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the senders form the anon
     for(let i = 0; i < this.client.senders.length; i++)
     {
-      this.senders.push(this.ApiMapper.mapClientRelationship(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise(), this.client.senders[i].senderEventTypeID));
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
+      this.senders.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.senders[i].senderEventTypeID));
     }
   }
   public async gatherResponses()
