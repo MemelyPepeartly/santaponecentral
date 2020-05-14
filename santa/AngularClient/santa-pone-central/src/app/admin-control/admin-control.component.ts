@@ -4,6 +4,7 @@ import { Tag } from 'src/classes/tag';
 import { MapService } from '../services/MapService.service';
 import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
+import { GathererService } from '../services/Gatherer.service';
 
 @Component({
   selector: 'app-admin-control',
@@ -16,6 +17,7 @@ export class AdminControlComponent implements OnInit {
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
+    public gatherer: GathererService,
     public ApiMapper: MapService) { }
 
   public allTags: Array<Tag> = [];
@@ -30,14 +32,20 @@ export class AdminControlComponent implements OnInit {
 
 
   async ngOnInit() {
-    await this.gatherAllTags();
-    console.log("Tag done");
-    await this.gatherAllEvents();
-    console.log("Event Done");
-    await this.gatherAllSurveys();
-    console.log("Survey Done");
-    await this.gatherAllQuestions();
-    console.log("Question Done");
+    await this.gatherer.allGather();
+    this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
+      this.allTags = tagArray;
+    });
+    this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
+      this.allEvents = eventArray;
+    });
+    this.gatherer.allSurveys.subscribe((surveyArray: Array<Survey>) => {
+      this.allSurveys = surveyArray;
+
+    });
+    this.gatherer.allQuestions.subscribe((questionArray: Array<Question>) => {
+      this.allQuestions = questionArray;
+    });
   }
   public selectTagControl()
   {
@@ -71,43 +79,7 @@ export class AdminControlComponent implements OnInit {
   {
     if(event)
     {
-      await this.gatherAllTags();
-    }
-  }
-  public async gatherAllTags()
-  {
-    this.allTags = [];
-    var tagRes = await this.SantaApiGet.getAllTags().toPromise();
-    for(let i = 0; i < tagRes.length; i++)
-    {
-      this.allTags.push(this.ApiMapper.mapTag(tagRes[i]))
-    }
-  }
-  public async gatherAllEvents()
-  {
-    this.allEvents = [];
-    var eventRes = await this.SantaApiGet.getAllEvents().toPromise();
-    for(let i = 0; i < eventRes.length; i++)
-    {
-      this.allEvents.push(this.ApiMapper.mapEvent(eventRes[i]))
-    }
-  }
-  public async gatherAllSurveys()
-  {
-    this.allSurveys = [];
-    var surveyRes = await this.SantaApiGet.getAllSurveys().toPromise();
-    for(let i = 0; i < surveyRes.length; i++)
-    {
-      this.allSurveys.push(this.ApiMapper.mapSurvey(surveyRes[i]))
-    }
-  }
-  public async gatherAllQuestions()
-  {
-    this.allQuestions = [];
-    var questionRes = await this.SantaApiGet.getAllSurveyQuestions().toPromise();
-    for(let i = 0; i < questionRes.length; i++)
-    {
-      this.allQuestions.push(this.ApiMapper.mapQuestion(questionRes[i]))
+      await this.gatherer.gatherAllTags();
     }
   }
 }
