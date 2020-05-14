@@ -4,6 +4,7 @@ import { MapService } from '../services/MapService.service';
 import { ConstantPool } from '@angular/compiler';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/SantaApiService.service';
+import { GathererService } from '../services/Gatherer.service';
 
 @Component({
   selector: 'app-headquarters',
@@ -30,7 +31,7 @@ import { SantaApiGetService } from '../services/SantaApiService.service';
 })
 export class HeadquartersComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService) {}
+  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) {}
 
 
   public showClientCard: boolean = false;
@@ -44,10 +45,12 @@ export class HeadquartersComponent implements OnInit {
   {
     this.currentClient = client;
     this.showClientCard = true;
+    this.gatherer.onSelectedClient = true;
   }
   hideClientWindow()
   {
     this.showClientCard = false;
+    this.gatherer.onSelectedClient = false;
   }
   async updateSelectedClient(clientID: string)
   {
