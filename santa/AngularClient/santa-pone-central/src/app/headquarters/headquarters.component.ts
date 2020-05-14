@@ -39,6 +39,7 @@ export class HeadquartersComponent implements OnInit {
   
 
   ngOnInit() {
+    this.gatherer.gatherAllClients();
   }
 
   showClientWindow(client)

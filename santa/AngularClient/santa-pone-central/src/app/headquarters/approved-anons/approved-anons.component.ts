@@ -26,16 +26,10 @@ export class ApprovedAnonsComponent implements OnInit {
     this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
       if(!this.gatherer.onSelectedClient)
       {
-        this.approvedClients = [];
-        clientArray.forEach((client: Client) => {
-          if(client.clientStatus.statusDescription == EventConstants.APPROVED)
-          {
-            this.approvedClients.push(client);
-          }
-        });  
+        this.approvedClients = clientArray.filter(filterByStatus)
+        function filterByStatus(client: Client) {return (client.clientStatus.statusDescription == EventConstants.APPROVED);} 
       }
     });
-    this.gatherer.gatherAllClients();
   }
   showCardInfo(client)
   {
