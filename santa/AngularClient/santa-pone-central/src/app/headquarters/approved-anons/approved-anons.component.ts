@@ -5,6 +5,7 @@ import { SantaApiGetService } from '../../services/SantaApiService.service';
 import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/MapService.service';
 import { EventConstants } from 'src/app/shared/constants/EventConstants';
+import { GathererService } from 'src/app/services/Gatherer.service';
 
 @Component({
   selector: 'app-approved-anons',
@@ -13,47 +14,40 @@ import { EventConstants } from 'src/app/shared/constants/EventConstants';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
+  constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   approvedClients: Array<Client> = [];
-  showSpinner: boolean = true;
   actionTaken: boolean = false;
+  showSpinner: boolean = false;
+
 
   ngOnInit() {
-    
-    this.SantaApi.getAllClients().subscribe(res => {
-      res.forEach(client => {
-        var c = this.mapper.mapClient(client);
-        if(c.clientStatus.statusDescription == EventConstants.APPROVED)
-        {
-          this.approvedClients.push(c);
-        }
-      });
-      this.showSpinner = false;
+    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
+      if(!this.gatherer.onSelectedClient)
+      {
+        this.approvedClients = [];
+        clientArray.forEach((client: Client) => {
+          if(client.clientStatus.statusDescription == EventConstants.APPROVED)
+          {
+            this.approvedClients.push(client);
+          }
+        });  
+      }
     });
+    this.gatherer.gatherAllClients();
   }
   showCardInfo(client)
   {
     this.clickedClient.emit(client);
   }
-  refreshApprovedClientList()
+  public async refreshApprovedClientList()
   {
     if(this.actionTaken)
     {
-      this.SantaApi.getAllClients().subscribe(res => {
-        this.approvedClients = [];
-        this.showSpinner = true;
-        res.forEach(client => {
-          var c = this.mapper.mapClient(client);
-          if(c.clientStatus.statusDescription == EventConstants.APPROVED)
-          {
-            this.approvedClients.push(c);
-          }
-        });
-        this.showSpinner = false;
-        this.actionTaken = false;
-      });
+      await this.gatherer.gatherAllClients();
+      this.actionTaken = false;
+      this.showSpinner = false;
     }
   }
   setAction(event: boolean)
