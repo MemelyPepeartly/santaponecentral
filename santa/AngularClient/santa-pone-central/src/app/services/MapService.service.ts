@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/EventType';
-import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse } from 'src/classes/responseTypes';
+import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 
@@ -215,5 +215,13 @@ export class MapResponse
     }
     
     return surveyApiResponse;
+  }
+  mapTagResponse(tag: Tag)
+  {
+    let tagResponse: TagResponse = new TagResponse();
+
+    tagResponse.tagName = tag.tagName;
+    
+    return tagResponse;
   }
 }
