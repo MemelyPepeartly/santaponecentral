@@ -14,7 +14,7 @@
         </mat-drawer>
         <mat-drawer-content>
             <div id="component-div">
-                <app-tag-control [allTags]="allTags" *ngIf="tagControlSelected" (newTagMade)="refreshTags($event)"></app-tag-control>
+                <app-tag-control [allTags]="allTags" *ngIf="tagControlSelected"></app-tag-control>
                 <app-event-control [allEvents]="allEvents" *ngIf="eventControlSelected"></app-event-control>
                 <app-survey-control [allSurveys]="allSurveys" *ngIf="surveyControlSelected"></app-survey-control>
                 <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
