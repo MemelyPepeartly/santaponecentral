@@ -15,9 +15,8 @@ mat-drawer-content
 #component-div
 {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
+    text-align: center;
+    padding-right: 200px;
 }
 #component-container
 {
