@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/SantaApiService.service';
 import { Tag } from 'src/classes/tag';
 import { MapService } from '../services/MapService.service';
 import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/EventType';
 import { GathererService } from '../services/Gatherer.service';
+import { TagControlComponent } from './tag-control/tag-control.component';
 
 @Component({
   selector: 'app-admin-control',
@@ -30,11 +31,14 @@ export class AdminControlComponent implements OnInit {
   public surveyControlSelected: boolean = false;
   public questionControlSelected: boolean = false;
 
+  @ViewChild(TagControlComponent) tagControlComponentChild: TagControlComponent;
+
 
   async ngOnInit() {
     await this.gatherer.allGather();
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
+      this.tagControlComponentChild.sortDeletableTags();
     });
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.allEvents = eventArray;
@@ -74,12 +78,5 @@ export class AdminControlComponent implements OnInit {
     this.eventControlSelected = false;
     this.surveyControlSelected = false;
     this.questionControlSelected = true;
-  }
-  public async refreshTags(event: boolean)
-  {
-    if(event)
-    {
-      await this.gatherer.gatherAllTags();
-    }
   }
 }
