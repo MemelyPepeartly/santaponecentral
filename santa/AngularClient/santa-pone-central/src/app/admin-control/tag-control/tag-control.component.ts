@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnChanges} from '@angular/core';
 import { Tag } from 'src/classes/tag';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/SantaApiService.service';
@@ -13,7 +13,7 @@ import { Client } from 'src/classes/client';
   templateUrl: './tag-control.component.html',
   styleUrls: ['./tag-control.component.css']
 })
-export class TagControlComponent implements OnInit {
+export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private formBuilder: FormBuilder,
     public SantaApiGet: SantaApiGetService,
@@ -37,6 +37,7 @@ export class TagControlComponent implements OnInit {
 
   public postingNewTag: boolean = false;
   public updatingTagName: boolean = false;
+  public deletingTag: boolean = false;
 
   // Getters for form values for ease-of-use
   get newTag() {
@@ -49,14 +50,18 @@ export class TagControlComponent implements OnInit {
   }
   
 
-  async ngOnInit(){
+  ngOnInit() {
     this.constructFormGroups();
-    await this.gatherer.gatherAllTags();
+  }
+  async ngAfterViewInit() {
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
-    })
-    await this.gatherer.gatherAllClients;
-    this.sortDeletableTags();
+    });
+    await this.gatherer.gatherAllTags();
+    await this.sortDeletableTags();
+  }
+  async ngOnChanges() {
+    await this.sortDeletableTags();
   }
   private constructFormGroups() {
     this.addTagFormGroup = this.formBuilder.group({
@@ -100,12 +105,19 @@ export class TagControlComponent implements OnInit {
     let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
     
     await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
-    await this.gatherer.gatherAllTags();
     this.updatingTagName = false;
   }
   public async deleteTag(tag: Tag)
   {
-    this.SantaApiDelete.
+    this.deletingTag = true;
+    this.SantaApiDelete.deleteTag(tag.tagID).subscribe(() => {
+      this.gatherer.gatherAllTags();
+      this.deletingTag = false;
+    },
+    err => {
+      this.deletingTag = false;
+      console.log(err); 
+    });
   }
   public async sortDeletableTags()
   {
