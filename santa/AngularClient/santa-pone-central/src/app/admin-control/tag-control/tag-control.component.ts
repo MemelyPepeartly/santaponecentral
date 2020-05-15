@@ -105,6 +105,7 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
     let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
     
     await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
+    await this.gatherer.gatherAllTags();
     this.updatingTagName = false;
   }
   public async deleteTag(tag: Tag)
