@@ -1,21 +1,24 @@
+<!-- Add global tag card-->
 <mat-card class="api-card mat-elevation-z5">
     <mat-card-header>
-        <mat-card-title>Tag Control</mat-card-title>
-        <mat-card-subtitle>Add or remove tags from the api</mat-card-subtitle>
+        <mat-card-title>Add Tag</mat-card-title>
+        <mat-card-subtitle>Add tags to the api</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <app-small-loading-spin *ngIf="postingNewTag"></app-small-loading-spin>
 
         <!--All Tag Chip list-->
         <mat-toolbar>All currently available tags</mat-toolbar>
+
         <div id="tagChipList">
-            <mat-chip-list>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags || postingNewTag"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!postingNewTag && !this.gatherer.gatheringAllTags">
                 <mat-chip *ngFor="let tag of allTags">{{tag.tagName}}</mat-chip>
             </mat-chip-list>
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
-        <form [formGroup]="tagFormGroup" *ngIf="!postingNewTag">
+        <form [formGroup]="addTagFormGroup" *ngIf="!postingNewTag && !this.gatherer.gatheringAllTags">
             <mat-form-field id="tagField">
                 <mat-label>New Tag</mat-label>
                 <input matInput #tagInput
@@ -31,12 +34,92 @@
             mat-raised-button
             matTooltip="Add tag to the list of tags"
             (click)="addNewTag()"
-            [disabled]="!tagFormGroup.valid || !tagFormGroup.touched || newTag?.length == 0 || newTag == undefined || newTag == '' "
+            [disabled]="!addTagFormGroup.valid || !addTagFormGroup.touched || newTag?.length == 0 || newTag == undefined || newTag == '' "
             [matTooltipPosition]="'left'">Add Tag</button>
         <button class="tagButton" 
             mat-raised-button
             matTooltip="Cancel Tag Action"
             [matTooltipPosition]="'right'">Cancel</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- <button class="tagButton" (click)="testGather()">Gather</button> -->
+
+<!-- Edit global tag card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Edit Tag</mat-card-title>
+        <mat-card-subtitle>Edit a tag's name in API</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Tag Chip list-->
+        <mat-toolbar>All currently editable tags</mat-toolbar>
+
+        <div id="tagChipList">
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
+                <mat-chip *ngFor="let tag of allTags" [value]="tag" (click)="setSelectedTag(tag);">{{tag.tagName}}</mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <ng-container *ngIf="selectedTag != undefined">
+            <mat-divider [inset]="true"></mat-divider>
+            <div id="selectedEditChip">
+                <mat-chip>{{ selectedTag.tagName }}</mat-chip>
+            </div>
+            <mat-divider [inset]="true"></mat-divider>
+        
+
+            <app-small-loading-spin *ngIf="updatingTagName"></app-small-loading-spin>
+            <form [formGroup]="editTagFormGroup" *ngIf="!this.gatherer.gatheringAllTags || !updatingTagName">
+                <mat-form-field id="tagField">
+                    <mat-label>New Tag Name</mat-label>
+                    <input matInput
+                        formControlName="editTag"
+                        placeholder="Ex. Happy Camper"
+                        maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}">
+                </mat-form-field>
+            </form>
+            
+            
+            <!--Tag Control buttons-->
+            <div id="tagButtonContainer">
+                <button class="tagButton" 
+                mat-raised-button
+                matTooltip="Add tag to the list of tags"
+                (click)="editTag()"
+                [disabled]="selectedTag == undefined || !editTagFormGroup.touched || !editTagFormGroup.valid"
+                [matTooltipPosition]="'left'">Submit</button>
+            <button class="tagButton" 
+                mat-raised-button
+                matTooltip="Cancel Tag Action"
+                [matTooltipPosition]="'right'">Cancel</button>
+            </div>
+        </ng-container>
+    </mat-card-content>
+</mat-card>
+
+<!-- Delete global tag card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Delete Tag</mat-card-title>
+        <mat-card-subtitle>Delete a global tag</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Tag Chip list-->
+        <mat-toolbar>All currently deletable tags</mat-toolbar>
+        <mat-card-subtitle>Tags already assigned to users are not deletable</mat-card-subtitle>
+
+        <div id="tagChipList">
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
+                <mat-chip *ngFor="let tag of deletableTags" [value]="tag">{{tag.tagName}}<mat-icon matChipRemove (click)="deleteTag(tag)">cancel</mat-icon></mat-chip>
+            </mat-chip-list>
         </div>
     </mat-card-content>
 </mat-card>
