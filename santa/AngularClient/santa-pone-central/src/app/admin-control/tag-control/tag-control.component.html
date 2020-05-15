@@ -36,10 +36,6 @@
             (click)="addNewTag()"
             [disabled]="!addTagFormGroup.valid || !addTagFormGroup.touched || newTag?.length == 0 || newTag == undefined || newTag == '' "
             [matTooltipPosition]="'left'">Add Tag</button>
-        <button class="tagButton" 
-            mat-raised-button
-            matTooltip="Cancel Tag Action"
-            [matTooltipPosition]="'right'">Cancel</button>
         </div>
     </mat-card-content>
 </mat-card>
@@ -74,7 +70,7 @@
         
 
             <app-small-loading-spin *ngIf="updatingTagName"></app-small-loading-spin>
-            <form [formGroup]="editTagFormGroup" *ngIf="!this.gatherer.gatheringAllTags || !updatingTagName">
+            <form [formGroup]="editTagFormGroup" *ngIf="!this.gatherer.gatheringAllTags && !updatingTagName">
                 <mat-form-field id="tagField">
                     <mat-label>New Tag Name</mat-label>
                     <input matInput
@@ -93,7 +89,8 @@
                 (click)="editTag()"
                 [disabled]="selectedTag == undefined || !editTagFormGroup.touched || !editTagFormGroup.valid"
                 [matTooltipPosition]="'left'">Submit</button>
-            <button class="tagButton" 
+            <button class="tagButton"
+                (click)="selectedTag = undefined"
                 mat-raised-button
                 matTooltip="Cancel Tag Action"
                 [matTooltipPosition]="'right'">Cancel</button>
@@ -112,12 +109,15 @@
 
         <!--All Tag Chip list-->
         <mat-toolbar>All currently deletable tags</mat-toolbar>
-        <mat-card-subtitle>Tags already assigned to users are not deletable</mat-card-subtitle>
+        <div id="deleteInformationalText">
+            <mat-card-subtitle>Tags already assigned to users are not deletable</mat-card-subtitle>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
 
         <div id="tagChipList">
-            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags"></app-small-loading-spin>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags || deletingTag"></app-small-loading-spin>
             
-            <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags && !deletingTag">
                 <mat-chip *ngFor="let tag of deletableTags" [value]="tag">{{tag.tagName}}<mat-icon matChipRemove (click)="deleteTag(tag)">cancel</mat-icon></mat-chip>
             </mat-chip-list>
         </div>
