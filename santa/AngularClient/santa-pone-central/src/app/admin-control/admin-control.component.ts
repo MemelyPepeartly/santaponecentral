@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/SantaApiService.service';
 import { Tag } from 'src/classes/tag';
 import { MapService } from '../services/MapService.service';
@@ -12,7 +12,7 @@ import { TagControlComponent } from './tag-control/tag-control.component';
   templateUrl: './admin-control.component.html',
   styleUrls: ['./admin-control.component.css']
 })
-export class AdminControlComponent implements OnInit {
+export class AdminControlComponent implements OnInit, AfterViewInit{
 
   constructor(public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
@@ -31,25 +31,26 @@ export class AdminControlComponent implements OnInit {
   public surveyControlSelected: boolean = false;
   public questionControlSelected: boolean = false;
 
-  @ViewChild(TagControlComponent) tagControlComponentChild: TagControlComponent;
+  @ViewChild(TagControlComponent) tagChild: TagControlComponent;
 
+  ngOnInit() {
 
-  async ngOnInit() {
-    await this.gatherer.allGather();
+  }
+  
+  async ngAfterViewInit() {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
-      this.tagControlComponentChild.sortDeletableTags();
     });
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.allEvents = eventArray;
     });
     this.gatherer.allSurveys.subscribe((surveyArray: Array<Survey>) => {
       this.allSurveys = surveyArray;
-
     });
     this.gatherer.allQuestions.subscribe((questionArray: Array<Question>) => {
       this.allQuestions = questionArray;
     });
+    await this.gatherer.allGather();
   }
   public selectTagControl()
   {
