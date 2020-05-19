@@ -9,11 +9,11 @@
         <!--All Tag Chip list-->
         <mat-toolbar>All currently available tags</mat-toolbar>
 
-        <div id="tagChipList">
+        <div>
             <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags || postingNewTag"></app-small-loading-spin>
 
             <mat-chip-list *ngIf="!postingNewTag && !this.gatherer.gatheringAllTags">
-                <mat-chip *ngFor="let tag of allTags">{{tag.tagName}}</mat-chip>
+                <mat-chip *ngFor="let tag of allTags"><span class="tagText">{{tag.tagName}}</span></mat-chip>
             </mat-chip-list>
         </div>
         <mat-divider [inset]="true"></mat-divider>
@@ -53,18 +53,18 @@
         <!--All Tag Chip list-->
         <mat-toolbar>All currently editable tags</mat-toolbar>
 
-        <div id="tagChipList">
+        <div>
             <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags"></app-small-loading-spin>
             
             <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
-                <mat-chip *ngFor="let tag of allTags" [value]="tag" (click)="setSelectedTag(tag);">{{tag.tagName}}</mat-chip>
+                <mat-chip *ngFor="let tag of allTags" [value]="tag" (click)="setSelectedTag(tag);"><span class="tagText">{{tag.tagName}}</span></mat-chip>
             </mat-chip-list>
         </div>
 
         <ng-container *ngIf="selectedTag != undefined">
             <mat-divider [inset]="true"></mat-divider>
-            <div id="selectedEditChip">
-                <mat-chip>{{ selectedTag.tagName }}</mat-chip>
+            <div id="selectedEditChipDiv">
+                <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedTag.tagName }}</span></mat-chip>
             </div>
             <mat-divider [inset]="true"></mat-divider>
         
@@ -114,11 +114,11 @@
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
-        <div id="tagChipList">
+        <div>
             <app-small-loading-spin *ngIf="this.gatherer.gatheringAllTags || deletingTag"></app-small-loading-spin>
             
             <mat-chip-list *ngIf="!this.gatherer.gatheringAllTags && !deletingTag">
-                <mat-chip *ngFor="let tag of deletableTags" [value]="tag">{{tag.tagName}}<mat-icon matChipRemove (click)="deleteTag(tag)">cancel</mat-icon></mat-chip>
+                <mat-chip *ngFor="let tag of deletableTags" [value]="tag"><span class="tagText">{{tag.tagName}}</span><mat-icon matChipRemove (click)="deleteTag(tag)">cancel</mat-icon></mat-chip>
             </mat-chip-list>
         </div>
     </mat-card-content>
