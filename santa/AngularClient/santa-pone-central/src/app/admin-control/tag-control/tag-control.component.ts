@@ -48,8 +48,8 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
     var formControlObj = this.editTagFormGroup.get('editTag') as FormControl
     return formControlObj.value
   }
-  
 
+  //KCHERE check console for bugs when this component is initialized
   ngOnInit() {
     this.constructFormGroups();
   }
@@ -113,6 +113,7 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
     this.deletingTag = true;
     this.SantaApiDelete.deleteTag(tag.tagID).subscribe(() => {
       this.gatherer.gatherAllTags();
+      this.selectedTag = undefined;
       this.deletingTag = false;
     },
     err => {
