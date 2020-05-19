@@ -250,14 +250,9 @@ export class SelectedAnonComponent implements OnInit {
     } 
     let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
 
-    console.log(recipientIDList);
-    console.log(recipientList);
-
     
     //refresh all API clients
     await this.gatherer.gatherAllClients();
-    console.log("Finished gathering clients: " + this.allClients.length);
-    
 
     //For all the clients in the DB,
     //If the client status is approved (&&)
