@@ -1,1 +1,125 @@
-<p>event-control works!</p>
+<!-- Add global event card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Add Event</mat-card-title>
+        <mat-card-subtitle>Add events to the api</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Event list-->
+        <mat-toolbar>All currently available events</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllEvents || postingNewEvent"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!postingNewEvent && !this.gatherer.gatheringAllEvents">
+                <mat-chip *ngFor="let event of allEvents"><span class="eventText">{{event.eventDescription}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <form [formGroup]="addEventFormGroup" *ngIf="!postingNewEvent && !this.gatherer.gatheringAllEvents">
+            <mat-form-field id="eventField">
+                <mat-label>New Event</mat-label>
+                <input matInput #eventInput
+                    formControlName="newEvent"
+                    placeholder="Ex. Happy Camper"
+                    maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}">
+            </mat-form-field>
+        </form>
+        
+        <!--Event Control buttons-->
+        <div id="eventButtonContainer">
+            <button class="eventButton" 
+            mat-raised-button
+            matTooltip="Add event to the list of events"
+            (click)="addNewEvent()"
+            [disabled]="!addEventFormGroup.valid || !addEventFormGroup.touched || newEvent?.length == 0 || newEvent == undefined || newEvent == '' "
+            [matTooltipPosition]="'left'">Add Event</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- <button class="eventButton" (click)="testGather()">Gather</button> -->
+
+<!-- Edit global Event card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Edit Event</mat-card-title>
+        <mat-card-subtitle>Edit a event's name in API</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Event Chip list-->
+        <mat-toolbar>All currently editable events</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllEvents"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllEvents" (selectable)="true" (change)="unsetSelectedEvent()">
+                <mat-chip *ngFor="let event of allEvents" [value]="event" (click)="setSelectedEvent(event);"><span class="eventText">{{event.eventDescription}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <ng-container *ngIf="selectedEvent != undefined">
+            <mat-divider [inset]="true"></mat-divider>
+            <div id="selectedEditChipDiv">
+                <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedEvent.eventDescription }}</span></mat-chip>
+            </div>
+            <mat-divider [inset]="true"></mat-divider>
+        
+
+            <app-small-loading-spin *ngIf="updatingEventName"></app-small-loading-spin>
+            <form [formGroup]="editEventFormGroup" *ngIf="!this.gatherer.gatheringAllEvents && !updatingEventName">
+                <mat-form-field id="eventField">
+                    <mat-label>New Event Name</mat-label>
+                    <input matInput
+                        formControlName="editEvent"
+                        placeholder="Ex. Happy Camper"
+                        maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}">
+                </mat-form-field>
+            </form>
+            
+            
+            <!--Event Control buttons-->
+            <div id="eventButtonContainer">
+                <button class="eventButton" 
+                mat-raised-button
+                matTooltip="Add event to the list of events"
+                (click)="editEvent()"
+                [disabled]="selectedEvent == undefined || !editEventFormGroup.touched || !editEventFormGroup.valid"
+                [matTooltipPosition]="'left'">Submit</button>
+            <button class="eventButton"
+                (click)="selectedEvent = undefined"
+                mat-raised-button
+                matTooltip="Cancel Event Action"
+                [matTooltipPosition]="'right'">Cancel</button>
+            </div>
+        </ng-container>
+    </mat-card-content>
+</mat-card>
+
+<!-- Delete global Event card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Delete Event</mat-card-title>
+        <mat-card-subtitle>Delete a global event</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Event Chip list-->
+        <mat-toolbar>All currently deletable events</mat-toolbar>
+        <div id="deleteInformationalText">
+            <mat-card-subtitle>Events already assigned to users are not deletable</mat-card-subtitle>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllEvents || deletingEvent"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllEvents && !deletingEvent">
+                <mat-chip *ngFor="let event of deletableEvents" [value]="event"><span class="eventText">{{event.eventDescription}}</span><mat-icon matChipRemove (click)="deleteEvent(event)">cancel</mat-icon></mat-chip>
+            </mat-chip-list>
+        </div>
+    </mat-card-content>
+</mat-card>
