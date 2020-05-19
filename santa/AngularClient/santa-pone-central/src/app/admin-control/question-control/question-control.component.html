@@ -1,1 +1,125 @@
-<p>question-control works!</p>
+<!-- Add global question card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Add Question</mat-card-title>
+        <mat-card-subtitle>Add questions to the api</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Question list-->
+        <mat-toolbar>All currently available questions</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllQuestions || postingNewQuestion"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!postingNewQuestion && !this.gatherer.gatheringAllQuestions">
+                <mat-chip *ngFor="let question of allQuestions"><span class="questionText">{{question.questionText}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <form [formGroup]="addQuestionFormGroup" *ngIf="!postingNewQuestion && !this.gatherer.gatheringAllQuestions">
+            <mat-form-field id="questionField">
+                <mat-label>New Question</mat-label>
+                <input matInput #questionInput
+                    formControlName="newQuestion"
+                    placeholder="Ex. Happy Camper"
+                    maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}">
+            </mat-form-field>
+        </form>
+        
+        <!--Question Control buttons-->
+        <div id="questionButtonContainer">
+            <button class="questionButton" 
+            mat-raised-button
+            matTooltip="Add question to the list of questions"
+            (click)="addNewQuestion()"
+            [disabled]="!addQuestionFormGroup.valid || !addQuestionFormGroup.touched || newQuestion?.length == 0 || newQuestion == undefined || newQuestion == '' "
+            [matTooltipPosition]="'left'">Add Question</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- <button class="questionButton" (click)="testGather()">Gather</button> -->
+
+<!-- Edit global Question card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Edit Question</mat-card-title>
+        <mat-card-subtitle>Edit a question's name in API</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Question Chip list-->
+        <mat-toolbar>All currently editable questions</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllQuestions"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllQuestions" (selectable)="true" (change)="unsetSelectedQuestion()">
+                <mat-chip *ngFor="let question of allQuestions" [value]="question" (click)="setSelectedQuestion(question);"><span class="questionText">{{question.questionText}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <ng-container *ngIf="selectedQuestion != undefined">
+            <mat-divider [inset]="true"></mat-divider>
+            <div id="selectedEditChipDiv">
+                <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedQuestion.questionText }}</span></mat-chip>
+            </div>
+            <mat-divider [inset]="true"></mat-divider>
+        
+
+            <app-small-loading-spin *ngIf="updatingQuestionName"></app-small-loading-spin>
+            <form [formGroup]="editQuestionFormGroup" *ngIf="!this.gatherer.gatheringAllQuestions && !updatingQuestionName">
+                <mat-form-field id="questionField">
+                    <mat-label>New Question Name</mat-label>
+                    <input matInput
+                        formControlName="editQuestion"
+                        placeholder="Ex. Happy Camper"
+                        maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}">
+                </mat-form-field>
+            </form>
+            
+            
+            <!--Question Control buttons-->
+            <div id="questionButtonContainer">
+                <button class="questionButton" 
+                mat-raised-button
+                matTooltip="Add question to the list of questions"
+                (click)="editQuestion()"
+                [disabled]="selectedQuestion == undefined || !editQuestionFormGroup.touched || !editQuestionFormGroup.valid"
+                [matTooltipPosition]="'left'">Submit</button>
+            <button class="questionButton"
+                (click)="selectedQuestion = undefined"
+                mat-raised-button
+                matTooltip="Cancel Question Action"
+                [matTooltipPosition]="'right'">Cancel</button>
+            </div>
+        </ng-container>
+    </mat-card-content>
+</mat-card>
+
+<!-- Delete global Question card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Delete Question</mat-card-title>
+        <mat-card-subtitle>Delete a global question</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Question Chip list-->
+        <mat-toolbar>All currently deletable questions</mat-toolbar>
+        <div id="deleteInformationalText">
+            <mat-card-subtitle>Questions already assigned to users are not deletable</mat-card-subtitle>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <div>
+            <app-small-loading-spin *ngIf="this.gatherer.gatheringAllQuestions || deletingQuestion"></app-small-loading-spin>
+            
+            <mat-chip-list *ngIf="!this.gatherer.gatheringAllQuestions && !deletingQuestion">
+                <mat-chip *ngFor="let question of deletableQuestions" [value]="question"><span class="questionText">{{question.questionText}}</span><mat-icon matChipRemove (click)="deleteQuestion(question)">cancel</mat-icon></mat-chip>
+            </mat-chip-list>
+        </div>
+    </mat-card-content>
+</mat-card>
