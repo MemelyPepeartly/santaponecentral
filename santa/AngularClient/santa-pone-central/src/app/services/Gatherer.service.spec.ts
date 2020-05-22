@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GathererService } from './Gatherer.service';
+import { GathererService } from './gatherer.service';
 
 describe('GathererService', () => {
   let service: GathererService;

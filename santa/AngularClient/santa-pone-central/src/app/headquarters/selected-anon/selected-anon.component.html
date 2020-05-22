@@ -1,4 +1,4 @@
-<div id="switchSpin">
+<div class="centerSpin">
     <app-loading-spin *ngIf="beingSwitched"></app-loading-spin>
 </div>
 
@@ -85,107 +85,118 @@
         </mat-card-content>
     </mat-card>
 
-    <!-- Response Cards -->
+    <!-- Response Card -->
     <ng-container *ngIf="clientApproved && responses?.length != 0">
         <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
                 Answers
             </mat-toolbar-row>
         </mat-toolbar>
-        <div class="infoContainer">
-            <div class="responseCard" *ngFor="let event of events">
-                <mat-card>
-                    <mat-card-header>
-                        <mat-card-title>{{event.eventDescription}}</mat-card-title>
-                        <mat-card-subtitle>Answers for the {{event.eventDescription}} survey</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <mat-accordion>
-                            <!-- Expansion panels for responses -->
-                            <mat-expansion-panel *ngFor="let response of responses">
-                                <mat-expansion-panel-header *ngIf="event.eventTypeID == response.eventTypeID">
-                                    <mat-panel-title>{{response.questionText}}</mat-panel-title>
-                                    <mat-panel-description>
-                                        <mat-icon>question_answer</mat-icon>
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <p>{{response.responseText}}</p>
-                            </mat-expansion-panel>
-        
-                        </mat-accordion>
-                    </mat-card-content>
-                </mat-card>
-            </div>
+        <div class="centerSpin">
+            <app-loading-spin *ngIf="gettingAnswers && !gettingEventDetails"></app-loading-spin>
         </div>
+        <ng-container *ngIf="!gettingAnswers">
+            <div class="infoContainer">
+                <div class="responseCard" *ngFor="let event of events">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>{{event.eventDescription}}</mat-card-title>
+                            <mat-card-subtitle>Answers for the {{event.eventDescription}} survey</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-accordion>
+                                <!-- Expansion panels for responses -->
+                                <mat-expansion-panel *ngFor="let response of responses">
+                                    <mat-expansion-panel-header *ngIf="event.eventTypeID == response.eventTypeID">
+                                        <mat-panel-title>{{response.questionText}}</mat-panel-title>
+                                        <mat-panel-description>
+                                            <mat-icon>question_answer</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <p>{{response.responseText}}</p>
+                                </mat-expansion-panel>
+            
+                            </mat-accordion>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </ng-container>
     </ng-container>
-
-    <ng-container *ngIf="clientApproved">
-        <div class="relationDiv" *ngFor="let event of events">
-            <mat-toolbar id="relationshipEventHeader">
-                <mat-toolbar-row>
-                    {{event.eventDescription}}
-                </mat-toolbar-row>
-            </mat-toolbar>
-            <div class=infoContainer>
-                <mat-card id="senderCard">
-                    <mat-card-header>
-                        <mat-card-title>Client Senders</mat-card-title>
-                        <mat-card-subtitle>People who are sending to the Anon</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <mat-accordion>
-                            <mat-expansion-panel *ngFor="let sender of senders">
-                                <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
-                                    <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
-                                    <mat-panel-description>
-                                        <mat-icon>card_giftcard</mat-icon>
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="expansionPanelButtonContainer">
-                                    <button class="expansionPanelButton" mat-raised-button
-                                    matTooltip="Switch to this Anon"
-                                    [matTooltipPosition]="'left'"
-                                    (click)="switchAnon(sender)">Switch</button>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </mat-card-content>
-                </mat-card>
-                <mat-card id="recieverCard">
-                    <mat-card-header>
-                        <mat-card-title>Client Recievers</mat-card-title>
-                        <mat-card-subtitle>People the Anon is sending to</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <mat-accordion>
-                            <mat-expansion-panel *ngFor="let recipient of recipients">
-                                <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
-                                    <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
-                                    <mat-panel-description>
-                                        <mat-icon>card_giftcard</mat-icon>
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
-                                    <app-small-loading-spin></app-small-loading-spin>
-                                </div>
-                                <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved">
-                                    <button class="expansionPanelButton" mat-raised-button
-                                    matTooltip="Switch to this Anon"
-                                    [matTooltipPosition]="'left'"
-                                    (click)="switchAnon(recipient)">Switch</button>
-    
-                                    <button class="expansionPanelButton" mat-raised-button
-                                    matTooltip="Remove the anon as a recipient"
-                                    color="warn"
-                                    [matTooltipPosition]="'right'"
-                                    (click)="removeRecipient(recipient)">Remove</button>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </mat-card-content>
-                </mat-card>
+    <div class="centerSpin">
+        <app-loading-spin *ngIf="gettingEventDetails"></app-loading-spin>
+    </div> 
+    <ng-container *ngIf="!gettingEventDetails">
+        <ng-container *ngIf="clientApproved">
+            <div class="relationDiv" *ngFor="let event of events">
+                <mat-toolbar id="relationshipEventHeader">
+                    <mat-toolbar-row>
+                        {{event.eventDescription}}
+                    </mat-toolbar-row>
+                </mat-toolbar>
+                <div class=infoContainer>
+                    <mat-card id="senderCard">
+                        <mat-card-header>
+                            <mat-card-title>Client Senders</mat-card-title>
+                            <mat-card-subtitle>People who are sending to the Anon</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <app-small-loading-spin *ngIf="gatheringSenders || showRecipientListPostingSpinner"></app-small-loading-spin>
+                            <mat-accordion *ngIf="!gatheringSenders && !showRecipientListPostingSpinner">
+                                <mat-expansion-panel *ngFor="let sender of senders">
+                                    <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
+                                        <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
+                                        <mat-panel-description>
+                                            <mat-icon>card_giftcard</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <div class="expansionPanelButtonContainer">
+                                        <button class="expansionPanelButton" mat-raised-button
+                                        matTooltip="Switch to this Anon"
+                                        [matTooltipPosition]="'left'"
+                                        (click)="switchAnon(sender)">Switch</button>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card id="recieverCard">
+                        <mat-card-header>
+                            <mat-card-title>Client Recievers</mat-card-title>
+                            <mat-card-subtitle>People the Anon is sending to</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
+                            <mat-accordion *ngIf="!showRecipientListPostingSpinner">
+                                <mat-expansion-panel *ngFor="let recipient of recipients">
+                                    <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
+                                        <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
+                                        <mat-panel-description>
+                                            <mat-icon>card_giftcard</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
+                                        <app-small-loading-spin></app-small-loading-spin>
+                                    </div>
+                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved">
+                                        <button class="expansionPanelButton" mat-raised-button
+                                        matTooltip="Switch to this Anon"
+                                        [matTooltipPosition]="'left'"
+                                        (click)="switchAnon(recipient)">Switch</button>
+        
+                                        <button class="expansionPanelButton" mat-raised-button
+                                        matTooltip="Remove the anon as a recipient"
+                                        color="warn"
+                                        [matTooltipPosition]="'right'"
+                                        (click)="removeRecipient(recipient)">Remove</button>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
             </div>
-        </div>
+        </ng-container>
     </ng-container>
     
     <mat-card class="infoCard mat-elevation-z5">
