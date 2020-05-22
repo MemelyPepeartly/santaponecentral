@@ -35,7 +35,6 @@ import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspo
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
-import { ApinavComponent } from './navbar/apinav/apinav.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
 import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
@@ -71,7 +70,6 @@ import { SurveyControlComponent } from './admin-control/survey-control/survey-co
     MaterialElevationDirective,
     SignupFormComponent,
     AdminHelpComponent,
-    ApinavComponent,
     LoadingSpinComponent,
     SelectedAnonComponent,
     SmallLoadingSpinComponent,
