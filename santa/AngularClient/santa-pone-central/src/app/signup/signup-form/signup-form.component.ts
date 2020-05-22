@@ -2,15 +2,15 @@ import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
 import { ClientResponse, SurveyApiResponse } from '../../../classes/responseTypes'
-import { SantaApiGetService, SantaApiPostService } from 'src/app/services/SantaApiService.service';
-import { EventType } from '../../../classes/EventType';
+import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaApiService.service';
+import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
-import { MapService, MapResponse } from '../../services/MapService.service';
-import { EventConstants } from '../../shared/constants/EventConstants';
+import { MapService, MapResponse } from '../../services/mapService.service';
+import { EventConstants } from '../../shared/constants/eventConstants';
 import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
-import { CountriesService } from 'src/app/services/Countries.service';
+import { CountriesService } from 'src/app/services/countries.service';
 import { Address } from 'src/classes/address';
 
 

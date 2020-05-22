@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { MapService } from './MapService.service';
+import { MapService } from './mapService.service';
 
 describe('Service: MapEvent', () => {
   beforeEach(() => {

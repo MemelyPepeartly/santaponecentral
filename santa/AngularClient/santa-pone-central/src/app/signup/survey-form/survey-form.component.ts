@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyOption, SurveyResponse, SurveyQA, SurveyFormOption } from 'src/classes/survey';
-import { EventType } from 'src/classes/EventType';
+import { EventType } from 'src/classes/eventType';
 import { SurveyApiResponse } from 'src/classes/responseTypes';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
