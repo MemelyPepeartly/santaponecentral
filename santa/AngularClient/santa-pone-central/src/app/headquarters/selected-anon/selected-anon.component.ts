@@ -1,17 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/SantaApiService.service';
-import { MapService, MapResponse } from 'src/app/services/MapService.service';
-import { EventConstants } from 'src/app/shared/constants/EventConstants';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
+import { MapService, MapResponse } from 'src/app/services/mapService.service';
+import { EventConstants } from 'src/app/shared/constants/eventConstants';
 import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { EventType } from 'src/classes/EventType';
+import { EventType } from 'src/classes/eventType';
 import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { GathererService } from 'src/app/services/Gatherer.service';
+import { GathererService } from 'src/app/services/gatherer.service';
 import { LoginComponent } from 'src/app/home/login/login.component';
 
 @Component({

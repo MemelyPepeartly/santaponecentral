@@ -1,6 +1,6 @@
 import { Address } from './address';
 import { Status } from './status';
-import { EventType } from './EventType';
+import { EventType } from './eventType';
 import { Tag } from './tag';
 
 export class Client {

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnChanges} from '@angular/core';
 import { Tag } from 'src/classes/tag';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/SantaApiService.service';
-import { MapService, MapResponse } from 'src/app/services/MapService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
+import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { TagResponse } from 'src/classes/responseTypes';
-import { GathererService } from 'src/app/services/Gatherer.service';
+import { GathererService } from 'src/app/services/gatherer.service';
 import { MatChip } from '@angular/material/chips';
 import { Client } from 'src/classes/client';
 

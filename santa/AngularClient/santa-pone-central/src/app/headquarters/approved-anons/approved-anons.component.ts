@@ -1,11 +1,11 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
-import { SantaApiGetService } from '../../services/SantaApiService.service';
+import { SantaApiGetService } from '../../services/santaApiService.service';
 import { EventEmitter } from '@angular/core';
-import { MapService } from '../../services/MapService.service';
-import { EventConstants } from 'src/app/shared/constants/EventConstants';
-import { GathererService } from 'src/app/services/Gatherer.service';
+import { MapService } from '../../services/mapService.service';
+import { EventConstants } from 'src/app/shared/constants/eventConstants';
+import { GathererService } from 'src/app/services/gatherer.service';
 
 @Component({
   selector: 'app-approved-anons',

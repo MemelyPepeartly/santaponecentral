@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SantaApiGetService } from '../services/SantaApiService.service';
+import { SantaApiGetService } from '../services/santaApiService.service';
 
 @Component({
   selector: 'app-navbar',
