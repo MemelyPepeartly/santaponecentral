@@ -93,6 +93,12 @@ export class SelectedAnonComponent implements OnInit {
   public editingTags: boolean = false;
   public modyingTagRelationships: boolean = false;
   public initializing: boolean = false;
+  public gettingAnswers: boolean = true;
+  public gettingEventDetails: boolean = true;
+  public gatheringRecipients: boolean = false;
+  public gatheringSenders: boolean = false;
+
+
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
@@ -123,7 +129,6 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
       this.allClients = clientArray;
     });
-
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
     //Gathers all client responses
     await this.gatherResponses();
@@ -131,6 +136,7 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSenders();
     //Gathers all client recipients
     await this.gatherRecipients();
+
     //Gathers all client tags
     await this.setClientTags();
 
@@ -149,6 +155,9 @@ export class SelectedAnonComponent implements OnInit {
 
     //Runs all gather services
     await this.gatherer.allGather();
+
+    this.gettingAnswers = false;
+    this.gettingEventDetails = false;
 
     this.initializing = false;
   }
@@ -229,10 +238,10 @@ export class SelectedAnonComponent implements OnInit {
 
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
-      this.addRecipientSuccess = true;
     }
 
     await this.getAllowedRecipientsByEvent(currentEvent);
+    this.addRecipientSuccess = true;
     this.showRecipientListPostingSpinner = false; 
   }
 
@@ -288,6 +297,8 @@ export class SelectedAnonComponent implements OnInit {
   public async switchAnon(anon: ClientSenderRecipientRelationship)
   {
     this.beingSwitched = true;
+    this.addRecipientSuccess = false;
+    this.recipientOpen = false;
     let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
     this.client = switchClient;
 
@@ -309,6 +320,11 @@ export class SelectedAnonComponent implements OnInit {
     this.client = this.ApiMapper.mapClient(res);
     await this.gatherSenders();
     await this.gatherRecipients();
+    if(this.selectedRecipientEvent != undefined)
+    {
+      await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
+    }
+    
     this.beingRemoved = false;
   }
   public async removeTagFromClient(tag: Tag)
@@ -375,6 +391,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async gatherRecipients()
   {
+    this.gatheringRecipients = true
     this.recipients = [];
     //Gets all the recievers form the anon
     for(let i = 0; i < this.client.recipients.length; i++)
@@ -382,10 +399,11 @@ export class SelectedAnonComponent implements OnInit {
       var foundClient = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
       this.recipients.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.recipients[i].recipientEventTypeID));
     }
-    
+    this.gatheringRecipients = false;
   }
   public async gatherSenders()
   {
+    this.gatheringSenders = true;
     this.senders = [];
 
     //Gets all the senders form the anon
@@ -394,9 +412,11 @@ export class SelectedAnonComponent implements OnInit {
       let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
       this.senders.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.senders[i].senderEventTypeID));
     }
+    this.gatheringSenders = false;
   }
   public async gatherResponses()
   {
+    this.gettingAnswers = true;
     this.responses = [];
 
     //API call for getting responses
@@ -425,5 +445,6 @@ export class SelectedAnonComponent implements OnInit {
         this.responses.push(mappedAnswer);
       }
     });
+    this.gettingAnswers = false;
   }
 }

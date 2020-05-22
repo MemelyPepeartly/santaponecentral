@@ -41,7 +41,7 @@ mat-panel-description
 {
     display: block;
 }
-#switchSpin
+.centerSpin
 {
     width: 100%;
     text-align: center;
