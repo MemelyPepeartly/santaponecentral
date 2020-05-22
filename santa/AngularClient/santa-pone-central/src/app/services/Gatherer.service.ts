@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService } from './SantaApiService.service';
-import { MapService } from './MapService.service';
+import { SantaApiGetService } from './santaApiService.service';
+import { MapService } from './mapService.service';
 import { Client } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';
-import { EventType } from 'src/classes/EventType';
+import { EventType } from 'src/classes/eventType';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Status } from 'src/classes/status';
 

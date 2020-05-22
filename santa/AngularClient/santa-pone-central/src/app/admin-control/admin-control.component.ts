@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/SantaApiService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/santaApiService.service';
 import { Tag } from 'src/classes/tag';
-import { MapService } from '../services/MapService.service';
+import { MapService } from '../services/mapService.service';
 import { Question, Survey } from 'src/classes/survey';
-import { EventType } from 'src/classes/EventType';
-import { GathererService } from '../services/Gatherer.service';
+import { EventType } from 'src/classes/eventType';
+import { GathererService } from '../services/gatherer.service';
 import { TagControlComponent } from './tag-control/tag-control.component';
 
 @Component({

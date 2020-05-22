@@ -1,11 +1,11 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
-import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
-import { MapService } from 'src/app/services/MapService.service';
+import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { MapService } from 'src/app/services/mapService.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { EventConstants } from 'src/app/shared/constants/EventConstants';
-import { GathererService } from 'src/app/services/Gatherer.service';
+import { EventConstants } from 'src/app/shared/constants/eventConstants';
+import { GathererService } from 'src/app/services/gatherer.service';
 
 @Component({
   selector: 'app-incoming-signups',
