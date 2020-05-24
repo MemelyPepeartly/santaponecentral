@@ -30,6 +30,10 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client/' + id).pipe(
       map(this.extractData));
   }
+  getSurveyResponseByClientID(id): Observable<any> {
+    return this.http.get(endpoint + 'Client/'+ id + '/Response').pipe(
+      map(this.extractData));
+  }
   getAllEvents(): Observable<any> {
     return this.http.get(endpoint + 'Event').pipe(
       map(this.extractData));
@@ -73,7 +77,7 @@ export class SantaApiGetService {
   getAllSurveyResponses(): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse').pipe(
       map(this.extractData));
-  }
+  } 
   getSurveyResponse(id): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse/' + id).pipe(
       map(this.extractData));
@@ -93,6 +97,10 @@ export class SantaApiGetService {
 export class SantaApiPostService {
 
   constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
   postClient(client: ClientResponse): Observable<any> {
     return this.http.post(endpoint + 'Client', client);
   }
@@ -116,6 +124,10 @@ export class SantaApiPostService {
 export class SantaApiPutService {
 
   constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
   putClientAddress(id: string, updatedClient: ClientAddressResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient);
   }
@@ -131,6 +143,10 @@ export class SantaApiPutService {
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
   }
+  putTagName(id: string, updatedTag: TagResponse): Observable<any> {
+    return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
+   
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -143,5 +159,8 @@ export class SantaApiDeleteService {
   }
   deleteTagFromClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + clientTagRelationship.clientID + '/Tag?tagID=' + clientTagRelationship.tagID);
+  }
+  deleteTag(id: string): Observable<any> {
+    return this.http.delete(endpoint + 'Tag/' + id);
   }
 }

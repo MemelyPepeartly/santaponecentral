@@ -1,0 +1,54 @@
+mat-chip
+{
+    max-width: 200px;
+}
+mat-chip-list
+{
+    margin: 5px;
+}
+.questionText
+{ 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.api-card 
+{
+    width: 325px;
+    margin: 15px;
+    display: inline-block;
+    vertical-align: top;
+}
+.questionButton
+{
+    margin-top: 10px;
+    margin-right: 5px;
+}
+#questionField
+{
+    margin: 10px;
+}
+#component-container
+{
+    padding:10px;
+}
+#selectedEditChipDiv
+{
+    margin: 10px;
+}
+#selectedEditChipSpan
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#selectedEditChip
+{
+    min-width: 250px;
+}
+#deleteInformationalText
+{
+    text-align: center;
+    padding-top: 16px;
+}

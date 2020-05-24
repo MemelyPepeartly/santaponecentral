@@ -33,7 +33,8 @@ CREATE TABLE app.ClientRelationXref
     clientRelationXrefID INT IDENTITY(1,1) PRIMARY KEY,
     senderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     recipientClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL
+    eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL,
+    CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
 );
 CREATE TABLE app.Survey
 (
@@ -88,5 +89,6 @@ CREATE TABLE app.ClientTagXref
 (
     clientTagXrefID INT IDENTITY(1,1) PRIMARY KEY,
     clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    tagID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Tag(tagID) NOT NULL
+    tagID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Tag(tagID) NOT NULL,
+    CONSTRAINT clientTagXrefID UNIQUE (clientID, tagID) 
 );

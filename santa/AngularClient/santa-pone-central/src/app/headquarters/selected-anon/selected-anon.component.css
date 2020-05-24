@@ -32,14 +32,24 @@ mat-panel-description
     margin-bottom: 20px;
 
 }
-#tagButton
+.tagButton
 {
     margin-top: 10px;
+    margin-right: 5px;
 }
-#switchSpin
+#tagButtonContainer
 {
-    width: 100%;
-    text-align: center;
+    display: block;
+}
+#tagSelectionList
+{
+    display: block;
+    margin-bottom:5px;
+}
+#tagChipList
+{
+    display: block;
+    margin-bottom:5px;
 }
 .expansionPanelButton
 {
@@ -51,7 +61,7 @@ mat-panel-description
     width: 100%;
     text-align: center;
 }
-.responseContainer
+.infoContainer
 {
     width: 100%;
     text-align: center;
@@ -78,21 +88,13 @@ mat-panel-description
 }
 #senderCard
 {
+    display: inline-block;
     vertical-align: top;
-    margin-top: 0;
-    margin-left: 17%;
-    width: 30%;
-    padding: 10px;
 }
 #recieverCard
 {
+    display: inline-block;
     vertical-align: top;
-    margin-top: 0;
-    margin-right: 17%;
-    width: 30%;
-    padding: 10px;
-    float: right;
-
 }
 #nickField
 {
@@ -103,6 +105,11 @@ mat-panel-description
     width: 50%;
     margin-bottom: 10px;
     padding: 10px;
+}
+.centerSpin
+{
+    width: 100%;
+    text-align: center;
 }
 .success
 {

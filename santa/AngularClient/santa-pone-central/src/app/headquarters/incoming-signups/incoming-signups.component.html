@@ -16,7 +16,7 @@
         </div> 
     </mat-toolbar-row>
 </mat-toolbar>
-<div class="spinnerWrap" *ngIf="showSpinner">
+<div class="spinnerWrap" *ngIf="(this.gatherer.gatheringAllClients || showSpinner) && !this.gatherer.onSelectedClient">
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>

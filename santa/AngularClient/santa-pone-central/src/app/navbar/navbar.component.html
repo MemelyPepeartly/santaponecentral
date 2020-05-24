@@ -6,7 +6,6 @@
   </button>
   <app-adminnav *ngIf="showAdminNav"></app-adminnav>
   <app-usernav *ngIf="showUserNav"></app-usernav>
-  <app-apinav *ngIf="showApiNav"></app-apinav>
   <app-defaultnav *ngIf="showNewUserNav"></app-defaultnav>
 
   <!--
@@ -24,8 +23,5 @@
   </button>
   <button mat-button class="button" (click)="showExistingUser()">
     <mat-label>Logged-in User</mat-label>
-  </button>
-  <button mat-button class="button" (click)="showApi()">
-    <mat-label>Api Test</mat-label>
   </button>
 </div>

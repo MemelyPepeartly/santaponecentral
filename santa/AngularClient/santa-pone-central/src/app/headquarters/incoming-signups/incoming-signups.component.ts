@@ -1,10 +1,11 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
-import { SantaApiGetService } from 'src/app/services/SantaApiService.service';
-import { MapService } from 'src/app/services/MapService.service';
+import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { MapService } from 'src/app/services/mapService.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { EventConstants } from 'src/app/shared/constants/EventConstants';
+import { EventConstants } from 'src/app/shared/constants/eventConstants';
+import { GathererService } from 'src/app/services/gatherer.service';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -31,25 +32,22 @@ import { EventConstants } from 'src/app/shared/constants/EventConstants';
 })
 export class IncomingSignupsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiGetService, public mapper: MapService) { }
+  constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
 
   awaitingClients: Array<Client> = [];
-  showSpinner: boolean = true;
+  showSpinner: boolean = false;
   actionTaken: boolean = false;
   
 
   ngOnInit() {
-    this.SantaApi.getAllClients().subscribe(res => {
-      res.forEach(client => {
-        var c = this.mapper.mapClient(client);
-        if(c.clientStatus.statusDescription == EventConstants.AWAITING)
-        {
-          this.awaitingClients.push(c);
-        }
-      });
-      this.showSpinner = false;
+    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
+      if(!this.gatherer.onSelectedClient)
+      {
+        this.awaitingClients = clientArray.filter(filterByStatus)
+        function filterByStatus(client: Client) {return (client.clientStatus.statusDescription == EventConstants.AWAITING);} 
+      }
     });
   }
   showCardInfo(client)
@@ -60,19 +58,9 @@ export class IncomingSignupsComponent implements OnInit {
   {
     if(this.actionTaken)
     {
-      this.SantaApi.getAllClients().subscribe(res => {
-        this.awaitingClients = [];
-        this.showSpinner = true;
-        res.forEach(client => {
-          var c = this.mapper.mapClient(client);
-          if(c.clientStatus.statusDescription == EventConstants.AWAITING)
-          {
-            this.awaitingClients.push(c);
-          }
-        });
-        this.showSpinner = false;
-        this.actionTaken = false;
-      }); 
+      this.gatherer.gatherAllClients();
+      this.actionTaken = false;
+      this.showSpinner = false;
     }
      
   }

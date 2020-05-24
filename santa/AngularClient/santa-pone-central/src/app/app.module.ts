@@ -17,7 +17,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Componenents
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
-import { NotificationsComponent } from './notifications/notifications.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './home/login/login.component';
@@ -27,25 +26,20 @@ import { SignupComponent } from './signup/signup.component';
 import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-anons.component';
-import { InTransitComponent } from './headquarters/in-transit/in-transit.component';
-import { IncomingCorrespondenceComponent } from './headquarters/incoming-correspondence/incoming-correspondence.component';
 import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component';
-import { ShippingCorrespondenceComponent } from './headquarters/incoming-correspondence/shipping-correspondence/shipping-correspondence.component';
-import { GeneralCorrespondenceComponent } from './headquarters/incoming-correspondence/general-correspondence/general-correspondence.component';
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
-import { ApinavComponent } from './navbar/apinav/apinav.component';
-import { ApiComponent } from './api/api.component';
-import { UserComponent } from './api/user/user.component';
-import { EventComponent } from './api/event/event.component';
-import { SurveyComponent } from './api/survey/survey.component';
-import { QuestionComponent } from './api/question/question.component';
-import { ResponseComponent } from './api/response/response.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
 import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
+import { AdminControlComponent } from './admin-control/admin-control.component';
+import { TagControlComponent } from './admin-control/tag-control/tag-control.component';
+import { QuestionControlComponent } from './admin-control/question-control/question-control.component';
+import { OptionControlComponent } from './admin-control/question-control/option-control/option-control.component';
+import { EventControlComponent } from './admin-control/event-control/event-control.component';
+import { SurveyControlComponent } from './admin-control/survey-control/survey-control.component';
 
 
 @NgModule({
@@ -53,7 +47,6 @@ import { SurveyFormComponent } from './signup/survey-form/survey-form.component'
     AppComponent,
     HomeComponent,
     ProfileComponent,
-    NotificationsComponent,
     NavbarComponent,
     UsernavComponent,
     LoginComponent,
@@ -63,25 +56,20 @@ import { SurveyFormComponent } from './signup/survey-form/survey-form.component'
     AdminnavComponent,
     HeadquartersComponent,
     ApprovedAnonsComponent,
-    InTransitComponent,
-    IncomingCorrespondenceComponent,
     IncomingSignupsComponent,
-    ShippingCorrespondenceComponent,
-    GeneralCorrespondenceComponent,
     MaterialElevationDirective,
     SignupFormComponent,
     AdminHelpComponent,
-    ApinavComponent,
-    ApiComponent,
-    UserComponent,
-    EventComponent,
-    SurveyComponent,
-    QuestionComponent,
-    ResponseComponent,
     LoadingSpinComponent,
     SelectedAnonComponent,
     SmallLoadingSpinComponent,
-    SurveyFormComponent
+    SurveyFormComponent,
+    AdminControlComponent,
+    TagControlComponent,
+    QuestionControlComponent,
+    OptionControlComponent,
+    EventControlComponent,
+    SurveyControlComponent
   ],
   entryComponents: [
     LoginComponent
