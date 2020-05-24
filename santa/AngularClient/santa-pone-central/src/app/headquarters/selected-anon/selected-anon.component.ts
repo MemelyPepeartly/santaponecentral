@@ -279,9 +279,6 @@ export class SelectedAnonComponent implements OnInit {
         this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
-    console.log(this.approvedRecipientClients);
-    
-
 
     this.recipientsAreLoaded=true;
   }
