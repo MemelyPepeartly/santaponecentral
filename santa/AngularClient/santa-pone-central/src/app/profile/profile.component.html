@@ -1,21 +1,23 @@
-<div class = "container mat-elevation-z2">
-    <div class="contentDiv mat-elevation-z4">
-        <div class="small-box mat-elevation-z3">
-            <mat-toolbar>Profile Control Options</mat-toolbar>
-            <mat-list>
-                <mat-list-item>Change password</mat-list-item>
-                <mat-list-item>Update personal information</mat-list-item>
-            </mat-list>
-        </div>
-    </div>
-    <div class="contentDiv mat-elevation-z4">
-        <div class="small-box mat-elevation-z3">
-            <mat-toolbar>Profile Overview</mat-toolbar>
-            <mat-list>
-                <mat-list-item>Profile picture</mat-list-item>
-                <mat-list-item>Email</mat-list-item>
-                <mat-list-item>Additional information related to profile</mat-list-item>
-            </mat-list>
-        </div>
+<div class = "component-container mat-elevation-z2">
+    <div class="component-div mat-elevation-z3">
+        <mat-card class="example-card mat-elevation-z5">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>Assigned Anons</mat-card-title>
+              <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
+            </mat-card-header>
+            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+            <mat-card-content>
+                <mat-selection-list #anons [multiple]="false">
+                    <mat-list-option *ngFor="let client of recipients">
+                      {{client.clientNickname}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button>LIKE</button>
+              <button mat-button>SHARE</button>
+            </mat-card-actions>
+          </mat-card>
     </div>
 </div>
