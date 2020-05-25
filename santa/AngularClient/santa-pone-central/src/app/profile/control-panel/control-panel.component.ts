@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-control-panel',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class ControlPanelComponent implements OnInit {
 
   constructor() { }
+
+  @Input() recipients: Array<Client> = []
 
   ngOnInit(): void {
   }

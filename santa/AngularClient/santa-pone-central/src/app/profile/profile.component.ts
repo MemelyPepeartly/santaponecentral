@@ -10,7 +10,7 @@ import { GathererService } from '../services/gatherer.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public gatherer: GathererService) { }
+  constructor(public gatherer: GathererService) { }
 
   public recipients: Array<Client> = []
 

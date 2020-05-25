@@ -1,23 +1,5 @@
 <div class = "component-container mat-elevation-z2">
     <div class="component-div mat-elevation-z3">
-        <mat-card class="example-card mat-elevation-z5">
-            <mat-card-header>
-              <div mat-card-avatar class="example-header-image"></div>
-              <mat-card-title>Assigned Anons</mat-card-title>
-              <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
-            </mat-card-header>
-            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
-            <mat-card-content>
-                <mat-selection-list #anons [multiple]="false">
-                    <mat-list-option *ngFor="let client of recipients">
-                      {{client.clientNickname}}
-                    </mat-list-option>
-                </mat-selection-list>
-            </mat-card-content>
-            <mat-card-actions>
-              <button mat-button>LIKE</button>
-              <button mat-button>SHARE</button>
-            </mat-card-actions>
-          </mat-card>
+        <app-control-panel [recipients]="recipients"></app-control-panel>
     </div>
 </div>
