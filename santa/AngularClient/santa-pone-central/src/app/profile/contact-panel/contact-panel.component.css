@@ -1,0 +1,38 @@
+mat-card
+{
+    margin: 10px;
+    vertical-align: top;
+    text-align: left;
+}
+.list-card 
+{
+    width: 90%;
+    min-width: 400px;
+    display: inline-block;
+}
+.chat-control-button
+{
+    margin: 10px;
+}
+#contact-div
+{
+    width: 100%;
+}
+#chat-window
+{
+    width: 45%;
+    min-width: 370px;
+    height: 500px;
+    display: inline-block;
+    border-radius: 25px;
+    border: 2px solid;
+    margin: 15px;
+}
+#button-container
+{
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+}
