@@ -11,5 +11,5 @@ mat-card
 .selected-anon-card
 {
     display: inline-block;
-    min-width: 500px;
+    min-width: 400px;
 }
