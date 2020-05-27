@@ -1,0 +1,15 @@
+.infoCard
+{
+    width: 30%;
+    min-width: 300px;
+    display: block;
+    margin: 10px;
+}
+.action-button
+{
+    margin: 5px !important;
+}
+#info-div
+{
+    width: 60%;
+}
