@@ -30,7 +30,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize("read:client")]
+        [Authorize("read:clients")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<List<Logic.Objects.Client>> GetAllClients()
         {
@@ -57,8 +57,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}")]
-        [Authorize("read:client")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize("read:profile")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
@@ -80,7 +79,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}/Response")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize("read:profile")]
         public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID)
         {
             try
