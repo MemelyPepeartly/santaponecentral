@@ -13,7 +13,7 @@ export class AuthService {
   auth0Client$ = (from(
     createAuth0Client({
       domain: "memelydev.auth0.com",
-      client_id: "gxgsZT1GVAo8bMjm41bSLzhn9BdSIEHp",
+      client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
       redirect_uri: `${window.location.origin}`
     })
   ) as Observable<Auth0Client>).pipe(
@@ -117,7 +117,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: "gxgsZT1GVAo8bMjm41bSLzhn9BdSIEHp",
+        client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
         returnTo: `${window.location.origin}`
       });
     });
