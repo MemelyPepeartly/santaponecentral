@@ -21,13 +21,14 @@
     "@angular/platform-browser": "~9.1.7",
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
+    "@auth0/auth0-spa-js": "^1.8.2",
     "guid-typescript": "^1.0.9",
     "rxjs": "~6.5.5",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.6",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@angular/cli": "~9.1.6",
     "@angular/compiler-cli": "~9.1.7",
     "@angular/language-service": "~9.1.7",
