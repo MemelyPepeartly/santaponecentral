@@ -29,14 +29,16 @@ namespace Santa.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Connection string
             string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
 
-
+            //DBContext
             services.AddDbContext<Santa.Data.Entities.SantaPoneCentralDatabaseContext>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
 
+            //Cors
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngular",
@@ -49,8 +51,10 @@ namespace Santa.Api
                 });
             });
 
+            //Repository
             services.AddScoped<IRepository, Repository>();
 
+            //Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SantaPone API", Version = "v1" });
@@ -67,10 +71,17 @@ namespace Santa.Api
             {
                 options.Authority = domain;
                 options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
             });
+
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:client", policy => policy.Requirements.Add(new HasScopeRequirement("read:client", domain)));
+                options.AddPolicy("read:clients", policy => policy.Requirements.Add(new HasScopeRequirement("read:clients", domain)));
+                options.AddPolicy("read:profile", policy => policy.Requirements.Add(new HasScopeRequirement("read:profile", domain)));
+
             });
 
             // register the scope authorization handler
@@ -92,14 +103,21 @@ namespace Santa.Api
             }
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            //Auth
             app.UseAuthorization();
             app.UseAuthentication();
+
             app.UseCors("AllowAngular");
+
+            //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "SantaPone Central V1");
             });
+
+            //Endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
