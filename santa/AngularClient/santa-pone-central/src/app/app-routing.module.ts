@@ -12,10 +12,15 @@ import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { AdminControlComponent } from './admin-control/admin-control.component';
 
+//Auth imports
+import { AuthGuard } from './auth/auth.guard'
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { InterceptorService } from './auth/interceptor.service';
+
 const appRoutes: Routes = [
   { path: 'profile',
-    component: ProfileComponent
-    
+    component: ProfileComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'home',
@@ -57,6 +62,13 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
+    }
+  ]
 })
 export class AppRoutingModule { }
