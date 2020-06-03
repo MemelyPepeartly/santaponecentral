@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Client } from 'src/classes/client';
+import { SantaApiGetService } from '../services/santaApiService.service';
+import { GathererService } from '../services/gatherer.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(public gatherer: GathererService) { }
+
+  public recipients: Array<Client> = []
 
   ngOnInit() {
+    
+    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
+      this.recipients = clientArray;
+    });
+    this.gatherer.gatherAllClients();
   }
 
 }

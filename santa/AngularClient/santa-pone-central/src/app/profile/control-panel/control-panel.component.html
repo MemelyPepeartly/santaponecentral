@@ -1,0 +1,24 @@
+<mat-card class="list-card mat-elevation-z5">
+    <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Assigned Anons</mat-card-title>
+        <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
+    </mat-card-header>
+    <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+    <mat-card-content>
+        <mat-selection-list #anons class="mat-elevation-z3" [multiple]="false">
+            <mat-list-option *ngFor="let client of recipients">
+                {{client.clientNickname}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="selected-anon-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Select an assignment to view their info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="mat-elevation-z3">
+        <p>{{anons.selectedOptions.selected}}</p>
+    </mat-card-content>
+</mat-card>
