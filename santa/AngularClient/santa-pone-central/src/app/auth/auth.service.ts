@@ -9,12 +9,19 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+  getTokenSilently$(options?): Observable<string> {
+    return this.auth0Client$.pipe(
+      concatMap((client: Auth0Client) => from(client.getTokenSilently(options)))
+    );
+  }
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
       domain: "memelydev.auth0.com",
       client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
-      redirect_uri: `${window.location.origin}`
+      redirect_uri: `${window.location.origin}`,
+      //KCHERE Will need to update for prod when the time comes
+      audience: "https://dev-santaponecentral-api.azurewebsites.net/api/"
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
