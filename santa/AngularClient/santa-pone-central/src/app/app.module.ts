@@ -40,6 +40,9 @@ import { QuestionControlComponent } from './admin-control/question-control/quest
 import { OptionControlComponent } from './admin-control/question-control/option-control/option-control.component';
 import { EventControlComponent } from './admin-control/event-control/event-control.component';
 import { SurveyControlComponent } from './admin-control/survey-control/survey-control.component';
+import { ControlPanelComponent } from './profile/control-panel/control-panel.component';
+import { InformationComponent } from './profile/information/information.component';
+import { ContactPanelComponent } from './profile/contact-panel/contact-panel.component';
 
 
 @NgModule({
@@ -69,7 +72,10 @@ import { SurveyControlComponent } from './admin-control/survey-control/survey-co
     QuestionControlComponent,
     OptionControlComponent,
     EventControlComponent,
-    SurveyControlComponent
+    SurveyControlComponent,
+    ControlPanelComponent,
+    InformationComponent,
+    ContactPanelComponent
   ],
   entryComponents: [
     LoginComponent

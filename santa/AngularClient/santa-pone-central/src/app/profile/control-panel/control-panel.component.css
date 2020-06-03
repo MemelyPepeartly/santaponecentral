@@ -1,0 +1,15 @@
+mat-card
+{
+    margin: 10px;
+    vertical-align: top;
+}
+.list-card 
+{
+    min-width: 400px;
+    display: inline-block;
+}
+.selected-anon-card
+{
+    display: inline-block;
+    min-width: 400px;
+}

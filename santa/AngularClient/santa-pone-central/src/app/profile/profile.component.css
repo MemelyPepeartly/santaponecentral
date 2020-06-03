@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: flex;
     justify-content: center;
     flex: 3;
@@ -29,4 +29,16 @@
     text-align: center;
     height: auto;
     width: auto;
+} */
+
+.component-div
+{
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+.component-container
+{
+    padding: 10px;
+    height: 100%;
 }
