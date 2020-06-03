@@ -81,7 +81,7 @@ namespace Santa.Api
             {
                 options.AddPolicy("read:clients", policy => policy.Requirements.Add(new HasScopeRequirement("read:clients", domain)));
                 options.AddPolicy("read:profile", policy => policy.Requirements.Add(new HasScopeRequirement("read:profile", domain)));
-
+                
             });
 
             // register the scope authorization handler

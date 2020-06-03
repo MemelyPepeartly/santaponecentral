@@ -30,7 +30,8 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize("read:clients")]
+        //[Authorize("read:clients")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<List<Logic.Objects.Client>> GetAllClients()
         {
@@ -53,15 +54,24 @@ namespace Santa.Api.Controllers
         // GET: api/Client/5
         /// <summary>
         /// Gets a client by an ID
+        /// 
+        /// Conditions: Have an Auth0 account
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}")]
-        [Authorize("read:profile")]
+        [Authorize]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
             {
+
+                //If user has user role, then return the client with some data expunged
+                
+                //Else return all the data
+
+
+
                 Logic.Objects.Client client = await repository.GetClientByIDAsync(clientID);
                 return Ok(JsonConvert.SerializeObject(client, Formatting.Indented));
             }
@@ -79,7 +89,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}/Response")]
-        [Authorize("read:profile")]
+        [Authorize]
         public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID)
         {
             try
