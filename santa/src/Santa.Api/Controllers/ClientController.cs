@@ -30,8 +30,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        //[Authorize("read:clients")]
-        [Authorize]
+        [Authorize("read:clients")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<List<Logic.Objects.Client>> GetAllClients()
         {
@@ -112,6 +111,7 @@ namespace Santa.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
@@ -164,6 +164,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Client/5/Recipient
         [HttpPost("{clientID}/Recipient", Name = "PostRecipient")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
         {
             try
@@ -179,6 +180,7 @@ namespace Santa.Api.Controllers
         }
         // POST: api/Client/5/Tag
         [HttpPost("{clientID}/Tag")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
         {
             try
@@ -195,6 +197,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Client/5/Address
         [HttpPut("{clientID}/Address")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClientAddress address)
         {
             try
@@ -235,6 +238,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Email
         [HttpPut("{clientID}/Email", Name ="PutEmail")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody, Bind("clientEmail")] ApiClientEmail email)
         {
             try
@@ -261,6 +265,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Nickname
         [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientNickname nickname)
         {
             try
@@ -287,6 +292,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Name
         [HttpPut("{clientID}/Name", Name = "PutName")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
         {
             try
@@ -311,8 +317,9 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
-        // PUT: api/Client/5/Name
+        // PUT: api/Client/5/Status
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody, Bind("clientStatusID")] ApiClientStatus status)
         {
             try
@@ -339,6 +346,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5
         [HttpDelete("{clientID}")]
+        [Authorize("delete:client")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
             try
@@ -354,6 +362,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5/Recipient
         [HttpDelete("{clientID}/Recipient")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
         {
             try
@@ -369,6 +378,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5/Tag
         [HttpDelete("{clientID}/Tag")]
+        [Authorize("modify:client")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
         {
             try
