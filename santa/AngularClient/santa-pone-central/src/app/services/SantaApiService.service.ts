@@ -6,7 +6,7 @@ import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNickn
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-//const endpoint = 'https://localhost:5001/api/';
+//const endpoint = 'https://localhost:44317/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({
