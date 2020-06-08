@@ -12,6 +12,8 @@ namespace Santa.Logic.Interfaces
         Task CreateClient(Client newClient);
         Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
         Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
+        Task<Client> GetClientByEmailAsync(string email);
+
         List<Logic.Objects.Client> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
         Task DeleteClientByIDAsync(Guid eventID);
@@ -33,7 +35,6 @@ namespace Santa.Logic.Interfaces
         List<Logic.Objects.Event> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync(Guid eventID);
         Task UpdateEventByIDAsync(Event targetEvent);
-       
         Task DeleteEventByIDAsync(Guid logicEvent);
         #endregion
 
