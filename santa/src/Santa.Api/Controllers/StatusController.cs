@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -12,6 +14,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class StatusController : ControllerBase
     {
         private readonly IRepository repository;
@@ -21,6 +24,7 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Status
         [HttpGet]
+
         public ActionResult<List<Logic.Objects.Status>> GetAllClientStatus()
         {
             try
@@ -49,6 +53,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Status
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "create:statuses")]
         public async Task<ActionResult<Logic.Objects.Status>> PostStatus([FromBody, Bind("statusDescription")] Models.ApiStatusDescription clientStatus)
         {
             try
@@ -78,6 +83,8 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Status/5
         [HttpPut("{clientStatusID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "modify:statuses")]
+
         public async Task<ActionResult<Logic.Objects.Status>> Put(Guid clientStatusID, [FromBody, Bind("statusDescription")] Models.ApiStatusDescription changedStatus)
         {
             try
@@ -105,7 +112,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/Status/5
         [HttpDelete("{clientStatusID}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:statuses")]
         public async Task<ActionResult<Logic.Objects.Status>> Delete(Guid clientStatusID)
         {
             try
