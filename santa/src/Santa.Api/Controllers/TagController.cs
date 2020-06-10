@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Santa.Api.Models.Tag_Models;
 using Santa.Logic.Interfaces;
@@ -12,6 +14,8 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class TagController : ControllerBase
     {
         private readonly IRepository repository;
@@ -21,6 +25,7 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Tag
         [HttpGet]
+        [Authorize(Policy = "read:tags")]
         public ActionResult<List<Logic.Objects.Tag>> GetAllTags()
         {
             try
@@ -40,6 +45,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Tag/5
         [HttpGet("{tagID}")]
+        [Authorize(Policy = "read:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> GetTagByID(Guid tagID)
         {
             try
@@ -54,6 +60,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Tag
         [HttpPost]
+        [Authorize(Policy = "create:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> PostTag([FromBody, Bind("tagName")] ApiTag tag)
         {
             try
@@ -76,6 +83,8 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Tag/5
         [HttpPut("{tagID}")]
+        [Authorize(Policy = "modify:tags")]
+
         public async Task<ActionResult<Logic.Objects.Tag>> PutTagName(Guid tagID, [FromBody, Bind("tagName")] ApiTag tag)
         {
             try
@@ -101,6 +110,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{tagID}")]
+        [Authorize(Policy = "delete:tags")]
         public async Task<ActionResult> DeleteTag(Guid tagID)
         {
             try
