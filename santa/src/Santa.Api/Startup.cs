@@ -12,8 +12,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Santa.Api.Auth;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Santa.Logic.Objects;
 
 namespace Santa.Api
 {
@@ -58,38 +59,70 @@ namespace Santa.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SantaPone API", Version = "v1" });
+                c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Description = "Bearer authentication scheme with JWT, e.g. \"Bearer eyJhbGciOiJIUzI1NiJ9.e30\"",
+                    Name = "Authorization"
+                });
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
             //Auth
-            string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            string domain = $"https://memelydev.auth0.com/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = domain;
-                options.Audience = Configuration["Auth0:ApiIdentifier"];
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = ClaimTypes.NameIdentifier
-                };
+                options.Authority = "https://memelydev.auth0.com/";
+                options.Audience = "https://dev-santaponecentral-api.azurewebsites.net/api/";
             });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:clients", policy => policy.Requirements.Add(new HasScopeRequirement("read:clients", domain)));
-                options.AddPolicy("read:profile", policy => policy.Requirements.Add(new HasScopeRequirement("read:profile", domain)));
-                options.AddPolicy("read:sender", policy => policy.Requirements.Add(new HasScopeRequirement("read:sender", domain)));
+
+                //Policy for clients
+                options.AddPolicy("create:clients", policy => policy.RequireClaim("permissions", "create:clients"));
+                options.AddPolicy("read:clients", policy => policy.RequireClaim("permissions", "read:clients"));
+                options.AddPolicy("update:clients", policy => policy.RequireClaim("permissions", "update:clients"));
+                options.AddPolicy("delete:clients", policy => policy.RequireClaim("permissions", "delete:clients"));
+
+                //Policy for events
+                options.AddPolicy("create:events", policy => policy.RequireClaim("permissions", "create:events"));
+                options.AddPolicy("read:events", policy => policy.RequireClaim("permissions", "read:events"));
+                options.AddPolicy("update:events", policy => policy.RequireClaim("permissions", "update:events"));
+                options.AddPolicy("delete:events", policy => policy.RequireClaim("permissions", "delete:events"));
+
+                //Policy for statuses
+                options.AddPolicy("create:statuses", policy => policy.RequireClaim("permissions", "create:statuses"));
+                options.AddPolicy("read:statuses", policy => policy.RequireClaim("permissions", "read:statuses"));
+                options.AddPolicy("update:statuses", policy => policy.RequireClaim("permissions", "update:statuses"));
+                options.AddPolicy("delete:statuses", policy => policy.RequireClaim("permissions", "delete:statuses"));
+
+                //Policy for questions
+                options.AddPolicy("create:surveys", policy => policy.RequireClaim("permissions", "create:surveys"));
+                options.AddPolicy("read:surveys", policy => policy.RequireClaim("permissions", "read:surveys"));
+                options.AddPolicy("update:surveys", policy => policy.RequireClaim("permissions", "update:surveys"));
+                options.AddPolicy("delete:surveys", policy => policy.RequireClaim("permissions", "delete:surveys"));
+
+                //Policy for responses
+                options.AddPolicy("create:responses", policy => policy.RequireClaim("permissions", "create:responses"));
+                options.AddPolicy("read:responses", policy => policy.RequireClaim("permissions", "read:responses"));
+                options.AddPolicy("update:responses", policy => policy.RequireClaim("permissions", "update:responses"));
+                options.AddPolicy("delete:responses", policy => policy.RequireClaim("permissions", "delete:responses"));
+
+                //Policy for tags
+                options.AddPolicy("create:tags", policy => policy.RequireClaim("permissions", "create:tags"));
+                options.AddPolicy("read:tags", policy => policy.RequireClaim("permissions", "read:tags"));
+                options.AddPolicy("update:tags", policy => policy.RequireClaim("permissions", "update:tags"));
+                options.AddPolicy("delete:tags", policy => policy.RequireClaim("permissions", "delete:tags"));
+
             });
 
-            // register the scope authorization handler
-            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             services.AddMvc();
-
-
-
+             
             services.AddControllers();
             services.AddHttpClient();
         }
