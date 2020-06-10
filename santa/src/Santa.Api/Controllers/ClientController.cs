@@ -56,7 +56,6 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Gets a client by an ID
         /// 
-        /// Conditions: Have an Auth0 account
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
@@ -77,7 +76,8 @@ namespace Santa.Api.Controllers
             }
             
         }
-        
+
+
         // GET: api/Client/5/Response
         /// <summary>
         /// Gets a list of responses by a client's ID
