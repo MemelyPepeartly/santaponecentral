@@ -10,6 +10,7 @@ using Santa.Logic.Interfaces;
 using Santa.Data.Repository;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -83,41 +84,15 @@ namespace Santa.Api
             services.AddAuthorization(options =>
             {
 
-                //Policy for clients
-                options.AddPolicy("create:clients", policy => policy.RequireClaim("permissions", "create:clients"));
-                options.AddPolicy("read:clients", policy => policy.RequireClaim("permissions", "read:clients"));
-                options.AddPolicy("update:clients", policy => policy.RequireClaim("permissions", "update:clients"));
-                options.AddPolicy("delete:clients", policy => policy.RequireClaim("permissions", "delete:clients"));
+                var objects = new[] { "clients", "events", "statuses", "surveys", "responses", "tags" };
+                var verbs = new[] { "create", "read", "update", "delete" };
 
-                //Policy for events
-                options.AddPolicy("create:events", policy => policy.RequireClaim("permissions", "create:events"));
-                options.AddPolicy("read:events", policy => policy.RequireClaim("permissions", "read:events"));
-                options.AddPolicy("update:events", policy => policy.RequireClaim("permissions", "update:events"));
-                options.AddPolicy("delete:events", policy => policy.RequireClaim("permissions", "delete:events"));
-
-                //Policy for statuses
-                options.AddPolicy("create:statuses", policy => policy.RequireClaim("permissions", "create:statuses"));
-                options.AddPolicy("read:statuses", policy => policy.RequireClaim("permissions", "read:statuses"));
-                options.AddPolicy("update:statuses", policy => policy.RequireClaim("permissions", "update:statuses"));
-                options.AddPolicy("delete:statuses", policy => policy.RequireClaim("permissions", "delete:statuses"));
-
-                //Policy for questions
-                options.AddPolicy("create:surveys", policy => policy.RequireClaim("permissions", "create:surveys"));
-                options.AddPolicy("read:surveys", policy => policy.RequireClaim("permissions", "read:surveys"));
-                options.AddPolicy("update:surveys", policy => policy.RequireClaim("permissions", "update:surveys"));
-                options.AddPolicy("delete:surveys", policy => policy.RequireClaim("permissions", "delete:surveys"));
-
-                //Policy for responses
-                options.AddPolicy("create:responses", policy => policy.RequireClaim("permissions", "create:responses"));
-                options.AddPolicy("read:responses", policy => policy.RequireClaim("permissions", "read:responses"));
-                options.AddPolicy("update:responses", policy => policy.RequireClaim("permissions", "update:responses"));
-                options.AddPolicy("delete:responses", policy => policy.RequireClaim("permissions", "delete:responses"));
-
-                //Policy for tags
-                options.AddPolicy("create:tags", policy => policy.RequireClaim("permissions", "create:tags"));
-                options.AddPolicy("read:tags", policy => policy.RequireClaim("permissions", "read:tags"));
-                options.AddPolicy("update:tags", policy => policy.RequireClaim("permissions", "update:tags"));
-                options.AddPolicy("delete:tags", policy => policy.RequireClaim("permissions", "delete:tags"));
+                // cartesian product
+                var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
+                foreach (string permission in permissions)
+                {
+                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                }
 
             });
 
