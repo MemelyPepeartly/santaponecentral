@@ -4,8 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+
 
 namespace Santa.Api.Controllers
 {
@@ -21,6 +24,8 @@ namespace Santa.Api.Controllers
         
         // GET: api/SurveyResponses
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:responses")]
+
         public ActionResult<List<Logic.Objects.Response>> GetSurveyResponse()
         {
             return Ok(repository.GetAllSurveyResponses());
@@ -28,6 +33,8 @@ namespace Santa.Api.Controllers
         
         // GET: api/SurveyResponses/5
         [HttpGet("{surveyResponseID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:responses")]
+
         public async Task<ActionResult<Response>> GetSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
@@ -44,6 +51,8 @@ namespace Santa.Api.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{surveyResponseID}/ResponseText")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "modify:responses")]
+
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
             
@@ -93,6 +102,8 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/SurveyResponses/5
         [HttpDelete("{surveyResponseID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:responses")]
+
         public async Task<ActionResult> DeleteSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
