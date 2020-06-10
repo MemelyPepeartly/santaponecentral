@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,8 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class ProfileController : ControllerBase
     {
         private readonly IRepository repository;
@@ -29,11 +32,11 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<Logic.Objects.Client>> GetProfileByEmailAsync()
+        public async Task<ActionResult<Logic.Objects.Client>> GetProfileByEmailAsync(string email)
         {
             try
             {
+
                 Logic.Objects.Client client = await repository.GetClientByEmailAsync("");
                 if(client == null)
                 {
