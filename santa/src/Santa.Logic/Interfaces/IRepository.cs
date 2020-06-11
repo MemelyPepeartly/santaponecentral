@@ -12,12 +12,15 @@ namespace Santa.Logic.Interfaces
         Task CreateClient(Client newClient);
         Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
         Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
-        Task<Client> GetClientByEmailAsync(string email);
-
         List<Logic.Objects.Client> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
         Task DeleteClientByIDAsync(Guid eventID);
         Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID);
+        #endregion
+
+        #region Profile
+        Task<Profile> GetProfileByEmailAsync(string email);
+
         #endregion
 
         #region Tag
