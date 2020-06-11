@@ -108,6 +108,7 @@ namespace Santa.Data.Repository
                 },
                 clientStatus = MapStatus(contextClient.ClientStatus),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
+                //senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
             };
 
