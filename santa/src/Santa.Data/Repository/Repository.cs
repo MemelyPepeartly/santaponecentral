@@ -112,26 +112,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task<Logic.Objects.Client> GetClientByEmailAsync(string email)
-        {
-            try
-            {
-                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                    .Include(s => s.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.SenderClient)
-                    .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(u => u.RecipientClient)
-                    .Include(tx => tx.ClientTagXref)
-                        .ThenInclude(t => t.Tag)
-                    .Include(s => s.ClientStatus)
-                    .FirstOrDefaultAsync(c => c.Email == email));
-                return logicClient;
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             try
@@ -179,6 +159,26 @@ namespace Santa.Data.Repository
                 santaContext.ClientRelationXref.Remove(contextRelation);
             }
             catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        #endregion
+
+        #region Profile
+        public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
+        {
+            try
+            {
+                Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
+                    .Include(r => r.ClientRelationXrefRecipientClient)
+                        .ThenInclude(u => u.RecipientClient)
+                    .Include(res => res.SurveyResponse)
+                    .Include(s => s.ClientStatus)
+                    .FirstOrDefaultAsync(c => c.Email == email));
+                return logicProfile;
+            }
+            catch (Exception e)
             {
                 throw e.InnerException;
             }

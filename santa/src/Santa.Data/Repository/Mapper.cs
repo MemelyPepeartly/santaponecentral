@@ -87,6 +87,35 @@ namespace Santa.Data.Repository
         }
 
         #endregion
+
+        #region Profile
+        public static Profile MapProfile(Entities.Client contextClient)
+        {
+            Logic.Objects.Profile logicProfile = new Logic.Objects.Profile()
+            {
+                clientID = contextClient.ClientId,
+                clientName = contextClient.ClientName,
+                nickname = contextClient.Nickname,
+                email = contextClient.Email,
+                address = new Address
+                {
+                    addressLineOne = contextClient.AddressLine1,
+                    addressLineTwo = contextClient.AddressLine2,
+                    city = contextClient.City,
+                    country = contextClient.Country,
+                    state = contextClient.State,
+                    postalCode = contextClient.PostalCode
+                },
+                clientStatus = MapStatus(contextClient.ClientStatus),
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
+            };
+
+            return logicProfile;
+
+        }
+        #endregion
+
         #region Tag
         public static Logic.Objects.Tag MapTag(Data.Entities.Tag contextTag)
         {
@@ -116,6 +145,7 @@ namespace Santa.Data.Repository
             return logicTag;
         }
         #endregion
+
         #region Status
     public static Status MapStatus(ClientStatus contextStatus)
         {
@@ -136,6 +166,7 @@ namespace Santa.Data.Repository
             return contextStatus;
         }
         #endregion
+
         #region Event
 
         public static Logic.Objects.Event MapEvent(Entities.EventType contextEventType)
@@ -159,6 +190,7 @@ namespace Santa.Data.Repository
             return contextEvent;
         }
         #endregion
+
         #region Survey
         /// <summary>
         /// Maps context survey to a logic survey
@@ -190,6 +222,7 @@ namespace Santa.Data.Repository
             return contextSurvey;
         }
         #endregion
+
         #region Question
         /// <summary>
         /// Maps a context question to a logic question
@@ -230,7 +263,6 @@ namespace Santa.Data.Repository
             Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
             {
                 SurveyQuestionId = logicQuestion.questionID,
-#warning might be a cause of problems here
             };
             return contextQuestionXref;
         }
@@ -268,7 +300,6 @@ namespace Santa.Data.Repository
             Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
             {
                 SurveyOptionId = newQuestionOption.surveyOptionID
-#warning Gonna cause problems here probably too
             };
             return contextQuestionOptionXref;
         }
