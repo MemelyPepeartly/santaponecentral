@@ -23,28 +23,28 @@ namespace Santa.Api.Controllers
 
         }
 
-        // GET: api/Client/5
+        // GET: api/Profile/email@domain.com
         /// <summary>
         /// Gets a client's profile by their email
         /// 
         /// Conditions: Have an Auth0 account, implying you have been approved
         /// </summary>
-        /// <param name="clientID"></param>
+        /// <param email="email"></param>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<Logic.Objects.Client>> GetProfileByEmailAsync(string email)
+        [HttpGet("{email}")]
+        public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
             try
             {
 
-                Logic.Objects.Client client = await repository.GetClientByEmailAsync("");
-                if(client == null)
+                Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+                if(logicProfile == null)
                 {
                     return NoContent();
                 }
                 else
                 {
-                    return Ok(client);
+                    return Ok(logicProfile);
                 }
             }
             catch (Exception e)
