@@ -36,6 +36,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
+#warning Need protection here. Check request and make sure requesting email is only getting the profile for THEIR email. No fooling the DB here
 
                 Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
                 if(logicProfile == null)
