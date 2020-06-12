@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SantaApiGetService } from '../services/santaApiService.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,13 +9,16 @@ import { SantaApiGetService } from '../services/santaApiService.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(public rest: SantaApiGetService) { }
+  constructor(public rest: SantaApiGetService, public auth: AuthService) { }
 
   showUserNav = false;
   showAdminNav = false;
   showNewUserNav = true;
 
+  isAdmin: boolean = false;
+
   ngOnInit() {
+
   }
 
   showAdmin() {
