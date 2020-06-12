@@ -27,10 +27,6 @@ const appRoutes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'santa-central',
-    component: AdminnavComponent
-  },
-  {
     path: 'signup',
     component: SignupComponent
   },
