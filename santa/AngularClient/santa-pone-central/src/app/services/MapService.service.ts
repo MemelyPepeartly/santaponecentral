@@ -5,6 +5,7 @@ import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
+import { Profile, ProfileRecipient } from 'src/classes/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,43 @@ export class MapService {
     });
 
     return mappedClient;
+  }
+  mapProfile(profile)
+  {
+    let mappedProfile = new Profile;
+
+    mappedProfile.clientID = profile.clientID;
+    mappedProfile.clientName = profile.clientName;
+    mappedProfile.email = profile.email;
+    mappedProfile.clientNickname = profile.nickname;
+
+    mappedProfile.clientStatus.statusID = profile.clientStatus.statusID;
+    mappedProfile.clientStatus.statusDescription = profile.clientStatus.statusDescription;
+
+    mappedProfile.address.addressLineOne = profile.address.addressLineOne;
+    mappedProfile.address.addressLineTwo = profile.address.addressLineTwo;
+    mappedProfile.address.city = profile.address.city;
+    mappedProfile.address.state = profile.address.state;
+    mappedProfile.address.country = profile.address.country;
+    mappedProfile.address.postalCode = profile.address.postalCode;
+
+    profile.recipients.forEach(recipient => {
+      mappedProfile.recipients.push(this.mapProfileRecipient(recipient));
+    });
+    profile.responses.forEach(response => {
+      mappedProfile.responses.push(this.mapResponse(response));
+    });
+  }
+  mapProfileRecipient(recipient)
+  {
+    let mappedProfileRecipient = new ProfileRecipient;
+
+
+    recipient.responses.forEach(response => {
+      mappedProfileRecipient.responses.push(this.mapResponse(response));
+    });
+
+    return mappedProfileRecipient;
   }
   mapClientRelationship(client: Client, eventTypeID: string)
   {
