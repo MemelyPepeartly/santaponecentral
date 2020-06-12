@@ -12,7 +12,8 @@
                     <mat-card-subtitle>Holiday ID and name information</mat-card-subtitle>
                 </mat-card-header>        
                 <mat-card-content>
-                    <p>Info goes here</p>
+                    <h3>{{profile.clientNickname}}</h3>
+                    <p>{{profile.clientName}}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button mat-raised-button class="action-button">Request name change</button>
@@ -26,7 +27,12 @@
                     <mat-card-subtitle>Your mailing address</mat-card-subtitle>
                 </mat-card-header>        
                 <mat-card-content>
-                    <p>Address goes here</p>
+                    <p>{{ profile.address.addressLineOne }}</p>
+                    <p>{{ profile.address.addressLineTwo }}</p>
+                    <p>{{ profile.address.city }}</p>
+                    <p>{{ profile.address.state }}</p>
+                    <p>{{ profile.address.postalCode }}</p>
+                    <p>{{ profile.address.country }}</p>
                 </mat-card-content>
                 <mat-card-actions>
                     <button mat-raised-button class="action-button">Request address change</button>
