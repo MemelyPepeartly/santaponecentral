@@ -7,7 +7,7 @@
 <button mat-button (click)="auth.login()" *ngIf="!auth.loggedIn" class="navButton">
     <mat-label>Login</mat-label>
 </button>
-<button mat-button (click)="auth.login()" *ngIf="auth.loggedIn" class="navButton">
-    <mat-label>Login</mat-label>
+<button mat-button (click)="auth.logout()" *ngIf="auth.loggedIn" class="navButton">
+    <mat-label>Logout</mat-label>
 </button>
 
