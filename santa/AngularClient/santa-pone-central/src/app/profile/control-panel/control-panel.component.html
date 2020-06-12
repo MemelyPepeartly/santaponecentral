@@ -7,8 +7,8 @@
     <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
     <mat-card-content>
         <mat-selection-list #anons class="mat-elevation-z3" [multiple]="false">
-            <mat-list-option *ngFor="let client of recipients">
-                {{client.clientNickname}}
+            <mat-list-option *ngFor="let recipient of recipients">
+                {{recipient.clientNickname}}
             </mat-list-option>
         </mat-selection-list>
     </mat-card-content>
