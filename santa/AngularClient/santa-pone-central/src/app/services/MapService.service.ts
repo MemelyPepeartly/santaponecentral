@@ -77,6 +77,16 @@ export class MapService {
   {
     let mappedProfileRecipient = new ProfileRecipient;
 
+    mappedProfileRecipient.recipientClientID = recipient.clientID;
+    mappedProfileRecipient.clientName = recipient.clientName;
+    mappedProfileRecipient.clientNickname = recipient.nickname;
+
+    mappedProfileRecipient.address.addressLineOne = recipient.address.addressLineOne;
+    mappedProfileRecipient.address.addressLineTwo = recipient.address.addressLineTwo;
+    mappedProfileRecipient.address.city = recipient.address.city;
+    mappedProfileRecipient.address.state = recipient.address.state;
+    mappedProfileRecipient.address.country = recipient.address.country;
+    mappedProfileRecipient.address.postalCode = recipient.address.postalCode;
 
     recipient.responses.forEach(response => {
       mappedProfileRecipient.responses.push(this.mapResponse(response));
