@@ -6,7 +6,7 @@ import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNickn
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-//const endpoint = 'https://localhost:44317/api/';
+//const endpoint = 'https://localhost:5001/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,6 +35,9 @@ export class SantaApiGetService {
   getSurveyResponseByClientID(id): Observable<any> {
     return this.http.get(endpoint + 'Client/'+ id + '/Response').pipe(
       map(this.extractData));
+  }
+  getProfile(email): Observable<any> {
+    return this.http.get(endpoint + 'Profile', email);
   }
   getAllEvents(): Observable<any> {
     return this.http.get(endpoint + 'Event').pipe(
