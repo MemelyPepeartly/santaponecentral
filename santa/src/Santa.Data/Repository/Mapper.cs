@@ -85,6 +85,27 @@ namespace Santa.Data.Repository
             };
             return logicRecipient;
         }
+        public static Logic.Objects.ProfileRecipient MapRelationProfileRecipientXref(Data.Entities.ClientRelationXref contextSenderXref, Data.Entities.Client contextRecipientClientData)
+        {
+            Logic.Objects.ProfileRecipient logicProfileRecipient = new ProfileRecipient()
+            {
+                recipientClientID = contextSenderXref.RecipientClientId,
+                recipientEventTypeID = contextSenderXref.EventTypeId,
+                address = new Address
+                {
+                    addressLineOne = contextRecipientClientData.AddressLine1,
+                    addressLineTwo = contextRecipientClientData.AddressLine2,
+                    city = contextRecipientClientData.City,
+                    country = contextRecipientClientData.Country,
+                    state = contextRecipientClientData.State,
+                    postalCode = contextRecipientClientData.PostalCode
+                },
+                name = contextRecipientClientData.ClientName,
+                nickname = contextRecipientClientData.Nickname,
+                responses = contextRecipientClientData.SurveyResponse.Select(Mapper.MapResponse).ToList()
+            };
+            return logicProfileRecipient;
+        }
 
         #endregion
 
@@ -107,8 +128,7 @@ namespace Santa.Data.Repository
                     postalCode = contextClient.PostalCode
                 },
                 clientStatus = MapStatus(contextClient.ClientStatus),
-                recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                //senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(s=> Mapper.MapRelationProfileRecipientXref(s ,s.RecipientClient)).ToList(),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
             };
 
