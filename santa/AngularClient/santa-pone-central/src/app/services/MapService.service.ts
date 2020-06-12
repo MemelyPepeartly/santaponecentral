@@ -72,6 +72,7 @@ export class MapService {
     profile.responses.forEach(response => {
       mappedProfile.responses.push(this.mapResponse(response));
     });
+    return mappedProfile
   }
   mapProfileRecipient(recipient)
   {

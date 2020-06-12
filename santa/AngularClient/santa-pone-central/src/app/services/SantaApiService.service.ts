@@ -5,8 +5,8 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 
-const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-//const endpoint = 'https://localhost:5001/api/';
+//const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
+const endpoint = 'https://localhost:5001/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -37,7 +37,8 @@ export class SantaApiGetService {
       map(this.extractData));
   }
   getProfile(email): Observable<any> {
-    return this.http.get(endpoint + 'Profile', email);
+    return this.http.get(endpoint + 'Profile/' + email).pipe(
+      map(this.extractData));
   }
   getAllEvents(): Observable<any> {
     return this.http.get(endpoint + 'Event').pipe(
