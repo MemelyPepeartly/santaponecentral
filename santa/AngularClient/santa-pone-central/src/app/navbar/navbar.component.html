@@ -4,9 +4,9 @@
   <button mat-button [routerLink]="'/home'" class="button">
       <mat-label>Home</mat-label>
   </button>
-  <app-adminnav *ngIf="showAdminNav"></app-adminnav>
-  <app-usernav *ngIf="showUserNav"></app-usernav>
-  <app-defaultnav *ngIf="showNewUserNav"></app-defaultnav>
+  <app-adminnav *ngIf="auth.loggedIn"></app-adminnav>
+  <app-usernav *ngIf="auth.loggedIn"></app-usernav>
+  <app-defaultnav *ngIf="!auth.loggedIn"></app-defaultnav>
   
 </div>
 <div class="navmenu">
