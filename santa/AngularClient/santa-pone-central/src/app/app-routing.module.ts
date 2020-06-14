@@ -36,7 +36,8 @@ const appRoutes: Routes = [
   },
   {
     path: 'headquarters',
-    component: HeadquartersComponent
+    component: HeadquartersComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'help',
@@ -44,7 +45,8 @@ const appRoutes: Routes = [
   },
   {
     path: 'admin-control',
-    component: AdminControlComponent
+    component: AdminControlComponent,
+    canActivate: [AuthGuard]
   },
   {
 		path: "**",
