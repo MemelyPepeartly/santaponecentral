@@ -6,7 +6,7 @@ import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaA
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
 import { MapService, MapResponse } from '../../services/mapService.service';
-import { EventConstants } from '../../shared/constants/eventConstants';
+import { EventConstants } from '../../shared/constants/eventConstants.enum';
 import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
