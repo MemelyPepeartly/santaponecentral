@@ -40,8 +40,8 @@ namespace Santa.Logic.Interfaces
 
         #region Message
         List<Message> GetAllMessages();
-        Task<Logic.Objects.Message> GetMessageByIDAsync();
-        Task CreateMessage();
+        Task<Logic.Objects.Message> GetMessageByIDAsync(Guid messageID);
+        Task CreateMessage(Message newMessage);
         #endregion
 
         #region Status
