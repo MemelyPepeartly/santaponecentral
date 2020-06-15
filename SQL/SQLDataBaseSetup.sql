@@ -98,6 +98,6 @@ CREATE TABLE app.ChatMessage
     messageSenderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
     messageRecieverClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
     clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
-    isMessageRead BIT NOT NULL,
-    messageContent NVARCHAR(500) NOT NULL
+    messageContent NVARCHAR(500) NOT NULL,
+    isMessageRead BIT NOT NULL
 );
