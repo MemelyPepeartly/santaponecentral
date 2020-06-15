@@ -230,7 +230,6 @@ namespace Santa.Data.Repository
             Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
             {
                 SurveyQuestionId = logicQuestion.questionID,
-#warning might be a cause of problems here
             };
             return contextQuestionXref;
         }
@@ -268,7 +267,6 @@ namespace Santa.Data.Repository
             Data.Entities.SurveyQuestionOptionXref contextQuestionOptionXref = new SurveyQuestionOptionXref()
             {
                 SurveyOptionId = newQuestionOption.surveyOptionID
-#warning Gonna cause problems here probably too
             };
             return contextQuestionOptionXref;
         }
