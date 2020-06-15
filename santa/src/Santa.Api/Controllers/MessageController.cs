@@ -19,34 +19,46 @@ namespace Santa.Api.Controllers
 
         }
         // GET: api/Message
+        /// <summary>
+        /// Gets all messages sent in DB
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Logic.Objects.Message>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(repository.GetAllMessages());
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         // GET: api/Message/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        /// <summary>
+        /// Gets certain message by ID
+        /// </summary>
+        /// <param name="messageID"></param>
+        /// <returns></returns>
+        [HttpGet("{messageID}", Name = "Get")]
+        public async Task<ActionResult<Logic.Objects.Message>> Get(Guid messageID)
         {
-            return "value";
+            try
+            {
+                return Ok(await repository.GetMessageByIDAsync(messageID));
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+            
         }
 
         // POST: api/Message
         [HttpPost]
         public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Message/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }
