@@ -15,6 +15,7 @@ namespace Santa.Data.Entities
         {
         }
 
+        public virtual DbSet<ChatMessage> ChatMessage { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientRelationXref> ClientRelationXref { get; set; }
         public virtual DbSet<ClientStatus> ClientStatus { get; set; }
@@ -30,12 +31,49 @@ namespace Santa.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("ChatMessage", "app");
+
+                entity.Property(e => e.ChatMessageId)
+                    .HasColumnName("chatMessageID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ClientRelationXrefId).HasColumnName("clientRelationXrefID");
+
+                entity.Property(e => e.IsMessageRead).HasColumnName("isMessageRead");
+
+                entity.Property(e => e.MessageContent)
+                    .IsRequired()
+                    .HasColumnName("messageContent")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.MessageRecieverClientId).HasColumnName("messageRecieverClientID");
+
+                entity.Property(e => e.MessageSenderClientId).HasColumnName("messageSenderClientID");
+
+                entity.HasOne(d => d.ClientRelationXref)
+                    .WithMany(p => p.ChatMessage)
+                    .HasForeignKey(d => d.ClientRelationXrefId)
+                    .HasConstraintName("FK__ChatMessa__clien__371CCD45");
+
+                entity.HasOne(d => d.MessageRecieverClient)
+                    .WithMany(p => p.ChatMessageMessageRecieverClient)
+                    .HasForeignKey(d => d.MessageRecieverClientId)
+                    .HasConstraintName("FK__ChatMessa__messa__3628A90C");
+
+                entity.HasOne(d => d.MessageSenderClient)
+                    .WithMany(p => p.ChatMessageMessageSenderClient)
+                    .HasForeignKey(d => d.MessageSenderClientId)
+                    .HasConstraintName("FK__ChatMessa__messa__353484D3");
+            });
+
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable("Client", "app");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Client__AB6E6164C06FC4E8")
+                    .HasName("UQ__Client__AB6E6164038ECE96")
                     .IsUnique();
 
                 entity.Property(e => e.ClientId)
@@ -91,14 +129,20 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.Client)
                     .HasForeignKey(d => d.ClientStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Client__clientSt__682A18F4");
+                    .HasConstraintName("FK__Client__clientSt__0E1AB7B2");
             });
 
             modelBuilder.Entity<ClientRelationXref>(entity =>
             {
                 entity.ToTable("ClientRelationXref", "app");
 
-                entity.Property(e => e.ClientRelationXrefId).HasColumnName("clientRelationXrefID");
+                entity.HasIndex(e => new { e.SenderClientId, e.RecipientClientId, e.EventTypeId })
+                    .HasName("clientRelationXrefID")
+                    .IsUnique();
+
+                entity.Property(e => e.ClientRelationXrefId)
+                    .HasColumnName("clientRelationXrefID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.EventTypeId).HasColumnName("eventTypeID");
 
@@ -110,19 +154,19 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.ClientRelationXref)
                     .HasForeignKey(d => d.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__event__6FCB3ABC");
+                    .HasConstraintName("FK__ClientRel__event__16AFFDB3");
 
                 entity.HasOne(d => d.RecipientClient)
                     .WithMany(p => p.ClientRelationXrefRecipientClient)
                     .HasForeignKey(d => d.RecipientClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__recip__6ED71683");
+                    .HasConstraintName("FK__ClientRel__recip__15BBD97A");
 
                 entity.HasOne(d => d.SenderClient)
                     .WithMany(p => p.ClientRelationXrefSenderClient)
                     .HasForeignKey(d => d.SenderClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__sende__6DE2F24A");
+                    .HasConstraintName("FK__ClientRel__sende__14C7B541");
             });
 
             modelBuilder.Entity<ClientStatus>(entity =>
@@ -157,13 +201,13 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.ClientTagXref)
                     .HasForeignKey(d => d.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientTag__clien__0A7F30F8");
+                    .HasConstraintName("FK__ClientTag__clien__3163F3EF");
 
                 entity.HasOne(d => d.Tag)
                     .WithMany(p => p.ClientTagXref)
                     .HasForeignKey(d => d.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientTag__tagID__0B735531");
+                    .HasConstraintName("FK__ClientTag__tagID__32581828");
             });
 
             modelBuilder.Entity<EventType>(entity =>
@@ -171,7 +215,7 @@ namespace Santa.Data.Entities
                 entity.ToTable("EventType", "app");
 
                 entity.HasIndex(e => e.EventDescription)
-                    .HasName("UQ__EventTyp__F516F46E5FF4304F")
+                    .HasName("UQ__EventTyp__F516F46E8420D60E")
                     .IsUnique();
 
                 entity.Property(e => e.EventTypeId)
@@ -207,7 +251,7 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.Survey)
                     .HasForeignKey(d => d.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Survey__eventTyp__72A7A767");
+                    .HasConstraintName("FK__Survey__eventTyp__198C6A5E");
             });
 
             modelBuilder.Entity<SurveyOption>(entity =>
@@ -248,7 +292,7 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<SurveyQuestionOptionXref>(entity =>
             {
                 entity.HasKey(e => e.SurveyQuestionOptionXref1)
-                    .HasName("PK__SurveyQu__1BAA3BB13AD22074");
+                    .HasName("PK__SurveyQu__1BAA3BB1F60950D1");
 
                 entity.ToTable("SurveyQuestionOptionXref", "app");
 
@@ -269,13 +313,13 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyQuestionOptionXref)
                     .HasForeignKey(d => d.SurveyOptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__03D23369");
+                    .HasConstraintName("FK__SurveyQue__surve__2AB6F660");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionOptionXref)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__02DE0F30");
+                    .HasConstraintName("FK__SurveyQue__surve__29C2D227");
             });
 
             modelBuilder.Entity<SurveyQuestionXref>(entity =>
@@ -299,13 +343,13 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyQuestionXref)
                     .HasForeignKey(d => d.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__7F0D7E4C");
+                    .HasConstraintName("FK__SurveyQue__surve__25F24143");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionXref)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__0001A285");
+                    .HasConstraintName("FK__SurveyQue__surve__26E6657C");
             });
 
             modelBuilder.Entity<SurveyResponse>(entity =>
@@ -333,24 +377,24 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__clien__7A48C92F");
+                    .HasConstraintName("FK__SurveyRes__clien__212D8C26");
 
                 entity.HasOne(d => d.Survey)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__7954A4F6");
+                    .HasConstraintName("FK__SurveyRes__surve__203967ED");
 
                 entity.HasOne(d => d.SurveyOption)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyOptionId)
-                    .HasConstraintName("FK__SurveyRes__surve__7C3111A1");
+                    .HasConstraintName("FK__SurveyRes__surve__2315D498");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyResponse)
                     .HasForeignKey(d => d.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__7B3CED68");
+                    .HasConstraintName("FK__SurveyRes__surve__2221B05F");
             });
 
             modelBuilder.Entity<Tag>(entity =>
@@ -358,7 +402,7 @@ namespace Santa.Data.Entities
                 entity.ToTable("Tag", "app");
 
                 entity.HasIndex(e => e.TagName)
-                    .HasName("UQ__Tag__288C38510AD49426")
+                    .HasName("UQ__Tag__288C385138CA6AA4")
                     .IsUnique();
 
                 entity.Property(e => e.TagId)
