@@ -167,8 +167,38 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Message
+
+        public static Logic.Objects.Message MapMessage(ChatMessage contextMessage)
+        {
+            Logic.Objects.Message logicMessage = new Message()
+            {
+                chatMessageID = contextMessage.ChatMessageId,
+                messageRecieverClientID = contextMessage.MessageRecieverClientId,
+                messageSenderClientID = contextMessage.MessageSenderClientId,
+                messageContent = contextMessage.MessageContent,
+                isMessageRead = contextMessage.IsMessageRead
+            };
+            return logicMessage;
+        }
+        public static ChatMessage MapMessage(Message logicMessage)
+        {
+            Data.Entities.ChatMessage contextMessage = new ChatMessage()
+            {
+                ChatMessageId = logicMessage.chatMessageID,
+                ClientRelationXrefId = logicMessage.clientRelationXrefID,
+                MessageRecieverClientId = logicMessage.messageRecieverClientID,
+                MessageSenderClientId = logicMessage.messageSenderClientID,
+                MessageContent = logicMessage.messageContent,
+                IsMessageRead = logicMessage.isMessageRead
+            };
+            return contextMessage;
+        }
+
+        #endregion
+
         #region Status
-    public static Status MapStatus(ClientStatus contextStatus)
+        public static Status MapStatus(ClientStatus contextStatus)
         {
             Logic.Objects.Status logicStatus = new Status()
             {
@@ -354,6 +384,7 @@ namespace Santa.Data.Repository
             };
             return logicResponse;
         }
+
         public static Data.Entities.SurveyResponse MapResponse(Logic.Objects.Response logicResponse)
         {
             Data.Entities.SurveyResponse contextResponse = new SurveyResponse()
