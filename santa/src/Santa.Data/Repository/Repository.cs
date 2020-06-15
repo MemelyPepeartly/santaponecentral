@@ -320,17 +320,42 @@ namespace Santa.Data.Repository
         #region Message
         public List<Message> GetAllMessages()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Logic.Objects.Message> logicMessageList = santaContext.ChatMessage.Select(Mapper.MapMessage).ToList();
+
+                return logicMessageList;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public async Task<Message> GetMessageByIDAsync(Guid messageID)
+        public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.Message logicMessage = Mapper.MapMessage(await santaContext.ChatMessage.FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID));
+                return logicMessage;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task CreateMessage(Message newMessage)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.ChatMessage contextMessage = Mapper.MapMessage(newMessage);
+                await santaContext.ChatMessage.AddAsync(contextMessage);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
 
