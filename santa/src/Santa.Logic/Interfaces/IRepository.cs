@@ -40,7 +40,7 @@ namespace Santa.Logic.Interfaces
 
         #region Message
         List<Message> GetAllMessages();
-        Task<Logic.Objects.Message> GetMessageByIDAsync(Guid messageID);
+        Task<Logic.Objects.Message> GetMessageByIDAsync(Guid chatMessageID);
         Task CreateMessage(Message newMessage);
         #endregion
 
