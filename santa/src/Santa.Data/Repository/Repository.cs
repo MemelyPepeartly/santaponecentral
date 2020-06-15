@@ -323,12 +323,12 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Message> GetMessageByIDAsync()
+        public async Task<Message> GetMessageByIDAsync(Guid messageID)
         {
             throw new NotImplementedException();
         }
 
-        public Task CreateMessage()
+        public async Task CreateMessage(Message newMessage)
         {
             throw new NotImplementedException();
         }
