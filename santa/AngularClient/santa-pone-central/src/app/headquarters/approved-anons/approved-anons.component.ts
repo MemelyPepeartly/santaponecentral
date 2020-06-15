@@ -4,7 +4,7 @@ import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santaApiService.service';
 import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/mapService.service';
-import { EventConstants } from 'src/app/shared/constants/eventConstants';
+import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 
 @Component({
