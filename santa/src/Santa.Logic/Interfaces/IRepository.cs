@@ -38,6 +38,12 @@ namespace Santa.Logic.Interfaces
         Task DeleteEventByIDAsync(Guid logicEvent);
         #endregion
 
+        #region Message
+        List<Message> GetAllMessages();
+        Task<Logic.Objects.Message> GetMessageByIDAsync();
+        Task CreateMessage();
+        #endregion
+
         #region Status
         Task CreateStatusAsync(Status newStatus);
         Task<Status> GetClientStatusByID(Guid clientStatusID);

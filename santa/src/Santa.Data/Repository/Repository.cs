@@ -317,6 +317,23 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Message
+        public List<Message> GetAllMessages()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Message> GetMessageByIDAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateMessage()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region ClientStatus
         public List<Status> GetAllClientStatus()
         {
