@@ -48,3 +48,23 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
+//Response type for approving anons and sending a new client to the Auth0 API
+export class Auth0NewClientResponse {
+    email: string;
+    phone_number: string;
+    user_metadata: {};
+    blocked: boolean;
+    email_verified: boolean;
+    phone_verified: boolean;
+    app_metadata: {};
+    given_name: string;
+    family_name: string;
+    name: string;
+    nickname: string;
+    picture: string;
+    user_id: string;
+    connection: string;
+    password: string;
+    verify_email: boolean;
+    username: string;
+}
