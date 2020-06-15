@@ -30,7 +30,7 @@ CREATE TABLE app.EventType
 );
 CREATE TABLE app.ClientRelationXref
 (
-    clientRelationXrefID INT IDENTITY(1,1) PRIMARY KEY,
+    clientRelationXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     senderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     recipientClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL,
@@ -91,4 +91,13 @@ CREATE TABLE app.ClientTagXref
     clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     tagID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Tag(tagID) NOT NULL,
     CONSTRAINT clientTagXrefID UNIQUE (clientID, tagID) 
+);
+CREATE TABLE app.ChatMessage
+(
+    chatMessageID UNIQUEIDENTIFIER PRIMARY KEY,
+    messageSenderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
+    messageRecieverClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
+    clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
+    isMessageRead BIT NOT NULL,
+    messageContent NVARCHAR(500) NOT NULL
 );
