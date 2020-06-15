@@ -11,6 +11,12 @@ DECLARE @tag1IDGUID UNIQUEIDENTIFIER;
 DECLARE @tag2IDGUID UNIQUEIDENTIFIER;
 DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
 
+-- Attatched to reciever
+DECLARE @message1IDGUID UNIQUEIDENTIFIER;
+
+--Not Attatched to reciever
+DECLARE @message2IDGUID UNIQUEIDENTIFIER;
+
 
 DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER;
@@ -49,6 +55,9 @@ SET @tag1IDGUID = NEWID();
 SET @tag2IDGUID = NEWID();
 SET @tag3IDGUID = NEWID();
 
+SET @message1IDGUID = NEWID();
+SET @message2IDGUID = NEWID();
+
 SET @firstClientStatusIDGUID = NEWID();
 SET @secondClientStatusIDGUID = NEWID();
 
@@ -76,6 +85,8 @@ PRINT N'tag1IDGUID:------------------ ' + (CAST (@tag1IDGUID AS NVARCHAR(50)));
 PRINT N'tag2IDGUID:------------------ ' + (CAST (@tag2IDGUID AS NVARCHAR(50)));
 PRINT N'tag3IDGUID:------------------ ' + (CAST (@tag3IDGUID AS NVARCHAR(50)));
 
+PRINT N'message1IDGUID:-------------- ' + (CAST (@message1IDGUID AS NVARCHAR(50)));
+PRINT N'message2IDGUID:-------------- ' + (CAST (@message2IDGUID AS NVARCHAR(50)));
 
 PRINT N'surveyResponse1IDGUID:------- ' + (CAST (@surveyResponse1IDGUID AS NVARCHAR(50)));
 PRINT N'surveyResponse2IDGUID:------- ' + (CAST (@surveyResponse2IDGUID AS NVARCHAR(50)));
@@ -141,7 +152,7 @@ VALUES
     (@client1IDGUID, @secondClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'fourthemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 -- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
 -- VALUES
@@ -168,6 +179,10 @@ VALUES
     (@client2IDGUID, @tag3IDGUID),
     (@client3IDGUID, @tag1IDGUID);
 
+INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, isMessageRead)
+VALUES
+    (@message1IDGUID, @client1IDGUID, null, null, 'This is my message content', 0);
+
 
 
 
@@ -187,6 +202,7 @@ SELECT * FROM app.ClientRelationXref;
 
 SELECT * FROM app.Tag;
 SELECT * FROM app.ClientTagXref;
+SELECT * FROM app.ChatMessage;
 
 
 

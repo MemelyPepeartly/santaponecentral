@@ -106,7 +106,6 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="survey"></param>
         /// <returns></returns>
-        #warning the active might cause issues, Doesnt have sort order attatched per the surveyquestionxref
         [HttpPost]
         public async Task<ActionResult<ApiSurvey>> PostSurvey([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
         {

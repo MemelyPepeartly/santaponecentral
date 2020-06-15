@@ -318,6 +318,48 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Message
+        public List<Message> GetAllMessages()
+        {
+            try
+            {
+                List<Logic.Objects.Message> logicMessageList = santaContext.ChatMessage.Select(Mapper.MapMessage).ToList();
+
+                return logicMessageList;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
+        {
+            try
+            {
+                Logic.Objects.Message logicMessage = Mapper.MapMessage(await santaContext.ChatMessage.FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID));
+                return logicMessage;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task CreateMessage(Message newMessage)
+        {
+            try
+            {
+                Data.Entities.ChatMessage contextMessage = Mapper.MapMessage(newMessage);
+                await santaContext.ChatMessage.AddAsync(contextMessage);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        #endregion
+
         #region ClientStatus
         public List<Status> GetAllClientStatus()
         {
