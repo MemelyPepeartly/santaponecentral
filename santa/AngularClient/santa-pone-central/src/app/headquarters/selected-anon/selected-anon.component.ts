@@ -3,7 +3,7 @@ import { Client, ClientSenderRecipientRelationship } from '../../../classes/clie
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
-import { EventConstants } from 'src/app/shared/constants/eventConstants';
+import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
