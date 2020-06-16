@@ -11,11 +11,6 @@ using Santa.Data.Repository;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Santa.Logic.Objects;
 
 namespace Santa.Api
 {
