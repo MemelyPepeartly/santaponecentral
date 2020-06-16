@@ -4,6 +4,7 @@ import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { RoleConstants } from '../shared/constants/roleConstants.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class AuthService {
       concatMap((client: Auth0Client) => from(client.getTokenSilently(options)))
     );
   }
+  private isAdminSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
+  public isAdmin = this.isAdminSubject$.asObservable();
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
@@ -57,7 +60,17 @@ export class AuthService {
   getUser$(options?): Observable<any> {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
-      tap(user => this.userProfileSubject$.next(user))
+      tap(user => {
+        this.userProfileSubject$.next(user);
+        if(user["https://santaponecentral.com/roles"].includes(RoleConstants.ADMIN))
+        {
+          this.isAdminSubject$.next(true);
+        }
+        else if (user["https://santaponecentral.com/roles"].includes(RoleConstants.USER))
+        {
+          this.isAdminSubject$.next(false);
+        }
+      })
     );
   }
 
