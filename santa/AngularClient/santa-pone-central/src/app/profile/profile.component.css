@@ -31,14 +31,14 @@
     width: auto;
 } */
 
-.component-div
+.components
 {
-    width: 100%;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
 }
 .component-container
 {
-    padding: 10px;
+    
+    padding: 5px;
     height: 100%;
 }

@@ -5,11 +5,11 @@ mat-card
 }
 .list-card 
 {
-    min-width: 400px;
+    min-width: 200px;
     display: inline-block;
 }
 .selected-anon-card
 {
     display: inline-block;
-    min-width: 400px;
+    min-width: 200px;
 }
