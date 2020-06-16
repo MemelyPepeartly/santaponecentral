@@ -151,7 +151,7 @@ INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, a
 VALUES
     (@client1IDGUID, @secondClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'thirdemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 -- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
