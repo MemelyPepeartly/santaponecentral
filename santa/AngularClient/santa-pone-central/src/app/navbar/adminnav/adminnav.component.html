@@ -1,16 +1,16 @@
 <button mat-button [routerLink]="'/profile'" class="navButton">
-    <mat-label>Admin Profile</mat-label>
+    <mat-label>Profile</mat-label>
 </button>
 <button mat-button [routerLink]="'/headquarters'" class="navButton">
     <mat-label>Headquarters</mat-label>
 </button>
-<button mat-button [routerLink]="'/correspondence'" class="navButton">
+<!-- <button mat-button [routerLink]="'/correspondence'" class="navButton">
     <mat-label>Correspondence</mat-label>
-</button>
+</button> -->
 <button mat-button [routerLink]="'/admin-control'" class="navButton">
     <mat-label>Admin Control</mat-label>
 </button>
-<button mat-button [routerLink]="'/help'" class="navButton">
-    <mat-label>Help</mat-label>
+<button mat-button (click)="auth.logout()" class="navButton">
+    <mat-label>Logout</mat-label>
 </button>
 

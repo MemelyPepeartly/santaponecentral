@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SantaApiGetService } from '../services/santaApiService.service';
 import { AuthService } from '../auth/auth.service';
+import { RoleConstants } from '../shared/constants/roleConstants.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -11,29 +12,18 @@ export class NavbarComponent implements OnInit {
 
   constructor(public rest: SantaApiGetService, public auth: AuthService) { }
 
-  showUserNav = false;
-  showAdminNav = false;
-  showNewUserNav = true;
+  
+
+  profile: any;
 
   isAdmin: boolean = false;
 
   ngOnInit() {
-
-  }
-
-  showAdmin() {
-    this.showAdminNav = true;
-    this.showUserNav = false;
-    this.showNewUserNav = false;
-  }
-  showNewUser() {
-    this.showAdminNav = false;
-    this.showUserNav = false;
-    this.showNewUserNav = true;
-  }
-  showExistingUser() {
-    this.showAdminNav = false;
-    this.showUserNav = true;
-    this.showNewUserNav = false;
+    this.auth.userProfile$.subscribe(data => {
+      this.profile = data;
+    });
+    this.auth.isAdmin.subscribe((admin: boolean) => {
+      this.isAdmin = admin;
+    });
   }
 }
