@@ -50,6 +50,7 @@ namespace Santa.Data.Repository
             {
                 Data.Entities.ClientRelationXref contexRelation = new ClientRelationXref()
                 {
+                    ClientRelationXrefId = Guid.NewGuid(),
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
                     EventTypeId = eventTypeID
