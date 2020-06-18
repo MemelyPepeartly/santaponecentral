@@ -13,6 +13,7 @@ DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
 
 -- Attatched to reciever
 DECLARE @message1IDGUID UNIQUEIDENTIFIER;
+DECLARE @message1DateTime DATETIME;
 
 --Not Attatched to reciever
 DECLARE @message2IDGUID UNIQUEIDENTIFIER;
@@ -56,6 +57,7 @@ SET @tag2IDGUID = NEWID();
 SET @tag3IDGUID = NEWID();
 
 SET @message1IDGUID = NEWID();
+SET @message1DateTime = GETUTCDATE();
 SET @message2IDGUID = NEWID();
 
 SET @firstClientStatusIDGUID = NEWID();
@@ -150,9 +152,10 @@ VALUES
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
     (@client1IDGUID, @secondClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'secondemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+
 
 -- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
 -- VALUES
@@ -179,9 +182,9 @@ VALUES
     (@client2IDGUID, @tag3IDGUID),
     (@client3IDGUID, @tag1IDGUID);
 
-INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, isMessageRead)
+INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, dateTimeSent, isMessageRead)
 VALUES
-    (@message1IDGUID, @client1IDGUID, null, null, 'This is my message content', 0);
+    (@message1IDGUID, @client1IDGUID, null, null, 'This is my message content',  @message1DateTime, 0);
 
 
 
