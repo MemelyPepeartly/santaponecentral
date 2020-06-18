@@ -1,0 +1,47 @@
+<div id="info-div">
+  <mat-card class="list-card mat-elevation-z5">
+    <mat-card-header>
+      <mat-card-title>Correspondence</mat-card-title>
+      <mat-card-subtitle>For contacting anons</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+      <!-- Unread -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>Unread</mat-card-title>
+          <mat-card-subtitle>Unread messages and requests from anons</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-unread [unreadMessageColumns]="displayedColumns"></app-unread>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- All -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>All</mat-card-title>
+          <mat-card-subtitle>List of all contact history for contacted anons</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-all [allMessageColumns]="displayedColumns"></app-all>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Pending -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>Pending</mat-card-title>
+          <mat-card-subtitle>List of all anons who have yet to be contacted, or have not responded</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-pending [pendingMessageColumns]="displayedColumns"></app-pending>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-card-content>
+  </mat-card>
+</div>
