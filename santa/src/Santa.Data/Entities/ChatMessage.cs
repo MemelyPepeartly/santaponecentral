@@ -9,8 +9,9 @@ namespace Santa.Data.Entities
         public Guid? MessageSenderClientId { get; set; }
         public Guid? MessageRecieverClientId { get; set; }
         public Guid? ClientRelationXrefId { get; set; }
-        public bool IsMessageRead { get; set; }
         public string MessageContent { get; set; }
+        public DateTime DateTimeSent { get; set; }
+        public bool IsMessageRead { get; set; }
 
         public virtual ClientRelationXref ClientRelationXref { get; set; }
         public virtual Client MessageRecieverClient { get; set; }
