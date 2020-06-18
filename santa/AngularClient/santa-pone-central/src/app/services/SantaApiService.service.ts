@@ -96,6 +96,14 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "Tag/" + id).pipe(
       map(this.extractData));
   }
+  getAllMessages(): Observable<any> {
+    return this.http.get(endpoint + "Message").pipe(
+      map(this.extractData));
+  }
+  getMessage(id): Observable<any> {
+    return this.http.get(endpoint + "Message/" + id).pipe(
+      map(this.extractData));
+  }
 }
 @Injectable({
   providedIn: 'root'
