@@ -21,6 +21,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import {MatChipsModule} from '@angular/material/chips';
   MatSidenavModule,
   MatSelectModule,
   MatTooltipModule,
-  MatChipsModule
+  MatChipsModule,
+  MatBadgeModule
   ],
   exports: [
   CommonModule,
@@ -71,7 +73,8 @@ import {MatChipsModule} from '@angular/material/chips';
    MatSidenavModule,
    MatSelectModule,
    MatTooltipModule,
-   MatChipsModule
+   MatChipsModule,
+   MatBadgeModule
    ],
 })
 export class CustomMaterialModule { }
