@@ -65,13 +65,20 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Message logicMessage = new Logic.Objects.Message()
                 {
                     chatMessageID = Guid.NewGuid(),
-                    messageRecieverClientID = message.messageRecieverClientID == null ? null : message.messageRecieverClientID,
-                    messageSenderClientID = message.messageSenderClientID == null ? null : message.messageSenderClientID,
+                    recieverClient = new Logic.Objects.MessageClientMeta()
+                    {
+                        clientId = message.messageRecieverClientID == null ? null : message.messageRecieverClientID
+                    },
+                    senderClient = new Logic.Objects.MessageClientMeta()
+                    {
+                        clientId = message.messageSenderClientID == null ? null : message.messageSenderClientID
+                    },
                     clientRelationXrefID = message.clientRelationXrefID == null ? null : message.clientRelationXrefID,
                     messageContent = message.messageContent,
+                    dateTimeSent = DateTime.UtcNow,
                     isMessageRead = false,
                 };
-                if (logicMessage.messageRecieverClientID == null && logicMessage.messageSenderClientID == null)
+                if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
