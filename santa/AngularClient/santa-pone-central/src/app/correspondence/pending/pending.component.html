@@ -1,0 +1,25 @@
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Sender Column -->
+    <ng-container matColumnDef="sender">
+      <th mat-header-cell *matHeaderCellDef> Sender </th>
+      <td mat-cell *matCellDef="let element"> <button mat-raised-button>{{element.sender}}</button> </td>
+    </ng-container>
+  
+    <!-- Recipient Column -->
+    <ng-container matColumnDef="recipient">
+      <th mat-header-cell *matHeaderCellDef> Recipient </th>
+      <td mat-cell *matCellDef="let element"> <button mat-raised-button>{{element.recipient}}</button> </td>
+    </ng-container>
+  
+    <!-- Event Column -->
+    <ng-container matColumnDef="event">
+      <th mat-header-cell *matHeaderCellDef> Event </th>
+      <td mat-cell *matCellDef="let element"> {{element.event}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="pendingMessageColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: pendingMessageColumns;"></tr>
+  
+  </table>
