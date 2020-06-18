@@ -11,7 +11,7 @@ export class CorrespondenceComponent implements OnInit {
 
   constructor() { }
 
-  displayedColumns: string[] = ['sender', 'recipient', 'event'];
+  displayedColumns: string[] = ['sender', 'recipient', 'event', 'contact'];
 
   ngOnInit() {
   }
