@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 
 namespace Santa.Api.Controllers
 {
@@ -38,8 +40,24 @@ namespace Santa.Api.Controllers
             {
 #warning Need protection here. Check request and make sure requesting email is only getting the profile for THEIR email. No fooling the DB here
 
+                /*
+                Microsoft.Extensions.Primitives.StringValues AuthHeaders = this.HttpContext.Request.Headers["Authorization"];
+                string result = AuthHeaders[0].Substring(AuthHeaders[0].LastIndexOf(' ') + 1);
+                JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken token = jwtHandler.ReadJwtToken(result);
+
+                if (token.Audiences.Contains(email))
+                {
+                    //Logic here for checking the warning
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+                */
+
                 Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-                if(logicProfile == null)
+                if (logicProfile == null)
                 {
                     return NoContent();
                 }
