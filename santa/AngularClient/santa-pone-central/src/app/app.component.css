@@ -16,7 +16,6 @@
 }
 #bg-div
 {
-  position: fixed;
   background-image: url(../assets/santa.png);
   background-position: absolute;
   background-repeat: no-repeat;
