@@ -17,6 +17,8 @@ export class UnreadComponent implements OnInit {
   @Input() unreadMessageColumns: string[];
   dataSource = ELEMENT_DATA;
 
+  public totalUnread: number = 4
+
   ngOnInit() {
   }
 
