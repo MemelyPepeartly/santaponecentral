@@ -174,9 +174,20 @@ namespace Santa.Data.Repository
             Logic.Objects.Message logicMessage = new Message()
             {
                 chatMessageID = contextMessage.ChatMessageId,
-                messageRecieverClientID = contextMessage.MessageRecieverClientId,
-                messageSenderClientID = contextMessage.MessageSenderClientId,
+                recieverClient = new MessageClientMeta()
+                {
+                    clientId = contextMessage.MessageRecieverClientId,
+                    clientName = contextMessage.MessageRecieverClient.ClientName,
+                    clientNickname = contextMessage.MessageRecieverClient.Nickname
+                },
+                senderClient = new MessageClientMeta()
+                {
+                    clientId = contextMessage.MessageSenderClientId,
+                    clientName = contextMessage.MessageSenderClient.ClientName,
+                    clientNickname = contextMessage.MessageSenderClient.Nickname
+                },
                 messageContent = contextMessage.MessageContent,
+                dateTimeSent = contextMessage.DateTimeSent,
                 isMessageRead = contextMessage.IsMessageRead
             };
             return logicMessage;
@@ -187,9 +198,10 @@ namespace Santa.Data.Repository
             {
                 ChatMessageId = logicMessage.chatMessageID,
                 ClientRelationXrefId = logicMessage.clientRelationXrefID,
-                MessageRecieverClientId = logicMessage.messageRecieverClientID,
-                MessageSenderClientId = logicMessage.messageSenderClientID,
+                MessageRecieverClientId = logicMessage.recieverClient.clientId,
+                MessageSenderClientId = logicMessage.senderClient.clientId,
                 MessageContent = logicMessage.messageContent,
+                DateTimeSent = logicMessage.dateTimeSent,
                 IsMessageRead = logicMessage.isMessageRead
             };
             return contextMessage;

@@ -324,7 +324,10 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Message> logicMessageList = santaContext.ChatMessage.Select(Mapper.MapMessage).ToList();
+                List<Logic.Objects.Message> logicMessageList = santaContext.ChatMessage
+                    .Include(s => s.MessageSenderClient)
+                    .Include(r => r.MessageRecieverClient)
+                    .Select(Mapper.MapMessage).ToList();
 
                 return logicMessageList;
             }
