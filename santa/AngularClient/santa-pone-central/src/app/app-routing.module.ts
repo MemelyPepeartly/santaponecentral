@@ -57,11 +57,11 @@ const appRoutes: Routes = [
   },
   {
 		path: "**",
-		redirectTo: "/"
+		redirectTo: "/home"
   },
   { 
     path: '',
-    redirectTo: '/',
+    redirectTo: '/home',
     pathMatch: 'full' }
 ];
 
