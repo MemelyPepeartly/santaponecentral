@@ -43,55 +43,64 @@ import { SurveyControlComponent } from './admin-control/survey-control/survey-co
 import { ControlPanelComponent } from './profile/control-panel/control-panel.component';
 import { InformationComponent } from './profile/information/information.component';
 import { ContactPanelComponent } from './profile/contact-panel/contact-panel.component';
+import { CorrespondenceComponent } from './correspondence/correspondence.component';
+import { UnreadComponent } from './correspondence/unread/unread.component';
+import { AllComponent } from './correspondence/all/all.component';
+import { PendingComponent } from './correspondence/pending/pending.component';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    ProfileComponent,
-    NavbarComponent,
-    UsernavComponent,
-    LoginComponent,
-    DefaultnavComponent,
-    ContactComponent,
-    SignupComponent,
-    AdminnavComponent,
-    HeadquartersComponent,
-    ApprovedAnonsComponent,
-    IncomingSignupsComponent,
-    MaterialElevationDirective,
-    SignupFormComponent,
-    AdminHelpComponent,
-    LoadingSpinComponent,
-    SelectedAnonComponent,
-    SmallLoadingSpinComponent,
-    SurveyFormComponent,
-    AdminControlComponent,
-    TagControlComponent,
-    QuestionControlComponent,
-    OptionControlComponent,
-    EventControlComponent,
-    SurveyControlComponent,
-    ControlPanelComponent,
-    InformationComponent,
-    ContactPanelComponent
-  ],
-  entryComponents: [
-    LoginComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CustomMaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    RouterModule,
-    HttpClientModule
-  ],
-  providers: [
-  ],
-  bootstrap: [AppComponent]
+   declarations: [
+      AppComponent,
+      HomeComponent,
+      ProfileComponent,
+      NavbarComponent,
+      UsernavComponent,
+      LoginComponent,
+      DefaultnavComponent,
+      ContactComponent,
+      SignupComponent,
+      AdminnavComponent,
+      HeadquartersComponent,
+      ApprovedAnonsComponent,
+      IncomingSignupsComponent,
+      MaterialElevationDirective,
+      SignupFormComponent,
+      AdminHelpComponent,
+      LoadingSpinComponent,
+      SelectedAnonComponent,
+      SmallLoadingSpinComponent,
+      SurveyFormComponent,
+      AdminControlComponent,
+      TagControlComponent,
+      QuestionControlComponent,
+      OptionControlComponent,
+      EventControlComponent,
+      SurveyControlComponent,
+      ControlPanelComponent,
+      InformationComponent,
+      ContactPanelComponent,
+      CorrespondenceComponent,
+      UnreadComponent,
+      AllComponent,
+      PendingComponent
+   ],
+   entryComponents: [
+      LoginComponent
+   ],
+   imports: [
+      BrowserModule,
+      BrowserAnimationsModule,
+      CustomMaterialModule,
+      FormsModule,
+      ReactiveFormsModule,
+      AppRoutingModule,
+      RouterModule,
+      HttpClientModule
+   ],
+   providers: [],
+   bootstrap: [
+      AppComponent
+   ]
 })
 export class AppModule { }

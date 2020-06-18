@@ -11,6 +11,8 @@ import { ContactComponent } from './contact/contact.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { AdminControlComponent } from './admin-control/admin-control.component';
+import { CorrespondenceComponent } from './correspondence/correspondence.component';
+
 
 //Auth imports
 import { AuthGuard } from './auth/auth.guard'
@@ -40,6 +42,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'correspondence',
+    component: CorrespondenceComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'help',
     component: AdminHelpComponent
   },
@@ -50,11 +57,11 @@ const appRoutes: Routes = [
   },
   {
 		path: "**",
-		redirectTo: "/home"
+		redirectTo: "/"
   },
   { 
     path: '',
-    redirectTo: '/home',
+    redirectTo: '/',
     pathMatch: 'full' }
 ];
 
