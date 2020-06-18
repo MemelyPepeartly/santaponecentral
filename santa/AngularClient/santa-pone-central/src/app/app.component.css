@@ -17,7 +17,6 @@
 #bg-div
 {
   background-image: url(../assets/santa.png);
-  background-position: absolute;
   background-repeat: no-repeat;
   height: 100%;
   margin-top: 10px;
