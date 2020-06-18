@@ -1,4 +1,7 @@
-
+button
+{
+  display: inline-block;
+}
 button:hover
 {
   color: red;

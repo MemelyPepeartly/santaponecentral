@@ -1,4 +1,7 @@
-
+button
+{
+  display: inline-block;
+}
 button:hover
 {
   color: red;
@@ -7,11 +10,6 @@ button:hover
   animation-name: example;
   animation-duration: 3s;
   animation-iteration-count: infinite
-}
-
-mat-label
-{
-  font-size: large;
 }
 
 @-webkit-keyframes example {
@@ -37,9 +35,17 @@ mat-label
   }
 }
 
+mat-label
+{
+  font-size: large;
+}
+
+
 .navmenu
 {
   margin-top: 2%;
+  color: white;
+  height: fit-content;
 }
 
 .navmenu mat-label
