@@ -6,6 +6,8 @@ import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, Client
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
+import { Message, MessageMeta } from 'src/classes/message';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +96,31 @@ export class MapService {
     });
 
     return mappedProfileRecipient;
+  }
+  mapMessage(message)
+  {
+    let mappedMessage = new Message;
+    
+    mappedMessage.chatMessageID = message.chatMessageID;
+    mappedMessage.senderClient = this.mapMeta(message.senderClient);
+    mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
+    mappedMessage.clientRelationXrefID = message.clientRelationXrefID;
+    mappedMessage.messageContent = message.messageContent;
+    mappedMessage.dateTimeSent =  message.dateTimeSent;
+    mappedMessage.isMessageRead = message.isMessageRead;
+
+    return mappedMessage;
+  }
+  // Maps the meta info for messages
+  mapMeta(meta)
+  {
+    let mappedMeta = new MessageMeta;
+
+    mappedMeta.clientID = meta.clientID;
+    mappedMeta.clientName = meta.clientName;
+    mappedMeta.clientNickname = meta.nickname;
+
+    return mappedMeta;
   }
   mapClientRelationship(client: Client, eventTypeID: string)
   {
