@@ -37,7 +37,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                List<Logic.Objects.Client> clients = repository.GetAllClients();
+                List<Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
                     return NotFound();

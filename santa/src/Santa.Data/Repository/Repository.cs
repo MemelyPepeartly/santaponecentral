@@ -67,19 +67,20 @@ namespace Santa.Data.Repository
         /// Gets a list of all clients
         /// </summary>
         /// <returns></returns>
-        public List<Logic.Objects.Client> GetAllClients()
+        public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
             try
             {
                 List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
-                clientList = santaContext.Client
+                clientList = (await santaContext.Client
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(crx => crx.RecipientClient)
                     .Include(sc => sc.ClientRelationXrefSenderClient)
                         .ThenInclude(crx => crx.SenderClient)
                     .Include(tx => tx.ClientTagXref)
                         .ThenInclude(t => t.Tag)
-                    .Include(s => s.ClientStatus)
+                    .Include(s => s.ClientStatus).ToListAsync())
+
                     .Select(Mapper.MapClient).ToList();
                 return clientList;
             }
@@ -250,12 +251,11 @@ namespace Santa.Data.Repository
         /// Gets a list of all tags
         /// </summary>
         /// <returns></returns>
-        public List<Logic.Objects.Tag> GetAllTags()
+        public async Task<List<Logic.Objects.Tag>> GetAllTags()
         {
             try
             {
-                List<Logic.Objects.Tag> logicTags = new List<Logic.Objects.Tag>();
-                logicTags = santaContext.Tag.Select(Mapper.MapTag).ToList();
+                List<Logic.Objects.Tag> logicTags = (await santaContext.Tag.ToListAsync()).Select(Mapper.MapTag).ToList();
 
                 return logicTags;
             }
@@ -334,13 +334,14 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public List<Message> GetAllMessages()
+        public async Task<List<Message>> GetAllMessages()
         {
             try
             {
-                List<Logic.Objects.Message> logicMessageList = santaContext.ChatMessage
+                List<Logic.Objects.Message> logicMessageList = (await santaContext.ChatMessage
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageRecieverClient)
+                    .ToListAsync())
                     .Select(Mapper.MapMessage).ToList();
 
                 return logicMessageList;
@@ -350,14 +351,15 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public List<Message> GetChatHistory(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<List<Message>> GetChatHistory(Guid clientID, Guid? clientRelationXrefID)
         {
             try
             {
-                List<Message> logicListMessages = santaContext.ChatMessage
+                List<Message> logicListMessages = (await santaContext.ChatMessage
+                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID && (m.MessageRecieverClient.ClientId == clientID || m.MessageSenderClient.ClientId == clientID))
+                    .OrderBy(dt => dt.DateTimeSent)
+                    .ToListAsync())
                     .Select(Mapper.MapMessage)
-                    .Where(m => m.clientRelationXrefID == clientRelationXrefID && (m.recieverClient.clientId == clientID || m.senderClient.clientId == clientID))
-                    .OrderBy(dt => dt.dateTimeSent)
                     .ToList();
                 return logicListMessages;
             }
@@ -398,11 +400,11 @@ namespace Santa.Data.Repository
         #endregion
 
         #region ClientStatus
-        public List<Status> GetAllClientStatus()
+        public async Task<List<Status>> GetAllClientStatus()
         {
             try
             {
-                List<Logic.Objects.Status> logicStatusList = santaContext.ClientStatus.Select(Mapper.MapStatus).ToList();
+                List<Logic.Objects.Status> logicStatusList = (await santaContext.ClientStatus.ToListAsync()).Select(Mapper.MapStatus).ToList();
                 return logicStatusList;
             }
             catch (Exception e)
@@ -502,12 +504,11 @@ namespace Santa.Data.Repository
         /// Gets a list of all events
         /// </summary>
         /// <returns></returns>
-        public List<Event> GetAllEvents()
+        public async Task<List<Event>> GetAllEvents()
         {
             try
             {
-                List<Logic.Objects.Event> eventList = new List<Logic.Objects.Event>();
-                eventList = santaContext.EventType.Select(Mapper.MapEvent).ToList();
+                List<Logic.Objects.Event> eventList = (await santaContext.EventType.ToListAsync()).Select(Mapper.MapEvent).ToList();
                 return eventList;
             }
             catch (Exception e)
@@ -572,17 +573,17 @@ namespace Santa.Data.Repository
         /// Gets all surveys
         /// </summary>
         /// <returns></returns>
-        public List<Logic.Objects.Survey> GetAllSurveys()
+        public async Task<List<Logic.Objects.Survey>> GetAllSurveys()
         {
             try
             {
-                List<Logic.Objects.Survey> surveyList = new List<Logic.Objects.Survey>();
-                surveyList = santaContext.Survey
+                List<Logic.Objects.Survey> surveyList = (await santaContext.Survey
                     .Include(s => s.SurveyQuestionXref)
                         .ThenInclude(sqx => sqx.SurveyQuestion)
                             .ThenInclude(sq => sq.SurveyQuestionOptionXref)
                                 .ThenInclude(so => so.SurveyOption)
-                    .AsNoTracking()
+                    .ToListAsync())
+
                     .Select(Mapper.MapSurvey).ToList();
 
                 return surveyList;
@@ -674,11 +675,12 @@ namespace Santa.Data.Repository
 
         #region SurveyOption
 
-        public List<Option> GetAllSurveyOption()
+        public async Task<List<Option>> GetAllSurveyOption()
         {
             try
             {
-                return santaContext.SurveyOption.Include(s=>s.SurveyQuestionOptionXref).Select(Mapper.MapSurveyOption).ToList();
+                List<Option> listLogicSurveyOption = (await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).ToListAsync()).Select(Mapper.MapSurveyOption).ToList();
+                return listLogicSurveyOption;
             }
             catch(Exception e)
             {
@@ -786,14 +788,15 @@ namespace Santa.Data.Repository
         /// Gets a list of all surveyQuestions
         /// </summary>
         /// <returns></returns>
-        public List<Question> GetAllSurveyQuestions()
+        public async Task<List<Question>> GetAllSurveyQuestions()
         {
             try
             {
-                List<Question> listLogicQuestion = santaContext.SurveyQuestion
+                List<Question> listLogicQuestion = (await santaContext.SurveyQuestion
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
-                    .AsNoTracking()
+                    .ToListAsync())
+
                     .Select(Mapper.MapQuestion).ToList();
                 return listLogicQuestion;
             }
@@ -920,11 +923,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public List<Logic.Objects.Response> GetAllSurveyResponsesByClientID(Guid clientID)
+        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponsesByClientID(Guid clientID)
         {
             try
             {
-                List<Response> listLogicResponse = santaContext.SurveyResponse.Select(Mapper.MapResponse).Where(r => r.clientID == clientID).ToList();
+                List<Response> listLogicResponse = (await santaContext.SurveyResponse.Where(r => r.ClientId == clientID).ToListAsync()).Select(Mapper.MapResponse).ToList();
                 return listLogicResponse;
             }
             catch(Exception e)
@@ -932,11 +935,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public List<Logic.Objects.Response> GetAllSurveyResponses()
+        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponses()
         {
             try
             {
-                List<Response> listLogicResponse = santaContext.SurveyResponse.Select(Mapper.MapResponse).ToList();
+                List<Response> listLogicResponse = (await santaContext.SurveyResponse.ToListAsync()).Select(Mapper.MapResponse).ToList();
                 return listLogicResponse;
             }
             catch (Exception e)
