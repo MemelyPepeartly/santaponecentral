@@ -1,6 +1,7 @@
 import { Status } from './status';
 import { Address } from './address';
 import { SurveyResponse } from './survey';
+import { EventType } from './eventType';
 
 export class Profile 
 {
@@ -15,10 +16,9 @@ export class Profile
 }
 export class ProfileRecipient 
 {
-    recipientClientID: string;
-    recipientEventTypeID: string;
     clientName: string;
     clientNickname: string;
     address = new Address;
+    recipientEvent: EventType;
     responses: Array<SurveyResponse> = [];
 }
