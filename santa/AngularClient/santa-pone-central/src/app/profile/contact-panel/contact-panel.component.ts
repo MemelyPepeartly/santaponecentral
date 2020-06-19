@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Message } from 'src/classes/message';
 
 @Component({
   selector: 'app-contact-panel',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class ContactPanelComponent implements OnInit {
 
   constructor() { }
+
+  @Input() chat: Array<Message>;
 
   ngOnInit(): void {
   }

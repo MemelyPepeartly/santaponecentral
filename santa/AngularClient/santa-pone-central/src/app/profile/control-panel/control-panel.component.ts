@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client } from 'src/classes/client';
-import { ProfileRecipient } from 'src/classes/profile';
+import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 
@@ -14,9 +14,15 @@ export class ControlPanelComponent implements OnInit {
   constructor(private gatherer: GathererService) { }
 
   @Input() recipients: Array<ProfileRecipient> = []
+  @Output() selectedRecipientContactHistoryEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
   columns: string[] = ["recipient", "event", "contact"];
 
   ngOnInit(): void {
+  }
+
+  public openContactHistory(recipient: ProfileRecipient)
+  {
+    this.selectedRecipientContactHistoryEvent.emit(recipient);
   }
 
 }

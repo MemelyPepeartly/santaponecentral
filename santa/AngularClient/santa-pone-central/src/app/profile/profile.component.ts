@@ -4,7 +4,8 @@ import { SantaApiGetService } from '../services/santaApiService.service';
 import { GathererService } from '../services/gatherer.service';
 import { MapService } from '../services/mapService.service';
 import { AuthService } from '../auth/auth.service';
-import { Profile } from 'src/classes/profile';
+import { Profile, ProfileRecipient } from 'src/classes/profile';
+import { Message } from 'src/classes/message';
 
 @Component({
   selector: 'app-profile',
@@ -19,15 +20,19 @@ export class ProfileComponent implements OnInit {
     public ApiMapper: MapService) { }
 
   public profile: Profile = new Profile();
+  public chat: Array<Message> = [];
 
   public async ngOnInit() {
     var data = this.auth.userProfile$.subscribe(async data => {
       this.profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(data.email).toPromise());
     });
-    // this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
-    //   this.recipients = clientArray;
-    // });
-    // this.gatherer.gatherAllClients();
+  }
+  public populateChat(recipient: ProfileRecipient)
+  {
+    this.chat = [];
+
+    console.log(recipient);
+    
   }
 
 }
