@@ -7,6 +7,7 @@ import { Survey, Question } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Status } from 'src/classes/status';
+import { Message } from 'src/classes/message';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class GathererService {
   public gatheringAllQuestions: boolean = false;
   public gatheringAllEvents: boolean = false;
   public gatheringAllStatuses: boolean = false;
+  public gatheringAllMessages: boolean = false;
 
 
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
@@ -29,8 +31,9 @@ export class GathererService {
   private _allQuestions: BehaviorSubject<Array<Question>> = new BehaviorSubject([])
   private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([])
   private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([])
+  private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([])
 
-
+  // Service variable for determinging if the select anon component is active
   private _onSelectedClient: boolean = false;
   get onSelectedClient(): boolean
   {
@@ -93,6 +96,15 @@ export class GathererService {
   private updateAllStatuses(statusArray: Array<Status>)
   {
     this._allStatuses.next(statusArray);
+  }
+  
+  get allMessages()
+  {
+    return this._allMessages.asObservable();
+  }
+  private updateAllMessages(messageArray: Array<Message>)
+  {
+    this._allMessages.next(messageArray);
   }
   
   public async gatherAllClients()
@@ -198,6 +210,25 @@ export class GathererService {
     this.updateAllStatuses(statusList);
     this.gatheringAllStatuses = false;
   }
+  public async gatherAllMessages()
+  {
+    this.gatheringAllMessages = true;
+    this.updateAllMessages([])
+    let messageList: Array<Message> = []
+
+    var res = await this.SantaApiGet.getAllMessages().toPromise().catch(err => {
+      console.log(err); 
+    });
+
+    for(let i = 0; i < res.length; i++)
+    {
+      messageList.push(this.ApiMapper.mapMessage(res[i]));
+    }
+    this.updateAllMessages(messageList);
+    this.gatheringAllMessages = false;
+  }
+  
+  // Utility methods
   public async allGather()
   {
     await this.gatherAllClients();
@@ -206,5 +237,16 @@ export class GathererService {
     await this.gatherAllSurveys();
     await this.gatherAllTags();
     await this.gatherAllStatuses();
+    await this.gatherAllMessages();
+  }
+  public clearAll()
+  {
+    this.updateAllClient([]);
+    this.updateAllEvents([]);
+    this.updateAllQuestions([]);
+    this.updateAllSurveys([]);
+    this.updateAllTags([]);
+    this.updateAllStatuses([]);
+    this.updateAllMessages([]);
   }
 }
