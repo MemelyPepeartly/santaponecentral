@@ -90,7 +90,8 @@ namespace Santa.Data.Repository
             Logic.Objects.ProfileRecipient logicProfileRecipient = new ProfileRecipient()
             {
                 recipientClientID = contextSenderXref.RecipientClientId,
-                recipientEventTypeID = contextSenderXref.EventTypeId,
+                recipientEvent = Mapper.MapEvent(contextSenderXref.EventType),
+
                 address = new Address
                 {
                     addressLineOne = contextRecipientClientData.AddressLine1,

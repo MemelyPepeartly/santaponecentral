@@ -173,8 +173,10 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
                     .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.RecipientClient)
+                        .ThenInclude(u => u.RecipientClient) 
                         .ThenInclude(recRes => recRes.SurveyResponse)
+                    .Include(r => r.ClientRelationXrefSenderClient)
+                        .ThenInclude(e => e.EventType)
                     .Include(res => res.SurveyResponse)
                     .Include(s => s.ClientStatus)
                     .FirstOrDefaultAsync(c => c.Email == email));
