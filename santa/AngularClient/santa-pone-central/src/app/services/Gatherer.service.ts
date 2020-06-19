@@ -237,7 +237,7 @@ export class GathererService {
     await this.gatherAllSurveys();
     await this.gatherAllTags();
     await this.gatherAllStatuses();
-    await this.gatherAllMessages();
+    //await this.gatherAllMessages();
   }
   public clearAll()
   {
@@ -247,6 +247,6 @@ export class GathererService {
     this.updateAllSurveys([]);
     this.updateAllTags([]);
     this.updateAllStatuses([]);
-    this.updateAllMessages([]);
+    //this.updateAllMessages([]);
   }
 }
