@@ -26,11 +26,11 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Survey>> GetAllSurveys()
+        public async Task<ActionResult<List<Logic.Objects.Survey>>> GetAllSurveys()
         {
             try
             {
-                return Ok(repository.GetAllSurveys());
+                return Ok(await repository.GetAllSurveys());
             }
             catch (Exception e)
             {

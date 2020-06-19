@@ -915,7 +915,7 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Response logicResponse = Mapper.MapResponse(await santaContext.SurveyResponse.FirstAsync(r => r.SurveyResponseId == surveyResponseID));
+                Logic.Objects.Response logicResponse = Mapper.MapResponse(await santaContext.SurveyResponse.FirstOrDefaultAsync(r => r.SurveyResponseId == surveyResponseID));
                 return logicResponse;
             }
             catch(Exception e)
