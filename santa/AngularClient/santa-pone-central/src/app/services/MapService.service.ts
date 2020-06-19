@@ -80,7 +80,7 @@ export class MapService {
   {
     let mappedProfileRecipient = new ProfileRecipient;
 
-    mappedProfileRecipient.recipientClientID = recipient.clientID;
+    mappedProfileRecipient.recipientEvent = this.mapEvent(recipient.recipientEvent);
     mappedProfileRecipient.clientName = recipient.clientName;
     mappedProfileRecipient.clientNickname = recipient.nickname;
 
