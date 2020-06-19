@@ -5,6 +5,7 @@ import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RoleConstants } from '../shared/constants/roleConstants.enum';
+import { GathererService } from '../services/gatherer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class AuthService {
       concatMap((client: Auth0Client) => from(client.getTokenSilently(options)))
     );
   }
+
   private isAdminSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
   public isAdmin = this.isAdminSubject$.asObservable();
   // Create an observable of Auth0 instance of client
@@ -47,7 +49,7 @@ export class AuthService {
   // Create a local property for login status
   loggedIn: boolean = null;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private gatherer: GathererService) {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
     this.localAuthSetup();
@@ -141,6 +143,8 @@ export class AuthService {
         returnTo: `${window.location.origin}`
       });
     });
+    //Clears all values from gatherer as a security measure
+    this.gatherer.clearAll();
   }
 
 }
