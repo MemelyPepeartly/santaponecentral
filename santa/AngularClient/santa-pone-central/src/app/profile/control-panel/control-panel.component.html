@@ -23,7 +23,7 @@
             <!-- Contact Column -->
             <ng-container matColumnDef="contact">
               <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
-              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button>Contact History</button> </td>
+              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button (click)="openContactHistory(recipient)">Contact History</button> </td>
             </ng-container>
           
             <tr mat-header-row *matHeaderRowDef="columns"></tr>
