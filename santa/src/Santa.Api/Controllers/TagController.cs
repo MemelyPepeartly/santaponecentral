@@ -26,11 +26,11 @@ namespace Santa.Api.Controllers
         // GET: api/Tag
         [HttpGet]
         [Authorize(Policy = "read:tags")]
-        public ActionResult<List<Logic.Objects.Tag>> GetAllTags()
+        public async Task<ActionResult<List<Logic.Objects.Tag>>> GetAllTags()
         {
             try
             {
-                List<Logic.Objects.Tag> logicTags = repository.GetAllTags();
+                List<Logic.Objects.Tag> logicTags = await repository.GetAllTags();
                 if (logicTags == null)
                 {
                     return NotFound();

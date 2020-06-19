@@ -25,11 +25,11 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Question>> GetQuestionsAsync()
+        public async Task<ActionResult<List<Logic.Objects.Question>>> GetQuestionsAsync()
         {
             try
             {
-                List<Logic.Objects.Question> listLogicQuestion = repository.GetAllSurveyQuestions();
+                List<Logic.Objects.Question> listLogicQuestion = await repository.GetAllSurveyQuestions();
                 return Ok(listLogicQuestion);
             }
             catch (Exception e)
