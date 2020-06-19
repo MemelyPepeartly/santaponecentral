@@ -94,5 +94,31 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
+        // PUT: api/Message/5
+        [HttpPut("{chatMessageID}/Read")]
+        public async Task<ActionResult<Logic.Objects.Message>> PutDescription(Guid chatMessageID, [FromBody, Bind("isMessageRead")] ApiMessageRead message)
+        {
+            try
+            {
+                Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
+                targetMessage.isMessageRead = message.isMessageRead;
+                try
+                {
+                    await repository.UpdateMessageByIDAsync(targetMessage);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetMessageByIDAsync(chatMessageID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
     }
 }
