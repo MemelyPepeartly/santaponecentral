@@ -4,21 +4,31 @@
         <mat-card-title>Assigned Anons</mat-card-title>
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
     </mat-card-header>
-    <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
     <mat-card-content>
-        <mat-selection-list #anons class="mat-elevation-z3" [multiple]="false">
-            <mat-list-option *ngFor="let recipient of recipients">
-                {{recipient.clientNickname}}
-            </mat-list-option>
-        </mat-selection-list>
-    </mat-card-content>
-</mat-card>
 
-<mat-card class="selected-anon-card mat-elevation-z5">
-    <mat-card-header>
-        <mat-card-title>Select an assignment to view their info</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="mat-elevation-z3">
-        <p>{{anons.selectedOptions.selected}}</p>
+        <table mat-table [dataSource]="recipients" id="data-table" class="mat-elevation-z8">
+          
+            <!-- Recipient Column -->
+            <ng-container matColumnDef="recipient">
+              <th mat-header-cell *matHeaderCellDef> Recipient </th>
+              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button>{{recipient.clientNickname}}</button> </td>
+            </ng-container>
+          
+            <!-- Event Column -->
+            <ng-container matColumnDef="event">
+              <th mat-header-cell *matHeaderCellDef> Event </th>
+              <td mat-cell *matCellDef="let recipient"> {{recipient.recipientEvent.eventDescription}} </td>
+            </ng-container>
+        
+            <!-- Contact Column -->
+            <ng-container matColumnDef="contact">
+              <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
+              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button>Contact History</button> </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+          
+        </table>
     </mat-card-content>
 </mat-card>
