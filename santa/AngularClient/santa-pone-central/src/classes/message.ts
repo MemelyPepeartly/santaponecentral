@@ -16,7 +16,4 @@ export class MessageMeta {
     clientName?: string;
     clientNickname?: string;
 }
-// A history is for one-sided histories of messages
-export class History {
-    messages: Array<Message> = []
-}
+

@@ -80,8 +80,9 @@ export class MapService {
   {
     let mappedProfileRecipient = new ProfileRecipient;
 
-    mappedProfileRecipient.recipientEvent = this.mapEvent(recipient.recipientEvent);
-    mappedProfileRecipient.clientName = recipient.clientName;
+    mappedProfileRecipient.clientID = recipient.recipientClientID;
+    mappedProfileRecipient.relationXrefID = recipient.relationXrefID;
+    mappedProfileRecipient.clientName = recipient.name;
     mappedProfileRecipient.clientNickname = recipient.nickname;
 
     mappedProfileRecipient.address.addressLineOne = recipient.address.addressLineOne;
@@ -90,6 +91,8 @@ export class MapService {
     mappedProfileRecipient.address.state = recipient.address.state;
     mappedProfileRecipient.address.country = recipient.address.country;
     mappedProfileRecipient.address.postalCode = recipient.address.postalCode;
+
+    mappedProfileRecipient.recipientEvent = this.mapEvent(recipient.recipientEvent);
 
     recipient.responses.forEach(response => {
       mappedProfileRecipient.responses.push(this.mapResponse(response));
@@ -167,7 +170,7 @@ export class MapService {
 
     mappedEventType.eventTypeID = event.eventTypeID;
     mappedEventType.eventDescription = event.eventDescription;
-    mappedEventType.isActive = event.isActive;
+    mappedEventType.isActive = event.active;
 
     return mappedEventType;
   }
