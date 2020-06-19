@@ -42,9 +42,12 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Message
+        Task CreateMessage(Message newMessage);
         List<Message> GetAllMessages();
         Task<Logic.Objects.Message> GetMessageByIDAsync(Guid chatMessageID);
-        Task CreateMessage(Message newMessage);
+        Task<Logic.Objects.ChatHistory> GetChatHistory(Guid clientID, Guid? eventID);
+        Task UpdateMessageByIDAsync(Message targetMessage);
+
         #endregion
 
         #region Status
@@ -98,6 +101,5 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         public Task SaveAsync();
-        
     }
 }

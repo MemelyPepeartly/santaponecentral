@@ -322,6 +322,18 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Message
+        public async Task CreateMessage(Message newMessage)
+        {
+            try
+            {
+                Data.Entities.ChatMessage contextMessage = Mapper.MapMessage(newMessage);
+                await santaContext.ChatMessage.AddAsync(contextMessage);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public List<Message> GetAllMessages()
         {
             try
@@ -351,15 +363,19 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
-        public async Task CreateMessage(Message newMessage)
+        
+        public async Task UpdateMessageByIDAsync(Message targetMessage)
         {
             try
             {
-                Data.Entities.ChatMessage contextMessage = Mapper.MapMessage(newMessage);
-                await santaContext.ChatMessage.AddAsync(contextMessage);
+                Entities.ChatMessage contextMessage = await santaContext.ChatMessage.FirstOrDefaultAsync(m => m.ChatMessageId == targetMessage.chatMessageID);
+
+                contextMessage.IsMessageRead = targetMessage.isMessageRead;
+
+                santaContext.ChatMessage.Update(contextMessage);
+
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 throw e.InnerException;
             }
@@ -947,7 +963,6 @@ namespace Santa.Data.Repository
             }
 
         }
-
         #endregion
     }
 }
