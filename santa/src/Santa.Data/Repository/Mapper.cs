@@ -177,15 +177,15 @@ namespace Santa.Data.Repository
                 chatMessageID = contextMessage.ChatMessageId,
                 recieverClient = new MessageClientMeta()
                 {
-                    clientId = contextMessage.MessageRecieverClientId,
-                    clientName = contextMessage.MessageRecieverClient.ClientName,
-                    clientNickname = contextMessage.MessageRecieverClient.Nickname
+                    clientId = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClientId : null,
+                    clientName = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.ClientName : String.Empty,
+                    clientNickname = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.Nickname : String.Empty
                 },
                 senderClient = new MessageClientMeta()
                 {
-                    clientId = contextMessage.MessageSenderClientId,
-                    clientName = contextMessage.MessageSenderClient.ClientName,
-                    clientNickname = contextMessage.MessageSenderClient.Nickname
+                    clientId = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClientId : null,
+                    clientName = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClient.ClientName : String.Empty,
+                    clientNickname = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClient.Nickname : String.Empty
                 },
                 messageContent = contextMessage.MessageContent,
                 dateTimeSent = contextMessage.DateTimeSent,
