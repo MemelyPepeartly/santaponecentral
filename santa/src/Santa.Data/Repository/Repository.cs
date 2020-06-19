@@ -354,7 +354,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Message> logicListMessages = santaContext.ChatMessage.Select(Mapper.MapMessage).Where(m => m.clientRelationXrefID == clientRelationXrefID && (m.recieverClient.clientId == clientID || m.senderClient.clientId == clientID)).OrderBy(dt => dt.dateTimeSent).ToList();
+                List<Message> logicListMessages = santaContext.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .Where(m => m.clientRelationXrefID == clientRelationXrefID && (m.recieverClient.clientId == clientID || m.senderClient.clientId == clientID))
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .ToList();
                 return logicListMessages;
             }
             catch (Exception e)
