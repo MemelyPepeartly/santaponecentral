@@ -97,6 +97,21 @@ namespace Santa.Api.Controllers
             }
 
         }
+        // GET: api/Client/5/MessageHistory/5
+        [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID}")]
+        public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        {
+            try
+            {
+                return Ok(repository.GetChatHistory(clientID, clientRelationXrefID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
+        }
+
 
         // POST: api/Client
         /// <summary>

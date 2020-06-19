@@ -350,7 +350,18 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        public List<Message> GetChatHistory(Guid clientID, Guid? clientRelationXrefID)
+        {
+            try
+            {
+                List<Message> logicListMessages = santaContext.ChatMessage.Select(Mapper.MapMessage).Where(m => m.clientRelationXrefID == clientRelationXrefID && (m.recieverClient.clientId == clientID || m.senderClient.clientId == clientID)).OrderBy(dt => dt.dateTimeSent).ToList();
+                return logicListMessages;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
             try

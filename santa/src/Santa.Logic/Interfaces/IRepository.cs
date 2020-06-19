@@ -44,8 +44,8 @@ namespace Santa.Logic.Interfaces
         #region Message
         Task CreateMessage(Message newMessage);
         List<Message> GetAllMessages();
+        List<Message> GetChatHistory(Guid clientID, Guid? clientRelationXrefID);
         Task<Logic.Objects.Message> GetMessageByIDAsync(Guid chatMessageID);
-        Task<Logic.Objects.ChatHistory> GetChatHistory(Guid clientID, Guid? eventID);
         Task UpdateMessageByIDAsync(Message targetMessage);
 
         #endregion
