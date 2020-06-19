@@ -24,11 +24,11 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Option>> GetAllSurveyOptions()
+        public async Task<ActionResult<List<Logic.Objects.Option>>> GetAllSurveyOptions()
         {
             try
             {
-                return Ok(repository.GetAllSurveyOption());
+                return Ok(await repository.GetAllSurveyOption());
             }
             catch(Exception e)
             {

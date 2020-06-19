@@ -23,6 +23,7 @@ namespace Santa.Api.Controllers
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
+
         // GET: api/Tag
         [HttpGet]
         [Authorize(Policy = "read:tags")]

@@ -23,11 +23,11 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Event>> GetAllEvents()
+        public async Task<ActionResult<List<Logic.Objects.Event>>> GetAllEvents()
         {
             try
             {
-                return Ok(repository.GetAllEvents());
+                return Ok(await repository.GetAllEvents());
             }
             catch (Exception e)
             {

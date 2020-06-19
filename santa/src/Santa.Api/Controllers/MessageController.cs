@@ -25,11 +25,11 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Logic.Objects.Message>> GetAllMessages()
+        public async Task<ActionResult<List<Logic.Objects.Message>>> GetAllMessages()
         {
             try
             {
-                return Ok(repository.GetAllMessages());
+                return Ok(await repository.GetAllMessages());
             }
             catch (Exception e)
             {

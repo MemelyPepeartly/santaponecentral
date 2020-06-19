@@ -64,10 +64,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                //UserProfile userProfile = await auth.GetUserProfile(Request.Headers["Authorization"].ToString());
-
-                Logic.Objects.Client client = await repository.GetClientByIDAsync(clientID);
-                return Ok(JsonConvert.SerializeObject(client, Formatting.Indented));
+                return Ok(await repository.GetClientByIDAsync(clientID));
             }
             catch (Exception e)
             {
@@ -85,11 +82,11 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("{clientID}/Response")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:clients")]
-        public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID)
+        public async Task<ActionResult<List<Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
             try
             {
-                return Ok(repository.GetAllSurveyResponsesByClientID(clientID));
+                return Ok(await repository.GetAllSurveyResponsesByClientID(clientID));
             }
             catch (Exception e)
             {
@@ -99,11 +96,11 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Client/5/MessageHistory/5
         [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID}")]
-        public ActionResult<List<Logic.Objects.Client>> GetClientResponsesByIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<ActionResult<List<Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID, Guid? clientRelationXrefID)
         {
             try
             {
-                return Ok(repository.GetChatHistory(clientID, clientRelationXrefID));
+                return Ok(await repository.GetChatHistory(clientID, clientRelationXrefID));
             }
             catch (Exception e)
             {

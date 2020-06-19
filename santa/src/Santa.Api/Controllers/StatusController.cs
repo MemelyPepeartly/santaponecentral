@@ -25,11 +25,11 @@ namespace Santa.Api.Controllers
         // GET: api/Status
         [HttpGet]
 
-        public ActionResult<List<Logic.Objects.Status>> GetAllClientStatus()
+        public async Task<ActionResult<List<Logic.Objects.Status>>> GetAllClientStatus()
         {
             try
             {
-                return Ok(repository.GetAllClientStatus());
+                return Ok(await repository.GetAllClientStatus());
             }
             catch (Exception e)
             {

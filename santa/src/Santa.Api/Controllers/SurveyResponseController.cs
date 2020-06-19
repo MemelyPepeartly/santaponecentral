@@ -26,9 +26,9 @@ namespace Santa.Api.Controllers
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:responses")]
 
-        public ActionResult<List<Logic.Objects.Response>> GetSurveyResponse()
+        public async Task<ActionResult<List<Logic.Objects.Response>>> GetSurveyResponse()
         {
-            return Ok(repository.GetAllSurveyResponses());
+            return Ok(await repository.GetAllSurveyResponses());
         }
         
         // GET: api/SurveyResponses/5
