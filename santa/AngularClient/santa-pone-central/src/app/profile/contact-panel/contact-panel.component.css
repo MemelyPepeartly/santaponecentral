@@ -13,6 +13,14 @@ mat-card
 {
     margin: 10px;
 }
+.recieved-message
+{
+    text-align: left;
+}
+.sent-message
+{
+    text-align: right;
+}
 #contact-div
 {
     width: 100%;
@@ -24,6 +32,7 @@ mat-card
     border: 2px solid;
     margin-left: 5px;
     margin-right: 5px;
+    overflow: scroll;
 }
 #button-container
 {
