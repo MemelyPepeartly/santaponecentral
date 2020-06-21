@@ -67,13 +67,13 @@ namespace Santa.Api.Controllers
                     chatMessageID = Guid.NewGuid(),
                     recieverClient = new Logic.Objects.MessageClientMeta()
                     {
-                        clientId = message.messageRecieverClientID == null ? null : message.messageRecieverClientID
+                        clientId = message.messageRecieverClientID
                     },
                     senderClient = new Logic.Objects.MessageClientMeta()
                     {
-                        clientId = message.messageSenderClientID == null ? null : message.messageSenderClientID
+                        clientId = message.messageSenderClientID
                     },
-                    clientRelationXrefID = message.clientRelationXrefID == null ? null : message.clientRelationXrefID,
+                    clientRelationXrefID = message.clientRelationXrefID,
                     messageContent = message.messageContent,
                     dateTimeSent = DateTime.UtcNow,
                     isMessageRead = false,
@@ -86,7 +86,7 @@ namespace Santa.Api.Controllers
                 {
                     await repository.CreateMessage(logicMessage);
                     await repository.SaveAsync();
-                    return Ok(await repository.GetMessageByIDAsync(logicMessage.chatMessageID));
+                    return Ok();
                 }
             }
             catch (Exception e)
