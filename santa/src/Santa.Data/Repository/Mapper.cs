@@ -176,6 +176,7 @@ namespace Santa.Data.Repository
             Logic.Objects.Message logicMessage = new Message()
             {
                 chatMessageID = contextMessage.ChatMessageId,
+                clientRelationXrefID = contextMessage.ClientRelationXrefId != null ? contextMessage.ClientRelationXrefId : null,
                 recieverClient = new MessageClientMeta()
                 {
                     clientId = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClientId : null,
