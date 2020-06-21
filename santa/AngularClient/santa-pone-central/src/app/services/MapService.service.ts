@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
-import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse } from 'src/classes/responseTypes';
+import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
@@ -119,9 +119,9 @@ export class MapService {
   {
     let mappedMeta = new MessageMeta;
 
-    mappedMeta.clientID = meta.clientID;
+    mappedMeta.clientID = meta.clientId;
     mappedMeta.clientName = meta.clientName;
-    mappedMeta.clientNickname = meta.nickname;
+    mappedMeta.clientNickname = meta.clientNickname;
 
     return mappedMeta;
   }
@@ -239,10 +239,23 @@ export class MapService {
 })
 export class MapResponse
 {
+  mapMessageResponse(selectedChatHistory: ProfileRecipient, sendingClientID, messageContent)
+  {
+    let messageResponse: MessageApiResponse = new MessageApiResponse();
+
+    messageResponse.clientRelationXrefID = selectedChatHistory.relationXrefID;
+    messageResponse.messageSenderClientID = sendingClientID;
+    messageResponse.messageRecieverClientID = null;
+    messageResponse.messageContent = messageContent;
+    
+    return messageResponse;
+  }
   mapClientEmailResponse(client: Client)
   {
     let clientEmailResponse: ClientEmailResponse = new ClientEmailResponse();
+
     clientEmailResponse.clientEmail = client.email
+
     return clientEmailResponse;
   }
   mapClientNicknameResponse(client: Client)
