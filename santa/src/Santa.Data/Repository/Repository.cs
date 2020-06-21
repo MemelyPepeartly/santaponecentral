@@ -341,6 +341,7 @@ namespace Santa.Data.Repository
                 List<Logic.Objects.Message> logicMessageList = (await santaContext.ChatMessage
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageRecieverClient)
+                    .Include(x => x.ClientRelationXref)
                     .ToListAsync())
                     .Select(Mapper.MapMessage).ToList();
 
@@ -357,6 +358,9 @@ namespace Santa.Data.Repository
             {
                 List<Message> logicListMessages = (await santaContext.ChatMessage
                     .Where(m => m.ClientRelationXrefId == clientRelationXrefID && (m.MessageRecieverClient.ClientId == clientID || m.MessageSenderClient.ClientId == clientID))
+                    .Include(s => s.MessageSenderClient)
+                    .Include(r => r.MessageRecieverClient)
+                    .Include(x => x.ClientRelationXref)
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync())
                     .Select(Mapper.MapMessage)
