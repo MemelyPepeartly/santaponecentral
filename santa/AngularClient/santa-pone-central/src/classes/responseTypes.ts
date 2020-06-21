@@ -48,6 +48,12 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
+export class MessageApiResponse {
+    messageSenderClientID?: string = null;
+    messageRecieverClientID?: string = null;
+    clientRelationXrefID?: string = null;
+    messageContent: string;
+}
 //Response type for approving anons and sending a new client to the Auth0 API
 export class Auth0NewClientResponse {
     email: string;
