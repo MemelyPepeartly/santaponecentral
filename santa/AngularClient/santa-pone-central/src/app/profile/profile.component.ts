@@ -21,18 +21,29 @@ export class ProfileComponent implements OnInit {
 
   public profile: Profile = new Profile();
   public chat: Array<Message> = [];
+  public selectedChatHistory: ProfileRecipient;
 
   public async ngOnInit() {
     var data = this.auth.userProfile$.subscribe(async data => {
       this.profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(data.email).toPromise());
     });
   }
-  public populateChat(recipient: ProfileRecipient)
+  public async populateChat(recipient: ProfileRecipient)
   {
     this.chat = [];
+    this.selectedChatHistory = recipient;
 
-    console.log(recipient);
-    
+    var res = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(this.profile.clientID, recipient.relationXrefID).subscribe(res => {
+      res.forEach(message => {
+        this.chat.push(this.ApiMapper.mapMessage(message)); 
+      });
+    });
   }
-
+  public async refreshMessages(newMessagePosted: boolean)
+  {
+    if(newMessagePosted)
+    {
+      await this.populateChat(this.selectedChatHistory)
+    }
+  }
 }

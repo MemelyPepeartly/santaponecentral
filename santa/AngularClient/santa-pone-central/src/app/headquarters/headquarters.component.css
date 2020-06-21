@@ -1,9 +1,8 @@
 .container {
     position: fixed;
-    width: 90%;
+    width: 100%;
     min-width: 450px;
-    height: 70%;
-    margin: 5% auto; /* Will not center vertically and won't work in IE6/7. */
+    height: 90%;
     top:5%;
     left: 0;
     right: 0;

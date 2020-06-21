@@ -4,19 +4,23 @@
         <mat-card-header>
             <mat-card-title>Contact</mat-card-title>
             <mat-card-subtitle>Options for contacting Santapone</mat-card-subtitle>
+        
+
         </mat-card-header>
         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
-            <!-- <div id="button-container">
-                <button class="chat-control-button" mat-raised-button>Button</button>
-                <mat-divider [inset]="true"></mat-divider>
-                <button class="chat-control-button" mat-raised-button>Button</button>
-                <mat-divider [inset]="true"></mat-divider>
-                <button class="chat-control-button" mat-raised-button>Button</button>
-                <mat-divider [inset]="true"></mat-divider>
-            </div> -->
             <div id="chat-window" class="mat-elevation-z7">
+                <ng-container *ngFor="let message of chat">
+                    <div [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
+                                     'recieved-message' : message.recieverClient.clientID == profile.clientID}">
+                        <mat-divider [inset]="true"></mat-divider>
+                        <h3> {{ message.senderClient.clientNickname }} </h3>
+                        <p> {{ message.messageContent }} </p>
+                        <p> {{ message.dateTimeSent }} </p>
+                    </div>
+                </ng-container>  
             </div>
+            <button (click)="postTest()">TEST POST</button>
         </mat-card-content>
     </mat-card>
 </div>
