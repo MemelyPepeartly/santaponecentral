@@ -14,10 +14,17 @@ export class ControlPanelComponent implements OnInit {
   constructor(private gatherer: GathererService) { }
 
   @Input() recipients: Array<ProfileRecipient> = []
+
   @Output() selectedRecipientContactHistoryEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
+  @Output() selectedRecipientInformationEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
+
   columns: string[] = ["recipient", "event", "contact"];
 
   ngOnInit(): void {
+  }
+  public openInformation(recipient: ProfileRecipient)
+  {
+    this.selectedRecipientInformationEvent.emit(recipient)
   }
 
   public openContactHistory(recipient: ProfileRecipient)
