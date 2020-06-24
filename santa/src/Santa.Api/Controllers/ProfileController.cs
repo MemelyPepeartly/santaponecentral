@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -57,6 +58,25 @@ namespace Santa.Api.Controllers
                 */
 
                 Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+                List<Message> history = new List<Message>();
+
+                // Finds all the messages that havn't been read yet and sets the number equal to how many messages have been unread for notification purposes
+                foreach(ProfileRecipient recipient in logicProfile.recipients)
+                {
+                    history = await repository.GetChatHistory(logicProfile.clientID, recipient.relationXrefID);
+                    foreach(Message message in history)
+                    {
+                        recipient.unreadCount += message.isMessageRead == false && message.recieverClient.clientId == logicProfile.clientID ? 1 : 0;
+                    }
+                }
+
+                // Case is same as above, but rather for the one case where there is no relationship XrefID. Used for general chat
+                history = await repository.GetChatHistory(logicProfile.clientID, null);
+                foreach (Message message in history)
+                {
+                    logicProfile.generalChatUnreadCount += message.isMessageRead == false && message.recieverClient.clientId == logicProfile.clientID ? 1 : 0;
+                }
+
                 if (logicProfile == null)
                 {
                     return NoContent();
