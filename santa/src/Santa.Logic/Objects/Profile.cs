@@ -12,6 +12,7 @@ namespace Santa.Logic.Objects
         public string nickname { get; set; }
         public string email { get; set; }
         public Address address { get; set; }
+        public int generalChatUnreadCount { get; set; }
         public List<ProfileRecipient> recipients { get; set; }
         public List<Response> responses { get; set; }
     }
