@@ -47,7 +47,8 @@ import { CorrespondenceComponent } from './correspondence/correspondence.compone
 import { UnreadComponent } from './correspondence/unread/unread.component';
 import { AllComponent } from './correspondence/all/all.component';
 import { PendingComponent } from './correspondence/pending/pending.component';
-import { SelectedChatComponent } from './correspondence/selected-chat/selected-chat.component'
+import { SelectedChatComponent } from './correspondence/selected-chat/selected-chat.component';
+import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component'
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import { SelectedChatComponent } from './correspondence/selected-chat/selected-c
       UnreadComponent,
       AllComponent,
       PendingComponent,
-      SelectedChatComponent
+      SelectedChatComponent,
+      SelectedRecipientComponent
    ],
    entryComponents: [
       LoginComponent
