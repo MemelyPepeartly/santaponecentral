@@ -4,29 +4,28 @@
         <mat-card-header>
             <mat-card-title>Contact</mat-card-title>
             <mat-card-subtitle>Options for contacting Santapone</mat-card-subtitle>
-        
-
         </mat-card-header>
         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
             <div id="chat-window" class="mat-elevation-z7">
                 <ng-container *ngFor="let message of chat">
+                    <div class="date-div">
+                        <span>{{ message.dateTimeSent }}</span>
+                        <mat-divider [inset]="true"></mat-divider>
+                    </div>
                     <div class="message" [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
                                      'recieved-message' : message.recieverClient.clientID == profile.clientID}">
-
-                        
-
-                        <div class="date">
-                            <span> {{ message.dateTimeSent }} </span>
-                            <span> {{ message.senderClient.clientNickname }} </span>
+                        <div class="nick-div">
+                            <span *ngIf="message.senderClient.clientNickname != ''"> {{ message.senderClient.clientNickname }} </span>
+                            <span *ngIf="message.senderClient.clientNickname == ''"> Admin </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
                         <p> {{ message.messageContent }} </p>
-                        
                     </div>
                 </ng-container>  
             </div>
-            <button (click)="postTest()">TEST POST</button>
+            <button mat-raised-button (click)="memberPostTest()">Member post test</button>
+            <button mat-raised-button *ngIf="isAdmin" (click)="adminPostTest()">Admin post test</button>
         </mat-card-content>
     </mat-card>
 </div>
