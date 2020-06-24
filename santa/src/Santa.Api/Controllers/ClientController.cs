@@ -95,8 +95,8 @@ namespace Santa.Api.Controllers
 
         }
         // GET: api/Client/5/MessageHistory/5
-        [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID}")]
-        public async Task<ActionResult<List<Logic.Objects.Message>>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid clientRelationXrefID)
+        [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID?}")]
+        public async Task<ActionResult<List<Logic.Objects.Message>>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
         {
             try
             {
