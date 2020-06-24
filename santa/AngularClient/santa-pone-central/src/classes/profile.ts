@@ -17,7 +17,7 @@ export class Profile
 export class ProfileRecipient 
 {
     clientID: string;
-    relationXrefID?: string;
+    relationXrefID?: string = null;
     clientName: string;
     clientNickname: string;
     address = new Address;
