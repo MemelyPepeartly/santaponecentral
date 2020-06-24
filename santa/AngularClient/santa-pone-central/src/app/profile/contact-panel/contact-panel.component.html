@@ -11,12 +11,18 @@
         <mat-card-content>
             <div id="chat-window" class="mat-elevation-z7">
                 <ng-container *ngFor="let message of chat">
-                    <div [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
+                    <div class="message" [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
                                      'recieved-message' : message.recieverClient.clientID == profile.clientID}">
-                        <mat-divider [inset]="true"></mat-divider>
-                        <h3> {{ message.senderClient.clientNickname }} </h3>
+
+                        
+
+                        <div class="date">
+                            <span> {{ message.dateTimeSent }} </span>
+                            <span> {{ message.senderClient.clientNickname }} </span>
+                            <mat-divider [inset]="true"></mat-divider>
+                        </div>
                         <p> {{ message.messageContent }} </p>
-                        <p> {{ message.dateTimeSent }} </p>
+                        
                     </div>
                 </ng-container>  
             </div>

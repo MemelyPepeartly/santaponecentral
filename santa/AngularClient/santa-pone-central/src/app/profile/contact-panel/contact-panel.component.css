@@ -13,14 +13,6 @@ mat-card
 {
     margin: 10px;
 }
-.recieved-message
-{
-    text-align: left;
-}
-.sent-message
-{
-    text-align: right;
-}
 #contact-div
 {
     width: 100%;
@@ -29,7 +21,6 @@ mat-card
 {
     height: 500px;
     border-radius: 25px;
-    border: 2px solid;
     margin-left: 5px;
     margin-right: 5px;
     overflow: scroll;
@@ -41,4 +32,36 @@ mat-card
     display: inline-block;
     vertical-align: top;
     text-align: center;
+}
+/* Message classes*/
+.date
+{
+    width: 200px;
+    text-align: center;
+}
+.message
+{
+    width: 200px;
+    display: block;
+    border-radius: 15px;
+    word-wrap: normal;
+    padding: 5px;
+    margin-top: 5px;
+    
+}
+.recieved-message
+{
+    background-color: #E9E9EB;
+    color: black;
+    text-align: left;
+    margin-right: auto;
+    margin-left: 5px;
+}
+.sent-message
+{
+    background-color: #1788FE;
+    color: white;
+    text-align: right;
+    margin-right: 5px;
+    margin-left: auto;
 }
