@@ -4,8 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.AspNetCore.SignalR;
 using Santa.Api.Models.Message_Models;
 using Santa.Logic.Interfaces;
+using SignalRChat.Hubs;
 
 namespace Santa.Api.Controllers
 {
@@ -14,9 +17,11 @@ namespace Santa.Api.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IRepository repository;
-        public MessageController(IRepository _repository)
+        private IHubContext<ChatHub> hub;
+        public MessageController(IRepository _repository, IHubContext<ChatHub> _hub)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            hub = _hub ?? throw new ArgumentNullException(nameof(_hub));
 
         }
         // GET: api/Message
