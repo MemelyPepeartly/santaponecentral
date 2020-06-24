@@ -96,11 +96,15 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Client/5/MessageHistory/5
         [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID?}")]
-        public async Task<ActionResult<List<Logic.Objects.Message>>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
         {
             try
             {
-                return Ok(await repository.GetChatHistory(clientID, clientRelationXrefID));
+                MessageHistory logicMessageHistory = new MessageHistory()
+                {
+                    history = await repository.GetChatHistory(clientID, clientRelationXrefID)
+                };
+                return Ok(logicMessageHistory);
             }
             catch (Exception e)
             {
@@ -108,7 +112,6 @@ namespace Santa.Api.Controllers
             }
 
         }
-
 
         // POST: api/Client
         /// <summary>
