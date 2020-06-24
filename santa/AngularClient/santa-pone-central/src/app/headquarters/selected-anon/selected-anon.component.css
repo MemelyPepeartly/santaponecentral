@@ -68,6 +68,7 @@ mat-panel-description
 }
 .responseCard
 {
+    vertical-align: top;
     display: inline-block;
 }
 .relationDiv
