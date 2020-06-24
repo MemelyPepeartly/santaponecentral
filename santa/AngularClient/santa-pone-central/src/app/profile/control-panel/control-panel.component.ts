@@ -22,7 +22,15 @@ export class ControlPanelComponent implements OnInit {
 
   public openContactHistory(recipient: ProfileRecipient)
   {
-    this.selectedRecipientContactHistoryEvent.emit(recipient);
+    if(recipient != null)
+    {
+      this.selectedRecipientContactHistoryEvent.emit(recipient);
+    }
+    else
+    {
+      let blankRecipient = new ProfileRecipient;
+      this.selectedRecipientContactHistoryEvent.emit(blankRecipient)
+    }
   }
 
 }
