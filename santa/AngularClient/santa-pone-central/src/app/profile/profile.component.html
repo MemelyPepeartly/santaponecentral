@@ -1,7 +1,13 @@
+<div id="overlay" *ngIf="showRecipientData" (click)="hideRecipientCard()"></div>
+<div class="container" *ngIf="showRecipientData">
+    <div class="fixedDiv">
+        <app-selected-recipient ></app-selected-recipient>
+    </div>
+</div>
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information [profile]="profile"></app-information>
-        <app-control-panel [recipients]="profile.recipients" (selectedRecipientContactHistoryEvent)="populateChat($event)"></app-control-panel> 
+        <app-control-panel [recipients]="profile.recipients" (selectedRecipientContactHistoryEvent)="populateChat($event)" (selectedRecipientInformationEvent)="showRecipientCard($event)"></app-control-panel> 
         <app-contact-panel *ngIf="selectedChatHistory != undefined"
         [chat]="chat"
         [selectedChatHistory]="selectedChatHistory"

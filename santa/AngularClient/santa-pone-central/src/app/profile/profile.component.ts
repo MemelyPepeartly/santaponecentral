@@ -22,6 +22,9 @@ export class ProfileComponent implements OnInit {
   public profile: Profile = new Profile();
   public chat: Array<Message> = [];
   public selectedChatHistory: ProfileRecipient;
+  public selectedRecipient: ProfileRecipient;
+  
+  public showRecipientData: boolean = false;
 
   public async ngOnInit() {
     var data = this.auth.userProfile$.subscribe(async data => {
@@ -38,6 +41,16 @@ export class ProfileComponent implements OnInit {
         this.chat.push(this.ApiMapper.mapMessage(message)); 
       });
     });
+  }
+  public showRecipientCard(recipient: ProfileRecipient)
+  {
+    this.selectedRecipient = recipient;
+    this.showRecipientData = true;
+  }
+  public hideRecipientCard()
+  {
+    this.selectedRecipient = undefined;
+    this.showRecipientData = false;
   }
   public async refreshMessages(newMessagePosted: boolean)
   {
