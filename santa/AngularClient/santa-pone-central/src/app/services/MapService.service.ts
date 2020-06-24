@@ -239,13 +239,13 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(selectedChatHistory: ProfileRecipient, sendingClientID, messageContent)
+  mapMessageResponse(selectedChatHistory: ProfileRecipient, messageContent, senderClientID, recieverClientID)
   {
     let messageResponse: MessageApiResponse = new MessageApiResponse();
 
+    messageResponse.messageSenderClientID = senderClientID;
+    messageResponse.messageRecieverClientID = recieverClientID;
     messageResponse.clientRelationXrefID = selectedChatHistory.relationXrefID;
-    messageResponse.messageSenderClientID = sendingClientID;
-    messageResponse.messageRecieverClientID = null;
     messageResponse.messageContent = messageContent;
     
     return messageResponse;
