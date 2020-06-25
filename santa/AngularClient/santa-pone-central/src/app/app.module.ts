@@ -48,7 +48,8 @@ import { UnreadComponent } from './correspondence/unread/unread.component';
 import { AllComponent } from './correspondence/all/all.component';
 import { PendingComponent } from './correspondence/pending/pending.component';
 import { SelectedChatComponent } from './correspondence/selected-chat/selected-chat.component';
-import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component'
+import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component';
+import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.component'
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { SelectedRecipientComponent } from './profile/selected-recipient/selecte
       AllComponent,
       PendingComponent,
       SelectedChatComponent,
-      SelectedRecipientComponent
+      SelectedRecipientComponent,
+      ChatHistoriesComponent
    ],
    entryComponents: [
       LoginComponent
