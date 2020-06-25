@@ -14,9 +14,4 @@ mat-card
     display: inline-block;
     min-width: 200px;
 }
-#data-table
-{
-    width: 100%;
-    min-width: 500px;
-    text-align: left;
-}
+

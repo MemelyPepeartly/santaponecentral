@@ -1,8 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { Client } from 'src/classes/client';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
+import { Message, MessageHistory } from 'src/classes/message';
+import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MapService } from 'src/app/services/mapService.service';
+import { BehaviorSubject } from 'rxjs';
+import { ProfileService } from 'src/app/services/Profile.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -11,23 +17,31 @@ import { EventType } from 'src/classes/eventType';
 })
 export class ControlPanelComponent implements OnInit {
 
-  constructor(private gatherer: GathererService) { }
-
-  @Input() recipients: Array<ProfileRecipient> = []
+  constructor(public ApiMapper: MapService,
+    public SantaApiGet: SantaApiGetService,
+    public auth: AuthService,
+    public profileService: ProfileService) { }
+    
+  @Input() histories: Array<MessageHistory>
+  @Input() profile: Profile
 
   @Output() selectedRecipientContactHistoryEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
   @Output() selectedRecipientInformationEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
 
-  columns: string[] = ["recipient", "event", "contact"];
 
   ngOnInit(): void {
+  }
+  public log()
+  {
+    console.log(this.histories);
+    this.profileService.getHistories(this.profile.clientID);
   }
   public openInformation(recipient: ProfileRecipient)
   {
     this.selectedRecipientInformationEvent.emit(recipient)
   }
 
-  public openContactHistory(recipient: ProfileRecipient)
+  public selectContactHistory(recipient: ProfileRecipient)
   {
     if(recipient != null)
     {
@@ -39,5 +53,4 @@ export class ControlPanelComponent implements OnInit {
       this.selectedRecipientContactHistoryEvent.emit(blankRecipient)
     }
   }
-
 }
