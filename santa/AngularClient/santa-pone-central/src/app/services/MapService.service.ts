@@ -6,8 +6,7 @@ import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, Client
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { Message, MessageMeta } from 'src/classes/message';
-import { map } from 'rxjs/operators';
+import { Message, MessageMeta, MessageHistory } from 'src/classes/message';
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +112,21 @@ export class MapService {
     mappedMessage.isMessageRead = message.isMessageRead;
 
     return mappedMessage;
+  }
+  mapMessageHistory(messageHistory)
+  {
+    let mappedMessageHistory = new MessageHistory;
+    mappedMessageHistory.relationXrefID = messageHistory.relationXrefID;
+
+    mappedMessageHistory.history = [];
+    messageHistory.history.forEach(message => {
+      mappedMessageHistory.history.push(this.mapMessage(message));
+    });
+    mappedMessageHistory.eventRecieverClient = this.mapMeta(messageHistory.eventRecieverClient);
+    mappedMessageHistory.eventSenderClient = this.mapMeta(messageHistory.eventSenderClient);
+    mappedMessageHistory.eventType = this.mapEvent(messageHistory.eventType);
+
+    return mappedMessageHistory;
   }
   // Maps the meta info for messages
   mapMeta(meta)
@@ -239,13 +253,13 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(selectedChatHistory: ProfileRecipient, messageContent, senderClientID, recieverClientID)
+  mapMessageResponse(profileRecipient: ProfileRecipient, messageContent, senderClientID, recieverClientID)
   {
     let messageResponse: MessageApiResponse = new MessageApiResponse();
 
     messageResponse.messageSenderClientID = senderClientID;
     messageResponse.messageRecieverClientID = recieverClientID;
-    messageResponse.clientRelationXrefID = selectedChatHistory.relationXrefID;
+    messageResponse.clientRelationXrefID = profileRecipient.relationXrefID;
     messageResponse.messageContent = messageContent;
     
     return messageResponse;
