@@ -26,6 +26,7 @@ mat-card
     margin-left: 5px;
     margin-right: 5px;
     overflow: scroll;
+    height: xyz;
 }
 ::-webkit-scrollbar {
     width: 0px;

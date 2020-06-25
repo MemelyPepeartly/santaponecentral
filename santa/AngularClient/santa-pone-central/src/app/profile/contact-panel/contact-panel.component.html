@@ -5,15 +5,14 @@
             <mat-card-title>Contact</mat-card-title>
             <mat-card-subtitle>Options for contacting Santapone</mat-card-subtitle>
         </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
-            <div id="chat-window" class="mat-elevation-z7">
-                <ng-container *ngFor="let message of chat">
+            <div #chatFrame id="chat-window" class="mat-elevation-z7">
+                <ng-container *ngFor="let message of selectedHistory.history">
                     <div class="date-div">
                         <span>{{ message.dateTimeSent }}</span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message" [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == profile.clientID,
                                      'recieved-message' : message.recieverClient.clientID == profile.clientID}">
                         <div class="nick-div">
                             <span *ngIf="message.senderClient.clientNickname != ''"> {{ message.senderClient.clientNickname }} </span>
