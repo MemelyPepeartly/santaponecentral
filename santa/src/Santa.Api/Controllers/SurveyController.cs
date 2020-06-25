@@ -137,26 +137,6 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/Survey/5/SurveyQuestions/5
-        /// <summary>
-        /// Posts a new relation between a survey and an existing question by surveyID and surveyQuestionID
-        /// </summary>
-        /// <param name="surveyID"></param>
-        /// <param name="surveyQuestionID"></param>
-        /// <returns></returns>
-        [HttpPost("{surveyID}/Relationship")]
-        public async Task<ActionResult<ApiSurvey>> PostSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-
         // PUT: api/Survey/5
         /// <summary>
         /// Put updates a survey's description by survey ID. Binds to ApiSurveyDescription model.
