@@ -41,41 +41,7 @@ namespace Santa.Api.Controllers
             {
 #warning Need protection here. Check request and make sure requesting email is only getting the profile for THEIR email. No fooling the DB here
 
-                /*
-                Microsoft.Extensions.Primitives.StringValues AuthHeaders = this.HttpContext.Request.Headers["Authorization"];
-                string result = AuthHeaders[0].Substring(AuthHeaders[0].LastIndexOf(' ') + 1);
-                JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken token = jwtHandler.ReadJwtToken(result);
-
-                if (token.Audiences.Contains(email))
-                {
-                    //Logic here for checking the warning
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-                */
-
                 Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-                List<Message> history = new List<Message>();
-
-                // Finds all the messages that havn't been read yet and sets the number equal to how many messages have been unread for notification purposes
-                foreach(ProfileRecipient recipient in logicProfile.recipients)
-                {
-                    history = await repository.GetChatHistory(logicProfile.clientID, recipient.relationXrefID);
-                    foreach(Message message in history)
-                    {
-                        recipient.unreadCount += message.isMessageRead == false && message.recieverClient.clientId == logicProfile.clientID ? 1 : 0;
-                    }
-                }
-
-                // Case is same as above, but rather for the one case where there is no relationship XrefID. Used for general chat
-                history = await repository.GetChatHistory(logicProfile.clientID, null);
-                foreach (Message message in history)
-                {
-                    logicProfile.generalChatUnreadCount += message.isMessageRead == false && message.recieverClient.clientId == logicProfile.clientID ? 1 : 0;
-                }
 
                 if (logicProfile == null)
                 {
