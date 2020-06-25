@@ -352,12 +352,35 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task<List<Message>> GetChatHistory(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<List<MessageHistory>> GetAllClientChatHistoriesAsync(Guid clientID)
         {
             try
             {
+                List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == clientID).ToListAsync();
+
+                foreach(ClientRelationXref relationiship in XrefList)
+                {
+                    MessageHistory logicHistory = new MessageHistory();
+                    logicHistory = await GetChatHistoryByID(clientID, relationiship.ClientRelationXrefId);
+                    listLogicMessageHistory.Add(logicHistory);
+                }
+
+                return listLogicMessageHistory;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<MessageHistory> GetChatHistoryByID(Guid clientID, Guid? clientRelationXrefID)
+        {
+            try
+            {
+                MessageHistory logicHistory = new MessageHistory();
                 List<Message> logicListMessages = (await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID && (m.MessageRecieverClient.ClientId == clientID || m.MessageSenderClient.ClientId == clientID))
+                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID)
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageRecieverClient)
                     .Include(x => x.ClientRelationXref)
@@ -365,7 +388,14 @@ namespace Santa.Data.Repository
                     .ToListAsync())
                     .Select(Mapper.MapMessage)
                     .ToList();
-                return logicListMessages;
+                logicHistory.history = logicListMessages;
+                logicHistory.relationXrefID = clientRelationXrefID;
+
+                logicHistory.eventType = clientRelationXrefID != null ? await FindEventByXrefID(clientRelationXrefID) : new Event();
+                logicHistory.eventSenderClient = clientRelationXrefID != null ? await FindSenderClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
+                logicHistory.eventRecieverClient = clientRelationXrefID != null ? await FindRecieverClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
+
+                return logicHistory;
             }
             catch (Exception e)
             {
@@ -984,6 +1014,56 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
 
+        }
+        public async Task<Event> FindEventByXrefID(Guid? clientRelationXrefID)
+        {
+            try
+            {
+                ClientRelationXref contextXrefRelationship = await santaContext.ClientRelationXref
+                    .Include(e => e.EventType)
+                    .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
+
+                Event logicEvent = Mapper.MapEvent(contextXrefRelationship.EventType);
+                return logicEvent;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<MessageClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID)
+        {
+            try
+            {
+                ClientRelationXref contextXrefRelationship = await santaContext.ClientRelationXref
+                    .Include(r => r.RecipientClient)
+                    .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
+
+                MessageClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.RecipientClient);
+                return logicMeta;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<MessageClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID)
+        {
+            try
+            {
+                ClientRelationXref contextXrefRelationship = await santaContext.ClientRelationXref
+                    .Include(r => r.SenderClient)
+                    .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
+
+                MessageClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.SenderClient);
+                return logicMeta;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
         #endregion
     }
