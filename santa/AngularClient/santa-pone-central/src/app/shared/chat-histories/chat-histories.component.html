@@ -1,0 +1,27 @@
+<div *ngIf="histories?.length == 0 || histories?.length == undefined">
+  <h1>No assignments to display!</h1>
+</div>
+<table mat-table *ngIf="histories?.length != 0 || histories?.length != undefined" [dataSource]="histories" id="data-table" class="mat-elevation-z8">
+          
+    <!-- Recipient Column -->
+    <ng-container matColumnDef="recipient">
+      <th mat-header-cell *matHeaderCellDef> Recipient </th>
+      <td mat-cell *matCellDef="let history"> <button mat-raised-button>{{history.eventRecieverClient.clientNickname}}</button> </td>
+    </ng-container>
+  
+    <!-- Event Column -->
+    <ng-container matColumnDef="event">
+      <th mat-header-cell *matHeaderCellDef> Event </th>
+      <td mat-cell *matCellDef="let history"> {{history.eventType.eventDescription}} </td>
+    </ng-container>
+
+    <!-- Contact Column -->
+    <ng-container matColumnDef="contact">
+      <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
+      <td mat-cell *matCellDef="let history"> <button mat-raised-button [matBadge]="history.recievedUnreadCount" [matBadgeHidden]="history.recievedUnreadCount == 0">Contact History</button> </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+  
+</table>
