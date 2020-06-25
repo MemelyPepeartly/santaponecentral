@@ -96,15 +96,27 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Client/5/MessageHistory/5
         [HttpGet("{clientID}/MessageHistory/{clientRelationXrefID?}")]
-        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
         {
             try
             {
-                MessageHistory logicMessageHistory = new MessageHistory()
-                {
-                    history = await repository.GetChatHistory(clientID, clientRelationXrefID)
-                };
-                return Ok(logicMessageHistory);
+                MessageHistory listLogicMessages = await repository.GetChatHistoryByID(clientID, clientRelationXrefID);
+                return Ok(listLogicMessages);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
+        }
+        // GET: api/Client/5/MessageHistories
+        [HttpGet("{clientID}/MessageHistories")]
+        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid clientID)
+        {
+            try
+            {
+                List<MessageHistory> listLogicMessageHistory = await repository.GetAllClientChatHistoriesAsync(clientID);
+                return Ok(listLogicMessageHistory);
             }
             catch (Exception e)
             {
