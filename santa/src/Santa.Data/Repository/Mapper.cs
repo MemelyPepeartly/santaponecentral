@@ -109,6 +109,18 @@ namespace Santa.Data.Repository
             return logicProfileRecipient;
         }
 
+        public static MessageClientMeta MapClientMeta(Entities.Client contextClient)
+        {
+            Logic.Objects.MessageClientMeta logicMeta = new MessageClientMeta()
+            {
+                clientId = contextClient.ClientId,
+                clientName = contextClient.ClientName,
+                clientNickname = contextClient.Nickname
+            };
+
+            return logicMeta;
+        }
+
         #endregion
 
         #region Profile
