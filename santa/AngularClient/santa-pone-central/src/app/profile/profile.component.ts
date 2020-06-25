@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Client } from 'src/classes/client';
 import { SantaApiGetService } from '../services/santaApiService.service';
 import { GathererService } from '../services/gatherer.service';
 import { MapService } from '../services/mapService.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { Message } from 'src/classes/message';
+import { Message, MessageHistory } from 'src/classes/message';
+import { ContactComponent } from '../contact/contact.component';
+import { ContactPanelComponent } from './contact-panel/contact-panel.component';
+import { ProfileService } from '../services/Profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,33 +17,43 @@ import { Message } from 'src/classes/message';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public gatherer: GathererService, 
+  constructor(public profileService: ProfileService, 
     public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
   public profile: Profile = new Profile();
-  public chat: Array<Message> = [];
-  public selectedChatHistory: ProfileRecipient;
+  public authProfile: any;
   public selectedRecipient: ProfileRecipient;
+  public selectedHistory: MessageHistory;
+  public histories: Array<MessageHistory>;
   
   public showRecipientData: boolean = false;
 
   public async ngOnInit() {
-    var data = this.auth.userProfile$.subscribe(async data => {
-      this.profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(data.email).toPromise());
+    //Auth profile
+    this.auth.userProfile$.subscribe(data => {
+      this.authProfile = data;
     });
-  }
-  public async populateChat(recipient: ProfileRecipient)
-  {
-    this.chat = [];
-    this.selectedChatHistory = recipient;
 
-    var res = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(this.profile.clientID, recipient.relationXrefID).subscribe(res => {
-      res.forEach(message => {
-        this.chat.push(this.ApiMapper.mapMessage(message)); 
-      });
+    // Profile service subscribe
+    this.profileService.profile.subscribe((profile: Profile) => {
+      this.profile = profile;
     });
+
+    // Chat histories subscribe
+    this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
+      this.histories = histories;
+    });
+    
+    // Selected history subscribe
+    this.profileService.selectedHistory.subscribe((selectedHistory: MessageHistory) => {
+      this.selectedHistory = selectedHistory;
+    });
+    this.profileService.getProfile(this.authProfile.name).then(() => {
+      this.profileService.getHistories(this.profile.clientID);
+    });
+    
   }
   public showRecipientCard(recipient: ProfileRecipient)
   {
@@ -52,11 +65,8 @@ export class ProfileComponent implements OnInit {
     this.selectedRecipient = undefined;
     this.showRecipientData = false;
   }
-  public async refreshMessages(newMessagePosted: boolean)
+  public populateSelectedChat(recipient: ProfileRecipient)
   {
-    if(newMessagePosted)
-    {
-      await this.populateChat(this.selectedChatHistory)
-    }
+    this.profileService.getSelectedHistory(this.profile.clientID, recipient);
   }
 }
