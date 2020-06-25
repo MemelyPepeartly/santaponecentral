@@ -7,11 +7,7 @@
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information [profile]="profile"></app-information>
-        <app-control-panel [recipients]="profile.recipients" (selectedRecipientContactHistoryEvent)="populateChat($event)" (selectedRecipientInformationEvent)="showRecipientCard($event)"></app-control-panel> 
-        <app-contact-panel *ngIf="selectedChatHistory != undefined"
-        [chat]="chat"
-        [selectedChatHistory]="selectedChatHistory"
-        [profile]="profile"
-        (messagePosted) = "refreshMessages($event)"></app-contact-panel>
+        <app-control-panel [profile]="profile" [histories]="histories" (selectedRecipientInformationEvent)="showRecipientCard($event)" (selectedRecipientContactHistoryEvent)="populateSelectedChat($event)"></app-control-panel> 
+        <app-contact-panel [profile]="profile" [selectedHistory]="selectedHistory" *ngIf="selectedHistory.history != undefined"></app-contact-panel>
     </div>
 </div>
