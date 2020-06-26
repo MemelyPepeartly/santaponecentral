@@ -6,8 +6,8 @@ import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNickn
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 
-const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-//const endpoint = 'https://localhost:5001/api/';
+//const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
+const endpoint = 'https://localhost:5001/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -105,8 +105,20 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "Message/" + id).pipe(
       map(this.extractData));
   }
+  getAllMessageHistories(): Observable<any> {
+    return this.http.get(endpoint + "History").pipe(
+      map(this.extractData));
+  }
   getAllMessageHistoriesByClientID(clientID): Observable<any> {
     return this.http.get(endpoint + "History/Client/" + clientID).pipe(
+      map(this.extractData));
+  }
+  getMessageHistoriesByEventID(eventID): Observable<any> {
+    return this.http.get(endpoint + "History/Event/" + eventID).pipe(
+      map(this.extractData));
+  }
+  getMessageHistoriesWithUnreadMessages(): Observable<any> {
+    return this.http.get(endpoint + "History/Unread").pipe(
       map(this.extractData));
   }
   getMessageHistoryByClientIDAndXrefID(clientID, clientRelationXrefID?): Observable<any> {

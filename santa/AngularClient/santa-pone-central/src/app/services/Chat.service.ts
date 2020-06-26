@@ -11,12 +11,23 @@ export class ChatService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
+  private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allGeneralChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allUnreadChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
 
+  // All Chats
+  get allChats()
+  {
+    return this._allChats.asObservable();
+  }
+  private updateAllChats(messageHistories: Array<MessageHistory>)
+  {
+    this._allChats.next(messageHistories);
+  }
+
   // All Event Chats
-  get allEventChat()
+  get allEventChats()
   {
     return this._allEventChats.asObservable();
   }
@@ -49,11 +60,19 @@ export class ChatService {
   // Gathering methods
   public async gatherEventChats()
   {
-
+    
   }
   public async gatherGeneralChats()
   {
+    let historyArray: Array<MessageHistory> = [];
 
+    this.SantaApiGet.getAllMessageHistories().subscribe(res => {
+      for(let i = 0; i < res.length; i++)
+      {
+        historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
+      }
+      this.updateAllChats(historyArray);
+    }, err => {console.log(err)});
   }
   public async gatherUnreadChats()
   {

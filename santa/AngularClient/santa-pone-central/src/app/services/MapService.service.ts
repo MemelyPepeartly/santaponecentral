@@ -253,13 +253,13 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(profileRecipient: ProfileRecipient, messageContent, senderClientID, recieverClientID)
+  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent)
   {
     let messageResponse: MessageApiResponse = new MessageApiResponse();
 
     messageResponse.messageSenderClientID = senderClientID;
     messageResponse.messageRecieverClientID = recieverClientID;
-    messageResponse.clientRelationXrefID = profileRecipient.relationXrefID;
+    messageResponse.clientRelationXrefID = relationXrefID;
     messageResponse.messageContent = messageContent;
     
     return messageResponse;
