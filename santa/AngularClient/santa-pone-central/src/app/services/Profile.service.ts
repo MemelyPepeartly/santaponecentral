@@ -14,6 +14,7 @@ export class ProfileService {
 
   public gettingProfile: boolean = false;
   public gettingHistories: boolean = false;
+  public gettingSelectedHistory: boolean = false;
 
   private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile);
   private _chatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([])
@@ -50,6 +51,7 @@ export class ProfileService {
   }
 
   // * METHODS * //
+  // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
   public async getProfile(email)
   {
     let profile = new Profile();
@@ -59,9 +61,13 @@ export class ProfileService {
     }, err => {console.log(err)});
     
   }
-  public async getHistories(clientID)
+  public async getHistories(clientID, isSoftUpdate?: boolean)
   {
-    this.gettingHistories = true;
+    if(!isSoftUpdate)
+    {
+      this.gettingHistories = true;
+    }
+
     let histories: Array<MessageHistory> = []
     this.SantaApiGet.getAllMessageHistoriesByClientID(clientID).subscribe(res => {
       for(let i = 0; i < res.length; i++)
@@ -75,11 +81,14 @@ export class ProfileService {
   }
   public async getSelectedHistory(clientID, relationXrefID)
   {
+    this.gettingSelectedHistory = true;
+
     let messageHistory = new MessageHistory;
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
       messageHistory = this.ApiMapper.mapMessageHistory(res);
       this.updateSelectedHistory(messageHistory);
-    },err => {console.log(err)})
+      this.gettingSelectedHistory = false;
+    },err => {console.log(err); this.gettingSelectedHistory = false;}); 
   }
 
 }
