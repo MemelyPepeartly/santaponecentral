@@ -61,22 +61,22 @@ export class ProfileService {
   }
   public async getHistories(clientID)
   {
+    this.gettingHistories = true;
     let histories: Array<MessageHistory> = []
     this.SantaApiGet.getAllMessageHistoriesByClientID(clientID).subscribe(res => {
-      console.log(res);
       for(let i = 0; i < res.length; i++)
       {
         histories.push(this.ApiMapper.mapMessageHistory(res[i]))
       }
       this.updateChatHistories(histories);
-    }, err => {console.log(err)});    
+      this.gettingHistories = false;
+    }, err => {console.log(err); this.gettingHistories = false;});    
     
   }
-  public async getSelectedHistory(clientID, relationship: ProfileRecipient)
+  public async getSelectedHistory(clientID, relationXrefID)
   {
     let messageHistory = new MessageHistory;
-    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationship.relationXrefID).subscribe(res => {
-      console.log(res);
+    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
       messageHistory = this.ApiMapper.mapMessageHistory(res);
       this.updateSelectedHistory(messageHistory);
     },err => {console.log(err)})
