@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models.Event_Models;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -47,6 +48,25 @@ namespace Santa.Api.Controllers
             try
             {
                 return Ok(await repository.GetEventByIDAsync(eventID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        // GET: api/Event/5/MessageHistories
+        /// <summary>
+        /// Gets event by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{eventID}/MessageHistories")]
+        public async Task<ActionResult<List<MessageHistory>>> GetMessageHistoriesByEventID(Guid eventID)
+        {
+            try
+            {
+                return Ok(await repository.GetAllChatHistoriesByEventIDAsync(eventID));
             }
             catch (Exception e)
             {

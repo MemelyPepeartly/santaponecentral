@@ -352,56 +352,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task<List<MessageHistory>> GetAllClientChatHistoriesAsync(Guid clientID)
-        {
-            try
-            {
-                List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == clientID).ToListAsync();
-
-                foreach(ClientRelationXref relationiship in XrefList)
-                {
-                    MessageHistory logicHistory = new MessageHistory();
-                    logicHistory = await GetChatHistoryByID(clientID, relationiship.ClientRelationXrefId);
-                    listLogicMessageHistory.Add(logicHistory);
-                }
-
-                return listLogicMessageHistory;
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-
-        public async Task<MessageHistory> GetChatHistoryByID(Guid clientID, Guid? clientRelationXrefID)
-        {
-            try
-            {
-                MessageHistory logicHistory = new MessageHistory();
-                List<Message> logicListMessages = (await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID)
-                    .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
-                    .Include(x => x.ClientRelationXref)
-                    .OrderBy(dt => dt.DateTimeSent)
-                    .ToListAsync())
-                    .Select(Mapper.MapMessage)
-                    .ToList();
-                logicHistory.history = logicListMessages;
-                logicHistory.relationXrefID = clientRelationXrefID;
-
-                logicHistory.eventType = clientRelationXrefID != null ? await FindEventByXrefID(clientRelationXrefID) : new Event();
-                logicHistory.eventSenderClient = clientRelationXrefID != null ? await FindSenderClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
-                logicHistory.eventRecieverClient = clientRelationXrefID != null ? await FindRecieverClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
-
-                return logicHistory;
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
+        
         public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
             try
@@ -431,9 +382,160 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+
+        #region Message Histories
+        /// <summary>
+        /// Gets all the chat histories for every client relationship and includes general chats with null XrefID.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<MessageHistory>> GetAllChatHistories()
+        {
+            try
+            {
+                List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+                List<ClientRelationXref> listContextClientRelationXref = await santaContext.ClientRelationXref.ToListAsync();
+                List<Entities.Client> listContextClient = await santaContext.Client.ToListAsync();
+
+                MessageHistory logicHistory = new MessageHistory();
+                foreach (Entities.Client client in listContextClient)
+                {
+                    foreach (ClientRelationXref relationship in listContextClientRelationXref)
+                    {
+                        logicHistory = new MessageHistory();
+                        logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, relationship.ClientRelationXrefId);
+                        listLogicMessageHistory.Add(logicHistory);
+                    }
+                    logicHistory = new MessageHistory();
+                    logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, null);
+                }
+                return listLogicMessageHistory;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        /// <summary>
+        /// Gets all the chat histories that have unread messages
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<MessageHistory>> GetAllChatHistoriesWithUnreadMessagesAsync()
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Gets all the chat histories of clients by their ID. Does not include general chats with null relationship Xref ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        public async Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID)
+        {
+            try
+            {
+                List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == clientID).ToListAsync();
+
+                foreach (ClientRelationXref relationship in XrefList)
+                {
+                    MessageHistory logicHistory = new MessageHistory();
+                    logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(clientID, relationship.ClientRelationXrefId);
+                    listLogicMessageHistory.Add(logicHistory);
+                }
+
+                return listLogicMessageHistory;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        /// <summary>
+        /// Gets a chat history by eventID. Does not include general chats, as those are not tied to any event
+        /// </summary>
+        /// <param name="eventID"></param>
+        /// <param name="clientRelationXrefID"></param>
+        /// <returns></returns>
+        public async Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID)
+        {
+            try
+            {
+                List<MessageHistory> listLogicHistories = new List<MessageHistory>();
+                MessageHistory logicHistory = new MessageHistory();
+                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.EventTypeId == eventID).ToListAsync();
+
+                foreach(ClientRelationXref relationship in XrefList)
+                {
+                    List<Message> logicListMessages = (await santaContext.ChatMessage
+                    .Where(m => m.ClientRelationXrefId == relationship.ClientRelationXrefId)
+                    .Include(s => s.MessageSenderClient)
+                    .Include(r => r.MessageRecieverClient)
+                    .Include(x => x.ClientRelationXref)
+                    .OrderBy(dt => dt.DateTimeSent)
+                    .ToListAsync())
+                    .Select(Mapper.MapMessage)
+                    .ToList();
+
+                    logicHistory.history = logicListMessages;
+                    logicHistory.relationXrefID = relationship.ClientRelationXrefId;
+
+                    logicHistory.eventType = await FindEventByXrefID(relationship.ClientRelationXrefId);
+                    logicHistory.eventSenderClient = await FindSenderClientMetaByXrefID(relationship.ClientRelationXrefId);
+                    logicHistory.eventRecieverClient = await FindRecieverClientMetaByXrefID(relationship.ClientRelationXrefId);
+
+                    listLogicHistories.Add(logicHistory);
+                    logicHistory = new MessageHistory();
+                }
+
+                return listLogicHistories;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        /// <summary>
+        /// Gets a single chat history by clientID and XrefID. This is a relationship between a person sending a gift that was assigned. Xref ID is optional in this case to be able to pull general chats without a relationship attatched.
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="clientRelationXrefID"></param>
+        /// <returns></returns>
+        public async Task<MessageHistory> GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        {
+            try
+            {
+                MessageHistory logicHistory = new MessageHistory();
+                List<Message> logicListMessages = (await santaContext.ChatMessage
+                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID && (m.MessageSenderClientId == clientID || m.MessageRecieverClientId == clientID))
+                    .Include(s => s.MessageSenderClient)
+                    .Include(r => r.MessageRecieverClient)
+                    .Include(x => x.ClientRelationXref)
+                    .OrderBy(dt => dt.DateTimeSent)
+                    .ToListAsync())
+                    .Select(Mapper.MapMessage)
+                    .ToList();
+                logicHistory.history = logicListMessages;
+                logicHistory.relationXrefID = clientRelationXrefID;
+
+                logicHistory.eventType = clientRelationXrefID != null ? await FindEventByXrefID(clientRelationXrefID) : new Event();
+                logicHistory.eventSenderClient = clientRelationXrefID != null ? await FindSenderClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
+                logicHistory.eventRecieverClient = clientRelationXrefID != null ? await FindRecieverClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
+
+                return logicHistory;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        #endregion
+
         #endregion
 
         #region ClientStatus
+        /// <summary>
+        /// Gets a list of all statuses
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Status>> GetAllClientStatus()
         {
             try
@@ -446,6 +548,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Gets a status by clientStatusID
+        /// </summary>
+        /// <param name="clientStatusID"></param>
+        /// <returns></returns>
         public async Task<Status> GetClientStatusByID(Guid clientStatusID)
         {
             try
@@ -459,6 +566,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Creates a new status
+        /// </summary>
+        /// <param name="newStatus"></param>
+        /// <returns></returns>
         public async Task CreateStatusAsync(Status newStatus)
         {
             try
@@ -471,7 +583,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
+        /// <summary>
+        /// Updates a status description that exists in the database
+        /// </summary>
+        /// <param name="changedLogicStatus"></param>
+        /// <returns></returns>
         public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
         {
             try
@@ -510,6 +626,11 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Event
+        /// <summary>
+        /// Creates a new event type in the database
+        /// </summary>
+        /// <param name="newEvent"></param>
+        /// <returns></returns>
         public async Task CreateEventAsync(Event newEvent)
         {
             try
@@ -522,6 +643,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Deletes an event by eventID 
+        /// </summary>
+        /// <param name="eventID"></param>
+        /// <returns></returns>
         public async Task DeleteEventByIDAsync(Guid eventID)
         {
             try
@@ -567,6 +693,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Updates either an eventDescripton or active state that exists in database
+        /// </summary>
+        /// <param name="targetEvent"></param>
+        /// <returns></returns>
         public async Task UpdateEventByIDAsync(Event targetEvent)
         {
             try
