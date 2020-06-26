@@ -3,7 +3,7 @@ import { Client } from 'src/classes/client';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
-import { Message, MessageHistory } from 'src/classes/message';
+import { Message, MessageHistory, MessageMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapService.service';
@@ -23,10 +23,11 @@ export class ControlPanelComponent implements OnInit {
     public profileService: ProfileService) { }
     
   @Input() histories: Array<MessageHistory>
-  @Input() profile: Profile
+  @Input() profile: Profile;
 
-  @Output() selectedRecipientContactHistoryEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
-  @Output() selectedRecipientInformationEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
+  public selectedRecipient: ProfileRecipient;
+
+  public showRecipientData: boolean = false;
 
 
   ngOnInit(): void {
@@ -34,23 +35,35 @@ export class ControlPanelComponent implements OnInit {
   public log()
   {
     console.log(this.histories);
-    this.profileService.getHistories(this.profile.clientID);
+    
   }
-  public openInformation(recipient: ProfileRecipient)
+  // Event is from the chat histories component, and contains {meta: MessageMeta, event: EventType}
+  public showRecipientCard(eventInformation)
   {
-    this.selectedRecipientInformationEvent.emit(recipient)
+    this.selectedRecipient = this.getProfileRecipientByMetaAndEventID(eventInformation.meta, eventInformation.event.eventTypeID);
+    this.showRecipientData = true;
   }
-
-  public selectContactHistory(recipient: ProfileRecipient)
+  public hideRecipientCard()
   {
-    if(recipient != null)
+    this.selectedRecipient = undefined;
+    this.showRecipientData = false;
+  }
+  public getProfileRecipientByMetaAndEventID(meta: MessageMeta, eventID)
+  {
+    let profileRecipient = this.profile.recipients.find((recipient: ProfileRecipient)=> {
+      return recipient.clientID == meta.clientID && recipient.recipientEvent.eventTypeID == eventID;
+    });
+    return profileRecipient;
+  }
+  public getSelectedHistoryMessages(history: MessageHistory)
+  {
+    if(history != null)
     {
-      this.selectedRecipientContactHistoryEvent.emit(recipient);
+      this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
     }
     else
     {
-      let blankRecipient = new ProfileRecipient;
-      this.selectedRecipientContactHistoryEvent.emit(blankRecipient)
+      this.profileService.getSelectedHistory(this.profile.clientID, null);
     }
   }
 }
