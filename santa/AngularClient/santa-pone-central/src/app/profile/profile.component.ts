@@ -37,20 +37,17 @@ export class ProfileComponent implements OnInit {
     // Profile service subscribe
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
-    });
-
-    // Chat histories subscribe
-    this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
-      this.histories = histories;
-    });
-    
-    // Selected history subscribe
-    this.profileService.selectedHistory.subscribe((selectedHistory: MessageHistory) => {
-      this.selectedHistory = selectedHistory;
-    });
-    this.profileService.getProfile(this.authProfile.name).then(() => {
+      // Chat histories subscribe
+      this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
+        this.histories = histories;
+      });
+      
+      // Selected history subscribe
+      this.profileService.selectedHistory.subscribe((selectedHistory: MessageHistory) => {
+        this.selectedHistory = selectedHistory;
+      });
       this.profileService.getHistories(this.profile.clientID);
     });
-    
+    await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
   }
 }
