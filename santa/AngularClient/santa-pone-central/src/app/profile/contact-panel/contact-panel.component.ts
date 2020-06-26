@@ -16,7 +16,6 @@ export class ContactPanelComponent implements OnInit {
   constructor(public SantaApiPost: SantaApiPostService, public responseMapper: MapResponse, public auth: AuthService, public profileService: ProfileService) { }
 
   @Input() selectedHistory: MessageHistory;
-  @Input() selectedProfileRecipient: ProfileRecipient;
   @Input() profile: Profile;
 
   @Output() messagePosted: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -37,16 +36,15 @@ export class ContactPanelComponent implements OnInit {
 
   public async memberPostTest()
   {
-    let test = new ProfileRecipient();
-    var newMessageResponse = this.responseMapper.mapMessageResponse(test, "I am a member posting", this.profile.clientID, null)
+    var newMessageResponse = this.responseMapper.mapMessageResponse(this.profile.clientID, null, this.selectedHistory.relationXrefID, "Member post for " + this.selectedHistory.eventType.eventDescription + " and Xref ID " + this.selectedHistory.relationXrefID)
     var res = await this.SantaApiPost.postMessage(newMessageResponse).toPromise();
-    this.messagePosted.emit(true);
+    this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID);
   }
   public async adminPostTest()
   {
-    var newMessageResponse = this.responseMapper.mapMessageResponse(this.selectedProfileRecipient, "I am an admin posting", null, this.profile.clientID)
+    var newMessageResponse = this.responseMapper.mapMessageResponse(null, this.profile.clientID, this.selectedHistory.relationXrefID, "Admin post for " + this.selectedHistory.eventType.eventDescription + " and Xref ID " + this.selectedHistory.relationXrefID)
     var res = await this.SantaApiPost.postMessage(newMessageResponse).toPromise();
-    this.messagePosted.emit(true); 
+    this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID);
   }
   public async scrollToBottom()
   {
