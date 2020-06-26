@@ -20,6 +20,28 @@ namespace Santa.Api.Controllers
 
         }
 
+        // GET: api/History
+        /// <summary>
+        /// Gets all histories
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="clientRelationXrefID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync(Guid clientID, Guid? clientRelationXrefID)
+        {
+            try
+            {
+                List<MessageHistory> listLogicHistory = await repository.GetAllChatHistories();
+                return Ok(listLogicHistory);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
+        }
+
         // GET: api/History/Client/5/Relationship/5
         /// <summary>
         /// Gets a specific history by clientID and an optional relationship ID

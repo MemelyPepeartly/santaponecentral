@@ -435,6 +435,7 @@ namespace Santa.Data.Repository
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
                 List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == clientID).ToListAsync();
 
+
                 foreach (ClientRelationXref relationship in XrefList)
                 {
                     MessageHistory logicHistory = new MessageHistory();
