@@ -27,8 +27,6 @@ export class ProfileComponent implements OnInit {
   public selectedRecipient: ProfileRecipient;
   public selectedHistory: MessageHistory;
   public histories: Array<MessageHistory>;
-  
-  public showRecipientData: boolean = false;
 
   public async ngOnInit() {
     //Auth profile
@@ -54,19 +52,5 @@ export class ProfileComponent implements OnInit {
       this.profileService.getHistories(this.profile.clientID);
     });
     
-  }
-  public showRecipientCard(recipient: ProfileRecipient)
-  {
-    this.selectedRecipient = recipient;
-    this.showRecipientData = true;
-  }
-  public hideRecipientCard()
-  {
-    this.selectedRecipient = undefined;
-    this.showRecipientData = false;
-  }
-  public populateSelectedChat(recipient: ProfileRecipient)
-  {
-    this.profileService.getSelectedHistory(this.profile.clientID, recipient);
   }
 }
