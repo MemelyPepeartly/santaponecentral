@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
+import { AuthService } from '../auth/auth.service';
 
 const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
 //const endpoint = 'https://localhost:5001/api/';
@@ -105,7 +106,7 @@ export class SantaApiGetService {
       map(this.extractData));
   }
   getAllMessageHistoriesByClientID(clientID): Observable<any> {
-    return this.http.get(endpoint + "Client/" + clientID + "/MessageHistories").pipe(
+    return this.http.get(endpoint + "History/Client/" + clientID).pipe(
       map(this.extractData));
   }
   getMessageHistoryByClientIDAndXrefID(clientID, clientRelationXrefID?): Observable<any> {
@@ -114,7 +115,7 @@ export class SantaApiGetService {
     {
       clientRelationXrefID = ""
     }
-    return this.http.get(endpoint + "Client/" + clientID + "/MessageHistory/" + clientRelationXrefID).pipe(
+    return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship/" + clientRelationXrefID).pipe(
       map(this.extractData));
   }
 }
