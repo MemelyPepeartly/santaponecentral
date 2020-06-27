@@ -3,7 +3,7 @@ import { Client } from 'src/classes/client';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
-import { Message, MessageHistory, MessageMeta } from 'src/classes/message';
+import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapService.service';
@@ -37,7 +37,7 @@ export class ControlPanelComponent implements OnInit {
     console.log(this.histories);
     
   }
-  // Event is from the chat histories component, and contains {meta: MessageMeta, event: EventType}
+  // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
   public showRecipientCard(eventInformation)
   {
     this.selectedRecipient = this.getProfileRecipientByMetaAndEventID(eventInformation.meta, eventInformation.event.eventTypeID);
@@ -48,9 +48,9 @@ export class ControlPanelComponent implements OnInit {
     this.selectedRecipient = undefined;
     this.showRecipientData = false;
   }
-  public getProfileRecipientByMetaAndEventID(meta: MessageMeta, eventID)
+  public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)
   {
-    let profileRecipient = this.profile.recipients.find((recipient: ProfileRecipient)=> {
+    let profileRecipient = this.profile.recipients.find((recipient: ProfileRecipient) => {
       return recipient.clientID == meta.clientID && recipient.recipientEvent.eventTypeID == eventID;
     });
     return profileRecipient;
