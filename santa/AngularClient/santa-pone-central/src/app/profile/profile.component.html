@@ -2,6 +2,6 @@
     <div class="components mat-elevation-z3">
         <app-information [profile]="profile"></app-information>
         <app-control-panel [profile]="profile" [histories]="histories"></app-control-panel> 
-        <app-contact-panel [profile]="profile" [selectedHistory]="selectedHistory"></app-contact-panel>
+        <app-contact-panel [clientMeta]="selectedHistory.conversationClient" [selectedHistory]="selectedHistory"></app-contact-panel>
     </div>
 </div>
