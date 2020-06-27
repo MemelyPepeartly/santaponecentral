@@ -129,25 +129,5 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
-
-        // GET: api/History/Unread
-        /// <summary>
-        /// Gets a list of message histories by a event's ID
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <returns></returns>
-        [HttpGet("Event/Unread")]
-        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllChatHistoriesWithUnreadMessagesAsync()
-        {
-            try
-            {
-                List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesWithUnreadMessagesAsync();
-                return Ok(listLogicMessageHistory);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
     }
 }
