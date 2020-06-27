@@ -182,9 +182,9 @@ VALUES
     (@client2IDGUID, @tag3IDGUID),
     (@client3IDGUID, @tag1IDGUID);
 
-INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, dateTimeSent, isMessageRead)
-VALUES
-    (@message1IDGUID, null, @client2IDGUID, null, 'This is my message content',  @message1DateTime, 0);
+-- INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, dateTimeSent, isMessageRead)
+-- VALUES
+--     (@message1IDGUID, null, @client2IDGUID, null, 'This is my message content',  @message1DateTime, 0);
 
 
 
