@@ -117,8 +117,8 @@ namespace Santa.Logic.Interfaces
         #region Utility
         Task SaveAsync();
         Task<Event> FindEventByXrefID(Guid? clientRelationXrefID);
-        Task<MessageClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID);
-        Task<MessageClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID);
+        Task<ClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID);
+        Task<ClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID);
         #endregion
 
     }
