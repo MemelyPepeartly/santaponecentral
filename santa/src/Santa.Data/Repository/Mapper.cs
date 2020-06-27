@@ -109,9 +109,9 @@ namespace Santa.Data.Repository
             return logicProfileRecipient;
         }
 
-        public static MessageClientMeta MapClientMeta(Entities.Client contextClient)
+        public static ClientMeta MapClientMeta(Entities.Client contextClient)
         {
-            Logic.Objects.MessageClientMeta logicMeta = new MessageClientMeta()
+            Logic.Objects.ClientMeta logicMeta = new ClientMeta()
             {
                 clientId = contextClient.ClientId,
                 clientName = contextClient.ClientName,
@@ -189,13 +189,13 @@ namespace Santa.Data.Repository
             {
                 chatMessageID = contextMessage.ChatMessageId,
                 clientRelationXrefID = contextMessage.ClientRelationXrefId != null ? contextMessage.ClientRelationXrefId : null,
-                recieverClient = new MessageClientMeta()
+                recieverClient = new ClientMeta()
                 {
                     clientId = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClientId : null,
                     clientName = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.ClientName : String.Empty,
                     clientNickname = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.Nickname : String.Empty
                 },
-                senderClient = new MessageClientMeta()
+                senderClient = new ClientMeta()
                 {
                     clientId = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClientId : null,
                     clientName = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClient.ClientName : String.Empty,

@@ -70,11 +70,11 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Message logicMessage = new Logic.Objects.Message()
                 {
                     chatMessageID = Guid.NewGuid(),
-                    recieverClient = new Logic.Objects.MessageClientMeta()
+                    recieverClient = new Logic.Objects.ClientMeta()
                     {
                         clientId = message.messageRecieverClientID
                     },
-                    senderClient = new Logic.Objects.MessageClientMeta()
+                    senderClient = new Logic.Objects.ClientMeta()
                     {
                         clientId = message.messageSenderClientID
                     },
