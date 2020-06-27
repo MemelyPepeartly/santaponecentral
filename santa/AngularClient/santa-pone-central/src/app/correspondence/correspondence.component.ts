@@ -27,7 +27,7 @@ export class CorrespondenceComponent implements OnInit {
 
   public showClientCard: boolean = false;
 
-  public selectedAnon: Client;
+  public selectedAnon: Client = new Client();
 
 
   public async ngOnInit() {
@@ -70,14 +70,17 @@ export class CorrespondenceComponent implements OnInit {
 
   public hideClientWindow()
   {
-
+    this.showClientCard = false;
+    this.selectedAnon = undefined;
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
-    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(meta.clientID).toPromise());
-    console.log(this.selectedAnon);
+    this.SantaApiGet.getClient(meta.clientID).subscribe(client => {
+      this.selectedAnon = this.mapper.mapClient(client);
+      this.showClientCard = true;
+    },err => { console.log(err); });
   }
-  async updateSelectedClient(clientID: string)
+  public async updateSelectedClient(clientID: string)
   {
     this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
   }
