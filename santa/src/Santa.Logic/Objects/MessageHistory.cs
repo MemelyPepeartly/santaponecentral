@@ -9,6 +9,9 @@ namespace Santa.Logic.Objects
     {
         public List<Message> history { get; set; }
         public Guid? relationXrefID { get; set; }
+        /// <summary>
+        /// Meta for the client who the conversation is with (Not the admin)
+        /// </summary>
         public ClientMeta conversationClient { get; set; }
         public Event eventType { get; set; }
         /// <summary>
