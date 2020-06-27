@@ -1,0 +1,34 @@
+
+<div id="contact-div">
+    <mat-card class="list-card mat-elevation-z5">
+        <mat-card-header>
+            <mat-card-title>Contact History</mat-card-title>
+            <mat-card-subtitle>Chat history for selected history</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="selectedHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z7">
+                <span>No chat selected! Select a chat history to see messages</span>
+            </div>
+            <div #chatFrame *ngIf="selectedHistory != undefined" id="chat-window" class="mat-elevation-z7">
+                <div class="spinner-container">
+                    <app-small-loading-spin *ngIf="!this.profileService.gettingSelectedHistory"></app-small-loading-spin>
+                </div>
+                <ng-container *ngFor="let message of selectedHistory.history">
+                    <div class="date-div">
+                        <span>{{ message.dateTimeSent }}</span>
+                        <mat-divider [inset]="true"></mat-divider>
+                    </div>
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == clientMeta.clientID,
+                                     'recieved-message' : message.recieverClient.clientID == clientMeta.clientID}">
+                        <div class="nick-div">
+                            <span *ngIf="message.senderClient.clientNickname != ''"> {{ message.senderClient.clientNickname }} </span>
+                            <span *ngIf="message.senderClient.clientNickname == ''"> Admin </span>
+                            <mat-divider [inset]="true"></mat-divider>
+                        </div>
+                        <p> {{ message.messageContent }} </p>
+                    </div>
+                </ng-container>  
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,92 @@
+mat-card
+{
+    vertical-align: top;
+    text-align: left;
+}
+.list-card 
+{
+    width: 100%;
+    min-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.chat-control-button
+{
+    margin: 10px;
+}
+#contact-div
+{
+    width: 90%;
+    min-width: 500px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#chat-window
+{
+    height: 500px;
+    border-radius: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: scroll;
+    height: xyz;
+}
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
+#button-container
+{
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+}
+/* Message classes*/
+.date-div
+{
+    display: block;
+    width: 40%;
+    min-width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.nick-div
+{
+    width: 50%;
+    text-align: center;
+}
+.message
+{
+    width: 200px;
+    display: block;
+    border-radius: 15px;
+    word-wrap: normal;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+}
+.recieved-message
+{
+    background-color: #E9E9EB;
+    color: black;
+    text-align: left;
+    margin-right: auto;
+    margin-left: 5px;
+}
+.sent-message
+{
+    background-color: #1788FE;
+    color: white;
+    text-align: right;
+    margin-right: 5px;
+    margin-left: auto;
+}
+.spinner-container
+{
+    display: block;
+    text-align: center;
+}
