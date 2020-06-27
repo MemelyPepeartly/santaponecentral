@@ -39,12 +39,6 @@ export class CorrespondenceComponent implements OnInit {
     this.ChatService.allEventChats.subscribe((historyArray: Array<MessageHistory>) => {
       this.eventChats = historyArray;
     });
-    this.ChatService.allGeneralChats.subscribe((historyArray: Array<MessageHistory>) => {
-      this.generalChats = historyArray;
-    });
-    this.ChatService.allUnreadChats.subscribe((historyArray: Array<MessageHistory>) => {
-      this.unreadChats = historyArray;
-    });
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray;
     });
