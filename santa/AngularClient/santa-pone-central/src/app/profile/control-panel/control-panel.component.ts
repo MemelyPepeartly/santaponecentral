@@ -1,13 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { Client } from 'src/classes/client';
+import { Component, OnInit, Input } from '@angular/core';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { EventType } from 'src/classes/eventType';
-import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
+import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapService.service';
-import { BehaviorSubject } from 'rxjs';
 import { ProfileService } from 'src/app/services/Profile.service';
 
 @Component({
