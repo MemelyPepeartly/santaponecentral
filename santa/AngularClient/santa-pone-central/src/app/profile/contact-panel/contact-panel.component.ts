@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Message, MessageHistory } from 'src/classes/message';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { SantaApiPostService } from 'src/app/services/santaApiService.service';
@@ -11,14 +11,12 @@ import { ProfileService } from 'src/app/services/Profile.service';
   templateUrl: './contact-panel.component.html',
   styleUrls: ['./contact-panel.component.css']
 })
-export class ContactPanelComponent implements OnInit {
+export class ContactPanelComponent implements OnInit, AfterViewChecked {
 
   constructor(public SantaApiPost: SantaApiPostService, public responseMapper: MapResponse, public auth: AuthService, public profileService: ProfileService) { }
 
   @Input() selectedHistory: MessageHistory;
   @Input() profile: Profile;
-
-  @Output() messagePosted: EventEmitter<boolean> = new EventEmitter<boolean>();
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
@@ -39,12 +37,14 @@ export class ContactPanelComponent implements OnInit {
     var newMessageResponse = this.responseMapper.mapMessageResponse(this.profile.clientID, null, this.selectedHistory.relationXrefID, "Member post for " + this.selectedHistory.eventType.eventDescription + " and Xref ID " + this.selectedHistory.relationXrefID)
     var res = await this.SantaApiPost.postMessage(newMessageResponse).toPromise();
     this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID);
+    this.profileService.getHistories(this.profile.clientID, true);
   }
   public async adminPostTest()
   {
     var newMessageResponse = this.responseMapper.mapMessageResponse(null, this.profile.clientID, this.selectedHistory.relationXrefID, "Admin post for " + this.selectedHistory.eventType.eventDescription + " and Xref ID " + this.selectedHistory.relationXrefID)
     var res = await this.SantaApiPost.postMessage(newMessageResponse).toPromise();
     this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID);
+    this.profileService.getHistories(this.profile.clientID, true);
   }
   public async scrollToBottom()
   {
