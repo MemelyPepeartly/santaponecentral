@@ -44,9 +44,6 @@ import { ControlPanelComponent } from './profile/control-panel/control-panel.com
 import { InformationComponent } from './profile/information/information.component';
 import { ContactPanelComponent } from './profile/contact-panel/contact-panel.component';
 import { CorrespondenceComponent } from './correspondence/correspondence.component';
-import { UnreadComponent } from './correspondence/unread/unread.component';
-import { AllComponent } from './correspondence/all/all.component';
-import { PendingComponent } from './correspondence/pending/pending.component';
 import { SelectedChatComponent } from './correspondence/selected-chat/selected-chat.component';
 import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component';
 import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.component'
@@ -84,9 +81,6 @@ import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.c
       InformationComponent,
       ContactPanelComponent,
       CorrespondenceComponent,
-      UnreadComponent,
-      AllComponent,
-      PendingComponent,
       SelectedChatComponent,
       SelectedRecipientComponent,
       ChatHistoriesComponent
