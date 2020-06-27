@@ -22,9 +22,7 @@ export class CorrespondenceComponent implements OnInit {
     public mapper: MapService) { }
 
   public allChats: Array<MessageHistory> = []
-  public unreadChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
-  public generalChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
 
   public showClientCard: boolean = false;
