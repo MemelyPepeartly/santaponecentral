@@ -13,10 +13,12 @@ export class ChatService {
 
   public gettingAllChats: boolean = false;
   public gettingAllEventChats: boolean = false;
+  public gettingSelectedHistory: boolean = false;
 
 
   private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
+  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
 
   // All Chats
   get allChats()
@@ -36,6 +38,16 @@ export class ChatService {
   private updateAllEventChats(messageHistories: Array<MessageHistory>)
   {
     this._allEventChats.next(messageHistories);
+  }
+
+  // Selected History
+  get selectedHistory()
+  {
+    return this._selectedHistory.asObservable();
+  }
+  private updateSelectedHistory(history: MessageHistory)
+  {
+    this._selectedHistory.next(history);
   }
 
 
@@ -67,5 +79,16 @@ export class ChatService {
       this.updateAllEventChats(historyArray);
       this.gettingAllEventChats = false;
     }, err => {console.log(err); this.gettingAllEventChats = false;}); 
+  }
+  public async getSelectedHistory(clientID, relationXrefID)
+  {
+    this.gettingSelectedHistory = true;
+
+    let messageHistory = new MessageHistory;
+    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
+      messageHistory = this.ApiMapper.mapMessageHistory(res);
+      this.updateSelectedHistory(messageHistory);
+      this.gettingSelectedHistory = false;
+    },err => {console.log(err); this.gettingSelectedHistory = false;}); 
   }
 }
