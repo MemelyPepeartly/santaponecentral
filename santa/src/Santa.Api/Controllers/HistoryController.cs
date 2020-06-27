@@ -28,7 +28,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientRelationXrefID"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync(Guid clientID, Guid? clientRelationXrefID)
+        public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync()
         {
             try
             {
@@ -83,6 +83,33 @@ namespace Santa.Api.Controllers
             }
         }
 
+        // GET: api/History/Event
+        /// <summary>
+        /// Gets a list of all event histories
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpGet("Event")]
+        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllEventChatHistoriesAsync()
+        {
+            try
+            {
+                List<Event> logicEvents = await repository.GetAllEvents();
+
+                List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+                foreach (Event logicEvent in logicEvents)
+                {
+                    listLogicMessageHistory.AddRange(await repository.GetAllChatHistoriesByEventIDAsync(logicEvent.eventTypeID));
+                }
+
+                return Ok(listLogicMessageHistory);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
         // GET: api/History/Event/5
         /// <summary>
         /// Gets a list of message histories by a event's ID
@@ -110,7 +137,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("Event/Unread")]
-        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllChatHistoriesWithUnreadMessagesAsync(Guid eventID)
+        public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllChatHistoriesWithUnreadMessagesAsync()
         {
             try
             {
