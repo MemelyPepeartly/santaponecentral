@@ -15,7 +15,9 @@
     <!-- Recipient Column -->
     <ng-container matColumnDef="recipient">
       <th mat-header-cell *matHeaderCellDef> Recipient </th>
-      <td mat-cell *matCellDef="let history"> <button (click)="emitSelectedRecipientInformation(history.eventRecieverClient, history.eventType)" mat-raised-button>{{history.eventRecieverClient.clientNickname}}</button> </td>
+      <td mat-cell *matCellDef="let history">
+        <button (click)="emitSelectedRecipientInformation(history.eventRecieverClient, history.eventType)" mat-raised-button>{{history.eventRecieverClient.clientNickname}}</button>
+      </td>
     </ng-container>
   
     <!-- Event Column -->
@@ -29,7 +31,12 @@
     <!-- Contact Column -->
     <ng-container matColumnDef="contact">
       <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
-      <td mat-cell *matCellDef="let history"> <button mat-raised-button (click)="emitSelectedHistory(history);" [matBadge]="history.recievedUnreadCount" [matBadgeHidden]="history.recievedUnreadCount == 0">Contact History</button> </td>
+      <td mat-cell *matCellDef="let history">
+        <button mat-raised-button
+          (click)="emitSelectedHistory(history);"
+          [matBadge]="isAdmin && !onProfile ? history.adminUnreadCount : history.memberUnreadCount"
+          [matBadgeHidden]="isAdmin && !onProfile && history.adminUnreadCount == 0 ? true : !isAdmin && history.memberUnreadCount == 0 ? true : false">Contact History</button>
+      </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
