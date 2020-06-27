@@ -50,11 +50,9 @@ namespace Santa.Logic.Interfaces
         #region Message Histories
         // General getters
         Task<List<MessageHistory>> GetAllChatHistories();
-        Task<List<MessageHistory>> GetAllChatHistoriesWithUnreadMessagesAsync();
         // Client getters
         Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID);
         Task<MessageHistory> GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(Guid clientID, Guid? clientRelationXrefID);
-
         // Event getters
         Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID);
 

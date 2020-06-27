@@ -429,14 +429,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets all the chat histories that have unread messages
-        /// </summary>
-        /// <returns></returns>
-        public Task<List<MessageHistory>> GetAllChatHistoriesWithUnreadMessagesAsync()
-        {
-            throw new NotImplementedException();
-        }
+
         /// <summary>
         /// Gets all the chat histories of clients by their ID. Does not include general chats with null relationship Xref ID
         /// </summary>
