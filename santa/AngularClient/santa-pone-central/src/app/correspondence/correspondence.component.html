@@ -17,7 +17,7 @@
     </mat-card-header>
     <mat-card-content>
 
-      <!-- Unread -->
+      <!-- Unread Histories -->
       <mat-card class="infoCard">
         <mat-card-header>
           <mat-card-title>Unread</mat-card-title>
@@ -25,7 +25,19 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-chat-histories [histories]="unreadChats" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+          <app-chat-histories [histories]="sortByUnread()" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- General Histories -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>General</mat-card-title>
+          <mat-card-subtitle>General chat histories not attatched to specific assignments</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-chat-histories [histories]="sortByGeneral()" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 

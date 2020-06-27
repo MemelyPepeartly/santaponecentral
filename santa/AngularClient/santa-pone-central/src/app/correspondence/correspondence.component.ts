@@ -56,15 +56,26 @@ export class CorrespondenceComponent implements OnInit {
   {
     await this.ChatService.gatherAllChats();
     await this.ChatService.gatherEventChats();
-    await this.ChatService.gatherGeneralChats();
-    await this.ChatService.gatherUnreadChats();
   }
   public sortByEvent(eventType: EventType)
   {   
-    return this.eventChats.filter((message: MessageHistory) => {
-      return message.eventType.eventTypeID == eventType.eventTypeID;
+    return this.eventChats.filter((history: MessageHistory) => {
+      return history.eventType.eventTypeID == eventType.eventTypeID;
     });
   }
+  public sortByUnread()
+  {   
+    return this.allChats.filter((history: MessageHistory) => {
+      return history.adminUnreadCount > 0;
+    });
+  }
+  public sortByGeneral()
+  {   
+    return this.allChats.filter((history: MessageHistory) => {
+      return history.relationXrefID == null;
+    });
+  }
+
   public hideClientWindow()
   {
 
@@ -72,6 +83,7 @@ export class CorrespondenceComponent implements OnInit {
   public async populateSelectAnonCard(meta: ClientMeta)
   {
     this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(meta.clientID).toPromise());
+    console.log(this.selectedAnon);
   }
   async updateSelectedClient(clientID: string)
   {
