@@ -393,22 +393,36 @@ namespace Santa.Data.Repository
             try
             {
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<ClientRelationXref> listContextClientRelationXref = await santaContext.ClientRelationXref.ToListAsync();
-                List<Entities.Client> listContextClient = await santaContext.Client.ToListAsync();
+                List<Entities.Client> listContextClient = await santaContext.Client.Include(c => c.ClientStatus).Include(x => x.ClientRelationXrefRecipientClient).ToListAsync();
 
-                MessageHistory logicHistory = new MessageHistory();
-                foreach (Entities.Client client in listContextClient)
+                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == StatusConstants.APPROVED))
                 {
-                    foreach (ClientRelationXref relationship in listContextClientRelationXref)
+                    if(client.ClientRelationXrefRecipientClient.Count() > 0)
                     {
+                        foreach (ClientRelationXref relationship in client.ClientRelationXrefRecipientClient)
+                        {
+                            MessageHistory logicHistory = new MessageHistory();
+                            logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(relationship.SenderClientId, relationship.ClientRelationXrefId);
+                            listLogicMessageHistory.Add(logicHistory);
+
+                            if (client.ClientRelationXrefRecipientClient.Last() == relationship &&
+                                listLogicMessageHistory.Where(h => h.relationXrefID == null).Count().Equals(0))
+                            {
+                                logicHistory = new MessageHistory();
+                                logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, null);
+                                listLogicMessageHistory.Add(logicHistory);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageHistory logicHistory = new MessageHistory();
                         logicHistory = new MessageHistory();
-                        logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, relationship.ClientRelationXrefId);
+                        logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, null);
                         listLogicMessageHistory.Add(logicHistory);
                     }
-                    logicHistory = new MessageHistory();
-                    logicHistory = await GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(client.ClientId, null);
                 }
-                return listLogicMessageHistory;
+                return listLogicMessageHistory.OrderBy(h => h.eventType.eventDescription).ToList();
             }
             catch(Exception e)
             {
@@ -460,34 +474,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<MessageHistory> listLogicHistories = new List<MessageHistory>();
-                MessageHistory logicHistory = new MessageHistory();
-                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.EventTypeId == eventID).ToListAsync();
+                List<MessageHistory> listLogicHistories = await GetAllChatHistories();
 
-                foreach(ClientRelationXref relationship in XrefList)
-                {
-                    List<Message> logicListMessages = (await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == relationship.ClientRelationXrefId)
-                    .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
-                    .Include(x => x.ClientRelationXref)
-                    .OrderBy(dt => dt.DateTimeSent)
-                    .ToListAsync())
-                    .Select(Mapper.MapMessage)
-                    .ToList();
-
-                    logicHistory.history = logicListMessages;
-                    logicHistory.relationXrefID = relationship.ClientRelationXrefId;
-
-                    logicHistory.eventType = await FindEventByXrefID(relationship.ClientRelationXrefId);
-                    logicHistory.eventSenderClient = await FindSenderClientMetaByXrefID(relationship.ClientRelationXrefId);
-                    logicHistory.eventRecieverClient = await FindRecieverClientMetaByXrefID(relationship.ClientRelationXrefId);
-
-                    listLogicHistories.Add(logicHistory);
-                    logicHistory = new MessageHistory();
-                }
-
-                return listLogicHistories;
+                return listLogicHistories.Where(h => h.eventType.eventTypeID == eventID).ToList();
             }
             catch(Exception e)
             {
@@ -518,8 +507,9 @@ namespace Santa.Data.Repository
                 logicHistory.relationXrefID = clientRelationXrefID;
 
                 logicHistory.eventType = clientRelationXrefID != null ? await FindEventByXrefID(clientRelationXrefID) : new Event();
-                logicHistory.eventSenderClient = clientRelationXrefID != null ? await FindSenderClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
-                logicHistory.eventRecieverClient = clientRelationXrefID != null ? await FindRecieverClientMetaByXrefID(clientRelationXrefID) : new MessageClientMeta();
+                logicHistory.conversationClient = Mapper.MapClientMeta(await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID));
+                logicHistory.eventSenderClient = clientRelationXrefID != null ? await FindSenderClientMetaByXrefID(clientRelationXrefID) : new ClientMeta();
+                logicHistory.eventRecieverClient = clientRelationXrefID != null ? await FindRecieverClientMetaByXrefID(clientRelationXrefID) : new ClientMeta();
 
                 return logicHistory;
             }
@@ -1164,7 +1154,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task<MessageClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID)
+        public async Task<ClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID)
         {
             try
             {
@@ -1172,7 +1162,7 @@ namespace Santa.Data.Repository
                     .Include(r => r.RecipientClient)
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
 
-                MessageClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.RecipientClient);
+                ClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.RecipientClient);
                 return logicMeta;
             }
             catch (Exception e)
@@ -1181,7 +1171,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task<MessageClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID)
+        public async Task<ClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID)
         {
             try
             {
@@ -1189,7 +1179,7 @@ namespace Santa.Data.Repository
                     .Include(r => r.SenderClient)
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
 
-                MessageClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.SenderClient);
+                ClientMeta logicMeta = Mapper.MapClientMeta(contextXrefRelationship.SenderClient);
                 return logicMeta;
             }
             catch (Exception e)
