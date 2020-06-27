@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MessageHistory, MessageMeta } from 'src/classes/message';
+import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { ProfileService } from 'src/app/services/Profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
@@ -22,7 +22,7 @@ export class ChatHistoriesComponent implements OnInit {
   @Input() histories: Array<MessageHistory>
 
   @Output() chatSelectedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
-  @Output() recipientSelectedEvent: EventEmitter<{meta: MessageMeta, event: EventType}> = new EventEmitter<{meta: MessageMeta, event: EventType}>();
+  @Output() recipientSelectedEvent: EventEmitter<{meta: ClientMeta, event: EventType}> = new EventEmitter<{meta: ClientMeta, event: EventType}>();
 
 
   ngOnInit(): void {
@@ -34,15 +34,8 @@ export class ChatHistoriesComponent implements OnInit {
   {
     this.chatSelectedEvent.emit(history);
   }
-  public emitSelectedRecipientInformation(historyMeta: MessageMeta, historyEvent: EventType)
+  public emitSelectedRecipientInformation(historyMeta: ClientMeta, historyEvent: EventType)
   {
     this.recipientSelectedEvent.emit({meta: historyMeta, event: historyEvent});
   }
-  public log()
-  {
-    console.log(this.isAdmin);
-    console.log(this.onProfile);
-  }
-
-
 }
