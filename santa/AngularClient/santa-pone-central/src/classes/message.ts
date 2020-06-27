@@ -11,7 +11,7 @@ export class MessageHistory {
     eventSenderClient: ClientMeta;
     eventRecieverClient: ClientMeta;
 
-    get sentUnreadCount()
+    get adminUnreadCount()
     {
         var count = 0;
         this.history.forEach((message: Message) => {
@@ -22,7 +22,7 @@ export class MessageHistory {
         });
         return count;
     }
-    get recievedUnreadCount()
+    get memberUnreadCount()
     {
         var count = 0;
         this.history.forEach((message: Message) => {
