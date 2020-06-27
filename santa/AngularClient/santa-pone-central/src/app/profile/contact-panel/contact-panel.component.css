@@ -82,3 +82,8 @@ mat-card
     margin-right: 5px;
     margin-left: auto;
 }
+.spinner-container
+{
+    display: block;
+    text-align: center;
+}
