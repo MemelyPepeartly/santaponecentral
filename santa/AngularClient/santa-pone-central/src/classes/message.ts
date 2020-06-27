@@ -1,13 +1,15 @@
 import { ModuleWithComponentFactories } from '@angular/core';
 import { EventType } from './eventType';
+import { Client } from './client';
 
 //Message History class
 export class MessageHistory {
     history: Array<Message>;
     relationXrefID: string;
+    conversationClient: ClientMeta;
     eventType: EventType;
-    eventSenderClient: MessageMeta;
-    eventRecieverClient: MessageMeta;
+    eventSenderClient: ClientMeta;
+    eventRecieverClient: ClientMeta;
 
     get sentUnreadCount()
     {
@@ -36,15 +38,15 @@ export class MessageHistory {
 // Message class for correspondance
 export class Message {
     chatMessageID: string;
-    senderClient: MessageMeta;
-    recieverClient: MessageMeta;
+    senderClient: ClientMeta;
+    recieverClient: ClientMeta;
     clientRelationXrefID?: string;
     messageContent: string;
     dateTimeSent: Date = new Date();
     isMessageRead: boolean;
 }
 // Minimized meta information returned from API for easily naming messages without additional API calls
-export class MessageMeta {
+export class ClientMeta {
     clientID?: string;
     clientName?: string;
     clientNickname?: string;

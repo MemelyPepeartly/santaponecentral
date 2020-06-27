@@ -113,6 +113,10 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "History/Client/" + clientID).pipe(
       map(this.extractData));
   }
+  getAllEventMessageHistories(): Observable<any> {
+    return this.http.get(endpoint + "History/Event").pipe(
+      map(this.extractData));
+  }
   getMessageHistoriesByEventID(eventID): Observable<any> {
     return this.http.get(endpoint + "History/Event/" + eventID).pipe(
       map(this.extractData));
