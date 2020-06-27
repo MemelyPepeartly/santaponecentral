@@ -11,6 +11,12 @@ export class ChatService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
+  public gettingAllChats: boolean = false;
+  public gettingAllEventChats: boolean = false;
+  public gettingAllGeneralChats: boolean = false;
+  public gettingAllUnreadChats: boolean = false;
+
+
   private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allGeneralChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
@@ -57,13 +63,10 @@ export class ChatService {
     this._allUnreadChats.next(messageHistories);
   }
 
-  // Gathering methods
-  public async gatherEventChats()
+  // * GATHERING METHODS * //
+  public async gatherAllChats()
   {
-    
-  }
-  public async gatherGeneralChats()
-  {
+    this.gettingAllChats = true;
     let historyArray: Array<MessageHistory> = [];
 
     this.SantaApiGet.getAllMessageHistories().subscribe(res => {
@@ -72,11 +75,41 @@ export class ChatService {
         historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
       }
       this.updateAllChats(historyArray);
-    }, err => {console.log(err)});
+      this.gettingAllChats = false;
+    }, err => {console.log(err); this.gettingAllChats = false;});
+  }
+  public async gatherEventChats()
+  {
+    this.gettingAllEventChats = true;
+    let historyArray: Array<MessageHistory> = [];
+
+    this.SantaApiGet.getAllEventMessageHistories().subscribe(res => {
+      for(let i = 0; i < res.length; i++)
+      {
+        historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
+      }
+      this.updateAllEventChats(historyArray);
+      this.gettingAllEventChats = false;
+    }, err => {console.log(err); this.gettingAllEventChats = false;}); 
+  }
+  public async gatherGeneralChats()
+  {
+    
   }
   public async gatherUnreadChats()
   {
-    
+    this.gettingAllUnreadChats = true;
+    let historyArray: Array<MessageHistory> = [];
+
+    this.SantaApiGet.getMessageHistoriesWithUnreadMessages().subscribe(res => {
+      for(let i = 0; i < res.length; i++)
+      {
+        historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
+      }
+      this.updateAllUnreadChats(historyArray);
+      this.gettingAllUnreadChats = false;
+
+    }, err => {console.log(err); this.gettingAllUnreadChats = false;}); 
   }
 
 }
