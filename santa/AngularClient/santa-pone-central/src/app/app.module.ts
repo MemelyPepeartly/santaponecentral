@@ -42,11 +42,10 @@ import { EventControlComponent } from './admin-control/event-control/event-contr
 import { SurveyControlComponent } from './admin-control/survey-control/survey-control.component';
 import { ControlPanelComponent } from './profile/control-panel/control-panel.component';
 import { InformationComponent } from './profile/information/information.component';
-import { ContactPanelComponent } from './profile/contact-panel/contact-panel.component';
 import { CorrespondenceComponent } from './correspondence/correspondence.component';
-import { SelectedChatComponent } from './correspondence/selected-chat/selected-chat.component';
 import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component';
 import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.component'
+import { ContactPanelComponent } from './shared/contact-panel/contact-panel.component';
 
 
 @NgModule({
@@ -81,7 +80,6 @@ import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.c
       InformationComponent,
       ContactPanelComponent,
       CorrespondenceComponent,
-      SelectedChatComponent,
       SelectedRecipientComponent,
       ChatHistoriesComponent
    ],
