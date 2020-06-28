@@ -1,7 +1,10 @@
-<div class="example-container">
+<div class="container mat-elevation-z5">
     <mat-form-field appearance="fill">
       <mat-label>Enter a message</mat-label>
-      <input matInput placeholder="Blah blah blah" [formControl]="message" required>
-      <mat-error *ngIf="message.invalid">{{ getErrorMessage() }}</mat-error>
+      <input class="inputField" matInput placeholder="Blah blah blah" [formControl]="messageFormControl" required>
+      <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
     </mat-form-field>
+    <button mat-raised-button matTooltip="Send" class="controlButton" [disabled]="messageFormControl.hasError('required')">
+        <mat-icon mat-icon-button (click)="emitMessage(messageFormControl.value)">send</mat-icon>
+    </button>    
   </div>
