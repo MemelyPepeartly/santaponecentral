@@ -10,6 +10,7 @@ using Santa.Logic.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using Santa.Logic.Objects;
+using System.Security.Claims;
 
 namespace Santa.Api.Controllers
 {
@@ -39,17 +40,30 @@ namespace Santa.Api.Controllers
         {
             try
             {
-#warning Need protection here. Check request and make sure requesting email is only getting the profile for THEIR email. No fooling the DB here
+                // Gets the claims from the token
+                Microsoft.Extensions.Primitives.StringValues AuthHeaders = this.HttpContext.Request.Headers["Authorization"];
+                string result = AuthHeaders[0].Substring(AuthHeaders[0].LastIndexOf(' ') + 1);
+                JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken token = jwtHandler.ReadJwtToken(result);
+                List<System.Security.Claims.Claim> claims = token.Claims.ToList();
 
-                Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-
-                if (logicProfile == null)
+                // Checks to make sure the token's email is only getting the email for its own profile
+                if (claims.First(c => c.Value == email) != null)
                 {
-                    return NoContent();
+                    Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+
+                    if (logicProfile == null)
+                    {
+                        return NoContent();
+                    }
+                    else
+                    {
+                        return Ok(logicProfile);
+                    }
                 }
                 else
                 {
-                    return Ok(logicProfile);
+                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
             }
             catch (Exception e)
