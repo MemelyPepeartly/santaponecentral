@@ -3,7 +3,10 @@
     <mat-card class="list-card mat-elevation-z5">
         <mat-card-header>
             <mat-card-title>Contact History</mat-card-title>
-            <mat-card-subtitle>Chat history for selected history</mat-card-subtitle>
+            <mat-card-subtitle>Chat history for {{ selectedHistory.conversationClient.clientNickname }}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription != undefined || selectedHistory.eventType.eventDescription != null">Sending to {{selectedHistory.eventRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription == undefined || selectedHistory.eventType.eventDescription == null">General Coversation History</mat-card-subtitle>
+
         </mat-card-header>
         <mat-card-content>
             <div *ngIf="selectedHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z7">
@@ -27,7 +30,10 @@
                         </div>
                         <p> {{ message.messageContent }} </p>
                         <div class="messageCheckDiv">
-                            <button mat-raised-button matTooltip="Mark as read" class="messageCheckButton mat-elevation-z5">
+                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="message.senderClient.clientID != sendingClientMeta.clientID && !message.isMessageRead"
+                                matTooltip="Mark as read"
+                                [disabled]="markingRead"
+                                (click)="markRead(message)">
                                 <mat-icon mat-icon-button>check</mat-icon>
                             </button> 
                         </div>      
