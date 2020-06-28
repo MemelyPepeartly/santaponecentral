@@ -62,7 +62,7 @@ mat-card
 {
     width: 200px;
     display: block;
-    border-radius: 15px 15px 0px 0px;
+    border-radius: 15px;
     word-wrap: normal;
     padding: 5px;
     margin-top: 5px;
@@ -75,18 +75,27 @@ mat-card
     color: black;
     text-align: left;
     margin-right: auto;
-    margin-left: 5px;
+    margin-left: 10px;
 }
 .sent-message
 {
     background-color: #1788FE;
     color: white;
     text-align: right;
-    margin-right: 5px;
+    margin-right: 10px;
     margin-left: auto;
 }
 .spinner-container
 {
     display: block;
     text-align: center;
+}
+.messageCheckButton
+{
+    width: 80%;
+}
+.messageCheckDiv
+{
+    text-align: center;
+    width: 100%;
 }

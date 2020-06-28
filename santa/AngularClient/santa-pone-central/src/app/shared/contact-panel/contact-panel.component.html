@@ -18,16 +18,22 @@
                         <span>{{ message.dateTimeSent }}</span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == clientMeta.clientID,
-                                     'recieved-message' : message.recieverClient.clientID == clientMeta.clientID}">
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == sendingClientMeta.clientID,
+                                     'recieved-message' : message.recieverClient.clientID == sendingClientMeta.clientID}">
                         <div class="nick-div">
                             <span *ngIf="message.senderClient.clientNickname != ''"> {{ message.senderClient.clientNickname }} </span>
                             <span *ngIf="message.senderClient.clientNickname == ''"> Admin </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
                         <p> {{ message.messageContent }} </p>
+                        <div class="messageCheckDiv">
+                            <button mat-raised-button matTooltip="Mark as read" class="messageCheckButton mat-elevation-z5">
+                                <mat-icon mat-icon-button>check</mat-icon>
+                            </button> 
+                        </div>      
                     </div>
-                </ng-container>  
+                    
+                </ng-container>
             </div>
         </mat-card-content>
     </mat-card>

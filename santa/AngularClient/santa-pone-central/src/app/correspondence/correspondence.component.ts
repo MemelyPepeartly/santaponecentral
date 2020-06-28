@@ -84,7 +84,8 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = true;
 
     console.log(messageResponse);
-    await this.SantaApiPost.postMessage(messageResponse).toPromise();;
+    await this.SantaApiPost.postMessage(messageResponse).toPromise();
+    this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID)
 
     this.postingMessage = false;
     
