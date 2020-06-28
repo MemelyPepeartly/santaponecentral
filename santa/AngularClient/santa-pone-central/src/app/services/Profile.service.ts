@@ -58,7 +58,7 @@ export class ProfileService {
 
     let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
     this.updateProfile(profile);
-    
+
     this.gettingProfile = false;
   }
   public async getHistories(clientID, isSoftUpdate?: boolean)
@@ -82,7 +82,8 @@ export class ProfileService {
   public async getSelectedHistory(clientID, relationXrefID)
   {
     this.gettingSelectedHistory = true;
-    let messageHistory = new MessageHistory;
+    let messageHistory = new MessageHistory();
+    this.updateSelectedHistory(messageHistory);
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
       messageHistory = this.ApiMapper.mapMessageHistory(res);
       this.updateSelectedHistory(messageHistory);

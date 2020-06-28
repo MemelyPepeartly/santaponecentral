@@ -72,7 +72,7 @@ export class ProfileComponent implements OnInit {
     if(event)
     {
       this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
-      this.profileService.getHistories(this.profile.clientID);
+      this.profileService.getHistories(this.profile.clientID, true);
     }
   }
 }
