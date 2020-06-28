@@ -34,8 +34,8 @@
       <td mat-cell *matCellDef="let history">
         <button mat-raised-button
           (click)="emitSelectedHistory(history);"
-          [matBadge]="isAdmin && !onProfile ? history.adminUnreadCount : history.memberUnreadCount"
-          [matBadgeHidden]="isAdmin && !onProfile && history.adminUnreadCount == 0 ? true : !isAdmin && history.memberUnreadCount == 0 ? true : false">Contact History</button>
+          [matBadge]="getUnreadNumber(history)"
+          [matBadgeHidden]="checkBadgeHidden(history)">Contact History</button>
       </td>
     </ng-container>
   
