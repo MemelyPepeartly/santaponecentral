@@ -18,6 +18,7 @@ export class InputControlComponent implements OnInit {
   @Input() relationshipID: string;
   @Input() sender: ClientMeta;
   @Input() reciever: ClientMeta;
+  @Input() disabled: boolean = false;
 
   public messageFormControl = new FormControl('', Validators.required);
 

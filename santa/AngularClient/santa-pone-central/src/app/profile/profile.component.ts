@@ -63,9 +63,14 @@ export class ProfileComponent implements OnInit {
   }
   public async send(messageResponse: MessageApiResponse)
   {
-    console.log(messageResponse);
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID)
-    
+    this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+  }
+  public async updateChat(event: boolean)
+  {
+    if(event)
+    {
+      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+    }
   }
 }

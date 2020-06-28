@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 
@@ -193,7 +193,9 @@ export class SantaApiPutService {
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
-   
+  }
+  putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
+    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
   }
 }
 @Injectable({

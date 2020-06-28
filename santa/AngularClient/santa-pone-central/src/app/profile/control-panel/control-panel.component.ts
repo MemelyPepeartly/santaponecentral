@@ -30,11 +30,6 @@ export class ControlPanelComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  public log()
-  {
-    console.log(this.histories);
-    
-  }
   // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
   public showRecipientCard(eventInformation)
   {
