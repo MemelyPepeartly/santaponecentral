@@ -11,7 +11,7 @@
             </div>
             <div #chatFrame *ngIf="selectedHistory != undefined" id="chat-window" class="mat-elevation-z7">
                 <div class="spinner-container">
-                    <app-small-loading-spin *ngIf="!this.profileService.gettingSelectedHistory"></app-small-loading-spin>
+                    <app-small-loading-spin *ngIf="showLoading"></app-small-loading-spin>
                 </div>
                 <ng-container *ngFor="let message of selectedHistory.history">
                     <div class="date-div">
