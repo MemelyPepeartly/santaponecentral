@@ -16,7 +16,8 @@ export class ContactPanelComponent implements OnInit, AfterViewChecked {
   constructor(public SantaApiPost: SantaApiPostService, public responseMapper: MapResponse, public auth: AuthService, public profileService: ProfileService) { }
 
   @Input() selectedHistory: MessageHistory;
-  @Input() clientMeta: ClientMeta
+  @Input() clientMeta: ClientMeta;
+  @Input() showLoading: boolean = false;
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
