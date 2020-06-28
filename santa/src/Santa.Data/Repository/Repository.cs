@@ -358,7 +358,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Message logicMessage = Mapper.MapMessage(await santaContext.ChatMessage.FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID));
+                var contextMessage = await santaContext.ChatMessage
+                    .Include(r => r.MessageRecieverClient)
+                    .Include(s => s.MessageSenderClient)
+                    .FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
+                Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
                 return logicMessage;
             }
             catch (Exception e)
