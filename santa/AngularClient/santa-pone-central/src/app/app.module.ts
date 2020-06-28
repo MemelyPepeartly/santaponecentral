@@ -46,6 +46,7 @@ import { CorrespondenceComponent } from './correspondence/correspondence.compone
 import { SelectedRecipientComponent } from './profile/selected-recipient/selected-recipient.component';
 import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.component'
 import { ContactPanelComponent } from './shared/contact-panel/contact-panel.component';
+import { InputControlComponent } from './shared/input-control/input-control.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { ContactPanelComponent } from './shared/contact-panel/contact-panel.comp
       ContactPanelComponent,
       CorrespondenceComponent,
       SelectedRecipientComponent,
-      ChatHistoriesComponent
+      ChatHistoriesComponent,
+      InputControlComponent
    ],
    entryComponents: [
       LoginComponent
