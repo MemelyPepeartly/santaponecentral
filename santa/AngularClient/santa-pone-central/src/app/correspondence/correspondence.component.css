@@ -30,6 +30,11 @@
     z-index: 3;
     border-radius: 8px;
 }
+.chatContainer
+{
+    padding: 15px;
+    height: fit-content;
+}
 #overlay
 {
     position: fixed; /* Sit on top of the page content */
