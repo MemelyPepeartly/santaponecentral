@@ -1,0 +1,7 @@
+<div class="example-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a message</mat-label>
+      <input matInput placeholder="Blah blah blah" [formControl]="message" required>
+      <mat-error *ngIf="message.invalid">{{ getErrorMessage() }}</mat-error>
+    </mat-form-field>
+  </div>
