@@ -129,7 +129,8 @@ export class SantaApiGetService {
     //Necessary for the correct call to be made where teh clientRelationXrefID is null
     if(clientRelationXrefID == null)
     {
-      clientRelationXrefID = ""
+      return this.http.get(endpoint + "History/Client/" + clientID + "/General").pipe(
+        map(this.extractData));
     }
     return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship/" + clientRelationXrefID).pipe(
       map(this.extractData));
