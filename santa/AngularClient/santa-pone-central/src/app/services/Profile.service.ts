@@ -82,7 +82,6 @@ export class ProfileService {
   public async getSelectedHistory(clientID, relationXrefID)
   {
     this.gettingSelectedHistory = true;
-
     let messageHistory = new MessageHistory;
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
       messageHistory = this.ApiMapper.mapMessageHistory(res);
