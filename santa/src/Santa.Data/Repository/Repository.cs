@@ -483,18 +483,15 @@ namespace Santa.Data.Repository
                     .Include(e => e.EventType)
                     .Include(s => s.SenderClient)
                     .Include(r => r.RecipientClient)
+                    .Include(m => m.ChatMessage)
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
-                List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == clientRelationXrefID)
-                    .OrderBy(dt => dt.DateTimeSent)
-                    .ToListAsync();
-                List<Logic.Objects.Message> logicListMessages = contextListMessages.Select(Mapper.MapMessage).ToList();
+                List<Logic.Objects.Message> logicListMessages = contextRelationship.ChatMessage.Select(Mapper.MapMessage).OrderBy(dt => dt.dateTimeSent).ToList();
 
                 logicHistory.history = logicListMessages;
                 logicHistory.relationXrefID = clientRelationXrefID;
 
                 logicHistory.eventType = Mapper.MapEvent(contextRelationship.EventType);
-                logicHistory.conversationClient = Mapper.MapClientMeta(await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID));
+                logicHistory.conversationClient = contextRelationship.SenderClient.ClientId == clientID ? Mapper.MapClientMeta(contextRelationship.SenderClient) : Mapper.MapClientMeta(contextRelationship.RecipientClient);
                 logicHistory.eventSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
                 logicHistory.eventRecieverClient = Mapper.MapClientMeta(contextRelationship.RecipientClient);
 
@@ -511,7 +508,7 @@ namespace Santa.Data.Repository
             {
                 MessageHistory logicHistory = new MessageHistory();
                 List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == null)
+                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageRecieverClientId == clientID))
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageRecieverClient)
                     .OrderBy(dt => dt.DateTimeSent)
