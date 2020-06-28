@@ -47,8 +47,8 @@ export class Message {
 }
 // Minimized meta information returned from API for easily naming messages without additional API calls
 export class ClientMeta {
-    clientID?: string;
-    clientName?: string;
-    clientNickname?: string;
+    clientID?: string = null;
+    clientName?: string = null;
+    clientNickname?: string = null;
 }
 
