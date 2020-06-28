@@ -9,7 +9,7 @@
   </div>
 </div>
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
-    <app-contact-panel [selectedHistory]="selectedHistory" [clientMeta]="selectedHistory.conversationClient"></app-contact-panel>
+    <app-contact-panel [selectedHistory]="selectedHistory" [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control
       (sendClicked)="send($event)"
       [relationshipID]="selectedHistory.relationXrefID"

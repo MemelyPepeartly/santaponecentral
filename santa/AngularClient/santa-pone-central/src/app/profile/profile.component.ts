@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SantaApiGetService } from '../services/santaApiService.service';
+import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
 import { MapService } from '../services/mapService.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { MessageHistory } from 'src/classes/message';
+import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { ProfileService } from '../services/Profile.service';
+import { MessageApiResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-profile',
@@ -15,14 +16,20 @@ export class ProfileComponent implements OnInit {
 
   constructor(public profileService: ProfileService, 
     public SantaApiGet: SantaApiGetService,
+    public SantaApiPost: SantaApiPostService,
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
   public profile: Profile = new Profile();
   public authProfile: any;
+
   public selectedRecipient: ProfileRecipient;
   public selectedHistory: MessageHistory;
+
   public histories: Array<MessageHistory>;
+  public adminRecieverMeta: ClientMeta = new ClientMeta;
+
+  public showChat: boolean = false;
 
   public async ngOnInit() {
     //Auth profile
@@ -45,5 +52,20 @@ export class ProfileComponent implements OnInit {
       this.profileService.getHistories(this.profile.clientID);
     });
     await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
+  }
+  public showSelectedChat()
+  {
+    this.showChat = true;
+  }
+  public hideSelectedChat()
+  {
+    this.showChat = false;
+  }
+  public async send(messageResponse: MessageApiResponse)
+  {
+    console.log(messageResponse);
+    await this.SantaApiPost.postMessage(messageResponse).toPromise();
+    this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID)
+    
   }
 }

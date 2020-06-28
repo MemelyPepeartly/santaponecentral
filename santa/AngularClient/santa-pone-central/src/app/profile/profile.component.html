@@ -1,13 +1,27 @@
+
+<div id="overlay" *ngIf="showChat == true" (click)="hideSelectedChat()">
+</div>
+
+<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+    <app-contact-panel
+        [selectedHistory]="selectedHistory"
+        [sendingClientMeta]="selectedHistory.conversationClient"
+        [showLoading]="this.profileService.gettingSelectedHistory"></app-contact-panel>
+    <app-input-control
+        (sendClicked)="send($event)"
+        [relationshipID]="selectedHistory.relationXrefID"
+        [sender]="selectedHistory.conversationClient"
+        [reciever]="adminRecieverMeta">
+    </app-input-control>
+</div>
+
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information [profile]="profile"></app-information>
         <app-control-panel
+            (chatClickedEvent)="showSelectedChat()"
             [profile]="profile"
-            [histories]="histories"></app-control-panel> 
-        <app-contact-panel 
-            [clientMeta]="selectedHistory.conversationClient"
-            [selectedHistory]="selectedHistory"
-            [showLoading]="this.profileService.gettingSelectedHistory">
-        </app-contact-panel>
+            [histories]="histories">
+        </app-control-panel> 
     </div>
 </div>

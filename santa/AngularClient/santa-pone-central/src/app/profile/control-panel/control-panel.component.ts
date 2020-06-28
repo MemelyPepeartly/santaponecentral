@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
@@ -20,6 +20,8 @@ export class ControlPanelComponent implements OnInit {
     
   @Input() histories: Array<MessageHistory>
   @Input() profile: Profile;
+
+  @Output() chatClickedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   public selectedRecipient: ProfileRecipient;
 
@@ -56,10 +58,12 @@ export class ControlPanelComponent implements OnInit {
     if(history != null)
     {
       this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+      this.chatClickedEvent.emit(true);
     }
     else
     {
       this.profileService.getSelectedHistory(this.profile.clientID, null);
+      this.chatClickedEvent.emit(true);
     }
   }
 }
