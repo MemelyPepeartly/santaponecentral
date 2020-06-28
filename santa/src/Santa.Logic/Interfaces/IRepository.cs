@@ -52,7 +52,8 @@ namespace Santa.Logic.Interfaces
         Task<List<MessageHistory>> GetAllChatHistories();
         // Client getters
         Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID);
-        Task<MessageHistory> GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(Guid clientID, Guid? clientRelationXrefID);
+        Task<MessageHistory> GetChatHistoryByClientIDAndRelationXrefIDAsync(Guid clientID, Guid clientRelationXrefID);
+        Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID);
         // Event getters
         Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID);
 
@@ -114,9 +115,6 @@ namespace Santa.Logic.Interfaces
 
         #region Utility
         Task SaveAsync();
-        Task<Event> FindEventByXrefID(Guid? clientRelationXrefID);
-        Task<ClientMeta> FindRecieverClientMetaByXrefID(Guid? clientRelationXrefID);
-        Task<ClientMeta> FindSenderClientMetaByXrefID(Guid? clientRelationXrefID);
         #endregion
 
     }

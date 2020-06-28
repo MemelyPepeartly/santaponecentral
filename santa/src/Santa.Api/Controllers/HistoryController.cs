@@ -49,20 +49,41 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="clientRelationXrefID"></param>
         /// <returns></returns>
-        [HttpGet("Client/{clientID}/Relationship/{clientRelationXrefID?}")]
-        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByIDAsync(Guid clientID, Guid? clientRelationXrefID)
+        [HttpGet("Client/{clientID}/Relationship/{clientRelationXrefID}")]
+        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndClientIDAsync(Guid clientID, Guid clientRelationXrefID)
         {
             try
             {
-                MessageHistory listLogicMessages = await repository.GetChatHistoryByClientIDAndOptionalRelationXrefIDAsync(clientID, clientRelationXrefID);
+                MessageHistory listLogicMessages = await repository.GetChatHistoryByClientIDAndRelationXrefIDAsync(clientID, clientRelationXrefID);
                 return Ok(listLogicMessages);
             }
             catch (Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
-
         }
+
+        // GET: api/History/Client/5/Relationship/5
+        /// <summary>
+        /// Gets a specific history by clientID and an optional relationship ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="clientRelationXrefID"></param>
+        /// <returns></returns>
+        [HttpGet("Client/{clientID}/General")]
+        public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid clientID)
+        {
+            try
+            {
+                MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryByClientIDAsync(clientID);
+                return Ok(listLogicMessages);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
         // GET: api/History/Client/5
         /// <summary>
         /// Gets a list of message histories by a client's ID
