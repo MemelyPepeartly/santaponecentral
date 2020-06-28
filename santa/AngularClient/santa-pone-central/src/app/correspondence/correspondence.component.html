@@ -1,4 +1,4 @@
-<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow();">
+<div id="overlay" *ngIf="showClientCard == true || showChat == true" (click)="hideWindow();">
 </div>
 
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
@@ -8,7 +8,9 @@
       (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
   </div>
 </div>
-
+<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+    <app-contact-panel [selectedHistory]="selectedHistory" [clientMeta]="selectedHistory.conversationClient"></app-contact-panel>
+</div>
 <div id="info-div">
   <mat-card class="list-card mat-elevation-z5">
     <mat-card-header>
@@ -25,7 +27,11 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-chat-histories [histories]="sortByUnread()" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="sortByUnread()"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 
@@ -37,7 +43,11 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-chat-histories [histories]="sortByGeneral()" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="sortByGeneral()"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 
@@ -49,7 +59,11 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-chat-histories [histories]="sortByEvent(event)" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllEventChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllEventChats"
+            [histories]="sortByEvent(event)"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 
@@ -57,11 +71,15 @@
       <mat-card class="infoCard">
         <mat-card-header>
           <mat-card-title>All</mat-card-title>
-          <mat-card-subtitle>List of all contact history for contacted anons</mat-card-subtitle>
+          <mat-card-subtitle>List of all contact histories for contacted anons</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
-          <app-chat-histories [histories]="allChats" (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"></app-chat-histories>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="allChats"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 

@@ -26,8 +26,10 @@ export class CorrespondenceComponent implements OnInit {
   public events: Array<EventType> = []
 
   public showClientCard: boolean = false;
+  public showChat: boolean = false;
 
   public selectedAnon: Client = new Client();
+  public selectedHistory: MessageHistory = new MessageHistory();
 
 
   public async ngOnInit() {
@@ -39,6 +41,9 @@ export class CorrespondenceComponent implements OnInit {
     });
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray;
+    });
+    this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
+      this.selectedHistory = history;
     });
 
     await this.gatherer.gatherAllEvents();
@@ -68,10 +73,12 @@ export class CorrespondenceComponent implements OnInit {
     });
   }
 
-  public hideClientWindow()
+  public hideWindow()
   {
     this.showClientCard = false;
+    this.showChat = false;
     this.selectedAnon = undefined;
+    this.selectedHistory = undefined;
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
@@ -79,6 +86,11 @@ export class CorrespondenceComponent implements OnInit {
       this.selectedAnon = this.mapper.mapClient(client);
       this.showClientCard = true;
     },err => { console.log(err); });
+  }
+  public async openSelectedChat(history: MessageHistory)
+  {
+    this.selectedHistory = history;
+    this.showChat = true;
   }
   public async updateSelectedClient(clientID: string)
   {
