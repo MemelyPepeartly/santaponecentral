@@ -4,7 +4,10 @@
       <input class="inputField" matInput placeholder="Blah blah blah" [formControl]="messageFormControl" required>
       <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
     </mat-form-field>
-    <button mat-raised-button matTooltip="Send" class="controlButton" [disabled]="messageFormControl.hasError('required')">
-        <mat-icon mat-icon-button (click)="emitMessage(messageFormControl.value)">send</mat-icon>
+    <button mat-raised-button class="controlButton"
+      matTooltip="Send"
+      [disabled]="messageFormControl.hasError('required')"
+      (click)="emitMessage(messageFormControl.value)">
+        <mat-icon mat-icon-button>send</mat-icon>
     </button>    
   </div>

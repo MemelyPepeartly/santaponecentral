@@ -127,7 +127,7 @@ export class SantaApiGetService {
   }
   getMessageHistoryByClientIDAndXrefID(clientID, clientRelationXrefID?): Observable<any> {
     //Necessary for the correct call to be made where teh clientRelationXrefID is null
-    if(clientRelationXrefID == null)
+    if(clientRelationXrefID == null || clientRelationXrefID == undefined)
     {
       return this.http.get(endpoint + "History/Client/" + clientID + "/General").pipe(
         map(this.extractData));
