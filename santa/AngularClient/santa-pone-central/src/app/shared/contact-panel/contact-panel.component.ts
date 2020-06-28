@@ -26,6 +26,8 @@ export class ContactPanelComponent implements OnInit, AfterViewChecked {
   public isAdmin: boolean;
   public markingRead: boolean = false;
 
+  private scrolledOnce: boolean = false;
+
 
   ngOnInit(): void {
     this.auth.isAdmin.subscribe((admin: boolean) => {
@@ -33,14 +35,18 @@ export class ContactPanelComponent implements OnInit, AfterViewChecked {
     });
   }
   ngAfterViewChecked() {        
-    this.scrollToBottom();      
+    this.scrollToBottom();
   } 
   
   public async scrollToBottom()
   {
     try 
     {
-      this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
+      if(this.scrolledOnce == false)
+      {
+        this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
+        this.scrolledOnce = true;
+      }
     }
     catch(err) { }
   }

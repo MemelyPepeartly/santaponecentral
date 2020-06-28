@@ -54,12 +54,12 @@ export class ProfileService {
   // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
   public async getProfile(email)
   {
-    let profile = new Profile();
-    this.SantaApiGet.getProfile(email).subscribe(res => {
-      profile = this.ApiMapper.mapProfile(res);
-      this.updateProfile(profile);
-    }, err => {console.log(err)});
+    this.gettingProfile = true;
+
+    let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
+    this.updateProfile(profile);
     
+    this.gettingProfile = false;
   }
   public async getHistories(clientID, isSoftUpdate?: boolean)
   {
