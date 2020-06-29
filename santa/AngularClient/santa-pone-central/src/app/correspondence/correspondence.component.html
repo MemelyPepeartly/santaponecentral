@@ -9,9 +9,12 @@
   </div>
 </div>
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
-    <app-contact-panel [selectedHistory]="selectedHistory" [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
+    <app-contact-panel #messages
+      (messageUpdatedEvent)="updateChat($event) "
+      [selectedHistory]="selectedHistory"
+      [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control
-      (sendClicked)="send($event)"
+      (sendClicked)="send($event); messages.scrollToBottom();"
       [relationshipID]="selectedHistory.relationXrefID"
       [sender]="adminSenderMeta"
       [reciever]="selectedRecieverMeta"
