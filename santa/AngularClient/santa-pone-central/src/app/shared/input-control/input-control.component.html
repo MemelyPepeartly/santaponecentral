@@ -3,7 +3,6 @@
       <mat-label>Enter a message</mat-label>
       <textarea matInput required class="inputField" 
       placeholder="Blah blah blah"
-      [disabled]="disabled" 
       [formControl]="messageFormControl"></textarea> 
       <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
     </mat-form-field>

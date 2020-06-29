@@ -54,12 +54,12 @@ export class CorrespondenceComponent implements OnInit {
     });
 
     await this.gatherer.gatherAllEvents();
-    await this.gatherAllChats();
+    await this.gatherAllChats(false);
   }
-  public async gatherAllChats()
+  public async gatherAllChats(isSoftGather: boolean)
   {
-    await this.ChatService.gatherAllChats();
-    await this.ChatService.gatherEventChats();
+    await this.ChatService.gatherAllChats(isSoftGather);
+    await this.ChatService.gatherEventChats(isSoftGather);
   }
   public sortByEvent(eventType: EventType)
   {   
@@ -83,9 +83,8 @@ export class CorrespondenceComponent implements OnInit {
   {
     this.postingMessage = true;
 
-    console.log(messageResponse);
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID)
+    this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
 
     this.postingMessage = false;
     
@@ -113,5 +112,13 @@ export class CorrespondenceComponent implements OnInit {
   public async updateSelectedClient(clientID: string)
   {
     this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
+  }
+  public async updateChat(event: boolean)
+  {
+    if(event)
+    {
+      this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+      this.gatherAllChats(true);
+    }
   }
 }
