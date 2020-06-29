@@ -112,9 +112,9 @@ VALUES
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
 VALUES
     (@surveyQuestion1IDGUID,'Who is your favorite pony?',1),
-    (@surveyQuestion4IDGUID,'Is this a christmas thing?',1),
-    (@surveyQuestion2IDGUID,'Gift Question 2',0),
-    (@surveyQuestion3IDGUID,'Card Question 1',0);
+    (@surveyQuestion2IDGUID,'What kind of things do you want for Christmas?',0),
+    (@surveyQuestion3IDGUID,'Any card requests?',0),
+    (@surveyQuestion4IDGUID,'Is this a christmas thing?',1);
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
@@ -123,8 +123,8 @@ VALUES
 
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
-    (@surveyOptionID1GUID,'Wrong Answer','1'),
-    (@surveyOptionID2GUID,'Wrong Answer again','1'),
+    (@surveyOptionID1GUID,'Rainbow Dash','1'),
+    (@surveyOptionID2GUID,'Twilight Sparkle','1'),
     (@surveyOptionID3GUID,'Pinkie Pie','1'),
     (@surveyOptionID4GUID,'Yes','1'),
     (@surveyOptionID5GUID,'No','1');
