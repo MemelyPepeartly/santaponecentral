@@ -52,9 +52,13 @@ export class ChatService {
 
 
   // * GATHERING METHODS * //
-  public async gatherAllChats()
+  public async gatherAllChats(isSoftGather? : boolean)
   {
-    this.gettingAllChats = true;
+    if(!isSoftGather)
+    {
+      this.gettingAllChats = true;
+    }
+    
     let historyArray: Array<MessageHistory> = [];
 
     this.SantaApiGet.getAllMessageHistories().subscribe(res => {
@@ -66,9 +70,12 @@ export class ChatService {
       this.gettingAllChats = false;
     }, err => {console.log(err); this.gettingAllChats = false;});
   }
-  public async gatherEventChats()
+  public async gatherEventChats(isSoftGather? : boolean)
   {
-    this.gettingAllEventChats = true;
+    if(!isSoftGather)
+    {
+      this.gettingAllEventChats = true;
+    }
     let historyArray: Array<MessageHistory> = [];
 
     this.SantaApiGet.getAllEventMessageHistories().subscribe(res => {
@@ -80,9 +87,12 @@ export class ChatService {
       this.gettingAllEventChats = false;
     }, err => {console.log(err); this.gettingAllEventChats = false;}); 
   }
-  public async getSelectedHistory(clientID, relationXrefID)
+  public async getSelectedHistory(clientID, relationXrefID, isSoftGather? : boolean)
   {
-    this.gettingSelectedHistory = true;
+    if(!isSoftGather)
+    {
+      this.gettingSelectedHistory = true;
+    }
 
     let messageHistory = new MessageHistory;
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
