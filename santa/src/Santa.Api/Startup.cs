@@ -84,7 +84,7 @@ namespace Santa.Api
             services.AddAuthorization(options =>
             {
 
-                var objects = new[] { "clients", "events", "statuses", "surveys", "responses", "tags" };
+                var objects = new[] { "clients", "events", "statuses", "surveys", "responses", "tags", "messages", "histories" };
                 var verbs = new[] { "create", "read", "update", "delete" };
 
                 // cartesian product

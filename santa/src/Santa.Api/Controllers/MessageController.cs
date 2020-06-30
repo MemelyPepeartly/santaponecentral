@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IIS.Core;
@@ -14,6 +16,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MessageController : ControllerBase
     {
         private readonly IRepository repository;
@@ -30,6 +33,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Policy = "read:messages")]
         public async Task<ActionResult<List<Logic.Objects.Message>>> GetAllMessages()
         {
             try
@@ -49,6 +53,7 @@ namespace Santa.Api.Controllers
         /// <param name="messageID"></param>
         /// <returns></returns>
         [HttpGet("{chatMessageID}", Name = "Get")]
+        [Authorize(Policy = "read:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> GetMessage(Guid chatMessageID)
         {
             try
@@ -63,10 +68,12 @@ namespace Santa.Api.Controllers
 
         // POST: api/Message
         [HttpPost]
+        [Authorize(Policy = "create:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody, Bind("messageSenderClientID, messageRecieverClientID, messageContent, clientRelationXrefID")] ApiMessage message)
         {
             try
             {
+#warning clients and admins can both use this. Ensure that the requesting client is only posting as a sender and that they are allowed to and such based on their token claims
                 Logic.Objects.Message logicMessage = new Logic.Objects.Message()
                 {
                     chatMessageID = Guid.NewGuid(),
@@ -102,10 +109,12 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Message/5
         [HttpPut("{chatMessageID}/Read")]
+        [Authorize(Policy = "update:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PutDescription(Guid chatMessageID, [FromBody, Bind("isMessageRead")] ApiMessageRead message)
         {
             try
             {
+#warning clients and admins can use this controller. Ensure that if a client, then it is only changing a message they themselves have written
                 Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
                 targetMessage.isMessageRead = message.isMessageRead;
                 try
