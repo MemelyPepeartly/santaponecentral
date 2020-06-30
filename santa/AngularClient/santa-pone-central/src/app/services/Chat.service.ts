@@ -15,7 +15,6 @@ export class ChatService {
   public gettingAllEventChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
 
-
   private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
@@ -87,6 +86,7 @@ export class ChatService {
       this.gettingAllEventChats = false;
     }, err => {console.log(err); this.gettingAllEventChats = false;}); 
   }
+
   public async getSelectedHistory(clientID, relationXrefID, isSoftGather? : boolean)
   {
     if(!isSoftGather)
