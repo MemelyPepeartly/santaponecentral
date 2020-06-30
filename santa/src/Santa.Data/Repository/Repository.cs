@@ -323,6 +323,11 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Message
+        /// <summary>
+        /// Creates a new message in the DB
+        /// </summary>
+        /// <param name="newMessage"></param>
+        /// <returns></returns>
         public async Task CreateMessage(Message newMessage)
         {
             try
@@ -335,6 +340,10 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Gets a list of all the messages within the DB
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Message>> GetAllMessages()
         {
             try
@@ -353,7 +362,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        
+        /// <summary>
+        /// Gets a single message by its ID
+        /// </summary>
+        /// <param name="chatMessageID"></param>
+        /// <returns></returns>
         public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
             try
@@ -370,7 +383,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        
+        /// <summary>
+        /// Updates the read status of a message by it's ID using a message object
+        /// </summary>
+        /// <param name="targetMessage"></param>
+        /// <returns></returns>
         public async Task UpdateMessageByIDAsync(Message targetMessage)
         {
             try
@@ -473,7 +490,7 @@ namespace Santa.Data.Repository
             }
         }
         /// <summary>
-        /// Gets a single chat history by clientID and XrefID. This is a relationship between a person sending a gift that was assigned. Xref ID is optional in this case to be able to pull general chats without a relationship attatched.
+        /// Gets a single chat history by clientID and XrefID. This is a relationship between a person sending a gift that was assigned.
         /// </summary>
         /// <param name="clientID"></param>
         /// <param name="clientRelationXrefID"></param>
@@ -506,6 +523,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// This gets the general history of a client where there is no Xref ID or relationship to attach to
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
         public async Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID)
         {
             try
