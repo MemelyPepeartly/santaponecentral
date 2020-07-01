@@ -40,15 +40,12 @@ namespace Santa.Api.Controllers
         {
             try
             {
+
                 // Gets the claims from the token
-                Microsoft.Extensions.Primitives.StringValues AuthHeaders = this.HttpContext.Request.Headers["Authorization"];
-                string result = AuthHeaders[0].Substring(AuthHeaders[0].LastIndexOf(' ') + 1);
-                JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken token = jwtHandler.ReadJwtToken(result);
-                List<System.Security.Claims.Claim> claims = token.Claims.ToList();
+                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
                 // Checks to make sure the token's email is only getting the email for its own profile
-                if (claims.First(c => c.Value == email) != null)
+                if (claimEmail == email)
                 {
                     Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
 
