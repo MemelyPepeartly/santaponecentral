@@ -95,16 +95,17 @@ export class CorrespondenceComponent implements OnInit {
   }
   public hideWindow()
   {
-    if(!this.chatComponent.markingRead && this.showChat == true)
-    {
-      this.showChat = false;
-      this.selectedHistory = undefined;
-    }
-    else if(this.showChat == false && this.showClientCard == true)
+    if(this.chatComponent == undefined && this.showClientCard == true)
     {
       this.showClientCard = false;
       this.selectedAnon = undefined;
     }
+    else if(!this.chatComponent.markingRead && this.showChat == true)
+    {
+      this.showChat = false;
+      this.selectedHistory = undefined;
+    }
+    
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
