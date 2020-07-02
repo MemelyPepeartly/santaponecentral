@@ -36,6 +36,7 @@ namespace Santa.Api.Controllers
         /// <param email="email"></param>
         /// <returns></returns>
         [HttpGet("{email}")]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
             try
