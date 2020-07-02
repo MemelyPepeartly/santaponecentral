@@ -108,7 +108,7 @@ export class MapService {
     mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
     mappedMessage.clientRelationXrefID = message.clientRelationXrefID;
     mappedMessage.messageContent = message.messageContent;
-    mappedMessage.dateTimeSent =  message.dateTimeSent;
+    mappedMessage.dateTimeSent = new Date(message.dateTimeSent);
     mappedMessage.isMessageRead = message.isMessageRead;
 
     return mappedMessage;
