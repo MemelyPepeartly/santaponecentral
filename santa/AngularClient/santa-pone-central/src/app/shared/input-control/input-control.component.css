@@ -1,0 +1,21 @@
+.container
+{
+    min-width: 350px;
+    width: 90%;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+mat-form-field
+{
+    width: 80%;
+}
+.inputButton
+{
+    display: inline-block;
+}
+.controlButton
+{
+    display: inline-block;
+    margin-left: 10px;
+}

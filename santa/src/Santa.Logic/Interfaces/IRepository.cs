@@ -44,9 +44,21 @@ namespace Santa.Logic.Interfaces
         #region Message
         Task CreateMessage(Message newMessage);
         Task<List<Message>> GetAllMessages();
-        Task<List<Message>> GetChatHistory(Guid clientID, Guid? clientRelationXrefID);
         Task<Logic.Objects.Message> GetMessageByIDAsync(Guid chatMessageID);
         Task UpdateMessageByIDAsync(Message targetMessage);
+
+        #region Message Histories
+        // General getters
+        Task<List<MessageHistory>> GetAllChatHistories();
+        // Client getters
+        Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID);
+        Task<MessageHistory> GetChatHistoryByClientIDAndRelationXrefIDAsync(Guid clientID, Guid clientRelationXrefID);
+        Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID);
+        // Event getters
+        Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID);
+
+
+        #endregion
 
         #endregion
 
@@ -101,6 +113,9 @@ namespace Santa.Logic.Interfaces
         Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID);
         #endregion
 
+        #region Utility
         Task SaveAsync();
+        #endregion
+
     }
 }

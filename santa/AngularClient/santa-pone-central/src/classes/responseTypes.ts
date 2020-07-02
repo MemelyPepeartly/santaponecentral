@@ -48,11 +48,16 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
+//Response for making new messages
 export class MessageApiResponse {
     messageSenderClientID?: string = null;
     messageRecieverClientID?: string = null;
     clientRelationXrefID?: string = null;
     messageContent: string;
+}
+//Response for marking messages as read
+export class MessageApiReadResponse {
+    isMessageRead: boolean;
 }
 //Response type for approving anons and sending a new client to the Auth0 API
 export class Auth0NewClientResponse {

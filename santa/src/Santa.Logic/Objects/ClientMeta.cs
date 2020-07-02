@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Santa.Logic.Objects
 {
-    public class MessageClientMeta
+    public class ClientMeta
     {
         public Guid? clientId { get; set; }
         public string clientName { get; set; }

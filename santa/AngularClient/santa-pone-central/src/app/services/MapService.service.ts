@@ -6,8 +6,7 @@ import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, Client
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { Message, MessageMeta } from 'src/classes/message';
-import { map } from 'rxjs/operators';
+import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 
 @Injectable({
   providedIn: 'root'
@@ -109,15 +108,33 @@ export class MapService {
     mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
     mappedMessage.clientRelationXrefID = message.clientRelationXrefID;
     mappedMessage.messageContent = message.messageContent;
-    mappedMessage.dateTimeSent =  message.dateTimeSent;
+    mappedMessage.dateTimeSent = new Date(message.dateTimeSent);
     mappedMessage.isMessageRead = message.isMessageRead;
 
     return mappedMessage;
   }
+  mapMessageHistory(messageHistory)
+  {
+    let mappedMessageHistory = new MessageHistory;
+    mappedMessageHistory.relationXrefID = messageHistory.relationXrefID;
+    
+
+    mappedMessageHistory.history = [];
+    messageHistory.history.forEach(message => {
+      mappedMessageHistory.history.push(this.mapMessage(message));
+    });
+    
+    mappedMessageHistory.conversationClient = this.mapMeta(messageHistory.conversationClient);
+    mappedMessageHistory.eventRecieverClient = this.mapMeta(messageHistory.eventRecieverClient);
+    mappedMessageHistory.eventSenderClient = this.mapMeta(messageHistory.eventSenderClient);
+    mappedMessageHistory.eventType = this.mapEvent(messageHistory.eventType);
+
+    return mappedMessageHistory;
+  }
   // Maps the meta info for messages
   mapMeta(meta)
   {
-    let mappedMeta = new MessageMeta;
+    let mappedMeta = new ClientMeta;
 
     mappedMeta.clientID = meta.clientId;
     mappedMeta.clientName = meta.clientName;
@@ -239,13 +256,13 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(selectedChatHistory: ProfileRecipient, messageContent, senderClientID, recieverClientID)
+  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent)
   {
     let messageResponse: MessageApiResponse = new MessageApiResponse();
 
     messageResponse.messageSenderClientID = senderClientID;
     messageResponse.messageRecieverClientID = recieverClientID;
-    messageResponse.clientRelationXrefID = selectedChatHistory.relationXrefID;
+    messageResponse.clientRelationXrefID = relationXrefID;
     messageResponse.messageContent = messageContent;
     
     return messageResponse;

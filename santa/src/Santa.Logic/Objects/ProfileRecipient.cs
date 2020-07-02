@@ -8,7 +8,7 @@ namespace Santa.Logic.Objects
     {
         public Guid recipientClientID { get; set; }
         //Xref ID needed for extra data for chat functionality
-        public Guid relationXrefID { get; set; }
+        public Guid? relationXrefID { get; set; }
         public string name { get; set; }
         public string nickname { get; set; }
         public Address address { get; set; }

@@ -1,3 +1,26 @@
+<div id="overlay" *ngIf="showClientCard == true || showChat == true" (click)="hideWindow();">
+</div>
+
+<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
+  <div class="fixedDiv mat-elevation-z6">
+      <app-selected-anon
+      [client]="selectedAnon"
+      (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
+  </div>
+</div>
+<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+    <app-contact-panel #messages
+      (messageUpdatedEvent)="updateChat($event) "
+      [selectedHistory]="selectedHistory"
+      [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
+    <app-input-control
+      (sendClicked)="send($event); messages.scrollToBottom();"
+      [relationshipID]="selectedHistory.relationXrefID"
+      [sender]="adminSenderMeta"
+      [reciever]="selectedRecieverMeta"
+      [disabled]="postingMessage">
+    </app-input-control>
+</div>
 <div id="info-div">
   <mat-card class="list-card mat-elevation-z5">
     <mat-card-header>
@@ -6,7 +29,7 @@
     </mat-card-header>
     <mat-card-content>
 
-      <!-- Unread -->
+      <!-- Unread Histories -->
       <mat-card class="infoCard">
         <mat-card-header>
           <mat-card-title>Unread</mat-card-title>
@@ -14,7 +37,43 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-unread [unreadMessageColumns]="displayedColumns"></app-unread>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="sortByUnread()"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- General Histories -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>General</mat-card-title>
+          <mat-card-subtitle>General chat histories not attatched to specific assignments</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="sortByGeneral()"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Event Histories -->
+      <mat-card class="infoCard" *ngFor="let event of events">
+        <mat-card-header>
+          <mat-card-title>{{ event.eventDescription }} Chats</mat-card-title>
+          <mat-card-subtitle>List of all anon conversations for the {{ event.eventDescription }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllEventChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllEventChats"
+            [histories]="sortByEvent(event)"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 
@@ -22,23 +81,15 @@
       <mat-card class="infoCard">
         <mat-card-header>
           <mat-card-title>All</mat-card-title>
-          <mat-card-subtitle>List of all contact history for contacted anons</mat-card-subtitle>
+          <mat-card-subtitle>List of all contact histories for contacted anons</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
-          <app-all [allMessageColumns]="displayedColumns"></app-all>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Pending -->
-      <mat-card class="infoCard">
-        <mat-card-header>
-          <mat-card-title>Pending</mat-card-title>
-          <mat-card-subtitle>List of all anons who have yet to be contacted, or have not responded</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <app-pending [pendingMessageColumns]="displayedColumns"></app-pending>
+          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+            [histories]="allChats"
+            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
 

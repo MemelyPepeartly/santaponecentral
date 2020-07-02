@@ -5,9 +5,10 @@ mat-card
 }
 .list-card 
 {
-    width: 80%;
+    width: 100%;
     min-width: 350px;
-    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
 }
 .chat-control-button
 {
@@ -15,7 +16,9 @@ mat-card
 }
 #contact-div
 {
-    width: 70%;
+    width: 90%;
+    min-width: 500px;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
 }
@@ -26,6 +29,7 @@ mat-card
     margin-left: 5px;
     margin-right: 5px;
     overflow: scroll;
+    height: xyz;
 }
 ::-webkit-scrollbar {
     width: 0px;
@@ -38,6 +42,10 @@ mat-card
     display: inline-block;
     vertical-align: top;
     text-align: center;
+}
+#timeZone
+{
+    color: rgb(184, 184, 184);
 }
 /* Message classes*/
 .date-div
@@ -59,7 +67,7 @@ mat-card
     width: 200px;
     display: block;
     border-radius: 15px;
-    word-wrap: normal;
+    word-wrap: break-word;
     padding: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -71,13 +79,27 @@ mat-card
     color: black;
     text-align: left;
     margin-right: auto;
-    margin-left: 5px;
+    margin-left: 10px;
 }
 .sent-message
 {
     background-color: #1788FE;
     color: white;
     text-align: right;
-    margin-right: 5px;
+    margin-right: 10px;
     margin-left: auto;
+}
+.spinner-container
+{
+    display: block;
+    text-align: center;
+}
+.messageCheckButton
+{
+    width: 80%;
+}
+.messageCheckDiv
+{
+    text-align: center;
+    width: 100%;
 }
