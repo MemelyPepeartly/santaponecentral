@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked, OnChanges, SimpleChanges, AfterViewInit, AfterContentChecked } from '@angular/core';
 import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/Profile.service';
@@ -11,14 +11,14 @@ import { MapResponse } from 'src/app/services/mapService.service';
   templateUrl: './contact-panel.component.html',
   styleUrls: ['./contact-panel.component.css']
 })
-export class ContactPanelComponent implements OnInit, AfterViewChecked {
+export class ContactPanelComponent implements OnInit, AfterViewInit{
 
   constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
-
+  
   @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<any>();
 
-  @Input() selectedHistory: MessageHistory;
-  @Input() sendingClientMeta: ClientMeta;
+  @Input() selectedHistory: MessageHistory = new MessageHistory();
+  @Input() sendingClientMeta: ClientMeta = new ClientMeta();
   @Input() showLoading: boolean = false;
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
@@ -26,7 +26,6 @@ export class ContactPanelComponent implements OnInit, AfterViewChecked {
   public isAdmin: boolean;
   public markingRead: boolean = false;
 
-  private scrolledOnce: boolean = false;
 
 
   ngOnInit(): void {
@@ -34,21 +33,14 @@ export class ContactPanelComponent implements OnInit, AfterViewChecked {
       this.isAdmin = admin;
     });
   }
-  ngAfterViewChecked() {        
-    this.scrollToBottom();
-  } 
+  ngAfterViewInit(): void {
+    this.scrollToBottom(); 
+  }
   
-  public async scrollToBottom()
-  {
-    try 
-    {
-      if(this.scrolledOnce == false)
-      {
+  public scrollToBottom(): void {
+    try {
         this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
-        this.scrolledOnce = true;
-      }
-    }
-    catch(err) { }
+    } catch(err) { }
   }
   public async markRead(message: Message)
   {

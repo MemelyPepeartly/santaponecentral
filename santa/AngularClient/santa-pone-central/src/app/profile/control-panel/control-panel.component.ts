@@ -19,6 +19,7 @@ export class ControlPanelComponent implements OnInit {
     public profileService: ProfileService) { }
     
   @Input() histories: Array<MessageHistory>
+  @Input() generalHistory: MessageHistory;
   @Input() profile: Profile;
 
   @Output() chatClickedEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -59,6 +60,23 @@ export class ControlPanelComponent implements OnInit {
     {
       this.profileService.getSelectedHistory(this.profile.clientID, null);
       this.chatClickedEvent.emit(true);
+    }
+  }
+  public getGeneralUnreadNumber()
+  {
+    return this.histories.find((history: MessageHistory) => {
+      return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null;
+    }).memberUnreadCount
+  }
+  public checkBadgeHidden()
+  {
+    if(this.histories.find((history: MessageHistory) => { return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null; }).memberUnreadCount == 0)
+    {
+      return true;
+    }
+    else 
+    {
+      return false;
     }
   }
 }

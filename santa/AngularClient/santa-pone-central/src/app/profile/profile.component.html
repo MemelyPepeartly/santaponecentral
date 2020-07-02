@@ -12,7 +12,8 @@
         (sendClicked)="send($event)"
         [relationshipID]="selectedHistory.relationXrefID"
         [sender]="selectedHistory.conversationClient"
-        [reciever]="adminRecieverMeta">
+        [reciever]="adminRecieverMeta"
+        [disabled]="postingMessage">
     </app-input-control>
 </div>
 
@@ -21,6 +22,7 @@
         <app-information [profile]="profile"></app-information>
         <app-control-panel
             (chatClickedEvent)="showSelectedChat()"
+            [generalHistory]="generalHistory"
             [profile]="profile"
             [histories]="histories">
         </app-control-panel> 

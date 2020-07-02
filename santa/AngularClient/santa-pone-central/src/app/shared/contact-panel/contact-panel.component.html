@@ -18,7 +18,7 @@
                 </div>
                 <ng-container *ngFor="let message of selectedHistory.history">
                     <div class="date-div">
-                        <span>{{ message.dateTimeSent }}</span>
+                        <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Daylight Time) </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
                     <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == sendingClientMeta.clientID,
