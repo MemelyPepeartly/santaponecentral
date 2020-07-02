@@ -57,7 +57,7 @@ export class Message {
     recieverClient: ClientMeta = new ClientMeta();
     clientRelationXrefID?: string;
     messageContent: string;
-    dateTimeSent: Date = new Date();
+    dateTimeSent: Date;
     isMessageRead: boolean;
 }
 // Minimized meta information returned from API for easily naming messages without additional API calls
