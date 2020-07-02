@@ -1,3 +1,11 @@
+
+
+<div id="overlay" *ngIf="showRecipientData" (click)="hideRecipientCard()"></div>
+<div class="container" *ngIf="showRecipientData">
+    <div class="fixedDiv">
+        <app-selected-recipient [selectedRecipient]="selectedRecipient"></app-selected-recipient>
+    </div>
+</div>
 <mat-card class="list-card mat-elevation-z5">
     <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
@@ -5,33 +13,19 @@
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-
-        <table mat-table [dataSource]="recipients" id="data-table" class="mat-elevation-z8">
-          
-            <!-- Recipient Column -->
-            <ng-container matColumnDef="recipient">
-              <th mat-header-cell *matHeaderCellDef> Recipient </th>
-              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button (click)="openInformation(recipient)">{{recipient.clientNickname}}</button> </td>
-            </ng-container>
-          
-            <!-- Event Column -->
-            <ng-container matColumnDef="event">
-              <th mat-header-cell *matHeaderCellDef> Event </th>
-              <td mat-cell *matCellDef="let recipient"> {{recipient.recipientEvent.eventDescription}} </td>
-            </ng-container>
-        
-            <!-- Contact Column -->
-            <ng-container matColumnDef="contact">
-              <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
-              <td mat-cell *matCellDef="let recipient"> <button mat-raised-button (click)="openContactHistory(recipient)">Contact History</button> </td>
-            </ng-container>
-          
-            <tr mat-header-row *matHeaderRowDef="columns"></tr>
-            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-          
-        </table>
+      <div *ngIf="(histories?.length == 0 || histories?.length == undefined) && !this.profileService.gettingHistories">
+        <h1>No assignments to display!</h1>
+      </div>
+      <app-small-loading-spin *ngIf="this.profileService.gettingHistories"></app-small-loading-spin>
+      <app-chat-histories *ngIf="(histories?.length != 0 || histories?.length != undefined) && !this.profileService.gettingHistories"
+        [onProfile]="true"
+        [histories]="histories"
+        (chatSelectedEvent)="getSelectedHistoryMessages($event)"
+        (recipientSelectedEvent)="showRecipientCard($event)"></app-chat-histories>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="openContactHistory(null)">General Chat</button>
+      <button mat-raised-button (click)="getSelectedHistoryMessages(null)"
+        [matBadge]="generalHistory.memberUnreadCount"
+        [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
     </mat-card-actions>
 </mat-card>

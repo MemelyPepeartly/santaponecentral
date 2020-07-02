@@ -7,8 +7,8 @@ namespace Santa.Logic.Objects
     public class Message
     {
         public Guid chatMessageID { get; set; }
-        public MessageClientMeta senderClient { get; set; }
-        public MessageClientMeta recieverClient { get; set; }
+        public ClientMeta senderClient { get; set; }
+        public ClientMeta recieverClient { get; set; }
         public Guid? clientRelationXrefID { get; set; }
         public string messageContent { get; set; }
         public DateTime dateTimeSent { get; set; }

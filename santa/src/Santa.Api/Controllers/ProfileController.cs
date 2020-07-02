@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
+using Santa.Logic.Objects;
+using System.Security.Claims;
 
 namespace Santa.Api.Controllers
 {
@@ -34,36 +36,32 @@ namespace Santa.Api.Controllers
         /// <param email="email"></param>
         /// <returns></returns>
         [HttpGet("{email}")]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
             try
             {
-#warning Need protection here. Check request and make sure requesting email is only getting the profile for THEIR email. No fooling the DB here
 
-                /*
-                Microsoft.Extensions.Primitives.StringValues AuthHeaders = this.HttpContext.Request.Headers["Authorization"];
-                string result = AuthHeaders[0].Substring(AuthHeaders[0].LastIndexOf(' ') + 1);
-                JwtSecurityTokenHandler jwtHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken token = jwtHandler.ReadJwtToken(result);
+                // Gets the claims from the token
+                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
-                if (token.Audiences.Contains(email))
+                // Checks to make sure the token's email is only getting the email for its own profile
+                if (claimEmail == email)
                 {
-                    //Logic here for checking the warning
+                    Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+
+                    if (logicProfile == null)
+                    {
+                        return NoContent();
+                    }
+                    else
+                    {
+                        return Ok(logicProfile);
+                    }
                 }
                 else
                 {
                     return StatusCode(StatusCodes.Status403Forbidden);
-                }
-                */
-
-                Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-                if (logicProfile == null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(logicProfile);
                 }
             }
             catch (Exception e)

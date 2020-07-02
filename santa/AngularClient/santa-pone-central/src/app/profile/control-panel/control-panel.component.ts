@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Client } from 'src/classes/client';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { EventType } from 'src/classes/eventType';
+import { MessageHistory, ClientMeta } from 'src/classes/message';
+import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MapService } from 'src/app/services/mapService.service';
+import { ProfileService } from 'src/app/services/Profile.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -11,33 +13,70 @@ import { EventType } from 'src/classes/eventType';
 })
 export class ControlPanelComponent implements OnInit {
 
-  constructor(private gatherer: GathererService) { }
+  constructor(public ApiMapper: MapService,
+    public SantaApiGet: SantaApiGetService,
+    public auth: AuthService,
+    public profileService: ProfileService) { }
+    
+  @Input() histories: Array<MessageHistory>
+  @Input() generalHistory: MessageHistory;
+  @Input() profile: Profile;
 
-  @Input() recipients: Array<ProfileRecipient> = []
+  @Output() chatClickedEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  @Output() selectedRecipientContactHistoryEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
-  @Output() selectedRecipientInformationEvent: EventEmitter<ProfileRecipient> = new EventEmitter();
+  public selectedRecipient: ProfileRecipient;
 
-  columns: string[] = ["recipient", "event", "contact"];
+  public showRecipientData: boolean = false;
+
 
   ngOnInit(): void {
   }
-  public openInformation(recipient: ProfileRecipient)
+  // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
+  public showRecipientCard(eventInformation)
   {
-    this.selectedRecipientInformationEvent.emit(recipient)
+    this.selectedRecipient = this.getProfileRecipientByMetaAndEventID(eventInformation.meta, eventInformation.event.eventTypeID);
+    this.showRecipientData = true;
   }
-
-  public openContactHistory(recipient: ProfileRecipient)
+  public hideRecipientCard()
   {
-    if(recipient != null)
+    this.selectedRecipient = undefined;
+    this.showRecipientData = false;
+  }
+  public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)
+  {
+    let profileRecipient = this.profile.recipients.find((recipient: ProfileRecipient) => {
+      return recipient.clientID == meta.clientID && recipient.recipientEvent.eventTypeID == eventID;
+    });
+    return profileRecipient;
+  }
+  public getSelectedHistoryMessages(history: MessageHistory)
+  {
+    if(history != null)
     {
-      this.selectedRecipientContactHistoryEvent.emit(recipient);
+      this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+      this.chatClickedEvent.emit(true);
     }
     else
     {
-      let blankRecipient = new ProfileRecipient;
-      this.selectedRecipientContactHistoryEvent.emit(blankRecipient)
+      this.profileService.getSelectedHistory(this.profile.clientID, null);
+      this.chatClickedEvent.emit(true);
     }
   }
-
+  public getGeneralUnreadNumber()
+  {
+    return this.histories.find((history: MessageHistory) => {
+      return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null;
+    }).memberUnreadCount
+  }
+  public checkBadgeHidden()
+  {
+    if(this.histories.find((history: MessageHistory) => { return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null; }).memberUnreadCount == 0)
+    {
+      return true;
+    }
+    else 
+    {
+      return false;
+    }
+  }
 }

@@ -11,6 +11,8 @@ using Santa.Data.Repository;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
+using SignalRChat.Hubs;
+
 
 namespace Santa.Api
 {
@@ -64,6 +66,9 @@ namespace Santa.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
+            //SignalR
+            services.AddSignalR();
+
             //Auth
             string domain = $"https://memelydev.auth0.com/";
             services.AddAuthentication(options =>
@@ -79,7 +84,7 @@ namespace Santa.Api
             services.AddAuthorization(options =>
             {
 
-                var objects = new[] { "clients", "events", "statuses", "surveys", "responses", "tags" };
+                var objects = new[] { "clients", "events", "statuses", "surveys", "responses", "tags", "profile", "messages", "histories" };
                 var verbs = new[] { "create", "read", "update", "delete" };
 
                 // cartesian product
@@ -124,6 +129,7 @@ namespace Santa.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

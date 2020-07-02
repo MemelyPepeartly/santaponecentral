@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Client } from 'src/classes/client';
-import { SantaApiGetService } from '../services/santaApiService.service';
-import { GathererService } from '../services/gatherer.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
 import { MapService } from '../services/mapService.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { Message } from 'src/classes/message';
+import { MessageHistory, ClientMeta } from 'src/classes/message';
+import { ProfileService } from '../services/Profile.service';
+import { MessageApiResponse } from 'src/classes/responseTypes';
+import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 
 @Component({
   selector: 'app-profile',
@@ -14,49 +15,94 @@ import { Message } from 'src/classes/message';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public gatherer: GathererService, 
+  constructor(public profileService: ProfileService, 
     public SantaApiGet: SantaApiGetService,
+    public SantaApiPost: SantaApiPostService,
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
+  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
+
   public profile: Profile = new Profile();
-  public chat: Array<Message> = [];
-  public selectedChatHistory: ProfileRecipient;
-  public selectedRecipient: ProfileRecipient;
-  
-  public showRecipientData: boolean = false;
+  public authProfile: any;
+
+  public selectedRecipient: ProfileRecipient = new ProfileRecipient();
+  public selectedHistory: MessageHistory = new MessageHistory();
+  public generalHistory: MessageHistory = new MessageHistory();
+
+  public histories: Array<MessageHistory>;
+  public adminRecieverMeta: ClientMeta = new ClientMeta;
+
+  public showChat: boolean = false;
+  public postingMessage: boolean = false;
+  public gettingAnyHistories: boolean = false;
+
+
 
   public async ngOnInit() {
-    var data = this.auth.userProfile$.subscribe(async data => {
-      this.profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(data.email).toPromise());
+    //Auth profile
+    this.auth.userProfile$.subscribe(data => {
+      this.authProfile = data;
     });
-  }
-  public async populateChat(recipient: ProfileRecipient)
-  {
-    this.chat = [];
-    this.selectedChatHistory = recipient;
 
-    var res = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(this.profile.clientID, recipient.relationXrefID).subscribe(res => {
-      res.forEach(message => {
-        this.chat.push(this.ApiMapper.mapMessage(message)); 
-      });
+    // Profile service subscribe
+    this.profileService.profile.subscribe((profile: Profile) => {
+      this.profile = profile;
     });
+    //await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
+    await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
+
+    // Chat histories subscribe
+    this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
+      this.histories = histories;
+    });
+
+    // Selected history subscribe
+    this.profileService.selectedHistory.subscribe((selectedHistory: MessageHistory) => {
+      this.selectedHistory = selectedHistory;
+    });
+
+    // General history subscribe
+    this.profileService.generalHistory.subscribe((generalHistory: MessageHistory) => {
+      this.generalHistory = generalHistory;
+    });
+
+    this.profileService.getHistories(this.profile.clientID);
   }
-  public showRecipientCard(recipient: ProfileRecipient)
+  public showSelectedChat()
   {
-    this.selectedRecipient = recipient;
-    this.showRecipientData = true;
+    
+    this.showChat = true;
   }
-  public hideRecipientCard()
+  public hideSelectedChat()
   {
-    this.selectedRecipient = undefined;
-    this.showRecipientData = false;
-  }
-  public async refreshMessages(newMessagePosted: boolean)
-  {
-    if(newMessagePosted)
+    if(!this.chatComponent.markingRead)
     {
-      await this.populateChat(this.selectedChatHistory)
+      this.showChat = false;
+    }
+  }
+  public async send(messageResponse: MessageApiResponse)
+  {
+    this.postingMessage = true;
+
+    await this.SantaApiPost.postMessage(messageResponse).toPromise();
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+    
+    this.postingMessage = false;
+  }
+  public async updateChat(event: boolean)
+  {
+    if(event)
+    {
+      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+      this.profileService.getHistories(this.profile.clientID, true);
+    }
+  }
+  public scrollTheChat(isUpdateScroll?: boolean)
+  {
+    if(isUpdateScroll)
+    {
+      this.chatComponent.scrollToBottom();
     }
   }
 }

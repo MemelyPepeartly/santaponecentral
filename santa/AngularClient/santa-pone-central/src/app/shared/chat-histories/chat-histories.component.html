@@ -1,0 +1,44 @@
+<table mat-table [dataSource]="histories" id="data-table" class="mat-elevation-z8">
+    
+    <!-- Sender Column -->
+    <ng-container matColumnDef="sender">
+      <th mat-header-cell *matHeaderCellDef> Sender </th>
+      <td mat-cell *matCellDef="let history">
+        <button mat-raised-button *ngIf="!onProfile && history.eventRecieverClient.clientID != null && history.eventSenderClient.clientID != null"
+          (click)="emitSelectedRecipientInformation(history.eventSenderClient, history.eventType)">{{ history.eventSenderClient.clientNickname }}</button>
+        <button mat-raised-button *ngIf="!onProfile && history.eventRecieverClient.clientID == null && history.eventSenderClient.clientID == null"
+          (click)="emitSelectedRecipientInformation(history.conversationClient, history.eventType)">{{ history.conversationClient.clientNickname }}</button>
+        <span *ngIf="onProfile">{{history.eventSenderClient.clientNickname}}</span>
+      </td>
+    </ng-container>
+
+    <!-- Recipient Column -->
+    <ng-container matColumnDef="recipient">
+      <th mat-header-cell *matHeaderCellDef> Recipient </th>
+      <td mat-cell *matCellDef="let history">
+        <button (click)="emitSelectedRecipientInformation(history.eventRecieverClient, history.eventType)" mat-raised-button>{{history.eventRecieverClient.clientNickname}}</button>
+      </td>
+    </ng-container>
+  
+    <!-- Event Column -->
+    <ng-container matColumnDef="event">
+      <th mat-header-cell *matHeaderCellDef> Event </th>
+      <td mat-cell *matCellDef="let history">
+        <span *ngIf="history.eventType.eventDescription != null">{{history.eventType.eventDescription}}</span>
+        <span *ngIf="history.eventType.eventDescription == null">General Correspondence</span> </td>
+    </ng-container>
+
+    <!-- Contact Column -->
+    <ng-container matColumnDef="contact">
+      <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
+      <td mat-cell *matCellDef="let history">
+        <button mat-raised-button
+          (click)="emitSelectedHistory(history);"
+          [matBadge]="getUnreadNumber(history)"
+          [matBadgeHidden]="checkBadgeHidden(history)">Contact History</button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>

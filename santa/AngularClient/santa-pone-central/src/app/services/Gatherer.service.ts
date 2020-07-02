@@ -14,7 +14,7 @@ import { Message } from 'src/classes/message';
 })
 export class GathererService {
 
-  constructor(public SantaApiGet: SantaApiGetService, public ApiMapper: MapService) { }
+  constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
   public gatheringAllClients: boolean = false;
   public gatheringAllTags: boolean = false;

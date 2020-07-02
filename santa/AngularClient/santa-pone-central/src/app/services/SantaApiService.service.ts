@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
+import { AuthService } from '../auth/auth.service';
 
-const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-//const endpoint = 'https://localhost:5001/api/';
+//const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
+const endpoint = 'https://localhost:5001/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -104,13 +105,34 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "Message/" + id).pipe(
       map(this.extractData));
   }
+  getAllMessageHistories(): Observable<any> {
+    return this.http.get(endpoint + "History").pipe(
+      map(this.extractData));
+  }
+  getAllMessageHistoriesByClientID(clientID): Observable<any> {
+    return this.http.get(endpoint + "History/Client/" + clientID).pipe(
+      map(this.extractData));
+  }
+  getAllEventMessageHistories(): Observable<any> {
+    return this.http.get(endpoint + "History/Event").pipe(
+      map(this.extractData));
+  }
+  getMessageHistoriesByEventID(eventID): Observable<any> {
+    return this.http.get(endpoint + "History/Event/" + eventID).pipe(
+      map(this.extractData));
+  }
+  getMessageHistoriesWithUnreadMessages(): Observable<any> {
+    return this.http.get(endpoint + "History/Unread").pipe(
+      map(this.extractData));
+  }
   getMessageHistoryByClientIDAndXrefID(clientID, clientRelationXrefID?): Observable<any> {
     //Necessary for the correct call to be made where teh clientRelationXrefID is null
-    if(clientRelationXrefID == null)
+    if(clientRelationXrefID == null || clientRelationXrefID == undefined)
     {
-      clientRelationXrefID = ""
+      return this.http.get(endpoint + "History/Client/" + clientID + "/General").pipe(
+        map(this.extractData));
     }
-    return this.http.get(endpoint + "Client/" + clientID + "/MessageHistory/" + clientRelationXrefID).pipe(
+    return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship/" + clientRelationXrefID).pipe(
       map(this.extractData));
   }
 }
@@ -171,7 +193,9 @@ export class SantaApiPutService {
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
-   
+  }
+  putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
+    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
   }
 }
 @Injectable({

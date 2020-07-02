@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models.Event_Models;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -42,6 +45,7 @@ namespace Santa.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{eventID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:events")]
         public async Task<ActionResult<Logic.Objects.Event>> GetEventByID(Guid eventID)
         {
             try
@@ -56,6 +60,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Event
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "create:events")]
         public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody, Bind("eventDescription, isActive")]Models.ApiEvent newEvent)
         {
             try
@@ -85,6 +90,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Event/5
         [HttpPut("{eventID}/Description")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:events")]
         public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventDescription description)
         {
             try
@@ -110,6 +116,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Event/5
         [HttpPut("{eventID}/Active")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:events")]
         public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventActive active)
         {
             try
@@ -136,6 +143,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/Event/5
         [HttpDelete("{eventID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:events")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(Guid eventID)
         {

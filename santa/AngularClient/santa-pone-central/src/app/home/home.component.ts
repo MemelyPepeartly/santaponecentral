@@ -10,7 +10,12 @@ export class HomeComponent implements OnInit {
 
   constructor(public auth: AuthService) { }
 
+  public authprofile: any;
+
   public async ngOnInit() {
+    this.auth.userProfile$.subscribe(res => {
+      this.authprofile = res;
+    });
   }
 }
 
