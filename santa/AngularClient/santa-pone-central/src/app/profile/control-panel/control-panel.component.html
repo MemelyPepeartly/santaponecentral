@@ -24,6 +24,8 @@
         (recipientSelectedEvent)="showRecipientCard($event)"></app-chat-histories>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="getSelectedHistoryMessages(null)">General Chat</button>
+      <button mat-raised-button (click)="getSelectedHistoryMessages(null)"
+        [matBadge]="generalHistory.memberUnreadCount"
+        [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
     </mat-card-actions>
 </mat-card>

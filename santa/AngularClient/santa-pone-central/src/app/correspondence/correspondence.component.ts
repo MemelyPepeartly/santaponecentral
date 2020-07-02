@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/Chat.service';
@@ -8,6 +8,7 @@ import { Client } from 'src/classes/client';
 import { MapService } from '../services/mapService.service';
 import { FormGroup } from '@angular/forms';
 import { MessageApiResponse } from 'src/classes/responseTypes';
+import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 
 
 
@@ -25,6 +26,8 @@ export class CorrespondenceComponent implements OnInit {
     public gatherer: GathererService,
     public mapper: MapService) { }
 
+  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
+  
   public allChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
@@ -85,16 +88,20 @@ export class CorrespondenceComponent implements OnInit {
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+    this.chatComponent.scrollToBottom();
 
     this.postingMessage = false;
     
   }
   public hideWindow()
   {
-    this.showClientCard = false;
-    this.showChat = false;
-    this.selectedAnon = undefined;
-    this.selectedHistory = undefined;
+    if(!this.chatComponent.markingRead)
+    {
+      this.showClientCard = false;
+      this.showChat = false;
+      this.selectedAnon = undefined;
+      this.selectedHistory = undefined;
+    }
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {

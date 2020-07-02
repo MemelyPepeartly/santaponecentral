@@ -43,6 +43,10 @@ mat-card
     vertical-align: top;
     text-align: center;
 }
+#timeZone
+{
+    color: rgb(184, 184, 184);
+}
 /* Message classes*/
 .date-div
 {
@@ -63,7 +67,7 @@ mat-card
     width: 200px;
     display: block;
     border-radius: 15px;
-    word-wrap: normal;
+    word-wrap: break-word;
     padding: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
