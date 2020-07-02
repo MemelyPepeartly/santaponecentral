@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageHistory } from 'src/classes/message';
 import { SantaApiGetService } from './santaApiService.service';
 import { MapService } from './mapService.service';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class ProfileService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  private _gettingProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _gettingHistories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public gettingProfile: boolean = false;
+  public gettingHistories: boolean = false;
+  public gettingSelectedHistory: boolean = false;
+  public gettingGeneralHistory: boolean = false;
 
   private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile);
   private _chatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([])
@@ -63,62 +64,22 @@ export class ProfileService {
     this._generalHistory.next(history);
   }
 
-  // Getting profile boolean
-  get gettingProfile()
-  {
-    return this._gettingProfile.asObservable();
-  }
-  private updateGettingProfileBool(value: boolean)
-  {
-    this._gettingProfile.next(value);
-  }
-
-  // Getting histories boolean
-  get gettingHistories()
-  {
-    return this._gettingHistories.asObservable();
-  }
-  private updateGettingHistoriesBool(value: boolean)
-  {
-    this._gettingHistories.next(value);
-  }
-
-  // Getting selected history boolean
-  get gettingSelectedHistory()
-  {
-    return this._gettingSelectedHistory.asObservable();
-  }
-  private updateGettingSelectedHistoryBool(value: boolean)
-  {
-    this._gettingSelectedHistory.next(value);
-  }
-
-  // Getting general history boolean
-  get gettingGeneralHistory()
-  {
-    return this._gettingGeneralHistory.asObservable();
-  }
-  private updateGettingGeneralHistoryBool(value: boolean)
-  {
-    this._gettingGeneralHistory.next(value);
-  }
-
   // * METHODS * //
   // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
   public async getProfile(email)
   {
-    this.updateGettingProfileBool(true);
+    this.gettingProfile = true;
 
     let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
     this.updateProfile(profile);
 
-    this.updateGettingProfileBool(false);
+    this.gettingProfile = false;
   }
   public async getHistories(clientID, isSoftUpdate?: boolean)
   {
     if(!isSoftUpdate)
     {
-      this.updateGettingHistoriesBool(true);
+      this.gettingHistories = true;
     }
 
     let histories: Array<MessageHistory> = []
@@ -129,34 +90,33 @@ export class ProfileService {
       }
       this.updateChatHistories(histories);
       this.gatherGeneralHistory(clientID);
-      this.updateGettingHistoriesBool(false);
-
-    }, err => {console.log(err); this.updateGettingHistoriesBool(false);});    
+      this.gettingHistories = false;
+    }, err => {console.log(err); this.gettingHistories = false;});    
     
   }
   public async gatherGeneralHistory(clientID, isSoftGather? : boolean)
   {
     if(!isSoftGather)
     {
-      this.updateGettingGeneralHistoryBool(true);
+      this.gettingGeneralHistory = true
     }
 
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).subscribe(res => {
       this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(res));
-      this.updateGettingGeneralHistoryBool(false);
-    }, err => {console.log(err); this.updateGettingGeneralHistoryBool(false); })
+    }, err => {console.log(err); })
   }
   public async getSelectedHistory(clientID, relationXrefID)
   {
-    this.updateGettingSelectedHistoryBool(true);
+    this.gettingSelectedHistory = true;
+    let messageHistory: MessageHistory = new MessageHistory();
 
-    let messageHistory = new MessageHistory();
-    this.updateSelectedHistory(messageHistory);
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
       messageHistory = this.ApiMapper.mapMessageHistory(res);
       this.updateSelectedHistory(messageHistory);
-      this.updateGettingSelectedHistoryBool(false);
-    },err => {console.log(err); this.updateGettingSelectedHistoryBool(false);}); 
+      this.gettingSelectedHistory = false;
+    }, err => {console.log(err); });
+    
+    this.gettingSelectedHistory = false;
   }
 
 }
