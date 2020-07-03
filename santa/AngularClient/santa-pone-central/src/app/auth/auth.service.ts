@@ -64,11 +64,11 @@ export class AuthService {
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap(user => {
         this.userProfileSubject$.next(user);
-        if(user["https://santaponecentral.com/roles"].includes(RoleConstants.ADMIN))
+        if(user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.ADMIN))
         {
           this.isAdminSubject$.next(true);
         }
-        else if (user["https://santaponecentral.com/roles"].includes(RoleConstants.USER))
+        else if (user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.USER))
         {
           this.isAdminSubject$.next(false);
         }
