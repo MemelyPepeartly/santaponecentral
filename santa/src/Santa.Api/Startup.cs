@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
 using SignalRChat.Hubs;
-
+using Santa.Api.AuthHelper;
 
 namespace Santa.Api
 {
@@ -52,6 +52,7 @@ namespace Santa.Api
 
             //Repository
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAuthHelper, AuthHelper.AuthHelper>();
 
             //Swagger
             services.AddSwaggerGen(c =>
