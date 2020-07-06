@@ -35,7 +35,7 @@ namespace Santa.Api.AuthHelper
         }
         public Auth0UserInfo getAuthClient(string authUserID)
         {
-            var userRestClient = new RestClient("https://memelydev.auth0.com/api/v2/users/auth0|5f026b40b07e900019ebd131");
+            var userRestClient = new RestClient("https://memelydev.auth0.com/api/v2/users/" + authUserID);
             var userRequest = new RestRequest(Method.GET);
             userRequest.AddHeader("authorization", "Bearer " + getTokenModel().access_token);
             IRestResponse response = userRestClient.Execute(userRequest);
