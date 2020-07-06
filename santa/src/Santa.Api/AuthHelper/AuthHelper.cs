@@ -33,15 +33,39 @@ namespace Santa.Api.AuthHelper
 
             return token;
         }
-        public Auth0UserInfo getAuthClient(string authUserID)
+        public Auth0UserInfoModel getAuthClientByID(string authUserID)
         {
             var userRestClient = new RestClient("https://memelydev.auth0.com/api/v2/users/" + authUserID);
             var userRequest = new RestRequest(Method.GET);
             userRequest.AddHeader("authorization", "Bearer " + getTokenModel().access_token);
             IRestResponse response = userRestClient.Execute(userRequest);
-            Auth0UserInfo user = JsonConvert.DeserializeObject<Auth0UserInfo>(response.Content.ToString());
+            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
 
             return user;
+        }
+
+        public Auth0UserInfoModel getAuthClientByEmail(string authUserEmail)
+        {
+            var userRestClient = new RestClient("https://memelydev.auth0.com/api/v2/users-by-email?email=" + authUserEmail);
+            var userRequest = new RestRequest(Method.GET);
+            userRequest.AddHeader("authorization", "Bearer " + getTokenModel().access_token);
+            IRestResponse response = userRestClient.Execute(userRequest);
+            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
+
+            return user;
+        }
+
+        public Auth0UserInfoModel changeAuthClientPassword(string authUserID, Auth0UserPasswordModel passwordModel)
+        {
+            var userRestClient = new RestClient("https://memelydev.auth0.com/api/v2/users/" + authUserID);
+            var userRequest = new RestRequest(Method.POST);
+            userRequest.AddHeader("authorization", "Bearer " + getTokenModel().access_token);
+            userRequest.AddJsonBody(passwordModel);
+            IRestResponse response = userRestClient.Execute(userRequest);
+            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
+
+            return user;
+
         }
     }
 }

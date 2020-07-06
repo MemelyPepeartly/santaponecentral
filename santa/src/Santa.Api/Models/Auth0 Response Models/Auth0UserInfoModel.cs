@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Auth0_Response_Models
 {
-    public class Auth0UserInfo
+    public class Auth0UserInfoModel
     {
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }

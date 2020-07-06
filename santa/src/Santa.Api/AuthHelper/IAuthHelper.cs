@@ -9,6 +9,8 @@ namespace Santa.Api.AuthHelper
     public interface IAuthHelper
     {
         Auth0TokenModel getTokenModel();
-        Auth0UserInfo getAuthClient(string authUserID);
+        Auth0UserInfoModel getAuthClientByID(string authUserID);
+        Auth0UserInfoModel getAuthClientByEmail(string authUserEmail);
+        Auth0UserInfoModel changeAuthClientPassword(string authUserID, Auth0UserPasswordModel passwordModel);
     }
 }
