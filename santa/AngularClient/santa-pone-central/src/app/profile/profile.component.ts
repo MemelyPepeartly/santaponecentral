@@ -43,6 +43,10 @@ export class ProfileComponent implements OnInit {
     //Auth profile
     this.auth.userProfile$.subscribe(data => {
       this.authProfile = data;
+      console.log(data);
+      console.log(this.authProfile);
+      
+      
     });
 
     // Profile service subscribe
