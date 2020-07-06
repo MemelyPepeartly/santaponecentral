@@ -22,7 +22,7 @@ namespace Santa.Api.Controllers
     {
 
         private readonly IRepository repository;
-        private IAuthHelper authHelper;
+        private readonly IAuthHelper authHelper;
         public ClientController(IRepository _repository, IAuthHelper _authHelper)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
