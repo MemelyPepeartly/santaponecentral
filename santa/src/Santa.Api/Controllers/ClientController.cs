@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Santa.Api.AuthHelper;
 using Santa.Api.Models;
 using Santa.Api.Models.Client_Models;
-using Santa.Api.Models.UserProfile;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 
@@ -16,14 +17,16 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClientController : ControllerBase
     {
 
         private readonly IRepository repository;
-        public ClientController(IRepository _repository)
+        private IAuthHelper authHelper;
+        public ClientController(IRepository _repository, IAuthHelper _authHelper)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-
+            authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
         }
         // GET: api/Client
         /// <summary>
@@ -31,16 +34,15 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:clients")]
-
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClients()
         {
             try
             {
-                List<Logic.Objects.Client> clients = await repository.GetAllClients();
+                List <Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
-                    return NotFound();
+                    return NoContent();
                 }
                 return Ok(JsonConvert.SerializeObject(clients, Formatting.Indented));
             }
@@ -81,7 +83,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}/Response")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:clients")]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
             try
@@ -102,6 +104,7 @@ namespace Santa.Api.Controllers
         /// <param name="client"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
@@ -155,7 +158,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Client/5/Recipient
         [HttpPost("{clientID}/Recipient", Name = "PostRecipient")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
         {
             try
@@ -171,7 +174,7 @@ namespace Santa.Api.Controllers
         }
         // POST: api/Client/5/Tag
         [HttpPost("{clientID}/Tag")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
         {
             try
@@ -188,7 +191,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Client/5/Address
         [HttpPut("{clientID}/Address")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClientAddress address)
         {
             try
@@ -229,7 +232,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Email
         [HttpPut("{clientID}/Email", Name ="PutEmail")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody, Bind("clientEmail")] ApiClientEmail email)
         {
             try
@@ -256,7 +259,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Nickname
         [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientNickname nickname)
         {
             try
@@ -283,7 +286,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Name
         [HttpPut("{clientID}/Name", Name = "PutName")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
         {
             try
@@ -310,7 +313,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Client/5/Status
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody, Bind("clientStatusID")] ApiClientStatus status)
         {
             try
@@ -337,7 +340,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5
         [HttpDelete("{clientID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:clients")]
+        [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
             try
@@ -353,7 +356,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5/Recipient
         [HttpDelete("{clientID}/Recipient")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
         {
             try
@@ -369,7 +372,7 @@ namespace Santa.Api.Controllers
         }
         // DELETE: api/Client/5/Tag
         [HttpDelete("{clientID}/Tag")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:clients")]
+        [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
         {
             try
