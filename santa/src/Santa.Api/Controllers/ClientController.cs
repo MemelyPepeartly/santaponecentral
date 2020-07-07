@@ -325,6 +325,7 @@ namespace Santa.Api.Controllers
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+                    await authHelper.createAuthClient(updatedClient.email);
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
