@@ -151,7 +151,7 @@ VALUES
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
-    (@client1IDGUID, @secondClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'firstemail@email.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client1IDGUID, @firstClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'kcguzman@comcast.net', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
