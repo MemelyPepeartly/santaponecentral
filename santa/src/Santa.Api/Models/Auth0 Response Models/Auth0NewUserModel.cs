@@ -12,5 +12,6 @@ namespace Santa.Api.Models.Auth0_Response_Models
         public string connection { get; set; }
         public string password { get; set; }
         public bool verify_email { get; set; }
+        //public bool email_verified { get; set; }
     }
 }
