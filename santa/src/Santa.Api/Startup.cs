@@ -11,8 +11,8 @@ using Santa.Data.Repository;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
-using SignalRChat.Hubs;
 using Santa.Api.AuthHelper;
+using Santa.Api.SendGrid;
 
 namespace Santa.Api
 {
@@ -50,9 +50,11 @@ namespace Santa.Api
                 });
             });
 
-            //Repository
+            //Services
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<IAuthHelper, AuthHelper.AuthHelper>();
+            services.AddScoped<IMailbag, Mailbag>();
+
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -130,7 +132,6 @@ namespace Santa.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }
