@@ -6,6 +6,7 @@ using Santa.Api.Models.Auth0_Response_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Santa.Api.AuthHelper
@@ -27,17 +28,17 @@ namespace Santa.Api.AuthHelper
             RestRequest userRequest = new RestRequest(Method.POST);
             Auth0TokenModel token = await getTokenModel();
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);
-            userRequest.AddJsonBody(new Auth0NewUserModel()
+            Auth0NewUserModel newUser = new Auth0NewUserModel()
             {
                 email = authEmail,
                 name = authEmail,
                 connection = "Username-Password-Authentication",
-                password = "TestPass2244",
-                verify_email = true
-            });
+                password = generateTempPassword(),
+                verify_email = false
+            };
+            userRequest.AddJsonBody(newUser);
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
             Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
-
             return user;
         }
         public async Task<Auth0UserInfoModel> getAuthClientByID(string authUserID)
@@ -133,6 +134,28 @@ namespace Santa.Api.AuthHelper
         }
         #endregion
 
+        #region Tickets
+        public async Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail)
+        {
+            RestClient roleRestClient = new RestClient(endpoint + "tickets/password-change");
+            RestRequest roleRequest = new RestRequest(Method.POST);
+            Auth0TokenModel token = await getTokenModel();
+            roleRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            roleRequest.AddJsonBody(new Auth0ChangePasswordModel()
+            {
+                email = authClientEmail,
+                connection_id = ConfigRoot["Auth0API:ConnectionID"],
+                mark_email_as_verified = true,
+                includeEmailInRedirect = true
+            });
+            IRestResponse response = await roleRestClient.ExecuteAsync(roleRequest);
+            Auth0TicketResponse ticket = JsonConvert.DeserializeObject<Auth0TicketResponse>(response.Content.ToString());
+
+            return ticket;
+
+        }
+        #endregion
+
         #region Utility
         public async Task<Auth0TokenModel> getTokenModel()
         {
@@ -148,6 +171,22 @@ namespace Santa.Api.AuthHelper
             Auth0TokenModel token = JsonConvert.DeserializeObject<Auth0TokenModel>(tokenResponse.Content.ToString());
 
             return token;
+        }
+
+        public string generateTempPassword(int length = 10)
+        {
+            // Create a string of characters, numbers, special characters that allowed in the password  
+            string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?_-";
+            Random random = new Random();
+
+            // Select one random character at a time from the string  
+            // and create an array of chars  
+            char[] chars = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                chars[i] = validChars[random.Next(0, validChars.Length)];
+            }
+            return new string(chars);
         }
         #endregion
     }
