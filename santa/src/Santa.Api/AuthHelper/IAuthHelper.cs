@@ -21,8 +21,13 @@ namespace Santa.Api.AuthHelper
         Task<Auth0RoleModel> getAuthRole(string authRoleID);
         #endregion
 
+        #region Tickets
+        Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail);
+        #endregion
+
         #region Utility
         Task<Auth0TokenModel> getTokenModel();
+        string generateTempPassword(int length);
         #endregion
     }
 }

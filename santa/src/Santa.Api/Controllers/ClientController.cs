@@ -14,6 +14,9 @@ using Santa.Api.Models.Client_Models;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Api.Constants;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using Santa.Api.SendGrid;
 
 namespace Santa.Api.Controllers
 {
@@ -25,10 +28,13 @@ namespace Santa.Api.Controllers
 
         private readonly IRepository repository;
         private readonly IAuthHelper authHelper;
-        public ClientController(IRepository _repository, IAuthHelper _authHelper)
+        private readonly IMailbag mailbag;
+
+        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
+            mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
         }
         // GET: api/Client
         /// <summary>
@@ -41,6 +47,7 @@ namespace Santa.Api.Controllers
         {
             try
             {
+
                 List <Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
@@ -322,17 +329,26 @@ namespace Santa.Api.Controllers
             {
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.clientStatus.statusID = status.clientStatusID;
+                await repository.UpdateClientByIDAsync(targetClient);
+                await repository.SaveAsync();
+                Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                 try
                 {
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS)
                     {
+                        // Creates auth client
                         Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(updatedClient.email);
+
+                        // Gets all the roles, and grabs the role for participants
                         List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
                         Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.Constants.PARTICIPANT);
+
+                        // Updates client with the participant role
                         await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+
+                        // Sends the client a password change ticket
+                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
+                        await mailbag.sendPasswordResetEmail(updatedClient, ticket);
                     }
                     return Ok(updatedClient);
                 }
