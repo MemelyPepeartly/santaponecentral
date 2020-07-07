@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.AspNetCore.SignalR;
 using Santa.Api.Models.Message_Models;
 using Santa.Logic.Interfaces;
-using SignalRChat.Hubs;
 
 namespace Santa.Api.Controllers
 {
@@ -20,12 +19,9 @@ namespace Santa.Api.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IRepository repository;
-        private IHubContext<ChatHub> hub;
-        public MessageController(IRepository _repository, IHubContext<ChatHub> _hub)
+        public MessageController(IRepository _repository)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            hub = _hub ?? throw new ArgumentNullException(nameof(_hub));
-
         }
         // GET: api/Message
         /// <summary>
