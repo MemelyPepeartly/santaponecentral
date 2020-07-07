@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,7 @@ using Santa.Api.Models;
 using Santa.Api.Models.Client_Models;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+using Santa.Api.Constants;
 
 namespace Santa.Api.Controllers
 {
@@ -325,7 +327,13 @@ namespace Santa.Api.Controllers
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                    await authHelper.createAuthClient(updatedClient.email);
+                    if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS)
+                    {
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(updatedClient.email);
+                        List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
+                        Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.Constants.PARTICIPANT);
+                        await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+                    }
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
