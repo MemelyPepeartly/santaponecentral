@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Santa.Api.Models.Auth0_Response_Models;
 using Santa.Api.Models.Mailbag_Models;
+using Santa.Logic.Objects;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -47,8 +48,8 @@ namespace Santa.Api.SendGrid
 
                 <body>
                     <div style='width: 100%; text-align: center;'>
-                        < img src='https://derpicdn.net/img/2020/6/10/2370933/large.png' alt='TotallyNotAShark' style='margin-left: auto; margin-right: auto; width: 200px;'>
-                        <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Set My Password</a></p>
+                        <img src='https://derpicdn.net/img/2020/6/10/2370933/large.png' alt='TotallyNotAShark' style='margin-left: auto; margin-right: auto; width: 200px;'>
+                        <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Password Reset</a></p>
                         <br>
                         <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>
                     </div>
@@ -60,7 +61,12 @@ namespace Santa.Api.SendGrid
             var response = await client.SendEmailAsync(msg);
         }
 
-        public async Task sendChatNotificationEmail(Logic.Objects.Client recipient, Message message)
+        public async Task sendChatNotificationEmail(Logic.Objects.Client recipient, Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging.Message message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task sendDeniedEmail(Client recipient)
         {
             throw new NotImplementedException();
         }

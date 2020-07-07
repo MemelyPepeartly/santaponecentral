@@ -13,5 +13,7 @@ namespace Santa.Api.SendGrid
         MailbagKeyModel getKey();
         Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket);
         Task sendChatNotificationEmail(Logic.Objects.Client recipient, Message message);
+        Task sendDeniedEmail(Logic.Objects.Client recipient);
+
     }
 }
