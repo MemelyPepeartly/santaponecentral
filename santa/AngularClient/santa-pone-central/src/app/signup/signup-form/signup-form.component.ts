@@ -12,6 +12,7 @@ import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/countries.service';
 import { Address } from 'src/classes/address';
+import { GathererService } from 'src/app/services/gatherer.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class SignupFormComponent implements OnInit {
 
   constructor(public SantaGet: SantaApiGetService,
     public SantaPost: SantaApiPostService,
+    public gatherer: GathererService,
     public objectMapper: MapService,
     public responseMapper: MapResponse,
     public countryService: CountriesService,
@@ -66,13 +68,22 @@ export class SignupFormComponent implements OnInit {
     this.getCountries();
 
     // API Call for getting statuses
-    await this.gatherStatuses();
+    this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
+      this.statuses = statuses;
+    });
 
     // API Call for getting events
-    await this.gatherEvents();
+    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
+      this.events = events;
+    });
     
     // API Call for getting surveys
-    await this.gatherSurveys();
+    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
+      this.surveys = surveys;
+    });
+    await this.gatherer.gatherAllStatuses();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
     
     this.isDoneLoading = true;
   }
@@ -170,31 +181,6 @@ export class SignupFormComponent implements OnInit {
         //console.log('Data:', this.countries);
       },
       err => console.log(err))
-  }
-  public async gatherSurveys() {
-    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise().catch(err => {console.log(err)});
-    for(let i =0; i<surveyApiResponse.length; i++)
-    {
-      var mappedsurvey = this.objectMapper.mapSurvey(surveyApiResponse[i]);
-      this.surveys.push(mappedsurvey);
-    }
-  }
-  public async gatherEvents() {
-    var eventApiResponse = await this.SantaGet.getAllEvents().toPromise();
-    for(let i =0; i<eventApiResponse.length; i++)
-    {
-      if(eventApiResponse[i].active == true)
-        {
-          this.events.push(this.objectMapper.mapEvent(eventApiResponse[i]))
-        }
-    }
-  }
-  public async gatherStatuses() {
-    var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
-    for(let i =0; i<statusApiResponse.length; i++)
-    {
-      this.statuses.push(this.objectMapper.mapStatus(statusApiResponse[i]));
-    }
   }
   public createFormGroups()
   {
