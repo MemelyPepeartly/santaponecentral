@@ -62,10 +62,15 @@
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <p *ngIf="showFail">Error approving Anon</p>
         <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
+        <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+
         <mat-card-actions *ngIf="!showButtonSpinner">
-            <button mat-raised-button (click)="approveAnon()"
-                *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="approveAnon()">Approve</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="denyAnon()">Deny</button>
             <button mat-raised-button>Other Options</button>
         </mat-card-actions>
     </mat-card>
