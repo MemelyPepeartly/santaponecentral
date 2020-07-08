@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, Input } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santaApiService.service';
@@ -17,19 +17,12 @@ export class ApprovedAnonsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
-  approvedClients: Array<Client> = [];
+  @Input() approvedClients: Array<Client> = [];
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 
 
   ngOnInit() {
-    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
-      if(!this.gatherer.onSelectedClient)
-      {
-        this.approvedClients = clientArray.filter(filterByStatus)
-        function filterByStatus(client: Client) {return (client.clientStatus.statusDescription == EventConstants.APPROVED);} 
-      }
-    });
   }
   showCardInfo(client)
   {

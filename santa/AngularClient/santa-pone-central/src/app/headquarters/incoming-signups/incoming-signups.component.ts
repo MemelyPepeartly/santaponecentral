@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
@@ -36,19 +36,12 @@ export class IncomingSignupsComponent implements OnInit {
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
 
-  awaitingClients: Array<Client> = [];
+  @Input() incomingClients: Array<Client> = [];
   showSpinner: boolean = false;
   actionTaken: boolean = false;
   
 
   ngOnInit() {
-    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
-      if(!this.gatherer.onSelectedClient)
-      {
-        this.awaitingClients = clientArray.filter(filterByStatus)
-        function filterByStatus(client: Client) {return (client.clientStatus.statusDescription == EventConstants.AWAITING);} 
-      }
-    });
   }
   showCardInfo(client)
   {
