@@ -61,6 +61,23 @@ namespace Santa.Api.Controllers
             }
             
         }
+        [HttpGet("send")]
+        [AllowAnonymous]
+        public async Task<ActionResult<bool>> sendTest()
+        {
+            try
+            {
+                await mailbag.sendTest("kcguzman@comcast.net");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+            
+        }
 
         // GET: api/Client/5
         /// <summary>
@@ -349,6 +366,10 @@ namespace Santa.Api.Controllers
                         // Sends the client a password change ticket
                         Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
                         await mailbag.sendPasswordResetEmail(updatedClient, ticket);
+                    }
+                    else if(updatedClient.clientStatus.statusDescription == Constants.Constants.DENIED_STATUS)
+                    {
+                        await mailbag.sendDeniedEmail(updatedClient);
                     }
                     return Ok(updatedClient);
                 }

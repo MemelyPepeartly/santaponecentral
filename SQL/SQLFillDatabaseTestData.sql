@@ -25,8 +25,9 @@ DECLARE @surveyOptionID3GUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionID4GUID UNIQUEIDENTIFIER;
 DECLARE @surveyOptionID5GUID UNIQUEIDENTIFIER;
 
-DECLARE @firstClientStatusIDGUID UNIQUEIDENTIFIER;
-DECLARE @secondClientStatusIDGUID UNIQUEIDENTIFIER;
+DECLARE @statusID1GUID UNIQUEIDENTIFIER;
+DECLARE @statusID2GUID UNIQUEIDENTIFIER;
+DECLARE @statusID3GUID UNIQUEIDENTIFIER;
 
 DECLARE @client1IDGUID UNIQUEIDENTIFIER;
 DECLARE @client2IDGUID UNIQUEIDENTIFIER;
@@ -60,8 +61,9 @@ SET @message1IDGUID = NEWID();
 SET @message1DateTime = GETUTCDATE();
 SET @message2IDGUID = NEWID();
 
-SET @firstClientStatusIDGUID = NEWID();
-SET @secondClientStatusIDGUID = NEWID();
+SET @statusID1GUID = NEWID();
+SET @statusID2GUID = NEWID();
+SET @statusID3GUID = NEWID();
 
 
 SET @client1IDGUID = NEWID();
@@ -93,8 +95,10 @@ PRINT N'message2IDGUID:-------------- ' + (CAST (@message2IDGUID AS NVARCHAR(50)
 PRINT N'surveyResponse1IDGUID:------- ' + (CAST (@surveyResponse1IDGUID AS NVARCHAR(50)));
 PRINT N'surveyResponse2IDGUID:------- ' + (CAST (@surveyResponse2IDGUID AS NVARCHAR(50)));
 
-PRINT N'firstClientStatusIDGUID:----- ' + (CAST (@firstClientStatusIDGUID AS NVARCHAR(50)));
-PRINT N'secondClientStatusIDGUID:---- ' + (CAST (@secondClientStatusIDGUID AS NVARCHAR(50)));
+PRINT N'statusID1GUID:--------------- ' + (CAST (@statusID1GUID AS NVARCHAR(50)));
+PRINT N'statusID2GUID:--------------- ' + (CAST (@statusID2GUID AS NVARCHAR(50)));
+PRINT N'statusID3GUID:--------------- ' + (CAST (@statusID3GUID AS NVARCHAR(50)));
+
 
 PRINT N'client1IDGUID:--------------- ' + (CAST (@client1IDGUID AS NVARCHAR(50)));
 PRINT N'client2IDGUID:--------------- ' + (CAST (@client2IDGUID AS NVARCHAR(50)));
@@ -146,15 +150,16 @@ VALUES
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
-    (@firstClientStatusIDGUID, 'Awaiting'),
-    (@secondClientStatusIDGUID, 'Approved');
+    (@statusID1GUID, 'Awaiting'),
+    (@statusID2GUID, 'Approved'),
+    (@statusID3GUID, 'Denied');
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
-    (@client1IDGUID, @firstClientStatusIDGUID, 'Wobble Wub', 'Wibble Wab', 'kcguzman@comcast.net', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client2IDGUID, @secondClientStatusIDGUID, 'Evershade', 'Sharona Virus', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client3IDGUID, @secondClientStatusIDGUID, 'Venport', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client4IDGUID, @secondClientStatusIDGUID, 'Memely', 'Duk', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client1IDGUID, @statusID1GUID, 'Wobble Wub', 'Wibble Wab', 'kcguzman@comcast.net', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client2IDGUID, @statusID1GUID, 'Evershade', 'Sharona Virus', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client3IDGUID, @statusID2GUID, 'Venport', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
+    (@client4IDGUID, @statusID2GUID, 'Memely', 'Duk', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 
 -- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
