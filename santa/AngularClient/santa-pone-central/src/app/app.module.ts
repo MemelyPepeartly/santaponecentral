@@ -47,6 +47,7 @@ import { SelectedRecipientComponent } from './profile/selected-recipient/selecte
 import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.component'
 import { ContactPanelComponent } from './shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from './shared/input-control/input-control.component';
+import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.component';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import { InputControlComponent } from './shared/input-control/input-control.comp
       CorrespondenceComponent,
       SelectedRecipientComponent,
       ChatHistoriesComponent,
-      InputControlComponent
+      InputControlComponent,
+      DeniedAnonsComponent
    ],
    entryComponents: [
       LoginComponent
