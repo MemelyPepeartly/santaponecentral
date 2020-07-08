@@ -77,6 +77,7 @@ export class SelectedAnonComponent implements OnInit {
   public showRecipientListPostingSpinner: boolean = false;
   
   public showApproveSuccess: boolean = false;
+  public showDeniedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
 
@@ -118,6 +119,11 @@ export class SelectedAnonComponent implements OnInit {
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
     });
+    /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
+    this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
+      this.statuses = statusArray;
+    });
+    await this.gatherer.gatherAllStatuses();
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
 
@@ -149,12 +155,14 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
-    this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
-      this.statuses = statusArray;
-    })
+    
 
     //Runs all gather services
-    await this.gatherer.allGather();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllQuestions();
+    await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllTags();
+
 
     this.gettingAnswers = false;
     this.gettingEventDetails = false;
@@ -179,6 +187,36 @@ export class SelectedAnonComponent implements OnInit {
           this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
             this.showButtonSpinner = false;
             this.showApproveSuccess = true;
+            this.actionTaken = true;
+            this.action.emit(this.actionTaken);
+          },
+          err => {
+            console.log(err);
+            this.showButtonSpinner = false;
+            this.showFail = true;
+            this.actionTaken = false;
+            this.action.emit(this.actionTaken);
+          });
+        }
+      });
+  }
+  denyAnon()
+  {
+    this.showButtonSpinner = true;
+    var putClient: Client = this.client;
+    var deniedStatus: Status = new Status;
+
+    this.statuses.forEach(status =>
+      {
+        if (status.statusDescription == EventConstants.DENIED)
+        {
+          deniedStatus = status;
+          putClient.clientStatus.statusID = deniedStatus.statusID;
+          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
+          
+          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+            this.showButtonSpinner = false;
+            this.showDeniedSuccess = true;
             this.actionTaken = true;
             this.action.emit(this.actionTaken);
           },
