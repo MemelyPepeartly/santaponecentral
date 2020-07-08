@@ -9,6 +9,8 @@ namespace Santa.Api.Constants
     {
         public const string AWAITING_STATUS = "Awaiting";
         public const string APPROVED_STATUS = "Approved";
+        public const string DENIED_STATUS = "Denied";
+
         public const string PARTICIPANT = "Participant";
         public const string EVENT_ADMIN = "Event Admin";
 
