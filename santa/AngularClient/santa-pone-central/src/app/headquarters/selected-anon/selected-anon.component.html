@@ -68,10 +68,12 @@
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
                 [disabled]="this.gatherer.gatheringAllStatuses"
                 (click)="approveAnon()">Approve</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="approveAnon()">Re-Approve</button>
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
                 [disabled]="this.gatherer.gatheringAllStatuses"
                 (click)="denyAnon()">Deny</button>
-            <button mat-raised-button>Other Options</button>
         </mat-card-actions>
     </mat-card>
 
@@ -188,10 +190,11 @@
                                         matTooltip="Switch to this Anon"
                                         [matTooltipPosition]="'left'"
                                         (click)="switchAnon(recipient)">Switch</button>
-        
+                                        <p *ngIf="!recipient.removable">Note: If a recipient has a chat history, they cannot be removed</p>
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Remove the anon as a recipient"
                                         color="warn"
+                                        [disabled]="!recipient.removable"
                                         [matTooltipPosition]="'right'"
                                         (click)="removeRecipient(recipient)">Remove</button>
                                     </div>
@@ -210,15 +213,6 @@
             <mat-card-subtitle>Actions that modify a client's activity</mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions>
-            <div class="optionDiv">
-                <button mat-raised-button
-                matTooltip="Send the Anon a contact message (Not implimented yet)"
-                [matTooltipPosition]="'right'">Contact</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Send a message to the client</p>
-                </mat-card-subtitle>
-            </div>
-            <mat-divider [inset]="true"></mat-divider>
 
             <!--Add recipient option-->
             <div class="optionDiv" id="recipientOptionDiv" *ngIf="clientApproved">

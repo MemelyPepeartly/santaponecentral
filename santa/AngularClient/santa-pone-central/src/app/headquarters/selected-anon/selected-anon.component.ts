@@ -290,16 +290,12 @@ export class SelectedAnonComponent implements OnInit {
 
     this.approvedRecipientClients = [];
 
-    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter(filterByEvent)
-    function filterByEvent(relationship: ClientSenderRecipientRelationship) {
-      
-      return (relationship.clientEventTypeID == eventType.eventTypeID); 
-    } 
+    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter((relationship: ClientSenderRecipientRelationship) => {return (relationship.clientEventTypeID == eventType.eventTypeID)})
     let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
 
     
     //refresh all API clients
-    await this.gatherer.gatherAllClients();
+    //await this.gatherer.gatherAllClients();
 
     //For all the clients in the DB,
     //If the client status is approved (&&)
@@ -313,8 +309,7 @@ export class SelectedAnonComponent implements OnInit {
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))
       {
-        
-        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(this.allClients[i], eventType.eventTypeID))
+        this.approvedRecipientClients.push(this.ApiMapper.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
 
@@ -432,7 +427,7 @@ export class SelectedAnonComponent implements OnInit {
     for(let i = 0; i < this.client.recipients.length; i++)
     {
       var foundClient = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
-      this.recipients.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.recipients[i].recipientEventTypeID));
+      this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
     }
     this.gatheringRecipients = false;
   }
@@ -445,7 +440,7 @@ export class SelectedAnonComponent implements OnInit {
     for(let i = 0; i < this.client.senders.length; i++)
     {
       let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
-      this.senders.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.senders[i].senderEventTypeID));
+      this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;
   }

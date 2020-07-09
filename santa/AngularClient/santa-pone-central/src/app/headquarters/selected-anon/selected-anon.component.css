@@ -91,11 +91,15 @@ mat-panel-description
 {
     display: inline-block;
     vertical-align: top;
+    width: 35%;
+    min-width: 250px;
 }
 #recieverCard
 {
     display: inline-block;
     vertical-align: top;
+    width: 35%;
+    min-width: 250px;
 }
 #nickField
 {
