@@ -142,14 +142,41 @@ export class MapService {
 
     return mappedMeta;
   }
-  mapClientRelationship(client: Client, eventTypeID: string)
+  mapClientRecipientRelationship(client: Client, recipientClient: Recipient)
   {
     let mappedRelationship = new ClientSenderRecipientRelationship;
 
     mappedRelationship.clientID = client.clientID;
     mappedRelationship.clientName = client.clientName;
     mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = eventTypeID;
+    mappedRelationship.clientEventTypeID = recipientClient.recipientEventTypeID;
+    mappedRelationship.removable = recipientClient.removable;
+
+    return mappedRelationship;
+
+  }
+  mapClientSenderRelationship(client: Client, senderClient: Sender)
+  {
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = senderClient.senderEventTypeID;
+    mappedRelationship.removable = senderClient.removable;
+
+    return mappedRelationship;
+
+  }
+  mapAllowedClientRelationship(client: Client, eventID: string)
+  {
+    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component 
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = eventID;
 
     return mappedRelationship;
 
@@ -160,6 +187,7 @@ export class MapService {
 
     mappedRecipient.recipientClientID = recipient.recipientClientID;
     mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
+    mappedRecipient.removable = recipient.removable;
 
     return mappedRecipient
   }
@@ -169,6 +197,7 @@ export class MapService {
 
     mappedSender.senderClientID = sender.senderClientID;
     mappedSender.senderEventTypeID = sender.senderEventTypeID;
+    mappedSender.removable = sender.removable;
 
     return mappedSender
   }
