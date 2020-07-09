@@ -78,11 +78,15 @@ namespace Santa.Data.Repository
                         .ThenInclude(crx => crx.RecipientClient)
                     .Include(sc => sc.ClientRelationXrefSenderClient)
                         .ThenInclude(crx => crx.SenderClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
                     .Include(tx => tx.ClientTagXref)
                         .ThenInclude(t => t.Tag)
                     .Include(s => s.ClientStatus).ToListAsync())
-
                     .Select(Mapper.MapClient).ToList();
+
                 return clientList;
             }
             catch (Exception e)
@@ -104,10 +108,15 @@ namespace Santa.Data.Repository
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(u => u.RecipientClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
                     .Include(tx => tx.ClientTagXref)
                         .ThenInclude(t => t.Tag)
                     .Include(s => s.ClientStatus)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
+
                 return logicClient;
             }
             catch (Exception e)
