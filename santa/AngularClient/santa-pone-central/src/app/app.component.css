@@ -25,7 +25,10 @@
 #bg-div
 {
   background-image: url(../assets/santa.png);
+  background-size: contain;
   background-repeat: no-repeat;
-  height: 100%;
+  width: 100%;
   margin-top: 10px;
+  height: fit-content;
+  min-height: 1000px;
 }
