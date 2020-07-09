@@ -5,14 +5,22 @@
     line-height: normal;
     color: wheat;
 }
-#nav-container {
+.nav-container
+{
+  min-width: 650px;
+}
+.main-container
+{
+  width: 100%;
+  min-width: 650px;
+}
+#nav-image {
   text-align: center;
   background-color: black;
   background-image: url(../assets/snow.gif);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  position: relative;
 }
 #bg-div
 {
