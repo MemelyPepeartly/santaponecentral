@@ -18,11 +18,13 @@ export class Client {
 export class Sender {
     senderClientID: string;
     senderEventTypeID: string;
+    removable: boolean;
 }
 // Class used for holding recipient and event ID information
 export class Recipient {
     recipientClientID: string;
     recipientEventTypeID: string;
+    removable: boolean;
 }
 // Class used for holding smaller amounts of data for clients in the sender/reciever lists for a client. More data can be recieved by using API get methods with the clientID
 export class ClientSenderRecipientRelationship {
@@ -30,5 +32,6 @@ export class ClientSenderRecipientRelationship {
     clientNickname: string;
     clientName: string;
     clientEventTypeID: string;
+    removable: boolean;
 }
 
