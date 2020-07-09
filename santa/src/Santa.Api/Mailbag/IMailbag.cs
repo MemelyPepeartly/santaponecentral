@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Santa.Api.Models.Auth0_Response_Models;
 using Santa.Api.Models.Mailbag_Models;
+using Santa.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,6 @@ namespace Santa.Api.SendGrid
         Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
         Task sendDeniedEmail(Logic.Objects.Client recipient);
         Task sendTest(string email);
-
+        Task sendUndeniedEmail(Client recipient);
     }
 }

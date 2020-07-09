@@ -126,6 +126,24 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+        public async Task sendUndeniedEmail(Client recipient)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central Login Information";
+            EmailAddress to = new EmailAddress(recipient.email, "Anon");
+            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. If you have any questions, feel free to reach out to the admins under your profile's general chat section, or reach out to mlpsantapone@gmail.com for technical issues.";
+            string htmlContent = emailStart +
+                @$"
+                    <p>After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in.</p>
+                    <br>
+                    <p>If you have any questions, feel free to reach out to the admins under your profile's general chat section, or reach out to mlpsantapone@gmail.com for technical issues.</p>
+                    <p><strong>SantaPone Intelligence Agency</strong></p>"
+                + emailEnd;
+
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
 
         public async Task sendTest(string email)
         {
@@ -138,5 +156,7 @@ namespace Santa.Api.SendGrid
             await sendPasswordResetEmail(testClient, new Auth0TicketResponse());
             await sendChatNotificationEmail(testClient, new Event());
         }
+
+        
     }
 }
