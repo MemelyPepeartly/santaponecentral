@@ -344,29 +344,31 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                // Grab original client
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+                Status originalStatus = targetClient.clientStatus;
+
+                // Updates client status
                 targetClient.clientStatus.statusID = status.clientStatusID;
                 await repository.UpdateClientByIDAsync(targetClient);
                 await repository.SaveAsync();
+
+                // Get updated client
                 Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                 try
                 {
-                    if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS)
+                    // Send approval steps for a client that was awaiting and approved for the event
+                    if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.Constants.AWAITING_STATUS)
                     {
-                        // Creates auth client
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(updatedClient.email);
-
-                        // Gets all the roles, and grabs the role for participants
-                        List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
-                        Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.Constants.PARTICIPANT);
-
-                        // Updates client with the participant role
-                        await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
-
-                        // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
-                        await mailbag.sendPasswordResetEmail(updatedClient, ticket);
+                        await ApprovalSteps(updatedClient);
                     }
+                    // Send approval steps for client that was denied, and was accepted after appeal
+                    else if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.Constants.DENIED_STATUS)
+                    {
+                        await mailbag.sendUndeniedEmail(updatedClient);
+                        await ApprovalSteps(updatedClient);
+                    }
+                    // Send denied email to client that was awaiting and was denied
                     else if(updatedClient.clientStatus.statusDescription == Constants.Constants.DENIED_STATUS)
                     {
                         await mailbag.sendDeniedEmail(updatedClient);
@@ -431,6 +433,23 @@ namespace Santa.Api.Controllers
             {
                 throw e.InnerException;
             }
+        }
+
+        private async Task ApprovalSteps(Client updatedClient)
+        {
+            // Creates auth client
+            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(updatedClient.email);
+
+            // Gets all the roles, and grabs the role for participants
+            List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
+            Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.Constants.PARTICIPANT);
+
+            // Updates client with the participant role
+            await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+
+            // Sends the client a password change ticket
+            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
+            await mailbag.sendPasswordResetEmail(updatedClient, ticket);
         }
     }
 }
