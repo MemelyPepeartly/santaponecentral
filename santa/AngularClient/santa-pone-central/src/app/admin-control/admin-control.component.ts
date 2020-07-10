@@ -12,7 +12,8 @@ import { TagControlComponent } from './tag-control/tag-control.component';
   templateUrl: './admin-control.component.html',
   styleUrls: ['./admin-control.component.css']
 })
-export class AdminControlComponent implements OnInit, AfterViewInit{
+export class AdminControlComponent implements OnInit, AfterViewInit
+{
 
   constructor(public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
@@ -31,10 +32,9 @@ export class AdminControlComponent implements OnInit, AfterViewInit{
   public surveyControlSelected: boolean = false;
   public questionControlSelected: boolean = false;
 
-  @ViewChild(TagControlComponent) tagChild: TagControlComponent;
-
   ngOnInit() {
-
+    console.log("Got here?????????");
+    
   }
   
   async ngAfterViewInit() {
