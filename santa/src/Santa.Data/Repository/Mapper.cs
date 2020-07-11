@@ -60,6 +60,7 @@ namespace Santa.Data.Repository
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
 
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
                 senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
                 tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
@@ -409,7 +410,9 @@ namespace Santa.Data.Repository
                 surveyID = contextResponse.SurveyId,
                 surveyQuestionID = contextResponse.SurveyQuestionId,
                 surveyOptionID = contextResponse.SurveyOptionId,
-                responseText = contextResponse.ResponseText
+                responseEvent = MapEvent(contextResponse.Survey.EventType),
+                responseText = contextResponse.ResponseText,
+                questionText = contextResponse.SurveyQuestion.QuestionText
             };
             return logicResponse;
         }

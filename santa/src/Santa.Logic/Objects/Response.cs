@@ -9,8 +9,10 @@ namespace Santa.Logic.Objects
         public Guid surveyResponseID { get; set; }
         public Guid surveyID { get; set; }
         public Guid clientID { get; set; }
+        public Event responseEvent { get; set; }
         public Guid surveyQuestionID { get; set; }
         public Guid? surveyOptionID { get; set; }
+        public string questionText { get; set; }
         public string responseText { get; set; }
     }
 }
