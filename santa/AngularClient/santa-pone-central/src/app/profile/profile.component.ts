@@ -33,7 +33,12 @@ export class ProfileComponent implements OnInit {
   public histories: Array<MessageHistory>;
   public adminRecieverMeta: ClientMeta = new ClientMeta;
 
+  public showOverlay: boolean = false;
   public showChat: boolean = false;
+  public showAddressRequest: boolean = false;
+  public showNameRequest: boolean = false;
+  public showNicknameRequest: boolean = false;
+
   public postingMessage: boolean = false;
   public gettingAnyHistories: boolean = false;
 
@@ -70,14 +75,22 @@ export class ProfileComponent implements OnInit {
   }
   public showSelectedChat()
   {
-    
+    this.showOverlay = true;
     this.showChat = true;
   }
-  public hideSelectedChat()
+  public hideWindow()
   {
-    if(!this.chatComponent.markingRead)
+    if(this.chatComponent == undefined)
+    {
+      this.showNameRequest = false;
+      this.showNicknameRequest = false;
+      this.showAddressRequest = false;
+      this.showOverlay = false;
+    }
+    else if(!this.chatComponent.markingRead)
     {
       this.showChat = false;
+      this.showOverlay = false;
     }
   }
   public async send(messageResponse: MessageApiResponse)
@@ -103,5 +116,24 @@ export class ProfileComponent implements OnInit {
     {
       this.chatComponent.scrollToBottom();
     }
+  }
+  public sendNameRequest()
+  {
+    this.showNameRequest = true;
+    this.showOverlay = true;
+    console.log("Name request");
+  }
+  public sendNicknameRequest()
+  {
+    this.showNicknameRequest = true;
+    this.showOverlay = true;
+    console.log("Nickname request");
+    
+  }
+  public sendAddressRequest()
+  {
+    this.showAddressRequest = true;
+    this.showOverlay = true;
+    console.log("Address request");
   }
 }
