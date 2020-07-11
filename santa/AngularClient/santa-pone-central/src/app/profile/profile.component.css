@@ -5,9 +5,12 @@
 }
 .component-container
 {
-    
+    width: 90%;
+    min-width: fit-content;
+    margin: auto;
     padding: 5px;
     height: 100%;
+    background-color: white;
 }
 .container {
     position: fixed;
