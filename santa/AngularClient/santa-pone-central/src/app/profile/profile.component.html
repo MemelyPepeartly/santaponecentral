@@ -23,22 +23,16 @@
     <app-address-request></app-address-request>
 </div>
 
-<!-- Name Request Window -->
-<div class="request-container" *ngIf="showNameRequest == true">
-    <app-name-request></app-name-request>
-</div>
-
-<!-- Nickname Request Window -->
-<div class="request-container" *ngIf="showNicknameRequest == true">
-    <app-nickname-request></app-nickname-request>
+<!-- Contact Request Window -->
+<div class="request-container" *ngIf="showContactRequest == true">
+    <app-contact-request></app-contact-request>
 </div>
 
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information
             [profile]="profile"
-            (nameRequestEvent)="sendNameRequest()"
-            (nicknameRequestEvent)="sendNicknameRequest()"
+            (contactRequestEvent)="sendContactRequest()"
             (addressRequestEvent)="sendAddressRequest()"
         ></app-information>
         <app-control-panel
