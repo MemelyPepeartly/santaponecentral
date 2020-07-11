@@ -8,11 +8,9 @@ import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
-import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
+import { Survey, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { LoginComponent } from 'src/app/home/login/login.component';
 
 @Component({
   selector: 'app-selected-anon',

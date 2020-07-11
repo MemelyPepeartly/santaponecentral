@@ -7,8 +7,6 @@ import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { ProfileService } from '../services/Profile.service';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
-import { GathererService } from '../services/gatherer.service';
-import { Survey } from 'src/classes/survey';
 
 @Component({
   selector: 'app-profile',
