@@ -5,20 +5,24 @@ mat-drawer
 }
 mat-drawer-content
 {
-  width: 100%;
   align-content: center;
 }
 .sidenav-container
 {
   height: 100%;
+  width: 200px;
+  background-color: white;
 }
 #component-div
 {
-    width: 100%;
-    text-align: center;
-    padding-right: 200px;
+  display: inline-block;
+  text-align: left;
+  width: fit-content;
+  text-align: center;
+  min-width: 450px;
 }
-#component-container
+#container
 {
   height: 100%;
+  display: inline-flex;
 }
