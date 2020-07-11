@@ -1,3 +1,31 @@
 <p>selected-recipient works!</p>
 
 <pre>{{ selectedRecipient | json}}</pre>
+<mat-toolbar>{{ selectedRecipient.recipientEvent.eventDescription }} Assignment</mat-toolbar>
+<mat-card class="infoCard">
+    <mat-card-header>
+        <mat-card-title>Address</mat-card-title>
+        <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s mailing address</mat-card-subtitle>
+    </mat-card-header>        
+    <mat-card-content>
+        <div>
+            <p>{{ selectedRecipient.address.addressLineOne }}</p>
+            <p>{{ selectedRecipient.address.addressLineTwo }}</p>
+            <p>{{ selectedRecipient.address.city }}</p>
+            <p>{{ selectedRecipient.address.state }}</p>
+            <p>{{ selectedRecipient.address.postalCode }}</p>
+            <p>{{ selectedRecipient.address.country }}</p>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="infoCard">
+    <mat-card-header>
+        <mat-card-title>Shipping name and information</mat-card-title>
+        <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
+    </mat-card-header>        
+    <mat-card-content>
+        <h3>{{selectedRecipient.clientNickname}}</h3>
+        <p>{{selectedRecipient.clientName}}</p>
+    </mat-card-content>
+</mat-card>
