@@ -59,7 +59,6 @@ export class SelectedAnonComponent implements OnInit {
   public events: Array<EventType> = new Array<EventType>();
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
-  public responses: Array<SurveyResponse> = new Array<SurveyResponse>();
   public statuses: Array<Status> = new Array<Status>();
   public allClients: Array<Client> = new Array<Client>();
 
@@ -136,8 +135,6 @@ export class SelectedAnonComponent implements OnInit {
       this.allClients = clientArray;
     });
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
-    //Gathers all client responses
-    await this.gatherResponses();
     //Gathers all client senders
     await this.gatherSenders();
     //Gathers all client recipients
@@ -168,6 +165,7 @@ export class SelectedAnonComponent implements OnInit {
     this.gettingEventDetails = false;
 
     this.initializing = false;
+
   }
   public approveAnon()
   {
@@ -340,7 +338,6 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.gatherAllEvents();
     await this.gatherSenders();
     await this.gatherRecipients();
-    await this.gatherResponses();
     this.beingSwitched = false;
   }
   public async removeRecipient(anon: ClientSenderRecipientRelationship)
@@ -443,38 +440,5 @@ export class SelectedAnonComponent implements OnInit {
       this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;
-  }
-  public async gatherResponses()
-  {
-    this.gettingAnswers = true;
-    this.responses = [];
-
-    //API call for getting responses
-    this.SantaApiGet.getSurveyResponseByClientID(this.client.clientID).subscribe(res => {
-      for(let i =0; i< res.length; i++)
-      {
-        var mappedAnswer = this.ApiMapper.mapResponse(res[i]);
-
-        for(let j =0; j< this.surveys.length; j++)
-        {
-          //If a survey in the list matches the ID of an answer's surveyID, set the eventType as the right ID it's from
-          if(mappedAnswer.surveyID == this.surveys[j].surveyID)
-          {
-            mappedAnswer.eventTypeID = this.surveys[j].eventTypeID;
-
-            //For each question answered, populate the actual question text
-            for(let k =0; k< this.surveys[j].surveyQuestions.length; k++)
-            {
-              if(mappedAnswer.surveyQuestionID == this.surveys[j].surveyQuestions[k].questionID)
-              {
-                mappedAnswer.questionText = this.surveys[j].surveyQuestions[k].questionText;
-              }
-            }
-          }
-        }
-        this.responses.push(mappedAnswer);
-      }
-    });
-    this.gettingAnswers = false;
   }
 }
