@@ -34,6 +34,10 @@ export class MapService {
     mappedClient.address.country = client.address.country;
     mappedClient.address.postalCode = client.address.postalCode;
 
+    client.responses.forEach(response => {
+      mappedClient.responses.push(this.mapResponse(response))
+    });
+
     client.recipients.forEach(recipient => {
       mappedClient.recipients.push(this.mapRecipient(recipient))
     });
@@ -267,6 +271,8 @@ export class MapService {
     mappedSurveyResponse.surveyQuestionID = surveyResponse.surveyQuestionID;
     mappedSurveyResponse.surveyOptionID = surveyResponse.surveyOptionID;
     mappedSurveyResponse.responseText = surveyResponse.responseText;
+    mappedSurveyResponse.questionText = surveyResponse.questionText;
+    mappedSurveyResponse.responseEvent = this.mapEvent(surveyResponse.responseEvent);
 
     return mappedSurveyResponse;
   }
