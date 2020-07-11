@@ -1,1 +1,44 @@
-<p>address-request works!</p>
+<div class="container">
+    <mat-card class="form-card mat-elevation-z3">
+        <mat-card-header>
+          <mat-card-title>Address Change Request Form</mat-card-title>
+          <mat-card-subtitle>Enter an address and submit it to request a shipping address change</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-div">
+            <form [formGroup]="clientAddressFormGroup">
+                <ng-template matStepLabel>Shipping Address</ng-template>
+                <mat-form-field>
+                    <input matInput formControlName="addressLine1" placeholder="Street Address" maxlength="50"
+                        pattern="[A-Za-z0-9 ]{1,50}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput #secondLine formControlName="addressLine2"
+                        placeholder="Second Street Address (Optional)" pattern="[A-Za-z0-9 ]" maxlength="50"
+                        maxlength="50">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="city" placeholder="City" maxlength="50"
+                        pattern="[A-Za-z0-9 ]{1,50}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="state" placeholder="State" maxlength="50"
+                        pattern="[A-Za-z0-9 ]{1,50}">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
+                        <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="postalCode" placeholder="Postal Code" maxlength="25"
+                        pattern="[0-9]{1,25}">
+                </mat-form-field>
+            </form>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button class="mat-elevation-z3">Submit Request</button>
+        </mat-card-actions>
+      </mat-card>
+</div>
