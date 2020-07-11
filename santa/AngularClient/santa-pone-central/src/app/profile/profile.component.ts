@@ -7,6 +7,8 @@ import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { ProfileService } from '../services/Profile.service';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
+import { GathererService } from '../services/gatherer.service';
+import { Survey } from 'src/classes/survey';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +17,7 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public profileService: ProfileService, 
+  constructor(public profileService: ProfileService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
     public auth: AuthService,
