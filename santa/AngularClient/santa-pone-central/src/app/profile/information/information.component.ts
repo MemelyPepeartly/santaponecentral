@@ -13,21 +13,16 @@ export class InformationComponent implements OnInit {
 
   @Input() profile: Profile;
 
-  @Output() nameRequestEvent: EventEmitter<any> = new EventEmitter<any>();
-  @Output() nicknameRequestEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() contactRequestEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() addressRequestEvent: EventEmitter<any> = new EventEmitter<any>();
 
 
   ngOnInit(): void {
   }
 
-  emitNameRequest()
+  emitContactRequest()
   {
-    this.nameRequestEvent.emit();
-  }
-  emitNicknameRequest()
-  {
-    this.nicknameRequestEvent.emit();
+    this.contactRequestEvent.emit();
   }
   emitAddressRequest()
   {

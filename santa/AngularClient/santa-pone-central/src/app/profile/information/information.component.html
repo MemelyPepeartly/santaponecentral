@@ -17,8 +17,7 @@
                     <p *ngIf="!this.profileService.gettingProfile">{{profile.clientName}}</p>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-raised-button class="action-button" (click)="emitNameRequest()">Request name change</button>
-                    <button mat-raised-button class="action-button" (click)="emitNicknameRequest()">Request nickname change</button>
+                    <button mat-raised-button class="action-button" (click)="emitContactRequest()">Request name or contact change</button>
                 </mat-card-actions>
             </mat-card>
 
