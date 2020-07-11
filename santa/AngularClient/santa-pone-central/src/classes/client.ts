@@ -2,6 +2,7 @@ import { Address } from './address';
 import { Status } from './status';
 import { EventType } from './eventType';
 import { Tag } from './tag';
+import { SurveyResponse } from './survey';
 
 export class Client {
     clientID: string;
@@ -10,6 +11,7 @@ export class Client {
     clientStatus = new Status;
     address = new Address;
     email: string;
+    responses: Array<SurveyResponse> = [];
     senders: Array<Sender> = [];
     recipients: Array<Recipient> = [];
     tags: Array<Tag> = [];
