@@ -48,6 +48,9 @@ import { ChatHistoriesComponent } from './shared/chat-histories/chat-histories.c
 import { ContactPanelComponent } from './shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from './shared/input-control/input-control.component';
 import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.component';
+import { AddressRequestComponent } from './profile/address-request/address-request.component';
+import { NameRequestComponent } from './profile/name-request/name-request.component';
+import { NicknameRequestComponent } from './profile/nickname-request/nickname-request.component';
 
 
 @NgModule({
@@ -85,7 +88,10 @@ import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.c
       SelectedRecipientComponent,
       ChatHistoriesComponent,
       InputControlComponent,
-      DeniedAnonsComponent
+      DeniedAnonsComponent,
+      AddressRequestComponent,
+      NameRequestComponent,
+      NicknameRequestComponent
    ],
    entryComponents: [
       LoginComponent
