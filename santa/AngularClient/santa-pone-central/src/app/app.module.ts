@@ -49,8 +49,7 @@ import { ContactPanelComponent } from './shared/contact-panel/contact-panel.comp
 import { InputControlComponent } from './shared/input-control/input-control.component';
 import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.component';
 import { AddressRequestComponent } from './profile/address-request/address-request.component';
-import { NameRequestComponent } from './profile/name-request/name-request.component';
-import { NicknameRequestComponent } from './profile/nickname-request/nickname-request.component';
+import { ContactRequestComponent } from './profile/contact-request/contact-request.component';
 
 
 @NgModule({
@@ -90,8 +89,7 @@ import { NicknameRequestComponent } from './profile/nickname-request/nickname-re
       InputControlComponent,
       DeniedAnonsComponent,
       AddressRequestComponent,
-      NameRequestComponent,
-      NicknameRequestComponent
+      ContactRequestComponent
    ],
    entryComponents: [
       LoginComponent
