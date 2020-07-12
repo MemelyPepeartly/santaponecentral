@@ -5,17 +5,12 @@
         <mat-label>{{ question.questionText }}</mat-label>
         <!-- Form for text field questions -->
         <mat-form-field class="inputForm" *ngIf="!question.isSurveyOptionList">
-          <input matInput
-            [(ngModel)]="question.responseInputText"
-            formControlName="inputQuestion"
-            placeholder="Answer">
+          <input matInput placeholder="Answer" formControlName="{{question.surveyQuestionID}}">
         </mat-form-field>
 
         <!-- Form for survey option lists (multiple choice) -->
-        <mat-radio-group *ngIf="question.isSurveyOptionList"
-          [(ngModel)]="question.responseOptionSelected"
-          formControlName="selectOption">
-          <mat-radio-button class="example-radio-button" *ngFor="let option of question.surveyOptionList" [value]="option">
+        <mat-radio-group *ngIf="question.isSurveyOptionList" formControlName="{{question.surveyQuestionID}}">
+          <mat-radio-button *ngFor="let option of question.surveyOptionList" [value]="option.optionText">
             {{option.optionText}}
           </mat-radio-button>
         </mat-radio-group>

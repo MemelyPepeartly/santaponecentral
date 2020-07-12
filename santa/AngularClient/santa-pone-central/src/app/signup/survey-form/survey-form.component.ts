@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyQA, SurveyFormOption } from 'src/classes/survey';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-survey-form',
@@ -20,11 +20,20 @@ export class SurveyFormComponent implements OnInit {
   public surveyFormGroup: FormGroup;
 
   ngOnInit() {
+    
     this.formQuestionsFormatted = this.setQuestions(this.questions)
 
-    this.surveyFormGroup = this.formBuilder.group({
-      inputQuestion: ['', Validators.required],
-      selectOption: ['', Validators.required]
+    this.surveyFormGroup = this.formBuilder.group({});
+    this.addFields();
+
+    this.surveyFormGroup.valueChanges.subscribe(() => {
+      this.isCompleted.emit(this.checkValid());
+    })
+  }
+  addFields()
+  {
+    this.formQuestionsFormatted.forEach(question => {
+      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', Validators.required))
     });
   }
   public setQuestions(questions: Array<Question>)
@@ -51,5 +60,10 @@ export class SurveyFormComponent implements OnInit {
       formQuestions.push(q);
     }
     return formQuestions;
+  }
+  public checkValid() : boolean
+  {
+    console.log(this.surveyFormGroup.valid);
+    return this.surveyFormGroup.valid
   }
 }
