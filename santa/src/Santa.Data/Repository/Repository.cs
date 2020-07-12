@@ -86,6 +86,8 @@ namespace Santa.Data.Repository
                         .ThenInclude(t => t.Tag)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
@@ -121,6 +123,8 @@ namespace Santa.Data.Repository
                         .ThenInclude(t => t.Tag)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
@@ -1113,6 +1117,8 @@ namespace Santa.Data.Repository
                     .Include(sr => sr.Survey)
                         .ThenInclude(s => s.EventType)
                     .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .FirstOrDefaultAsync(r => r.SurveyResponseId == surveyResponseID));
                 return logicResponse;
             }
@@ -1129,6 +1135,8 @@ namespace Santa.Data.Repository
                     .Include(sr => sr.Survey)
                         .ThenInclude(s => s.EventType)
                     .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .Where(r => r.ClientId == clientID)
                     .ToListAsync())
                     .Select(Mapper.MapResponse)
@@ -1148,6 +1156,8 @@ namespace Santa.Data.Repository
                     .Include(sr => sr.Survey)
                         .ThenInclude(s => s.EventType)
                     .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .ToListAsync())
                     .Select(Mapper.MapResponse)
                     .ToList();
