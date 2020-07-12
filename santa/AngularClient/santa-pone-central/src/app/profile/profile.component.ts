@@ -35,8 +35,6 @@ export class ProfileComponent implements OnInit {
 
   public showOverlay: boolean = false;
   public showChat: boolean = false;
-  public showAddressRequest: boolean = false;
-  public showContactRequest: boolean = false;
 
   public postingMessage: boolean = false;
   public gettingAnyHistories: boolean = false;
@@ -79,13 +77,7 @@ export class ProfileComponent implements OnInit {
   }
   public hideWindow()
   {
-    if(this.chatComponent == undefined)
-    {
-      this.showContactRequest = false;
-      this.showAddressRequest = false;
-      this.showOverlay = false;
-    }
-    else if(!this.chatComponent.markingRead)
+    if(!this.chatComponent.markingRead)
     {
       this.showChat = false;
       this.showOverlay = false;
@@ -114,15 +106,5 @@ export class ProfileComponent implements OnInit {
     {
       this.chatComponent.scrollToBottom();
     }
-  }
-  public sendContactRequest()
-  {
-    this.showContactRequest = true;
-    this.showOverlay = true;
-  }
-  public sendAddressRequest()
-  {
-    this.showAddressRequest = true;
-    this.showOverlay = true;
   }
 }

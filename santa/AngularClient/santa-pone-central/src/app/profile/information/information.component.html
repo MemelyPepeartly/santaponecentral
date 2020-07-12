@@ -16,9 +16,6 @@
                     <h3 *ngIf="!this.profileService.gettingProfile">{{profile.clientNickname}}</h3>
                     <p *ngIf="!this.profileService.gettingProfile">{{profile.clientName}}</p>
                 </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button class="action-button" (click)="emitContactRequest()">Request name or contact change</button>
-                </mat-card-actions>
             </mat-card>
 
             <mat-card class="infoCard">
@@ -37,9 +34,6 @@
                         <p>{{ profile.address.country }}</p>
                     </div>
                 </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button class="action-button" (click)="emitAddressRequest()">Request address change</button>
-                </mat-card-actions>
             </mat-card>
         </mat-card-content>
     </mat-card>

@@ -13,20 +13,7 @@ export class InformationComponent implements OnInit {
 
   @Input() profile: Profile;
 
-  @Output() contactRequestEvent: EventEmitter<any> = new EventEmitter<any>();
-  @Output() addressRequestEvent: EventEmitter<any> = new EventEmitter<any>();
-
-
   ngOnInit(): void {
-  }
-
-  emitContactRequest()
-  {
-    this.contactRequestEvent.emit();
-  }
-  emitAddressRequest()
-  {
-    this.addressRequestEvent.emit();
   }
 
 }
