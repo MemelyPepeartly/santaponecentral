@@ -408,11 +408,10 @@ namespace Santa.Data.Repository
                 surveyResponseID = contextResponse.SurveyResponseId,
                 clientID = contextResponse.ClientId,
                 surveyID = contextResponse.SurveyId,
-                surveyQuestionID = contextResponse.SurveyQuestionId,
+                surveyQuestion = Mapper.MapQuestion(contextResponse.SurveyQuestion),
                 surveyOptionID = contextResponse.SurveyOptionId,
                 responseEvent = MapEvent(contextResponse.Survey.EventType),
-                responseText = contextResponse.ResponseText,
-                questionText = contextResponse.SurveyQuestion.QuestionText
+                responseText = contextResponse.ResponseText
             };
             return logicResponse;
         }
@@ -424,7 +423,7 @@ namespace Santa.Data.Repository
                 SurveyResponseId = logicResponse.surveyResponseID,
                 ClientId = logicResponse.clientID,
                 SurveyId = logicResponse.surveyID,
-                SurveyQuestionId = logicResponse.surveyQuestionID,
+                SurveyQuestionId = logicResponse.surveyQuestion.questionID,
                 SurveyOptionId = logicResponse.surveyOptionID,
                 ResponseText = logicResponse.responseText
             };
