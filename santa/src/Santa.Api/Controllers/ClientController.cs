@@ -61,23 +61,6 @@ namespace Santa.Api.Controllers
             }
             
         }
-        [HttpGet("send")]
-        [AllowAnonymous]
-        public async Task<ActionResult<bool>> sendTest()
-        {
-            try
-            {
-                await mailbag.sendTest("kcguzman@comcast.net");
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-            
-            
-        }
 
         // GET: api/Client/5
         /// <summary>
