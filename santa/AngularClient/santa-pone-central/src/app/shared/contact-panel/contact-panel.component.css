@@ -64,7 +64,7 @@ mat-card
 }
 .message
 {
-    width: 200px;
+    width: 40%;
     display: block;
     border-radius: 15px;
     word-wrap: break-word;

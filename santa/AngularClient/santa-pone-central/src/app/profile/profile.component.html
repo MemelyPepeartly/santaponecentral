@@ -18,22 +18,10 @@
     </app-input-control>
 </div>
 
-<!-- Address Request Window -->
-<div class="request-container" *ngIf="showAddressRequest == true">
-    <app-address-request></app-address-request>
-</div>
-
-<!-- Contact Request Window -->
-<div class="request-container" *ngIf="showContactRequest == true">
-    <app-contact-request></app-contact-request>
-</div>
-
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information
             [profile]="profile"
-            (contactRequestEvent)="sendContactRequest()"
-            (addressRequestEvent)="sendAddressRequest()"
         ></app-information>
         <app-control-panel
             (chatClickedEvent)="showSelectedChat()"
