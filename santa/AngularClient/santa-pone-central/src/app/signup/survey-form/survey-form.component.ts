@@ -13,7 +13,9 @@ export class SurveyFormComponent implements OnInit {
 
   @Input() surveyID: string;
   @Input() questions: Array<Question>;
-  @Output() isCompleted: EventEmitter<boolean>= new EventEmitter;
+  @Output() validity: EventEmitter<boolean>= new EventEmitter;
+
+  public isValid: boolean = false;
 
   public formQuestionsFormatted: Array<SurveyQA>
 
@@ -27,7 +29,8 @@ export class SurveyFormComponent implements OnInit {
     this.addFields();
 
     this.surveyFormGroup.valueChanges.subscribe(() => {
-      this.isCompleted.emit(this.checkValid());
+      this.isValid = this.checkValid();
+      this.validity.emit(this.checkValid());
     })
   }
   addFields()
@@ -63,7 +66,6 @@ export class SurveyFormComponent implements OnInit {
   }
   public checkValid() : boolean
   {
-    console.log(this.surveyFormGroup.valid);
     return this.surveyFormGroup.valid
   }
 }

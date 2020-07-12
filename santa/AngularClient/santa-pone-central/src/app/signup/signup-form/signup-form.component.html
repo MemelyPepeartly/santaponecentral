@@ -23,7 +23,7 @@
                             pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="50" required>
                     </mat-form-field>
                     <div>
-                        <button mat-button matStepperNext>Next</button>
+                        <button mat-raised-button matStepperNext>Next</button>
                     </div>
                 </form>
             </mat-step>
@@ -57,34 +57,38 @@
                             pattern="[0-9]{1,25}">
                     </mat-form-field>
                     <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext>Next</button>
+                        <button mat-raised-button matStepperPrevious>Back</button>
+                        <button mat-raised-button matStepperNext>Next</button>
                     </div>
                 </form>
             </mat-step>
-            <mat-step>
+            <mat-step validate>
                 <ng-template matStepLabel>Event</ng-template>
                 <h3>What events are you participating in?</h3>
                 <mat-selection-list [(ngModel)]="selectedEvents">
                     <mat-list-option *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-list-option>
                 </mat-selection-list>
                 <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext [disabled]="selectedEvents?.length == 0">Next</button>
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button matStepperNext [disabled]="selectedEvents?.length == 0">Next</button>
                 </div>
                 <br>
             </mat-step>
-            <mat-step>
+            <mat-step validate>
                 <ng-template matStepLabel>Questions</ng-template>
                 <ng-container *ngFor="let event of selectedEvents">
                     <mat-card-title>{{event.eventDescription}}</mat-card-title>
                     <ng-container *ngFor="let survey of surveys">
                         <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true"
+                        (validity)="setQuestionValidity($event)"
                         [questions]="survey.surveyQuestions"
                         [surveyID]="survey.surveyID"></app-survey-form>
                     </ng-container>
                 </ng-container>
-                <button mat-button matStepperNext [disabled]="!allQuestionsAnswered">Next</button>
+                <div>
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button matStepperNext [disabled]="!allQuestionsAnswered">Next</button>
+                </div>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Done</ng-template>
@@ -95,9 +99,9 @@
                 <p>Double check your information and try submitting again</p>
                 <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
                 <div *ngIf="showSpinner==false && showFinished==false">
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button (click)="stepper.reset()">Reset</button>
-                    <button mat-button type="submit" (click)="onSubmit()">Submit</button>
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button type="submit" (click)="onSubmit()">Submit</button>
+                    <button mat-raised-button (click)="test()">Test</button>
                 </div>
             </mat-step>
         </mat-vertical-stepper>

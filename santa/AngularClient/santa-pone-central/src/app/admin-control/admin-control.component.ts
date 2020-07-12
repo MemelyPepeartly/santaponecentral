@@ -33,7 +33,6 @@ export class AdminControlComponent implements OnInit, AfterViewInit
   public questionControlSelected: boolean = false;
 
   ngOnInit() {
-    console.log("Got here?????????");
     
   }
   
