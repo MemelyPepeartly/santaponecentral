@@ -268,7 +268,7 @@ export class MapService {
     mappedSurveyResponse.surveyResponseID = surveyResponse.surveyResponseID;
     mappedSurveyResponse.surveyID = surveyResponse.surveyID;
     mappedSurveyResponse.clientID = surveyResponse.clientID;
-    mappedSurveyResponse.surveyQuestionID = surveyResponse.surveyQuestionID;
+    mappedSurveyResponse.surveyQuestion = this.mapQuestion(surveyResponse.surveyQuestion);
     mappedSurveyResponse.surveyOptionID = surveyResponse.surveyOptionID;
     mappedSurveyResponse.responseText = surveyResponse.responseText;
     mappedSurveyResponse.questionText = surveyResponse.questionText;
