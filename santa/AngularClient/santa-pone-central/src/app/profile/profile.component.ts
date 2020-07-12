@@ -119,12 +119,10 @@ export class ProfileComponent implements OnInit {
   {
     this.showContactRequest = true;
     this.showOverlay = true;
-    console.log("Contact request");
   }
   public sendAddressRequest()
   {
     this.showAddressRequest = true;
     this.showOverlay = true;
-    console.log("Address request");
   }
 }

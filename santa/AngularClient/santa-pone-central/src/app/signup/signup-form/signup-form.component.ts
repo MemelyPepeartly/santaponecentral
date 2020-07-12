@@ -24,7 +24,7 @@ export class SignupFormComponent implements OnInit {
   constructor(public SantaGet: SantaApiGetService,
     public SantaPost: SantaApiPostService,
     public gatherer: GathererService,
-    public objectMapper: MapService,
+    public mapper: MapService,
     public responseMapper: MapResponse,
     public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
@@ -116,9 +116,11 @@ export class SignupFormComponent implements OnInit {
     address.country = formControlCountry.value;
     return address;
   }
-  public onSubmit()
+  public async onSubmit()
   {
     this.showSpinner = true;
+
+    // Construction of new client response
     let newClient: ClientResponse = new ClientResponse();
     newClient.clientName = this.clientName;
     newClient.clientEmail = this.clientEmail;
@@ -133,37 +135,41 @@ export class SignupFormComponent implements OnInit {
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == EventConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
+    
+    // Post client
+    let postedClient: Client = this.mapper.mapClient(await this.SantaPost.postClient(newClient).toPromise());
 
-    this.SantaPost.postClient(newClient).subscribe(
-      clientRes => {
-        let newClient = this.objectMapper.mapClient(clientRes);
+    // Post client's answers
+    this.surveyForms.forEach(surveyForm => {
+      let response = new SurveyApiResponse;
+      for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
+      {
+        var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
 
-        // Posts client responses to surveys if the client response has a new client
-        this.surveyForms.forEach(surveyForm => {
-          console.log("---Posting response for client--");
-          for(let i =0; i<surveyForm.formQuestionsFormatted.length; i++)
-          {
-            let surveyApiResponse: SurveyApiResponse = this.responseMapper.mapSurveyApiResponse(surveyForm.formQuestionsFormatted[i]);
-            surveyApiResponse.clientID = newClient.clientID
+        response.surveyQuestionID = field;
 
-            console.log(surveyApiResponse);
-            
-          
-            this.SantaPost.postSurveyResponse(surveyApiResponse).toPromise().catch(err => {console.log(err)});
-          }
-        });
-          
-        this.showSomethingWrong = false;
-        this.showSpinner = false;
-        this.showFinished = true;
-        this.clientInfoFormGroup.reset();
-        this.clientAddressFormGroup.reset();
-    },
-    err => {
-      this.showSomethingWrong = true;
-      this.showSpinner = false;
-    }
-    )};
+        response.clientID = postedClient.clientID;
+        response.surveyID = surveyForm.surveyID;
+
+        if (control.value.surveyOptionID !== undefined) {
+          response.surveyOptionID = control.value.surveyOptionID;
+          response.responseText = control.value.optionText;
+        }
+        else {
+          response.responseText = control.value;
+        }
+        this.SantaPost.postSurveyResponse(response).toPromise();
+        response = new SurveyApiResponse();
+      }
+    });
+
+
+    this.showSomethingWrong = false;
+    this.showSpinner = false;
+    this.showFinished = true;
+    this.clientInfoFormGroup.reset();
+    this.clientAddressFormGroup.reset();
+  }
   public resetSubmitBools()
   {
     this.showFinished = false;
@@ -177,7 +183,6 @@ export class SignupFormComponent implements OnInit {
     subscribe(
       data2 => {
         this.countries=data2.Countries;
-        //console.log('Data:', this.countries);
       },
       err => console.log(err))
   }
@@ -199,5 +204,14 @@ export class SignupFormComponent implements OnInit {
     this.clientEventFormGroup = this.formBuilder.group({
       eventDescription: ['', Validators.required]
     });
+  }
+  public setQuestionValidity(childValidity: boolean)
+  {
+    let validArray: Array<boolean> = []
+    this.surveyForms.forEach(surveyForm => {
+      validArray.push(surveyForm.isValid);
+    });
+
+    this.allQuestionsAnswered = validArray.every(v => v == true);
   }
 }

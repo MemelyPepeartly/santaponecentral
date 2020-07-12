@@ -17,3 +17,6 @@ mat-form-field
     width: 100%;
     text-align: center;
 }
+::ng-deep .mat-vertical-stepper-header {
+    pointer-events: none !important;
+}
