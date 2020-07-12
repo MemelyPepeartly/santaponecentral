@@ -12,7 +12,7 @@ export class SurveyResponse {
     surveyID: string;
     clientID: string;
     responseEvent: EventType;
-    surveyQuestionID: string;
+    surveyQuestion: Question;
     surveyOptionID?: string;
     questionText: string;
     responseText: string;
