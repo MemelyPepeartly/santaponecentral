@@ -144,19 +144,5 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
-
-        public async Task sendTest(string email)
-        {
-            Client testClient = new Client()
-            {
-                email = "santaponecentraldev@gmail.com",
-                nickname = "Santadev"
-            };
-            await sendDeniedEmail(testClient);
-            await sendPasswordResetEmail(testClient, new Auth0TicketResponse());
-            await sendChatNotificationEmail(testClient, new Event());
-        }
-
-        
     }
 }
