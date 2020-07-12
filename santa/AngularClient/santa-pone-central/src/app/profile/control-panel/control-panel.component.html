@@ -13,15 +13,19 @@
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="(histories?.length == 0 || histories?.length == undefined) && !this.profileService.gettingHistories">
+      <div *ngIf="(histories.length == 0) && !this.profileService.gettingHistories">
         <h1>No assignments to display!</h1>
       </div>
-      <app-small-loading-spin *ngIf="this.profileService.gettingHistories"></app-small-loading-spin>
-      <app-chat-histories *ngIf="(histories?.length != 0 || histories?.length != undefined) && !this.profileService.gettingHistories"
+      <div *ngIf="this.profileService.gettingHistories">
+        <app-small-loading-spin></app-small-loading-spin>
+      </div>
+      <div *ngIf="histories.length != 0">
+        <app-chat-histories 
         [onProfile]="true"
         [histories]="histories"
         (chatSelectedEvent)="getSelectedHistoryMessages($event)"
         (recipientSelectedEvent)="showRecipientCard($event)"></app-chat-histories>
+      </div>
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button (click)="getSelectedHistoryMessages(null)"
