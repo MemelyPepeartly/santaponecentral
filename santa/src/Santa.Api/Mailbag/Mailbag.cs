@@ -74,12 +74,12 @@ namespace Santa.Api.SendGrid
             EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
             string plainTextContent = "";
             string htmlContent = "";
-            if (string.IsNullOrWhiteSpace(eventType.eventDescription))
+            if (!string.IsNullOrWhiteSpace(eventType.eventDescription))
             {
                 plainTextContent = $"You have recieved message for an assignment in the {eventType.eventDescription}, agent! Log into {url} to view it!";
                 htmlContent = emailStart +
                     @$"
-                    <p>You have recieved message for an assignment in the {eventType.eventDescription}, agent! Log into<a href='{url}'>SantaPone Central</a> to view it!</p>
+                    <p>You have recieved message for an assignment in the {eventType.eventDescription}, agent! Log into <a href='{url}'>SantaPone Central</a> to view it!</p>
                     <br>
                     <p>Over and Out</p>
                     <p><strong>SantaPone Intelligence Agency</strong></p>"
@@ -90,7 +90,7 @@ namespace Santa.Api.SendGrid
                 plainTextContent = $"You have recieved a message in your general correspondence, agent! Log into {url} to view it!";
                 htmlContent = emailStart +
                     @$"
-                    <p>You have recieved a message in your general correspondence, agent! Log into<a href='{url}'>SantaPone Central</a> to view it!</p>
+                    <p>You have recieved a message in your general correspondence, agent! Log into <a href='{url}'>SantaPone Central</a> to view it!</p>
                     <br>
                     <p>Over and Out</p>
                     <p><strong>SantaPone Intelligence Agency</strong></p>"

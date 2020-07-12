@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.AspNetCore.SignalR;
 using Santa.Api.Models.Message_Models;
+using Santa.Api.SendGrid;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -19,9 +21,13 @@ namespace Santa.Api.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IRepository repository;
-        public MessageController(IRepository _repository)
+        private readonly IMailbag mailbag;
+
+        public MessageController(IRepository _repository, IMailbag _mailbag)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
+
         }
         // GET: api/Message
         /// <summary>
@@ -94,6 +100,13 @@ namespace Santa.Api.Controllers
                 {
                     await repository.CreateMessage(logicMessage);
                     await repository.SaveAsync();
+
+                    if(logicMessage.recieverClient.clientId.HasValue)
+                    {
+                        Logic.Objects.MessageHistory history = logicMessage.clientRelationXrefID != null ? await repository.GetChatHistoryByClientIDAndRelationXrefIDAsync(logicMessage.recieverClient.clientId.Value, logicMessage.clientRelationXrefID.Value) : await repository.GetGeneralChatHistoryByClientIDAsync(logicMessage.recieverClient.clientId.Value);
+                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), history.eventType);
+                    }
+
                     return Ok();
                 }
             }
