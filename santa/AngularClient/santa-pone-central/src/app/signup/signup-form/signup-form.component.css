@@ -2,6 +2,10 @@ mat-form-field
 {
     display: block;
 }
+button
+{
+    margin-left: 10px;
+}
 .mat-radio-button ~ .mat-radio-button 
 {
     margin-left: 16px;
@@ -16,4 +20,7 @@ mat-form-field
     padding: 30px;
     width: 100%;
     text-align: center;
+}
+::ng-deep .mat-vertical-stepper-header {
+    pointer-events: none !important;
 }

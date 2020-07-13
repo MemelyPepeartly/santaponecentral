@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Question, SurveyOption, SurveyResponse, SurveyQA, SurveyFormOption } from 'src/classes/survey';
-import { EventType } from 'src/classes/eventType';
-import { SurveyApiResponse } from 'src/classes/responseTypes';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { Question, SurveyQA, SurveyFormOption } from 'src/classes/survey';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-survey-form',
@@ -15,18 +13,30 @@ export class SurveyFormComponent implements OnInit {
 
   @Input() surveyID: string;
   @Input() questions: Array<Question>;
-  @Output() isCompleted: EventEmitter<boolean>= new EventEmitter;
+  @Output() validity: EventEmitter<boolean>= new EventEmitter;
+
+  public isValid: boolean = false;
 
   public formQuestionsFormatted: Array<SurveyQA>
 
   public surveyFormGroup: FormGroup;
 
   ngOnInit() {
+    
     this.formQuestionsFormatted = this.setQuestions(this.questions)
 
-    this.surveyFormGroup = this.formBuilder.group({
-      inputQuestion: ['', Validators.required],
-      selectOption: ['', Validators.required]
+    this.surveyFormGroup = this.formBuilder.group({});
+    this.addFields();
+
+    this.surveyFormGroup.valueChanges.subscribe(() => {
+      this.isValid = this.checkValid();
+      this.validity.emit(this.checkValid());
+    })
+  }
+  addFields()
+  {
+    this.formQuestionsFormatted.forEach(question => {
+      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', Validators.required))
     });
   }
   public setQuestions(questions: Array<Question>)
@@ -54,20 +64,8 @@ export class SurveyFormComponent implements OnInit {
     }
     return formQuestions;
   }
-  public checkIfComplete()
+  public checkValid() : boolean
   {
-    
-    if(this.surveyFormGroup.status == "VALID")
-    {
-      this.isCompleted.emit(true);
-    }
-    else
-    {
-      this.isCompleted.emit(false);
-    }
-  }
-  public IsItValid()
-  {
-    console.log(this.surveyFormGroup.status);
+    return this.surveyFormGroup.valid
   }
 }

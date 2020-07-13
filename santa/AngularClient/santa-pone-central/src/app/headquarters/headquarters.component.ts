@@ -1,10 +1,10 @@
 import { Component, OnInit} from '@angular/core';
 import { Client } from '../../classes/client';
 import { MapService } from '../services/mapService.service';
-import { ConstantPool } from '@angular/compiler';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santaApiService.service';
 import { GathererService } from '../services/gatherer.service';
+import { EventConstants } from '../shared/constants/eventConstants.enum';
 
 @Component({
   selector: 'app-headquarters',
@@ -36,9 +36,13 @@ export class HeadquartersComponent implements OnInit {
 
   public showClientCard: boolean = false;
   public currentClient: Client;
+  public allClients: Array<Client> = [];
   
 
   ngOnInit() {
+    this.gatherer.allClients.subscribe((clients: Array<Client>) => {
+      this.allClients = clients;
+    })
     this.gatherer.gatherAllClients();
   }
 
@@ -56,5 +60,17 @@ export class HeadquartersComponent implements OnInit {
   async updateSelectedClient(clientID: string)
   {
     this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
+  }
+  sortApproved() : Array<Client>
+  {
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.APPROVED});
+  }
+  sortIncoming() : Array<Client>
+  {
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.AWAITING});
+  }
+  sortDenied() : Array<Client>
+  {
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.DENIED});
   }
 }

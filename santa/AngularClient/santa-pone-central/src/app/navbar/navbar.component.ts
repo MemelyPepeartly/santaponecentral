@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SantaApiGetService } from '../services/santaApiService.service';
 import { AuthService } from '../auth/auth.service';
-import { RoleConstants } from '../shared/constants/roleConstants.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +8,7 @@ import { RoleConstants } from '../shared/constants/roleConstants.enum';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(public rest: SantaApiGetService, public auth: AuthService) { }
+  constructor(public auth: AuthService) { }
 
   
 

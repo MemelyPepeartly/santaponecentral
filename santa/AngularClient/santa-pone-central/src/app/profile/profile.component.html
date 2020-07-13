@@ -1,7 +1,8 @@
 
-<div id="overlay" *ngIf="showChat == true" (click)="hideSelectedChat()">
+<div id="overlay" *ngIf="showOverlay == true" (click)="hideWindow()">
 </div>
 
+<!-- Chat Window -->
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
     <app-contact-panel
         (messageUpdatedEvent)="updateChat($event)"
@@ -19,7 +20,9 @@
 
 <div class = "component-container">
     <div class="components mat-elevation-z3">
-        <app-information [profile]="profile"></app-information>
+        <app-information
+            [profile]="profile"
+        ></app-information>
         <app-control-panel
             (chatClickedEvent)="showSelectedChat()"
             [generalHistory]="generalHistory"

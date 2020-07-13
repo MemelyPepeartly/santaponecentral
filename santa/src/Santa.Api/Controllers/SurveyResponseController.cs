@@ -85,7 +85,7 @@ namespace Santa.Api.Controllers
                     surveyResponseID = Guid.NewGuid(),
                     surveyID = response.surveyID,
                     clientID = response.clientID,
-                    surveyQuestionID = response.surveyQuestionID,
+                    surveyQuestion = new Question() { questionID = response.surveyQuestionID },
                     surveyOptionID = response.surveyOptionID,
                     responseText = response.responseText
                 };

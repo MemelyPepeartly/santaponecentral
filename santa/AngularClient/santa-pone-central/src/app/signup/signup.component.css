@@ -3,13 +3,13 @@ button{
     color:white
 }
 .container {
-    display: flex;
+    display: block;
     justify-content: center;
-    flex: 3;
     border-radius: 8px;
     margin-top: 15px;
-    height: auto;
-    flex-wrap: wrap;
+    width: 80%;
+    min-width: 650px;
+    height: fit-content;
     background-color:white;
     opacity: 1.0;
     overflow:auto;

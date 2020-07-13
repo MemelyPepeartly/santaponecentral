@@ -78,11 +78,22 @@ namespace Santa.Data.Repository
                         .ThenInclude(crx => crx.RecipientClient)
                     .Include(sc => sc.ClientRelationXrefSenderClient)
                         .ThenInclude(crx => crx.SenderClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
                     .Include(tx => tx.ClientTagXref)
                         .ThenInclude(t => t.Tag)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
                     .Include(s => s.ClientStatus).ToListAsync())
-
                     .Select(Mapper.MapClient).ToList();
+
                 return clientList;
             }
             catch (Exception e)
@@ -104,10 +115,22 @@ namespace Santa.Data.Repository
                         .ThenInclude(u => u.SenderClient)
                     .Include(r => r.ClientRelationXrefRecipientClient)
                         .ThenInclude(u => u.RecipientClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
                     .Include(tx => tx.ClientTagXref)
                         .ThenInclude(t => t.Tag)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
                     .Include(s => s.ClientStatus)
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
+
                 return logicClient;
             }
             catch (Exception e)
@@ -175,11 +198,16 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
                     .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.RecipientClient) 
-                        .ThenInclude(recRes => recRes.SurveyResponse)
+                        .ThenInclude(clXref => clXref.RecipientClient) 
+                            .ThenInclude(c => c.SurveyResponse)
+                                .ThenInclude(sr => sr.Survey)
+                                    .ThenInclude(s => s.EventType)
+                    .Include(r => r.ClientRelationXrefSenderClient)
+                        .ThenInclude(clXref => clXref.RecipientClient)
+                            .ThenInclude(c => c.SurveyResponse)
+                                .ThenInclude(sr => sr.SurveyQuestion)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
-                    .Include(res => res.SurveyResponse)
                     .Include(s => s.ClientStatus)
                     .FirstOrDefaultAsync(c => c.Email == email));
                 return logicProfile;
@@ -1080,6 +1108,67 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Response
+
+        public async Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
+        {
+            try
+            {
+                Logic.Objects.Response logicResponse = Mapper.MapResponse(await santaContext.SurveyResponse
+                    .Include(sr => sr.Survey)
+                        .ThenInclude(s => s.EventType)
+                    .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .FirstOrDefaultAsync(r => r.SurveyResponseId == surveyResponseID));
+                return logicResponse;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponsesByClientID(Guid clientID)
+        {
+            try
+            {
+                List<Response> listLogicResponse = (await santaContext.SurveyResponse
+                    .Include(sr => sr.Survey)
+                        .ThenInclude(s => s.EventType)
+                    .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .Where(r => r.ClientId == clientID)
+                    .ToListAsync())
+                    .Select(Mapper.MapResponse)
+                    .ToList();
+                return listLogicResponse;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponses()
+        {
+            try
+            {
+                List<Response> listLogicResponse = (await santaContext.SurveyResponse
+                    .Include(sr => sr.Survey)
+                        .ThenInclude(s => s.EventType)
+                    .Include(sr => sr.SurveyQuestion)
+                        .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .ToListAsync())
+                    .Select(Mapper.MapResponse)
+                    .ToList();
+                return listLogicResponse;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         public async Task CreateSurveyResponseAsync(Response newResponse)
         {
             try
@@ -1100,42 +1189,6 @@ namespace Santa.Data.Repository
                 santaContext.Remove(contextResponse);
             }
             catch(Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-        public async Task<Logic.Objects.Response> GetSurveyResponseByIDAsync(Guid surveyResponseID)
-        {
-            try
-            {
-                Logic.Objects.Response logicResponse = Mapper.MapResponse(await santaContext.SurveyResponse.FirstOrDefaultAsync(r => r.SurveyResponseId == surveyResponseID));
-                return logicResponse;
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponsesByClientID(Guid clientID)
-        {
-            try
-            {
-                List<Response> listLogicResponse = (await santaContext.SurveyResponse.Where(r => r.ClientId == clientID).ToListAsync()).Select(Mapper.MapResponse).ToList();
-                return listLogicResponse;
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-        public async Task<List<Logic.Objects.Response>> GetAllSurveyResponses()
-        {
-            try
-            {
-                List<Response> listLogicResponse = (await santaContext.SurveyResponse.ToListAsync()).Select(Mapper.MapResponse).ToList();
-                return listLogicResponse;
-            }
-            catch (Exception e)
             {
                 throw e.InnerException;
             }

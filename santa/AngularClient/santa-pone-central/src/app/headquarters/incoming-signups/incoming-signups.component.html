@@ -20,7 +20,7 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of awaitingClients" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
+    <mat-card mat-list-item *ngFor="let client of incomingClients" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
         <mat-card-title>
             {{ client.clientNickname }}
         </mat-card-title>

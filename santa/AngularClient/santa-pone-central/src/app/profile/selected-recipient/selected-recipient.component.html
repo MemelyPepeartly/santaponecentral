@@ -1,3 +1,55 @@
-<p>selected-recipient works!</p>
+<div class="scrollbar scrollbar-primary">
+    <mat-toolbar>{{ selectedRecipient.recipientEvent.eventDescription }} Assignment</mat-toolbar>
+    <mat-card class="infoCard">
+        <mat-card-header>
+            <mat-card-title>Address</mat-card-title>
+            <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s mailing address</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                <p>{{ selectedRecipient.address.addressLineOne }}</p>
+                <p>{{ selectedRecipient.address.addressLineTwo }}</p>
+                <p>{{ selectedRecipient.address.city }}</p>
+                <p>{{ selectedRecipient.address.state }}</p>
+                <p>{{ selectedRecipient.address.postalCode }}</p>
+                <p>{{ selectedRecipient.address.country }}</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
 
-<pre>{{ selectedRecipient | json}}</pre>
+    <mat-card class="infoCard">
+        <mat-card-header>
+            <mat-card-title>Shipping name and information</mat-card-title>
+            <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <h3>{{selectedRecipient.clientNickname}}</h3>
+            <p>{{selectedRecipient.clientName}}</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-toolbar>Santa Responses</mat-toolbar>
+
+    <mat-card class="infoCard responseCard">
+        <mat-card-header>
+            <mat-card-title>{{selectedRecipient.recipientEvent.eventDescription}}</mat-card-title>
+            <mat-card-subtitle>Answers for the {{selectedRecipient.recipientEvent.eventDescription}} survey
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-accordion multi>
+                <!-- Expansion panels for responses -->
+                <mat-expansion-panel *ngFor="let response of selectedRecipient.responses">
+                    <mat-expansion-panel-header
+                        *ngIf="selectedRecipient.recipientEvent.eventTypeID == response.responseEvent.eventTypeID">
+                        <mat-panel-title>{{response.surveyQuestion.questionText}}</mat-panel-title>
+                        <mat-panel-description>
+                            <mat-icon>question_answer</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p>{{response.responseText}}</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-card-content>
+    </mat-card>
+</div>

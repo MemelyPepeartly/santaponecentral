@@ -15,7 +15,7 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public profileService: ProfileService, 
+  constructor(public profileService: ProfileService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
     public auth: AuthService,
@@ -33,7 +33,9 @@ export class ProfileComponent implements OnInit {
   public histories: Array<MessageHistory>;
   public adminRecieverMeta: ClientMeta = new ClientMeta;
 
+  public showOverlay: boolean = false;
   public showChat: boolean = false;
+
   public postingMessage: boolean = false;
   public gettingAnyHistories: boolean = false;
 
@@ -49,7 +51,6 @@ export class ProfileComponent implements OnInit {
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
-    //await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
     await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
 
     // Chat histories subscribe
@@ -71,14 +72,15 @@ export class ProfileComponent implements OnInit {
   }
   public showSelectedChat()
   {
-    
+    this.showOverlay = true;
     this.showChat = true;
   }
-  public hideSelectedChat()
+  public hideWindow()
   {
     if(!this.chatComponent.markingRead)
     {
       this.showChat = false;
+      this.showOverlay = false;
     }
   }
   public async send(messageResponse: MessageApiResponse)

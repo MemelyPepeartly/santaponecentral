@@ -18,7 +18,7 @@ export class ControlPanelComponent implements OnInit {
     public auth: AuthService,
     public profileService: ProfileService) { }
     
-  @Input() histories: Array<MessageHistory>
+  @Input() histories: Array<MessageHistory> = []
   @Input() generalHistory: MessageHistory;
   @Input() profile: Profile;
 

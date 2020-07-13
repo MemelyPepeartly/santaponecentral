@@ -60,6 +60,7 @@ namespace Santa.Data.Repository
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
 
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
                 senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
                 tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
@@ -72,7 +73,8 @@ namespace Santa.Data.Repository
             Logic.Objects.Sender logicSender = new Sender()
             {
                 senderClientID = contextRecipientXref.SenderClientId,
-                senderEventTypeID = contextRecipientXref.EventTypeId
+                senderEventTypeID = contextRecipientXref.EventTypeId,
+                removable = contextRecipientXref.ChatMessage.Count > 0 ? false : true
             };
             return logicSender;
         }
@@ -81,7 +83,8 @@ namespace Santa.Data.Repository
             Logic.Objects.Recipient logicRecipient = new Recipient()
             {
                 recipientClientID = contextSenderXref.RecipientClientId,
-                recipientEventTypeID = contextSenderXref.EventTypeId
+                recipientEventTypeID = contextSenderXref.EventTypeId,
+                removable = contextSenderXref.ChatMessage.Count > 0 ? false : true
             };
             return logicRecipient;
         }
@@ -405,8 +408,9 @@ namespace Santa.Data.Repository
                 surveyResponseID = contextResponse.SurveyResponseId,
                 clientID = contextResponse.ClientId,
                 surveyID = contextResponse.SurveyId,
-                surveyQuestionID = contextResponse.SurveyQuestionId,
+                surveyQuestion = Mapper.MapQuestion(contextResponse.SurveyQuestion),
                 surveyOptionID = contextResponse.SurveyOptionId,
+                responseEvent = MapEvent(contextResponse.Survey.EventType),
                 responseText = contextResponse.ResponseText
             };
             return logicResponse;
@@ -419,7 +423,7 @@ namespace Santa.Data.Repository
                 SurveyResponseId = logicResponse.surveyResponseID,
                 ClientId = logicResponse.clientID,
                 SurveyId = logicResponse.surveyID,
-                SurveyQuestionId = logicResponse.surveyQuestionID,
+                SurveyQuestionId = logicResponse.surveyQuestion.questionID,
                 SurveyOptionId = logicResponse.surveyOptionID,
                 ResponseText = logicResponse.responseText
             };

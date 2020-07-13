@@ -5,9 +5,27 @@
 }
 .component-container
 {
-    
+    width: 90%;
+    min-width: fit-content;
+    margin: auto;
     padding: 5px;
     height: 100%;
+    background-color: white;
+}
+.request-container
+{
+    display: block;
+    position: fixed;
+    width: 80%;
+    height: fit-content;
+    min-width: 450px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    background-color:white;
+    z-index: 3;
+    border-radius: 8px;
 }
 .container {
     position: fixed;

@@ -1,4 +1,5 @@
 export enum EventConstants {
     APPROVED = "Approved",
-    AWAITING = "Awaiting"
+    AWAITING = "Awaiting",
+    DENIED = "Denied",
 }
