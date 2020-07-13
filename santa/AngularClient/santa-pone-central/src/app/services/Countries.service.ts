@@ -8,7 +8,7 @@ import { Observable} from 'rxjs';
 })
 export class CountriesService {
 
-  url :string = "../assets/countries.json";
+  url :string = "https://raw.githubusercontent.com/sagarshirbhate/Country-State-City-Database/master/Contries.json";
 
   constructor(private http:HttpClient) { }
 
