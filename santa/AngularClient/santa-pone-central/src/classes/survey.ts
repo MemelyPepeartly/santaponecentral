@@ -1,3 +1,5 @@
+import { EventType } from './eventType';
+
 export class Survey {
     surveyID: string;
     eventTypeID: string;
@@ -9,10 +11,10 @@ export class SurveyResponse {
     surveyResponseID: string;
     surveyID: string;
     clientID: string;
-    eventTypeID?: string;
-    surveyQuestionID: string;
+    responseEvent: EventType;
+    surveyQuestion: Question;
     surveyOptionID?: string;
-    questionText?: string;
+    questionText: string;
     responseText: string;
 }
 export class Question {

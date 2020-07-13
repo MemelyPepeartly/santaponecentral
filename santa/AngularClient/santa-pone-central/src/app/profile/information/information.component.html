@@ -12,13 +12,10 @@
                     <mat-card-subtitle>Holiday ID and name information</mat-card-subtitle>
                 </mat-card-header>        
                 <mat-card-content>
-                    <h3>{{profile.clientNickname}}</h3>
-                    <p>{{profile.clientName}}</p>
+                    <app-small-loading-spin *ngIf="this.profileService.gettingProfile"></app-small-loading-spin>
+                    <h3 *ngIf="!this.profileService.gettingProfile">{{profile.clientNickname}}</h3>
+                    <p *ngIf="!this.profileService.gettingProfile">{{profile.clientName}}</p>
                 </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button class="action-button">Request name change</button>
-                    <button mat-raised-button class="action-button">Request nickname change</button>
-                </mat-card-actions>
             </mat-card>
 
             <mat-card class="infoCard">
@@ -27,16 +24,16 @@
                     <mat-card-subtitle>Your mailing address</mat-card-subtitle>
                 </mat-card-header>        
                 <mat-card-content>
-                    <p>{{ profile.address.addressLineOne }}</p>
-                    <p>{{ profile.address.addressLineTwo }}</p>
-                    <p>{{ profile.address.city }}</p>
-                    <p>{{ profile.address.state }}</p>
-                    <p>{{ profile.address.postalCode }}</p>
-                    <p>{{ profile.address.country }}</p>
+                    <app-small-loading-spin *ngIf="this.profileService.gettingProfile"></app-small-loading-spin>
+                    <div *ngIf="!this.profileService.gettingProfile">
+                        <p>{{ profile.address.addressLineOne }}</p>
+                        <p>{{ profile.address.addressLineTwo }}</p>
+                        <p>{{ profile.address.city }}</p>
+                        <p>{{ profile.address.state }}</p>
+                        <p>{{ profile.address.postalCode }}</p>
+                        <p>{{ profile.address.country }}</p>
+                    </div>
                 </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button class="action-button">Request address change</button>
-                </mat-card-actions>
             </mat-card>
         </mat-card-content>
     </mat-card>

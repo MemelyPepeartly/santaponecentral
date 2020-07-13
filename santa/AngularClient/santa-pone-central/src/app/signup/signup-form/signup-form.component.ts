@@ -7,11 +7,11 @@ import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
 import { MapService, MapResponse } from '../../services/mapService.service';
 import { EventConstants } from '../../shared/constants/eventConstants.enum';
-import { Guid } from "guid-typescript";
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/countries.service';
 import { Address } from 'src/classes/address';
+import { GathererService } from 'src/app/services/gatherer.service';
 
 
 @Component({
@@ -23,7 +23,8 @@ export class SignupFormComponent implements OnInit {
 
   constructor(public SantaGet: SantaApiGetService,
     public SantaPost: SantaApiPostService,
-    public objectMapper: MapService,
+    public gatherer: GathererService,
+    public mapper: MapService,
     public responseMapper: MapResponse,
     public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
@@ -66,13 +67,22 @@ export class SignupFormComponent implements OnInit {
     this.getCountries();
 
     // API Call for getting statuses
-    await this.gatherStatuses();
+    this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
+      this.statuses = statuses;
+    });
 
     // API Call for getting events
-    await this.gatherEvents();
+    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
+      this.events = events;
+    });
     
     // API Call for getting surveys
-    await this.gatherSurveys();
+    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
+      this.surveys = surveys;
+    });
+    await this.gatherer.gatherAllStatuses();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
     
     this.isDoneLoading = true;
   }
@@ -106,9 +116,11 @@ export class SignupFormComponent implements OnInit {
     address.country = formControlCountry.value;
     return address;
   }
-  public onSubmit()
+  public async onSubmit()
   {
     this.showSpinner = true;
+
+    // Construction of new client response
     let newClient: ClientResponse = new ClientResponse();
     newClient.clientName = this.clientName;
     newClient.clientEmail = this.clientEmail;
@@ -123,37 +135,41 @@ export class SignupFormComponent implements OnInit {
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == EventConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
+    
+    // Post client
+    let postedClient: Client = this.mapper.mapClient(await this.SantaPost.postClient(newClient).toPromise());
 
-    this.SantaPost.postClient(newClient).subscribe(
-      clientRes => {
-        let newClient = this.objectMapper.mapClient(clientRes);
+    // Post client's answers
+    this.surveyForms.forEach(surveyForm => {
+      let response = new SurveyApiResponse;
+      for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
+      {
+        var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
 
-        // Posts client responses to surveys if the client response has a new client
-        this.surveyForms.forEach(surveyForm => {
-          console.log("---Posting response for client--");
-          for(let i =0; i<surveyForm.formQuestionsFormatted.length; i++)
-          {
-            let surveyApiResponse: SurveyApiResponse = this.responseMapper.mapSurveyApiResponse(surveyForm.formQuestionsFormatted[i]);
-            surveyApiResponse.clientID = newClient.clientID
+        response.surveyQuestionID = field;
 
-            console.log(surveyApiResponse);
-            
-          
-            this.SantaPost.postSurveyResponse(surveyApiResponse).toPromise().catch(err => {console.log(err)});
-          }
-        });
-          
-        this.showSomethingWrong = false;
-        this.showSpinner = false;
-        this.showFinished = true;
-        this.clientInfoFormGroup.reset();
-        this.clientAddressFormGroup.reset();
-    },
-    err => {
-      this.showSomethingWrong = true;
-      this.showSpinner = false;
-    }
-    )};
+        response.clientID = postedClient.clientID;
+        response.surveyID = surveyForm.surveyID;
+
+        if (control.value.surveyOptionID !== undefined) {
+          response.surveyOptionID = control.value.surveyOptionID;
+          response.responseText = control.value.optionText;
+        }
+        else {
+          response.responseText = control.value;
+        }
+        this.SantaPost.postSurveyResponse(response).toPromise();
+        response = new SurveyApiResponse();
+      }
+    });
+
+
+    this.showSomethingWrong = false;
+    this.showSpinner = false;
+    this.showFinished = true;
+    this.clientInfoFormGroup.reset();
+    this.clientAddressFormGroup.reset();
+  }
   public resetSubmitBools()
   {
     this.showFinished = false;
@@ -167,34 +183,8 @@ export class SignupFormComponent implements OnInit {
     subscribe(
       data2 => {
         this.countries=data2.Countries;
-        //console.log('Data:', this.countries);
       },
       err => console.log(err))
-  }
-  public async gatherSurveys() {
-    var surveyApiResponse = await this.SantaGet.getAllSurveys().toPromise().catch(err => {console.log(err)});
-    for(let i =0; i<surveyApiResponse.length; i++)
-    {
-      var mappedsurvey = this.objectMapper.mapSurvey(surveyApiResponse[i]);
-      this.surveys.push(mappedsurvey);
-    }
-  }
-  public async gatherEvents() {
-    var eventApiResponse = await this.SantaGet.getAllEvents().toPromise();
-    for(let i =0; i<eventApiResponse.length; i++)
-    {
-      if(eventApiResponse[i].active == true)
-        {
-          this.events.push(this.objectMapper.mapEvent(eventApiResponse[i]))
-        }
-    }
-  }
-  public async gatherStatuses() {
-    var statusApiResponse = await this.SantaGet.getAllStatuses().toPromise();
-    for(let i =0; i<statusApiResponse.length; i++)
-    {
-      this.statuses.push(this.objectMapper.mapStatus(statusApiResponse[i]));
-    }
   }
   public createFormGroups()
   {
@@ -214,5 +204,14 @@ export class SignupFormComponent implements OnInit {
     this.clientEventFormGroup = this.formBuilder.group({
       eventDescription: ['', Validators.required]
     });
+  }
+  public setQuestionValidity(childValidity: boolean)
+  {
+    let validArray: Array<boolean> = []
+    this.surveyForms.forEach(surveyForm => {
+      validArray.push(surveyForm.isValid);
+    });
+
+    this.allQuestionsAnswered = validArray.every(v => v == true);
   }
 }

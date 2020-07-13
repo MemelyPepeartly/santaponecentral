@@ -11,13 +11,14 @@ using Santa.Data.Repository;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
-using SignalRChat.Hubs;
-
+using Santa.Api.AuthHelper;
+using Santa.Api.SendGrid;
 
 namespace Santa.Api
 {
     public class Startup
     {
+        private const string version = "v7";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -50,13 +51,16 @@ namespace Santa.Api
                 });
             });
 
-            //Repository
+            //Services
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAuthHelper, AuthHelper.AuthHelper>();
+            services.AddScoped<IMailbag, Mailbag>();
+
 
             //Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SantaPone API", Version = "v1" });
+                c.SwaggerDoc(version, new OpenApiInfo { Title = "SantaPone API", Version = version });
                 c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
@@ -122,14 +126,13 @@ namespace Santa.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SantaPone Central V1");
+                c.SwaggerEndpoint("/swagger/"+ version + "/swagger.json", "SantaPone Central " + version.ToUpper());
             });
 
             //Endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

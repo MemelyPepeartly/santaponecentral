@@ -13,14 +13,21 @@
     <mat-tab label="Incoming Sign-Ups">
         <div class="contentDiv mat-elevation-z4">
             <div class="small-box mat-elevation-z3">
-                <app-incoming-signups #signups (clickedClient)="showClientWindow($event)"></app-incoming-signups>
+                <app-incoming-signups #signups [incomingClients]="sortIncoming()" (clickedClient)="showClientWindow($event)"></app-incoming-signups>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Approved Anons">
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
-                <app-approved-anons #approved (clickedClient)="showClientWindow($event)"></app-approved-anons>
+                <app-approved-anons #approved [approvedClients]="sortApproved()" (clickedClient)="showClientWindow($event)"></app-approved-anons>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Denied Anons">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-denied-anons #denied [deniedClients]="sortDenied()" (clickedClient)="showClientWindow($event)"></app-denied-anons>
             </div>
         </div>
     </mat-tab>

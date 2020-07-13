@@ -8,11 +8,9 @@ import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
-import { SurveyResponse, Survey, SurveyQA, Question } from 'src/classes/survey';
+import { Survey, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { LoginComponent } from 'src/app/home/login/login.component';
 
 @Component({
   selector: 'app-selected-anon',
@@ -59,7 +57,6 @@ export class SelectedAnonComponent implements OnInit {
   public events: Array<EventType> = new Array<EventType>();
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
-  public responses: Array<SurveyResponse> = new Array<SurveyResponse>();
   public statuses: Array<Status> = new Array<Status>();
   public allClients: Array<Client> = new Array<Client>();
 
@@ -77,6 +74,7 @@ export class SelectedAnonComponent implements OnInit {
   public showRecipientListPostingSpinner: boolean = false;
   
   public showApproveSuccess: boolean = false;
+  public showDeniedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
 
@@ -118,6 +116,11 @@ export class SelectedAnonComponent implements OnInit {
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
     });
+    /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
+    this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
+      this.statuses = statusArray;
+    });
+    await this.gatherer.gatherAllStatuses();
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
 
@@ -130,8 +133,6 @@ export class SelectedAnonComponent implements OnInit {
       this.allClients = clientArray;
     });
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
-    //Gathers all client responses
-    await this.gatherResponses();
     //Gathers all client senders
     await this.gatherSenders();
     //Gathers all client recipients
@@ -149,17 +150,20 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
-    this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
-      this.statuses = statusArray;
-    })
+    
 
     //Runs all gather services
-    await this.gatherer.allGather();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllQuestions();
+    await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllTags();
+
 
     this.gettingAnswers = false;
     this.gettingEventDetails = false;
 
     this.initializing = false;
+
   }
   public approveAnon()
   {
@@ -179,6 +183,36 @@ export class SelectedAnonComponent implements OnInit {
           this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
             this.showButtonSpinner = false;
             this.showApproveSuccess = true;
+            this.actionTaken = true;
+            this.action.emit(this.actionTaken);
+          },
+          err => {
+            console.log(err);
+            this.showButtonSpinner = false;
+            this.showFail = true;
+            this.actionTaken = false;
+            this.action.emit(this.actionTaken);
+          });
+        }
+      });
+  }
+  denyAnon()
+  {
+    this.showButtonSpinner = true;
+    var putClient: Client = this.client;
+    var deniedStatus: Status = new Status;
+
+    this.statuses.forEach(status =>
+      {
+        if (status.statusDescription == EventConstants.DENIED)
+        {
+          deniedStatus = status;
+          putClient.clientStatus.statusID = deniedStatus.statusID;
+          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
+          
+          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+            this.showButtonSpinner = false;
+            this.showDeniedSuccess = true;
             this.actionTaken = true;
             this.action.emit(this.actionTaken);
           },
@@ -252,16 +286,12 @@ export class SelectedAnonComponent implements OnInit {
 
     this.approvedRecipientClients = [];
 
-    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter(filterByEvent)
-    function filterByEvent(relationship: ClientSenderRecipientRelationship) {
-      
-      return (relationship.clientEventTypeID == eventType.eventTypeID); 
-    } 
+    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter((relationship: ClientSenderRecipientRelationship) => {return (relationship.clientEventTypeID == eventType.eventTypeID)})
     let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
 
     
     //refresh all API clients
-    await this.gatherer.gatherAllClients();
+    //await this.gatherer.gatherAllClients();
 
     //For all the clients in the DB,
     //If the client status is approved (&&)
@@ -275,8 +305,7 @@ export class SelectedAnonComponent implements OnInit {
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))
       {
-        
-        this.approvedRecipientClients.push(this.ApiMapper.mapClientRelationship(this.allClients[i], eventType.eventTypeID))
+        this.approvedRecipientClients.push(this.ApiMapper.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
 
@@ -307,7 +336,6 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.gatherAllEvents();
     await this.gatherSenders();
     await this.gatherRecipients();
-    await this.gatherResponses();
     this.beingSwitched = false;
   }
   public async removeRecipient(anon: ClientSenderRecipientRelationship)
@@ -394,7 +422,7 @@ export class SelectedAnonComponent implements OnInit {
     for(let i = 0; i < this.client.recipients.length; i++)
     {
       var foundClient = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
-      this.recipients.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.recipients[i].recipientEventTypeID));
+      this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
     }
     this.gatheringRecipients = false;
   }
@@ -407,41 +435,8 @@ export class SelectedAnonComponent implements OnInit {
     for(let i = 0; i < this.client.senders.length; i++)
     {
       let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
-      this.senders.push(this.ApiMapper.mapClientRelationship(foundClient ,this.client.senders[i].senderEventTypeID));
+      this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;
-  }
-  public async gatherResponses()
-  {
-    this.gettingAnswers = true;
-    this.responses = [];
-
-    //API call for getting responses
-    this.SantaApiGet.getSurveyResponseByClientID(this.client.clientID).subscribe(res => {
-      for(let i =0; i< res.length; i++)
-      {
-        var mappedAnswer = this.ApiMapper.mapResponse(res[i]);
-
-        for(let j =0; j< this.surveys.length; j++)
-        {
-          //If a survey in the list matches the ID of an answer's surveyID, set the eventType as the right ID it's from
-          if(mappedAnswer.surveyID == this.surveys[j].surveyID)
-          {
-            mappedAnswer.eventTypeID = this.surveys[j].eventTypeID;
-
-            //For each question answered, populate the actual question text
-            for(let k =0; k< this.surveys[j].surveyQuestions.length; k++)
-            {
-              if(mappedAnswer.surveyQuestionID == this.surveys[j].surveyQuestions[k].questionID)
-              {
-                mappedAnswer.questionText = this.surveys[j].surveyQuestions[k].questionText;
-              }
-            }
-          }
-        }
-        this.responses.push(mappedAnswer);
-      }
-    });
-    this.gettingAnswers = false;
   }
 }

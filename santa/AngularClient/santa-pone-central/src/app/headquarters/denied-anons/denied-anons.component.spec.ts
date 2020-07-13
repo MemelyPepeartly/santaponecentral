@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContactPanelComponent } from './contact-panel.component';
+import { DeniedAnonsComponent } from './denied-anons.component';
 
-describe('ContactPanelComponent', () => {
-  let component: ContactPanelComponent;
-  let fixture: ComponentFixture<ContactPanelComponent>;
+describe('DeniedAnonsComponent', () => {
+  let component: DeniedAnonsComponent;
+  let fixture: ComponentFixture<DeniedAnonsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContactPanelComponent ]
+      declarations: [ DeniedAnonsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContactPanelComponent);
+    fixture = TestBed.createComponent(DeniedAnonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

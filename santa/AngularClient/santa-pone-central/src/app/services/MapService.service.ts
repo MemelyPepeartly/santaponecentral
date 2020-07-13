@@ -34,6 +34,10 @@ export class MapService {
     mappedClient.address.country = client.address.country;
     mappedClient.address.postalCode = client.address.postalCode;
 
+    client.responses.forEach(response => {
+      mappedClient.responses.push(this.mapResponse(response))
+    });
+
     client.recipients.forEach(recipient => {
       mappedClient.recipients.push(this.mapRecipient(recipient))
     });
@@ -142,14 +146,41 @@ export class MapService {
 
     return mappedMeta;
   }
-  mapClientRelationship(client: Client, eventTypeID: string)
+  mapClientRecipientRelationship(client: Client, recipientClient: Recipient)
   {
     let mappedRelationship = new ClientSenderRecipientRelationship;
 
     mappedRelationship.clientID = client.clientID;
     mappedRelationship.clientName = client.clientName;
     mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = eventTypeID;
+    mappedRelationship.clientEventTypeID = recipientClient.recipientEventTypeID;
+    mappedRelationship.removable = recipientClient.removable;
+
+    return mappedRelationship;
+
+  }
+  mapClientSenderRelationship(client: Client, senderClient: Sender)
+  {
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = senderClient.senderEventTypeID;
+    mappedRelationship.removable = senderClient.removable;
+
+    return mappedRelationship;
+
+  }
+  mapAllowedClientRelationship(client: Client, eventID: string)
+  {
+    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component 
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = eventID;
 
     return mappedRelationship;
 
@@ -160,6 +191,7 @@ export class MapService {
 
     mappedRecipient.recipientClientID = recipient.recipientClientID;
     mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
+    mappedRecipient.removable = recipient.removable;
 
     return mappedRecipient
   }
@@ -169,6 +201,7 @@ export class MapService {
 
     mappedSender.senderClientID = sender.senderClientID;
     mappedSender.senderEventTypeID = sender.senderEventTypeID;
+    mappedSender.removable = sender.removable;
 
     return mappedSender
   }
@@ -235,9 +268,11 @@ export class MapService {
     mappedSurveyResponse.surveyResponseID = surveyResponse.surveyResponseID;
     mappedSurveyResponse.surveyID = surveyResponse.surveyID;
     mappedSurveyResponse.clientID = surveyResponse.clientID;
-    mappedSurveyResponse.surveyQuestionID = surveyResponse.surveyQuestionID;
+    mappedSurveyResponse.surveyQuestion = this.mapQuestion(surveyResponse.surveyQuestion);
     mappedSurveyResponse.surveyOptionID = surveyResponse.surveyOptionID;
     mappedSurveyResponse.responseText = surveyResponse.responseText;
+    mappedSurveyResponse.questionText = surveyResponse.questionText;
+    mappedSurveyResponse.responseEvent = this.mapEvent(surveyResponse.responseEvent);
 
     return mappedSurveyResponse;
   }

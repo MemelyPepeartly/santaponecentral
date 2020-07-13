@@ -11,14 +11,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class DefaultnavComponent implements OnInit {
 
-  username = '';
-  password = '';
-
-  constructor( public dialog: MatDialog, public auth: AuthService ) { }
-
-  openDialog() {
-    this.dialog.open(LoginComponent);
-  }
+  constructor(public auth: AuthService ) { }
   ngOnInit() {
   }
 }

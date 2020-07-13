@@ -62,11 +62,18 @@
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <p *ngIf="showFail">Error approving Anon</p>
         <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
+        <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+
         <mat-card-actions *ngIf="!showButtonSpinner">
-            <button mat-raised-button (click)="approveAnon()"
-                *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'">Deny</button>
-            <button mat-raised-button>Other Options</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="approveAnon()">Approve</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="approveAnon()">Re-Approve</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="denyAnon()">Deny</button>
         </mat-card-actions>
     </mat-card>
 
@@ -104,11 +111,11 @@
                             <mat-card-subtitle>Answers for the {{event.eventDescription}} survey</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <mat-accordion>
+                            <mat-accordion multi>
                                 <!-- Expansion panels for responses -->
-                                <mat-expansion-panel *ngFor="let response of responses">
-                                    <mat-expansion-panel-header *ngIf="event.eventTypeID == response.eventTypeID">
-                                        <mat-panel-title>{{response.questionText}}</mat-panel-title>
+                                <mat-expansion-panel *ngFor="let response of client.responses">
+                                    <mat-expansion-panel-header *ngIf="event.eventTypeID == response.responseEvent.eventTypeID">
+                                        <mat-panel-title>{{response.surveyQuestion.questionText}}</mat-panel-title>
                                         <mat-panel-description>
                                             <mat-icon>question_answer</mat-icon>
                                         </mat-panel-description>
@@ -183,10 +190,11 @@
                                         matTooltip="Switch to this Anon"
                                         [matTooltipPosition]="'left'"
                                         (click)="switchAnon(recipient)">Switch</button>
-        
+                                        <p *ngIf="!recipient.removable">Note: If a recipient has a chat history, they cannot be removed</p>
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Remove the anon as a recipient"
                                         color="warn"
+                                        [disabled]="!recipient.removable"
                                         [matTooltipPosition]="'right'"
                                         (click)="removeRecipient(recipient)">Remove</button>
                                     </div>
@@ -205,15 +213,6 @@
             <mat-card-subtitle>Actions that modify a client's activity</mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions>
-            <div class="optionDiv">
-                <button mat-raised-button
-                matTooltip="Send the Anon a contact message (Not implimented yet)"
-                [matTooltipPosition]="'right'">Contact</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Send a message to the client</p>
-                </mat-card-subtitle>
-            </div>
-            <mat-divider [inset]="true"></mat-divider>
 
             <!--Add recipient option-->
             <div class="optionDiv" id="recipientOptionDiv" *ngIf="clientApproved">
