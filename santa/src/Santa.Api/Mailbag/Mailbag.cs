@@ -70,7 +70,7 @@ namespace Santa.Api.SendGrid
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
-            string subject = "SantaPone Central Login Information";
+            string subject = "SantaPone Central Notification";
             EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
             string plainTextContent = "";
             string htmlContent = "";
