@@ -11,6 +11,7 @@ import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
+import { CountriesService } from 'src/app/services/countries.service';
 
 @Component({
   selector: 'app-selected-anon',
@@ -45,7 +46,8 @@ export class SelectedAnonComponent implements OnInit {
     public ApiMapper: MapService,
     public gatherer: GathererService,
     public responseMapper: MapResponse,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
   @Output() action: EventEmitter<any> = new EventEmitter();
@@ -59,8 +61,13 @@ export class SelectedAnonComponent implements OnInit {
   public questions: Array<Question> = new Array<Question>();
   public statuses: Array<Status> = new Array<Status>();
   public allClients: Array<Client> = new Array<Client>();
+  public countries: Array<any> = [];
 
-  //Tag arrays
+  // Forms
+  public clientNicknameFormGroup: FormGroup;
+  public clientAddressFormGroup: FormGroup;
+
+  // Tag arrays
   public allTags: Array<Tag> = new Array<Tag>();
   public availableTags: Array<Tag> = new Array<Tag>();
   public currentTags: Array<Tag> = new Array<Tag>();
@@ -76,6 +83,7 @@ export class SelectedAnonComponent implements OnInit {
   public showApproveSuccess: boolean = false;
   public showDeniedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
+  public showAddressChangeForm: boolean = false;
   public addRecipientSuccess: boolean = false;
 
   public showFiller: boolean = false;
@@ -96,14 +104,8 @@ export class SelectedAnonComponent implements OnInit {
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
 
-
-
   //Possibly depreciated
   public settingClientTags: boolean = false;
-
-
-
-  public clientNicknameFormGroup: FormGroup;
 
   public async ngOnInit() {
     this.initializing = true;
@@ -113,8 +115,18 @@ export class SelectedAnonComponent implements OnInit {
     {
       this.clientApproved = true;
     }
+    // Form Building
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
+    });
+
+    this.clientAddressFormGroup = this.formBuilder.group({
+      addressLine1: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
+      addressLine2: ['', Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50) && Validators.minLength(0)],
+      city: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
+      state: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
+      postalCode: ['', Validators.required && Validators.pattern("[0-9]{1,25}") && Validators.maxLength(25)],
+      country: ['', Validators.required]
     });
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
     this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
@@ -137,9 +149,10 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSenders();
     //Gathers all client recipients
     await this.gatherRecipients();
-
     //Gathers all client tags
     await this.setClientTags();
+    //Gathers all countries for the form;
+    this.countries = this.countryService.allCountries();
 
     /* ---- GENERAL SUBSCRIBES ---- */
     //Gathers all events
