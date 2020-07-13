@@ -1,13 +1,33 @@
-.title{
-    font-size: 400%;
-    font-family: 'Lilita One', cursive;
-    font-style: italic;
-    line-height: normal;
-    color: wheat;
+#button-container
+{
+  display: block;
+  background-color: rgb(59, 59, 59);
+  width: 100%;
+  text-align: center;
 }
+#title-text
+{
+  vertical-align: -webkit-baseline-middle;
+}
+.title{
+  display: inline-block;
+  width: 60%;
+  min-width: fit-content;
+  height: 100%;
+  font-size: 400%;
+  vertical-align: top;
+  font-family: 'Lilita One', cursive;
+  font-style: italic;
+  line-height: normal;
+  color: wheat;
+  background-color: black;
+}
+
 .nav-container
 {
-  min-width: 650px;
+  text-align: center;
+  min-width: 600px;
+  width: 100%;
 }
 .main-container
 {
@@ -15,13 +35,32 @@
   height: 100%;
   display: contents;
 }
-#nav-image {
-  text-align: center;
-  background-color: black;
-  background-image: url(../assets/snow.gif);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+.nav-container
+{
+  width: 100%;
+  height: 120px;
+}
+.nav-image
+{
+  display: inline-block;
+  border: 1px;
+  border-style: dotted;
+  width: 20%;
+  height: 100%;
+}
+.right-nav-image
+{
+  display: block;
+  background-color: brown;
+  height: 100%;
+  width: 100%;
+}
+.left-nav-image
+{
+  display: block;
+  background-color: cadetblue;
+  height: 100%;
+  width: 100%;
 }
 .bg
 {
@@ -31,7 +70,7 @@
   background-repeat: no-repeat;
   margin-top: 10px;
   background-position: bottom;
-  min-width: 650px;
+  min-width: 600px;
   width: 100%;
   height: fit-content;
   min-height: 800px;
