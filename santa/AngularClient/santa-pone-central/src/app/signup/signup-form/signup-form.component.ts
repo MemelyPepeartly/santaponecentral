@@ -64,7 +64,7 @@ export class SignupFormComponent implements OnInit {
     this.createFormGroups();
 
     // JSON call for getting country data
-    this.getCountries();
+    this.countries = this.countryService.allCountries();
 
     // API Call for getting statuses
     this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
@@ -176,15 +176,6 @@ export class SignupFormComponent implements OnInit {
     this.showSpinner = false;
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
-  }
-  
-  public getCountries(){
-    this.countryService.allCountries().
-    subscribe(
-      data2 => {
-        this.countries=data2.Countries;
-      },
-      err => console.log(err))
   }
   public createFormGroups()
   {
