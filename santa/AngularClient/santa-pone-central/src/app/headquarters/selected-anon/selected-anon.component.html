@@ -83,12 +83,44 @@
             <mat-card-subtitle>Address that Anon's would use to send something to this Anon</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p>{{ client.address.addressLineOne }}</p>
-            <p>{{ client.address.addressLineTwo }}</p>
-            <p>{{ client.address.city }}</p>
-            <p>{{ client.address.state }}</p>
-            <p>{{ client.address.postalCode }}</p>
-            <p>{{ client.address.country }}</p>
+            <div>
+                <p>{{ client.address.addressLineOne }}</p>
+                <p>{{ client.address.addressLineTwo }}</p>
+                <p>{{ client.address.city }}</p>
+                <p>{{ client.address.state }}</p>
+                <p>{{ client.address.postalCode }}</p>
+                <p>{{ client.address.country }}</p>
+            </div>
+            <button mat-raised-button *ngIf="!showAddressChangeForm" (click)="showAddressChangeForm = !showAddressChangeForm">Change Address</button>
+            <div id="addressChangeForm" *ngIf="showAddressChangeForm">
+                <form [formGroup]="clientAddressFormGroup">
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="addressLine1" placeholder="Street Address">
+                    </mat-form-field>
+                    <mat-form-field class="addressFormField">
+                        <input matInput #secondLine formControlName="addressLine2"
+                            placeholder="Second Street Address (Optional)">
+                    </mat-form-field>
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="city" placeholder="City">
+                    </mat-form-field>
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="state" placeholder="State">
+                    </mat-form-field>
+                    <mat-form-field class="addressFormField">
+                        <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
+                            <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="postalCode" placeholder="Postal Code">
+                    </mat-form-field>
+                    <div>
+                        <button mat-raised-button [disabled]="!clientAddressFormGroup.valid">Submit Change</button>
+                        <button mat-raised-button (click)="showAddressChangeForm = !showAddressChangeForm">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </mat-card-content>
     </mat-card>
 

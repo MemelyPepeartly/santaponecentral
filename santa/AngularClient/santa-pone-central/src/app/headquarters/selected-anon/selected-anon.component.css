@@ -20,6 +20,10 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+#addressChangeForm
+{
+    display: block;
+}
 #headerContentContainer
 {
     display: block;
@@ -50,6 +54,11 @@ mat-panel-description
 {
     display: block;
     margin-bottom:5px;
+}
+/* Classes */
+.addressFormField
+{
+    display: block;
 }
 .expansionPanelButton
 {
