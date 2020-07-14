@@ -53,7 +53,7 @@ namespace Santa.Api.Controllers
                 {
                     return NoContent();
                 }
-                return Ok(JsonConvert.SerializeObject(clients, Formatting.Indented));
+                return Ok(JsonConvert.SerializeObject(clients.OrderBy(c => c.nickname), Formatting.Indented));
             }
             catch (ArgumentNullException e)
             {
