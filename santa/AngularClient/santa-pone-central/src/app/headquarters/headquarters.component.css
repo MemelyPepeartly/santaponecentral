@@ -1,9 +1,9 @@
 .container {
     position: fixed;
     width: 100%;
-    min-width: 450px;
-    height: 90%;
-    top:5%;
+    min-width: 650px;
+    height: 85%;
+    top: 8%;
     left: 0;
     right: 0;
     background-color:white;
