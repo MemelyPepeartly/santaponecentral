@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -103,9 +103,15 @@ export class SelectedAnonComponent implements OnInit {
   public gettingEventDetails: boolean = true;
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
+  public changingAddress: boolean = false;
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
+
+  get addressFormControls()
+  {
+    return this.clientAddressFormGroup.controls;
+  }
 
   public async ngOnInit() {
     this.initializing = true;
@@ -121,11 +127,11 @@ export class SelectedAnonComponent implements OnInit {
     });
 
     this.clientAddressFormGroup = this.formBuilder.group({
-      addressLine1: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
-      addressLine2: ['', Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50) && Validators.minLength(0)],
-      city: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
-      state: ['', Validators.required && Validators.pattern("[A-Za-z0-9 ]{1,50}") && Validators.maxLength(50)],
-      postalCode: ['', Validators.required && Validators.pattern("[0-9]{1,25}") && Validators.maxLength(25)],
+      addressLine1: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      addressLine2: ['', [Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      city: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
       country: ['', Validators.required]
     });
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
@@ -451,5 +457,25 @@ export class SelectedAnonComponent implements OnInit {
       this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;
+  }
+  public async submitNewAddress()
+  {
+    this.changingAddress = true;
+
+    let newAddressResponse = new ClientAddressResponse();
+
+    newAddressResponse.clientAddressLine1 = this.addressFormControls.addressLine1.value;
+    newAddressResponse.clientAddressLine2 = this.addressFormControls.addressLine2.value;
+    newAddressResponse.clientCity = this.addressFormControls.city.value;
+    newAddressResponse.clientState = this.addressFormControls.state.value;
+    newAddressResponse.clientCountry = this.addressFormControls.country.value;
+    newAddressResponse.clientPostalCode = this.addressFormControls.postalCode.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientAddress(this.client.clientID, newAddressResponse).toPromise());
+    this.clientAddressFormGroup.reset();
+    this.showAddressChangeForm = false;
+    this.action.emit(true);
+
+    this.changingAddress = false;
   }
 }
