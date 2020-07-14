@@ -60,7 +60,7 @@
             </mat-card>
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
-        <p *ngIf="showFail">Error approving Anon</p>
+        <div class="error" *ngIf="showFail">Error approving Anon</div>
         <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
         <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
 
@@ -82,7 +82,10 @@
             <mat-card-title>Shipping Address</mat-card-title>
             <mat-card-subtitle>Address that Anon's would use to send something to this Anon</mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content *ngIf="changingAddress">
+            <app-loading-spin></app-loading-spin>
+        </mat-card-content>
+        <mat-card-content *ngIf="!changingAddress">
             <div>
                 <p>{{ client.address.addressLineOne }}</p>
                 <p>{{ client.address.addressLineTwo }}</p>
@@ -94,29 +97,61 @@
             <button mat-raised-button *ngIf="!showAddressChangeForm" (click)="showAddressChangeForm = !showAddressChangeForm">Change Address</button>
             <div id="addressChangeForm" *ngIf="showAddressChangeForm">
                 <form [formGroup]="clientAddressFormGroup">
+
+                    <!-- Address line 1 -->
                     <mat-form-field class="addressFormField">
                         <input matInput formControlName="addressLine1" placeholder="Street Address">
                     </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.addressLine1.errors && addressFormControls.addressLine1.touched">
+                        <div *ngIf="addressFormControls.addressLine1.errors.required">An address line is required</div>
+                        <div *ngIf="addressFormControls.addressLine1.errors.maxlength">First address line is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- Address line 2 -->
                     <mat-form-field class="addressFormField">
                         <input matInput #secondLine formControlName="addressLine2"
                             placeholder="Second Street Address (Optional)">
                     </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.addressLine2.errors && addressFormControls.addressLine2.touched">
+                        <div *ngIf="addressFormControls.addressLine2.errors.maxlength">Second address line is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- City -->
                     <mat-form-field class="addressFormField">
                         <input matInput formControlName="city" placeholder="City">
                     </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.city.errors && addressFormControls.city.touched">
+                        <div *ngIf="addressFormControls.city.errors.required">A city is required</div>
+                        <div *ngIf="addressFormControls.city.errors.maxlength">City field is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- State -->
                     <mat-form-field class="addressFormField">
                         <input matInput formControlName="state" placeholder="State">
                     </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.state.errors && addressFormControls.state.touched">
+                        <div *ngIf="addressFormControls.state.errors.required">A state is required</div>
+                        <div *ngIf="addressFormControls.state.errors.maxlength">State line is too long. 50 Characters is the maximum</div>
+                    </div>
+
                     <mat-form-field class="addressFormField">
                         <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
                             <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+
+                    <!-- Postal Code -->
                     <mat-form-field class="addressFormField">
                         <input matInput formControlName="postalCode" placeholder="Postal Code">
                     </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.postalCode.errors && addressFormControls.postalCode.touched">
+                        <div *ngIf="addressFormControls.postalCode.errors.required">A postal code is required</div>
+                        <div *ngIf="addressFormControls.postalCode.errors.maxlength">Postal code is too long. 25 Characters is the maximum</div>
+                        <div *ngIf="addressFormControls.postalCode.errors.pattern">Postal code can only have numbers</div>
+                    </div>
+
                     <div>
-                        <button mat-raised-button [disabled]="!clientAddressFormGroup.valid">Submit Change</button>
+                        <button mat-raised-button [disabled]="clientAddressFormGroup.invalid" (click)="submitNewAddress()">Submit Change</button>
                         <button mat-raised-button (click)="showAddressChangeForm = !showAddressChangeForm">Cancel</button>
                     </div>
                 </form>

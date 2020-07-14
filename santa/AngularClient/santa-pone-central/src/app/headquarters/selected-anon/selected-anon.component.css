@@ -129,9 +129,9 @@ mat-panel-description
 {
     color: rgb(0, 90, 0);
 }
-.failure
+.error
 {
-    color: rgb(128, 0, 0);
+    color: #F44336;
 }
 .shell
 {
