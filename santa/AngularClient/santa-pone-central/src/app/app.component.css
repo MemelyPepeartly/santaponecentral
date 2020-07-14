@@ -14,7 +14,7 @@
   width: 60%;
   min-width: fit-content;
   height: 100%;
-  font-size: 400%;
+  font-size: 300%;
   vertical-align: top;
   font-family: 'Lilita One', cursive;
   font-style: italic;
@@ -46,6 +46,7 @@
   border: 1px;
   border-style: dotted;
   width: 20%;
+  max-width: auto;
   height: 100%;
 }
 .right-nav-image
