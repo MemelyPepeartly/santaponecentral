@@ -60,28 +60,14 @@ namespace Santa.Api.AuthHelper
             Auth0TokenModel token = await getTokenModel();
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
+            List<Auth0UserInfoModel> users = JsonConvert.DeserializeObject<List<Auth0UserInfoModel>>(response.Content);
 
-            return user;
-        }
-
-        public async Task<Auth0UserInfoModel> updateAuthClientPassword(string authUserID, Auth0UserPasswordModel passwordModel)
-        {
-            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
-            RestRequest userRequest = new RestRequest(Method.POST);
-            Auth0TokenModel token = await getTokenModel();
-            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
-            userRequest.AddJsonBody(passwordModel);
-            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
-
-            return user;
-
+            return users.First(c => c.email == authUserEmail);
         }
         public async Task updateAuthClientRole(string authUserID, string authRoleID)
         {
             RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID + "/roles");
-            RestRequest userRequest = new RestRequest(Method.POST);
+            RestRequest userRequest = new RestRequest(Method.PATCH);
             Auth0TokenModel token = await getTokenModel();
 
             Auth0AddRoleIDModel responseModel = new Auth0AddRoleIDModel()
@@ -102,6 +88,33 @@ namespace Santa.Api.AuthHelper
             {
                 throw new Exception();
             }
+
+        }
+        public async Task updateAuthClientEmail(string newEmail, string authUserID)
+        {
+            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
+            RestRequest userRequest = new RestRequest(Method.PATCH);
+            Auth0TokenModel token = await getTokenModel();
+
+            var responseModel = new Models.Auth0_Response_Models.Auth0ChangeEmailModel()
+            {
+                email = newEmail,
+                name = newEmail
+            };
+
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            userRequest.AddJsonBody(responseModel);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+
+            if (response.IsSuccessful)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception();
+            }
+
 
         }
         #endregion
