@@ -55,8 +55,16 @@ mat-panel-description
     display: block;
     margin-bottom:5px;
 }
+#nameChangeFormDiv
+{
+    display: block;
+}
+#emailChangeFormDiv
+{
+    display: block;
+}
 /* Classes */
-.addressFormField
+.changeFormField
 {
     display: block;
 }
@@ -79,6 +87,8 @@ mat-panel-description
 {
     vertical-align: top;
     display: inline-block;
+    width: 35%;
+    min-width: 250px;
 }
 .relationDiv
 {
