@@ -74,6 +74,79 @@
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
                 [disabled]="this.gatherer.gatheringAllStatuses"
                 (click)="denyAnon()">Deny</button>
+            <button mat-raised-button [disabled]="showNameChangeForm"
+                (click)="showNameChangeForm = true">Change Agent's Name</button>
+            <button mat-raised-button [disabled]="showEmailChangeForm"
+                (click)="showEmailChangeForm = true">Change Agent's Email</button>
+            
+            <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
+
+            <!-- Name change form group -->
+            <mat-card class="infoCard mat-elevation-z2" *ngIf="showNameChangeForm">
+                <mat-card-header>
+                    <mat-card-title>Edit Agent Name</mat-card-title>
+                    <mat-card-subtitle>This changes the real name of the client</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="clientNameFormGroup">
+                        <!-- First Name -->
+                        <mat-form-field class="changeFormField">
+                            <mat-label>First Name</mat-label>
+                            <input matInput formControlName="firstName" placeholder="First Name">
+                        </mat-form-field>
+                        <div class="error" *ngIf="nameFormControls.firstName.errors && nameFormControls.firstName.touched">
+                            <div *ngIf="nameFormControls.firstName.errors.required">A first name is required</div>
+                            <div *ngIf="nameFormControls.firstName.errors.maxlength">First name is too long. 20 Characters is the maximum</div>
+                            <div *ngIf="nameFormControls.firstName.errors.pattern">First name must be a proper first name</div>
+                        </div>
+    
+                        <!-- Last Name -->
+                        <mat-form-field class="changeFormField">
+                            <mat-label>Last Name</mat-label>
+                            <input matInput formControlName="lastName" placeholder="Last Name">
+                        </mat-form-field>
+                        <div class="error" *ngIf="nameFormControls.lastName.errors && nameFormControls.lastName.touched">
+                            <div *ngIf="nameFormControls.lastName.errors.required">A last name is required</div>
+                            <div *ngIf="nameFormControls.lastName.errors.maxlength">Last name is too long. 20 Characters is the maximum</div>
+                            <div *ngIf="nameFormControls.lastName.errors.pattern">Last name must be a proper last name</div>
+                        </div>
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <div>
+                        <button mat-raised-button (click)="submitNewName()">Submit</button>
+                        <button mat-raised-button (click)="showNameChangeForm = false">Cancel</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+            
+            <!-- Email change form group -->
+            <mat-card class="infoCard mat-elevation-z2" *ngIf="showEmailChangeForm">
+                <mat-card-header>
+                    <mat-card-title>Edit Agent Email</mat-card-title>
+                    <mat-card-subtitle>This changes the email of the client, and their login email</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="clientEmailFormGroup">
+                        <!-- Email -->
+                        <mat-form-field class="changeFormField">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email" placeholder="email@domain.com">
+                        </mat-form-field>
+                        <div class="error" *ngIf="emailFormControls.email.errors && emailFormControls.email.touched">
+                            <div *ngIf="emailFormControls.email.errors.required">An email is required</div>
+                            <div *ngIf="emailFormControls.email.errors.maxlength">Email is too long. 50 Characters is the maximum</div>
+                            <div *ngIf="emailFormControls.email.errors.pattern">Email must be a proper email</div>
+                        </div>
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <div>
+                        <button mat-raised-button (click)="submitNewEmail()">Submit</button>
+                        <button mat-raised-button (click)="showEmailChangeForm = false">Cancel</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
         </mat-card-actions>
     </mat-card>
 
@@ -99,7 +172,7 @@
                 <form [formGroup]="clientAddressFormGroup">
 
                     <!-- Address line 1 -->
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <input matInput formControlName="addressLine1" placeholder="Street Address">
                     </mat-form-field>
                     <div class="error" *ngIf="addressFormControls.addressLine1.errors && addressFormControls.addressLine1.touched">
@@ -108,7 +181,7 @@
                     </div>
 
                     <!-- Address line 2 -->
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <input matInput #secondLine formControlName="addressLine2"
                             placeholder="Second Street Address (Optional)">
                     </mat-form-field>
@@ -117,7 +190,7 @@
                     </div>
 
                     <!-- City -->
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <input matInput formControlName="city" placeholder="City">
                     </mat-form-field>
                     <div class="error" *ngIf="addressFormControls.city.errors && addressFormControls.city.touched">
@@ -126,7 +199,7 @@
                     </div>
 
                     <!-- State -->
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <input matInput formControlName="state" placeholder="State">
                     </mat-form-field>
                     <div class="error" *ngIf="addressFormControls.state.errors && addressFormControls.state.touched">
@@ -134,14 +207,14 @@
                         <div *ngIf="addressFormControls.state.errors.maxlength">State line is too long. 50 Characters is the maximum</div>
                     </div>
 
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
                             <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
                     <!-- Postal Code -->
-                    <mat-form-field class="addressFormField">
+                    <mat-form-field class="changeFormField">
                         <input matInput formControlName="postalCode" placeholder="Postal Code">
                     </mat-form-field>
                     <div class="error" *ngIf="addressFormControls.postalCode.errors && addressFormControls.postalCode.touched">
