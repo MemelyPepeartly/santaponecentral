@@ -21,6 +21,11 @@ export class SurveyFormComponent implements OnInit {
 
   public surveyFormGroup: FormGroup;
 
+  public get surveyFormControls()
+  {
+    return this.surveyFormGroup.controls;
+  }
+
   ngOnInit() {
     
     this.formQuestionsFormatted = this.setQuestions(this.questions)
@@ -36,7 +41,7 @@ export class SurveyFormComponent implements OnInit {
   addFields()
   {
     this.formQuestionsFormatted.forEach(question => {
-      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', Validators.required))
+      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
     });
   }
   public setQuestions(questions: Array<Question>)
