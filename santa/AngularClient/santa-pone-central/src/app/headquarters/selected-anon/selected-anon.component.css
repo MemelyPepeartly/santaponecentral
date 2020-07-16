@@ -55,14 +55,6 @@ mat-panel-description
     display: block;
     margin-bottom:5px;
 }
-#nameChangeFormDiv
-{
-    display: block;
-}
-#emailChangeFormDiv
-{
-    display: block;
-}
 /* Classes */
 .changeFormField
 {

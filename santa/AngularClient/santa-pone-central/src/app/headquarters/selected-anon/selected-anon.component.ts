@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -66,6 +66,12 @@ export class SelectedAnonComponent implements OnInit {
   // Forms
   public clientNicknameFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
+  public clientNameFormGroup: FormGroup;
+  public clientEmailFormGroup: FormGroup;
+
+  public showAddressChangeForm: boolean = false;
+  public showNameChangeForm: boolean = false;
+  public showEmailChangeForm: boolean = false;
 
   // Tag arrays
   public allTags: Array<Tag> = new Array<Tag>();
@@ -83,7 +89,6 @@ export class SelectedAnonComponent implements OnInit {
   public showApproveSuccess: boolean = false;
   public showDeniedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
-  public showAddressChangeForm: boolean = false;
   public addRecipientSuccess: boolean = false;
 
   public showFiller: boolean = false;
@@ -104,6 +109,9 @@ export class SelectedAnonComponent implements OnInit {
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
   public changingAddress: boolean = false;
+  public changingName: boolean = false;
+  public changingEmail: boolean = false;
+
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
@@ -111,6 +119,14 @@ export class SelectedAnonComponent implements OnInit {
   get addressFormControls()
   {
     return this.clientAddressFormGroup.controls;
+  }
+  get nameFormControls()
+  {
+    return this.clientNameFormGroup.controls;
+  }
+  get emailFormControls()
+  {
+    return this.clientEmailFormGroup.controls;
   }
 
   public async ngOnInit() {
@@ -133,6 +149,13 @@ export class SelectedAnonComponent implements OnInit {
       state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
       country: ['', Validators.required]
+    });
+    this.clientNameFormGroup = this.formBuilder.group({
+      firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+      lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+    });
+    this.clientEmailFormGroup = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
     this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
@@ -477,5 +500,35 @@ export class SelectedAnonComponent implements OnInit {
     this.action.emit(true);
 
     this.changingAddress = false;
+  }
+  public async submitNewName()
+  {
+    this.changingName = true;
+
+    let newNameResponse = new ClientNameResponse();
+
+    newNameResponse.clientName = this.nameFormControls.firstName.value + " " + this.nameFormControls.lastName.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientName(this.client.clientID, newNameResponse).toPromise());
+    this.clientNameFormGroup.reset();
+    this.showNameChangeForm = false;
+    this.action.emit(true);
+
+    this.changingName = false;
+  }
+  public async submitEmailName()
+  {
+    this.changingEmail = true;
+
+    let newEmailResponse = new ClientEmailResponse();
+
+    newEmailResponse.clientEmail = this.emailFormControls.email.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientEmail(this.client.clientID, newEmailResponse).toPromise());
+    this.clientNameFormGroup.reset();
+    this.showEmailChangeForm = false;
+    this.action.emit(true);
+
+    this.changingEmail = false;
   }
 }
