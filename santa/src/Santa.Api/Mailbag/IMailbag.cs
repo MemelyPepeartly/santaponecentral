@@ -12,7 +12,7 @@ namespace Santa.Api.SendGrid
     public interface IMailbag
     {
         MailbagKeyModel getKey();
-        Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket);
+        Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket, bool isNewUser);
         Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
         Task sendDeniedEmail(Logic.Objects.Client recipient);
         Task sendUndeniedEmail(Client recipient);
