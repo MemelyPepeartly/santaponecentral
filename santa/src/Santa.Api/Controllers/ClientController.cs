@@ -449,7 +449,7 @@ namespace Santa.Api.Controllers
             await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
             // Sends the client a password change ticket
-            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
+            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);
             await mailbag.sendPasswordResetEmail(updatedClient.email, updatedClient.nickname, ticket, true);
         }
     }
