@@ -68,12 +68,14 @@ namespace Santa.Api.SendGrid
             }
             else
             {
-                plainTextContent = "Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: " + ticket.ticket + "\nOnce you have it set, login at " + url + ". If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!";
+                plainTextContent = "Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: " + ticket.ticket + "\nOnce you have it set, login at " + url + 
+                    "If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!";
                 htmlContent = emailStart +
                     @$"
                     <p>Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: <a href='{ticket.ticket}'>Password Reset</a></p>
                     <br>
-                    <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>. If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!"
+                    <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>
+                    <p>If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!</p>"
                     + emailEnd;
             }
             
