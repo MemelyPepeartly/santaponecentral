@@ -246,7 +246,7 @@ namespace Santa.Api.Controllers
             try
             {
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                Client oldClient = targetClient;
+                string oldEmail = targetClient.email;
                 targetClient.email = email.clientEmail;
 
                 try
@@ -258,14 +258,14 @@ namespace Santa.Api.Controllers
                     try
                     {
                         // Gets the original client ID by the old email
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldClient.email);
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
 
                         // Updates a client's email and name in Auth0
                         await authHelper.updateAuthClientEmail(updatedClient.email, authClient.user_id);
 
                         // Sends the client a password change ticket
                         Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);
-                        await mailbag.sendPasswordResetEmail(oldClient, ticket, false);
+                        await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
                     }
                     catch(Exception e)
                     {
@@ -450,7 +450,7 @@ namespace Santa.Api.Controllers
 
             // Sends the client a password change ticket
             Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
-            await mailbag.sendPasswordResetEmail(updatedClient, ticket, true);
+            await mailbag.sendPasswordResetEmail(updatedClient.email, updatedClient.nickname, ticket, true);
         }
     }
 }
