@@ -87,7 +87,10 @@
                     <mat-card-title>Edit Agent Name</mat-card-title>
                     <mat-card-subtitle>This changes the real name of the client</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
+                <mat-card-content *ngIf="changingAddress">
+                    <app-loading-spin></app-loading-spin>
+                </mat-card-content>
+                <mat-card-content *ngIf="!changingAddress">
                     <form [formGroup]="clientNameFormGroup">
                         <!-- First Name -->
                         <mat-form-field class="changeFormField">
@@ -126,7 +129,10 @@
                     <mat-card-title>Edit Agent Email</mat-card-title>
                     <mat-card-subtitle>This changes the email of the client, and their login email</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
+                <mat-card-content *ngIf="changingEmail">
+                    <app-loading-spin></app-loading-spin>
+                </mat-card-content>
+                <mat-card-content *ngIf="!changingEmail">
                     <form [formGroup]="clientEmailFormGroup">
                         <!-- Email -->
                         <mat-form-field class="changeFormField">
