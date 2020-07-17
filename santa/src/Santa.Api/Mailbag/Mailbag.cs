@@ -48,12 +48,12 @@ namespace Santa.Api.SendGrid
             };
         }
 
-        public async Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket, bool isNewUser)
+        public async Task sendPasswordResetEmail(string recipientEmail, string recipientNickname, Auth0TicketResponse ticket, bool isNewUser)
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Login Information";
-            EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+            EmailAddress to = new EmailAddress(recipientEmail, recipientNickname);
             string plainTextContent = string.Empty;
             string htmlContent = string.Empty;
             if (isNewUser)
@@ -63,7 +63,7 @@ namespace Santa.Api.SendGrid
                     @$"
                     <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Set your password</a></p>
                     <br>
-                    <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>"
+                    <p>Once you've done that, log into your account at <a href='{url}'>SantaPone Central</a></p>"
                     + emailEnd;
             }
             else
@@ -74,7 +74,7 @@ namespace Santa.Api.SendGrid
                     @$"
                     <p>Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: <a href='{ticket.ticket}'>Password Reset</a></p>
                     <br>
-                    <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>
+                    <p>Once you've done that, log into your account at <a href='{url}'>SantaPone Central</a></p>
                     <p>If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!</p>"
                     + emailEnd;
             }
