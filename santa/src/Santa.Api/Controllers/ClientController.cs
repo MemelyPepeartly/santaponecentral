@@ -246,7 +246,7 @@ namespace Santa.Api.Controllers
             try
             {
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                string oldEmail = targetClient.email;
+                Client oldClient = targetClient;
                 targetClient.email = email.clientEmail;
 
                 try
@@ -264,8 +264,8 @@ namespace Santa.Api.Controllers
                         await authHelper.updateAuthClientEmail(updatedClient.email, authClient.user_id);
 
                         // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(oldEmail);
-                        await mailbag.sendPasswordResetEmail(updatedClient, ticket, false);
+                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);
+                        await mailbag.sendPasswordResetEmail(oldClient, ticket, false);
                     }
                     catch(Exception e)
                     {
