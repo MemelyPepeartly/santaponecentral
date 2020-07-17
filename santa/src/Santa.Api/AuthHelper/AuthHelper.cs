@@ -38,7 +38,7 @@ namespace Santa.Api.AuthHelper
             };
             userRequest.AddJsonBody(newUser);
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
+            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
             return user;
         }
         public async Task<Auth0UserInfoModel> getAuthClientByID(string authUserID)
@@ -48,7 +48,7 @@ namespace Santa.Api.AuthHelper
             Auth0TokenModel token = await getTokenModel();
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content.ToString());
+            Auth0UserInfoModel user = JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
 
             return user;
         }
@@ -67,7 +67,7 @@ namespace Santa.Api.AuthHelper
         public async Task updateAuthClientRole(string authUserID, string authRoleID)
         {
             RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID + "/roles");
-            RestRequest userRequest = new RestRequest(Method.PATCH);
+            RestRequest userRequest = new RestRequest(Method.POST);
             Auth0TokenModel token = await getTokenModel();
 
             Auth0AddRoleIDModel responseModel = new Auth0AddRoleIDModel()
@@ -128,7 +128,7 @@ namespace Santa.Api.AuthHelper
             roleRequest.AddHeader("authorization", "Bearer " + token.access_token);
             IRestResponse response = await roleRestClient.ExecuteAsync(roleRequest);
 
-            List<Auth0RoleModel> roles = JsonConvert.DeserializeObject<List<Auth0RoleModel>>(response.Content.ToString());
+            List<Auth0RoleModel> roles = JsonConvert.DeserializeObject<List<Auth0RoleModel>>(response.Content);
 
             return roles;
         }
@@ -140,7 +140,7 @@ namespace Santa.Api.AuthHelper
             Auth0TokenModel token = await getTokenModel();
             roleRequest.AddHeader("authorization", "Bearer " + token.access_token);
             IRestResponse response = await roleRestClient.ExecuteAsync(roleRequest);
-            Auth0RoleModel role = JsonConvert.DeserializeObject<Auth0RoleModel>(response.Content.ToString());
+            Auth0RoleModel role = JsonConvert.DeserializeObject<Auth0RoleModel>(response.Content);
 
             return role;
 
@@ -162,7 +162,7 @@ namespace Santa.Api.AuthHelper
                 includeEmailInRedirect = true
             });
             IRestResponse response = await roleRestClient.ExecuteAsync(roleRequest);
-            Auth0TicketResponse ticket = JsonConvert.DeserializeObject<Auth0TicketResponse>(response.Content.ToString());
+            Auth0TicketResponse ticket = JsonConvert.DeserializeObject<Auth0TicketResponse>(response.Content);
 
             return ticket;
 
@@ -181,7 +181,7 @@ namespace Santa.Api.AuthHelper
             tokenRequest.AddHeader("content-type", "application/json");
             tokenRequest.AddParameter("application/json", "{\"client_id\":\"" + authClientID + "\",\"client_secret\":\"" + authClientSecret + "\",\"audience\":\"https://memelydev.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}", ParameterType.RequestBody);
             IRestResponse tokenResponse = await tokenRestClient.ExecuteAsync(tokenRequest);
-            Auth0TokenModel token = JsonConvert.DeserializeObject<Auth0TokenModel>(tokenResponse.Content.ToString());
+            Auth0TokenModel token = JsonConvert.DeserializeObject<Auth0TokenModel>(tokenResponse.Content);
 
             return token;
         }
