@@ -516,7 +516,7 @@ export class SelectedAnonComponent implements OnInit {
 
     this.changingName = false;
   }
-  public async submitEmailName()
+  public async submitNewEmail()
   {
     this.changingEmail = true;
 
