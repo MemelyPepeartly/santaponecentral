@@ -63,19 +63,24 @@ namespace Santa.Api.SendGrid
                     @$"
                     <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Set your password</a></p>
                     <br>
-                    <p>Once you've done that, log into your account at <a href='{url}'>SantaPone Central</a></p>"
+                    <p>Once you've done that, log into your account at <a href='{url}'>SantaPone Central</a></p>
+                    <br>
+                    <p><strong>Santa Authorization and Networking Telecommunication Administration</strong></p>"
+
                     + emailEnd;
             }
             else
             {
                 plainTextContent = "Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: " + ticket.ticket + "\nOnce you have it set, login at " + url + 
-                    "If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!";
+                    "If you did not make this request, reach out to the admins in your General Correspondence tab on your profile, or mlpsantapone@gmail.com!";
                 htmlContent = emailStart +
                     @$"
                     <p>Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: <a href='{ticket.ticket}'>Password Reset</a></p>
                     <br>
                     <p>Once you've done that, log into your account at <a href='{url}'>SantaPone Central</a></p>
-                    <p>If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!</p>"
+                    <p>If you did not make this request, reach out to the admins in your General Correspondence tab on your profile, or mlpsantapone@gmail.com!</p>
+                    <br>
+                    <p><strong>Santa Authorization and Networking Telecommunication Administration</strong></p>"
                     + emailEnd;
             }
             
@@ -99,8 +104,8 @@ namespace Santa.Api.SendGrid
                     @$"
                     <p>You have recieved message for an assignment in the {eventType.eventDescription}, agent! Log into <a href='{url}'>SantaPone Central</a> to view it!</p>
                     <br>
-                    <p>Over and Out</p>
-                    <p><strong>SantaPone Intelligence Agency</strong></p>"
+                    <p>Over and Out,</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
                     + emailEnd;
             }
             else
@@ -111,7 +116,7 @@ namespace Santa.Api.SendGrid
                     <p>You have recieved a message in your general correspondence, agent! Log into <a href='{url}'>SantaPone Central</a> to view it!</p>
                     <br>
                     <p>Over and Out</p>
-                    <p><strong>SantaPone Intelligence Agency</strong></p>"
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
                     + emailEnd;
             }
 
@@ -132,13 +137,15 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Login Information";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
-            string plainTextContent = "Unfortunately, you were not approved for the Secret Santa event. If you feel this is a mistake, or wish to make an appeal, feel free to reach out to mlpsantapone@gmail.com .";
+            string plainTextContent = "Unfortunately, you were not approved for the Secret Santa event. If you feel this is a mistake, or wish to make an appeal, feel free to reach out to mlpsantapone@gmail.com.";
             string htmlContent = emailStart +
                 @$"
                     <p>Unfortunately, you were not approved for the Secret Santa event.</p>
                     <br>
                     <p>If you feel this is a mistake, or wish to make an appeal, feel free to reach out to mlpsantapone@gmail.com</p>
-                    <p><strong>SantaPone Intelligence Agency</strong></p>"
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
                 + emailEnd;
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
@@ -150,13 +157,16 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Login Information";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
-            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. If you have any questions, feel free to reach out to the admins under your profile's general chat section, or reach out to mlpsantapone@gmail.com for technical issues.";
+            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. " +
+                "If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
                     <p>After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in.</p>
                     <br>
-                    <p>If you have any questions, feel free to reach out to the admins under your profile's general chat section, or reach out to mlpsantapone@gmail.com for technical issues.</p>
-                    <p><strong>SantaPone Intelligence Agency</strong></p>"
+                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
                 + emailEnd;
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
