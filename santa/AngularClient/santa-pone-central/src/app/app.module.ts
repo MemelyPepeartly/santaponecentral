@@ -21,7 +21,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { UsernavComponent } from './navbar/usernav/usernav.component';
 import { LoginComponent } from './home/login/login.component';
 import { DefaultnavComponent } from './navbar/defaultnav/defaultnav.component';
-import { ContactComponent } from './contact/contact.component';
 import { SignupComponent } from './signup/signup.component';
 import { AdminnavComponent } from './navbar/adminnav/adminnav.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
@@ -59,7 +58,6 @@ import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.c
       UsernavComponent,
       LoginComponent,
       DefaultnavComponent,
-      ContactComponent,
       SignupComponent,
       AdminnavComponent,
       HeadquartersComponent,

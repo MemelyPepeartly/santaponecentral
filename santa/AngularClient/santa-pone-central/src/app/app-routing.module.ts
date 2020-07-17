@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
-import { ContactComponent } from './contact/contact.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
 import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { CorrespondenceComponent } from './correspondence/correspondence.component';
@@ -28,10 +27,6 @@ const appRoutes: Routes = [
   {
     path: 'signup',
     component: SignupComponent
-  },
-  {
-    path: 'contact',
-    component: ContactComponent
   },
   {
     path: 'headquarters',

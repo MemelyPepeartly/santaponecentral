@@ -5,12 +5,13 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
+import { CountriesService } from 'src/app/services/countries.service';
 
 @Component({
   selector: 'app-selected-anon',
@@ -45,7 +46,8 @@ export class SelectedAnonComponent implements OnInit {
     public ApiMapper: MapService,
     public gatherer: GathererService,
     public responseMapper: MapResponse,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
   @Output() action: EventEmitter<any> = new EventEmitter();
@@ -59,8 +61,19 @@ export class SelectedAnonComponent implements OnInit {
   public questions: Array<Question> = new Array<Question>();
   public statuses: Array<Status> = new Array<Status>();
   public allClients: Array<Client> = new Array<Client>();
+  public countries: Array<any> = [];
 
-  //Tag arrays
+  // Forms
+  public clientNicknameFormGroup: FormGroup;
+  public clientAddressFormGroup: FormGroup;
+  public clientNameFormGroup: FormGroup;
+  public clientEmailFormGroup: FormGroup;
+
+  public showAddressChangeForm: boolean = false;
+  public showNameChangeForm: boolean = false;
+  public showEmailChangeForm: boolean = false;
+
+  // Tag arrays
   public allTags: Array<Tag> = new Array<Tag>();
   public availableTags: Array<Tag> = new Array<Tag>();
   public currentTags: Array<Tag> = new Array<Tag>();
@@ -95,15 +108,26 @@ export class SelectedAnonComponent implements OnInit {
   public gettingEventDetails: boolean = true;
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
-
+  public changingAddress: boolean = false;
+  public changingName: boolean = false;
+  public changingEmail: boolean = false;
 
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
 
-
-
-  public clientNicknameFormGroup: FormGroup;
+  get addressFormControls()
+  {
+    return this.clientAddressFormGroup.controls;
+  }
+  get nameFormControls()
+  {
+    return this.clientNameFormGroup.controls;
+  }
+  get emailFormControls()
+  {
+    return this.clientEmailFormGroup.controls;
+  }
 
   public async ngOnInit() {
     this.initializing = true;
@@ -113,8 +137,25 @@ export class SelectedAnonComponent implements OnInit {
     {
       this.clientApproved = true;
     }
+    // Form Building
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
+    });
+
+    this.clientAddressFormGroup = this.formBuilder.group({
+      addressLine1: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      addressLine2: ['', [Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      city: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
+      country: ['', Validators.required]
+    });
+    this.clientNameFormGroup = this.formBuilder.group({
+      firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+      lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+    });
+    this.clientEmailFormGroup = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
     this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
@@ -137,9 +178,10 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherSenders();
     //Gathers all client recipients
     await this.gatherRecipients();
-
     //Gathers all client tags
     await this.setClientTags();
+    //Gathers all countries for the form;
+    this.countries = this.countryService.allCountries();
 
     /* ---- GENERAL SUBSCRIBES ---- */
     //Gathers all events
@@ -438,5 +480,55 @@ export class SelectedAnonComponent implements OnInit {
       this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;
+  }
+  public async submitNewAddress()
+  {
+    this.changingAddress = true;
+
+    let newAddressResponse = new ClientAddressResponse();
+
+    newAddressResponse.clientAddressLine1 = this.addressFormControls.addressLine1.value;
+    newAddressResponse.clientAddressLine2 = this.addressFormControls.addressLine2.value;
+    newAddressResponse.clientCity = this.addressFormControls.city.value;
+    newAddressResponse.clientState = this.addressFormControls.state.value;
+    newAddressResponse.clientCountry = this.addressFormControls.country.value;
+    newAddressResponse.clientPostalCode = this.addressFormControls.postalCode.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientAddress(this.client.clientID, newAddressResponse).toPromise());
+    this.clientAddressFormGroup.reset();
+    this.showAddressChangeForm = false;
+    this.action.emit(true);
+
+    this.changingAddress = false;
+  }
+  public async submitNewName()
+  {
+    this.changingName = true;
+
+    let newNameResponse = new ClientNameResponse();
+
+    newNameResponse.clientName = this.nameFormControls.firstName.value + " " + this.nameFormControls.lastName.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientName(this.client.clientID, newNameResponse).toPromise());
+    this.clientNameFormGroup.reset();
+    this.showNameChangeForm = false;
+    this.action.emit(true);
+
+    this.changingName = false;
+  }
+  public async submitNewEmail()
+  {
+    this.changingEmail = true;
+
+    let newEmailResponse = new ClientEmailResponse();
+
+    newEmailResponse.clientEmail = this.emailFormControls.email.value;
+
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientEmail(this.client.clientID, newEmailResponse).toPromise());
+    this.clientNameFormGroup.reset();
+    this.showEmailChangeForm = false;
+    this.action.emit(true);
+
+    this.changingEmail = false;
   }
 }

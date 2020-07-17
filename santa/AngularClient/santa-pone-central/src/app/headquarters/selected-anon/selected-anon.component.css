@@ -20,6 +20,10 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+#addressChangeForm
+{
+    display: block;
+}
 #headerContentContainer
 {
     display: block;
@@ -51,6 +55,11 @@ mat-panel-description
     display: block;
     margin-bottom:5px;
 }
+/* Classes */
+.changeFormField
+{
+    display: block;
+}
 .expansionPanelButton
 {
     margin-left: 10px;
@@ -70,6 +79,8 @@ mat-panel-description
 {
     vertical-align: top;
     display: inline-block;
+    width: 35%;
+    min-width: 250px;
 }
 .relationDiv
 {
@@ -120,9 +131,9 @@ mat-panel-description
 {
     color: rgb(0, 90, 0);
 }
-.failure
+.error
 {
-    color: rgb(128, 0, 0);
+    color: #F44336;
 }
 .shell
 {

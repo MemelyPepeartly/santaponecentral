@@ -62,7 +62,7 @@ CREATE TABLE app.SurveyResponse
     clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
-    responseText NVARCHAR(150) NOT NULL
+    responseText NVARCHAR(2000) NOT NULL
 );
 CREATE TABLE app.SurveyQuestionXref
 (

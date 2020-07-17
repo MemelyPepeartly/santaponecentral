@@ -48,19 +48,35 @@ namespace Santa.Api.SendGrid
             };
         }
 
-        public async Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket)
+        public async Task sendPasswordResetEmail(Logic.Objects.Client recipient, Auth0TicketResponse ticket, bool isNewUser)
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Login Information";
             EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
-            string plainTextContent = "Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: " + ticket.ticket +"\nOnce you have it set, login at " + url;
-            string htmlContent = emailStart +
-                @$"
-                    <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Password Reset</a></p>
+            string plainTextContent = string.Empty;
+            string htmlContent = string.Empty;
+            if (isNewUser)
+            {
+                plainTextContent = "Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: " + ticket.ticket + "\nOnce you have it set, login at " + url;
+                htmlContent = emailStart +
+                    @$"
+                    <p>Agent, it's time to bring the cheer, and you've been approved for the cause! Follow the link here to set your password: <a href='{ticket.ticket}'>Set your password</a></p>
                     <br>
                     <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>"
-                + emailEnd;
+                    + emailEnd;
+            }
+            else
+            {
+                plainTextContent = "Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: " + ticket.ticket + "\nOnce you have it set, login at " + url + ". If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!";
+                htmlContent = emailStart +
+                    @$"
+                    <p>Agent, A change to your username, or a request to change your password has been made. Use this link to reset your password: <a href='{ticket.ticket}'>Password Reset</a></p>
+                    <br>
+                    <p>Once you've done that, log into your accout at <a href='{url}'>SantaPone Central</a></p>. If you did not make this request, reach out to the admins in your General Correspondence tab, or mlpsantapone@gmail.com!"
+                    + emailEnd;
+            }
+            
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
