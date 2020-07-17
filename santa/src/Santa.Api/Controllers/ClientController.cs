@@ -53,7 +53,7 @@ namespace Santa.Api.Controllers
                 {
                     return NoContent();
                 }
-                return Ok(JsonConvert.SerializeObject(clients, Formatting.Indented));
+                return Ok(JsonConvert.SerializeObject(clients.OrderBy(c => c.nickname), Formatting.Indented));
             }
             catch (ArgumentNullException e)
             {
@@ -205,7 +205,6 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                
                 try
                 {
                     Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
@@ -247,6 +246,7 @@ namespace Santa.Api.Controllers
             try
             {
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+                string oldEmail = targetClient.email;
                 targetClient.email = email.clientEmail;
 
                 try
@@ -254,6 +254,24 @@ namespace Santa.Api.Controllers
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+
+                    try
+                    {
+                        // Gets the original client ID by the old email
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+
+                        // Updates a client's email and name in Auth0
+                        await authHelper.updateAuthClientEmail(updatedClient.email, authClient.user_id);
+
+                        // Sends the client a password change ticket
+                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(oldEmail);
+                        await mailbag.sendPasswordResetEmail(updatedClient, ticket, false);
+                    }
+                    catch(Exception e)
+                    {
+                        throw e.InnerException;
+                    }
+
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
@@ -432,7 +450,7 @@ namespace Santa.Api.Controllers
 
             // Sends the client a password change ticket
             Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(authClient.email);
-            await mailbag.sendPasswordResetEmail(updatedClient, ticket);
+            await mailbag.sendPasswordResetEmail(updatedClient, ticket, true);
         }
     }
 }

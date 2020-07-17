@@ -14,6 +14,10 @@ button
 {
     padding: 10px;
 }
+.error
+{
+    color: #F44336;
+}
 .loaderDiv
 {
     display: block;

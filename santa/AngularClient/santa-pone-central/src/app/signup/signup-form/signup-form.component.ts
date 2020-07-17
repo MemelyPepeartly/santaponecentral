@@ -64,7 +64,7 @@ export class SignupFormComponent implements OnInit {
     this.createFormGroups();
 
     // JSON call for getting country data
-    this.getCountries();
+    this.countries = this.countryService.allCountries();
 
     // API Call for getting statuses
     this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
@@ -115,6 +115,14 @@ export class SignupFormComponent implements OnInit {
     address.postalCode = formControlPostal.value;
     address.country = formControlCountry.value;
     return address;
+  }
+  get addressFormControls()
+  {
+    return this.clientAddressFormGroup.controls;
+  }
+  get nameFormControls()
+  {
+    return this.clientInfoFormGroup.controls;
   }
   public async onSubmit()
   {
@@ -177,28 +185,19 @@ export class SignupFormComponent implements OnInit {
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
   }
-  
-  public getCountries(){
-    this.countryService.allCountries().
-    subscribe(
-      data2 => {
-        this.countries=data2.Countries;
-      },
-      err => console.log(err))
-  }
   public createFormGroups()
   {
     this.clientInfoFormGroup = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', Validators.required]
+      firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+      lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+      email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
     this.clientAddressFormGroup = this.formBuilder.group({
-      addressLine1: ['', Validators.required],
-      addressLine2: ['', Validators.nullValidator],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      postalCode: ['', Validators.required],
+      addressLine1: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      addressLine2: ['', [Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      city: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
+      postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
       country: ['', Validators.required]
     });
     this.clientEventFormGroup = this.formBuilder.group({

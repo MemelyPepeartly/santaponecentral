@@ -11,3 +11,7 @@ mat-label{
     display: block;
 
 }
+.error
+{
+    color: #F44336;
+}
