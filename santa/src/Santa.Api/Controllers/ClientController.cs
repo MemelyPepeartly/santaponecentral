@@ -258,7 +258,7 @@ namespace Santa.Api.Controllers
                     try
                     {
                         // Gets the original client ID by the old email
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldClient.email);
 
                         // Updates a client's email and name in Auth0
                         await authHelper.updateAuthClientEmail(updatedClient.email, authClient.user_id);
