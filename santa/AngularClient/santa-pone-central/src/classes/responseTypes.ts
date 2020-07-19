@@ -10,6 +10,19 @@ export class ClientResponse {
     clientPostalCode: string;
     clientCountry: string;
 }
+export class ClientSignupResponse {
+    clientStatusID: string;
+    clientName: string;
+    clientEmail: string;
+    clientNickname: string;
+    clientAddressLine1: string;
+    clientAddressLine2: string;
+    clientCity: string;
+    clientState: string;
+    clientPostalCode: string;
+    clientCountry: string;
+    responses: Array<SurveySignupApiResponse> = []
+}
 export class ClientAddressResponse {
     clientAddressLine1: string;
     clientAddressLine2: string;
@@ -37,6 +50,12 @@ export class ClientRelationshipResponse {
 export class SurveyApiResponse {
     surveyID: string;
     clientID: string;
+    surveyQuestionID: string;
+    surveyOptionID?: string = null;
+    responseText: string;
+}
+export class SurveySignupApiResponse {
+    surveyID: string;
     surveyQuestionID: string;
     surveyOptionID?: string = null;
     responseText: string;
