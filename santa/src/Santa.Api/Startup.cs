@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Linq;
 using Santa.Api.AuthHelper;
 using Santa.Api.SendGrid;
+using Santa.Logic.Objects;
 
 namespace Santa.Api
 {
@@ -74,15 +75,15 @@ namespace Santa.Api
             services.AddSignalR();
 
             //Auth
-            string domain = $"https://memelydev.auth0.com/";
+            string domain = $"https://{Configuration["Auth0API:domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://memelydev.auth0.com/";
-                options.Audience = "https://dev-santaponecentral-api.azurewebsites.net/api/";
+                options.Authority = domain;
+                options.Audience = Configuration["Auth0API:audience"];
             });
 
             services.AddAuthorization(options =>
