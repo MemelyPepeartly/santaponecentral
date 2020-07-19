@@ -114,8 +114,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = "create:clients")]
-        //No authentication. New users with no account can post a client to the DB through the use of the sign up form
-        public async Task<ActionResult<Client>> PostClientAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
+        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiClient client)
         {
             try
             {
@@ -206,7 +205,7 @@ namespace Santa.Api.Controllers
                         {
                             surveyResponseID = Guid.NewGuid(),
                             surveyID = response.surveyID,
-                            clientID = response.clientID,
+                            clientID = newClient.clientID,
                             surveyQuestion = new Question() { questionID = response.surveyQuestionID },
                             surveyOptionID = response.surveyOptionID,
                             responseText = response.responseText
