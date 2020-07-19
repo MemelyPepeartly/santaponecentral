@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientMultipleRelationshipResponse } from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -297,26 +297,25 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.showRecipientListPostingSpinner = true;
 
-    let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse;
     var currentEvent = this.selectedRecipientEvent;
-    var currentSelectedClientID = this.client.clientID;
 
+    let assignments = new ClientMultipleRelationshipResponse();
     for (let i = 0; i < this.selectedRecipients.length; i++) {
-      
+      let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse();
       relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
-      relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID
+      relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID;
 
-      await this.SantaApiPost.postClientRecipient(currentSelectedClientID, relationshipResponse).toPromise().catch(err => console.log(err));
-      this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise())
-      
-      await this.gatherRecipients();
-      await this.gatherSenders();
+      assignments.assignments.push(relationshipResponse);
 
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
     }
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
+    await this.gatherRecipients();
+    await this.gatherSenders();
     await this.getAllowedRecipientsByEvent(currentEvent);
+
     this.addRecipientSuccess = true;
     this.showRecipientListPostingSpinner = false; 
   }
@@ -463,7 +462,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the recievers form the anon
     for(let i = 0; i < this.client.recipients.length; i++)
     {
-      var foundClient = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
       this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
     }
     this.gatheringRecipients = false;
