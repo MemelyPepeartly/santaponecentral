@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +14,12 @@ export class HomeComponent implements OnInit {
   public authprofile: any;
 
   public async ngOnInit() {
-    this.auth.userProfile$.subscribe(res => {
-      this.authprofile = res;
-    });
+    if(environment.production == false)
+    {
+      this.auth.userProfile$.subscribe(res => {
+        this.authprofile = res;
+      });
+    }
   }
 }
 

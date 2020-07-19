@@ -240,6 +240,6 @@
     </div>
  </div>
 
- <p>{{ authprofile | json}}</p>
+ <p *ngIf="authprofile != null">{{ authprofile | json}}</p>
 
 
