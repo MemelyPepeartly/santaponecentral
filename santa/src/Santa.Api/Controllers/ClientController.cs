@@ -199,7 +199,7 @@ namespace Santa.Api.Controllers
                 try
                 {
                     await repository.CreateClient(newClient);
-                    foreach(var response in clientResponseModel.responses)
+                    foreach(Models.Survey_Response_Models.ApiSurveyResponse response in clientResponseModel.responses)
                     {
                         await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
                         {
@@ -226,14 +226,23 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/Client/5/Recipient
-        [HttpPost("{clientID}/Recipient", Name = "PostRecipient")]
+        // POST: api/Client/5/Recipients
+        /// <summary>
+        /// Endpoint for posting more than one assignment at once
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="assignmentsModel"></param>
+        /// <returns></returns>
+        [HttpPost("{clientID}/Recipients", Name = "PostRecipients")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientRelationship relationship)
+        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationships assignmentsModel)
         {
             try
             {
-                await repository.CreateClientRelationByID(clientID, relationship.recieverClientID, relationship.eventTypeID);
+                foreach(ApiClientRelationship assignment in assignmentsModel.assignments)
+                {
+                    await repository.CreateClientRelationByID(clientID, assignment.recieverClientID, assignment.eventTypeID);
+                }
                 await repository.SaveAsync();
                 return Ok(await repository.GetClientByIDAsync(clientID));
             }
