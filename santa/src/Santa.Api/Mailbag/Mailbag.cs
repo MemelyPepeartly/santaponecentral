@@ -16,8 +16,7 @@ namespace Santa.Api.SendGrid
     public class Mailbag : IMailbag
     {
         private IConfigurationRoot ConfigRoot;
-#warning Change address at prod
-        private const string url = "http://dev-santaponecentral.azurewebsites.net/";
+        private string url = string.Empty;
         private const string appEmail = "mailbag@santaponecentral.com";
 
         private const string emailStart = @"
@@ -39,6 +38,7 @@ namespace Santa.Api.SendGrid
         public Mailbag(IConfiguration configRoot)
         {
             ConfigRoot = (IConfigurationRoot)configRoot;
+            url = ConfigRoot["SendgridAPI:emailURL"];
         }
         public MailbagKeyModel getKey()
         {
