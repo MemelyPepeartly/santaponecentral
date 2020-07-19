@@ -5,7 +5,7 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
-import { environment } from 'src/environments/environment.dev';
+import { environment } from 'src/environments/environment';
 
 const endpoint = environment.apiUrl;
 
