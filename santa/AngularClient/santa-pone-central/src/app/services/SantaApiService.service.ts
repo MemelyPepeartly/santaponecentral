@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientMultipleRelationshipResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
+import { environment } from 'src/environments/environment';
 
-//const endpoint = 'https://dev-santaponecentral-api.azurewebsites.net/api/';
-const endpoint = 'https://localhost:5001/api/';
+const endpoint = environment.apiUrl;
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -149,7 +149,7 @@ export class SantaApiPostService {
   postClient(client: ClientResponse): Observable<any> {
     return this.http.post(endpoint + 'Client', client);
   }
-  postClientRecipients(id: string, relationships: ClientMultipleRelationshipResponse): Observable<any> {
+  postClientRecipients(id: string, relationships: ClientRelationshipsResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + '/Recipients', relationships);
   }
   postClientSignup(signup: ClientSignupResponse): Observable<any> {
