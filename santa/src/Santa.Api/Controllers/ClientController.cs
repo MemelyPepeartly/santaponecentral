@@ -239,12 +239,18 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                foreach(ApiClientRelationship assignment in assignmentsModel.assignments)
+                foreach(Guid assignment in assignmentsModel.assignments)
                 {
-                    await repository.CreateClientRelationByID(clientID, assignment.recieverClientID, assignment.eventTypeID);
+                    await repository.CreateClientRelationByID(clientID, assignment, assignmentsModel.eventTypeID);
                 }
                 await repository.SaveAsync();
-                return Ok(await repository.GetClientByIDAsync(clientID));
+
+                // Get new client with recipients, and send the client a notification they have new assignments for an event
+                Client updatedClient = await repository.GetClientByIDAsync(clientID);
+                Event assigneeEvent = await repository.GetEventByIDAsync(assignmentsModel.eventTypeID);
+                await mailbag.sendAssignedRecipientEmail(updatedClient, assigneeEvent);
+
+                return Ok(updatedClient);
             }
             catch (Exception e)
             {
