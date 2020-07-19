@@ -169,7 +169,7 @@ export class SignupFormComponent implements OnInit {
     console.log(newClient);
     
     // Post client with answers
-    let postedClient: Client = this.mapper.mapClient(await this.SantaPost.postClientSignup(newClient).toPromise());
+    await this.SantaPost.postClientSignup(newClient).toPromise();
 
     this.clientInfoFormGroup.reset();
     this.clientAddressFormGroup.reset();
