@@ -14,6 +14,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SurveyResponseController : ControllerBase
     {
         private readonly IRepository repository;
@@ -24,7 +25,7 @@ namespace Santa.Api.Controllers
         
         // GET: api/SurveyResponses
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:responses")]
+        [Authorize(Policy = "read:responses")]
 
         public async Task<ActionResult<List<Logic.Objects.Response>>> GetSurveyResponse()
         {
@@ -33,7 +34,7 @@ namespace Santa.Api.Controllers
         
         // GET: api/SurveyResponses/5
         [HttpGet("{surveyResponseID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:responses")]
+        [Authorize(Policy = "read:responses")]
 
         public async Task<ActionResult<Response>> GetSurveyResponse(Guid surveyResponseID)
         {
@@ -51,7 +52,7 @@ namespace Santa.Api.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{surveyResponseID}/ResponseText")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "modify:responses")]
+        [Authorize(Policy = "modify:responses")]
 
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
@@ -76,6 +77,7 @@ namespace Santa.Api.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Policy = "create:responses")]
         public async Task<ActionResult<Response>> PostSurveyResponse([FromBody, Bind("surveyID, clientID, surveyQuestionID, surveyOptionID, responseText")] Models.Survey_Response_Models.ApiSurveyResponse response)
         {
             try
@@ -102,7 +104,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/SurveyResponses/5
         [HttpDelete("{surveyResponseID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:responses")]
+        [Authorize(Policy = "delete:responses")]
 
         public async Task<ActionResult> DeleteSurveyResponse(Guid surveyResponseID)
         {
