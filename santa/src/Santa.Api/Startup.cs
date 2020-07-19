@@ -19,7 +19,7 @@ namespace Santa.Api
 {
     public class Startup
     {
-        private const string version = "v7";
+        private const string version = "v8";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -45,7 +45,7 @@ namespace Santa.Api
                 options.AddPolicy("AllowAngular",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-santaponecentral.azurewebsites.net")
+                    builder.WithOrigins("http://localhost:4200", "https://dev-santaponecentral.azurewebsites.net", "https://www.santaponecentral.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
