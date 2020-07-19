@@ -175,7 +175,7 @@ namespace Santa.Api.AuthHelper
         {
             string authClientID = ConfigRoot["Auth0API:client_id"];
             string authClientSecret = ConfigRoot["Auth0API:Auth0Client_secret"];
-            string authClientAudience = ConfigRoot["Auth0API:audience"];
+            string authClientAudience = ConfigRoot["Auth0API:authServiceAudience"];
             string tokenURIPath = ConfigRoot["Auth0API:tokenURIPath"];
 
             RestClient tokenRestClient = new RestClient(tokenURIPath);

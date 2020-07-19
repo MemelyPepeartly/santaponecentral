@@ -83,7 +83,7 @@ namespace Santa.Api
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:audience"];
+                options.Audience = Configuration["Auth0API:startupAudience"];
             });
 
             services.AddAuthorization(options =>
