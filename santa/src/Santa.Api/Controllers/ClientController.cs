@@ -258,6 +258,12 @@ namespace Santa.Api.Controllers
             }
         }
         // POST: api/Client/5/Tag
+        /// <summary>
+        /// Assigns a specific user a tag by ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         [HttpPost("{clientID}/Tag")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
@@ -275,9 +281,15 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Client/5/Address
+        /// <summary>
+        /// Updates a client's address
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody, Bind("clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClientAddress address)
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddress address)
         {
             try
             {
@@ -315,9 +327,15 @@ namespace Santa.Api.Controllers
             }
         }
         // PUT: api/Client/5/Email
+        /// <summary>
+        /// Updates a client's email and Auth0 email, then sends them an option to reset their password
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Email", Name ="PutEmail")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody, Bind("clientEmail")] ApiClientEmail email)
+        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmail email)
         {
             try
             {
@@ -361,9 +379,15 @@ namespace Santa.Api.Controllers
             }
         }
         // PUT: api/Client/5/Nickname
+        /// <summary>
+        /// Update a client's nickname
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="nickname"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody, Bind("clientNickname")] ApiClientNickname nickname)
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNickname nickname)
         {
             try
             {
@@ -388,6 +412,12 @@ namespace Santa.Api.Controllers
             }
         }
         // PUT: api/Client/5/Name
+        /// <summary>
+        /// Updates a client's actual name
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Name", Name = "PutName")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
@@ -415,9 +445,15 @@ namespace Santa.Api.Controllers
             }
         }
         // PUT: api/Client/5/Status
+        /// <summary>
+        /// Updates the status of a certain client by their ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody, Bind("clientStatusID")] ApiClientStatus status)
+        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatus status)
         {
             try
             {
@@ -464,10 +500,16 @@ namespace Santa.Api.Controllers
             }
         }
         // DELETE: api/Client/5
+        /// <summary>
+        /// Deletes a client
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
         [HttpDelete("{clientID}")]
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
+#warning Not Auth0 functioning yet
             try
             {
                 await repository.DeleteClientByIDAsync(clientID);
@@ -480,6 +522,13 @@ namespace Santa.Api.Controllers
             }
         }
         // DELETE: api/Client/5/Recipient
+        /// <summary>
+        /// Delets an assignment from a client
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="recipientID"></param>
+        /// <param name="eventID"></param>
+        /// <returns></returns>
         [HttpDelete("{clientID}/Recipient")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
@@ -496,6 +545,12 @@ namespace Santa.Api.Controllers
             }
         }
         // DELETE: api/Client/5/Tag
+        /// <summary>
+        /// Deletes a tag from a client
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="tagID"></param>
+        /// <returns></returns>
         [HttpDelete("{clientID}/Tag")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
@@ -512,6 +567,11 @@ namespace Santa.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Method for approval steps
+        /// </summary>
+        /// <param name="updatedClient"></param>
+        /// <returns></returns>
         private async Task ApprovalSteps(Client updatedClient)
         {
             // Creates auth client
