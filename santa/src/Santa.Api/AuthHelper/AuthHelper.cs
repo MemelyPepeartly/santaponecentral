@@ -14,11 +14,12 @@ namespace Santa.Api.AuthHelper
     public class AuthHelper : IAuthHelper
     {
         private IConfigurationRoot ConfigRoot;
-        private const string endpoint = "https://memelydev.auth0.com/api/v2/";
+        private string endpoint = String.Empty;
 
         public AuthHelper(IConfiguration configRoot)
         {
             ConfigRoot = (IConfigurationRoot)configRoot;
+            endpoint = ConfigRoot["Auth0API:endpoint"];
         }
 
         #region User Info Model
@@ -174,12 +175,13 @@ namespace Santa.Api.AuthHelper
         {
             string authClientID = ConfigRoot["Auth0API:client_id"];
             string authClientSecret = ConfigRoot["Auth0API:Auth0Client_secret"];
+            string authClientAudience = ConfigRoot["Auth0API:audience"];
+            string tokenURIPath = ConfigRoot["Auth0API:tokenURIPath"];
 
-
-            RestClient tokenRestClient = new RestClient("https://memelydev.auth0.com/oauth/token");
+            RestClient tokenRestClient = new RestClient(tokenURIPath);
             RestRequest tokenRequest = new RestRequest(Method.POST);
             tokenRequest.AddHeader("content-type", "application/json");
-            tokenRequest.AddParameter("application/json", "{\"client_id\":\"" + authClientID + "\",\"client_secret\":\"" + authClientSecret + "\",\"audience\":\"https://memelydev.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}", ParameterType.RequestBody);
+            tokenRequest.AddParameter("application/json", "{\"client_id\":\"" + authClientID + "\",\"client_secret\":\"" + authClientSecret + "\",\"audience\":\""+ authClientAudience + "\",\"grant_type\":\"client_credentials\"}", ParameterType.RequestBody);
             IRestResponse tokenResponse = await tokenRestClient.ExecuteAsync(tokenRequest);
             Auth0TokenModel token = JsonConvert.DeserializeObject<Auth0TokenModel>(tokenResponse.Content);
 
