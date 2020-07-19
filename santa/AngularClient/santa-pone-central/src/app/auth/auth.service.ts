@@ -6,6 +6,7 @@ import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RoleConstants } from '../shared/constants/roleConstants.enum';
 import { GathererService } from '../services/gatherer.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,10 @@ export class AuthService {
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
-      domain: "memelydev.auth0.com",
-      client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
+      domain: environment.auth0Domain,
+      client_id: environment.auth0Client_id,
       redirect_uri: `${window.location.origin}`,
-      //KCHERE Will need to update for prod when the time comes
-      audience: "https://dev-santaponecentral-api.azurewebsites.net/api/"
+      audience: environment.auth0Audience
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -139,7 +139,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
+        client_id: environment.auth0Client_id,
         returnTo: `${window.location.origin}`
       });
     });
