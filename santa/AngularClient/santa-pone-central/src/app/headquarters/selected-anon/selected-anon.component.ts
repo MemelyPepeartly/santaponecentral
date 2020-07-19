@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientRelationshipResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientMultipleRelationshipResponse } from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -299,22 +299,21 @@ export class SelectedAnonComponent implements OnInit {
 
     var currentEvent = this.selectedRecipientEvent;
 
-    let assignments = new ClientMultipleRelationshipResponse();
-    for (let i = 0; i < this.selectedRecipients.length; i++) {
-      let relationshipResponse: ClientRelationshipResponse = new ClientRelationshipResponse();
-      relationshipResponse.eventTypeID = this.selectedRecipientEvent.eventTypeID;
-      relationshipResponse.recieverClientID = this.selectedRecipients[i].clientID;
+    let assignments = new ClientRelationshipsResponse();
+    assignments.eventTypeID = this.selectedRecipientEvent.eventTypeID;
 
-      assignments.assignments.push(relationshipResponse);
+    this.selectedRecipients.forEach((selectedRecipient: Client) => {
+      assignments.assignments.push(selectedRecipient.clientID);
+    })
 
-      this.actionTaken = true;
-      this.action.emit(this.actionTaken);
-    }
     this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
     await this.gatherRecipients();
     await this.gatherSenders();
     await this.getAllowedRecipientsByEvent(currentEvent);
+
+    this.actionTaken = true;
+    this.action.emit(this.actionTaken);
 
     this.addRecipientSuccess = true;
     this.showRecipientListPostingSpinner = false; 
