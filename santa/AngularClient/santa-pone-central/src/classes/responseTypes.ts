@@ -43,13 +43,10 @@ export class ClientNameResponse {
 export class ClientStatusResponse {
     clientStatusID: string;
 }
-export class ClientRelationshipResponse {
-    recieverClientID: string;
-    eventTypeID: string;
-}
 
-export class ClientMultipleRelationshipResponse {
-    assignments: Array<ClientRelationshipResponse> = []
+export class ClientRelationshipsResponse {
+    eventTypeID: string;
+    assignments: Array<string> = []
 }
 export class SurveyApiResponse {
     surveyID: string;
