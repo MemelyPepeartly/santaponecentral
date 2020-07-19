@@ -172,5 +172,26 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+
+        public async Task sendAssignedRecipientEmail(Client recipient, Event eventType)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central New Assignment";
+            EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+            string plainTextContent = $"You have been given your assignment(s) for the {eventType.eventDescription} event! If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
+            string htmlContent = emailStart +
+                @$"
+                    <p>You have been given your assignment(s) for the {eventType.eventDescription} event!</p>
+                    <br>
+                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
+
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
     }
 }

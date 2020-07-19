@@ -15,6 +15,8 @@ namespace Santa.Api.SendGrid
         Task sendPasswordResetEmail(string recipientEmail, string recipientNickname, Auth0TicketResponse ticket, bool isNewUser);
         Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
         Task sendDeniedEmail(Logic.Objects.Client recipient);
+        Task sendAssignedRecipientEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
+
         Task sendUndeniedEmail(Client recipient);
     }
 }
