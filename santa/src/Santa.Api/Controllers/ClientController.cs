@@ -113,9 +113,9 @@ namespace Santa.Api.Controllers
         /// <param name="client"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Policy = "create:clients")]
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
-        public async Task<ActionResult<ApiClient>> PostAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
+        public async Task<ActionResult<Client>> PostClientAsync([FromBody, Bind("clientName, clientEmail, clientNickname, clientStatusID, clientAddressLine1, clientAddressLine2, clientCity, clientState, clientPostalCode, clientCountry")] ApiClient client)
         {
             try
             {
@@ -163,6 +163,68 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
+        }
+        // POST: api/Client
+        /// <summary>
+        /// Posts a new client signup with their responses
+        /// </summary>
+        /// <param name="clientResponseModel"></param>
+        /// <returns></returns>
+        [HttpPost("Signup")]
+        [AllowAnonymous]
+        //No authentication. New users with no account can post a client to the DB through the use of the sign up form
+        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponses clientResponseModel)
+        {
+            try
+            {
+                Logic.Objects.Client newClient = new Logic.Objects.Client()
+                {
+                    clientID = Guid.NewGuid(),
+                    clientName = clientResponseModel.clientName,
+                    email = clientResponseModel.clientEmail,
+                    nickname = clientResponseModel.clientNickname,
+                    clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
+                    address = new Logic.Objects.Address()
+                    {
+                        addressLineOne = clientResponseModel.clientAddressLine1,
+                        addressLineTwo = clientResponseModel.clientAddressLine2,
+                        city = clientResponseModel.clientCity,
+                        state = clientResponseModel.clientState,
+                        postalCode = clientResponseModel.clientPostalCode,
+                        country = clientResponseModel.clientCountry
+                    },
+                    recipients = new List<Recipient>(),
+                    senders = new List<Sender>()
+                };
+
+                try
+                {
+                    await repository.CreateClient(newClient);
+                    foreach(var response in clientResponseModel.responses)
+                    {
+                        await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
+                        {
+                            surveyResponseID = Guid.NewGuid(),
+                            surveyID = response.surveyID,
+                            clientID = response.clientID,
+                            surveyQuestion = new Question() { questionID = response.surveyQuestionID },
+                            surveyOptionID = response.surveyOptionID,
+                            responseText = response.responseText
+                        });
+                    }
+                    await repository.SaveAsync();
+
+                    return Ok(await repository.GetClientByIDAsync(newClient.clientID));
+                }
+                catch (Exception e)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, e.Message);
+            }
         }
 
         // POST: api/Client/5/Recipient
