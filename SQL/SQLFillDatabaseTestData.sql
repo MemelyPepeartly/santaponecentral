@@ -28,6 +28,7 @@ DECLARE @surveyOptionID5GUID UNIQUEIDENTIFIER;
 DECLARE @statusID1GUID UNIQUEIDENTIFIER;
 DECLARE @statusID2GUID UNIQUEIDENTIFIER;
 DECLARE @statusID3GUID UNIQUEIDENTIFIER;
+DECLARE @statusID4GUID UNIQUEIDENTIFIER;
 
 DECLARE @client1IDGUID UNIQUEIDENTIFIER;
 DECLARE @client2IDGUID UNIQUEIDENTIFIER;
@@ -64,6 +65,7 @@ SET @message2IDGUID = NEWID();
 SET @statusID1GUID = NEWID();
 SET @statusID2GUID = NEWID();
 SET @statusID3GUID = NEWID();
+SET @statusID4GUID = NEWID();
 
 
 SET @client1IDGUID = NEWID();
@@ -98,6 +100,7 @@ PRINT N'surveyResponse2IDGUID:------- ' + (CAST (@surveyResponse2IDGUID AS NVARC
 PRINT N'statusID1GUID:--------------- ' + (CAST (@statusID1GUID AS NVARCHAR(50)));
 PRINT N'statusID2GUID:--------------- ' + (CAST (@statusID2GUID AS NVARCHAR(50)));
 PRINT N'statusID3GUID:--------------- ' + (CAST (@statusID3GUID AS NVARCHAR(50)));
+PRINT N'statusID4GUID:--------------- ' + (CAST (@statusID4GUID AS NVARCHAR(50)));
 
 
 PRINT N'client1IDGUID:--------------- ' + (CAST (@client1IDGUID AS NVARCHAR(50)));
@@ -152,27 +155,15 @@ INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
     (@statusID1GUID, 'Awaiting'),
     (@statusID2GUID, 'Approved'),
-    (@statusID3GUID, 'Denied');
+    (@statusID3GUID, 'Denied'),
+    (@statusID4GUID, 'Completed');
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
     (@client1IDGUID, @statusID1GUID, 'Spiral Harmonies', 'Jimothy James', 'redwirebuilder@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client2IDGUID, @statusID2GUID, 'Evershade Pensive', 'Sharona Virus', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
     (@client3IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client4IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Duk', 'memelypepeartly@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
-
-
--- INSERT INTO app.SurveyResponse (surveyResponseID, surveyID, clientID, surveyQuestionID, surveyOptionID, responseText)
--- VALUES
---     (@surveyResponse1IDGUID, @survey1IDGUID, @client1IDGUID, @surveyQuestion1IDGUID, @surveyOptionID1GUID, 'Pinkie Pie'),
---     (@surveyResponse2IDGUID, @survey2IDGUID, @client1IDGUID, @surveyQuestion3IDGUID, null , 'This is my card answer');
-    
--- INSERT INTO app.ClientRelationXref (senderClientID, recipientClientID, eventTypeID)
--- VALUES
---     (@client1IDGUID, @client2IDGUID, @eventTypeID1GUID),
---     (@client2IDGUID, @client3IDGUID, @eventTypeID1GUID),
---     (@client2IDGUID, @client4IDGUID, @eventTypeID1GUID),
---     (@client4IDGUID, @client1IDGUID, @eventTypeID1GUID);
+    (@client4IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Duk', 'santaponecentraldev@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 INSERT INTO app.Tag (tagID, tagName)
 VALUES
@@ -186,14 +177,6 @@ VALUES
     (@client1IDGUID, @tag2IDGUID),
     (@client2IDGUID, @tag3IDGUID),
     (@client3IDGUID, @tag1IDGUID);
-
--- INSERT INTO app.ChatMessage (chatMessageID, messageSenderClientID, messageRecieverClientID, clientRelationXrefID, messageContent, dateTimeSent, isMessageRead)
--- VALUES
---     (@message1IDGUID, null, @client2IDGUID, null, 'This is my message content',  @message1DateTime, 0);
-
-
-
-
 
 
 SELECT * FROM app.SurveyQuestion;
