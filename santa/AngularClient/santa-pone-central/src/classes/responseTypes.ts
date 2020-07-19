@@ -47,6 +47,10 @@ export class ClientRelationshipResponse {
     recieverClientID: string;
     eventTypeID: string;
 }
+
+export class ClientMultipleRelationshipResponse {
+    assignments: Array<ClientRelationshipResponse> = []
+}
 export class SurveyApiResponse {
     surveyID: string;
     clientID: string;
