@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
-import { ClientResponse, SurveyApiResponse } from '../../../classes/responseTypes'
+import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../../classes/responseTypes'
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaApiService.service';
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
@@ -129,7 +129,7 @@ export class SignupFormComponent implements OnInit {
     this.showSpinner = true;
 
     // Construction of new client response
-    let newClient: ClientResponse = new ClientResponse();
+    let newClient: ClientSignupResponse = new ClientSignupResponse();
     newClient.clientName = this.clientName;
     newClient.clientEmail = this.clientEmail;
     newClient.clientNickname = "Anon"
@@ -143,20 +143,16 @@ export class SignupFormComponent implements OnInit {
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == EventConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
-    
-    // Post client
-    let postedClient: Client = this.mapper.mapClient(await this.SantaPost.postClient(newClient).toPromise());
 
-    // Post client's answers
-    this.surveyForms.forEach(surveyForm => {
+    var thing = this.surveyForms.toArray()
+    // Set client's answers
+    thing.forEach((surveyForm: SurveyFormComponent) => {
       let response = new SurveyApiResponse;
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
 
         response.surveyQuestionID = field;
-
-        response.clientID = postedClient.clientID;
         response.surveyID = surveyForm.surveyID;
 
         if (control.value.surveyOptionID !== undefined) {
@@ -166,17 +162,21 @@ export class SignupFormComponent implements OnInit {
         else {
           response.responseText = control.value;
         }
-        this.SantaPost.postSurveyResponse(response).toPromise();
+        newClient.responses.push(response);
         response = new SurveyApiResponse();
       }
     });
+    console.log(newClient);
+    
+    // Post client with answers
+    let postedClient: Client = this.mapper.mapClient(await this.SantaPost.postClientSignup(newClient).toPromise());
 
+    this.clientInfoFormGroup.reset();
+    this.clientAddressFormGroup.reset();
 
     this.showSomethingWrong = false;
     this.showSpinner = false;
     this.showFinished = true;
-    this.clientInfoFormGroup.reset();
-    this.clientAddressFormGroup.reset();
   }
   public resetSubmitBools()
   {
