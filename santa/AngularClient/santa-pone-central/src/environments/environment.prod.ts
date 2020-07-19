@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: "https://santaponecentral-api.net/api/",
+  apiUrl: "https://santaponecentral-api.azurewebsites.net/api/",
   auth0Domain: "santaponecentral.us.auth0.com",
   auth0Client_id: "C1rQkNwNOUPknN44muKxbwTeGN37G8TM",
   auth0Redirect_uri: `${window.location.origin}`,
