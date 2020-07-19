@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, ClientRelationshipResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 
@@ -151,6 +151,9 @@ export class SantaApiPostService {
   }
   postClientRecipient(id: string, relationship: ClientRelationshipResponse): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + '/Recipient', relationship);
+  }
+  postClientSignup(signup: ClientSignupResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/Signup', signup);
   }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
     return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
