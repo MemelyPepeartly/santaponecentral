@@ -6,7 +6,7 @@ import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RoleConstants } from '../shared/constants/roleConstants.enum';
 import { GathererService } from '../services/gatherer.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.dev';
 
 @Injectable({
   providedIn: 'root'
