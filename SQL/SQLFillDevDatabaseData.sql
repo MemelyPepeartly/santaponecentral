@@ -160,10 +160,10 @@ VALUES
     
 INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
 VALUES
-    (@client1IDGUID, @statusID1GUID, 'Spiral Harmonies', 'Jimothy James', 'redwirebuilder@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client2IDGUID, @statusID2GUID, 'Evershade Pensive', 'Sharona Virus', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client3IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country'),
-    (@client4IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Duk', 'santaponecentraldev@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client1IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
+    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
+    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
+    (@client4IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 INSERT INTO app.Tag (tagID, tagName)
 VALUES
