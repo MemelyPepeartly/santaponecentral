@@ -12,13 +12,19 @@ export class HomeComponent implements OnInit {
   constructor(public auth: AuthService) { }
 
   public authprofile: any;
+  public showMetadata: boolean = false;
 
   public async ngOnInit() {
     if(environment.production == false)
     {
+      this.showMetadata = true;
       this.auth.userProfile$.subscribe(res => {
         this.authprofile = res;
       });
+    }
+    else
+    {
+      this.showMetadata = false;
     }
   }
 }
