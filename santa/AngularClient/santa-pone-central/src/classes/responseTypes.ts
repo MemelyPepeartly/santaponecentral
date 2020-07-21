@@ -68,7 +68,19 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
-//Response for making new messages
+// Response model for modifying the completion status of a sender/reciever relationship
+export class RecipientCompletionResponse
+{
+    recipientID: string;
+    eventTypeID: string;
+    completed: boolean;
+}
+// Response model for marking if a question is viewable by the person(s) sending to them
+export class QuestionReadabilityResponse
+{
+    senderCanView: boolean;
+}
+// Response for making new messages
 export class MessageApiResponse {
     messageSenderClientID?: string = null;
     messageRecieverClientID?: string = null;
