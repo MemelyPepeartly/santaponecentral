@@ -3,7 +3,7 @@ import { Client, ClientSenderRecipientRelationship } from '../../../classes/clie
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
-import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -133,7 +133,7 @@ export class SelectedAnonComponent implements OnInit {
     this.initializing = true;
     this.gatherer.onSelectedClient = true;
     //Tells card if client is approved to hide or show the recipient add profile controls
-    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
     {
       this.clientApproved = true;
     }
@@ -216,7 +216,7 @@ export class SelectedAnonComponent implements OnInit {
 
     this.statuses.forEach(status =>
       {
-        if (status.statusDescription == EventConstants.APPROVED)
+        if (status.statusDescription == StatusConstants.APPROVED)
         {
           approvedStatus = status;
           putClient.clientStatus.statusID = approvedStatus.statusID;
@@ -246,7 +246,7 @@ export class SelectedAnonComponent implements OnInit {
 
     this.statuses.forEach(status =>
       {
-        if (status.statusDescription == EventConstants.DENIED)
+        if (status.statusDescription == StatusConstants.DENIED)
         {
           deniedStatus = status;
           putClient.clientStatus.statusID = deniedStatus.statusID;
@@ -341,7 +341,7 @@ export class SelectedAnonComponent implements OnInit {
 
     for(let i = 0; i < this.allClients.length; i++)
     {
-      if(this.allClients[i].clientStatus.statusDescription == EventConstants.APPROVED &&
+      if(this.allClients[i].clientStatus.statusDescription == StatusConstants.APPROVED &&
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))
       {
@@ -368,7 +368,7 @@ export class SelectedAnonComponent implements OnInit {
     let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
     this.client = switchClient;
 
-    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
     {
       this.clientApproved = true;
     }
