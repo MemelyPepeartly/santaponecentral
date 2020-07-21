@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models.Survey_Question_Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -182,6 +183,32 @@ namespace Santa.Api.Controllers
             {
                 Logic.Objects.Question logicQuestion = await repository.GetSurveyQuestionByIDAsync(surveyQuestionID);
                 logicQuestion.isSurveyOptionList = questionIsSurveyOptionList.isSurveyOptionList;
+                try
+                {
+                    await repository.UpdateSurveyQuestionByIDAsync(logicQuestion);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyQuestionByIDAsync(surveyQuestionID));
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        // PUT: api/SurveyQuestion/5/Readability
+        [HttpPut("{surveyQuestionID}/Readability")]
+        [Authorize(Policy = "update:questions")]
+        public async Task<ActionResult<Logic.Objects.Option>> PutQuestionReadability(Guid surveyQuestionID, [FromBody] ApiQuestionReadability questionReadability)
+        {
+            try
+            {
+                Logic.Objects.Question logicQuestion = await repository.GetSurveyQuestionByIDAsync(surveyQuestionID);
+                logicQuestion.senderCanView = questionReadability.senderCanView;
                 try
                 {
                     await repository.UpdateSurveyQuestionByIDAsync(logicQuestion);
