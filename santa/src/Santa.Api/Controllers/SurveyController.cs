@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models;
@@ -11,6 +13,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SurveyController : ControllerBase
     {
 
@@ -26,6 +29,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.Survey>>> GetAllSurveys()
         {
             try
@@ -45,6 +49,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Survey>> GetSurveyByIDAsync(Guid surveyID)
         {
             try
@@ -65,6 +70,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}/SurveyQuestions")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Survey>> GetQuestionsFromSurveyAsync(Guid surveyID)
         {
             try
@@ -86,6 +92,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}/SurveyQuestions/{surveyQuestionID}/SurveyOptions")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.Option>>> GetQuestionOptionFromQuestionInSurveyAsync(Guid surveyID, Guid surveyQuestionID)
         {
             try
@@ -107,6 +114,7 @@ namespace Santa.Api.Controllers
         /// <param name="survey"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Policy ="create:surveys")]
         public async Task<ActionResult<ApiSurvey>> PostSurvey([FromBody, Bind("eventTypeID, surveyDescription, active")] Api.Models.ApiSurvey survey)
         {
             try
@@ -145,6 +153,7 @@ namespace Santa.Api.Controllers
         /// <param name="description"></param>
         /// <returns></returns>
         [HttpPut("{surveyID}/Description")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Survey>> PutSurveyDescription(Guid surveyID, [FromBody, Bind("surveyDescription")] Models.Survey_Models.ApiSurveyDescription description)
         {
             try
@@ -176,6 +185,7 @@ namespace Santa.Api.Controllers
         /// <param name="active"></param>
         /// <returns></returns>
         [HttpPut("{surveyID}/Active")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Survey>> PutSurveyActive(Guid surveyID, [FromBody, Bind("isActive")] Models.Survey_Models.ApiSurveyActive active)
         {
             try
@@ -207,6 +217,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpDelete("{surveyID}/SurveyQuestions/{surveyQuestionID}")]
+        [Authorize(Policy = "delete:surveys")]
         public async Task<ActionResult<Logic.Objects.Survey>> DeleteSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
         {
             try
