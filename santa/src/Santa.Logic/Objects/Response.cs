@@ -12,7 +12,6 @@ namespace Santa.Logic.Objects
         public Event responseEvent { get; set; }
         public Question surveyQuestion { get; set; }
         public Guid? surveyOptionID { get; set; }
-        public string questionText { get; set; }
         public string responseText { get; set; }
     }
 }
