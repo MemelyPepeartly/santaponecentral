@@ -53,6 +53,7 @@ CREATE TABLE app.SurveyQuestion
 (
     surveyQuestionID UNIQUEIDENTIFIER PRIMARY KEY,
     questionText NVARCHAR(150) NOT NULL,
+    senderCanView BIT NOT NULL,
     isSurveyOptionList BIT NOT NULL
 )
 CREATE TABLE app.SurveyResponse
