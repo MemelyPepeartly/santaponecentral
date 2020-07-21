@@ -4,7 +4,7 @@ import { Address } from '../../../classes/address';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { MapService } from 'src/app/services/mapService.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 
 @Component({

@@ -4,7 +4,7 @@ import { MapService } from '../services/mapService.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santaApiService.service';
 import { GathererService } from '../services/gatherer.service';
-import { EventConstants } from '../shared/constants/eventConstants.enum';
+import { StatusConstants } from '../shared/constants/statusConstants.enum';
 
 @Component({
   selector: 'app-headquarters',
@@ -63,14 +63,14 @@ export class HeadquartersComponent implements OnInit {
   }
   sortApproved() : Array<Client>
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.APPROVED});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
   }
   sortIncoming() : Array<Client>
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.AWAITING});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.AWAITING});
   }
   sortDenied() : Array<Client>
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == EventConstants.DENIED});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
   }
 }
