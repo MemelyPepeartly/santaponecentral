@@ -82,9 +82,29 @@ mat-panel-description
     width: 35%;
     min-width: 250px;
 }
+.relationshipPanelTitle
+{
+    /*display: inline-block !important;*/
+}
 .relationDiv
 {
     clear:both;
+}
+.relationshipIcon
+{
+    width: 60%;
+    position: absolute;
+    top: 0;
+    right: 5%;
+    opacity: 50%;
+}
+.cardExchangeIcon
+{
+    content: url(../../../assets/christmasCard.png);
+}
+.giftExchangeIcon
+{
+    content: url(../../../assets/christmasPresent.png);
 }
 #relationshipEventHeader
 {
