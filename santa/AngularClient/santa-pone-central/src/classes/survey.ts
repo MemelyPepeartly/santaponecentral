@@ -40,6 +40,7 @@ export class SurveyQA
     responseInputText: string;
     responseOptionSelected: SurveyFormOption;
     isSurveyOptionList: boolean;
+    senderCanView: boolean;
     surveyOptionList: Array<SurveyFormOption> = [];
 }
 
