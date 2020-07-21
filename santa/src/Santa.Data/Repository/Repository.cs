@@ -1092,6 +1092,7 @@ namespace Santa.Data.Repository
 
                 oldQuestion.QuestionText = targetQuestion.questionText;
                 oldQuestion.IsSurveyOptionList = targetQuestion.isSurveyOptionList;
+                oldQuestion.SenderCanView = targetQuestion.senderCanView;
 
                 santaContext.SurveyQuestion.Update(oldQuestion);
             }
