@@ -198,14 +198,14 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
                     .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient) 
-                            .ThenInclude(c => c.SurveyResponse)
+                        .ThenInclude(clXref => clXref.RecipientClient)
+                            .ThenInclude(c => c.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
                                 .ThenInclude(sr => sr.Survey)
                                     .ThenInclude(s => s.EventType)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(clXref => clXref.RecipientClient)
                             .ThenInclude(c => c.SurveyResponse)
-                                .ThenInclude(sr => sr.SurveyQuestion.SenderCanView == true)
+                                .ThenInclude(sr => sr.SurveyQuestion)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
                     .Include(s => s.ClientStatus)
@@ -215,6 +215,7 @@ namespace Santa.Data.Repository
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
                     .FirstOrDefaultAsync(c => c.Email == email));
+                
                 return logicProfile;
             }
             catch (Exception e)
