@@ -205,7 +205,7 @@ namespace Santa.Data.Repository
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(clXref => clXref.RecipientClient)
                             .ThenInclude(c => c.SurveyResponse)
-                                .ThenInclude(sr => sr.SurveyQuestion)
+                                .ThenInclude(sr => sr.SurveyQuestion.SenderCanView == true)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
                     .Include(s => s.ClientStatus)
