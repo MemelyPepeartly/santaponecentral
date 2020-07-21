@@ -2,7 +2,9 @@
   <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
     <form [formGroup]="surveyFormGroup">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
-        <mat-label>{{ question.questionText }}</mat-label>
+        <h2>{{ question.questionText }}</h2>
+        <h4 class="viewNote" *ngIf="question.senderCanView">Note: Your answer for this question will be shown to people who are assigned to send to you</h4>
+        <h4 class="viewNote" *ngIf="!question.senderCanView">Note: Your answer for this question will <u class="error">not</u> be shown to people who are assigned to send to you and will only be shared with admins</h4>
         <!-- Form for text field questions -->
         <mat-form-field class="inputForm" *ngIf="!question.isSurveyOptionList">
           <textarea matInput placeholder="Answer" formControlName="{{question.surveyQuestionID}}" required></textarea>
