@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
@@ -10,6 +11,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SurveyQuestionController : ControllerBase
     {
         private readonly IRepository repository;
@@ -25,6 +27,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.Question>>> GetQuestionsAsync()
         {
             try
@@ -65,6 +68,7 @@ namespace Santa.Api.Controllers
         /// <param name="question"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Policy ="create:questions")]
         public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestion([FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
         {
             try
@@ -100,6 +104,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionOption"></param>
         /// <returns></returns>
         [HttpPost("{surveyQuestionID}/SurveyOption")]
+        [Authorize(Policy = "create:questions")]
         public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue")] Models.ApiSurveyOption questionOption)
         {
             try
@@ -138,6 +143,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionText"></param>
         /// <returns></returns>
         [HttpPut("{surveyQuestionID}/QuestionText")]
+        [Authorize(Policy = "update:questions")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionText(Guid surveyQuestionID, [FromBody, Bind("questionText")] Models.Question_Models.ApiQuestionText questionText)
         {
             try
@@ -169,6 +175,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionIsSurveyOptionList"></param>
         /// <returns></returns>
         [HttpPut("{surveyQuestionID}/HasOptions")]
+        [Authorize(Policy = "update:questions")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionIsSurveyOptionList(Guid surveyQuestionID, [FromBody, Bind("isSurveyOptionList")] Models.Question_Models.ApiQuestionIsSurveyOptionList questionIsSurveyOptionList)
         {
             try
@@ -199,6 +206,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpDelete("{surveyQuestionID}")]
+        [Authorize(Policy = "delete:questions")]
         public async Task<ActionResult> Delete(Guid surveyQuestionID)
         {
             try
