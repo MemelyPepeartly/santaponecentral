@@ -55,7 +55,7 @@ namespace Santa.Data.Repository
                     RecipientClientId = recipientClientID,
                     EventTypeId = eventTypeID,
                     // Value being posted should be false to start by default
-                    Completed = true
+                    Completed = false
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
             }
