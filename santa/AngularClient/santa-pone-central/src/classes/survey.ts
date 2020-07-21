@@ -21,6 +21,7 @@ export class Question {
     questionID: string;
     questionText: string;
     isSurveyOptionList: boolean;
+    senderCanView: boolean;
     surveyOptionList: Array<SurveyOption> = [];
 }
 export class SurveyOption {

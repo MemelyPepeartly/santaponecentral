@@ -245,6 +245,7 @@ export class MapService {
     mappedQuestion.questionID = question.questionID;
     mappedQuestion.questionText = question.questionText;
     mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
+    mappedQuestion.senderCanView = question.senderCanView;
     question.surveyOptionList.forEach(surveyOption => {
       mappedQuestion.surveyOptionList.push(this.mapSurveyOption(surveyOption));
     });
