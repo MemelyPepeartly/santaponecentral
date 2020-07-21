@@ -298,11 +298,13 @@
                             <mat-accordion *ngIf="!gatheringSenders && !showRecipientListPostingSpinner">
                                 <mat-expansion-panel *ngFor="let sender of senders">
                                     <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
+                                        <mat-panel-title class="relationshipPanelTitle">
+                                            {{sender.clientNickname}}
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon>card_giftcard</mat-icon>
+                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>
+                                    </mat-expansion-panel-header>                
                                     <div class="expansionPanelButtonContainer">
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Switch to this Anon"
@@ -323,11 +325,13 @@
                             <mat-accordion *ngIf="!showRecipientListPostingSpinner">
                                 <mat-expansion-panel *ngFor="let recipient of recipients">
                                     <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
+                                        <mat-panel-title class="relationshipPanelTitle">
+                                            {{recipient.clientNickname}}
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon>card_giftcard</mat-icon>
+                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>
+                                    </mat-expansion-panel-header>       
                                     <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
                                         <app-small-loading-spin></app-small-loading-spin>
                                     </div>
