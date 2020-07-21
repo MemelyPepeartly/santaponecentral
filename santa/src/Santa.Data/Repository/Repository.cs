@@ -209,6 +209,11 @@ namespace Santa.Data.Repository
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
                     .Include(s => s.ClientStatus)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(s => s.SurveyQuestion)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
                     .FirstOrDefaultAsync(c => c.Email == email));
                 return logicProfile;
             }
