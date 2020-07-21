@@ -6,17 +6,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Santa.Api.AuthHelper;
 using Santa.Api.Models;
 using Santa.Api.Models.Client_Models;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
-using Santa.Api.Constants;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using Santa.Api.SendGrid;
+using Santa.Logic.Constants;
 
 namespace Santa.Api.Controllers
 {
@@ -471,18 +468,18 @@ namespace Santa.Api.Controllers
                 try
                 {
                     // Send approval steps for a client that was awaiting and approved for the event
-                    if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.Constants.AWAITING_STATUS)
+                    if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                     {
                         await ApprovalSteps(updatedClient);
                     }
                     // Send approval steps for client that was denied, and was accepted after appeal
-                    else if(updatedClient.clientStatus.statusDescription == Constants.Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.Constants.DENIED_STATUS)
+                    else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                     {
                         await mailbag.sendUndeniedEmail(updatedClient);
                         await ApprovalSteps(updatedClient);
                     }
                     // Send denied email to client that was awaiting and was denied
-                    else if(updatedClient.clientStatus.statusDescription == Constants.Constants.DENIED_STATUS)
+                    else if(updatedClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
                     {
                         await mailbag.sendDeniedEmail(updatedClient);
                     }
@@ -579,7 +576,7 @@ namespace Santa.Api.Controllers
 
             // Gets all the roles, and grabs the role for participants
             List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
-            Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.Constants.PARTICIPANT);
+            Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
 
             // Updates client with the participant role
             await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);

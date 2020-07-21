@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Data.Entities;
-using Santa.Data.Repository;
-using System.Runtime.CompilerServices;
+using Santa.Logic.Constants;
 
 namespace Santa.Data.Repository
 {
@@ -451,7 +450,7 @@ namespace Santa.Data.Repository
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
                 List<Entities.Client> listContextClient = await santaContext.Client.Include(c => c.ClientStatus).Include(x => x.ClientRelationXrefRecipientClient).ToListAsync();
 
-                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == StatusConstants.APPROVED))
+                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
                 {
                     if(client.ClientRelationXrefRecipientClient.Count() > 0)
                     {
