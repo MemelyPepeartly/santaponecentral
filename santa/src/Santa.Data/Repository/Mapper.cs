@@ -318,6 +318,7 @@ namespace Santa.Data.Repository
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
+                senderCanView = contextSurveyQuestion.SenderCanView,
                 surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList()
             };
             return logicQuestion;
