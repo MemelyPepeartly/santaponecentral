@@ -74,6 +74,7 @@ namespace Santa.Data.Repository
             {
                 senderClientID = contextRecipientXref.SenderClientId,
                 senderEventTypeID = contextRecipientXref.EventTypeId,
+                completed = contextRecipientXref.Completed,
                 removable = contextRecipientXref.ChatMessage.Count > 0 ? false : true
             };
             return logicSender;
@@ -84,6 +85,7 @@ namespace Santa.Data.Repository
             {
                 recipientClientID = contextSenderXref.RecipientClientId,
                 recipientEventTypeID = contextSenderXref.EventTypeId,
+                completed = contextSenderXref.Completed,
                 removable = contextSenderXref.ChatMessage.Count > 0 ? false : true
             };
             return logicRecipient;
@@ -93,6 +95,8 @@ namespace Santa.Data.Repository
             Logic.Objects.ProfileRecipient logicProfileRecipient = new ProfileRecipient()
             {
                 recipientClientID = contextSenderXref.RecipientClientId,
+                name = contextRecipientClientData.ClientName,
+                nickname = contextRecipientClientData.Nickname,
                 relationXrefID = contextSenderXref.ClientRelationXrefId,
                 recipientEvent = Mapper.MapEvent(contextSenderXref.EventType),
 
@@ -105,8 +109,7 @@ namespace Santa.Data.Repository
                     state = contextRecipientClientData.State,
                     postalCode = contextRecipientClientData.PostalCode
                 },
-                name = contextRecipientClientData.ClientName,
-                nickname = contextRecipientClientData.Nickname,
+                completed = contextSenderXref.Completed,
                 responses = contextRecipientClientData.SurveyResponse.Select(Mapper.MapResponse).ToList()
             };
             return logicProfileRecipient;
