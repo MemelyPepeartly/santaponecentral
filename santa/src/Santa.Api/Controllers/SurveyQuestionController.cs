@@ -69,7 +69,7 @@ namespace Santa.Api.Controllers
         /// <param name="question"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Policy ="create:questions")]
+        [Authorize(Policy ="create:surveys")]
         public async Task<ActionResult<Logic.Objects.Question>> PostSurveyQuestion([FromBody, Bind("questionText, isSurveyOptionList")] Models.ApiQuestion question)
         {
             try
@@ -105,7 +105,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionOption"></param>
         /// <returns></returns>
         [HttpPost("{surveyQuestionID}/SurveyOption")]
-        [Authorize(Policy = "create:questions")]
+        [Authorize(Policy = "create:surveys")]
         public async Task<ActionResult<Logic.Objects.Option>> PostSurveyQuestionOption(Guid surveyQuestionID, [FromBody, Bind("surveyOptionID, displayText, surveyOptionValue")] Models.ApiSurveyOption questionOption)
         {
             try
@@ -144,7 +144,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionText"></param>
         /// <returns></returns>
         [HttpPut("{surveyQuestionID}/QuestionText")]
-        [Authorize(Policy = "update:questions")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionText(Guid surveyQuestionID, [FromBody, Bind("questionText")] Models.Question_Models.ApiQuestionText questionText)
         {
             try
@@ -176,7 +176,7 @@ namespace Santa.Api.Controllers
         /// <param name="questionIsSurveyOptionList"></param>
         /// <returns></returns>
         [HttpPut("{surveyQuestionID}/HasOptions")]
-        [Authorize(Policy = "update:questions")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionIsSurveyOptionList(Guid surveyQuestionID, [FromBody, Bind("isSurveyOptionList")] Models.Question_Models.ApiQuestionIsSurveyOptionList questionIsSurveyOptionList)
         {
             try
@@ -202,7 +202,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/SurveyQuestion/5/Readability
         [HttpPut("{surveyQuestionID}/Readability")]
-        [Authorize(Policy = "update:questions")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Option>> PutQuestionReadability(Guid surveyQuestionID, [FromBody] ApiQuestionReadability questionReadability)
         {
             try
@@ -233,7 +233,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpDelete("{surveyQuestionID}")]
-        [Authorize(Policy = "delete:questions")]
+        [Authorize(Policy = "delete:surveys")]
         public async Task<ActionResult> Delete(Guid surveyQuestionID)
         {
             try
