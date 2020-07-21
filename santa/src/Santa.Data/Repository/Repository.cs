@@ -53,7 +53,9 @@ namespace Santa.Data.Repository
                     ClientRelationXrefId = Guid.NewGuid(),
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
-                    EventTypeId = eventTypeID
+                    EventTypeId = eventTypeID,
+                    // Value being posted should be false to start by default
+                    Completed = true
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
             }
@@ -158,6 +160,21 @@ namespace Santa.Data.Repository
                 contextOldClient.Nickname = targetLogicClient.nickname;
 
                 santaContext.Client.Update(contextOldClient);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recieverID, Guid eventTypeID, bool targetCompletedStatus)
+        {
+            try
+            {
+                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.SenderClientId == senderID && crxf.RecipientClientId == recieverID && crxf.EventTypeId == eventTypeID);
+
+                contextRelationship.Completed = targetCompletedStatus;
+
+                santaContext.ClientRelationXref.Update(contextRelationship);
             }
             catch(Exception e)
             {

@@ -236,9 +236,9 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                foreach(Guid assignment in assignmentsModel.assignments)
+                foreach(Guid assignmentID in assignmentsModel.assignments)
                 {
-                    await repository.CreateClientRelationByID(clientID, assignment, assignmentsModel.eventTypeID);
+                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID);
                 }
                 await repository.SaveAsync();
 
@@ -408,6 +408,7 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
         // PUT: api/Client/5/Name
         /// <summary>
         /// Updates a client's actual name
@@ -490,6 +491,28 @@ namespace Santa.Api.Controllers
                     throw e.InnerException;
                 }
 
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        // PUT: api/Client/5/Recipient
+        /// <summary>
+        /// Updates the completion status of a relationship by sender, reciever, and event type ID's
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="recipientCompletionModel"></param>
+        /// <returns></returns>
+        [HttpPut("{clientID}/Recipient")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> UpdateRecipientXrefCompletionStatus(Guid clientID, [FromBody] ApiRecipientCompletionModel recipientCompletionModel)
+        {
+            try
+            {
+                await repository.UpdateClientRelationCompletedStatusByID(clientID, recipientCompletionModel.recieverID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
+                await repository.SaveAsync();
+                return (await repository.GetClientByIDAsync(clientID));
             }
             catch (Exception e)
             {
