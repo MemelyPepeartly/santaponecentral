@@ -166,11 +166,11 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recieverID, Guid eventTypeID, bool targetCompletedStatus)
+        public async Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus)
         {
             try
             {
-                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.SenderClientId == senderID && crxf.RecipientClientId == recieverID && crxf.EventTypeId == eventTypeID);
+                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.RecipientClientId == recipientID && crxf.SenderClientId == senderID && crxf.EventTypeId == eventTypeID);
 
                 contextRelationship.Completed = targetCompletedStatus;
 

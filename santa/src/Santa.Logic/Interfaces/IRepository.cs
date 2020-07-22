@@ -14,7 +14,7 @@ namespace Santa.Logic.Interfaces
         Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
         Task<List<Logic.Objects.Client>> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
-        Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recieverID, Guid eventTypeID, bool targetCompletedStatus);
+        Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
         Task DeleteClientByIDAsync(Guid eventID);
         Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID);
         #endregion

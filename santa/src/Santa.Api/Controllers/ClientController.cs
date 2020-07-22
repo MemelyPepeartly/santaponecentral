@@ -526,9 +526,16 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                await repository.UpdateClientRelationCompletedStatusByID(clientID, recipientCompletionModel.recieverID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
-                await repository.SaveAsync();
-                return (await repository.GetClientByIDAsync(clientID));
+                if(recipientCompletionModel.recipientID.Equals(Guid.Empty) || recipientCompletionModel.eventTypeID.Equals(Guid.Empty))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "One or both of the required ID's for reciever or eventType were not present on the request");
+                }
+                else
+                {
+                    await repository.UpdateClientRelationCompletedStatusByID(clientID, recipientCompletionModel.recipientID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
+                    await repository.SaveAsync();
+                    return (await repository.GetClientByIDAsync(clientID));
+                }
             }
             catch (Exception e)
             {
