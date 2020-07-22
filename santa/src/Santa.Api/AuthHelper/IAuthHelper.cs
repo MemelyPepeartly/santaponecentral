@@ -9,7 +9,7 @@ namespace Santa.Api.AuthHelper
     public interface IAuthHelper
     {
         #region User Info Model
-        Task<Auth0UserInfoModel> createAuthClient(string authEmail);
+        Task<Auth0UserInfoModel> createAuthClient(string authEmail, string authName);
         Task<Auth0UserInfoModel> getAuthClientByID(string authUserID);
         Task<Auth0UserInfoModel> getAuthClientByEmail(string authUserEmail);
         Task updateAuthClientRole(string authUserID, string authRoleID);
