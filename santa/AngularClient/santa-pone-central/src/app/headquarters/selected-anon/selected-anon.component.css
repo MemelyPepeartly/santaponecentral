@@ -104,12 +104,10 @@ mat-panel-description
 .cardExchangeIcon
 {
     content: url(../../../assets/images/christmasCard.png);
-    opacity: 50% !important;
 }
 .giftExchangeIcon
 {
     content: url(../../../assets/images/christmasPresent.png);
-    opacity: 50% !important;
 }
 #relationshipEventHeader
 {
