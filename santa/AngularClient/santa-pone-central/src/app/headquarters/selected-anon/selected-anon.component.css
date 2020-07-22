@@ -97,18 +97,18 @@ mat-panel-description
 {
     width: 60%;
     position: absolute;
-    top: 0;
+    top: -9px;
     right: 5%;
     z-index: 0;
     opacity: 0.5;
 }
 .cardExchangeIcon
 {
-    content: url(../../../assets/images/christmasCard.png);
+    content: url(../../../assets/images/cardAndClawWithoutSparkle.png);
 }
 .giftExchangeIcon
 {
-    content: url(../../../assets/images/christmasPresent.png);
+    content: url(../../../assets/images/presentWithOneFin.png);
 }
 #relationshipEventHeader
 {
