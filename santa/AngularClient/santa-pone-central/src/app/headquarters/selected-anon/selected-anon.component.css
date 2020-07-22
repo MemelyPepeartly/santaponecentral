@@ -99,17 +99,17 @@ mat-panel-description
     position: absolute;
     top: 0;
     right: 5%;
-    opacity: 50% !important;
+    z-index: 0;
 }
 .cardExchangeIcon
 {
     content: url(../../../assets/images/christmasCard.png);
-    z-index: 0;
+    opacity: 50% !important;
 }
 .giftExchangeIcon
 {
     content: url(../../../assets/images/christmasPresent.png);
-    z-index: 0;
+    opacity: 50% !important;
 }
 #relationshipEventHeader
 {
