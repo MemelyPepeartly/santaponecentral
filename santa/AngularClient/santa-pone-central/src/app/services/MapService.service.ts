@@ -155,6 +155,7 @@ export class MapService {
     mappedRelationship.clientNickname = client.clientNickname;
     mappedRelationship.clientEventTypeID = recipientClient.recipientEventTypeID;
     mappedRelationship.removable = recipientClient.removable;
+    mappedRelationship.completed = recipientClient.completed;
 
     return mappedRelationship;
 
@@ -168,19 +169,7 @@ export class MapService {
     mappedRelationship.clientNickname = client.clientNickname;
     mappedRelationship.clientEventTypeID = senderClient.senderEventTypeID;
     mappedRelationship.removable = senderClient.removable;
-
-    return mappedRelationship;
-
-  }
-  mapAllowedClientRelationship(client: Client, eventID: string)
-  {
-    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component 
-    let mappedRelationship = new ClientSenderRecipientRelationship;
-
-    mappedRelationship.clientID = client.clientID;
-    mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = eventID;
+    mappedRelationship.completed = senderClient.completed;
 
     return mappedRelationship;
 
@@ -192,6 +181,7 @@ export class MapService {
     mappedRecipient.recipientClientID = recipient.recipientClientID;
     mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
     mappedRecipient.removable = recipient.removable;
+    mappedRecipient.completed = recipient.completed;
 
     return mappedRecipient
   }
@@ -202,6 +192,7 @@ export class MapService {
     mappedSender.senderClientID = sender.senderClientID;
     mappedSender.senderEventTypeID = sender.senderEventTypeID;
     mappedSender.removable = sender.removable;
+    mappedSender.completed = sender.completed;
 
     return mappedSender
   }

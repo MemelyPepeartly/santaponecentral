@@ -65,18 +65,20 @@
         <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
 
         <mat-card-actions *ngIf="!showButtonSpinner">
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Re-Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
-            <button mat-raised-button [disabled]="showNameChangeForm"
+            <button mat-raised-button
+                [disabled]="showNameChangeForm"
                 (click)="showNameChangeForm = true">Change Agent's Name</button>
-            <button mat-raised-button [disabled]="showEmailChangeForm"
+            <button mat-raised-button
+                [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
             
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
@@ -303,7 +305,7 @@
                                 <mat-expansion-panel *ngFor="let sender of senders">
                                     <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
                                         <mat-panel-title class="relationshipPanelTitle">
-                                            {{sender.clientNickname}}
+                                            <span>{{sender.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="sender.completed">check_circle</mat-icon>
                                         </mat-panel-title>
                                         <mat-panel-description>
                                             <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
@@ -330,27 +332,33 @@
                                 <mat-expansion-panel *ngFor="let recipient of recipients">
                                     <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
                                         <mat-panel-title class="relationshipPanelTitle">
-                                            {{recipient.clientNickname}}
+                                            <span>{{recipient.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="recipient.completed">check_circle</mat-icon>
                                         </mat-panel-title>
                                         <mat-panel-description>
                                             <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>       
-                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
+                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved || markingAsComplete">
                                         <app-small-loading-spin></app-small-loading-spin>
                                     </div>
-                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved">
+                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved && !markingAsComplete">
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Switch to this Anon"
-                                        [matTooltipPosition]="'left'"
-                                        (click)="switchAnon(recipient)">Switch</button>
+                                        [matTooltipPosition]="'right'"
+                                        (click)="switchAnon(recipient)">Switch To<mat-icon>swap_horiz</mat-icon></button>
+                                        <button class="expansionPanelButton" mat-raised-button
+                                        matTooltip="Mark this assignment as complete"
+                                        [matTooltipPosition]="'right'"
+                                        [disabled]="recipient.completed"
+                                        (click)="markAsComplete(recipient)">Mark As Complete<mat-icon>done</mat-icon></button>
+                                        <!-- Removable button is disabled if the client is not removable from the assignments list due to having a chat history -->
                                         <p *ngIf="!recipient.removable">Note: If a recipient has a chat history, they cannot be removed</p>
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Remove the anon as a recipient"
                                         color="warn"
                                         [disabled]="!recipient.removable"
                                         [matTooltipPosition]="'right'"
-                                        (click)="removeRecipient(recipient)">Remove</button>
+                                        (click)="removeRecipient(recipient)">Remove Assignment<mat-icon>delete_forever</mat-icon></button>
                                     </div>
                                 </mat-expansion-panel>
                             </mat-accordion>

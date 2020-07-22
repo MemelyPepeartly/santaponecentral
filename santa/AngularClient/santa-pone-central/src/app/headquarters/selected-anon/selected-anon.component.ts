@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -108,6 +108,7 @@ export class SelectedAnonComponent implements OnInit {
   public gettingEventDetails: boolean = true;
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
+  public markingAsComplete: boolean = false;
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
@@ -345,11 +346,24 @@ export class SelectedAnonComponent implements OnInit {
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))
       {
-        this.approvedRecipientClients.push(this.ApiMapper.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
+        this.approvedRecipientClients.push(this.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
 
     this.recipientsAreLoaded=true;
+  }
+  public mapAllowedClientRelationship(client: Client, eventID: string)
+  {
+    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component 
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = eventID;
+    mappedRelationship.removable
+
+    return mappedRelationship;
   }
   public relationListToIDList(relationList: Array<ClientSenderRecipientRelationship>): Array<string>
   {
@@ -391,6 +405,25 @@ export class SelectedAnonComponent implements OnInit {
     }
     
     this.beingRemoved = false;
+  }
+  public async markAsComplete(anon: ClientSenderRecipientRelationship)
+  {
+    this.markingAsComplete = true; 
+
+    let response = new RecipientCompletionResponse();
+
+    response.completed = true;
+    response.eventTypeID = anon.clientEventTypeID;
+    response.recipientID = anon.clientID;
+    console.log("Client ID: " + this.client.clientID);
+    console.log("Recipient ID: " + anon.clientID);
+    
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
+
+    await this.gatherSenders();
+    await this.gatherRecipients();
+
+    this.markingAsComplete = false; 
   }
   public async removeTagFromClient(tag: Tag)
   {

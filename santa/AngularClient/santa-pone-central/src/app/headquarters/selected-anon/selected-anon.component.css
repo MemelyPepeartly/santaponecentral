@@ -64,6 +64,7 @@ mat-panel-description
 {
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 10px;
 }
 .expansionPanelButtonContainer
 {
@@ -103,10 +104,12 @@ mat-panel-description
 .cardExchangeIcon
 {
     content: url(../../../assets/images/christmasCard.png);
+    z-index: 0;
 }
 .giftExchangeIcon
 {
     content: url(../../../assets/images/christmasPresent.png);
+    z-index: 0;
 }
 #relationshipEventHeader
 {
