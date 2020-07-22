@@ -367,7 +367,7 @@ namespace Santa.Api.Controllers
                         }
 
                         // Updates a client's email and name in Auth0
-                        await authHelper.updateAuthClientEmail(updatedClient.email, authClient.user_id);
+                        await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email, updatedClient.nickname);
 
                         // Sends the client a password change ticket
                         Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);

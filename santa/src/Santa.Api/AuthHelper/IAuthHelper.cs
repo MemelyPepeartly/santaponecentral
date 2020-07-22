@@ -13,7 +13,7 @@ namespace Santa.Api.AuthHelper
         Task<Auth0UserInfoModel> getAuthClientByID(string authUserID);
         Task<Auth0UserInfoModel> getAuthClientByEmail(string authUserEmail);
         Task updateAuthClientRole(string authUserID, string authRoleID);
-        Task updateAuthClientEmail(string newEmail, string authUserID);
+        Task updateAuthClientEmail(string authUserID, string newEmail, string nickname);
         #endregion
 
         #region Roles

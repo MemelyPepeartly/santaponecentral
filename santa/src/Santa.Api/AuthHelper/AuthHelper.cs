@@ -91,7 +91,7 @@ namespace Santa.Api.AuthHelper
             }
 
         }
-        public async Task updateAuthClientEmail(string newEmail, string authUserID)
+        public async Task updateAuthClientEmail(string authUserID, string newEmail, string nickname)
         {
             RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
             RestRequest userRequest = new RestRequest(Method.PATCH);
@@ -100,7 +100,7 @@ namespace Santa.Api.AuthHelper
             var responseModel = new Models.Auth0_Response_Models.Auth0ChangeEmailModel()
             {
                 email = newEmail,
-                name = newEmail
+                name = nickname
             };
 
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);
