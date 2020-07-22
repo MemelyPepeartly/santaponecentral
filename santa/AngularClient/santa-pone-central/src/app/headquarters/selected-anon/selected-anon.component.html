@@ -61,8 +61,10 @@
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <div class="error" *ngIf="showFail">Error approving Anon</div>
-        <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
-        <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+        <p class="success" *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
+        <p class="success" *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+        <p class="success" *ngIf="showCompletedSuccess">{{ client.clientNickname }} has been marked as completed, and an email has been sent!</p>
+        <p class="success" *ngIf="showReenlistedSuccess">{{ client.clientNickname }} has been re-enlisted to the cause, and an email has been sent!</p>
 
         <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
@@ -81,8 +83,11 @@
                 [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Approved'"
-                [disabled]="client.clientStatus.statusDescription == 'Completed'"
+                [disabled]="this.gatherer.gatheringAllStatuses || showCompletedSuccess || client.clientStatus.statusDescription == 'Completed'"
                 (click)="setAsCompleted()">Mark as complete</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Completed'"
+                [disabled]="this.gatherer.gatheringAllStatuses || showReenlistedSuccess || client.clientStatus.statusDescription == 'Approved'"
+                (click)="reenlistAnon()">Re-Enlist</button>
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
 
             <!-- Name change form group -->
