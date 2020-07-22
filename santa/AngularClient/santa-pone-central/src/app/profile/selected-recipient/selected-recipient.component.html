@@ -42,9 +42,13 @@
                 <mat-expansion-panel *ngFor="let response of selectedRecipient.responses">
                     <mat-expansion-panel-header
                         *ngIf="selectedRecipient.recipientEvent.eventTypeID == response.responseEvent.eventTypeID">
-                        <mat-panel-title>{{response.surveyQuestion.questionText}}</mat-panel-title>
+                        <mat-panel-title>
+                            <span class="questionText">{{response.surveyQuestion.questionText}}</span>
+                        </mat-panel-title>
                         <mat-panel-description>
-                            <mat-icon>question_answer</mat-icon>
+                            <mat-icon
+                            matTooltip="{{response.surveyQuestion.questionText}}"
+                            [matTooltipPosition]="'right'">question_answer</mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
                     <p>{{response.responseText}}</p>
