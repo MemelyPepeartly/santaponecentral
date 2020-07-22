@@ -88,6 +88,8 @@ export class SelectedAnonComponent implements OnInit {
   
   public showApproveSuccess: boolean = false;
   public showDeniedSuccess: boolean = false;
+  public showCompletedSuccess: boolean = false;
+  public showReenlistedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
 
@@ -212,11 +214,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     
     this.showButtonSpinner = true;
-    var putClient: Client = this.client;
     var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    let clientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID == approvedStatus.statusID
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = approvedStatus.statusID
 
     this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
@@ -236,11 +237,10 @@ export class SelectedAnonComponent implements OnInit {
   denyAnon()
   {
     this.showButtonSpinner = true;
-    var putClient: Client = this.client;
     var deniedStatus: Status = this.getStatusByConstant(StatusConstants.DENIED);
 
-    let clientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID == deniedStatus.statusID
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = deniedStatus.statusID
 
     this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
@@ -259,15 +259,15 @@ export class SelectedAnonComponent implements OnInit {
   public async setAsCompleted()
   {
     this.showButtonSpinner = true;
-    var putClient: Client = this.client;
-    var completedStatus: Status = this.getStatusByConstant(StatusConstants.COMPLETED);
+    var completedStatus: Status = this.getStatusByConstant(StatusConstants.COMPLETED);  
 
-    let clientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID == completedStatus.statusID
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = completedStatus.statusID
+    
 
     this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
-      this.showDeniedSuccess = true;
+      this.showCompletedSuccess = true;
       this.actionTaken = true;
       this.action.emit(this.actionTaken);
     },
@@ -278,6 +278,30 @@ export class SelectedAnonComponent implements OnInit {
       this.actionTaken = false;
       this.action.emit(this.actionTaken);
     });
+  }
+  public reenlistAnon()
+  {
+    
+    this.showButtonSpinner = true;
+    var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
+
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = approvedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showReenlistedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {
