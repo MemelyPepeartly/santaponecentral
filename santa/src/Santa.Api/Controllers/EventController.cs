@@ -61,7 +61,7 @@ namespace Santa.Api.Controllers
         // POST: api/Event
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "create:events")]
-        public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody, Bind("eventDescription, isActive")]Models.ApiEvent newEvent)
+        public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody]Models.ApiEvent newEvent)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Santa.Api.Controllers
         // PUT: api/Event/5
         [HttpPut("{eventID}/Description")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:events")]
-        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventDescription description)
+        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody] ApiEventDescription description)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace Santa.Api.Controllers
         // PUT: api/Event/5
         [HttpPut("{eventID}/Active")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "update:events")]
-        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody, Bind("eventDescription")] ApiEventActive active)
+        public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody] ApiEventActive active)
         {
             try
             {
