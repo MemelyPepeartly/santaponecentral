@@ -327,12 +327,6 @@ export class MapResponse
     
     return clientAddressResponse
   }
-  mapClientStatusResponse(client: Client)
-  {
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID = client.clientStatus.statusID;
-    return clientStatusResponse;
-  }
   mapSurveyApiResponse(response: SurveyQA)
   {
     let surveyApiResponse: SurveyApiResponse = new SurveyApiResponse();
