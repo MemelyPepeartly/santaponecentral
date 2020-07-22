@@ -154,7 +154,7 @@ namespace Santa.Api.SendGrid
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
-            string subject = "SantaPone Central Login Information";
+            string subject = "SantaPone Central Status";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
             string plainTextContent = "Unfortunately, you were not approved for the Secret Santa event. If you feel this is a mistake, or wish to make an appeal, feel free to reach out to mlpsantapone@gmail.com.";
             string htmlContent = emailStart +
@@ -174,7 +174,7 @@ namespace Santa.Api.SendGrid
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
-            string subject = "SantaPone Central Login Information";
+            string subject = "SantaPone Central Status";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
             string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. " +
                 "If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
@@ -191,14 +191,35 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+        public async Task sendReelistedEmail(Client recipient)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central Re-Enlistment";
+            EmailAddress to = new EmailAddress(recipient.email, "Anon");
+            string plainTextContent = "Your tenacity and dedication to the cause is incredible, agent! You have been successfully re-enlisted to the cause! The world could do with more santa's like you. " +
+                "Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!";
+            string htmlContent = emailStart +
+                @$"
+                    <p>Your tenacity and dedication to the cause is incredible, agent! You have been successfully re-enlisted to the cause! The world could do with more santa's like you.</p>
+                    <br>
+                    <p>Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
+
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
         public async Task sendCompletedEmail(Client recipient)
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
-            string subject = "SantaPone Central Login Information";
+            string subject = "SantaPone Central Completed Confirmation";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
-            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. " +
-                "If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
+            string plainTextContent = "Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest! " +
+                "Now of course, if you feel there can be more to do, more cheer to bring, or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
                     <p>Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest!</p>
@@ -212,6 +233,5 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
-        
     }
 }

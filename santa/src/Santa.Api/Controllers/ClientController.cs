@@ -471,10 +471,15 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                if(status.clientStatusID.Equals(Guid.Empty))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
                 // Grab original client
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 Status originalStatus = targetClient.clientStatus;
 
+                
                 try
                 {
                     // Updates client status
@@ -484,7 +489,7 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
                 }
 
                 // Get updated client
@@ -506,6 +511,11 @@ namespace Santa.Api.Controllers
                     else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
                     {
                         await mailbag.sendCompletedEmail(updatedClient);
+                    }
+                    // Send re-enlisted email
+                    else if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.COMPLETED_STATUS)
+                    {
+                        await mailbag.sendReelistedEmail(updatedClient);
                     }
                     // Send denied email to client that was awaiting and was denied
                     else if(updatedClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
