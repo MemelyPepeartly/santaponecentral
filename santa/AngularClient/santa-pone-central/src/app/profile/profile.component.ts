@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
-    await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
+    await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
     // Chat histories subscribe
     this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
