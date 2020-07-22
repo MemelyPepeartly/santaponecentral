@@ -73,4 +73,8 @@ export class HeadquartersComponent implements OnInit {
   {
     return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
   }
+  sortCompleted() : Array<Client>
+  {
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.COMPLETED});
+  }
 }
