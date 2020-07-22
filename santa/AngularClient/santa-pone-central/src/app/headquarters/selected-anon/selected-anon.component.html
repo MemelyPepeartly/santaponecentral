@@ -80,7 +80,9 @@
             <button mat-raised-button
                 [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
-            
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Approved'"
+                [disabled]="client.clientStatus.statusDescription == 'Completed'"
+                (click)="setAsCompleted()">Mark as complete</button>
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
 
             <!-- Name change form group -->
