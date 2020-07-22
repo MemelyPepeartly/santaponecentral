@@ -130,7 +130,26 @@ namespace Santa.Api.SendGrid
                 throw new Exception("Email content is invalid for sending chat notification");
             }
         }
+        public async Task sendAssignedRecipientEmail(Client recipient, Event eventType)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central New Assignment";
+            EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+            string plainTextContent = $"You have been given your assignment(s) for the {eventType.eventDescription} event! If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
+            string htmlContent = emailStart +
+                @$"
+                    <p>You have been given your assignment(s) for the {eventType.eventDescription} event!</p>
+                    <br>
+                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
 
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
         public async Task sendDeniedEmail(Client recipient)
         {
             SendGridClient client = new SendGridClient(getKey().key);
@@ -172,26 +191,27 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
-
-        public async Task sendAssignedRecipientEmail(Client recipient, Event eventType)
+        public async Task sendCompletedEmail(Client recipient)
         {
             SendGridClient client = new SendGridClient(getKey().key);
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
-            string subject = "SantaPone Central New Assignment";
-            EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
-            string plainTextContent = $"You have been given your assignment(s) for the {eventType.eventDescription} event! If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
+            string subject = "SantaPone Central Login Information";
+            EmailAddress to = new EmailAddress(recipient.email, "Anon");
+            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. " +
+                "If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
-                    <p>You have been given your assignment(s) for the {eventType.eventDescription} event!</p>
+                    <p>Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest!</p>
                     <br>
-                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    <p>Now of course, if you feel there can be more to do, more cheer to bring, or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
                     <br>
-                    <p>Over and Out</p>
+                    <p>Thanks again for joining the cause, Agent, Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"
                 + emailEnd;
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+        
     }
 }

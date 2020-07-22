@@ -475,10 +475,17 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 Status originalStatus = targetClient.clientStatus;
 
-                // Updates client status
-                targetClient.clientStatus.statusID = status.clientStatusID;
-                await repository.UpdateClientByIDAsync(targetClient);
-                await repository.SaveAsync();
+                try
+                {
+                    // Updates client status
+                    targetClient.clientStatus.statusID = status.clientStatusID;
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
 
                 // Get updated client
                 Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
@@ -495,6 +502,11 @@ namespace Santa.Api.Controllers
                         await mailbag.sendUndeniedEmail(updatedClient);
                         await ApprovalSteps(updatedClient);
                     }
+                    // Send congrats on completing the gift assignments
+                    else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
+                    {
+                        await mailbag.sendCompletedEmail(updatedClient);
+                    }
                     // Send denied email to client that was awaiting and was denied
                     else if(updatedClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
                     {
@@ -504,7 +516,10 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    targetClient.clientStatus = originalStatus;
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    return StatusCode(StatusCodes.Status417ExpectationFailed, "Something went wrong approving the anon, or sending them an email for the event. Status has been left unchanged.");
                 }
 
             }
