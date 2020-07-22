@@ -213,61 +213,77 @@ export class SelectedAnonComponent implements OnInit {
     
     this.showButtonSpinner = true;
     var putClient: Client = this.client;
-    var approvedStatus: Status = new Status;
+    var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    this.statuses.forEach(status =>
-      {
-        if (status.statusDescription == StatusConstants.APPROVED)
-        {
-          approvedStatus = status;
-          putClient.clientStatus.statusID = approvedStatus.statusID;
-          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
-          
-          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
-            this.showButtonSpinner = false;
-            this.showApproveSuccess = true;
-            this.actionTaken = true;
-            this.action.emit(this.actionTaken);
-          },
-          err => {
-            console.log(err);
-            this.showButtonSpinner = false;
-            this.showFail = true;
-            this.actionTaken = false;
-            this.action.emit(this.actionTaken);
-          });
-        }
-      });
+    let clientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID == approvedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showApproveSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+
   }
   denyAnon()
   {
     this.showButtonSpinner = true;
     var putClient: Client = this.client;
-    var deniedStatus: Status = new Status;
+    var deniedStatus: Status = this.getStatusByConstant(StatusConstants.DENIED);
 
-    this.statuses.forEach(status =>
-      {
-        if (status.statusDescription == StatusConstants.DENIED)
-        {
-          deniedStatus = status;
-          putClient.clientStatus.statusID = deniedStatus.statusID;
-          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
-          
-          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
-            this.showButtonSpinner = false;
-            this.showDeniedSuccess = true;
-            this.actionTaken = true;
-            this.action.emit(this.actionTaken);
-          },
-          err => {
-            console.log(err);
-            this.showButtonSpinner = false;
-            this.showFail = true;
-            this.actionTaken = false;
-            this.action.emit(this.actionTaken);
-          });
-        }
-      });
+    let clientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID == deniedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showDeniedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+  }
+  public async setAsCompleted()
+  {
+    this.showButtonSpinner = true;
+    var putClient: Client = this.client;
+    var completedStatus: Status = this.getStatusByConstant(StatusConstants.COMPLETED);
+
+    let clientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID == completedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showDeniedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+  }
+  public getStatusByConstant(statusConstant: StatusConstants) : Status
+  {
+    return this.statuses.find((status: Status) => {
+      return status.statusDescription == statusConstant
+    })
   }
   public async changeNickname()
   {
