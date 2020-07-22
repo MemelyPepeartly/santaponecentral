@@ -31,4 +31,11 @@
             </div>
         </div>
     </mat-tab>
+    <mat-tab label="Completed Anons">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-completed-anons #completed [completedClients]="sortCompleted()" (clickedClient)="showClientWindow($event)"></app-completed-anons>
+            </div>
+        </div>
+    </mat-tab>
 </mat-tab-group>
