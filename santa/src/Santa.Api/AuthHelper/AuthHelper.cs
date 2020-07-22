@@ -23,7 +23,7 @@ namespace Santa.Api.AuthHelper
         }
 
         #region User Info Model
-        public async Task<Auth0UserInfoModel> createAuthClient(string authEmail)
+        public async Task<Auth0UserInfoModel> createAuthClient(string authEmail, string authName)
         {
             RestClient userRestClient = new RestClient(endpoint + "users");
             RestRequest userRequest = new RestRequest(Method.POST);
@@ -32,7 +32,7 @@ namespace Santa.Api.AuthHelper
             Auth0NewUserModel newUser = new Auth0NewUserModel()
             {
                 email = authEmail,
-                name = authEmail,
+                name = authName,
                 connection = "Username-Password-Authentication",
                 password = generateTempPassword(),
                 verify_email = false
