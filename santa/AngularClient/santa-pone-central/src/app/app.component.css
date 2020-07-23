@@ -67,13 +67,12 @@
 {
   display: inline-block;
   background-image: url(../assets/images/santa.png);
+  max-width: 1200px;
   background-size: contain;
   background-repeat: no-repeat;
   margin-top: 10px;
-  background-position: bottom;
+  background-position-y: bottom;
   min-width: 600px;
   width: 100%;
-  height: fit-content;
   min-height: 800px;
-  background-position: left;
 }
