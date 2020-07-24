@@ -8,8 +8,8 @@
     </mat-form-field>
     <button mat-raised-button class="controlButton"
       matTooltip="Send"
-      [disabled]="messageFormControl.hasError('required') || disabled"
+      [disabled]="messageFormControl.invalid || disabled"
       (click)="emitMessage(messageFormControl.value)">
         <mat-icon mat-icon-button>send</mat-icon>
-    </button>    
+    </button>
   </div>
