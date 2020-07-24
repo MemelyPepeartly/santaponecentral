@@ -39,6 +39,7 @@
       <td mat-cell *matCellDef="let history">
         <button mat-raised-button
           (click)="emitSelectedHistory(history);"
+          [disabled]="disabled"
           [matBadge]="getUnreadNumber(history)"
           [matBadgeHidden]="checkBadgeHidden(history)">Contact History</button>
       </td>

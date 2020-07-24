@@ -14,12 +14,12 @@ export class ChatHistoriesComponent implements OnInit {
   constructor(private profileService: ProfileService, private auth: AuthService) { }
 
   @Input() onProfile: boolean = false;
+  @Input() histories: Array<MessageHistory>
+  @Input() disabled: boolean = false;
 
   columns: string[] = ["sender", "recipient", "event", "contact"];
 
   public isAdmin: boolean = false;
-
-  @Input() histories: Array<MessageHistory>
 
   @Output() chatSelectedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() recipientSelectedEvent: EventEmitter<{meta: ClientMeta, event: EventType}> = new EventEmitter<{meta: ClientMeta, event: EventType}>();
