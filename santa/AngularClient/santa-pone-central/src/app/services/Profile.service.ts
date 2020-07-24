@@ -89,7 +89,8 @@ export class ProfileService {
   {
     this._gettingProfile.next(true);
 
-    let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
+    var data = await this.SantaApiGet.getProfile(email).toPromise().catch(err => {console.log(err); this._gettingProfile.next(false);});
+    let profile = this.ApiMapper.mapProfile(data);
     this.updateProfile(profile);
 
     this._gettingProfile.next(false);
@@ -98,8 +99,6 @@ export class ProfileService {
   {
     if(!isSoftUpdate)
     {
-      console.log("Got here");
-      
       this._gettingHistories.next(true);
     }
 
@@ -113,8 +112,7 @@ export class ProfileService {
       this.gatherGeneralHistory(clientID);
       this._gettingHistories.next(false);
 
-    }, err => {console.log(err); this._gettingHistories.next(false);
-    });    
+    }, err => {console.log(err); this._gettingHistories.next(false);});    
     
   }
   public async gatherGeneralHistory(clientID, isSoftGather? : boolean)
