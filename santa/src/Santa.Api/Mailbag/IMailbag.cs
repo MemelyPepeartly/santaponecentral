@@ -16,7 +16,8 @@ namespace Santa.Api.SendGrid
         Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
         Task sendDeniedEmail(Logic.Objects.Client recipient);
         Task sendAssignedRecipientEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
-
+        Task sendCompletedEmail(Client recipient);
+        Task sendReelistedEmail(Client recipient);
         Task sendUndeniedEmail(Client recipient);
     }
 }

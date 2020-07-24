@@ -14,6 +14,7 @@ namespace Santa.Data.Entities
 
         public Guid SurveyQuestionId { get; set; }
         public string QuestionText { get; set; }
+        public bool SenderCanView { get; set; }
         public bool IsSurveyOptionList { get; set; }
 
         public virtual ICollection<SurveyQuestionOptionXref> SurveyQuestionOptionXref { get; set; }

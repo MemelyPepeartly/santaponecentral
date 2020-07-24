@@ -21,6 +21,7 @@ export class Question {
     questionID: string;
     questionText: string;
     isSurveyOptionList: boolean;
+    senderCanView: boolean;
     surveyOptionList: Array<SurveyOption> = [];
 }
 export class SurveyOption {
@@ -39,6 +40,7 @@ export class SurveyQA
     responseInputText: string;
     responseOptionSelected: SurveyFormOption;
     isSurveyOptionList: boolean;
+    senderCanView: boolean;
     surveyOptionList: Array<SurveyFormOption> = [];
 }
 

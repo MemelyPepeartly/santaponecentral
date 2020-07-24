@@ -3,9 +3,9 @@ import { Client, ClientSenderRecipientRelationship } from '../../../classes/clie
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
-import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -88,6 +88,8 @@ export class SelectedAnonComponent implements OnInit {
   
   public showApproveSuccess: boolean = false;
   public showDeniedSuccess: boolean = false;
+  public showCompletedSuccess: boolean = false;
+  public showReenlistedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
 
@@ -108,6 +110,7 @@ export class SelectedAnonComponent implements OnInit {
   public gettingEventDetails: boolean = true;
   public gatheringRecipients: boolean = false;
   public gatheringSenders: boolean = false;
+  public markingAsComplete: boolean = false;
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
@@ -133,7 +136,7 @@ export class SelectedAnonComponent implements OnInit {
     this.initializing = true;
     this.gatherer.onSelectedClient = true;
     //Tells card if client is approved to hide or show the recipient add profile controls
-    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
     {
       this.clientApproved = true;
     }
@@ -211,62 +214,100 @@ export class SelectedAnonComponent implements OnInit {
   {
     
     this.showButtonSpinner = true;
-    var putClient: Client = this.client;
-    var approvedStatus: Status = new Status;
+    var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    this.statuses.forEach(status =>
-      {
-        if (status.statusDescription == EventConstants.APPROVED)
-        {
-          approvedStatus = status;
-          putClient.clientStatus.statusID = approvedStatus.statusID;
-          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
-          
-          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
-            this.showButtonSpinner = false;
-            this.showApproveSuccess = true;
-            this.actionTaken = true;
-            this.action.emit(this.actionTaken);
-          },
-          err => {
-            console.log(err);
-            this.showButtonSpinner = false;
-            this.showFail = true;
-            this.actionTaken = false;
-            this.action.emit(this.actionTaken);
-          });
-        }
-      });
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = approvedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showApproveSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+
   }
   denyAnon()
   {
     this.showButtonSpinner = true;
-    var putClient: Client = this.client;
-    var deniedStatus: Status = new Status;
+    var deniedStatus: Status = this.getStatusByConstant(StatusConstants.DENIED);
 
-    this.statuses.forEach(status =>
-      {
-        if (status.statusDescription == EventConstants.DENIED)
-        {
-          deniedStatus = status;
-          putClient.clientStatus.statusID = deniedStatus.statusID;
-          var clientStatusResponse: ClientStatusResponse = this.responseMapper.mapClientStatusResponse(putClient);
-          
-          this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
-            this.showButtonSpinner = false;
-            this.showDeniedSuccess = true;
-            this.actionTaken = true;
-            this.action.emit(this.actionTaken);
-          },
-          err => {
-            console.log(err);
-            this.showButtonSpinner = false;
-            this.showFail = true;
-            this.actionTaken = false;
-            this.action.emit(this.actionTaken);
-          });
-        }
-      });
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = deniedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showDeniedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+  }
+  public async setAsCompleted()
+  {
+    this.showButtonSpinner = true;
+    var completedStatus: Status = this.getStatusByConstant(StatusConstants.COMPLETED);  
+
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = completedStatus.statusID
+    
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showCompletedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+  }
+  public reenlistAnon()
+  {
+    
+    this.showButtonSpinner = true;
+    var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
+
+    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    clientStatusResponse.clientStatusID = approvedStatus.statusID
+
+    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+      this.showButtonSpinner = false;
+      this.showReenlistedSuccess = true;
+      this.actionTaken = true;
+      this.action.emit(this.actionTaken);
+    },
+    err => {
+      console.log(err);
+      this.showButtonSpinner = false;
+      this.showFail = true;
+      this.actionTaken = false;
+      this.action.emit(this.actionTaken);
+    });
+
+  }
+  public getStatusByConstant(statusConstant: StatusConstants) : Status
+  {
+    return this.statuses.find((status: Status) => {
+      return status.statusDescription == statusConstant
+    })
   }
   public async changeNickname()
   {
@@ -341,15 +382,28 @@ export class SelectedAnonComponent implements OnInit {
 
     for(let i = 0; i < this.allClients.length; i++)
     {
-      if(this.allClients[i].clientStatus.statusDescription == EventConstants.APPROVED &&
+      if(this.allClients[i].clientStatus.statusDescription == StatusConstants.APPROVED &&
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))
       {
-        this.approvedRecipientClients.push(this.ApiMapper.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
+        this.approvedRecipientClients.push(this.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
       }
     }
 
     this.recipientsAreLoaded=true;
+  }
+  public mapAllowedClientRelationship(client: Client, eventID: string)
+  {
+    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component 
+    let mappedRelationship = new ClientSenderRecipientRelationship;
+
+    mappedRelationship.clientID = client.clientID;
+    mappedRelationship.clientName = client.clientName;
+    mappedRelationship.clientNickname = client.clientNickname;
+    mappedRelationship.clientEventTypeID = eventID;
+    mappedRelationship.removable
+
+    return mappedRelationship;
   }
   public relationListToIDList(relationList: Array<ClientSenderRecipientRelationship>): Array<string>
   {
@@ -368,7 +422,7 @@ export class SelectedAnonComponent implements OnInit {
     let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
     this.client = switchClient;
 
-    if(this.client.clientStatus.statusDescription == EventConstants.APPROVED)
+    if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
     {
       this.clientApproved = true;
     }
@@ -391,6 +445,25 @@ export class SelectedAnonComponent implements OnInit {
     }
     
     this.beingRemoved = false;
+  }
+  public async markAsComplete(anon: ClientSenderRecipientRelationship)
+  {
+    this.markingAsComplete = true; 
+
+    let response = new RecipientCompletionResponse();
+
+    response.completed = true;
+    response.eventTypeID = anon.clientEventTypeID;
+    response.recipientID = anon.clientID;
+    console.log("Client ID: " + this.client.clientID);
+    console.log("Recipient ID: " + anon.clientID);
+    
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
+
+    await this.gatherSenders();
+    await this.gatherRecipients();
+
+    this.markingAsComplete = false; 
   }
   public async removeTagFromClient(tag: Tag)
   {

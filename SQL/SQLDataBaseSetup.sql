@@ -34,6 +34,7 @@ CREATE TABLE app.ClientRelationXref
     senderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     recipientClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL,
+    completed BIT NOT NULL,
     CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
 );
 CREATE TABLE app.Survey
@@ -53,6 +54,7 @@ CREATE TABLE app.SurveyQuestion
 (
     surveyQuestionID UNIQUEIDENTIFIER PRIMARY KEY,
     questionText NVARCHAR(150) NOT NULL,
+    senderCanView BIT NOT NULL,
     isSurveyOptionList BIT NOT NULL
 )
 CREATE TABLE app.SurveyResponse

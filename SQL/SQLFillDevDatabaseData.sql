@@ -1,9 +1,13 @@
 DECLARE @eventTypeID1GUID UNIQUEIDENTIFIER;
 DECLARE @eventTypeID2GUID UNIQUEIDENTIFIER;
+
 DECLARE @surveyQuestion1IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion2IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion4IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion5IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion6IDGUID UNIQUEIDENTIFIER;
+
 DECLARE @survey1IDGUID UNIQUEIDENTIFIER;
 DECLARE @survey2IDGUID UNIQUEIDENTIFIER;
 
@@ -40,10 +44,14 @@ DECLARE @surveyResponse2IDGUID UNIQUEIDENTIFIER;
 
 SET @eventTypeID1GUID = NEWID();
 SET @eventTypeID2GUID = NEWID();
+
 SET @surveyQuestion1IDGUID = NEWID();
 SET @surveyQuestion2IDGUID = NEWID();
 SET @surveyQuestion3IDGUID = NEWID();
 SET @surveyQuestion4IDGUID = NEWID();
+SET @surveyQuestion5IDGUID = NEWID();
+SET @surveyQuestion6IDGUID = NEWID();
+
 SET @survey1IDGUID = NEWID();
 SET @survey2IDGUID = NEWID();
 SET @surveyOptionID1GUID = NEWID();
@@ -116,12 +124,14 @@ VALUES
     (@eventTypeID1GUID,'Gift Exchange', 1),
     (@eventTypeID2GUID,'Card Exchange', 1);
 
-INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
+INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
 VALUES
-    (@surveyQuestion1IDGUID,'Who is your favorite pony?',1),
-    (@surveyQuestion2IDGUID,'What kind of things do you want for Christmas?',0),
-    (@surveyQuestion3IDGUID,'Any card requests?',0),
-    (@surveyQuestion4IDGUID,'Is this a christmas thing?',1);
+    (@surveyQuestion1IDGUID,'Card text question', 1, 0),
+    (@surveyQuestion2IDGUID,'Card option question', 1, 1),
+    (@surveyQuestion3IDGUID,'Gift text question', 1, 0),
+    (@surveyQuestion4IDGUID,'Gift option question', 1, 1),
+    (@surveyQuestion5IDGUID,'Card secret question', 0, 0),
+    (@surveyQuestion6IDGUID,'Gift secret question', 0, 0);
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
@@ -130,26 +140,31 @@ VALUES
 
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
-    (@surveyOptionID1GUID,'Rainbow Dash','1'),
-    (@surveyOptionID2GUID,'Twilight Sparkle','1'),
-    (@surveyOptionID3GUID,'Pinkie Pie','1'),
-    (@surveyOptionID4GUID,'Yes','1'),
-    (@surveyOptionID5GUID,'No','1');
+    (@surveyOptionID1GUID,'Yes','1'),
+    (@surveyOptionID2GUID,'No','1'),
+    (@surveyOptionID3GUID,'Maybe','1');
 
 INSERT INTO app.SurveyQuestionXref (surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
-    (@survey1IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1);
+-- Gift survey
+    (@survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
+    (@survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
+    (@survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
+-- Card survey
+    (@survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
+    (@survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
+    (@survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1);
+
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (@surveyQuestion1IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion1IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion1IDGUID, @surveyOptionID3GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID4GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID5GUID, 'asc', 1);
+    (@surveyQuestion2IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (@surveyQuestion2IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (@surveyQuestion2IDGUID, @surveyOptionID3GUID, 'asc', 1),
+
+    (@surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (@surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (@surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1);
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
@@ -163,7 +178,7 @@ VALUES
     (@client1IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
     (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
     (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client4IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'sorengylfietwilightdigger@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client4IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
 
 INSERT INTO app.Tag (tagID, tagName)
 VALUES

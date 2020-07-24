@@ -71,7 +71,7 @@ namespace Santa.Api.Controllers
         // POST: api/Message
         [HttpPost]
         [Authorize(Policy = "create:messages")]
-        public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody, Bind("messageSenderClientID, messageRecieverClientID, messageContent, clientRelationXrefID")] ApiMessage message)
+        public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody] ApiMessage message)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace Santa.Api.Controllers
         // PUT: api/Message/5
         [HttpPut("{chatMessageID}/Read")]
         [Authorize(Policy = "update:messages")]
-        public async Task<ActionResult<Logic.Objects.Message>> PutDescription(Guid chatMessageID, [FromBody, Bind("isMessageRead")] ApiMessageRead message)
+        public async Task<ActionResult<Logic.Objects.Message>> PutDescription(Guid chatMessageID, [FromBody] ApiMessageRead message)
         {
             try
             {

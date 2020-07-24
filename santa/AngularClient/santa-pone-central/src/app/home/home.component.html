@@ -4,7 +4,7 @@
           <mat-tab label="What is it?">
              <div class="small-box mat-elevation-z8 contentBox">
                 <h1>What is it?</h1>
-                <h4>It's christmas, ya dingus!</h4>
+                <h4>It's Hearthswarming, and it's serious business! Are you up to join the cause?</h4>
                 <mat-tab-group mat-align-tabs="center">
                   <mat-tab label="General Information">
                      <div class="small-box mat-elevation-z8 contentBox">
@@ -218,10 +218,13 @@
                            Post ‘em in the threads, use the contact link above, or email SantaPone or the Card Dragon themselves!
                         </p>
                         <p>
-                           Coordinator email for comments/concerns/general inquiries: mlpsantapone@gmail.com
+                           Coordinator email <s>shark</s> pony: <a href = "mailto: mlpsantapone@gmail.com">mlpsantapone@gmail.com</a>
                         </p>
                         <p>
-                           Card Ambassador and assistant dragon supreme : thecardslut@gmail.com 
+                           Card Ambassador and assistant dragon supreme: <a href = "mailto: thecardslut@gmail.com ">thecardslut@gmail.com </a>
+                        </p>
+                        <p>
+                           Site developer, and totally-not-a-Duck: <a href = "mailto: santaponecentraldev@gmail.com">santaponecentraldev@gmail.com</a>
                         </p>
                      </div>
                   </mat-tab>
@@ -232,7 +235,97 @@
             <div class="small-box mat-elevation-z8 contentBox">
                <h1>Privacy</h1>
                <p>
-                  Description
+                  SantaDev here, here at SantaPone Central, we understand that privacy is an incredibly serious business. A bunch of folks from 4chan giving their information to other anons is a HUGE exercise in trust, and 
+                  security, credential protections, and authorization have been the absolute top focus of this whole project. As part of the development of this project, I want to be as transparent as I can with each and every 
+                  one of you about the tech stack used, how it is used, and how your data is protect to the highest degree.
+               </p>
+               <!-- Service Infrustructure Information -->
+               <mat-toolbar>Service Infrastructure</mat-toolbar>
+               <h2>Overview</h2>
+               <p>SantaPone Central is a full stack application with an ASP.NET Web API backend, interfacing Auth0 for a stable and secure role-based management system, and Twilo Sendgrid as a privately used Azure service 
+                  of its own to have a secure way to deliver notifications and other information to users. The front end is an auth0 manged Angular Single-Page Application itself that utilizes best practice to make for a simple 
+                  and effective way for clients and event admins to manage and contribute to the event. 
+               </p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Back End</h2>
+               <p>There are namely 3 parts to the backend infrastructure; the data service, the email service, and the auth0 service. All of these work together to ensure that data is valid, secure, and stateless. 
+                  A privately hosted Twilo Sendgrid solution is used to ensure that emails from the API are uniform, and specific to events, assignments, and coorespondance to notify users of assignments, correspondance, 
+                  or any other things that need to be sent, such as password reset requests. The Auth0 service itself is used by utilizing the Auth0 management API itself, ensuring data security and proper credential handling. 
+                  Being that it as API running on it's own domain, requests are only allowed to come from this site, and the Auth0 tenants used in the data security layer. This specifically has been rigorously tested for fidelity to 
+                  ensure data security management.
+               </p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Front End</h2>
+               <p>The front end site you see before you was made with the Angular framework to deliver a nice, Single-Page Application web experience. I personally am a huge fan of Angular and the way type-safety and 
+                  services in-application can be accessed and handled. SantaPone Central is hosted on its own app platform service seperate from the API to ensure that data calls and services are exclusively handled on the API 
+                  layer, and features data protection layers and services by Auth0 to manage user authorization and requests.
+               </p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Sendgrid</h2>
+               <p>Twilo Sendgrid is one of the services hosted privately within Azure. Rather simply, it is the service that allows the API to send secure emails about notifications and correspondance in general.</p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Hosting</h2>
+               <p>The hosting of all of these services are hosted within Azure. If you are not familiar with service archetechtures, in short, similar services would be Amazon Web Services and CloudFlare. These are secure 
+                  and expandable cloud computing solutions that allow for a safe and consistent running environment. I use Azure specifically because it is what I am most familiar with, and it interfaces well with a lot of 
+                  the other Microsoft-based services and frameworks like SendGrid, or ASP.NET in general.
+               </p>
+
+               <!-- Auth0 Information -->
+               <mat-toolbar>Auth0</mat-toolbar>
+               <h2>What exactly is Auth0?</h2>
+               <p>Auth0, in short is a security service that handles client login information and security</p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>How secure is it?</h2>
+               <p>To put it mildly, this is a security platform that AMD, Atlassian, and BlueCross BlueShield thmeselves use. It provides a secure way to attatch validation to requests that are made 
+                  with roles that define information about a user, allows for a safe API to manage password changes, and ensures that quite literally nothing gets past the security layer that shouldn't.
+               </p>
+               
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Passwords</h2>
+               <p>For the sake of security, there are literally no passwords that are or ever will be stored on the database for SantaPone Central. All user credentials and security information is 
+                  handled exclusively by a privately paid and managed Auth0 tenant by yours truly to make sure every single one of your data is secure. Passwords, to that end, the only people who 
+                  can even see or change your password is... yourself. Not even myself can see or know your passwords. 
+               </p>
+
+               <!-- Data Information -->
+               <mat-toolbar>Data</mat-toolbar>
+               <h2>What data is stored?</h2>
+               <p>The goal of SantaPone Central is to literally keep the same process to the /SS/ event in a managed, easy-to-use way. That being said, the only things that are stored on the database 
+                  is the information that has always been asked for. Your names, emails, address, and survey questions are the only things that are asked for upon signing up, and are vigorously and strictly
+                  locked behind auth0 for peace of mind and protection. 
+               </p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>Who can access my data?</h2>
+               <p>Auth0 allows for role-based authorization. That being said, the only people who can view your data are the admins, and the people who are set to send to yourself as an assignment. The 
+                  API has been carefully developed to make sure that the profile responses to users only gives the necessary data to that user, being the information SantaPone has always given in emails in 
+                  past events.
+               </p>
+
+               <mat-divider [inset]="true"></mat-divider>
+
+               <h2>What about after the event?</h2>
+               <p>After the Secret Santa Event, I plan to remove all the user data once SantaPone is able to download the tables needed for her own archival purposes in terms of knowing who grinched, or any other 
+                  information needed. Auth0 Accounts will also be deleted, and the data service will be brought offline until the need for the next event.
+               </p>
+
+               <mat-toolbar>Further Information</mat-toolbar>
+               <p>Hundreds of hours went into the software development project for over half a year by quite literally just myself. The hosting services through the course of development, domains, certifications, and authorization 
+                  services are something I have been footing the bill fo rmyself to make sure that this year had a nice tool for SantaPone and the other event organizers to have to help manage the event in 
+                  a way that would be easy for both you wonderful anons, and her to manage assignments, and bring cheer to more people. That being said, my goal here is to be as transparent and open to you all as possible, 
+                  and if any of you dev-happy anons would like to peek into the development of the application, feel free to reach out to me at <a href = "mailto: santaponecentraldev@gmail.com">santaponecentraldev@gmail.com</a>.
                </p>
             </div>
           </mat-tab>

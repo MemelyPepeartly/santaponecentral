@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -191,6 +191,9 @@ export class SantaApiPutService {
   putClientName(id: string, updatedClient: ClientNameResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient);
   }
+  putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel);
+  }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
   }
@@ -200,6 +203,9 @@ export class SantaApiPutService {
   putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
     return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
   }
+  putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
+    return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -207,7 +213,7 @@ export class SantaApiPutService {
 export class SantaApiDeleteService {
   
   constructor(private http: HttpClient) { }
-  deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationship): Observable<any> {
+  deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationshipReponse): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
   }
   deleteTagFromClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {

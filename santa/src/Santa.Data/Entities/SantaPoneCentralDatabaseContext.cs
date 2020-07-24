@@ -37,140 +37,174 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.ChatMessageId)
                     .HasColumnName("chatMessageID")
+                    .HasViewColumnName("chatMessageID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.ClientRelationXrefId).HasColumnName("clientRelationXrefID");
+                entity.Property(e => e.ClientRelationXrefId)
+                    .HasColumnName("clientRelationXrefID")
+                    .HasViewColumnName("clientRelationXrefID");
 
                 entity.Property(e => e.DateTimeSent)
                     .HasColumnName("dateTimeSent")
+                    .HasViewColumnName("dateTimeSent")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IsMessageRead).HasColumnName("isMessageRead");
+                entity.Property(e => e.IsMessageRead)
+                    .HasColumnName("isMessageRead")
+                    .HasViewColumnName("isMessageRead");
 
                 entity.Property(e => e.MessageContent)
                     .IsRequired()
                     .HasColumnName("messageContent")
+                    .HasViewColumnName("messageContent")
                     .HasMaxLength(500);
 
-                entity.Property(e => e.MessageRecieverClientId).HasColumnName("messageRecieverClientID");
+                entity.Property(e => e.MessageRecieverClientId)
+                    .HasColumnName("messageRecieverClientID")
+                    .HasViewColumnName("messageRecieverClientID");
 
-                entity.Property(e => e.MessageSenderClientId).HasColumnName("messageSenderClientID");
+                entity.Property(e => e.MessageSenderClientId)
+                    .HasColumnName("messageSenderClientID")
+                    .HasViewColumnName("messageSenderClientID");
 
                 entity.HasOne(d => d.ClientRelationXref)
                     .WithMany(p => p.ChatMessage)
-                    .HasForeignKey(d => d.ClientRelationXrefId)
-                    .HasConstraintName("FK__ChatMessa__clien__1DBDB94C");
+                    .HasForeignKey(x => x.ClientRelationXrefId)
+                    .HasConstraintName("FK__ChatMessa__clien__72942F7C");
 
                 entity.HasOne(d => d.MessageRecieverClient)
                     .WithMany(p => p.ChatMessageMessageRecieverClient)
-                    .HasForeignKey(d => d.MessageRecieverClientId)
-                    .HasConstraintName("FK__ChatMessa__messa__1CC99513");
+                    .HasForeignKey(x => x.MessageRecieverClientId)
+                    .HasConstraintName("FK__ChatMessa__messa__71A00B43");
 
                 entity.HasOne(d => d.MessageSenderClient)
                     .WithMany(p => p.ChatMessageMessageSenderClient)
-                    .HasForeignKey(d => d.MessageSenderClientId)
-                    .HasConstraintName("FK__ChatMessa__messa__1BD570DA");
+                    .HasForeignKey(x => x.MessageSenderClientId)
+                    .HasConstraintName("FK__ChatMessa__messa__70ABE70A");
             });
 
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable("Client", "app");
 
-                entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Client__AB6E61643EDE3F64")
+                entity.HasIndex(x => x.Email)
+                    .HasName("UQ__Client__AB6E6164C4442372")
                     .IsUnique();
 
                 entity.Property(e => e.ClientId)
                     .HasColumnName("clientID")
+                    .HasViewColumnName("clientID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.AddressLine1)
                     .IsRequired()
                     .HasColumnName("addressLine1")
+                    .HasViewColumnName("addressLine1")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.AddressLine2)
                     .HasColumnName("addressLine2")
+                    .HasViewColumnName("addressLine2")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasColumnName("city")
+                    .HasViewColumnName("city")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.ClientName)
                     .IsRequired()
                     .HasColumnName("clientName")
+                    .HasViewColumnName("clientName")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.ClientStatusId).HasColumnName("clientStatusID");
+                entity.Property(e => e.ClientStatusId)
+                    .HasColumnName("clientStatusID")
+                    .HasViewColumnName("clientStatusID");
 
                 entity.Property(e => e.Country)
                     .IsRequired()
                     .HasColumnName("country")
+                    .HasViewColumnName("country")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasColumnName("email")
+                    .HasViewColumnName("email")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Nickname)
                     .HasColumnName("nickname")
+                    .HasViewColumnName("nickname")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.PostalCode)
                     .IsRequired()
                     .HasColumnName("postalCode")
+                    .HasViewColumnName("postalCode")
                     .HasMaxLength(25);
 
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasColumnName("state")
+                    .HasViewColumnName("state")
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.ClientStatus)
                     .WithMany(p => p.Client)
-                    .HasForeignKey(d => d.ClientStatusId)
+                    .HasForeignKey(x => x.ClientStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Client__clientSt__74BBA3B9");
+                    .HasConstraintName("FK__Client__clientSt__499219E9");
             });
 
             modelBuilder.Entity<ClientRelationXref>(entity =>
             {
                 entity.ToTable("ClientRelationXref", "app");
 
-                entity.HasIndex(e => new { e.SenderClientId, e.RecipientClientId, e.EventTypeId })
+                entity.HasIndex(x => new { x.SenderClientId, x.RecipientClientId, x.EventTypeId })
                     .HasName("clientRelationXrefID")
                     .IsUnique();
 
                 entity.Property(e => e.ClientRelationXrefId)
                     .HasColumnName("clientRelationXrefID")
+                    .HasViewColumnName("clientRelationXrefID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.EventTypeId).HasColumnName("eventTypeID");
+                entity.Property(e => e.Completed)
+                    .HasColumnName("completed")
+                    .HasViewColumnName("completed");
 
-                entity.Property(e => e.RecipientClientId).HasColumnName("recipientClientID");
+                entity.Property(e => e.EventTypeId)
+                    .HasColumnName("eventTypeID")
+                    .HasViewColumnName("eventTypeID");
 
-                entity.Property(e => e.SenderClientId).HasColumnName("senderClientID");
+                entity.Property(e => e.RecipientClientId)
+                    .HasColumnName("recipientClientID")
+                    .HasViewColumnName("recipientClientID");
+
+                entity.Property(e => e.SenderClientId)
+                    .HasColumnName("senderClientID")
+                    .HasViewColumnName("senderClientID");
 
                 entity.HasOne(d => d.EventType)
                     .WithMany(p => p.ClientRelationXref)
-                    .HasForeignKey(d => d.EventTypeId)
+                    .HasForeignKey(x => x.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__event__7D50E9BA");
+                    .HasConstraintName("FK__ClientRel__event__52275FEA");
 
                 entity.HasOne(d => d.RecipientClient)
                     .WithMany(p => p.ClientRelationXrefRecipientClient)
-                    .HasForeignKey(d => d.RecipientClientId)
+                    .HasForeignKey(x => x.RecipientClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__recip__7C5CC581");
+                    .HasConstraintName("FK__ClientRel__recip__51333BB1");
 
                 entity.HasOne(d => d.SenderClient)
                     .WithMany(p => p.ClientRelationXrefSenderClient)
-                    .HasForeignKey(d => d.SenderClientId)
+                    .HasForeignKey(x => x.SenderClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__sende__7B68A148");
+                    .HasConstraintName("FK__ClientRel__sende__503F1778");
             });
 
             modelBuilder.Entity<ClientStatus>(entity =>
@@ -179,11 +213,13 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.ClientStatusId)
                     .HasColumnName("clientStatusID")
+                    .HasViewColumnName("clientStatusID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.StatusDescription)
                     .IsRequired()
                     .HasColumnName("statusDescription")
+                    .HasViewColumnName("statusDescription")
                     .HasMaxLength(25);
             });
 
@@ -191,47 +227,57 @@ namespace Santa.Data.Entities
             {
                 entity.ToTable("ClientTagXref", "app");
 
-                entity.HasIndex(e => new { e.ClientId, e.TagId })
+                entity.HasIndex(x => new { x.ClientId, x.TagId })
                     .HasName("clientTagXrefID")
                     .IsUnique();
 
-                entity.Property(e => e.ClientTagXrefId).HasColumnName("clientTagXrefID");
+                entity.Property(e => e.ClientTagXrefId)
+                    .HasColumnName("clientTagXrefID")
+                    .HasViewColumnName("clientTagXrefID");
 
-                entity.Property(e => e.ClientId).HasColumnName("clientID");
+                entity.Property(e => e.ClientId)
+                    .HasColumnName("clientID")
+                    .HasViewColumnName("clientID");
 
-                entity.Property(e => e.TagId).HasColumnName("tagID");
+                entity.Property(e => e.TagId)
+                    .HasColumnName("tagID")
+                    .HasViewColumnName("tagID");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.ClientTagXref)
-                    .HasForeignKey(d => d.ClientId)
+                    .HasForeignKey(x => x.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientTag__clien__1804DFF6");
+                    .HasConstraintName("FK__ClientTag__clien__6CDB5626");
 
                 entity.HasOne(d => d.Tag)
                     .WithMany(p => p.ClientTagXref)
-                    .HasForeignKey(d => d.TagId)
+                    .HasForeignKey(x => x.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientTag__tagID__18F9042F");
+                    .HasConstraintName("FK__ClientTag__tagID__6DCF7A5F");
             });
 
             modelBuilder.Entity<EventType>(entity =>
             {
                 entity.ToTable("EventType", "app");
 
-                entity.HasIndex(e => e.EventDescription)
-                    .HasName("UQ__EventTyp__F516F46E577178DC")
+                entity.HasIndex(x => x.EventDescription)
+                    .HasName("UQ__EventTyp__F516F46E36A3B58C")
                     .IsUnique();
 
                 entity.Property(e => e.EventTypeId)
                     .HasColumnName("eventTypeID")
+                    .HasViewColumnName("eventTypeID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.EventDescription)
                     .IsRequired()
                     .HasColumnName("eventDescription")
+                    .HasViewColumnName("eventDescription")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("isActive")
+                    .HasViewColumnName("isActive");
             });
 
             modelBuilder.Entity<Survey>(entity =>
@@ -240,22 +286,28 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.SurveyId)
                     .HasColumnName("surveyID")
+                    .HasViewColumnName("surveyID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.EventTypeId).HasColumnName("eventTypeID");
+                entity.Property(e => e.EventTypeId)
+                    .HasColumnName("eventTypeID")
+                    .HasViewColumnName("eventTypeID");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("isActive")
+                    .HasViewColumnName("isActive");
 
                 entity.Property(e => e.SurveyDescription)
                     .IsRequired()
                     .HasColumnName("surveyDescription")
+                    .HasViewColumnName("surveyDescription")
                     .HasMaxLength(100);
 
                 entity.HasOne(d => d.EventType)
                     .WithMany(p => p.Survey)
-                    .HasForeignKey(d => d.EventTypeId)
+                    .HasForeignKey(x => x.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Survey__eventTyp__002D5665");
+                    .HasConstraintName("FK__Survey__eventTyp__5503CC95");
             });
 
             modelBuilder.Entity<SurveyOption>(entity =>
@@ -264,16 +316,19 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.SurveyOptionId)
                     .HasColumnName("surveyOptionID")
+                    .HasViewColumnName("surveyOptionID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.DisplayText)
                     .IsRequired()
                     .HasColumnName("displayText")
+                    .HasViewColumnName("displayText")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.SurveyOptionValue)
                     .IsRequired()
                     .HasColumnName("surveyOptionValue")
+                    .HasViewColumnName("surveyOptionValue")
                     .HasMaxLength(50);
             });
 
@@ -283,77 +338,103 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.SurveyQuestionId)
                     .HasColumnName("surveyQuestionID")
+                    .HasViewColumnName("surveyQuestionID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.IsSurveyOptionList).HasColumnName("isSurveyOptionList");
+                entity.Property(e => e.IsSurveyOptionList)
+                    .HasColumnName("isSurveyOptionList")
+                    .HasViewColumnName("isSurveyOptionList");
 
                 entity.Property(e => e.QuestionText)
                     .IsRequired()
                     .HasColumnName("questionText")
+                    .HasViewColumnName("questionText")
                     .HasMaxLength(150);
+
+                entity.Property(e => e.SenderCanView)
+                    .HasColumnName("senderCanView")
+                    .HasViewColumnName("senderCanView");
             });
 
             modelBuilder.Entity<SurveyQuestionOptionXref>(entity =>
             {
-                entity.HasKey(e => e.SurveyQuestionOptionXref1)
-                    .HasName("PK__SurveyQu__1BAA3BB18E9148C7");
+                entity.HasKey(x => x.SurveyQuestionOptionXref1)
+                    .HasName("PK__SurveyQu__1BAA3BB115D0BBB3");
 
                 entity.ToTable("SurveyQuestionOptionXref", "app");
 
-                entity.Property(e => e.SurveyQuestionOptionXref1).HasColumnName("surveyQuestionOptionXref");
+                entity.Property(e => e.SurveyQuestionOptionXref1)
+                    .HasColumnName("surveyQuestionOptionXref")
+                    .HasViewColumnName("surveyQuestionOptionXref");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("isActive")
+                    .HasViewColumnName("isActive");
 
                 entity.Property(e => e.SortOrder)
                     .IsRequired()
                     .HasColumnName("sortOrder")
+                    .HasViewColumnName("sortOrder")
                     .HasMaxLength(5);
 
-                entity.Property(e => e.SurveyOptionId).HasColumnName("surveyOptionID");
+                entity.Property(e => e.SurveyOptionId)
+                    .HasColumnName("surveyOptionID")
+                    .HasViewColumnName("surveyOptionID");
 
-                entity.Property(e => e.SurveyQuestionId).HasColumnName("surveyQuestionID");
+                entity.Property(e => e.SurveyQuestionId)
+                    .HasColumnName("surveyQuestionID")
+                    .HasViewColumnName("surveyQuestionID");
 
                 entity.HasOne(d => d.SurveyOption)
                     .WithMany(p => p.SurveyQuestionOptionXref)
-                    .HasForeignKey(d => d.SurveyOptionId)
+                    .HasForeignKey(x => x.SurveyOptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__1157E267");
+                    .HasConstraintName("FK__SurveyQue__surve__662E5897");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionOptionXref)
-                    .HasForeignKey(d => d.SurveyQuestionId)
+                    .HasForeignKey(x => x.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__1063BE2E");
+                    .HasConstraintName("FK__SurveyQue__surve__653A345E");
             });
 
             modelBuilder.Entity<SurveyQuestionXref>(entity =>
             {
                 entity.ToTable("SurveyQuestionXref", "app");
 
-                entity.Property(e => e.SurveyQuestionXrefId).HasColumnName("surveyQuestionXrefID");
+                entity.Property(e => e.SurveyQuestionXrefId)
+                    .HasColumnName("surveyQuestionXrefID")
+                    .HasViewColumnName("surveyQuestionXrefID");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("isActive")
+                    .HasViewColumnName("isActive");
 
                 entity.Property(e => e.SortOrder)
                     .IsRequired()
                     .HasColumnName("sortOrder")
+                    .HasViewColumnName("sortOrder")
                     .HasMaxLength(5);
 
-                entity.Property(e => e.SurveyId).HasColumnName("surveyID");
+                entity.Property(e => e.SurveyId)
+                    .HasColumnName("surveyID")
+                    .HasViewColumnName("surveyID");
 
-                entity.Property(e => e.SurveyQuestionId).HasColumnName("surveyQuestionID");
+                entity.Property(e => e.SurveyQuestionId)
+                    .HasColumnName("surveyQuestionID")
+                    .HasViewColumnName("surveyQuestionID");
 
                 entity.HasOne(d => d.Survey)
                     .WithMany(p => p.SurveyQuestionXref)
-                    .HasForeignKey(d => d.SurveyId)
+                    .HasForeignKey(x => x.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__0C932D4A");
+                    .HasConstraintName("FK__SurveyQue__surve__6169A37A");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyQuestionXref)
-                    .HasForeignKey(d => d.SurveyQuestionId)
+                    .HasForeignKey(x => x.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyQue__surve__0D875183");
+                    .HasConstraintName("FK__SurveyQue__surve__625DC7B3");
             });
 
             modelBuilder.Entity<SurveyResponse>(entity =>
@@ -362,60 +443,72 @@ namespace Santa.Data.Entities
 
                 entity.Property(e => e.SurveyResponseId)
                     .HasColumnName("surveyResponseID")
+                    .HasViewColumnName("surveyResponseID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.ClientId).HasColumnName("clientID");
+                entity.Property(e => e.ClientId)
+                    .HasColumnName("clientID")
+                    .HasViewColumnName("clientID");
 
                 entity.Property(e => e.ResponseText)
                     .IsRequired()
                     .HasColumnName("responseText")
+                    .HasViewColumnName("responseText")
                     .HasMaxLength(2000);
 
-                entity.Property(e => e.SurveyId).HasColumnName("surveyID");
+                entity.Property(e => e.SurveyId)
+                    .HasColumnName("surveyID")
+                    .HasViewColumnName("surveyID");
 
-                entity.Property(e => e.SurveyOptionId).HasColumnName("surveyOptionID");
+                entity.Property(e => e.SurveyOptionId)
+                    .HasColumnName("surveyOptionID")
+                    .HasViewColumnName("surveyOptionID");
 
-                entity.Property(e => e.SurveyQuestionId).HasColumnName("surveyQuestionID");
+                entity.Property(e => e.SurveyQuestionId)
+                    .HasColumnName("surveyQuestionID")
+                    .HasViewColumnName("surveyQuestionID");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.SurveyResponse)
-                    .HasForeignKey(d => d.ClientId)
+                    .HasForeignKey(x => x.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__clien__07CE782D");
+                    .HasConstraintName("FK__SurveyRes__clien__5CA4EE5D");
 
                 entity.HasOne(d => d.Survey)
                     .WithMany(p => p.SurveyResponse)
-                    .HasForeignKey(d => d.SurveyId)
+                    .HasForeignKey(x => x.SurveyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__06DA53F4");
+                    .HasConstraintName("FK__SurveyRes__surve__5BB0CA24");
 
                 entity.HasOne(d => d.SurveyOption)
                     .WithMany(p => p.SurveyResponse)
-                    .HasForeignKey(d => d.SurveyOptionId)
-                    .HasConstraintName("FK__SurveyRes__surve__09B6C09F");
+                    .HasForeignKey(x => x.SurveyOptionId)
+                    .HasConstraintName("FK__SurveyRes__surve__5E8D36CF");
 
                 entity.HasOne(d => d.SurveyQuestion)
                     .WithMany(p => p.SurveyResponse)
-                    .HasForeignKey(d => d.SurveyQuestionId)
+                    .HasForeignKey(x => x.SurveyQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SurveyRes__surve__08C29C66");
+                    .HasConstraintName("FK__SurveyRes__surve__5D991296");
             });
 
             modelBuilder.Entity<Tag>(entity =>
             {
                 entity.ToTable("Tag", "app");
 
-                entity.HasIndex(e => e.TagName)
-                    .HasName("UQ__Tag__288C385141106FDC")
+                entity.HasIndex(x => x.TagName)
+                    .HasName("UQ__Tag__288C38512A836E0C")
                     .IsUnique();
 
                 entity.Property(e => e.TagId)
                     .HasColumnName("tagID")
+                    .HasViewColumnName("tagID")
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.TagName)
                     .IsRequired()
                     .HasColumnName("tagName")
+                    .HasViewColumnName("tagName")
                     .HasMaxLength(50);
             });
 

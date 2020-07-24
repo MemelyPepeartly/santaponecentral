@@ -66,14 +66,15 @@
 .bg
 {
   display: inline-block;
-  background-image: url(../assets/santa.png);
+  position: fixed;
+  background-image: url(../assets/images/santa.png);
   background-size: contain;
   background-repeat: no-repeat;
-  margin-top: 10px;
-  background-position: bottom;
-  min-width: 600px;
   width: 100%;
-  height: fit-content;
+  max-width: 1200px;
+  min-width: 600px;
   min-height: 800px;
-  background-position: left;
+  margin-top: 10px;
+  background-position-y: bottom;
+  
 }

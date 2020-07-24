@@ -1,6 +1,48 @@
+tr
+{
+    vertical-align: middle;
+}
 #data-table
 {
     width: 100%;
     min-width: 500px;
     text-align: left;
+}
+
+.senderContainer
+{
+    display: block;
+    width: fit-content;
+}
+.senderInfoDiv
+{
+    display: inline-block;
+    height: 100%;
+}
+.senderImage
+{
+    width: 60px;
+    position: relative;
+    bottom: 8px;
+    left: 15px;
+}
+.cardExchangeIcon
+{
+    content: url(../../../assets/images/cardAndClawWithoutSparkle.png);
+}
+.giftExchangeIcon
+{
+    content: url(../../../assets/images/presentWithOneFin.png);
+}
+
+@media only screen and (max-width: 767px) and (min-width: 480px)
+{
+    .senderImage
+    {
+        display:none;
+    }
+    .cardExchangeIcon
+    {
+        display:none;
+    }
 }
