@@ -17,7 +17,8 @@ export class ControlPanelComponent implements OnInit {
     public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
     public profileService: ProfileService) { }
-    
+  
+  @Input() loading: boolean;
   @Input() histories: Array<MessageHistory> = []
   @Input() generalHistory: MessageHistory;
   @Input() profile: Profile;

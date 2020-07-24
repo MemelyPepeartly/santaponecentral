@@ -15,7 +15,7 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
 
   constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
   
-  @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<any>();
+  @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
@@ -25,8 +25,6 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
 
   public isAdmin: boolean;
   public markingRead: boolean = false;
-
-
 
   ngOnInit(): void {
     this.auth.isAdmin.subscribe((admin: boolean) => {

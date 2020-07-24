@@ -8,7 +8,7 @@
         (messageUpdatedEvent)="updateChat($event)"
         [selectedHistory]="selectedHistory"
         [sendingClientMeta]="selectedHistory.conversationClient"
-        [showLoading]="this.profileService.gettingSelectedHistory"></app-contact-panel>
+        [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
         [relationshipID]="selectedHistory.relationXrefID"
@@ -23,9 +23,11 @@
         <app-information
             [profile]="profile"
             [events]="events"
+            [loading] = "gettingProfile"
         ></app-information>
         <app-control-panel
             (chatClickedEvent)="showSelectedChat()"
+            [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
             [generalHistory]="generalHistory"
             [profile]="profile"
             [histories]="histories">

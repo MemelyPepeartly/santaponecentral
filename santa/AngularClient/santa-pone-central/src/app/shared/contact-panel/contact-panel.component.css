@@ -25,6 +25,7 @@ mat-card
 #chat-window
 {
     height: 500px;
+    min-height: 500px;
     border-radius: 25px;
     margin-left: 5px;
     margin-right: 5px;
@@ -93,6 +94,12 @@ mat-card
 {
     display: block;
     text-align: center;
+    height: 100%;
+    position: absolute;
+    bottom: 50%;
+    top: 50%;
+    left: 50%;
+    right: 50%;
 }
 .messageCheckButton
 {
