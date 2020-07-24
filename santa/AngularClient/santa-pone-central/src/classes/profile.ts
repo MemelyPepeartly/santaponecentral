@@ -5,22 +5,22 @@ import { EventType } from './eventType';
 
 export class Profile 
 {
-    clientID: string;
-    clientStatus = new Status;
-    clientName: string;
-    clientNickname: string;
-    email: string;
-    address = new Address;
+    clientID: string = "";
+    clientStatus: Status = new Status();
+    clientName: string = "";
+    clientNickname: string = "";
+    email: string = "";
+    address: Address = new Address;
     recipients: Array<ProfileRecipient> = [];
     responses: Array<SurveyResponse> = [];
 }
 export class ProfileRecipient 
 {
-    clientID: string;
+    clientID: string = "";
     relationXrefID?: string = null;
-    clientName: string;
-    clientNickname: string;
-    address = new Address;
-    recipientEvent: EventType;
+    clientName: string = "";
+    clientNickname: string = "";
+    address: Address = new Address();
+    recipientEvent: EventType = new EventType();
     responses: Array<SurveyResponse> = [];
 }
