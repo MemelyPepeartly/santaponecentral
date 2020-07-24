@@ -23,7 +23,7 @@ namespace Santa.Api.AuthHelper
         }
 
         #region User Info Model
-        public async Task<Auth0UserInfoModel> createAuthClient(string authEmail)
+        public async Task<Auth0UserInfoModel> createAuthClient(string authEmail, string authName)
         {
             RestClient userRestClient = new RestClient(endpoint + "users");
             RestRequest userRequest = new RestRequest(Method.POST);
@@ -32,7 +32,7 @@ namespace Santa.Api.AuthHelper
             Auth0NewUserModel newUser = new Auth0NewUserModel()
             {
                 email = authEmail,
-                name = authEmail,
+                name = authName,
                 connection = "Username-Password-Authentication",
                 password = generateTempPassword(),
                 verify_email = false
@@ -91,7 +91,7 @@ namespace Santa.Api.AuthHelper
             }
 
         }
-        public async Task updateAuthClientEmail(string newEmail, string authUserID)
+        public async Task updateAuthClientEmail(string authUserID, string newEmail, string nickname)
         {
             RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
             RestRequest userRequest = new RestRequest(Method.PATCH);
@@ -100,7 +100,7 @@ namespace Santa.Api.AuthHelper
             var responseModel = new Models.Auth0_Response_Models.Auth0ChangeEmailModel()
             {
                 email = newEmail,
-                name = newEmail
+                name = nickname
             };
 
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);

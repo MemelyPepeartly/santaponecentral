@@ -64,18 +64,18 @@ VALUES
     (@eventTypeID1GUID,'Gift Exchange', 1),
     (@eventTypeID2GUID,'Card Exchange', 1);
 
-INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, isSurveyOptionList)
+INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
 VALUES
-    (@surveyQuestion1IDGUID,'How many cards would you like to send?',0),
-    (@surveyQuestion2IDGUID,'How many cards would you like to recieve?',0),
-    (@surveyQuestion3IDGUID,'Who are your favorite characters?',0),
-    (@surveyQuestion4IDGUID,'Are you okay with spaghetti on the package?',1),
-    (@surveyQuestion5IDGUID,'Are you okay with lewd?',1),
-    (@surveyQuestion6IDGUID,'Are you okay with edible items?',1),
-    (@surveyQuestion7IDGUID,'Are you okay with receiving extra assignments?',1),
-    (@surveyQuestion8IDGUID,'Additional comments?',0),
-    (@surveyQuestion9IDGUID,'Wishlist',0),
-    (@surveyQuestion10IDGUID,'Do you like handmade items?',1);
+    (@surveyQuestion1IDGUID,'How many cards would you like to send?', 0, 0),
+    (@surveyQuestion2IDGUID,'How many cards would you like to recieve?', 0, 0),
+    (@surveyQuestion3IDGUID,'Who are your favorite characters?', 1, 0),
+    (@surveyQuestion4IDGUID,'Are you okay with spaghetti on the package?', 1, 1),
+    (@surveyQuestion5IDGUID,'Are you okay with lewd?', 1, 1),
+    (@surveyQuestion6IDGUID,'Are you okay with edible items?', 1, 1),
+    (@surveyQuestion7IDGUID,'Are you okay with receiving extra assignments?', 0, 1),
+    (@surveyQuestion8IDGUID,'Additional comments?', 1 ,0),
+    (@surveyQuestion9IDGUID,'Wishlist', 1, 0),
+    (@surveyQuestion10IDGUID,'Do you like handmade items?', 1, 1);
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
@@ -116,19 +116,19 @@ VALUES
     (@surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
 
-    (@surveyQuestion5IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (@surveyQuestion5IDGUID, @surveyOptionID1GUID, 'asc', 1),
     (@surveyQuestion5IDGUID, @surveyOptionID2GUID, 'asc', 1),
     (@surveyQuestion5IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion6IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (@surveyQuestion6IDGUID, @surveyOptionID1GUID, 'asc', 1),
     (@surveyQuestion6IDGUID, @surveyOptionID2GUID, 'asc', 1),
     (@surveyQuestion6IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion7IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (@surveyQuestion7IDGUID, @surveyOptionID1GUID, 'asc', 1),
     (@surveyQuestion7IDGUID, @surveyOptionID2GUID, 'asc', 1),
     (@surveyQuestion7IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion10IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (@surveyQuestion10IDGUID, @surveyOptionID1GUID, 'asc', 1),
     (@surveyQuestion10IDGUID, @surveyOptionID2GUID, 'asc', 1),
     (@surveyQuestion10IDGUID, @surveyOptionID3GUID, 'asc', 1);
     

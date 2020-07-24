@@ -1,12 +1,12 @@
 <div id="info-div">
-    <mat-card class="list-card mat-elevation-z5">
+    <mat-card class="mat-elevation-z5">
+        <!-- Personal Information Card-->
         <mat-card-header>
             <mat-card-title>Profile Information</mat-card-title>
             <mat-card-subtitle>Personal information</mat-card-subtitle>
         </mat-card-header>
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
         <mat-card-content>
-            <mat-card class="infoCard">
+            <mat-card class="infoCard mat-elevation-z3">
                 <mat-card-header>
                     <mat-card-title>Holiday Information</mat-card-title>
                     <mat-card-subtitle>Holiday ID and name information</mat-card-subtitle>
@@ -18,7 +18,8 @@
                 </mat-card-content>
             </mat-card>
 
-            <mat-card class="infoCard">
+            <!-- Address card -->
+            <mat-card class="infoCard mat-elevation-z3">
                 <mat-card-header>
                     <mat-card-title>Address</mat-card-title>
                     <mat-card-subtitle>Your mailing address</mat-card-subtitle>
@@ -35,6 +36,39 @@
                     </div>
                 </mat-card-content>
             </mat-card>
+
+            <!-- Response Card -->
+            <mat-toolbar id="relationshipEventHeader">
+                <mat-toolbar-row>
+                    Survey Answers
+                </mat-toolbar-row>
+            </mat-toolbar>
+            <mat-card class="infoCard mat-elevation-z3" *ngFor="let event of events">
+                <mat-card-header>
+                    <mat-card-title>{{event.eventDescription}} Survey Responses</mat-card-title>
+                    <mat-card-subtitle>Your own answers for the {{event.eventDescription}} survey</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-accordion multi>
+                        <!-- Expansion panels for responses -->
+                        <mat-expansion-panel *ngFor="let response of profile.responses">
+                            <mat-expansion-panel-header *ngIf="event.eventTypeID == response.responseEvent.eventTypeID">
+                                <mat-panel-title>
+                                    <span class="questionText">{{response.surveyQuestion.questionText}}</span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    <mat-icon 
+                                    matTooltip="{{response.surveyQuestion.questionText}}"
+                                    [matTooltipPosition]="'right'">question_answer</mat-icon>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <p>{{response.responseText}}</p>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+                </mat-card-content>
+            </mat-card>
         </mat-card-content>
     </mat-card>
+
 </div>

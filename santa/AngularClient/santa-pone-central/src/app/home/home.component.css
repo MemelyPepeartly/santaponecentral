@@ -3,10 +3,11 @@
   padding: 10px;
   display: block;
   text-align: center;
+  min-width: 600px;
 }
 .child{
   display: inline-block;
-  width: 90%;
+  width: 100%;
 }
 .small-box, .large-box {
   display: block;

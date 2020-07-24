@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Data.Entities;
-using Santa.Data.Repository;
-using System.Runtime.CompilerServices;
+using Santa.Logic.Constants;
 
 namespace Santa.Data.Repository
 {
@@ -54,7 +53,9 @@ namespace Santa.Data.Repository
                     ClientRelationXrefId = Guid.NewGuid(),
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
-                    EventTypeId = eventTypeID
+                    EventTypeId = eventTypeID,
+                    // Value being posted should be false to start by default
+                    Completed = false
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
             }
@@ -165,6 +166,21 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public async Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus)
+        {
+            try
+            {
+                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.RecipientClientId == recipientID && crxf.SenderClientId == senderID && crxf.EventTypeId == eventTypeID);
+
+                contextRelationship.Completed = targetCompletedStatus;
+
+                santaContext.ClientRelationXref.Update(contextRelationship);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public async Task DeleteClientByIDAsync(Guid clientID)
         {
             try
@@ -198,8 +214,8 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
                     .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient) 
-                            .ThenInclude(c => c.SurveyResponse)
+                        .ThenInclude(clXref => clXref.RecipientClient)
+                            .ThenInclude(c => c.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
                                 .ThenInclude(sr => sr.Survey)
                                     .ThenInclude(s => s.EventType)
                     .Include(r => r.ClientRelationXrefSenderClient)
@@ -209,7 +225,13 @@ namespace Santa.Data.Repository
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
                     .Include(s => s.ClientStatus)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(s => s.SurveyQuestion)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
                     .FirstOrDefaultAsync(c => c.Email == email));
+                
                 return logicProfile;
             }
             catch (Exception e)
@@ -445,7 +467,7 @@ namespace Santa.Data.Repository
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
                 List<Entities.Client> listContextClient = await santaContext.Client.Include(c => c.ClientStatus).Include(x => x.ClientRelationXrefRecipientClient).ToListAsync();
 
-                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == StatusConstants.APPROVED))
+                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
                 {
                     if(client.ClientRelationXrefRecipientClient.Count() > 0)
                     {
@@ -1086,6 +1108,7 @@ namespace Santa.Data.Repository
 
                 oldQuestion.QuestionText = targetQuestion.questionText;
                 oldQuestion.IsSurveyOptionList = targetQuestion.isSurveyOptionList;
+                oldQuestion.SenderCanView = targetQuestion.senderCanView;
 
                 santaContext.SurveyQuestion.Update(oldQuestion);
             }

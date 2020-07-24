@@ -7,6 +7,8 @@ import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { ProfileService } from '../services/Profile.service';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
+import { GathererService } from '../services/gatherer.service';
+import { EventType } from 'src/classes/eventType';
 
 @Component({
   selector: 'app-profile',
@@ -16,6 +18,7 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 export class ProfileComponent implements OnInit {
 
   constructor(public profileService: ProfileService,
+    public gatherer: GathererService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
     public auth: AuthService,
@@ -30,7 +33,8 @@ export class ProfileComponent implements OnInit {
   public selectedHistory: MessageHistory = new MessageHistory();
   public generalHistory: MessageHistory = new MessageHistory();
 
-  public histories: Array<MessageHistory>;
+  public histories: Array<MessageHistory> = [];
+  public events: Array<EventType> = [];
   public adminRecieverMeta: ClientMeta = new ClientMeta;
 
   public showOverlay: boolean = false;
@@ -51,7 +55,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
-    await this.profileService.getProfile(this.authProfile.name).catch(err => {console.log(err)});
+    await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
     // Chat histories subscribe
     this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
@@ -68,7 +72,13 @@ export class ProfileComponent implements OnInit {
       this.generalHistory = generalHistory;
     });
 
-    this.profileService.getHistories(this.profile.clientID);
+    // Events subscribe
+    this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
+      this.events = eventArray
+    });
+
+    await this.gatherer.gatherAllEvents();
+    await this.profileService.getHistories(this.profile.clientID);
   }
   public showSelectedChat()
   {

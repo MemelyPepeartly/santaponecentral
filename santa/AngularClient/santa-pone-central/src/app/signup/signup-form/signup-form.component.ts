@@ -6,7 +6,7 @@ import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaA
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
 import { MapService, MapResponse } from '../../services/mapService.service';
-import { EventConstants } from '../../shared/constants/eventConstants.enum';
+import { StatusConstants } from '../../shared/constants/statusConstants.enum';
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/countries.service';
@@ -141,7 +141,7 @@ export class SignupFormComponent implements OnInit {
     newClient.clientPostalCode = this.clientAddress.postalCode;
     newClient.clientCountry = this.clientAddress.country;
 
-    var awaitingStatusID = this.statuses.find(status => status.statusDescription == EventConstants.AWAITING);
+    var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
 
     var thing = this.surveyForms.toArray()

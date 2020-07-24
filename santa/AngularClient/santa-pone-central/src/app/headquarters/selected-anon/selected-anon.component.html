@@ -61,24 +61,33 @@
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <div class="error" *ngIf="showFail">Error approving Anon</div>
-        <p *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
-        <p *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+        <p class="success" *ngIf="showApproveSuccess">{{ client.clientNickname }} has been approved!</p>
+        <p class="success" *ngIf="showDeniedSuccess">{{ client.clientNickname }} has been denied and an email has been sent!</p>
+        <p class="success" *ngIf="showCompletedSuccess">{{ client.clientNickname }} has been marked as completed, and an email has been sent!</p>
+        <p class="success" *ngIf="showReenlistedSuccess">{{ client.clientNickname }} has been re-enlisted to the cause, and an email has been sent!</p>
 
         <mat-card-actions *ngIf="!showButtonSpinner">
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Re-Approve</button>
-            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
+                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
-            <button mat-raised-button [disabled]="showNameChangeForm"
+            <button mat-raised-button
+                [disabled]="showNameChangeForm"
                 (click)="showNameChangeForm = true">Change Agent's Name</button>
-            <button mat-raised-button [disabled]="showEmailChangeForm"
+            <button mat-raised-button
+                [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
-            
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Approved'"
+                [disabled]="this.gatherer.gatheringAllStatuses || showCompletedSuccess || client.clientStatus.statusDescription == 'Completed'"
+                (click)="setAsCompleted()">Mark as complete</button>
+            <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Completed'"
+                [disabled]="this.gatherer.gatheringAllStatuses || showReenlistedSuccess || client.clientStatus.statusDescription == 'Approved'"
+                (click)="reenlistAnon()">Re-Enlist</button>
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
 
             <!-- Name change form group -->
@@ -242,7 +251,7 @@
     <ng-container *ngIf="clientApproved && responses?.length != 0">
         <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
-                Answers
+                Survey Answers
             </mat-toolbar-row>
         </mat-toolbar>
         <div class="centerSpin">
@@ -261,9 +270,13 @@
                                 <!-- Expansion panels for responses -->
                                 <mat-expansion-panel *ngFor="let response of client.responses">
                                     <mat-expansion-panel-header *ngIf="event.eventTypeID == response.responseEvent.eventTypeID">
-                                        <mat-panel-title>{{response.surveyQuestion.questionText}}</mat-panel-title>
+                                        <mat-panel-title>
+                                            <span class="questionText">{{response.surveyQuestion.questionText}}</span>
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon>question_answer</mat-icon>
+                                            <mat-icon 
+                                            matTooltip="{{response.surveyQuestion.questionText}}"
+                                            [matTooltipPosition]="'right'">question_answer</mat-icon>
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
                                     <p>{{response.responseText}}</p>
@@ -298,11 +311,13 @@
                             <mat-accordion *ngIf="!gatheringSenders && !showRecipientListPostingSpinner">
                                 <mat-expansion-panel *ngFor="let sender of senders">
                                     <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title>{{sender.clientNickname}}</mat-panel-title>
+                                        <mat-panel-title class="relationshipPanelTitle">
+                                            <span>{{sender.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="sender.completed">check_circle</mat-icon>
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon>card_giftcard</mat-icon>
+                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>
+                                    </mat-expansion-panel-header>                
                                     <div class="expansionPanelButtonContainer">
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Switch to this Anon"
@@ -323,26 +338,34 @@
                             <mat-accordion *ngIf="!showRecipientListPostingSpinner">
                                 <mat-expansion-panel *ngFor="let recipient of recipients">
                                     <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title>{{recipient.clientNickname}}</mat-panel-title>
+                                        <mat-panel-title class="relationshipPanelTitle">
+                                            <span>{{recipient.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="recipient.completed">check_circle</mat-icon>
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon>card_giftcard</mat-icon>
+                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved">
+                                    </mat-expansion-panel-header>       
+                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved || markingAsComplete">
                                         <app-small-loading-spin></app-small-loading-spin>
                                     </div>
-                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved">
+                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved && !markingAsComplete">
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Switch to this Anon"
-                                        [matTooltipPosition]="'left'"
-                                        (click)="switchAnon(recipient)">Switch</button>
+                                        [matTooltipPosition]="'right'"
+                                        (click)="switchAnon(recipient)">Switch To<mat-icon>swap_horiz</mat-icon></button>
+                                        <button class="expansionPanelButton" mat-raised-button
+                                        matTooltip="Mark this assignment as complete"
+                                        [matTooltipPosition]="'right'"
+                                        [disabled]="recipient.completed"
+                                        (click)="markAsComplete(recipient)">Mark As Complete<mat-icon>done</mat-icon></button>
+                                        <!-- Removable button is disabled if the client is not removable from the assignments list due to having a chat history -->
                                         <p *ngIf="!recipient.removable">Note: If a recipient has a chat history, they cannot be removed</p>
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Remove the anon as a recipient"
                                         color="warn"
                                         [disabled]="!recipient.removable"
                                         [matTooltipPosition]="'right'"
-                                        (click)="removeRecipient(recipient)">Remove</button>
+                                        (click)="removeRecipient(recipient)">Remove Assignment<mat-icon>delete_forever</mat-icon></button>
                                     </div>
                                 </mat-expansion-panel>
                             </mat-accordion>
