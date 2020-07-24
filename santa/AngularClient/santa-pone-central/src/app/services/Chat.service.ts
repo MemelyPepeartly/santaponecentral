@@ -11,9 +11,23 @@ export class ChatService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  public gettingAllChats: boolean = false;
-  public gettingAllEventChats: boolean = false;
-  public gettingSelectedHistory: boolean = false;
+  private _gettingAllChats: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingAllChats()
+  {
+    return this._gettingAllChats.asObservable();
+  }
+
+  private _gettingAllEventChats: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingAllEventChats()
+  {
+    return this._gettingAllEventChats.asObservable();
+  }
+
+  private _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingSelectedHistory()
+  {
+    return this._gettingSelectedHistory.asObservable();
+  }
 
   private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
@@ -51,54 +65,52 @@ export class ChatService {
 
 
   // * GATHERING METHODS * //
-  public async gatherAllChats(isSoftGather? : boolean)
+  public async gatherAllChats(isSoftGather: boolean = false)
   {
     if(!isSoftGather)
     {
-      this.gettingAllChats = true;
+      this._gettingAllChats.next(true);
     }
     
     let historyArray: Array<MessageHistory> = [];
 
-    this.SantaApiGet.getAllMessageHistories().subscribe(res => {
-      for(let i = 0; i < res.length; i++)
-      {
-        historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
-      }
-      this.updateAllChats(historyArray);
-      this.gettingAllChats = false;
-    }, err => {console.log(err); this.gettingAllChats = false;});
+    var data = await this.SantaApiGet.getAllMessageHistories().toPromise().catch(err => {console.log(err); this._gettingAllChats.next(false);});
+    for(let i = 0; i < data.length; i++)
+    {
+      historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))
+    }
+    this.updateAllChats(historyArray);
+    this._gettingAllChats.next(false);
   }
-  public async gatherEventChats(isSoftGather? : boolean)
+  public async gatherEventChats(isSoftGather: boolean = false)
   {
     if(!isSoftGather)
     {
-      this.gettingAllEventChats = true;
+      this._gettingAllEventChats.next(true);
     }
     let historyArray: Array<MessageHistory> = [];
 
-    this.SantaApiGet.getAllEventMessageHistories().subscribe(res => {
-      for(let i = 0; i < res.length; i++)
-      {
-        historyArray.push(this.ApiMapper.mapMessageHistory(res[i]))
-      }
-      this.updateAllEventChats(historyArray);
-      this.gettingAllEventChats = false;
-    }, err => {console.log(err); this.gettingAllEventChats = false;}); 
+    var data = await this.SantaApiGet.getAllEventMessageHistories().toPromise().catch(err => {console.log(err); this._gettingAllEventChats.next(false);});
+
+    for(let i = 0; i < data.length; i++)
+    {
+      historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))
+    }
+    this.updateAllEventChats(historyArray);
+    this._gettingAllEventChats.next(false);
   }
 
-  public async getSelectedHistory(clientID, relationXrefID, isSoftGather? : boolean)
+  public async getSelectedHistory(clientID, relationXrefID, isSoftGather: boolean = false)
   {
     if(!isSoftGather)
     {
-      this.gettingSelectedHistory = true;
+      this._gettingSelectedHistory.next(true);
     }
 
     let messageHistory = new MessageHistory;
-    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
-      messageHistory = this.ApiMapper.mapMessageHistory(res);
-      this.updateSelectedHistory(messageHistory);
-      this.gettingSelectedHistory = false;
-    },err => {console.log(err); this.gettingSelectedHistory = false;}); 
+    var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).toPromise().catch(err => {console.log(err); this._gettingSelectedHistory.next(false);});
+    messageHistory = this.ApiMapper.mapMessageHistory(data);
+    this.updateSelectedHistory(messageHistory);
+    this._gettingSelectedHistory.next(false);
   }
 }
