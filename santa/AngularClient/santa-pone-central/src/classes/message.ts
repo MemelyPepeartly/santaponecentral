@@ -6,10 +6,10 @@ import { Client } from './client';
 export class MessageHistory {
     history: Array<Message> = [];
     relationXrefID: string;
-    conversationClient: ClientMeta;
-    eventType: EventType;
-    eventSenderClient: ClientMeta;
-    eventRecieverClient: ClientMeta;
+    conversationClient: ClientMeta = new ClientMeta();
+    eventType: EventType = new EventType();
+    eventSenderClient: ClientMeta = new ClientMeta();
+    eventRecieverClient: ClientMeta = new ClientMeta();
 
     get adminUnreadCount() : number
     {
