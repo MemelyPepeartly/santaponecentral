@@ -20,7 +20,7 @@ export class InputControlComponent implements OnInit {
   @Input() reciever: ClientMeta;
   @Input() disabled: boolean = false;
 
-  public messageFormControl = new FormControl('', Validators.required);
+  public messageFormControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
 
   ngOnInit(): void {
   }
@@ -39,7 +39,9 @@ export class InputControlComponent implements OnInit {
     if (this.messageFormControl.hasError('required')) {
       return 'You must enter a value';
     }
+    if (this.messageFormControl.hasError('maxlength')) {
+      return 'Max length of a message is 1000 characters';
+    }
     return 'Something is wrong with your message'
   }
-
 }
