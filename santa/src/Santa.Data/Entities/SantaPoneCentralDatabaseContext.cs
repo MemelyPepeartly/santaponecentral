@@ -57,7 +57,7 @@ namespace Santa.Data.Entities
                     .IsRequired()
                     .HasColumnName("messageContent")
                     .HasViewColumnName("messageContent")
-                    .HasMaxLength(500);
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.MessageRecieverClientId)
                     .HasColumnName("messageRecieverClientID")
