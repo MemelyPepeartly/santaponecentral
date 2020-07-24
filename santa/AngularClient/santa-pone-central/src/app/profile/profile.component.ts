@@ -63,16 +63,15 @@ export class ProfileComponent implements OnInit {
     this.profileService._gettingSelectedHistory.subscribe((status: boolean) => {
       this.gettingSelectedHistory = status;
     });
-    // Auth profile
-    this.auth.userProfile$.subscribe(data => {
-      this.authProfile = data;
-    });
-
     // Profile service subscribe
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
-    await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
+    
+    // Auth profile
+    this.auth.userProfile$.subscribe(data => {
+      this.authProfile = data;
+    });
 
     // Chat histories subscribe
     this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
@@ -92,8 +91,10 @@ export class ProfileComponent implements OnInit {
     // Events subscribe
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray
+      
     });
 
+    await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
     await this.gatherer.gatherAllEvents();
     await this.profileService.getHistories(this.profile.clientID);
   }
