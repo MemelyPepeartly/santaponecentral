@@ -4,8 +4,8 @@
         <mat-card-header>
             <mat-card-title>Contact History</mat-card-title>
             <mat-card-subtitle>Chat history for {{ selectedHistory.conversationClient.clientNickname }}</mat-card-subtitle>
-            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription != undefined || selectedHistory.eventType.eventDescription != null">Sending to {{selectedHistory.eventRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
-            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription == undefined || selectedHistory.eventType.eventDescription == null">General Coversation History</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription != undefined">Sending to {{selectedHistory.eventRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription == undefined">General Coversation History</mat-card-subtitle>
 
         </mat-card-header>
         <mat-card-content>

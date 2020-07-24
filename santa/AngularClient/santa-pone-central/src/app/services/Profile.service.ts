@@ -13,15 +13,34 @@ export class ProfileService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  public gettingProfile: boolean = false;
-  public gettingHistories: boolean = false;
-  public gettingSelectedHistory: boolean = false;
-  public gettingGeneralHistory: boolean = false;
+  public _gettingProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingProfile()
+  {
+    return this._gettingProfile.asObservable();
+  }
 
-  private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile);
+  public _gettingHistories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingHistories()
+  {
+    return this._gettingHistories.asObservable();
+  }
+
+  public _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingSelectedHistory()
+  {
+    return this._gettingSelectedHistory.asObservable();
+  }
+
+  public _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingGeneralHistory()
+  {
+    return this._gettingGeneralHistory.asObservable();
+  }
+
+  private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile());
   private _chatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([])
-  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
-  private _generalHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
+  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
+  private _generalHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
 
 
   // Profile
@@ -68,18 +87,20 @@ export class ProfileService {
   // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
   public async getProfile(email)
   {
-    this.gettingProfile = true;
+    this._gettingProfile.next(true);
 
     let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
     this.updateProfile(profile);
 
-    this.gettingProfile = false;
+    this._gettingProfile.next(false);
   }
-  public async getHistories(clientID, isSoftUpdate?: boolean)
+  public async getHistories(clientID, isSoftUpdate: boolean = false)
   {
     if(!isSoftUpdate)
     {
-      this.gettingHistories = true;
+      console.log("Got here");
+      
+      this._gettingHistories.next(true);
     }
 
     let histories: Array<MessageHistory> = []
@@ -90,33 +111,34 @@ export class ProfileService {
       }
       this.updateChatHistories(histories);
       this.gatherGeneralHistory(clientID);
-      this.gettingHistories = false;
-    }, err => {console.log(err); this.gettingHistories = false;});    
+      this._gettingHistories.next(false);
+
+    }, err => {console.log(err); this._gettingHistories.next(false);
+    });    
     
   }
   public async gatherGeneralHistory(clientID, isSoftGather? : boolean)
   {
     if(!isSoftGather)
     {
-      this.gettingGeneralHistory = true
+      this._gettingGeneralHistory.next(true);
     }
 
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).subscribe(res => {
       this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(res));
-    }, err => {console.log(err); })
+      this._gettingGeneralHistory.next(false);
+    }, err => {console.log(err); this._gettingGeneralHistory.next(false);})
   }
   public async getSelectedHistory(clientID, relationXrefID)
   {
-    this.gettingSelectedHistory = true;
-    let messageHistory: MessageHistory = new MessageHistory();
+    this._gettingSelectedHistory.next(true);
 
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
-      messageHistory = this.ApiMapper.mapMessageHistory(res);
+      let messageHistory: MessageHistory = this.ApiMapper.mapMessageHistory(res);
       this.updateSelectedHistory(messageHistory);
-      this.gettingSelectedHistory = false;
-    }, err => {console.log(err); });
-    
-    this.gettingSelectedHistory = false;
+      this._gettingSelectedHistory.next(false);
+
+    }, err => {console.log(err); this._gettingSelectedHistory.next(false);});
   }
 
 }

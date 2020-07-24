@@ -41,12 +41,29 @@ export class ProfileComponent implements OnInit {
   public showChat: boolean = false;
 
   public postingMessage: boolean = false;
-  public gettingAnyHistories: boolean = false;
+  public gettingAllHistories: boolean = false;
+  public gettingGeneralHistory: boolean = false;
+  public gettingSelectedHistory: boolean = false;
+  public gettingProfile: boolean = false;
+
 
 
 
   public async ngOnInit() {
-    //Auth profile
+    // Boolean subscribes
+    this.profileService._gettingProfile.subscribe((status: boolean) => {
+      this.gettingProfile = status;
+    });
+    this.profileService._gettingGeneralHistory.subscribe((status: boolean) => {
+      this.gettingGeneralHistory = status;
+    });
+    this.profileService._gettingHistories.subscribe((status: boolean) => {
+      this.gettingAllHistories = status;
+    });
+    this.profileService._gettingSelectedHistory.subscribe((status: boolean) => {
+      this.gettingSelectedHistory = status;
+    });
+    // Auth profile
     this.auth.userProfile$.subscribe(data => {
       this.authProfile = data;
     });
@@ -89,6 +106,7 @@ export class ProfileComponent implements OnInit {
   {
     if(!this.chatComponent.markingRead)
     {
+      this.selectedHistory = new MessageHistory();
       this.showChat = false;
       this.showOverlay = false;
     }
