@@ -100,7 +100,9 @@ CREATE TABLE app.ChatMessage
     messageSenderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
     messageRecieverClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
     clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
-    messageContent NVARCHAR(500) NOT NULL,
+    messageContent NVARCHAR(1000) NOT NULL,
     dateTimeSent DATETIME NOT NULL,
     isMessageRead BIT NOT NULL
 );
+
+-- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
