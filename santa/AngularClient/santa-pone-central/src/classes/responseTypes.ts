@@ -97,3 +97,7 @@ export class MessageApiResponse {
 export class MessageApiReadResponse {
     isMessageRead: boolean;
 }
+//Response for marking a list of messages as read
+export class MessageApiReadAllResponse {
+    messages: Array<string> = [];
+}
