@@ -65,7 +65,7 @@ export class ChatService {
 
 
   // * GATHERING METHODS * //
-  public async gatherAllChats(isSoftGather: boolean = false)
+  public async gatherAllChats(isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {
@@ -82,7 +82,7 @@ export class ChatService {
     this.updateAllChats(historyArray);
     this._gettingAllChats.next(false);
   }
-  public async gatherEventChats(isSoftGather: boolean = false)
+  public async gatherEventChats(isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {
@@ -100,7 +100,7 @@ export class ChatService {
     this._gettingAllEventChats.next(false);
   }
 
-  public async getSelectedHistory(clientID, relationXrefID, isSoftGather: boolean = false)
+  public async getSelectedHistory(clientID, relationXrefID, isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {

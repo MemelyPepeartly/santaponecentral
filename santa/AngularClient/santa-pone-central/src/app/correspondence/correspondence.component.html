@@ -16,6 +16,7 @@
       [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control
       (sendClicked)="send($event); messages.scrollToBottom();"
+      (readAllClicked)="readAll()"
       [relationshipID]="selectedHistory.relationXrefID"
       [sender]="adminSenderMeta"
       [reciever]="selectedRecieverMeta"
