@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
+import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
 import { MapService } from '../services/mapService.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { MessageHistory, ClientMeta } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { ProfileService } from '../services/Profile.service';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
     public gatherer: GathererService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
+    public SantaApiPut: SantaApiPutService,
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
@@ -41,6 +42,8 @@ export class ProfileComponent implements OnInit {
   public showChat: boolean = false;
 
   public postingMessage: boolean = false;
+  public puttingMessage: boolean = false;
+
   public gettingAllHistories: boolean = false;
   public gettingGeneralHistory: boolean = false;
   public gettingSelectedHistory: boolean = false;
@@ -117,15 +120,29 @@ export class ProfileComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
-    
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
+    this.scrollTheChat(true)
     this.postingMessage = false;
+  }
+  public async readAll()
+  {
+    this.puttingMessage = true;
+
+    let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
+    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
+    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
+
+    this.SantaApiPut.putMessageReadAll(response).toPromise();
+    await this.updateChat(true)
+
+    this.puttingMessage = false;
+    
   }
   public async updateChat(event: boolean)
   {
     if(event)
     {
-      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
       this.profileService.getHistories(this.profile.clientID, true);
     }
   }
