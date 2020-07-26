@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Message_Models
 {
-    public class ApiMessageRead
+    public class ApiMessageReadModel
     {
         public bool isMessageRead { get; set; }
     }
