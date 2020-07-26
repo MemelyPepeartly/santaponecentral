@@ -3,7 +3,7 @@
 </div>
 
 <!-- Chat Window -->
-<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+<div class="container chatContainer mat-elevation-z3 clientCard scrollbar scrollbar-primary" *ngIf="showChat == true">
     <app-contact-panel
         (messageUpdatedEvent)="updateChat($event)"
         [selectedHistory]="selectedHistory"
@@ -11,6 +11,7 @@
         [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
+        (readAllClicked)="readAll()"
         [relationshipID]="selectedHistory.relationXrefID"
         [sender]="selectedHistory.conversationClient"
         [reciever]="adminRecieverMeta"
