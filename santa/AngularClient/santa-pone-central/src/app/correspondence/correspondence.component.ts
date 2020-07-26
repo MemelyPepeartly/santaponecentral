@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MessageHistory, ClientMeta } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/Chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
@@ -7,7 +7,7 @@ import { GathererService } from '../services/gatherer.service';
 import { Client } from 'src/classes/client';
 import { MapService } from '../services/mapService.service';
 import { FormGroup } from '@angular/forms';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
 
@@ -37,6 +37,7 @@ export class CorrespondenceComponent implements OnInit {
   public gettingAllChats: boolean = false;
   public gettingAllEventChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
+  public puttingMessage: boolean = false;
 
   public showClientCard: boolean = false;
   public showChat: boolean = false;
@@ -111,6 +112,20 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = false;
     
   }
+  public async readAll()
+  {
+    this.puttingMessage = true;
+
+    let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == null });
+    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
+    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
+
+    this.SantaApiPut.putMessageReadAll(response).toPromise();
+    await this.updateChats(true)
+
+    this.puttingMessage = false;
+    
+  }
   public async hideWindow()
   {
     if(this.chatComponent == undefined && this.showClientCard == true)
@@ -154,7 +169,7 @@ export class CorrespondenceComponent implements OnInit {
     if(event)
     {
       this.updateOnClickaway = true
-      this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+      await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
       await this.ChatService.gatherAllChats(true);
     }
   }
