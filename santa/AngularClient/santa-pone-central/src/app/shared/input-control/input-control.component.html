@@ -1,15 +1,28 @@
 <div class="container mat-elevation-z5">
-    <mat-form-field appearance="fill">
-      <mat-label>Enter a message</mat-label>
-      <textarea matInput required class="inputField" 
-      placeholder="Blah blah blah"
-      [formControl]="messageFormControl"></textarea> 
-      <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <button mat-raised-button class="controlButton"
-      matTooltip="Send"
-      [disabled]="messageFormControl.invalid || disabled"
-      (click)="emitMessage(messageFormControl.value)">
-        <mat-icon mat-icon-button>send</mat-icon>
+  <div class="controlPanel mat-elevation-z2">
+    <h2>Control Panel</h2>
+    <button mat-raised-button class="controlButton" matTooltip="Mark all as read" [disabled]="disabled"
+      (click)="emitReadAll()">
+      <mat-icon mat-icon-button>mark_chat_read</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Pinned messages (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>push_pin</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Convert Time Zone (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>access_time</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Color (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>color_lens</mat-icon>
     </button>
   </div>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a message</mat-label>
+    <textarea matInput required class="inputField" placeholder="Blah blah blah"
+      [formControl]="messageFormControl"></textarea>
+    <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+  </mat-form-field>
+  <button mat-raised-button class="controlButton" matTooltip="Send" [disabled]="messageFormControl.invalid || disabled"
+    (click)="emitMessage(messageFormControl.value)">
+    <mat-icon mat-icon-button>send</mat-icon>
+  </button>
+</div>
