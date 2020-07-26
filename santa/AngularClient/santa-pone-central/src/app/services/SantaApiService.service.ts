@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -202,6 +202,9 @@ export class SantaApiPutService {
   }
   putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
     return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
+  }
+  putMessageReadAll(messages: MessageApiReadAllResponse): Observable<any> {
+    return this.http.put(endpoint + 'Message/ReadAll', messages);
   }
   putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
     return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
