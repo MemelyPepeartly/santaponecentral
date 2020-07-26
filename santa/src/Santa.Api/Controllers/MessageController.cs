@@ -71,7 +71,7 @@ namespace Santa.Api.Controllers
         // POST: api/Message
         [HttpPost]
         [Authorize(Policy = "create:messages")]
-        public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody] ApiMessage message)
+        public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody] ApiMessageModel message)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace Santa.Api.Controllers
         // PUT: api/Message/5
         [HttpPut("{chatMessageID}/Read")]
         [Authorize(Policy = "update:messages")]
-        public async Task<ActionResult<Logic.Objects.Message>> PutDescription(Guid chatMessageID, [FromBody] ApiMessageRead message)
+        public async Task<ActionResult<Logic.Objects.Message>> PutReadStatus(Guid chatMessageID, [FromBody] ApiMessageReadModel message)
         {
             try
             {
@@ -141,6 +141,32 @@ namespace Santa.Api.Controllers
             catch (Exception e)
             {
                 throw e.InnerException;
+            }
+        }
+
+        // PUT: api/Message/ReadAll
+        [HttpPut("ReadAll")]
+        [Authorize(Policy = "update:messages")]
+        public async Task<ActionResult<Logic.Objects.Message>> PutReadAll([FromBody] ApiReadAllMessageModel messages)
+        {
+            try
+            {
+#warning clients and admins can use this controller. Ensure that if a client, then it is only changing a message they themselves have written
+
+                foreach(Guid messageID in messages.messages)
+                {
+                    Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(messageID);
+                    targetMessage.isMessageRead = true;
+                    await repository.UpdateMessageByIDAsync(targetMessage);
+                }
+
+                await repository.SaveAsync();
+                return Ok();
+            }
+
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
     }
