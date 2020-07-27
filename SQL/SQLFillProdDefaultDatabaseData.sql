@@ -88,49 +88,49 @@ VALUES
     (@surveyOptionID2GUID,'No','1'),
     (@surveyOptionID3GUID,'Maybe','1');
 
-INSERT INTO app.SurveyQuestionXref (surveyID, surveyQuestionID, sortOrder, isActive)
+INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
 -- Card survey
-    (@survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
 -- Gift survey
-    (@survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion9IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion10IDGUID, 'asc', 1);
+    (NEWID(), @survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion9IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion10IDGUID, 'asc', 1);
 
-INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionID, surveyOptionID, sortOrder, isActive)
+INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (@surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
 
-    (@surveyQuestion5IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion5IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion5IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion6IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion6IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion6IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion7IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion7IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion7IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion10IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion10IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion10IDGUID, @surveyOptionID3GUID, 'asc', 1);
+    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID3GUID, 'asc', 1);
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES

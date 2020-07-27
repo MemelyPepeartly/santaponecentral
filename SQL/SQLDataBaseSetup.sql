@@ -68,7 +68,7 @@ CREATE TABLE app.SurveyResponse
 );
 CREATE TABLE app.SurveyQuestionXref
 (
-    surveyQuestionXrefID INT IDENTITY(1,1) PRIMARY KEY,
+    surveyQuestionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     surveyID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Survey(surveyID) NOT NULL,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
     sortOrder NVARCHAR(5) NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE app.SurveyQuestionXref
 );
 CREATE TABLE app.SurveyQuestionOptionXref
 (
-    surveyQuestionOptionXref INT IDENTITY(1,1) PRIMARY KEY,
+    surveyQuestionOptionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID) NOT NULL,
     sortOrder NVARCHAR(5) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE app.Tag
 );
 CREATE TABLE app.ClientTagXref
 (
-    clientTagXrefID INT IDENTITY(1,1) PRIMARY KEY,
+    clientTagXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
     tagID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Tag(tagID) NOT NULL,
     CONSTRAINT clientTagXrefID UNIQUE (clientID, tagID) 

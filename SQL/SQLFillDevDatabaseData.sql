@@ -144,27 +144,27 @@ VALUES
     (@surveyOptionID2GUID,'No','1'),
     (@surveyOptionID3GUID,'Maybe','1');
 
-INSERT INTO app.SurveyQuestionXref (surveyID, surveyQuestionID, sortOrder, isActive)
+INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
 -- Gift survey
-    (@survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
-    (@survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
 -- Card survey
-    (@survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (@survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1);
+    (NEWID(), @survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1);
 
 
-INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionID, surveyOptionID, sortOrder, isActive)
+INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (@surveyQuestion2IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion2IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion2IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion2IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion2IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion2IDGUID, @surveyOptionID3GUID, 'asc', 1),
 
-    (@surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (@surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1);
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
+    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1);
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
@@ -185,13 +185,6 @@ VALUES
     (@tag1IDGUID, 'Grinch'),
     (@tag2IDGUID, 'Mass Mailer'),
     (@tag3IDGUID, 'Twifag');
-
-INSERT INTO app.ClientTagXref (clientID, tagID)
-VALUES
-    (@client1IDGUID, @tag1IDGUID),
-    (@client1IDGUID, @tag2IDGUID),
-    (@client2IDGUID, @tag3IDGUID),
-    (@client3IDGUID, @tag1IDGUID);
 
 
 SELECT * FROM app.SurveyQuestion;
