@@ -5,7 +5,7 @@ namespace Santa.Data.Entities
 {
     public partial class SurveyQuestionXref
     {
-        public int SurveyQuestionXrefId { get; set; }
+        public Guid SurveyQuestionXrefId { get; set; }
         public Guid SurveyId { get; set; }
         public Guid SurveyQuestionId { get; set; }
         public string SortOrder { get; set; }
