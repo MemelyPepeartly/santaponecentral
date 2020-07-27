@@ -14,6 +14,7 @@ namespace Santa.Api.AuthHelper
         Task<Auth0UserInfoModel> getAuthClientByEmail(string authUserEmail);
         Task updateAuthClientRole(string authUserID, string authRoleID);
         Task updateAuthClientEmail(string authUserID, string newEmail, string nickname);
+        Task deleteAuthClient(string authUserID);
         #endregion
 
         #region Roles

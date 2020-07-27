@@ -625,13 +625,23 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                try
+                {
+                    Client logicClient = await repository.GetClientByIDAsync(clientID);
+                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
+                    await authHelper.deleteAuthClient(authUser.user_id);
+                }
+                catch(Exception e)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                }
                 await repository.DeleteClientTagRelationshipByID(clientID, tagID);
                 await repository.SaveAsync();
                 return (await repository.GetClientByIDAsync(clientID));
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Client was unable to be deleted for the following exception: " + e.InnerException);
             }
         }
 

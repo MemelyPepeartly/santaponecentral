@@ -118,6 +118,25 @@ namespace Santa.Api.AuthHelper
 
 
         }
+
+        public async Task deleteAuthClient(string authUserID)
+        {
+            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
+            RestRequest userRequest = new RestRequest(Method.DELETE);
+            Auth0TokenModel token = await getTokenModel();
+
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+
+            if(response.IsSuccessful)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
         #endregion
 
         #region Roles
