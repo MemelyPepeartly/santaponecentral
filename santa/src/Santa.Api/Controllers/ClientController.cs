@@ -584,7 +584,6 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                
                 try
                 {
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
@@ -595,7 +594,6 @@ namespace Santa.Api.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
-                
                 await repository.DeleteClientByIDAsync(clientID);
 
                 await repository.SaveAsync();
