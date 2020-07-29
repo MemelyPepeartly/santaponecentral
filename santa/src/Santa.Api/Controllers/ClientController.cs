@@ -261,15 +261,20 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="tagID"></param>
         /// <returns></returns>
-        [HttpPost("{clientID}/Tag")]
+        [HttpPost("{clientID}/Tags")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
+        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] ApiClientTagListResponseModel tagsModel)
         {
             try
             {
-                await repository.CreateClientTagRelationByID(clientID, tagID);
+                foreach(Guid tagID in tagsModel.tags)
+                {
+                    await repository.CreateClientTagRelationByID(clientID, tagID);
+                }
                 await repository.SaveAsync();
-                return Ok(await repository.GetClientByIDAsync(clientID));
+
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                return Ok(logicClient);
             }
             catch (Exception e)
             {
@@ -577,9 +582,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-#warning Not Auth0 functioning yet
             try
             {
+                
                 try
                 {
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
@@ -590,10 +595,11 @@ namespace Santa.Api.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
-
+                
                 await repository.DeleteClientByIDAsync(clientID);
+
                 await repository.SaveAsync();
-                return StatusCode(StatusCodes.Status204NoContent, "Client deleted successfully");
+                return NoContent();
             }
             catch (Exception e)
             {
