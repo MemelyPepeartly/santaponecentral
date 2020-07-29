@@ -88,6 +88,12 @@
             <button mat-raised-button *ngIf="client.clientStatus.statusDescription == 'Completed'"
                 [disabled]="this.gatherer.gatheringAllStatuses || showReenlistedSuccess || client.clientStatus.statusDescription == 'Approved'"
                 (click)="reenlistAnon()">Re-Enlist</button>
+            <button mat-raised-button
+                matTooltip="Delete an anon's account entirely"
+                color="warn"
+                [matTooltipPosition]="'right'"
+                [disabled]="this.gatherer.gatheringAllStatuses"
+                (click)="deleteAnon()">Delete Agent</button>
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
 
             <!-- Name change form group -->
