@@ -55,7 +55,6 @@ export class IncomingSignupsComponent implements OnInit {
       this.actionTaken = false;
       this.showSpinner = false;
     }
-     
   }
   setAction(event: boolean)
   {
