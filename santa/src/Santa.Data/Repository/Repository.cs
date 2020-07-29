@@ -185,16 +185,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Data.Entities.Client contextClient = await santaContext.Client
-                    .Include(c => c.SurveyResponse)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(r => r.ChatMessage)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(r => r.ChatMessage)
-                    .Include(c => c.ClientTagXref)
-                    .FirstOrDefaultAsync(c => c.ClientId == clientID);
+                Data.Entities.Client contextClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID);
 
-                santaContext.Client.RemoveRange(contextClient);
+                santaContext.Remove(contextClient);
             }
             catch (Exception e)
             {
@@ -279,6 +272,7 @@ namespace Santa.Data.Repository
             {
                 Data.Entities.ClientTagXref contextClientRelationXref = new ClientTagXref()
                 {
+                    ClientTagXrefId = Guid.NewGuid(),
                     ClientId = clientID,
                     TagId = tagID
                 };
