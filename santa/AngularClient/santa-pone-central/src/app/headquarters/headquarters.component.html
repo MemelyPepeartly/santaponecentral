@@ -1,11 +1,12 @@
-<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList()" [@simpleFadeAnimation]="'in'">
+<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList(); denied.refreshDeniedClientList(); completed.refreshCompletedClientList();" [@simpleFadeAnimation]="'in'">
 </div>
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
     <div class="fixedDiv mat-elevation-z6">
         <app-selected-anon
         [client]="currentClient"
         (action)="signups.setAction($event); approved.setAction($event)"
-        (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
+        (refreshSelectedClient)="updateSelectedClient($event)"
+        (deletedAnon)="hideClientWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList(); denied.refreshDeniedClientList(); completed.refreshCompletedClientList();"></app-selected-anon>
     </div>
 </div>
 

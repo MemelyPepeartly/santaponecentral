@@ -23,7 +23,7 @@ export class DeniedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshIncomingClientList()
+  public async refreshDeniedClientList()
   {
     if(this.actionTaken)
     {
@@ -40,7 +40,7 @@ export class DeniedAnonsComponent implements OnInit {
   {
     this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshIncomingClientList();
+    this.refreshDeniedClientList();
   }
 
 }

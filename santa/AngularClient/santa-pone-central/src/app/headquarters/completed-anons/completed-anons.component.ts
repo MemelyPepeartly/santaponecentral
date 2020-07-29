@@ -23,7 +23,7 @@ export class CompletedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshIncomingClientList()
+  public async refreshCompletedClientList()
   {
     if(this.actionTaken)
     {
@@ -40,7 +40,7 @@ export class CompletedAnonsComponent implements OnInit {
   {
     this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshIncomingClientList();
+    this.refreshCompletedClientList();
   }
 
 }

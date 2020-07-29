@@ -178,6 +178,7 @@ mat-panel-description
     width: 100%;
     padding: 5px;
     padding-bottom: 0px;
+    margin-top: 5px;
 }
 .infoCard
 {
@@ -188,7 +189,13 @@ mat-panel-description
     height: auto;
     clear: both;
 }
-
+/*Buttons at top of component*/
+.mainActionButton
+{
+    margin-right: 5px !important;
+    margin-top: 5px !important;
+    margin-left: 0 !important;
+}
 .scrollbar {
     width: 100%;
     height: 100%;

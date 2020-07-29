@@ -50,7 +50,9 @@ export class SelectedAnonComponent implements OnInit {
     public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
+
   @Output() action: EventEmitter<any> = new EventEmitter();
+  @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
   @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
@@ -306,8 +308,10 @@ export class SelectedAnonComponent implements OnInit {
   public async deleteAnon()
   {
     this.showButtonSpinner = true;
+
     this.SantaApiDelete.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
     this.action.emit(this.actionTaken);
+    this.deletedAnon.emit(true);
     this.showButtonSpinner = false;
 
   }
