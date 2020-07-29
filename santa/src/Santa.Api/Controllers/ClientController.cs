@@ -587,6 +587,8 @@ namespace Santa.Api.Controllers
                 try
                 {
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
+                    await repository.DeleteClientByIDAsync(clientID);
+
                     Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
                     await authHelper.deleteAuthClient(authUser.user_id);
                 }
@@ -594,7 +596,6 @@ namespace Santa.Api.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
-                await repository.DeleteClientByIDAsync(clientID);
 
                 await repository.SaveAsync();
                 return NoContent();
