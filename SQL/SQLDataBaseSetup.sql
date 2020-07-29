@@ -1,15 +1,13 @@
 CREATE SCHEMA app;
 GO
-
 CREATE TABLE app.ClientStatus
 (
     clientStatusID UNIQUEIDENTIFIER PRIMARY KEY,
     statusDescription NVARCHAR(25) NOT NULL
-);
-
+)
 CREATE TABLE app.Client
 (
-    clientID UNIQUEIDENTIFIER PRIMARY KEY,
+    clientID UNIQUEIDENTIFIER PRIMARY KEY ,
     clientStatusID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientStatus(clientStatusID) NOT NULL,
     clientName NVARCHAR(50) NOT NULL,
     nickname NVARCHAR(50),
@@ -31,16 +29,16 @@ CREATE TABLE app.EventType
 CREATE TABLE app.ClientRelationXref
 (
     clientRelationXrefID UNIQUEIDENTIFIER PRIMARY KEY,
-    senderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    recipientClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL,
+    senderClientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
+    recipientClientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
+    eventTypeID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.EventType(eventTypeID),
     completed BIT NOT NULL,
     CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
 );
 CREATE TABLE app.Survey
 (
     surveyID UNIQUEIDENTIFIER PRIMARY KEY,
-    eventTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EventType(eventTypeID) NOT NULL,
+    eventTypeID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.EventType(eventTypeID) ,
     surveyDescription NVARCHAR(100) NOT NULL,
     isActive BIT NOT NULL,
 );
@@ -60,25 +58,25 @@ CREATE TABLE app.SurveyQuestion
 CREATE TABLE app.SurveyResponse
 (
     surveyResponseID UNIQUEIDENTIFIER PRIMARY KEY,
-    surveyID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Survey(surveyID) NOT NULL,
-    clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
+    surveyID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Survey(surveyID),
+    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID) ON DELETE CASCADE,
+    surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
     responseText NVARCHAR(2000) NOT NULL
 );
 CREATE TABLE app.SurveyQuestionXref
 (
     surveyQuestionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
-    surveyID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Survey(surveyID) NOT NULL,
-    surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
+    surveyID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Survey(surveyID),
+    surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
     sortOrder NVARCHAR(5) NOT NULL,
     isActive BIT NOT NULL
 );
 CREATE TABLE app.SurveyQuestionOptionXref
 (
     surveyQuestionOptionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
-    surveyQuestionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID) NOT NULL,
-    surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID) NOT NULL,
+    surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
+    surveyOptionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
     sortOrder NVARCHAR(5) NOT NULL,
     isActive BIT NOT NULL
 );
@@ -90,8 +88,8 @@ CREATE TABLE app.Tag
 CREATE TABLE app.ClientTagXref
 (
     clientTagXrefID UNIQUEIDENTIFIER PRIMARY KEY,
-    clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
-    tagID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Tag(tagID) NOT NULL,
+    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID) ON DELETE CASCADE,
+    tagID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Tag(tagID),
     CONSTRAINT clientTagXrefID UNIQUE (clientID, tagID) 
 );
 CREATE TABLE app.ChatMessage
@@ -102,7 +100,28 @@ CREATE TABLE app.ChatMessage
     clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
     messageContent NVARCHAR(1000) NOT NULL,
     dateTimeSent DATETIME NOT NULL,
-    isMessageRead BIT NOT NULL
-);
+    isMessageRead BIT NOT NULL);
+GO
+
+CREATE TRIGGER app.cascadeTrigger ON app.Client INSTEAD OF DELETE
+NOT FOR REPLICATION
+AS BEGIN 
+    SET NOCOUNT ON;
+    DELETE FROM app.ClientRelationXref
+    WHERE senderClientID in (SELECT clientID from deleted) OR
+    recipientClientID in (SELECT clientID FROM deleted)
+
+    SET NOCOUNT ON;
+    DELETE FROM app.ChatMessage
+    WHERE messageSenderClientID in (SELECT clientID from deleted) OR
+    messageRecieverClientID in (SELECT clientID FROM deleted)
+
+    DELETE FROM app.ChatMessage
+    WHERE messageSenderClientID in (SELECT clientID from deleted) OR
+    messageRecieverClientID in (SELECT clientID FROM deleted)
+
+    DELETE FROM app.Client WHERE clientID IN (SELECT clientID FROM deleted)
+END
+
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
