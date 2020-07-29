@@ -75,6 +75,7 @@
   min-width: 600px;
   min-height: 800px;
   margin-top: 10px;
+  z-index: -1;
   background-position-y: bottom;
   
 }
