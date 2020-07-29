@@ -111,11 +111,6 @@ AS BEGIN
     WHERE senderClientID in (SELECT clientID from deleted) OR
     recipientClientID in (SELECT clientID FROM deleted)
 
-    SET NOCOUNT ON;
-    DELETE FROM app.ChatMessage
-    WHERE messageSenderClientID in (SELECT clientID from deleted) OR
-    messageRecieverClientID in (SELECT clientID FROM deleted)
-
     DELETE FROM app.ChatMessage
     WHERE messageSenderClientID in (SELECT clientID from deleted) OR
     messageRecieverClientID in (SELECT clientID FROM deleted)
