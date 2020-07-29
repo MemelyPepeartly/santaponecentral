@@ -68,6 +68,9 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
+export class ClientTagRelationshipsResponse {
+    tags: Array<string> = [];
+}
 export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
     clientNickname: string;

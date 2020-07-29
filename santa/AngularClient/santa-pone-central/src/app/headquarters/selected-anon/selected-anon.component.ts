@@ -5,7 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -303,6 +303,14 @@ export class SelectedAnonComponent implements OnInit {
     });
 
   }
+  public async deleteAnon()
+  {
+    this.showButtonSpinner = true;
+    this.SantaApiDelete.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+    this.action.emit(this.actionTaken);
+    this.showButtonSpinner = false;
+
+  }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {
     return this.statuses.find((status: Status) => {
@@ -502,13 +510,14 @@ export class SelectedAnonComponent implements OnInit {
   public async addTagsToClient()
   {
     this.modyingTagRelationships = true;
-    for(let i = 0; i < this.selectedTags.length; i++)
-    {
-      let clientTagRelationship = new ClientTagRelationshipResponse();
-      clientTagRelationship.clientID = this.client.clientID;
-      clientTagRelationship.tagID = this.selectedTags[i].tagID;
-      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagToClient(clientTagRelationship).toPromise());
-    }
+
+    let clientTagRelationships: ClientTagRelationshipsResponse = new ClientTagRelationshipsResponse();
+    this.selectedTags.forEach((tag: Tag) => {
+      clientTagRelationships.tags.push(tag.tagID)
+    });
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
+
+
     await this.setClientTags();
     await this.showAvailableTags();
     this.modyingTagRelationships = false;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse, ClientTagRelationshipsResponse, ClientTagRelationshipResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -161,8 +161,8 @@ export class SantaApiPostService {
   postTag(tagResponse: TagResponse): Observable<any> {
     return this.http.post(endpoint + 'Tag', tagResponse);
   }
-  postTagToClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/'+ clientTagRelationship.clientID + "/Tag?tagID=" + clientTagRelationship.tagID, null);
+  postTagsToClient(clientID: string, clientTagRelationships: ClientTagRelationshipsResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships);
   }
   postMessage(messageResponse: MessageApiResponse): Observable<any> {
     return this.http.post(endpoint + 'Message', messageResponse);
@@ -216,6 +216,9 @@ export class SantaApiPutService {
 export class SantaApiDeleteService {
   
   constructor(private http: HttpClient) { }
+  deleteClient(id: string): Observable<any> {
+    return this.http.delete(endpoint + 'Client/' + id);
+  }
   deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationshipReponse): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
   }
