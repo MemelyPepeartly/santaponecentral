@@ -168,7 +168,7 @@ namespace Santa.Api.AuthHelper
         #endregion
 
         #region Tickets
-        public async Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail)
+        public async Task<Auth0TicketResponse> getPasswordChangeTicketByAuthClientEmail(string authClientEmail)
         {
             RestClient roleRestClient = new RestClient(endpoint + "tickets/password-change");
             RestRequest roleRequest = new RestRequest(Method.POST);
