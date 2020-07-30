@@ -464,8 +464,22 @@
             </div>
 
             <mat-divider [inset]="true"></mat-divider>
+            <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
-            <div class="optionDiv">
+            <div class="optionDiv" *ngIf="!sendingReset">
+                <button mat-raised-button
+                matTooltip="Send a password reset email to the agent to reset their password"
+                [matTooltipPosition]="'right'"
+                (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
+                <mat-card-subtitle class="optionSub">
+                    <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
+                </mat-card-subtitle>
+            </div>
+
+            <mat-divider [inset]="true"></mat-divider>
+            <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>
+
+            <div class="optionDiv" *ngIf="!deletingClient">
                 <button mat-raised-button
                 matTooltip="Delete an anon's account entirely"
                 color="warn"

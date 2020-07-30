@@ -167,6 +167,9 @@ export class SantaApiPostService {
   postMessage(messageResponse: MessageApiResponse): Observable<any> {
     return this.http.post(endpoint + 'Message', messageResponse);
   }
+  postPasswordResetToClient(id: string): Observable<any> {
+    return this.http.post(endpoint + 'Client/' + id + "/Password", {});
+  }
 }
 
 @Injectable({
