@@ -187,7 +187,7 @@ namespace Santa.Data.Repository
             {
                 Data.Entities.Client contextClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID);
 
-                santaContext.Remove(contextClient);
+                santaContext.Client.Remove(contextClient);
             }
             catch (Exception e)
             {
@@ -402,7 +402,7 @@ namespace Santa.Data.Repository
             {
                 List<Logic.Objects.Message> logicMessageList = (await santaContext.ChatMessage
                     .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .Include(x => x.ClientRelationXref)
                     .ToListAsync())
                     .Select(Mapper.MapMessage).ToList();
@@ -424,7 +424,7 @@ namespace Santa.Data.Repository
             try
             {
                 var contextMessage = await santaContext.ChatMessage
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .Include(s => s.MessageSenderClient)
                     .FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
                 Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
@@ -586,9 +586,9 @@ namespace Santa.Data.Repository
             {
                 MessageHistory logicHistory = new MessageHistory();
                 List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageRecieverClientId == clientID))
+                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageReceiverClientId == clientID))
                     .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 

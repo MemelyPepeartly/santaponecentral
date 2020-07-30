@@ -197,9 +197,9 @@ namespace Santa.Data.Repository
                 clientRelationXrefID = contextMessage.ClientRelationXrefId != null ? contextMessage.ClientRelationXrefId : null,
                 recieverClient = new ClientMeta()
                 {
-                    clientId = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClientId : null,
-                    clientName = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.ClientName : String.Empty,
-                    clientNickname = contextMessage.MessageRecieverClientId != null ? contextMessage.MessageRecieverClient.Nickname : String.Empty
+                    clientId = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClientId : null,
+                    clientName = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClient.ClientName : String.Empty,
+                    clientNickname = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClient.Nickname : String.Empty
                 },
                 senderClient = new ClientMeta()
                 {
@@ -219,7 +219,7 @@ namespace Santa.Data.Repository
             {
                 ChatMessageId = logicMessage.chatMessageID,
                 ClientRelationXrefId = logicMessage.clientRelationXrefID,
-                MessageRecieverClientId = logicMessage.recieverClient.clientId,
+                MessageReceiverClientId = logicMessage.recieverClient.clientId,
                 MessageSenderClientId = logicMessage.senderClient.clientId,
                 MessageContent = logicMessage.messageContent,
                 DateTimeSent = logicMessage.dateTimeSent,
