@@ -11,7 +11,7 @@
         [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
-        (readAllClicked)="readAll()"
+        (readAllAction)="readAll()"
         [relationshipID]="selectedHistory.relationXrefID"
         [sender]="selectedHistory.conversationClient"
         [reciever]="adminRecieverMeta"
