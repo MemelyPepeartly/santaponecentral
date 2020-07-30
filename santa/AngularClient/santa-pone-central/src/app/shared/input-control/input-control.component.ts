@@ -14,8 +14,6 @@ export class InputControlComponent implements OnInit {
   constructor() { }
 
   @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
-  @Output() readAllClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
-
 
   @Input() relationshipID: string;
   @Input() sender: ClientMeta;
@@ -36,10 +34,6 @@ export class InputControlComponent implements OnInit {
     newMessage.messageRecieverClientID = this.reciever.clientID;
 
     this.sendClicked.emit(newMessage);
-  }
-  public emitReadAll()
-  {
-    this.readAllClicked.emit(true);
   }
   public getErrorMessage() {
     if (this.messageFormControl.hasError('required')) {
