@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { Client } from 'src/classes/client';
+import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
+
 
 @Component({
   selector: 'app-input-control',
@@ -14,6 +16,10 @@ export class InputControlComponent implements OnInit {
   constructor() { }
 
   @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
+  @Output() readAllAction: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() displayPinnedAction: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() timeZoneAction: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() colorAction: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() relationshipID: string;
   @Input() sender: ClientMeta;
@@ -34,6 +40,25 @@ export class InputControlComponent implements OnInit {
     newMessage.messageRecieverClientID = this.reciever.clientID;
 
     this.sendClicked.emit(newMessage);
+  }
+  public emitAction(action: InputControlConstants)
+  {
+    if(action == InputControlConstants.READALL)
+    {
+      this.readAllAction.emit(true);
+    }
+    else if(action == InputControlConstants.PINNED)
+    {
+      this.readAllAction.emit(true);
+    }
+    else if(action == InputControlConstants.TIMEZONE)
+    {
+      this.readAllAction.emit(true);
+    }
+    else if(action == InputControlConstants.COLOR)
+    {
+      this.readAllAction.emit(true);
+    }
   }
   public getErrorMessage() {
     if (this.messageFormControl.hasError('required')) {

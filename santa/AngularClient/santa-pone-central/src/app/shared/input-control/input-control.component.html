@@ -9,4 +9,13 @@
     (click)="emitMessage(messageFormControl.value)">
     <mat-icon mat-icon-button>send</mat-icon>
   </button>
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <app-message-control-panel #panel
+            (readAllClicked)="emitAction($event)"
+            [disabled]="disabled">
+    </app-message-control-panel>
+  </mat-menu>
 </div>
