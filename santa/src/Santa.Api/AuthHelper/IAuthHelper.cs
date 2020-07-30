@@ -23,7 +23,7 @@ namespace Santa.Api.AuthHelper
         #endregion
 
         #region Tickets
-        Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail);
+        Task<Auth0TicketResponse> getPasswordChangeTicketByAuthClientEmail(string authClientEmail);
         #endregion
 
         #region Utility
