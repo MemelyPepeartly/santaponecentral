@@ -10,6 +10,31 @@ namespace Santa.Data.Entities
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<ClientRelationXref>()
+                .HasOne(crx => crx.SenderClient)
+                .WithMany(c => c.ClientRelationXrefSenderClient)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ClientRelationXref>()
+                .HasOne(crx => crx.RecipientClient)
+                .WithMany(c => c.ClientRelationXrefRecipientClient)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ClientRelationXref>()
+                .HasOne(crx => crx.RecipientClient)
+                .WithMany(c => c.ClientRelationXrefRecipientClient)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ClientTagXref>()
+                .HasOne(ctx => ctx.Client)
+                .WithMany(t => t.ClientTagXref)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SurveyResponse>()
+                .HasOne(d => d.Client)
+                .WithMany(p => p.SurveyResponse)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
