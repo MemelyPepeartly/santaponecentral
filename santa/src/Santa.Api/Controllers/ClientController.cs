@@ -282,6 +282,32 @@ namespace Santa.Api.Controllers
             }
         }
 
+        // POST: api/Client/5/Password
+        /// <summary>
+        /// Triggers a password reset email for a user
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpPost("{clientID}/Password")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> sendResetPasswordInformation(Guid clientID)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+
+                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
+                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, false);
+
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+            }
+        }
+
         // PUT: api/Client/5/Address
         /// <summary>
         /// Updates a client's address
@@ -375,7 +401,7 @@ namespace Santa.Api.Controllers
                         await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email, updatedClient.nickname);
 
                         // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);
+                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
                         await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
 
                         return Ok(updatedClient);
@@ -669,7 +695,7 @@ namespace Santa.Api.Controllers
             await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
             // Sends the client a password change ticket
-            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(logicClient.email);
+            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
             await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
         }
     }
