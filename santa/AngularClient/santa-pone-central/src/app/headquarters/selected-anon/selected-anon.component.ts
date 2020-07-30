@@ -116,6 +116,8 @@ export class SelectedAnonComponent implements OnInit {
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
+  public deletingClient: boolean = false;
+  public sendingReset: boolean = false;
 
 
   //Possibly depreciated
@@ -307,13 +309,22 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async deleteAnon()
   {
-    this.showButtonSpinner = true;
+    this.deletingClient = true;
 
     this.SantaApiDelete.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
     this.action.emit(this.actionTaken);
     this.deletedAnon.emit(true);
-    this.showButtonSpinner = false;
+    
+    this.deletingClient = false;
 
+  }
+  public async sendAnonPasswordReset()
+  {
+    this.sendingReset = true;
+
+    this.SantaApiPost.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+
+    this.sendingReset = false;
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {
