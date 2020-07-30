@@ -59,7 +59,7 @@ CREATE TABLE app.SurveyResponse
 (
     surveyResponseID UNIQUEIDENTIFIER PRIMARY KEY,
     surveyID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Survey(surveyID),
-    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID) ON DELETE CASCADE,
+    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
     responseText NVARCHAR(2000) NOT NULL
@@ -88,7 +88,7 @@ CREATE TABLE app.Tag
 CREATE TABLE app.ClientTagXref
 (
     clientTagXrefID UNIQUEIDENTIFIER PRIMARY KEY,
-    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID) ON DELETE CASCADE,
+    clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     tagID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Tag(tagID),
     CONSTRAINT clientTagXrefID UNIQUE (clientID, tagID) 
 );
@@ -96,27 +96,56 @@ CREATE TABLE app.ChatMessage
 (
     chatMessageID UNIQUEIDENTIFIER PRIMARY KEY,
     messageSenderClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
-    messageRecieverClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
+    messageReceiverClientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID),
     clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
     messageContent NVARCHAR(1000) NOT NULL,
     dateTimeSent DATETIME NOT NULL,
     isMessageRead BIT NOT NULL);
-GO
 
+GO
 CREATE TRIGGER app.cascadeTrigger ON app.Client INSTEAD OF DELETE
 NOT FOR REPLICATION
 AS BEGIN 
     SET NOCOUNT ON;
-    DELETE FROM app.ClientRelationXref
-    WHERE senderClientID in (SELECT clientID from deleted) OR
-    recipientClientID in (SELECT clientID FROM deleted)
+    begin try
+    begin tran;
 
-    DELETE FROM app.ChatMessage
-    WHERE messageSenderClientID in (SELECT clientID from deleted) OR
-    messageRecieverClientID in (SELECT clientID FROM deleted)
+    delete app.ClientTagXref
+    where clientID in(select clientID from deleted);
+    
+    --Deletes chat message things
+    delete app.ChatMessage
+    where messageSenderClientID in(select clientID from deleted);
 
-    DELETE FROM app.Client WHERE clientID IN (SELECT clientID FROM deleted)
+    delete app.ChatMessage
+    where messageReceiverClientID in(select clientID from deleted);
+
+    -- Deletes xref relationships
+    delete app.ClientRelationXref
+    where recipientClientID in (select clientID from deleted)
+
+    delete app.ClientRelationXref
+    where senderClientID in (select clientID from deleted)
+
+    delete app.SurveyResponse
+    where clientID in(select clientID from deleted);
+
+    delete app.Client
+    where clientID in(select clientID from deleted);
+
+    commit tran;
+    end try
+    begin catch
+    if @@trancount > 0
+    rollback tran;
+    throw;
+    end catch;
 END
+
+
+-- SELECT * FROM app.Client
+
+-- DELETE app.Client WHERE clientID = '45e7198c-4eed-4f4a-881a-93a23dea244d'
 
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
