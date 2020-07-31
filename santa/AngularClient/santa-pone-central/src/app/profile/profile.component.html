@@ -8,6 +8,7 @@
         (messageUpdatedEvent)="updateChat($event)"
         [selectedHistory]="selectedHistory"
         [sendingClientMeta]="selectedHistory.conversationClient"
+        [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage)"
         [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
