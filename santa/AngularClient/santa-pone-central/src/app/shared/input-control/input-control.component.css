@@ -1,12 +1,15 @@
 mat-form-field
 {
     width: 80%;
+    margin-top: 5px;
 }
 .container
 {
     margin-left: auto;
     margin-right: auto;
     min-width: 100%;
+    margin-top: 10px;
+    border-radius: 4px;
 }
 .inputButton
 {
