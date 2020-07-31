@@ -47,6 +47,10 @@ mat-card
     color: rgb(184, 184, 184);
 }
 /* Message classes*/
+#content
+{
+    white-space: pre-wrap;
+}
 .date-div
 {
     display: block;
