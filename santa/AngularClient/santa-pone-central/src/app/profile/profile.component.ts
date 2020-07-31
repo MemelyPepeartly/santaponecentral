@@ -122,6 +122,7 @@ export class ProfileComponent implements OnInit {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
     this.scrollTheChat(true)
+
     this.postingMessage = false;
   }
   public async readAll()
@@ -129,22 +130,21 @@ export class ProfileComponent implements OnInit {
     this.puttingMessage = true;
 
     let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
+    
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
     this.SantaApiPut.putMessageReadAll(response).toPromise();
-    await this.updateChat(true)
+
+    await this.updateChats(true);
 
     this.puttingMessage = false;
     
   }
-  public async updateChat(event: boolean)
+  public async updateChats(softUpdate: boolean = false)
   {
-    if(event)
-    {
-      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
-      this.profileService.getHistories(this.profile.clientID, true);
-    }
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, softUpdate);
+    await this.profileService.getHistories(this.profile.clientID, softUpdate);
   }
   public scrollTheChat(isUpdateScroll?: boolean)
   {
