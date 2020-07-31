@@ -97,9 +97,8 @@ export class ProfileService {
   }
   public async getHistories(clientID, isSoftUpdate?: boolean)
   {
-    if(!isSoftUpdate)
+    if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
-      console.log("This is not a soft update!");
       this._gettingHistories.next(true);
     }
 
@@ -118,7 +117,7 @@ export class ProfileService {
   }
   public async gatherGeneralHistory(clientID, isSoftUpdate?: boolean)
   {
-    if(!isSoftUpdate)
+    if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
       this._gettingGeneralHistory.next(true);
     }
@@ -130,14 +129,13 @@ export class ProfileService {
   }
   public async getSelectedHistory(clientID, relationXrefID, isSoftUpdate?: boolean)
   {
-    if(!isSoftUpdate)
+    if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
       this._gettingSelectedHistory.next(true);
     }
 
     this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
-      let messageHistory: MessageHistory = this.ApiMapper.mapMessageHistory(res);
-      this.updateSelectedHistory(messageHistory);
+      this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(res));
       this._gettingSelectedHistory.next(false);
 
     }, err => {console.log(err); this._gettingSelectedHistory.next(false);});
