@@ -95,7 +95,7 @@ export class ProfileService {
 
     this._gettingProfile.next(false);
   }
-  public async getHistories(clientID, isSoftUpdate?: boolean)
+  public async getHistories(clientID, isSoftUpdate: boolean = false)
   {
     if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
@@ -115,7 +115,7 @@ export class ProfileService {
     }, err => {console.log(err); this._gettingHistories.next(false);});    
     
   }
-  public async gatherGeneralHistory(clientID, isSoftUpdate?: boolean)
+  public async gatherGeneralHistory(clientID: string, isSoftUpdate: boolean = false)
   {
     if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
@@ -127,9 +127,9 @@ export class ProfileService {
       this._gettingGeneralHistory.next(false);
     }, err => {console.log(err); this._gettingGeneralHistory.next(false);})
   }
-  public async getSelectedHistory(clientID, relationXrefID, isSoftUpdate?: boolean)
+  public async getSelectedHistory(clientID: string , relationXrefID: string, isSoftUpdate: boolean = false)
   {
-    if(isSoftUpdate != undefined || isSoftUpdate == false)
+    if(isSoftUpdate == false)
     {
       this._gettingSelectedHistory.next(true);
     }

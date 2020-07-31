@@ -202,8 +202,9 @@ mat-panel-description
     background: #fff;
     overflow-y: scroll;
 }
-.force-overflow {
-min-height: 450px;
+.force-overflow 
+{
+    min-height: 450px;
 }
     
 .scrollbar-primary::-webkit-scrollbar 
