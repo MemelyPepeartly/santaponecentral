@@ -101,6 +101,12 @@ mat-card
     left: 50%;
     right: 50%;
 }
+.actionBarDiv
+{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
 .messageCheckButton
 {
     width: 80%;

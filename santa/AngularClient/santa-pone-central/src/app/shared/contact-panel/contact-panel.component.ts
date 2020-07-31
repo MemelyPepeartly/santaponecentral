@@ -20,6 +20,7 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
   @Input() showLoading: boolean = false;
+  @Input() showActionProgressBar: boolean = false;
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
