@@ -134,7 +134,9 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
     this.postingMessage = false;
-    this.scrollTheChat(true)
+    console.log(this.selectedHistory);
+    
+    this.chatComponent.scrollToBottom();
   }
   public async readAll()
   {
@@ -150,18 +152,11 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
     this.puttingMessage = false;
-    this.scrollTheChat(true);
+    this.chatComponent.scrollToBottom();
     
   }
   public softRefreshSelectedChat(isSoftUpdate: boolean)
   {
     this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
-  }
-  public scrollTheChat(isUpdateScroll?: boolean)
-  {
-    if(isUpdateScroll)
-    {
-      this.chatComponent.scrollToBottom();
-    }
   }
 }

@@ -31,7 +31,7 @@
                             <span *ngIf="message.senderClient.clientNickname == ''"> Admin </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
-                        <p> {{ message.messageContent }} </p>
+                        <p id="content"> {{ message.messageContent }} </p>
                         <div class="messageCheckDiv">
                             <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="message.senderClient.clientID != sendingClientMeta.clientID && !message.isMessageRead"
                                 matTooltip="Mark as read"
