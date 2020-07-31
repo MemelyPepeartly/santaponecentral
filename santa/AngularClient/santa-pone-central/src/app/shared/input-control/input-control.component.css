@@ -1,14 +1,12 @@
-.container
-{
-    min-width: 350px;
-    width: 90%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-}
 mat-form-field
 {
     width: 80%;
+}
+.container
+{
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100%;
 }
 .inputButton
 {
@@ -17,9 +15,15 @@ mat-form-field
 .controlButton
 {
     display: inline-block;
-    margin: 10px;
+    margin: 5px;
 }
 .error
 {
     color: #F44336;
+}
+#buttonsDiv
+{
+    display: inline-block;
+    width: 20%;
+    text-align: center;
 }

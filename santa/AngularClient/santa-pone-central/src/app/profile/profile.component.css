@@ -40,7 +40,7 @@
 .chatContainer
 {
     padding: 15px;
-    height: fit-content;
+    min-width: 650px;
 }
 
 
