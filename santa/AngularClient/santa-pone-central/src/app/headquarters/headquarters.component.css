@@ -1,7 +1,7 @@
 .container {
     position: fixed;
     width: 100%;
-    min-width: 650px;
+    min-width: 600px;
     height: 85%;
     top: 8%;
     left: 0;
@@ -32,7 +32,7 @@
     border-radius: 8px;
     background-color: white;
     width: 95%;
-    min-width: 450px;
+    min-width: 600px;
 }
 
 .small-box {
