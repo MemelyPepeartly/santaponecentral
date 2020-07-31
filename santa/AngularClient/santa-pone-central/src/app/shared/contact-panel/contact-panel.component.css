@@ -16,8 +16,6 @@ mat-card
 }
 #contact-div
 {
-    width: 90%;
-    min-width: 500px;
     display: flex;
     margin-left: auto;
     margin-right: auto;
