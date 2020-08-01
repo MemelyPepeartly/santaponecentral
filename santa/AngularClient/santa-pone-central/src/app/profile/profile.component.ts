@@ -100,17 +100,28 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
     await this.gatherer.gatherAllEvents();
     await this.profileService.getHistories(this.profile.clientID);
+    await this.profileService.gatherGeneralHistory(this.profile.clientID)
   }
-  public showSelectedChat()
+  public showSelectedChat(history: MessageHistory)
   {
     this.showOverlay = true;
     this.showChat = true;
+
+    if(history == null)
+    {
+      this.profileService.getSelectedHistory(this.profile.clientID, null);
+    }
+    else
+    {
+      this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+    }
   }
   public hideWindow()
   {
     if(!this.chatComponent.markingRead)
     {
       this.selectedHistory = new MessageHistory();
+      this.profileService.getHistories(this.profile.clientID);
       this.showChat = false;
       this.showOverlay = false;
     }
@@ -120,37 +131,32 @@ export class ProfileComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
-    this.scrollTheChat(true)
+    await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
+
     this.postingMessage = false;
+    console.log(this.selectedHistory);
+    
+    this.chatComponent.scrollToBottom();
   }
   public async readAll()
   {
     this.puttingMessage = true;
 
     let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
+    
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
-    this.SantaApiPut.putMessageReadAll(response).toPromise();
-    await this.updateChat(true)
+    this.SantaApiPut.putMessageReadAll(response).toPromise().catch((err) => {console.log(err)});
+
+    await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
     this.puttingMessage = false;
+    this.chatComponent.scrollToBottom();
     
   }
-  public async updateChat(event: boolean)
+  public softRefreshSelectedChat(isSoftUpdate: boolean)
   {
-    if(event)
-    {
-      this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
-      this.profileService.getHistories(this.profile.clientID, true);
-    }
-  }
-  public scrollTheChat(isUpdateScroll?: boolean)
-  {
-    if(isUpdateScroll)
-    {
-      this.chatComponent.scrollToBottom();
-    }
+    this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
   }
 }

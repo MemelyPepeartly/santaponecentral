@@ -23,12 +23,12 @@
         <app-chat-histories 
         [onProfile]="true"
         [histories]="histories"
-        (chatSelectedEvent)="getSelectedHistoryMessages($event)"
+        (chatSelectedEvent)="historySelected($event)"
         (recipientSelectedEvent)="showRecipientCard($event)"></app-chat-histories>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="getSelectedHistoryMessages(null)"
+      <button mat-raised-button (click)="historySelected(null)"
         [matBadge]="generalHistory.memberUnreadCount"
         [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
     </mat-card-actions>

@@ -22,6 +22,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import {MatBadgeModule} from '@angular/material/badge';
   MatSelectModule,
   MatTooltipModule,
   MatChipsModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatProgressBarModule
   ],
   exports: [
   CommonModule,
@@ -75,7 +77,8 @@ import {MatBadgeModule} from '@angular/material/badge';
    MatSelectModule,
    MatTooltipModule,
    MatChipsModule,
-   MatBadgeModule
+   MatBadgeModule,
+   MatProgressBarModule
    ],
 })
 export class CustomMaterialModule { }

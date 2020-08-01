@@ -18,7 +18,7 @@
     position: fixed;
     width: 80%;
     height: fit-content;
-    min-width: 450px;
+    min-width: 600px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -36,12 +36,11 @@
     right: 0;
     top: 2%;
     max-height: 95%;
-    overflow: scroll;
 }
 .chatContainer
 {
     padding: 15px;
-    height: fit-content;
+    min-width: 600px;
 }
 
 

@@ -15,11 +15,13 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
 
   constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
   
+  // Boolean value for passing whether or not the emit is a soft update or not
   @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
   @Input() showLoading: boolean = false;
+  @Input() showActionProgressBar: boolean = false;
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
@@ -46,9 +48,9 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
     let putMessage = new MessageApiReadResponse();
 
     putMessage.isMessageRead = true;
-    this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).subscribe(() => {
-      this.markingRead = false;
-      this.messageUpdatedEvent.emit(true);
-    },err => {console.log(err)});
+    await this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);});
+
+    this.markingRead = false;
+    this.messageUpdatedEvent.emit(true);
   }
 }
