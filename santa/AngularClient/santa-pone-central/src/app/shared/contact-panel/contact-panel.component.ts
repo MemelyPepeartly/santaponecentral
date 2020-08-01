@@ -11,7 +11,7 @@ import { MapResponse } from 'src/app/services/mapService.service';
   templateUrl: './contact-panel.component.html',
   styleUrls: ['./contact-panel.component.css']
 })
-export class ContactPanelComponent implements OnInit, AfterViewInit{
+export class ContactPanelComponent implements OnInit{
 
   constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
   
@@ -32,9 +32,7 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
-  }
-  ngAfterViewInit(): void {
-    this.scrollToBottom(); 
+    this.scrollToBottom();
   }
   
   public scrollToBottom(): void {
@@ -45,6 +43,7 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
   public async markRead(message: Message)
   {
     this.markingRead = true;
+
     let putMessage = new MessageApiReadResponse();
 
     putMessage.isMessageRead = true;
