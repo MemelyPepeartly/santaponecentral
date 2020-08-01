@@ -48,6 +48,7 @@ import { ContactPanelComponent } from './shared/contact-panel/contact-panel.comp
 import { InputControlComponent } from './shared/input-control/input-control.component';
 import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './headquarters/completed-anons/completed-anons.component';
+import { MessageControlPanelComponent } from './shared/message-control-panel/message-control-panel.component';
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import { CompletedAnonsComponent } from './headquarters/completed-anons/complete
       ChatHistoriesComponent,
       InputControlComponent,
       DeniedAnonsComponent,
-      CompletedAnonsComponent
+      CompletedAnonsComponent,
+      MessageControlPanelComponent
    ],
    entryComponents: [
       LoginComponent

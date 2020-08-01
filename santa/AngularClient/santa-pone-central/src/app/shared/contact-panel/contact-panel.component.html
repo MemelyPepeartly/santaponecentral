@@ -9,13 +9,16 @@
 
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="selectedHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z7">
+            <div *ngIf="selectedHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z5">
                 <span>No chat selected! Select a chat history to see messages</span>
             </div>
             <div *ngIf="showLoading" class="spinner-container">
                 <app-small-loading-spin></app-small-loading-spin>
             </div>
-            <div #chatFrame *ngIf="selectedHistory != undefined && !showLoading" id="chat-window" class="mat-elevation-z7">
+            <div class="actionBarDiv" *ngIf="showActionProgressBar">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <div #chatFrame *ngIf="selectedHistory != undefined && !showLoading" id="chat-window" class="mat-elevation-z5">
                 <ng-container *ngFor="let message of selectedHistory.history">
                     <div class="date-div">
                         <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Daylight Time) </span>
@@ -28,7 +31,7 @@
                             <span *ngIf="message.senderClient.clientNickname == ''"> Admin </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
-                        <p> {{ message.messageContent }} </p>
+                        <p id="content"> {{ message.messageContent }} </p>
                         <div class="messageCheckDiv">
                             <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="message.senderClient.clientID != sendingClientMeta.clientID && !message.isMessageRead"
                                 matTooltip="Mark as read"

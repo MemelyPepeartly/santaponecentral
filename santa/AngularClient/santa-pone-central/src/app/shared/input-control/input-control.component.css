@@ -1,14 +1,15 @@
-.container
-{
-    min-width: 350px;
-    width: 90%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-}
 mat-form-field
 {
     width: 80%;
+    margin-top: 5px;
+}
+.container
+{
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100%;
+    margin-top: 10px;
+    border-radius: 4px;
 }
 .inputButton
 {
@@ -17,16 +18,15 @@ mat-form-field
 .controlButton
 {
     display: inline-block;
-    margin-left: 10px;
-}
-.controlPanel
-{
-    width: 80%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 5px;
 }
 .error
 {
     color: #F44336;
+}
+#buttonsDiv
+{
+    display: inline-block;
+    width: 20%;
+    text-align: center;
 }
