@@ -50,8 +50,6 @@ export class ProfileComponent implements OnInit {
   public gettingProfile: boolean = false;
 
 
-
-
   public async ngOnInit() {
     // Boolean subscribes
     this.profileService._gettingProfile.subscribe((status: boolean) => {
@@ -133,10 +131,9 @@ export class ProfileComponent implements OnInit {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
-    this.postingMessage = false;
-    console.log(this.selectedHistory);
-    
     this.chatComponent.scrollToBottom();
+
+    this.postingMessage = false;
   }
   public async readAll()
   {
@@ -152,7 +149,7 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
     this.puttingMessage = false;
-    this.chatComponent.scrollToBottom();
+
     
   }
   public softRefreshSelectedChat(isSoftUpdate: boolean)

@@ -21,6 +21,7 @@
       </div>
       <div *ngIf="histories.length != 0">
         <app-chat-histories 
+        [disabled]="gettingAllHistories"
         [onProfile]="true"
         [histories]="histories"
         (chatSelectedEvent)="historySelected($event)"
@@ -29,6 +30,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button (click)="historySelected(null)"
+        [disabled]="gettingProfile || gettingGeneralHistory"
         [matBadge]="generalHistory.memberUnreadCount"
         [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
     </mat-card-actions>

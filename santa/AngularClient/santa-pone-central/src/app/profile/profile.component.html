@@ -28,6 +28,10 @@
             [loading] = "gettingProfile"
         ></app-information>
         <app-control-panel
+            [gettingAllHistories]="gettingAllHistories"
+            [gettingGeneralHistory]="gettingGeneralHistory"
+            [gettingSelectedHistory]="gettingSelectedHistory"
+            [gettingProfile]="gettingProfile"
             (chatClickedEvent)="showSelectedChat($event)"
             [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
             [generalHistory]="generalHistory"
