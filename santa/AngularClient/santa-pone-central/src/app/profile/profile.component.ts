@@ -131,7 +131,7 @@ export class ProfileComponent implements OnInit {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
-    this.chatComponent.scrollToBottom();
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0)
 
     this.postingMessage = false;
   }
