@@ -80,7 +80,7 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // GET: api/Client/email@domain.com
+        // GET: api/Client/Email/email@domain.com
         /// <summary>
         /// Gets a client by an ID
         /// 
