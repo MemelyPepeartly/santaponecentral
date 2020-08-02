@@ -29,7 +29,8 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="historySelected(null)"
+      <button mat-raised-button 
+        (click)="historySelected(null)"
         [disabled]="gettingProfile || gettingGeneralHistory"
         [matBadge]="generalHistory.memberUnreadCount"
         [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>

@@ -11,6 +11,7 @@
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
     <app-contact-panel #messages
       (messageUpdatedEvent)="updateChats($event)"
+      [showActionProgressBar]="postingMessage || puttingMessage"
       [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedChat && selectedHistory.history.length == 0"
       [selectedHistory]="selectedHistory"
       [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
