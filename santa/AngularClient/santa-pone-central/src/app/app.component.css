@@ -14,20 +14,13 @@
 .title{
   display: inline-block;
   width: 100%;
-  min-width: fit-content;
   height: 100%;
   vertical-align: top;
-  line-height: normal;
-  z-index: -1;
-
-  font-size: 300%;
-  font-family: 'Lilita One', cursive;
-  font-style: italic;
-  color: wheat;
   background-image: url(../assets/banner/bg.png);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
+  min-height: 150px;
 }
 .main-container
 {
