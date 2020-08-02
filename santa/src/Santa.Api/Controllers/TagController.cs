@@ -85,7 +85,6 @@ namespace Santa.Api.Controllers
         // PUT: api/Tag/5
         [HttpPut("{tagID}")]
         [Authorize(Policy = "update:tags")]
-
         public async Task<ActionResult<Logic.Objects.Tag>> PutTagName(Guid tagID, [FromBody, Bind("tagName")] ApiTag tag)
         {
             try
