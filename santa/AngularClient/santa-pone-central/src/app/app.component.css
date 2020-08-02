@@ -49,6 +49,6 @@
   z-index: -1;
   background-position-y: bottom;
   background-image: url(../assets/images/santa.png);
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
 }
