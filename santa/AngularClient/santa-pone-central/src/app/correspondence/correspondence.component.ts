@@ -126,8 +126,10 @@ export class CorrespondenceComponent implements OnInit {
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
-
     this.puttingMessage = false;
+
+    //Updates all the chats to update the read messages on that particular chat against all the others for sorting
+    await this.ChatService.gatherAllChats(true);
     
   }
   public async hideWindow()
