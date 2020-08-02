@@ -13,7 +13,10 @@ import { MapResponse } from 'src/app/services/mapService.service';
 })
 export class ContactPanelComponent implements OnInit{
 
-  constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
+  constructor(
+    public SantaApiPut: SantaApiPutService,
+    public responseMapper: MapResponse,
+    public auth: AuthService) { }
   
   // Boolean value for passing whether or not the emit is a soft update or not
   @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();

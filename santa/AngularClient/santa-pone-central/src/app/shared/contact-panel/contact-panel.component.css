@@ -92,6 +92,22 @@ mat-card
     margin-right: 10px;
     margin-left: auto;
 }
+.readSpan
+{
+    display: block;
+    color: #b9b9b9;
+    font-size: smaller;
+}
+.sent-read
+{
+    text-align: right;
+    margin-right: 10px;
+}
+.recieved-read
+{
+    text-align: left;
+    margin-left: 10px;
+}
 .spinner-container
 {
     display: block;

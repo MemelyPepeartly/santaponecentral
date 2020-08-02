@@ -24,7 +24,7 @@
                         <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Daylight Time) </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.senderClient.clientID == sendingClientMeta.clientID,
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.recieverClient.clientID != sendingClientMeta.clientID,
                                      'recieved-message' : message.recieverClient.clientID == sendingClientMeta.clientID}">
                         <div class="nick-div">
                             <span *ngIf="message.senderClient.clientNickname != ''"> {{ message.senderClient.clientNickname }} </span>
@@ -33,14 +33,17 @@
                         </div>
                         <p id="content"> {{ message.messageContent }} </p>
                         <div class="messageCheckDiv">
-                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="message.senderClient.clientID != sendingClientMeta.clientID && !message.isMessageRead"
+                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="!message.isMessageRead && message.recieverClient.clientID == sendingClientMeta.clientID && message.senderClient.clientID != message.recieverClient.clientID"
                                 matTooltip="Mark as read"
                                 [disabled]="markingRead"
                                 (click)="markRead(message)">
                                 <mat-icon mat-icon-button>check</mat-icon>
                             </button> 
-                        </div>      
+                        </div>
                     </div>
+                    <span class="readSpan" *ngIf="message.isMessageRead && message.senderClient.clientID == sendingClientMeta.clientID"
+                    [ngClass]="{'sent-read' : message.senderClient.clientID == sendingClientMeta.clientID,
+                    'recieved-read' : message.recieverClient.clientID == sendingClientMeta.clientID}"><mat-icon>check</mat-icon>Read</span> 
                     
                 </ng-container>
             </div>
