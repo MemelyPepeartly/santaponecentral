@@ -1,7 +1,9 @@
 <div class="container mat-elevation-z5">
   <mat-form-field appearance="fill">
     <mat-label>Enter a message</mat-label>
-    <textarea matInput required class="inputField" placeholder="Blah blah blah"
+    <textarea matInput required placeholder="Agent Report Here"
+      [matAutosizeMaxRows]="6"
+      [matTextareaAutosize]="true"
       [formControl]="messageFormControl"></textarea>
     <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
   </mat-form-field>
