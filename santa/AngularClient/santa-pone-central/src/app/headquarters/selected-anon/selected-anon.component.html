@@ -1,8 +1,8 @@
 <div class="centerSpin">
-    <app-loading-spin *ngIf="beingSwitched"></app-loading-spin>
+    <app-loading-spin *ngIf="beingSwitched || deletingClient"></app-loading-spin>
 </div>
 
-<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched">
+<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient">
     <mat-card class="infoCard mat-elevation-z5">
 
         <mat-card-header>
@@ -68,13 +68,13 @@
 
         <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
-                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Approve</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
-                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="approveAnon()">Re-Approve</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
-                [disabled]="this.gatherer.gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
             <button mat-raised-button class="mainActionButton" 
                 [disabled]="showNameChangeForm"
@@ -83,10 +83,10 @@
                 [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Approved'"
-                [disabled]="this.gatherer.gatheringAllStatuses || showCompletedSuccess || client.clientStatus.statusDescription == 'Completed'"
+                [disabled]="gatheringAllStatuses || showCompletedSuccess || client.clientStatus.statusDescription == 'Completed'"
                 (click)="setAsCompleted()">Mark as complete</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Completed'"
-                [disabled]="this.gatherer.gatheringAllStatuses || showReenlistedSuccess || client.clientStatus.statusDescription == 'Approved'"
+                [disabled]="gatheringAllStatuses || showReenlistedSuccess || client.clientStatus.statusDescription == 'Approved'"
                 (click)="reenlistAnon()">Re-Enlist</button>
             <mat-divider style="margin-top: 10px;" *ngIf="showNameChangeForm == true || showEmailChangeForm == true" [inset]="true"></mat-divider>
 
@@ -484,10 +484,10 @@
                 matTooltip="Delete an anon's account entirely"
                 color="warn"
                 [matTooltipPosition]="'right'"
-                [disabled]="this.gatherer.gatheringAllStatuses"
+                [disabled]="gatheringAllStatuses"
                 (click)="deleteAnon()">Delete Agent</button>
                 <mat-card-subtitle class="optionSub">
-                    <p>Delete a client and their Auth0 login account entirely (No undo)</p>
+                    <p>Delete a client and their Auth0 login account entirely, along with any chat involvement (No undo)</p>
                 </mat-card-subtitle>
             </div>
         </mat-card-actions>

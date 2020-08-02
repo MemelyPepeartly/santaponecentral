@@ -12,6 +12,7 @@ export class CompletedAnonsComponent implements OnInit {
   constructor(public gatherer: GathererService) { }
 
   @Input() completedClients: Array<Client> = [];
+  @Input() gatheringAllClients: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   actionTaken: boolean = false;

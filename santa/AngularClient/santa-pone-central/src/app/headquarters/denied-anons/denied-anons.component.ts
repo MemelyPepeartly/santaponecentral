@@ -12,6 +12,7 @@ export class DeniedAnonsComponent implements OnInit {
   constructor(public gatherer: GathererService) { }
 
   @Input() deniedClients: Array<Client> = [];
+  @Input() gatheringAllClients: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   actionTaken: boolean = false;

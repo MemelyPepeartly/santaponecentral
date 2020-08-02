@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked, OnChanges, SimpleChanges, AfterViewInit, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/Profile.service';
