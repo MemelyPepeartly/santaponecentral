@@ -4,6 +4,9 @@ import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
+import { AuthService } from 'src/app/auth/auth.service';
+import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { MapService } from 'src/app/services/mapService.service';
 
 
 @Component({
@@ -13,7 +16,7 @@ import { InputControlConstants } from 'src/app/shared/constants/inputControlCons
 })
 export class InputControlComponent implements OnInit {
 
-  constructor() { }
+  constructor(public Auth: AuthService, public SantaApiGet: SantaApiGetService, public Mapper: MapService) { }
 
   @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
   @Output() readAllAction: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -26,9 +29,23 @@ export class InputControlComponent implements OnInit {
   @Input() reciever: ClientMeta;
   @Input() disabled: boolean = false;
 
+  private isAdmin: boolean;
+  private profile: any;
+  private adminClient: Client;
+
   public messageFormControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
 
   ngOnInit(): void {
+    this.Auth.userProfile$.subscribe(data => {
+      this.profile = data;
+    });
+    this.Auth.isAdmin.subscribe(async (admin: boolean) => {
+      this.isAdmin = admin;
+      if(this.isAdmin)
+      {
+        this.adminClient = this.Mapper.mapClient(await this.SantaApiGet.getClientByEmail(this.profile.email).toPromise());
+      }
+    });
   }
   public emitMessage(message: string)
   {
@@ -36,7 +53,7 @@ export class InputControlComponent implements OnInit {
     let newMessage = new MessageApiResponse();
     newMessage.messageContent = message;
     newMessage.clientRelationXrefID = this.relationshipID;
-    newMessage.messageSenderClientID = this.sender.clientID;
+    newMessage.messageSenderClientID = this.isAdmin ? this.adminClient.clientID : this.sender.clientID;
     newMessage.messageRecieverClientID = this.reciever.clientID;
 
     this.sendClicked.emit(newMessage);
