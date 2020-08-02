@@ -27,7 +27,7 @@
   color: wheat;
   background-image: url(../assets/banner/bg.png);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
 }
 .main-container
@@ -49,6 +49,6 @@
   z-index: -1;
   background-position-y: bottom;
   background-image: url(../assets/images/santa.png);
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
