@@ -37,13 +37,19 @@ export class HeadquartersComponent implements OnInit {
   public showClientCard: boolean = false;
   public currentClient: Client;
   public allClients: Array<Client> = [];
-  
 
-  ngOnInit() {
+  public gatheringAllClients: boolean;
+
+  async ngOnInit() {
+    /* GET STATUS BOOLEAN SUBSCRIBE */
+    this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
+      this.gatheringAllClients = status;
+    });
+    /* ALL CLIENTS SUBSCRIBE */
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
-    })
-    this.gatherer.gatherAllClients();
+    });
+    await this.gatherer.gatherAllClients();
   }
 
   showClientWindow(client)
@@ -52,10 +58,14 @@ export class HeadquartersComponent implements OnInit {
     this.showClientCard = true;
     this.gatherer.onSelectedClient = true;
   }
-  hideClientWindow()
+  async hideClientWindow(forceRefresh: boolean = false)
   {
     this.showClientCard = false;
     this.gatherer.onSelectedClient = false;
+    if(forceRefresh)
+    {
+      await this.gatherer.gatherAllClients();
+    }
   }
   async updateSelectedClient(clientID: string)
   {

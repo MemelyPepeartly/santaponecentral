@@ -17,7 +17,10 @@ export class ApprovedAnonsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  
   @Input() approvedClients: Array<Client> = [];
+  @Input() gatheringAllClients: boolean;
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 

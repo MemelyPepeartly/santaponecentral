@@ -37,6 +37,8 @@ export class IncomingSignupsComponent implements OnInit {
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
 
   @Input() incomingClients: Array<Client> = [];
+  @Input() gatheringAllClients: boolean;
+
   showSpinner: boolean = false;
   actionTaken: boolean = false;
   
@@ -47,11 +49,11 @@ export class IncomingSignupsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  refreshSignupClientList()
+  async refreshSignupClientList()
   {
     if(this.actionTaken)
     {
-      this.gatherer.gatherAllClients();
+      await this.gatherer.gatherAllClients();
       this.actionTaken = false;
       this.showSpinner = false;
     }
@@ -60,10 +62,10 @@ export class IncomingSignupsComponent implements OnInit {
   {
     this.actionTaken = event;
   }
-  manualRefresh()
+  async manualRefresh()
   {
     this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshSignupClientList();
+    await this.refreshSignupClientList();
   }
 }
