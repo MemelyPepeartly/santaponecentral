@@ -27,7 +27,7 @@
   color: wheat;
   background-image: url(../assets/banner/bg.png);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
 }
 .main-container
