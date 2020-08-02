@@ -12,6 +12,7 @@ namespace Santa.Logic.Interfaces
         Task CreateClient(Client newClient);
         Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
         Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
+        Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail);
         Task<List<Logic.Objects.Client>> GetAllClients();
         Task UpdateClientByIDAsync(Client targetClient);
         Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);

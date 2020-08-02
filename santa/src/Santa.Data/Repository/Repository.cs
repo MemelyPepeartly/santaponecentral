@@ -139,6 +139,43 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Gets a client by their email
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        public async Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail)
+        {
+            try
+            {
+                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
+                    .Include(s => s.ClientRelationXrefSenderClient)
+                        .ThenInclude(u => u.SenderClient)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
+                        .ThenInclude(u => u.RecipientClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(tx => tx.ClientTagXref)
+                        .ThenInclude(t => t.Tag)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
+                    .Include(s => s.ClientStatus)
+                    .FirstOrDefaultAsync(c => c.Email == clientEmail));
+
+                return logicClient;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             try
