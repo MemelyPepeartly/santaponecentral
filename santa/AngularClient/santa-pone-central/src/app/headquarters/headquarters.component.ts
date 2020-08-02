@@ -59,7 +59,7 @@ export class HeadquartersComponent implements OnInit {
   }
   async updateSelectedClient(clientID: string)
   {
-    this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
+    this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
   }
   sortApproved() : Array<Client>
   {

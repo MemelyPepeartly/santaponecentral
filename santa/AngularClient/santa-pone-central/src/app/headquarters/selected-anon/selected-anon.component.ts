@@ -170,7 +170,7 @@ export class SelectedAnonComponent implements OnInit {
     });
     await this.gatherer.gatherAllStatuses();
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
 
     /* ---- CLIENT SUBSCRIBES ---- */
     //Gathers all client surveys (Must come before gatherResponses)
@@ -442,7 +442,7 @@ export class SelectedAnonComponent implements OnInit {
     this.beingSwitched = true;
     this.addRecipientSuccess = false;
     this.recipientOpen = false;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.clientID).toPromise());
     this.client = switchClient;
 
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
@@ -558,7 +558,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the recievers form the anon
     for(let i = 0; i < this.client.recipients.length; i++)
     {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.recipients[i].recipientClientID).toPromise());
       this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
     }
     this.gatheringRecipients = false;
@@ -571,7 +571,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the senders form the anon
     for(let i = 0; i < this.client.senders.length; i++)
     {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.senders[i].senderClientID).toPromise());
       this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;

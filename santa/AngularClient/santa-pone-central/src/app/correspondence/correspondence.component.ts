@@ -155,7 +155,7 @@ export class CorrespondenceComponent implements OnInit {
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
-    this.SantaApiGet.getClient(meta.clientID).subscribe(client => {
+    this.SantaApiGet.getClientByClientID(meta.clientID).subscribe(client => {
       this.selectedAnon = this.mapper.mapClient(client);
       this.showClientCard = true;
     },err => { console.log(err); });
@@ -169,7 +169,7 @@ export class CorrespondenceComponent implements OnInit {
   }
   public async updateSelectedClient(clientID: string)
   {
-    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
+    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
   }
   public async updateChats(isSoftUpdate: boolean = false)
   {

@@ -14,7 +14,8 @@
       [showActionProgressBar]="postingMessage || puttingMessage"
       [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedChat && selectedHistory.history.length == 0"
       [selectedHistory]="selectedHistory"
-      [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
+      [sendingClientMeta]="adminSenderMeta"
+      [onCoorespondenceTab]="true"></app-contact-panel>
     <app-input-control
       (sendClicked)="send($event); messages.scrollToBottom();"
       (readAllAction)="readAll()"
