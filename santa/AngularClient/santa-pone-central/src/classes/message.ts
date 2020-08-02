@@ -22,7 +22,7 @@ export class MessageHistory {
         {
             var count = 0;
             this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && message.senderClient.clientID != null)
+                if(message.isMessageRead == false && this.conversationClient.clientID != message.recieverClient.clientID)
                 {
                     count += 1;
                 }
@@ -41,7 +41,7 @@ export class MessageHistory {
         {
             var count = 0;
             this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && message.recieverClient.clientID != null)
+                if(message.isMessageRead == false && this.conversationClient.clientID != message.senderClient.clientID)
                 {
                     count += 1;
                 }
