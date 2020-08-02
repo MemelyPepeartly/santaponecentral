@@ -29,8 +29,12 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client').pipe(
       map(this.extractData));
   }
-  getClient(id): Observable<any> {
+  getClientByClientID(id): Observable<any> {
     return this.http.get(endpoint + 'Client/' + id).pipe(
+      map(this.extractData));
+  }
+  getClientByEmail(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Client/Email/' + email).pipe(
       map(this.extractData));
   }
   getSurveyResponseByClientID(id): Observable<any> {
