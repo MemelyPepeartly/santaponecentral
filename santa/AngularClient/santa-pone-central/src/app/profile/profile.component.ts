@@ -100,18 +100,22 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getHistories(this.profile.clientID);
     await this.profileService.gatherGeneralHistory(this.profile.clientID)
   }
-  public showSelectedChat(history: MessageHistory)
+  public async showSelectedChat(history: MessageHistory)
   {
     this.showOverlay = true;
     this.showChat = true;
 
     if(history == null)
     {
-      this.profileService.getSelectedHistory(this.profile.clientID, null);
+      await this.profileService.getSelectedHistory(this.profile.clientID, null);
+      setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+      
     }
     else
     {
-      this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+      await this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+      setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+
     }
   }
   public hideWindow()
@@ -131,7 +135,7 @@ export class ProfileComponent implements OnInit {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0)
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
   }
@@ -144,9 +148,10 @@ export class ProfileComponent implements OnInit {
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
-    this.SantaApiPut.putMessageReadAll(response).toPromise().catch((err) => {console.log(err)});
-
+    await this.SantaApiPut.putMessageReadAll(response).toPromise().catch((err) => {console.log(err)});
     await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
+
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.puttingMessage = false;
 

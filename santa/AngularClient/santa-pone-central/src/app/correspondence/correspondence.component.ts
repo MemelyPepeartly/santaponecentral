@@ -106,8 +106,9 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
-    this.chatComponent.scrollToBottom();
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
     
@@ -120,8 +121,11 @@ export class CorrespondenceComponent implements OnInit {
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
-    this.SantaApiPut.putMessageReadAll(response).toPromise();
-    await this.updateChats(true)
+    await this.SantaApiPut.putMessageReadAll(response).toPromise();
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
+
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+
 
     this.puttingMessage = false;
     
@@ -159,6 +163,7 @@ export class CorrespondenceComponent implements OnInit {
     this.selectedHistory = history;
     this.selectedRecieverMeta = history.conversationClient;
     this.showChat = true;
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
   public async updateSelectedClient(clientID: string)
   {

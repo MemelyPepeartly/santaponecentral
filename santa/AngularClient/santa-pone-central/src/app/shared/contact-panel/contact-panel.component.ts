@@ -32,7 +32,7 @@ export class ContactPanelComponent implements OnInit{
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
-    this.scrollToBottom();
+    
   }
   
   public scrollToBottom(): void {
