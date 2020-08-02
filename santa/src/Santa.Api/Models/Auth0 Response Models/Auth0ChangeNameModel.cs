@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Auth0_Response_Models
 {
-    public class Auth0ChangeEmailModel
+    public class Auth0ChangeNameModel
     {
-        public string email { get; set; }
+        public string name { get; set; }
     }
 }
