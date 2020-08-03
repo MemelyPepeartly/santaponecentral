@@ -50,7 +50,7 @@ export class MessageHistory {
         }
     }
 }
-// Message class for correspondance
+// Message class for correspondence
 export class Message {
     chatMessageID: string;
     senderClient: ClientMeta = new ClientMeta();
