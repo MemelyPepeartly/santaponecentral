@@ -2,7 +2,8 @@
   <mat-form-field appearance="fill">
     <mat-label>Enter a message</mat-label>
     <textarea matInput required placeholder="Agent Report Here"
-      [matAutosizeMaxRows]="6"
+      [matAutosizeMinRows]="2"
+      [matAutosizeMaxRows]="4"
       [matTextareaAutosize]="true"
       [formControl]="messageFormControl"></textarea>
     <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
