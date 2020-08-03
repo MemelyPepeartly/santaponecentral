@@ -16,11 +16,11 @@ mat-card {
 }
 #iconDiv
 {
-    display: inline-flex;
+    display: block;
     align-items: center;
-    justify-content: flex-start;
-    width: 50%;
+    width: fit-content;
     height: 100%;
+    margin-top: 10px;
 }
 .controlButton
 {
