@@ -2,10 +2,13 @@ tr
 {
     vertical-align: middle;
 }
+th
+{
+    text-align: center;
+}
 #data-table
 {
     width: 100%;
-    min-width: 500px;
     text-align: left;
 }
 
@@ -34,9 +37,28 @@ tr
 {
     content: url(../../../assets/images/presentWithOneFin.png);
 }
-
-@media (max-width:600px)
+.reactive
 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.center
+{
+    text-align: center;
+    display: block;
+}
+@media (max-width:550px)
+{
+    .reactive
+    {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90px;
+    }
     .senderImage
     {
         display:none;
