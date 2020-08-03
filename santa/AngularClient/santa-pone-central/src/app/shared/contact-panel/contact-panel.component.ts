@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked, OnChanges, SimpleChanges, AfterViewInit, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/Profile.service';
@@ -11,30 +11,31 @@ import { MapResponse } from 'src/app/services/mapService.service';
   templateUrl: './contact-panel.component.html',
   styleUrls: ['./contact-panel.component.css']
 })
-export class ContactPanelComponent implements OnInit, AfterViewInit{
+export class ContactPanelComponent implements OnInit{
 
-  constructor(public SantaApiPut: SantaApiPutService, public responseMapper: MapResponse, public auth: AuthService) { }
+  constructor(
+    public SantaApiPut: SantaApiPutService,
+    public responseMapper: MapResponse,
+    public auth: AuthService) { }
   
-  @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<any>();
+  // Boolean value for passing whether or not the emit is a soft update or not
+  @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
   @Input() showLoading: boolean = false;
+  @Input() showActionProgressBar: boolean = false;
   
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
   public isAdmin: boolean;
   public markingRead: boolean = false;
 
-
-
   ngOnInit(): void {
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
-  }
-  ngAfterViewInit(): void {
-    this.scrollToBottom(); 
+    
   }
   
   public scrollToBottom(): void {
@@ -45,12 +46,13 @@ export class ContactPanelComponent implements OnInit, AfterViewInit{
   public async markRead(message: Message)
   {
     this.markingRead = true;
+
     let putMessage = new MessageApiReadResponse();
 
     putMessage.isMessageRead = true;
-    this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).subscribe(() => {
-      this.markingRead = false;
-      this.messageUpdatedEvent.emit(true);
-    },err => {console.log(err)});
+    await this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);});
+
+    this.markingRead = false;
+    this.messageUpdatedEvent.emit(true);
   }
 }

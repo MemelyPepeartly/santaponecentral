@@ -1,11 +1,13 @@
-<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList()" [@simpleFadeAnimation]="'in'">
+<div id="overlay" *ngIf="showClientCard == true" (click)="hideClientWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList(); denied.refreshDeniedClientList(); completed.refreshCompletedClientList();" [@simpleFadeAnimation]="'in'">
 </div>
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
     <div class="fixedDiv mat-elevation-z6">
         <app-selected-anon
         [client]="currentClient"
-        (action)="signups.setAction($event); approved.setAction($event)"
-        (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
+        (action)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
+        (refreshSelectedClient)="updateSelectedClient($event)"
+        (deletedAnon)="hideClientWindow(true);">
+        </app-selected-anon>
     </div>
 </div>
 
@@ -13,28 +15,40 @@
     <mat-tab label="Incoming Sign-Ups">
         <div class="contentDiv mat-elevation-z4">
             <div class="small-box mat-elevation-z3">
-                <app-incoming-signups #signups [incomingClients]="sortIncoming()" (clickedClient)="showClientWindow($event)"></app-incoming-signups>
+                <app-incoming-signups #signups
+                [gatheringAllClients]="gatheringAllClients"
+                [incomingClients]="sortIncoming()"
+                (clickedClient)="showClientWindow($event)"></app-incoming-signups>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Approved Anons">
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
-                <app-approved-anons #approved [approvedClients]="sortApproved()" (clickedClient)="showClientWindow($event)"></app-approved-anons>
+                <app-approved-anons #approved
+                [gatheringAllClients]="gatheringAllClients"
+                [approvedClients]="sortApproved()"
+                (clickedClient)="showClientWindow($event)"></app-approved-anons>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Denied Anons">
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
-                <app-denied-anons #denied [deniedClients]="sortDenied()" (clickedClient)="showClientWindow($event)"></app-denied-anons>
+                <app-denied-anons #denied
+                [gatheringAllClients]="gatheringAllClients"
+                [deniedClients]="sortDenied()"
+                (clickedClient)="showClientWindow($event)"></app-denied-anons>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Completed Anons">
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
-                <app-completed-anons #completed [completedClients]="sortCompleted()" (clickedClient)="showClientWindow($event)"></app-completed-anons>
+                <app-completed-anons #completed
+                [gatheringAllClients]="gatheringAllClients"
+                [completedClients]="sortCompleted()"
+                (clickedClient)="showClientWindow($event)"></app-completed-anons>
             </div>
         </div>
     </mat-tab>

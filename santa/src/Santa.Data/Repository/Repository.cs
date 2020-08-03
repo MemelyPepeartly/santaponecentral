@@ -139,6 +139,43 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        /// <summary>
+        /// Gets a client by their email
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        public async Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail)
+        {
+            try
+            {
+                Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
+                    .Include(s => s.ClientRelationXrefSenderClient)
+                        .ThenInclude(u => u.SenderClient)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
+                        .ThenInclude(u => u.RecipientClient)
+                    .Include(xr => xr.ClientRelationXrefRecipientClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(xr => xr.ClientRelationXrefSenderClient)
+                        .ThenInclude(m => m.ChatMessage)
+                    .Include(tx => tx.ClientTagXref)
+                        .ThenInclude(t => t.Tag)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion)
+                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
+                                .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey)
+                            .ThenInclude(s => s.EventType)
+                    .Include(s => s.ClientStatus)
+                    .FirstOrDefaultAsync(c => c.Email == clientEmail));
+
+                return logicClient;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             try
@@ -186,6 +223,7 @@ namespace Santa.Data.Repository
             try
             {
                 Data.Entities.Client contextClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID);
+
                 santaContext.Client.Remove(contextClient);
             }
             catch (Exception e)
@@ -271,6 +309,7 @@ namespace Santa.Data.Repository
             {
                 Data.Entities.ClientTagXref contextClientRelationXref = new ClientTagXref()
                 {
+                    ClientTagXrefId = Guid.NewGuid(),
                     ClientId = clientID,
                     TagId = tagID
                 };
@@ -400,7 +439,7 @@ namespace Santa.Data.Repository
             {
                 List<Logic.Objects.Message> logicMessageList = (await santaContext.ChatMessage
                     .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .Include(x => x.ClientRelationXref)
                     .ToListAsync())
                     .Select(Mapper.MapMessage).ToList();
@@ -422,7 +461,7 @@ namespace Santa.Data.Repository
             try
             {
                 var contextMessage = await santaContext.ChatMessage
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .Include(s => s.MessageSenderClient)
                     .FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
                 Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
@@ -584,9 +623,9 @@ namespace Santa.Data.Repository
             {
                 MessageHistory logicHistory = new MessageHistory();
                 List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageRecieverClientId == clientID))
+                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageReceiverClientId == clientID))
                     .Include(s => s.MessageSenderClient)
-                    .Include(r => r.MessageRecieverClient)
+                    .Include(r => r.MessageReceiverClient)
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 

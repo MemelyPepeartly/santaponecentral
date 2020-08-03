@@ -17,12 +17,18 @@ export class ControlPanelComponent implements OnInit {
     public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
     public profileService: ProfileService) { }
-    
+
+  @Input() gettingAllHistories: boolean;
+  @Input() gettingGeneralHistory: boolean;
+  @Input() gettingSelectedHistory: boolean;
+  @Input() gettingProfile: boolean;
+  
+  @Input() loading: boolean;
   @Input() histories: Array<MessageHistory> = []
-  @Input() generalHistory: MessageHistory;
+  @Input() generalHistory: MessageHistory = new MessageHistory();
   @Input() profile: Profile;
 
-  @Output() chatClickedEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() chatClickedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
 
   public selectedRecipient: ProfileRecipient;
 
@@ -49,24 +55,9 @@ export class ControlPanelComponent implements OnInit {
     });
     return profileRecipient;
   }
-  public getSelectedHistoryMessages(history: MessageHistory)
+  public async historySelected(history: MessageHistory)
   {
-    if(history != null)
-    {
-      this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
-      this.chatClickedEvent.emit(true);
-    }
-    else
-    {
-      this.profileService.getSelectedHistory(this.profile.clientID, null);
-      this.chatClickedEvent.emit(true);
-    }
-  }
-  public getGeneralUnreadNumber()
-  {
-    return this.histories.find((history: MessageHistory) => {
-      return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null;
-    }).memberUnreadCount
+    this.chatClickedEvent.emit(history);
   }
   public checkBadgeHidden()
   {

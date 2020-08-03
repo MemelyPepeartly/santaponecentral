@@ -1,15 +1,24 @@
 <div class="container mat-elevation-z5">
-    <mat-form-field appearance="fill">
-      <mat-label>Enter a message</mat-label>
-      <textarea matInput required class="inputField" 
-      placeholder="Blah blah blah"
-      [formControl]="messageFormControl"></textarea> 
-      <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <button mat-raised-button class="controlButton"
-      matTooltip="Send"
-      [disabled]="messageFormControl.hasError('required') || disabled"
-      (click)="emitMessage(messageFormControl.value)">
-        <mat-icon mat-icon-button>send</mat-icon>
-    </button>    
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a message</mat-label>
+    <textarea matInput required placeholder="Agent Report Here"
+      [matAutosizeMinRows]="2"
+      [matAutosizeMaxRows]="4"
+      [matTextareaAutosize]="true"
+      [formControl]="messageFormControl"></textarea>
+    <mat-error *ngIf="messageFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+  </mat-form-field>
+  <div id="buttonsDiv">
+    <button mat-raised-button class="controlButton" matTooltip="Send"
+      [disabled]="messageFormControl.invalid || disabled" (click)="emitMessage(messageFormControl.value)">
+      <mat-icon mat-icon-button>send</mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <app-message-control-panel #panel (readAllClicked)="emitAction($event)" [disabled]="disabled">
+      </app-message-control-panel>
+    </mat-menu>
   </div>
+</div>

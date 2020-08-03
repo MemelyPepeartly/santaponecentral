@@ -6,10 +6,10 @@ import { Client } from './client';
 export class MessageHistory {
     history: Array<Message> = [];
     relationXrefID: string;
-    conversationClient: ClientMeta;
-    eventType: EventType;
-    eventSenderClient: ClientMeta;
-    eventRecieverClient: ClientMeta;
+    conversationClient: ClientMeta = new ClientMeta();
+    eventType: EventType = new EventType();
+    eventSenderClient: ClientMeta = new ClientMeta();
+    eventRecieverClient: ClientMeta = new ClientMeta();
 
     get adminUnreadCount() : number
     {
@@ -22,7 +22,7 @@ export class MessageHistory {
         {
             var count = 0;
             this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && message.senderClient.clientID != null)
+                if(message.isMessageRead == false && this.conversationClient.clientID != message.recieverClient.clientID)
                 {
                     count += 1;
                 }
@@ -41,7 +41,7 @@ export class MessageHistory {
         {
             var count = 0;
             this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && message.recieverClient.clientID != null)
+                if(message.isMessageRead == false && this.conversationClient.clientID != message.senderClient.clientID)
                 {
                     count += 1;
                 }
@@ -50,7 +50,7 @@ export class MessageHistory {
         }
     }
 }
-// Message class for correspondance
+// Message class for correspondence
 export class Message {
     chatMessageID: string;
     senderClient: ClientMeta = new ClientMeta();

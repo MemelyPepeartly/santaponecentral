@@ -13,7 +13,9 @@ namespace Santa.Api.AuthHelper
         Task<Auth0UserInfoModel> getAuthClientByID(string authUserID);
         Task<Auth0UserInfoModel> getAuthClientByEmail(string authUserEmail);
         Task updateAuthClientRole(string authUserID, string authRoleID);
-        Task updateAuthClientEmail(string authUserID, string newEmail, string nickname);
+        Task updateAuthClientEmail(string authUserID, string newEmail);
+        Task updateAuthClientName(string authUserID, string newName);
+        Task deleteAuthClient(string authUserID);
         #endregion
 
         #region Roles
@@ -22,7 +24,7 @@ namespace Santa.Api.AuthHelper
         #endregion
 
         #region Tickets
-        Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail);
+        Task<Auth0TicketResponse> getPasswordChangeTicketByAuthClientEmail(string authClientEmail);
         #endregion
 
         #region Utility

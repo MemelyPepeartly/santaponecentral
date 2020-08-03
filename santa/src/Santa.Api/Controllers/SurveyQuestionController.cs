@@ -49,6 +49,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
         [HttpGet("{surveyQuestionID}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Question>> GetQuestionsByIDAsync(Guid surveyQuestionID)
         {
             try

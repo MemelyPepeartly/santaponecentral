@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MessageHistory, ClientMeta } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/Chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
@@ -7,8 +7,9 @@ import { GathererService } from '../services/gatherer.service';
 import { Client } from 'src/classes/client';
 import { MapService } from '../services/mapService.service';
 import { FormGroup } from '@angular/forms';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
+import { InputControlComponent } from '../shared/input-control/input-control.component';
 
 
 
@@ -27,14 +28,21 @@ export class CorrespondenceComponent implements OnInit {
     public mapper: MapService) { }
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
+  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
   
   public allChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
 
+  public gettingAllChats: boolean = false;
+  public gettingAllEventChats: boolean = false;
+  public gettingSelectedHistory: boolean = false;
+  public puttingMessage: boolean = false;
+
   public showClientCard: boolean = false;
   public showChat: boolean = false;
   public postingMessage: boolean = false;
+  public updateOnClickaway: boolean = false;
 
   public selectedAnon: Client = new Client();
   public adminSenderMeta: ClientMeta = new ClientMeta();
@@ -43,30 +51,41 @@ export class CorrespondenceComponent implements OnInit {
 
 
   public async ngOnInit() {
+    // Boolean subscribes
+    this.ChatService.gettingAllChats.subscribe((status: boolean) => {
+      this.gettingAllChats = status;
+    });
+    this.ChatService.gettingAllEventChats.subscribe((status: boolean) => {
+
+      this.gettingAllEventChats = status;
+    });
+    this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
+      this.gettingSelectedHistory = status;
+    });
+    
+    /* -- Data subscribes -- */
+    // All chats
     this.ChatService.allChats.subscribe((historyArray: Array<MessageHistory>) => {
       this.allChats = historyArray;
     });
-    this.ChatService.allEventChats.subscribe((historyArray: Array<MessageHistory>) => {
-      this.eventChats = historyArray;
-    });
+
+    // All events
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray;
     });
+    
+    // Selected history
     this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
       this.selectedHistory = history;
     });
 
     await this.gatherer.gatherAllEvents();
-    await this.gatherAllChats(false);
-  }
-  public async gatherAllChats(isSoftGather: boolean)
-  {
-    await this.ChatService.gatherAllChats(isSoftGather);
-    await this.ChatService.gatherEventChats(isSoftGather);
+    await this.ChatService.gatherAllChats(false);
+    
   }
   public sortByEvent(eventType: EventType)
-  {   
-    return this.eventChats.filter((history: MessageHistory) => {
+  { 
+    return this.allChats.filter((history: MessageHistory) => {
       return history.eventType.eventTypeID == eventType.eventTypeID;
     });
   }
@@ -87,29 +106,56 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
-    this.chatComponent.scrollToBottom();
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
     
   }
-  public hideWindow()
+  public async readAll()
+  {
+    this.puttingMessage = true;
+
+    let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == null });
+    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
+    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
+
+    await this.SantaApiPut.putMessageReadAll(response).toPromise();
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
+
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+
+    this.puttingMessage = false;
+
+    //Updates all the chats to update the read messages on that particular chat against all the others for sorting
+    await this.ChatService.gatherAllChats(true);
+    
+  }
+  public async hideWindow()
   {
     if(this.chatComponent == undefined && this.showClientCard == true)
     {
       this.showClientCard = false;
-      this.selectedAnon = undefined;
+      this.selectedAnon = new Client();
     }
-    else if(!this.chatComponent.markingRead && this.showChat == true)
+    // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
+    else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
     {
       this.showChat = false;
-      this.selectedHistory = undefined;
+      this.selectedHistory = new MessageHistory();
+      // If the updater variable is true, refresh on clicking away
+      if(this.updateOnClickaway)
+      {
+        await this.ChatService.gatherAllChats(true);
+        this.updateOnClickaway = false;
+      }
     }
     
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
-    this.SantaApiGet.getClient(meta.clientID).subscribe(client => {
+    this.SantaApiGet.getClientByClientID(meta.clientID).subscribe(client => {
       this.selectedAnon = this.mapper.mapClient(client);
       this.showClientCard = true;
     },err => { console.log(err); });
@@ -119,17 +165,16 @@ export class CorrespondenceComponent implements OnInit {
     this.selectedHistory = history;
     this.selectedRecieverMeta = history.conversationClient;
     this.showChat = true;
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
   public async updateSelectedClient(clientID: string)
   {
-    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClient(clientID).toPromise());
+    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
   }
-  public async updateChat(event: boolean)
+  public async updateChats(isSoftUpdate: boolean = false)
   {
-    if(event)
-    {
-      this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
-      this.gatherAllChats(true);
-    }
+    this.updateOnClickaway = true
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    await this.ChatService.gatherAllChats(isSoftUpdate);
   }
 }

@@ -67,7 +67,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "read:clients")]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
@@ -78,7 +78,28 @@ namespace Santa.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
-            
+        }
+
+        // GET: api/Client/Email/email@domain.com
+        /// <summary>
+        /// Gets a client by an ID
+        /// 
+        /// </summary>
+        /// <param name="clientEmail"></param>
+        /// <returns></returns>
+        [HttpGet("Email/{clientEmail}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(string clientEmail)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
+                return Ok(logicClient);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
 
@@ -261,19 +282,50 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="tagID"></param>
         /// <returns></returns>
-        [HttpPost("{clientID}/Tag")]
+        [HttpPost("{clientID}/Tags")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationship(Guid clientID, Guid tagID)
+        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] ApiClientTagListResponseModel tagsModel)
         {
             try
             {
-                await repository.CreateClientTagRelationByID(clientID, tagID);
+                foreach(Guid tagID in tagsModel.tags)
+                {
+                    await repository.CreateClientTagRelationByID(clientID, tagID);
+                }
                 await repository.SaveAsync();
-                return Ok(await repository.GetClientByIDAsync(clientID));
+
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                return Ok(logicClient);
             }
             catch (Exception e)
             {
                 throw e.InnerException;
+            }
+        }
+
+        // POST: api/Client/5/Password
+        /// <summary>
+        /// Triggers a password reset email for a user
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpPost("{clientID}/Password")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> sendResetPasswordInformation(Guid clientID)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+
+                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
+                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, false);
+
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -366,11 +418,11 @@ namespace Santa.Api.Controllers
                             return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
                         }
 
-                        // Updates a client's email and name in Auth0
-                        await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email, updatedClient.nickname);
+                        // Updates a client's email in Auth0
+                        await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
 
                         // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(updatedClient.email);
+                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
                         await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
 
                         return Ok(updatedClient);
@@ -410,7 +462,17 @@ namespace Santa.Api.Controllers
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
+
+                    if (targetClient.clientStatus.statusDescription == Constants.AWAITING_STATUS || targetClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
+                    {
+                        await repository.SaveAsync();
+                    }
+                    else if (targetClient.clientStatus.statusDescription == Constants.APPROVED_STATUS || targetClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS)
+                    {
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(targetClient.email);
+                        await authHelper.updateAuthClientName(authClient.user_id, nickname.clientNickname);
+                        await repository.SaveAsync();
+                    }
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
                     return Ok(updatedClient);
                 }
@@ -577,16 +639,28 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-#warning Not Auth0 functioning yet
             try
             {
-                await repository.DeleteClientByIDAsync(clientID);
+                try
+                {
+                    Client logicClient = await repository.GetClientByIDAsync(clientID);
+                    await repository.DeleteClientByIDAsync(clientID);
+
+#warning Need a check here. Use case when a client has data, but maybe doesnt have an auth0 account for some reason. This would not allow for the deletion of the account and cause an exception. 
+                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
+                    await authHelper.deleteAuthClient(authUser.user_id);
+                }
+                catch (Exception e)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                }
+
                 await repository.SaveAsync();
                 return NoContent();
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // DELETE: api/Client/5/Recipient
@@ -653,7 +727,7 @@ namespace Santa.Api.Controllers
             await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
             // Sends the client a password change ticket
-            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.triggerPasswordChangeNotification(logicClient.email);
+            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
             await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
         }
     }

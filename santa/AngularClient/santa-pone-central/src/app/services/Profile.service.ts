@@ -13,15 +13,34 @@ export class ProfileService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  public gettingProfile: boolean = false;
-  public gettingHistories: boolean = false;
-  public gettingSelectedHistory: boolean = false;
-  public gettingGeneralHistory: boolean = false;
+  public _gettingProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingProfile()
+  {
+    return this._gettingProfile.asObservable();
+  }
 
-  private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile);
+  public _gettingHistories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingHistories()
+  {
+    return this._gettingHistories.asObservable();
+  }
+
+  public _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingSelectedHistory()
+  {
+    return this._gettingSelectedHistory.asObservable();
+  }
+
+  public _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gettingGeneralHistory()
+  {
+    return this._gettingGeneralHistory.asObservable();
+  }
+
+  private _profile: BehaviorSubject<Profile>= new BehaviorSubject(new Profile());
   private _chatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([])
-  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
-  private _generalHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
+  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
+  private _generalHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
 
 
   // Profile
@@ -68,55 +87,68 @@ export class ProfileService {
   // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
   public async getProfile(email)
   {
-    this.gettingProfile = true;
+    this._gettingProfile.next(true);
 
-    let profile = this.ApiMapper.mapProfile(await this.SantaApiGet.getProfile(email).toPromise());
+    var data = await this.SantaApiGet.getProfile(email).toPromise().catch(err => {console.log(err); this._gettingProfile.next(false);});
+    let profile = this.ApiMapper.mapProfile(data);
     this.updateProfile(profile);
 
-    this.gettingProfile = false;
+    this._gettingProfile.next(false);
   }
-  public async getHistories(clientID, isSoftUpdate?: boolean)
+  public async getHistories(clientID, isSoftUpdate: boolean = false)
   {
-    if(!isSoftUpdate)
+    if(isSoftUpdate != undefined || isSoftUpdate == false)
     {
-      this.gettingHistories = true;
+      this._gettingHistories.next(true);
     }
 
     let histories: Array<MessageHistory> = []
-    this.SantaApiGet.getAllMessageHistoriesByClientID(clientID).subscribe(res => {
-      for(let i = 0; i < res.length; i++)
-      {
-        histories.push(this.ApiMapper.mapMessageHistory(res[i]))
-      }
-      this.updateChatHistories(histories);
-      this.gatherGeneralHistory(clientID);
-      this.gettingHistories = false;
-    }, err => {console.log(err); this.gettingHistories = false;});    
-    
-  }
-  public async gatherGeneralHistory(clientID, isSoftGather? : boolean)
-  {
-    if(!isSoftGather)
+    var data = await this.SantaApiGet.getAllMessageHistoriesByClientID(clientID).toPromise().catch((err) => {console.log(err);});
+    for(let i = 0; i < data.length; i++)
     {
-      this.gettingGeneralHistory = true
+      histories.push(this.ApiMapper.mapMessageHistory(data[i]))
     }
 
-    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).subscribe(res => {
-      this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(res));
-    }, err => {console.log(err); })
-  }
-  public async getSelectedHistory(clientID, relationXrefID)
-  {
-    this.gettingSelectedHistory = true;
-    let messageHistory: MessageHistory = new MessageHistory();
-
-    this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).subscribe(res => {
-      messageHistory = this.ApiMapper.mapMessageHistory(res);
-      this.updateSelectedHistory(messageHistory);
-      this.gettingSelectedHistory = false;
-    }, err => {console.log(err); });
+    this.updateChatHistories(histories);
+    this._gettingHistories.next(false);
     
-    this.gettingSelectedHistory = false;
+  }
+  public async gatherGeneralHistory(clientID: string, isSoftUpdate: boolean = false)
+  {
+    if(isSoftUpdate != undefined || isSoftUpdate == false)
+    {
+      this._gettingGeneralHistory.next(true);
+    }
+
+    var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
+
+    this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
+    this._gettingGeneralHistory.next(false);
+  }
+  public async getSelectedHistory(clientID: string , relationXrefID: string, isSoftUpdate: boolean = false)
+  {
+    if(isSoftUpdate == false)
+    { 
+      this._gettingSelectedHistory.next(true);
+    }
+
+    // If the relationship is not null, update the selected history, else, update the general one as well, since that is the one that is being requested
+    if(relationXrefID != null && relationXrefID != undefined)
+    {
+      var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).toPromise().catch((err) => {console.log(err);});
+
+      this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
+    }
+    else
+    {
+      var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
+
+      this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
+      this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
+    }
+
+    
+    this._gettingSelectedHistory.next(false);
   }
 
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, ClientTagRelationshipResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse } from '../../classes/responseTypes';
+import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse, ClientTagRelationshipsResponse, ClientTagRelationshipResponse } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -29,8 +29,12 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client').pipe(
       map(this.extractData));
   }
-  getClient(id): Observable<any> {
+  getClientByClientID(id): Observable<any> {
     return this.http.get(endpoint + 'Client/' + id).pipe(
+      map(this.extractData));
+  }
+  getClientByEmail(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Client/Email/' + email).pipe(
       map(this.extractData));
   }
   getSurveyResponseByClientID(id): Observable<any> {
@@ -161,11 +165,14 @@ export class SantaApiPostService {
   postTag(tagResponse: TagResponse): Observable<any> {
     return this.http.post(endpoint + 'Tag', tagResponse);
   }
-  postTagToClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/'+ clientTagRelationship.clientID + "/Tag?tagID=" + clientTagRelationship.tagID, null);
+  postTagsToClient(clientID: string, clientTagRelationships: ClientTagRelationshipsResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships);
   }
   postMessage(messageResponse: MessageApiResponse): Observable<any> {
     return this.http.post(endpoint + 'Message', messageResponse);
+  }
+  postPasswordResetToClient(id: string): Observable<any> {
+    return this.http.post(endpoint + 'Client/' + id + "/Password", {});
   }
 }
 
@@ -203,6 +210,9 @@ export class SantaApiPutService {
   putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
     return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
   }
+  putMessageReadAll(messages: MessageApiReadAllResponse): Observable<any> {
+    return this.http.put(endpoint + 'Message/ReadAll', messages);
+  }
   putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
     return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
   }
@@ -213,6 +223,9 @@ export class SantaApiPutService {
 export class SantaApiDeleteService {
   
   constructor(private http: HttpClient) { }
+  deleteClient(id: string): Observable<any> {
+    return this.http.delete(endpoint + 'Client/' + id);
+  }
   deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationshipReponse): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
   }

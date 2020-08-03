@@ -5,7 +5,7 @@ namespace Santa.Data.Entities
 {
     public partial class ClientTagXref
     {
-        public int ClientTagXrefId { get; set; }
+        public Guid ClientTagXrefId { get; set; }
         public Guid ClientId { get; set; }
         public Guid TagId { get; set; }
 

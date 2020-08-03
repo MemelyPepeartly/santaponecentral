@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
 import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question } from 'src/classes/survey';
@@ -50,7 +50,9 @@ export class SelectedAnonComponent implements OnInit {
     public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
+
   @Output() action: EventEmitter<any> = new EventEmitter();
+  @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
   @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
@@ -82,10 +84,12 @@ export class SelectedAnonComponent implements OnInit {
   public selectedTags: Array<Tag> = new Array<Tag>();
   public selectedRecipientEvent: EventType = new EventType();
 
+  /* SHOW SPINNER BOOLEANS */
   public showButtonSpinner: boolean = false;
   public showNickSpinner: boolean = false;
   public showRecipientListPostingSpinner: boolean = false;
   
+  /* SUCCESS BOOLEANS */
   public showApproveSuccess: boolean = false;
   public showDeniedSuccess: boolean = false;
   public showCompletedSuccess: boolean = false;
@@ -93,6 +97,7 @@ export class SelectedAnonComponent implements OnInit {
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
 
+  /* FUNCTIONAL COMPONENT BOOLEANS */
   public showFiller: boolean = false;
   public recipientOpen: boolean = false;
   public showFail: boolean = false;
@@ -106,15 +111,24 @@ export class SelectedAnonComponent implements OnInit {
   public editingTags: boolean = false;
   public modyingTagRelationships: boolean = false;
   public initializing: boolean = false;
-  public gettingAnswers: boolean = true;
-  public gettingEventDetails: boolean = true;
-  public gatheringRecipients: boolean = false;
-  public gatheringSenders: boolean = false;
   public markingAsComplete: boolean = false;
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
+  public deletingClient: boolean = false;
+  public sendingReset: boolean = false;
 
+  /* COMPONENT GATHERING BOOLEANS */
+  public gettingAnswers: boolean = true;
+  public gettingEventDetails: boolean = true;
+  public gatheringRecipients: boolean = false;
+  public gatheringSenders: boolean = false;
+  public gatheringAllEvents: boolean = true;
+  public gatheringAllMessages: boolean = true;
+  public gatheringAllQuestions: boolean = true;
+  public gatheringAllStatuses: boolean = true;
+  public gatheringAllSurveys: boolean = true;
+  public gatheringAllTags: boolean = true;
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
@@ -135,12 +149,14 @@ export class SelectedAnonComponent implements OnInit {
   public async ngOnInit() {
     this.initializing = true;
     this.gatherer.onSelectedClient = true;
+
     //Tells card if client is approved to hide or show the recipient add profile controls
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
     {
       this.clientApproved = true;
     }
-    // Form Building
+
+    /* FORM BUILDERS */
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
     });
@@ -160,13 +176,14 @@ export class SelectedAnonComponent implements OnInit {
     this.clientEmailFormGroup = this.formBuilder.group({
       email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
+
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
     this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
       this.statuses = statusArray;
     });
     await this.gatherer.gatherAllStatuses();
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.clientID).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
 
     /* ---- CLIENT SUBSCRIBES ---- */
     //Gathers all client surveys (Must come before gatherResponses)
@@ -195,7 +212,26 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
-    
+
+    /* BOOLEAN STATUS SUSCRIBES */
+    this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
+      this.gatheringAllEvents = status;
+    });
+    this.gatherer.gatheringAllMessages.subscribe((status: boolean) => {
+      this.gatheringAllMessages = status;
+    });
+    this.gatherer.gatheringAllQuestions.subscribe((status: boolean) => {
+      this.gatheringAllQuestions = status;
+    });
+    this.gatherer.gatheringAllStatuses.subscribe((status: boolean) => {
+      this.gatheringAllStatuses = status;
+    });
+    this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
+      this.gatheringAllSurveys = status;
+    });
+    this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
+      this.gatheringAllTags = status;
+    });
 
     //Runs all gather services
     await this.gatherer.gatherAllEvents();
@@ -208,7 +244,6 @@ export class SelectedAnonComponent implements OnInit {
     this.gettingEventDetails = false;
 
     this.initializing = false;
-
   }
   public approveAnon()
   {
@@ -302,6 +337,27 @@ export class SelectedAnonComponent implements OnInit {
       this.action.emit(this.actionTaken);
     });
 
+  }
+  public async deleteAnon()
+  {
+    this.deletingClient = true;
+
+    await this.SantaApiDelete.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+    
+    this.actionTaken = true;
+    this.action.emit(this.actionTaken);
+    
+    this.deletingClient = false;
+    this.deletedAnon.emit(true);
+
+  }
+  public async sendAnonPasswordReset()
+  {
+    this.sendingReset = true;
+
+    this.SantaApiPost.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+
+    this.sendingReset = false;
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {
@@ -419,7 +475,7 @@ export class SelectedAnonComponent implements OnInit {
     this.beingSwitched = true;
     this.addRecipientSuccess = false;
     this.recipientOpen = false;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(anon.clientID).toPromise());
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.clientID).toPromise());
     this.client = switchClient;
 
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
@@ -502,13 +558,14 @@ export class SelectedAnonComponent implements OnInit {
   public async addTagsToClient()
   {
     this.modyingTagRelationships = true;
-    for(let i = 0; i < this.selectedTags.length; i++)
-    {
-      let clientTagRelationship = new ClientTagRelationshipResponse();
-      clientTagRelationship.clientID = this.client.clientID;
-      clientTagRelationship.tagID = this.selectedTags[i].tagID;
-      this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagToClient(clientTagRelationship).toPromise());
-    }
+
+    let clientTagRelationships: ClientTagRelationshipsResponse = new ClientTagRelationshipsResponse();
+    this.selectedTags.forEach((tag: Tag) => {
+      clientTagRelationships.tags.push(tag.tagID)
+    });
+    this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
+
+
     await this.setClientTags();
     await this.showAvailableTags();
     this.modyingTagRelationships = false;
@@ -534,7 +591,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the recievers form the anon
     for(let i = 0; i < this.client.recipients.length; i++)
     {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.recipients[i].recipientClientID).toPromise());
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.recipients[i].recipientClientID).toPromise());
       this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
     }
     this.gatheringRecipients = false;
@@ -547,7 +604,7 @@ export class SelectedAnonComponent implements OnInit {
     //Gets all the senders form the anon
     for(let i = 0; i < this.client.senders.length; i++)
     {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClient(this.client.senders[i].senderClientID).toPromise());
+      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.senders[i].senderClientID).toPromise());
       this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
     }
     this.gatheringSenders = false;

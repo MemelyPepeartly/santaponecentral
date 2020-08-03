@@ -26,7 +26,6 @@ namespace Santa.Api.Controllers
         // GET: api/SurveyResponses
         [HttpGet]
         [Authorize(Policy = "read:responses")]
-
         public async Task<ActionResult<List<Logic.Objects.Response>>> GetSurveyResponse()
         {
             return Ok(await repository.GetAllSurveyResponses());
@@ -35,7 +34,6 @@ namespace Santa.Api.Controllers
         // GET: api/SurveyResponses/5
         [HttpGet("{surveyResponseID}")]
         [Authorize(Policy = "read:responses")]
-
         public async Task<ActionResult<Response>> GetSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
@@ -53,7 +51,6 @@ namespace Santa.Api.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{surveyResponseID}/ResponseText")]
         [Authorize(Policy = "modify:responses")]
-
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
             
@@ -105,7 +102,6 @@ namespace Santa.Api.Controllers
         // DELETE: api/SurveyResponses/5
         [HttpDelete("{surveyResponseID}")]
         [Authorize(Policy = "delete:responses")]
-
         public async Task<ActionResult> DeleteSurveyResponse(Guid surveyResponseID)
         {
             Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);

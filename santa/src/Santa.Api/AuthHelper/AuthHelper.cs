@@ -91,7 +91,7 @@ namespace Santa.Api.AuthHelper
             }
 
         }
-        public async Task updateAuthClientEmail(string authUserID, string newEmail, string nickname)
+        public async Task updateAuthClientEmail(string authUserID, string newEmail)
         {
             RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
             RestRequest userRequest = new RestRequest(Method.PATCH);
@@ -100,7 +100,6 @@ namespace Santa.Api.AuthHelper
             var responseModel = new Models.Auth0_Response_Models.Auth0ChangeEmailModel()
             {
                 email = newEmail,
-                name = nickname
             };
 
             userRequest.AddHeader("authorization", "Bearer " + token.access_token);
@@ -115,8 +114,49 @@ namespace Santa.Api.AuthHelper
             {
                 throw new Exception();
             }
+        }
+        public async Task updateAuthClientName(string authUserID, string newName)
+        {
+            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
+            RestRequest userRequest = new RestRequest(Method.PATCH);
+            Auth0TokenModel token = await getTokenModel();
 
+            var responseModel = new Models.Auth0_Response_Models.Auth0ChangeNameModel()
+            {
+                name = newName,
+            };
 
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            userRequest.AddJsonBody(responseModel);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+
+            if (response.IsSuccessful)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
+        public async Task deleteAuthClient(string authUserID)
+        {
+            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID);
+            RestRequest userRequest = new RestRequest(Method.DELETE);
+            Auth0TokenModel token = await getTokenModel();
+
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+
+            if(response.IsSuccessful)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
         #endregion
 
@@ -149,7 +189,7 @@ namespace Santa.Api.AuthHelper
         #endregion
 
         #region Tickets
-        public async Task<Auth0TicketResponse> triggerPasswordChangeNotification(string authClientEmail)
+        public async Task<Auth0TicketResponse> getPasswordChangeTicketByAuthClientEmail(string authClientEmail)
         {
             RestClient roleRestClient = new RestClient(endpoint + "tickets/password-change");
             RestRequest roleRequest = new RestRequest(Method.POST);

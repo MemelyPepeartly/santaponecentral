@@ -12,6 +12,7 @@ export class CompletedAnonsComponent implements OnInit {
   constructor(public gatherer: GathererService) { }
 
   @Input() completedClients: Array<Client> = [];
+  @Input() gatheringAllClients: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   actionTaken: boolean = false;
@@ -23,7 +24,7 @@ export class CompletedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshIncomingClientList()
+  public async refreshCompletedClientList()
   {
     if(this.actionTaken)
     {
@@ -40,7 +41,7 @@ export class CompletedAnonsComponent implements OnInit {
   {
     this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshIncomingClientList();
+    this.refreshCompletedClientList();
   }
 
 }

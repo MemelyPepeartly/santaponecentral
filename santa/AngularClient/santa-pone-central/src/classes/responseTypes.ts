@@ -68,6 +68,9 @@ export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
+export class ClientTagRelationshipsResponse {
+    tags: Array<string> = [];
+}
 export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
     clientNickname: string;
@@ -96,4 +99,8 @@ export class MessageApiResponse {
 //Response for marking messages as read
 export class MessageApiReadResponse {
     isMessageRead: boolean;
+}
+//Response for marking a list of messages as read
+export class MessageApiReadAllResponse {
+    messages: Array<string> = [];
 }

@@ -16,15 +16,51 @@ export class GathererService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  public gatheringAllClients: boolean = false;
-  public gatheringAllTags: boolean = false;
-  public gatheringAllSurveys: boolean = false;
-  public gatheringAllQuestions: boolean = false;
-  public gatheringAllEvents: boolean = false;
-  public gatheringAllStatuses: boolean = false;
-  public gatheringAllMessages: boolean = false;
+  public onSelectedClient: boolean = false;
+  /* BEHAVIOR SUBJECTS FOR GATHERING STATUS */
+  public _gatheringAllClients: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllClients()
+  {
+    return this._gatheringAllClients.asObservable();
+  }
 
+  public _gatheringAllTags: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllTags()
+  {
+    return this._gatheringAllTags.asObservable();
+  }
 
+  public _gatheringAllSurveys: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllSurveys()
+  {
+    return this._gatheringAllSurveys.asObservable();
+  }
+
+  public _gatheringAllQuestions: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllQuestions()
+  {
+    return this._gatheringAllQuestions.asObservable();
+  }
+
+  public _gatheringAllEvents: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllEvents()
+  {
+    return this._gatheringAllEvents.asObservable();
+  }
+
+  public _gatheringAllStatuses: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllStatuses()
+  {
+    return this._gatheringAllStatuses.asObservable();
+  }
+
+  public _gatheringAllMessages: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllMessages()
+  {
+    return this._gatheringAllMessages.asObservable();
+  }
+
+  /* BEHAVIOR SUBJECTS FOR DATA */
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
   private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([])
   private _allSurveys: BehaviorSubject<Array<Survey>> = new BehaviorSubject([])
@@ -32,17 +68,6 @@ export class GathererService {
   private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([])
   private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([])
   private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([])
-
-  // Service variable for determinging if the select anon component is active
-  private _onSelectedClient: boolean = false;
-  get onSelectedClient(): boolean
-  {
-    return this._onSelectedClient;
-  }
-  set onSelectedClient(value: boolean)
-  {
-    this._onSelectedClient = value;
-  }
 
   get allClients()
   {
@@ -107,9 +132,10 @@ export class GathererService {
     this._allMessages.next(messageArray);
   }
   
+  /* GATHERING METHODS */
   public async gatherAllClients()
   {
-    this.gatheringAllClients = true;
+    this._gatheringAllClients.next(true);
 
     this.updateAllClient([]);
     let clientList: Array<Client> = []
@@ -123,11 +149,11 @@ export class GathererService {
       clientList.push(this.ApiMapper.mapClient(res[i]));
     }
     this.updateAllClient(clientList);
-    this.gatheringAllClients = false;
+    this._gatheringAllClients.next(false);
   }
   public async gatherAllTags()
   {
-    this.gatheringAllTags = true;
+    this._gatheringAllTags.next(true);
     this.updateAllTags([])
     let tagList: Array<Tag> = []
 
@@ -140,11 +166,11 @@ export class GathererService {
       tagList.push(this.ApiMapper.mapTag(res[i]));
     }
     this.updateAllTags(tagList);
-    this.gatheringAllTags = false;
+    this._gatheringAllTags.next(false);
   }
   public async gatherAllSurveys()
   {
-    this.gatheringAllSurveys = true;
+    this._gatheringAllSurveys.next(true);
     this.updateAllSurveys([]);
     let surveyList: Array<Survey> = []
 
@@ -157,11 +183,11 @@ export class GathererService {
       surveyList.push(this.ApiMapper.mapSurvey(res[i]));
     }
     this.updateAllSurveys(surveyList);
-    this.gatheringAllSurveys = false;
+    this._gatheringAllSurveys.next(false);
   }
   public async gatherAllQuestions()
   {
-    this.gatheringAllQuestions = true;
+    this._gatheringAllQuestions.next(true);
     this.updateAllQuestions([]);
     let questionList: Array<Question> = []
 
@@ -174,11 +200,11 @@ export class GathererService {
       questionList.push(this.ApiMapper.mapQuestion(res[i]));
     }
     this.updateAllQuestions(questionList);
-    this.gatheringAllQuestions = false;
+    this._gatheringAllQuestions.next(false);
   }
   public async gatherAllEvents()
   {
-    this.gatheringAllEvents = true;
+    this._gatheringAllEvents.next(true);
     this.updateAllEvents([])
     let eventList: Array<EventType> = []
 
@@ -191,11 +217,11 @@ export class GathererService {
       eventList.push(this.ApiMapper.mapEvent(res[i]));
     }
     this.updateAllEvents(eventList);
-    this.gatheringAllEvents = false;
+    this._gatheringAllEvents.next(false);
   }
   public async gatherAllStatuses()
   {
-    this.gatheringAllStatuses = true;
+    this._gatheringAllStatuses.next(true);
     this.updateAllStatuses([])
     let statusList: Array<Status> = []
 
@@ -208,11 +234,11 @@ export class GathererService {
       statusList.push(this.ApiMapper.mapStatus(res[i]));
     }
     this.updateAllStatuses(statusList);
-    this.gatheringAllStatuses = false;
+    this._gatheringAllStatuses.next(false);
   }
   public async gatherAllMessages()
   {
-    this.gatheringAllMessages = true;
+    this._gatheringAllMessages.next(true);
     this.updateAllMessages([])
     let messageList: Array<Message> = []
 
@@ -225,7 +251,7 @@ export class GathererService {
       messageList.push(this.ApiMapper.mapMessage(res[i]));
     }
     this.updateAllMessages(messageList);
-    this.gatheringAllMessages = false;
+    this._gatheringAllMessages.next(false);
   }
   
   // Utility methods

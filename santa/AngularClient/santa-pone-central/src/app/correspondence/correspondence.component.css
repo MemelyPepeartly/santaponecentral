@@ -5,7 +5,6 @@
 #info-div
 {
     min-width: 350px;
-    width: fit-content;
     padding: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -21,7 +20,7 @@
 .container {
     position: fixed;
     width: 100%;
-    min-width: 450px;
+    min-width: 550px;;
     height: 90%;
     top:5%;
     left: 0;
@@ -34,6 +33,7 @@
 {
     padding: 15px;
     height: fit-content;
+    min-width: 550px;;
 }
 #overlay
 {

@@ -12,6 +12,7 @@ export class InformationComponent implements OnInit {
 
   constructor(public profileService: ProfileService) { }
 
+  @Input() loading: boolean;
   @Input() profile: Profile;
   @Input() events: Array<EventType>;
 

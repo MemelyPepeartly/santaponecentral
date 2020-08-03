@@ -2,6 +2,7 @@
 {
     text-align: center;
     padding: 5px;
+    background-color: white;
 }
 .component-container
 {
@@ -18,7 +19,7 @@
     position: fixed;
     width: 80%;
     height: fit-content;
-    min-width: 450px;
+    min-width: 550px;;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -29,21 +30,45 @@
 }
 .container {
     position: fixed;
-    width: 100%;
-    min-width: 450px;
-    height: 90%;
-    top:5%;
-    left: 0;
-    right: 0;
-    background-color:white;
+    background-color: white;
     z-index: 3;
     border-radius: 8px;
+    left: 0;
+    right: 0;
+    top: 2%;
+    max-height: 95%;
 }
 .chatContainer
 {
     padding: 15px;
-    height: fit-content;
+    min-width: 550px;;
 }
+
+
+/* ADD THESE TO CONTAINER IF YOU WANT A SCROLLBAR
+.scrollbar
+{
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    overflow-y: scroll;
+    border-radius: 8px;
+}
+    
+.scrollbar-primary::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #4285F4;
+}
+*/
+
 #overlay
 {
     position: fixed; /* Sit on top of the page content */

@@ -239,6 +239,7 @@ namespace Santa.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpDelete("{surveyID}")]
+        [Authorize(Policy = "delete:surveys")]
         public async Task<ActionResult> DeleteSurvey(Guid surveyID)
         {
             try

@@ -6,11 +6,11 @@ import { EventType } from './eventType';
 export class Profile 
 {
     clientID: string;
-    clientStatus = new Status;
+    clientStatus: Status = new Status();
     clientName: string;
     clientNickname: string;
     email: string;
-    address = new Address;
+    address: Address = new Address;
     recipients: Array<ProfileRecipient> = [];
     responses: Array<SurveyResponse> = [];
 }
@@ -20,7 +20,7 @@ export class ProfileRecipient
     relationXrefID?: string = null;
     clientName: string;
     clientNickname: string;
-    address = new Address;
-    recipientEvent: EventType;
+    address: Address = new Address();
+    recipientEvent: EventType = new EventType();
     responses: Array<SurveyResponse> = [];
 }

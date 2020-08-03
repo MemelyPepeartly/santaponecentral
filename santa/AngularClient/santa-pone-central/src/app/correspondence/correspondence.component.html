@@ -10,11 +10,14 @@
 </div>
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
     <app-contact-panel #messages
-      (messageUpdatedEvent)="updateChat($event) "
+      (messageUpdatedEvent)="updateChats($event)"
+      [showActionProgressBar]="postingMessage || puttingMessage"
+      [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedChat && selectedHistory.history.length == 0"
       [selectedHistory]="selectedHistory"
       [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control
       (sendClicked)="send($event); messages.scrollToBottom();"
+      (readAllAction)="readAll()"
       [relationshipID]="selectedHistory.relationXrefID"
       [sender]="adminSenderMeta"
       [reciever]="selectedRecieverMeta"
@@ -34,11 +37,13 @@
         <mat-card-header>
           <mat-card-title>Unread</mat-card-title>
           <mat-card-subtitle>Unread messages and requests from anons</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!gettingAllChats && sortByUnread().length == 0">(No unread messages to display)</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
-          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
-          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
+            [disabled]="updateOnClickaway"
             [histories]="sortByUnread()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -53,8 +58,9 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
-          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [disabled]="updateOnClickaway"
             [histories]="sortByGeneral()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -69,8 +75,9 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-small-loading-spin *ngIf="this.ChatService.gettingAllEventChats"></app-small-loading-spin>
-          <app-chat-histories *ngIf="!this.ChatService.gettingAllEventChats"
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [disabled]="updateOnClickaway"
             [histories]="sortByEvent(event)"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -85,8 +92,9 @@
         </mat-card-header>
 
         <mat-card-content>
-          <app-small-loading-spin *ngIf="this.ChatService.gettingAllChats"></app-small-loading-spin>
-          <app-chat-histories *ngIf="!this.ChatService.gettingAllChats"
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [disabled]="updateOnClickaway"
             [histories]="allChats"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>

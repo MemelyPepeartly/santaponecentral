@@ -7,7 +7,7 @@ namespace Santa.Data.Entities
     {
         public Client()
         {
-            ChatMessageMessageRecieverClient = new HashSet<ChatMessage>();
+            ChatMessageMessageReceiverClient = new HashSet<ChatMessage>();
             ChatMessageMessageSenderClient = new HashSet<ChatMessage>();
             ClientRelationXrefRecipientClient = new HashSet<ClientRelationXref>();
             ClientRelationXrefSenderClient = new HashSet<ClientRelationXref>();
@@ -28,7 +28,7 @@ namespace Santa.Data.Entities
         public string Country { get; set; }
 
         public virtual ClientStatus ClientStatus { get; set; }
-        public virtual ICollection<ChatMessage> ChatMessageMessageRecieverClient { get; set; }
+        public virtual ICollection<ChatMessage> ChatMessageMessageReceiverClient { get; set; }
         public virtual ICollection<ChatMessage> ChatMessageMessageSenderClient { get; set; }
         public virtual ICollection<ClientRelationXref> ClientRelationXrefRecipientClient { get; set; }
         public virtual ICollection<ClientRelationXref> ClientRelationXrefSenderClient { get; set; }

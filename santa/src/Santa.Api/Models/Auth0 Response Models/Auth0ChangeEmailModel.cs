@@ -8,6 +8,5 @@ namespace Santa.Api.Models.Auth0_Response_Models
     public class Auth0ChangeEmailModel
     {
         public string email { get; set; }
-        public string name { get; set; }
     }
 }

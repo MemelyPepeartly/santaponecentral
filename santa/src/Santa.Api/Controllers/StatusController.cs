@@ -14,7 +14,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class StatusController : ControllerBase
     {
         private readonly IRepository repository;
@@ -24,7 +24,7 @@ namespace Santa.Api.Controllers
         }
         // GET: api/Status
         [HttpGet]
-
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.Status>>> GetAllClientStatus()
         {
             try
@@ -39,6 +39,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Status/5
         [HttpGet("{clientStatusID}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Status>> GetClientStatusByID(Guid clientStatusID)
         {
             try
@@ -53,7 +54,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Status
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "create:statuses")]
+        [Authorize(Policy = "create:statuses")]
         public async Task<ActionResult<Logic.Objects.Status>> PostStatus([FromBody, Bind("statusDescription")] Models.ApiStatusDescription clientStatus)
         {
             try
@@ -83,7 +84,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Status/5
         [HttpPut("{clientStatusID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "modify:statuses")]
+        [Authorize(Policy = "modify:statuses")]
 
         public async Task<ActionResult<Logic.Objects.Status>> Put(Guid clientStatusID, [FromBody, Bind("statusDescription")] Models.ApiStatusDescription changedStatus)
         {
@@ -112,7 +113,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/Status/5
         [HttpDelete("{clientStatusID}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "delete:statuses")]
+        [Authorize(Policy = "delete:statuses")]
         public async Task<ActionResult<Logic.Objects.Status>> Delete(Guid clientStatusID)
         {
             try

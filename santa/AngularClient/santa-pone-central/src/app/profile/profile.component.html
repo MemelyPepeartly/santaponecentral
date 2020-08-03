@@ -3,14 +3,16 @@
 </div>
 
 <!-- Chat Window -->
-<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+<div class="container chatContainer mat-elevation-z3 clientCard scrollbar scrollbar-primary" *ngIf="showChat == true">
     <app-contact-panel
-        (messageUpdatedEvent)="updateChat($event)"
+        (messageUpdatedEvent)="softRefreshSelectedChat($event)"
         [selectedHistory]="selectedHistory"
         [sendingClientMeta]="selectedHistory.conversationClient"
-        [showLoading]="this.profileService.gettingSelectedHistory"></app-contact-panel>
+        [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage)"
+        [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
+        (readAllAction)="readAll()"
         [relationshipID]="selectedHistory.relationXrefID"
         [sender]="selectedHistory.conversationClient"
         [reciever]="adminRecieverMeta"
@@ -23,9 +25,15 @@
         <app-information
             [profile]="profile"
             [events]="events"
+            [loading] = "gettingProfile"
         ></app-information>
         <app-control-panel
-            (chatClickedEvent)="showSelectedChat()"
+            [gettingAllHistories]="gettingAllHistories"
+            [gettingGeneralHistory]="gettingGeneralHistory"
+            [gettingSelectedHistory]="gettingSelectedHistory"
+            [gettingProfile]="gettingProfile"
+            (chatClickedEvent)="showSelectedChat($event)"
+            [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
             [generalHistory]="generalHistory"
             [profile]="profile"
             [histories]="histories">
