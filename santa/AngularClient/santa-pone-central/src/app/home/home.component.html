@@ -231,6 +231,60 @@
                </mat-tab-group>
             </div>
           </mat-tab>
+          <mat-tab label="Contribute">
+            <div class="small-box mat-elevation-z8 contentBox">
+               <h1>Can I contribute to the site in any way?</h1>
+               <p>
+                  There are a number of ways that you can help with SantaPone Central, agent!
+               </p>
+               <mat-tab-group mat-align-tabs="center">
+                  <mat-tab label="Ko-Fi">
+                     <div class="small-box mat-elevation-z8 contentBox">
+                        <h2>Ko-Fi donations for site hosting</h2>
+                        <p>
+                           All the development work itself is something I've been doing as a kindness to the event organizers and all you wonderful Anon's to be able to 
+                           have a nice way to help everyone participate in bringing joy and ponies to the world. This includes also footing the bill of app platform 
+                           hosting for the better part of this last year. Being that this is the case, as things move towards the actual event, costs for hosting will 
+                           go up, and while I don't forsee myself being unable to keep the hosting up, donations and help with the cost of platform hosting are greatly 
+                           appreciated, and the Ko-Fi link to help out with that is right here if you'd like to help out in that respect!
+                         </p>
+                         <h3>-> <a href="https://ko-fi.com/santaponecentraldev">Ko-Fi</a> <-</h3>
+                     </div>
+                  </mat-tab>
+                  <mat-tab label="Art and Assets">
+                     <div class="small-box mat-elevation-z8 contentBox">
+                        <h2>I'm an art agent and would like to help out with site assets! Can I help?</h2>
+                        <p>
+                           Of course you can! If you are an artistic sort who would like to help with site assets such as backgrounds, buttons, or any other 
+                           creative ideas to help with how the site looks, you can shoot me an 
+                           email at <a href="mailto: santaponecentraldev@gmail.com">santaponecentraldev@gmail.com</a>.
+                         </p>
+                     </div>
+                  </mat-tab>
+                  <mat-tab label="Ideas">
+                     <div class="small-box mat-elevation-z8 contentBox">
+                        <h2>I have a really good idea! How can I suggest things?</h2>
+                        <p>
+                           Here at SantaPone Central, creativity and ideas from Anon's are always considered! If you have one, shoot me an 
+                           email at <a href="mailto: santaponecentraldev@gmail.com">santaponecentraldev@gmail.com</a>!
+                         </p>
+                     </div>
+                  </mat-tab>
+               </mat-tab-group>
+            </div>
+          </mat-tab>
+          <mat-tab label="I don't have a login!">
+            <div class="small-box mat-elevation-z8 contentBox">
+               <h1>Don't have a login?</h1>
+               <p>
+                  Fear not! If you have signed up for the secret santa already with the link above, just wait patiently. An email will be sent as soon as your profile is looked at by SantaPone and you are ready to 
+                  join the event! Along with your holiday ID, you will also recieve a password to log in with to be able to see your santa information and other related info. 
+               </p>
+               <p>
+                  If you have not signed up yet, do so!
+               </p>
+            </div>
+          </mat-tab>
           <mat-tab label="Privacy">
             <div class="small-box mat-elevation-z8 contentBox">
                <h1>Privacy</h1>
@@ -251,7 +305,7 @@
 
                <h2>Back End</h2>
                <p>There are namely 3 parts to the backend infrastructure; the data service, the email service, and the auth0 service. All of these work together to ensure that data is valid, secure, and stateless. 
-                  A privately hosted Twilo Sendgrid solution is used to ensure that emails from the API are uniform, and specific to events, assignments, and coorespondance to notify users of assignments, correspondance, 
+                  A privately hosted Twilo Sendgrid solution is used to ensure that emails from the API are uniform, and specific to events, assignments, and correspondence to notify users of assignments, correspondence, 
                   or any other things that need to be sent, such as password reset requests. The Auth0 service itself is used by utilizing the Auth0 management API itself, ensuring data security and proper credential handling. 
                   Being that it as API running on it's own domain, requests are only allowed to come from this site, and the Auth0 tenants used in the data security layer. This specifically has been rigorously tested for fidelity to 
                   ensure data security management.
@@ -261,19 +315,19 @@
 
                <h2>Front End</h2>
                <p>The front end site you see before you was made with the Angular framework to deliver a nice, Single-Page Application web experience. I personally am a huge fan of Angular and the way type-safety and 
-                  services in-application can be accessed and handled. SantaPone Central is hosted on its own app platform service seperate from the API to ensure that data calls and services are exclusively handled on the API 
+                  services in-application can be accessed and handled. SantaPone Central is hosted on its own app platform service separate from the API to ensure that data calls and services are exclusively handled on the API 
                   layer, and features data protection layers and services by Auth0 to manage user authorization and requests.
                </p>
 
                <mat-divider [inset]="true"></mat-divider>
 
                <h2>Sendgrid</h2>
-               <p>Twilo Sendgrid is one of the services hosted privately within Azure. Rather simply, it is the service that allows the API to send secure emails about notifications and correspondance in general.</p>
+               <p>Twilo Sendgrid is one of the services hosted privately within Azure. Rather simply, it is the service that allows the API to send secure emails about notifications and correspondence in general.</p>
 
                <mat-divider [inset]="true"></mat-divider>
 
                <h2>Hosting</h2>
-               <p>The hosting of all of these services are hosted within Azure. If you are not familiar with service archetechtures, in short, similar services would be Amazon Web Services and CloudFlare. These are secure 
+               <p>The hosting of all of these services are hosted within Azure. If you are not familiar with service architectures, in short, similar services would be Amazon Web Services and CloudFlare. These are secure 
                   and expandable cloud computing solutions that allow for a safe and consistent running environment. I use Azure specifically because it is what I am most familiar with, and it interfaces well with a lot of 
                   the other Microsoft-based services and frameworks like SendGrid, or ASP.NET in general.
                </p>
@@ -286,7 +340,7 @@
                <mat-divider [inset]="true"></mat-divider>
 
                <h2>How secure is it?</h2>
-               <p>To put it mildly, this is a security platform that AMD, Atlassian, and BlueCross BlueShield thmeselves use. It provides a secure way to attatch validation to requests that are made 
+               <p>To put it mildly, this is a security platform that AMD, Atlassian, and BlueCross BlueShield themeselves use. It provides a secure way to attach validation to requests that are made 
                   with roles that define information about a user, allows for a safe API to manage password changes, and ensures that quite literally nothing gets past the security layer that shouldn't.
                </p>
                
