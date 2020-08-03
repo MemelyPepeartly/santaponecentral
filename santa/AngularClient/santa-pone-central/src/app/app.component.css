@@ -14,24 +14,23 @@
 .title{
   display: inline-block;
   width: 100%;
-  height: 200px;
+  height: 250px;
   vertical-align: top;
   background-image: url(../assets/banner/bg.png);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: 50%;
 }
 @media (max-width:550px)
 {
   .title{
     display: inline-block;
     width: 100%;
-    height: 120px;
+    height: 150px;
     vertical-align: top;
     background-image: url(../assets/banner/bg.png);
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
   }
 }
 .main-container
