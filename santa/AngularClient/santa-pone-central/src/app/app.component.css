@@ -9,7 +9,7 @@
 {
   width: 100%;
   height: 200px;
-  min-width: 600px;
+  min-width: 550px;;
 }
 .title{
   display: inline-block;
@@ -20,6 +20,19 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+@media (max-width:600px)
+{
+  .title{
+    display: inline-block;
+    width: 100%;
+    height: 120px;
+    vertical-align: top;
+    background-image: url(../assets/banner/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
 }
 .main-container
 {
@@ -33,7 +46,7 @@
   display: inline-block;
   position: fixed;
   width: 100%;
-  min-width: 600px;
+  min-width: 550px;;
   min-height: 800px;
   left: 0;
   z-index: -1;
