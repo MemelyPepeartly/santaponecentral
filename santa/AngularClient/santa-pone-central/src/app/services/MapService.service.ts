@@ -114,6 +114,7 @@ export class MapService {
     mappedMessage.messageContent = message.messageContent;
     mappedMessage.dateTimeSent = new Date(message.dateTimeSent);
     mappedMessage.isMessageRead = message.isMessageRead;
+    mappedMessage.subjectMessage = message.subjectMessage;
 
     return mappedMessage;
   }
@@ -121,17 +122,17 @@ export class MapService {
   {
     let mappedMessageHistory = new MessageHistory;
     mappedMessageHistory.relationXrefID = messageHistory.relationXrefID;
-    
-
-    mappedMessageHistory.history = [];
-    messageHistory.history.forEach(message => {
-      mappedMessageHistory.history.push(this.mapMessage(message));
-    });
-    
-    mappedMessageHistory.conversationClient = this.mapMeta(messageHistory.conversationClient);
-    mappedMessageHistory.eventRecieverClient = this.mapMeta(messageHistory.eventRecieverClient);
-    mappedMessageHistory.eventSenderClient = this.mapMeta(messageHistory.eventSenderClient);
+    mappedMessageHistory.assignmentClient = this.mapMeta(messageHistory.assignmentClient);
     mappedMessageHistory.eventType = this.mapEvent(messageHistory.eventType);
+
+    mappedMessageHistory.subjectClient = this.mapMeta(messageHistory.subjectClient);
+    messageHistory.subjectMessages.forEach(message => {
+      mappedMessageHistory.subjectMessages.push(this.mapMessage(message));
+    });
+
+    messageHistory.recieverMessages.forEach(message => {
+      mappedMessageHistory.subjectMessages.push(this.mapMessage(message));
+    });
 
     return mappedMessageHistory;
   }
