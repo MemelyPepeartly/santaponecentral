@@ -37,7 +37,19 @@ export class ContactPanelComponent implements OnInit{
     });
     
   }
-  
+  public totalHistory() : Array<Message>
+  {
+    let allMessages: Array<Message> = []
+    this.selectedHistory.recieverMessages.forEach((message: Message) => {
+      allMessages.push(message);
+    });
+    this.selectedHistory.subjectMessages.forEach((message: Message) => {
+      allMessages.push(message);
+    });
+    return allMessages.sort((a: Message, b: Message) => {
+      return a.dateTimeSent.getTime() - b.dateTimeSent.getTime();
+    }); 
+  }
   public scrollToBottom(): void {
     try {
         this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;

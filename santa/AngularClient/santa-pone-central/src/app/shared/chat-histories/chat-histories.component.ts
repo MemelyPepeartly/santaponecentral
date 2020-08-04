@@ -38,40 +38,4 @@ export class ChatHistoriesComponent implements OnInit {
   {
     this.recipientSelectedEvent.emit({meta: historyMeta, event: historyEvent});
   }
-  public checkBadgeHidden(messageHistory: MessageHistory)
-  {
-    if(this.isAdmin && !this.onProfile)
-    {
-      if(messageHistory.adminUnreadCount == 0)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
-    else
-    {
-      if(messageHistory.memberUnreadCount == 0)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
-  }
-  public getUnreadNumber(messageHistory: MessageHistory)
-  {
-    if(this.isAdmin && !this.onProfile)
-    {
-      return messageHistory.adminUnreadCount;
-    }
-    else
-    {
-      return messageHistory.memberUnreadCount;
-    }
-  }
 }
