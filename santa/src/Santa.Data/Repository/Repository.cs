@@ -594,6 +594,9 @@ namespace Santa.Data.Repository
                     .Include(s => s.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(m => m.ChatMessage)
+                        .ThenInclude(cm => cm.MessageReceiverClient)
+                    .Include(m => m.ChatMessage)
+                        .ThenInclude(cm => cm.MessageSenderClient)
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
                 List<Logic.Objects.Message> logicListMessages = contextRelationship.ChatMessage.Select(Mapper.MapMessage).OrderBy(dt => dt.dateTimeSent).ToList();
 
