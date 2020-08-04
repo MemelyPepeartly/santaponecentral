@@ -50,16 +50,13 @@ namespace Santa.Logic.Interfaces
         Task UpdateMessageByIDAsync(Message targetMessage);
 
         #region Message Histories
-        // General getters
-        Task<List<MessageHistory>> GetAllChatHistories();
-        // Client getters
-        Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID);
-        Task<MessageHistory> GetChatHistoryByClientIDAndRelationXrefIDAsync(Guid clientID, Guid clientRelationXrefID);
-        Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID);
-        // Event getters
-        Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID);
-
-
+        /* Subject ID's are needed to determine who was the client that made the call. For example, if a person with a profile wants their messages,
+           they will call the endpoint with themselves as the subject
+        */
+        Task<List<MessageHistory>> GetAllChatHistories(Guid subjectID);
+        Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Guid subjectID);
+        Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Guid subjectID);
+        Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Guid subjectID);
         #endregion
 
         #endregion
