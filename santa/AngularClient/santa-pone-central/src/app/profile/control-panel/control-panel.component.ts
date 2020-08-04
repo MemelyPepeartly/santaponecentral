@@ -59,15 +59,4 @@ export class ControlPanelComponent implements OnInit {
   {
     this.chatClickedEvent.emit(history);
   }
-  public checkBadgeHidden()
-  {
-    if(this.histories.find((history: MessageHistory) => { return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null; }).memberUnreadCount == 0)
-    {
-      return true;
-    }
-    else 
-    {
-      return false;
-    }
-  }
 }

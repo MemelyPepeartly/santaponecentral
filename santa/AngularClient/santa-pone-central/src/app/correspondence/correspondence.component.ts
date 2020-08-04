@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
+import { AuthService } from '../auth/auth.service';
 
 
 
@@ -21,6 +22,7 @@ import { InputControlComponent } from '../shared/input-control/input-control.com
 export class CorrespondenceComponent implements OnInit {
 
   constructor(public SantaApiGet: SantaApiGetService,
+    public Auth: AuthService, 
     public SantaApiPost: SantaApiPostService,
     public SantaApiPut: SantaApiPutService,
     public ChatService: ChatService,
@@ -29,6 +31,9 @@ export class CorrespondenceComponent implements OnInit {
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
+
+  public profile: any;
+  public subject: Client = new Client();
   
   public allChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
@@ -45,12 +50,16 @@ export class CorrespondenceComponent implements OnInit {
   public updateOnClickaway: boolean = false;
 
   public selectedAnon: Client = new Client();
-  public adminSenderMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
   public selectedHistory: MessageHistory = new MessageHistory();
 
 
   public async ngOnInit() {
+    this.Auth.userProfile$.subscribe(async data => {
+      this.profile = data;
+      this.subject = await this.SantaApiGet.getClientByEmail(this.profile.email).toPromise()
+    });
+    
     // Boolean subscribes
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
       this.gettingAllChats = status;
@@ -80,7 +89,7 @@ export class CorrespondenceComponent implements OnInit {
     });
 
     await this.gatherer.gatherAllEvents();
-    await this.ChatService.gatherAllChats(false);
+    await this.ChatService.gatherAllChats(this.subject.clientID, false);
     
   }
   public sortByEvent(eventType: EventType)
@@ -92,7 +101,7 @@ export class CorrespondenceComponent implements OnInit {
   public sortByUnread()
   {   
     return this.allChats.filter((history: MessageHistory) => {
-      return history.adminUnreadCount > 0;
+      return history.unreadCount > 0;
     });
   }
   public sortByGeneral()
@@ -106,7 +115,7 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID);
+    await this.ChatService.getSelectedHistory(this.selectedHistory.subjectClient.clientID, this.selectedHistory.relationXrefID);
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
@@ -117,19 +126,19 @@ export class CorrespondenceComponent implements OnInit {
   {
     this.puttingMessage = true;
 
-    let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == null });
+    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == null });
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
     await this.SantaApiPut.putMessageReadAll(response).toPromise();
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, true);
+    await this.ChatService.getSelectedHistory(this.selectedHistory.subjectClient.clientID, this.selectedHistory.relationXrefID, true);
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.puttingMessage = false;
 
     //Updates all the chats to update the read messages on that particular chat against all the others for sorting
-    await this.ChatService.gatherAllChats(true);
+    await this.ChatService.gatherAllChats(this.subject.clientID, true);
     
   }
   public async hideWindow()
@@ -147,7 +156,7 @@ export class CorrespondenceComponent implements OnInit {
       // If the updater variable is true, refresh on clicking away
       if(this.updateOnClickaway)
       {
-        await this.ChatService.gatherAllChats(true);
+        await this.ChatService.gatherAllChats(this.subject.clientID, true);
         this.updateOnClickaway = false;
       }
     }
@@ -163,7 +172,7 @@ export class CorrespondenceComponent implements OnInit {
   public async openSelectedChat(history: MessageHistory)
   {
     this.selectedHistory = history;
-    this.selectedRecieverMeta = history.conversationClient;
+    this.selectedRecieverMeta = history.assignmentClient;
     this.showChat = true;
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
@@ -174,7 +183,7 @@ export class CorrespondenceComponent implements OnInit {
   public async updateChats(isSoftUpdate: boolean = false)
   {
     this.updateOnClickaway = true
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    await this.ChatService.gatherAllChats(isSoftUpdate);
+    await this.ChatService.getSelectedHistory(this.selectedHistory.subjectClient.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
 }

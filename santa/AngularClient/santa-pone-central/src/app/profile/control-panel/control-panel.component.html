@@ -32,7 +32,7 @@
       <button mat-raised-button 
         (click)="historySelected(null)"
         [disabled]="gettingProfile || gettingGeneralHistory"
-        [matBadge]="generalHistory.memberUnreadCount"
-        [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
+        [matBadge]="generalHistory.unreadCount"
+        [matBadgeHidden]="generalHistory.unreadCount == 0">General Chat</button>
     </mat-card-actions>
 </mat-card>

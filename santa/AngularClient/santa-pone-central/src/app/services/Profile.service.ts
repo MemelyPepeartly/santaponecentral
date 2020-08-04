@@ -120,7 +120,7 @@ export class ProfileService {
       this._gettingGeneralHistory.next(true);
     }
 
-    var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
+    var data = await this.SantaApiGet.getMessageHistoryBySubjectIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
 
     this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
     this._gettingGeneralHistory.next(false);
@@ -135,13 +135,13 @@ export class ProfileService {
     // If the relationship is not null, update the selected history, else, update the general one as well, since that is the one that is being requested
     if(relationXrefID != null && relationXrefID != undefined)
     {
-      var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).toPromise().catch((err) => {console.log(err);});
+      var data = await this.SantaApiGet.getMessageHistoryBySubjectIDAndXrefID(clientID, relationXrefID).toPromise().catch((err) => {console.log(err);});
 
       this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
     }
     else
     {
-      var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
+      var data = await this.SantaApiGet.getMessageHistoryBySubjectIDAndXrefID(clientID, null).toPromise().catch((err) => {console.log(err);});
 
       this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
       this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));

@@ -143,7 +143,7 @@ export class ProfileComponent implements OnInit {
   {
     this.puttingMessage = true;
 
-    let unreadMessages: Array<Message> = this.selectedHistory.history.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
+    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
     
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
