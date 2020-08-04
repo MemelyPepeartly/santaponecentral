@@ -95,6 +95,8 @@ export class MessageApiResponse {
     messageRecieverClientID?: string = null;
     clientRelationXrefID?: string = null;
     messageContent: string;
+    //KCHERE Address this new value in the responses
+    eventTypeID: string;
 }
 //Response for marking messages as read
 export class MessageApiReadResponse {
