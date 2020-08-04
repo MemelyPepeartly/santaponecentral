@@ -15,7 +15,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HistoryController : ControllerBase
     {
         private readonly IRepository repository;
@@ -33,7 +33,6 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize(Policy = "read:histories")]
-        [AllowAnonymous]
         public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync([Required]Guid subjectID)
         {
             try
@@ -57,7 +56,6 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("Relationship/{clientRelationXrefID}")]
         [Authorize(Policy = "read:profile")]
-        [AllowAnonymous]
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Guid subjectID)
         {
             try
