@@ -7,22 +7,24 @@ namespace Santa.Logic.Objects
 {
     public class MessageHistory
     {
-        public List<Message> history { get; set; }
         public Guid? relationXrefID { get; set; }
-        /// <summary>
-        /// Meta for the client who the conversation is with (Not the admin). Effectively the sender client meta information
-        /// </summary>
-        public ClientMeta conversationClient { get; set; }
         public Event eventType { get; set; }
         /// <summary>
-        /// Meta information for the person sending the gift if it is a history with a relationXrefID
+        /// Meta of the client that the conversation is about. This is the client that was assigned if the object has a relationXrefID
         /// </summary>
-#warning Possibly depreciated property
-        public ClientMeta eventSenderClient { get; set; }
+        public ClientMeta assignmentClient { get; set; }
         /// <summary>
-        /// Meta information for the person recieving the gift if it is a history with a relationXrefID
+        /// Subject client is the one who is requesting to see the messages. Will always be on the blue side
         /// </summary>
-        public ClientMeta eventRecieverClient { get; set; }
+        public ClientMeta subjectClient { get; set; }
+        /// <summary>
+        /// List of the subject client's messages
+        /// </summary>
+        public List<Message> subjectMessages { get; set; }
+        /// <summary>
+        /// Reciever messages on the grey side. There is no client meta because more than one admin can be the people sending a message
+        /// </summary>
+        public List<Message> recieverMessages { get; set; }
 
     }
 }
