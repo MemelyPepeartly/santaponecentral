@@ -103,8 +103,8 @@ namespace Santa.Api.Controllers
 
                     if(logicMessage.recieverClient.clientId.HasValue)
                     {
-                        Logic.Objects.MessageHistory history = logicMessage.clientRelationXrefID != null ? await repository.GetChatHistoryByClientIDAndRelationXrefIDAsync(logicMessage.recieverClient.clientId.Value, logicMessage.clientRelationXrefID.Value) : await repository.GetGeneralChatHistoryByClientIDAsync(logicMessage.recieverClient.clientId.Value);
-                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), history.eventType);
+                        Logic.Objects.Event logicEvent = message.eventTypeID != null ? await repository.GetEventByIDAsync(message.eventTypeID.Value) : new Logic.Objects.Event();
+                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
                     }
 
                     return Ok();
