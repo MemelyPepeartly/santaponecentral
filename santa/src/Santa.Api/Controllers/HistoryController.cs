@@ -37,7 +37,8 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                List<MessageHistory> listLogicHistory = await repository.GetAllChatHistories(subjectID);
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                List<MessageHistory> listLogicHistory = await repository.GetAllChatHistories(subjectClient);
                 return Ok(listLogicHistory);
             }
             catch (Exception e)
@@ -56,13 +57,13 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("Relationship/{clientRelationXrefID}")]
         [Authorize(Policy = "read:profile")]
-        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Guid subjectID)
+        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required]Guid subjectID)
         {
             try
             {
 #warning This controller can be used by clients. Need a check on the token claims that the requested clientID is the client selected, likely with a seperate task to get their profile and compare their email with the email on their token
-
-                MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectID);
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
                 return Ok(logicHistory);
             }
             catch (Exception e)
@@ -71,22 +72,24 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // GET: api/History/Client/5/Relationship/5
+        // GET: api/History/Client/5/General
         /// <summary>
         /// Gets a client's general history with a clientID to define as the viewer. Used for profiles and updating specific messages on the front end for soft refreshing
         /// ClientID in this endpoint is assumed to also be the subject of the conversation for determinging the viewer
         /// A given history
         /// </summary>
-        /// <param name="clientID"></param>
+        /// <param name="conversationClientID"></param>
         /// <returns></returns>
-        [HttpGet("Client/{subjectID}/General")]
+        [HttpGet("Client/{conversationClientID}/General")]
         [Authorize(Policy = "read:profile")]
-        public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid clientID)
+        public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid conversationClientID, Guid subjectID)
         {
             try
             {
 #warning This controller can also be used by a client. Use the claims and the email in it to confirm that the requested clientID is from the client requesting
-                MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(clientID);
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
+                MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
                 return Ok(listLogicMessages);
             }
             catch (Exception e)
@@ -108,7 +111,8 @@ namespace Santa.Api.Controllers
             try
             {
 #warning Clients and admins can both use this, and is used for profile generation. Ensure the requesting client is only getting chats from their own profile.
-                List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectID);
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
                 return Ok(listLogicMessageHistory);
             }
             catch (Exception e)
