@@ -115,6 +115,8 @@ export class MapService {
     mappedMessage.dateTimeSent = new Date(message.dateTimeSent);
     mappedMessage.isMessageRead = message.isMessageRead;
     mappedMessage.subjectMessage = message.subjectMessage;
+    mappedMessage.fromAdmin = message.fromAdmin;
+
 
     return mappedMessage;
   }
