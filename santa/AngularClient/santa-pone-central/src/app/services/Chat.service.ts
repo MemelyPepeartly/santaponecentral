@@ -75,6 +75,7 @@ export class ChatService {
     let historyArray: Array<MessageHistory> = [];
 
     var data = await this.SantaApiGet.getAllMessageHistories(subjectID).toPromise().catch(err => {console.log(err); this._gettingAllChats.next(false);});
+    
     for(let i = 0; i < data.length; i++)
     {
       historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))
@@ -83,7 +84,7 @@ export class ChatService {
     this._gettingAllChats.next(false);
   }
 
-  public async getSelectedHistory(subjectID, relationXrefID, isSoftGather?: boolean)
+  public async getSelectedHistory(conversationClientID, subjectID, relationXrefID, isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {
@@ -91,7 +92,7 @@ export class ChatService {
     }
 
     let messageHistory = new MessageHistory;
-    var data = await this.SantaApiGet.getMessageHistoryBySubjectIDAndXrefID(subjectID, relationXrefID).toPromise().catch(err => {console.log(err); this._gettingSelectedHistory.next(false);});
+    var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID ,subjectID, relationXrefID).toPromise().catch(err => {console.log(err); this._gettingSelectedHistory.next(false);});
     messageHistory = this.ApiMapper.mapMessageHistory(data);
     this.updateSelectedHistory(messageHistory);
     this._gettingSelectedHistory.next(false);
