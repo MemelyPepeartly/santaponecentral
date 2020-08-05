@@ -116,14 +116,15 @@ export class SantaApiGetService {
   }
   getAllMessageHistoriesByClientID(clientID): Observable<any> {
     // Gets mesage histories for a client. ClientID is used as the subject of the conversation with this method to determine the viewing party
-    return this.http.get(endpoint + "History/" + clientID).pipe(
+    return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship").pipe(
       map(this.extractData));
   }
-  getMessageHistoryBySubjectIDAndXrefID(subjectID, clientRelationXrefID?): Observable<any> {
-    //Necessary for the correct call to be made where teh clientRelationXrefID is null
+  getClientMessageHistoryBySubjectIDAndXrefID(clientID: string, subjectID: string, clientRelationXrefID?: string): Observable<any> {
+    //Necessary for the correct call to be made where the clientRelationXrefID is null
+    // ClientID is the conversationClient, subjectID is who is reading the messages
     if(clientRelationXrefID == null || clientRelationXrefID == undefined)
     {
-      return this.http.get(endpoint + "History/Client/" + subjectID + "/General").pipe(
+      return this.http.get(endpoint + "History/Client/" + clientID + "/General?subjectID=" + subjectID).pipe(
         map(this.extractData));
     }
     return this.http.get(endpoint + "History/Relationship/" + clientRelationXrefID + "?subjectID=" + subjectID).pipe(
