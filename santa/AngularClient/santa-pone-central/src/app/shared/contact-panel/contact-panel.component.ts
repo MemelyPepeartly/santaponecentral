@@ -23,6 +23,7 @@ export class ContactPanelComponent implements OnInit{
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
+  @Input() onProfile: boolean
   @Input() showLoading: boolean = false;
   @Input() showActionProgressBar: boolean = false;
   
@@ -66,5 +67,15 @@ export class ContactPanelComponent implements OnInit{
 
     this.markingRead = false;
     this.messageUpdatedEvent.emit(true);
+  }
+  public showRead(message: Message) : boolean
+  {
+    return (message.isMessageRead && message.senderClient.clientID != this.selectedHistory.subjectClient.clientID && this.isAdmin && !message.fromAdmin) ||
+    (!this.isAdmin && message.fromAdmin && this.onProfile && message.isMessageRead)
+  }
+  public showButton(message: Message) : boolean
+  {
+    return (!message.isMessageRead && !message.subjectMessage && this.isAdmin && !message.fromAdmin) ||
+    (!this.isAdmin && message.fromAdmin && this.onProfile && !message.isMessageRead)
   }
 }

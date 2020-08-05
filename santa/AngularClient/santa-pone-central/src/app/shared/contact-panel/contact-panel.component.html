@@ -24,15 +24,15 @@
                         <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Daylight Time) </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage,
-                                     'recieved-message' : !message.subjectMessage}">
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage || (isAdmin && message.fromAdmin),
+                                     'recieved-message' : !message.subjectMessage || !message.fromAdmin}">
                         <div class="nick-div">
                             <span> {{ message.senderClient.clientNickname }} </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
                         <p id="content"> {{ message.messageContent }} </p>
                         <div class="messageCheckDiv">
-                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="!message.isMessageRead && !message.subjectMessage"
+                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="showButton(message)"
                                 matTooltip="Mark as read"
                                 [disabled]="markingRead"
                                 (click)="markRead(message)">
@@ -40,8 +40,7 @@
                             </button> 
                         </div>
                     </div>
-                    <!-- Show the read arrow if the message has been read, and the sending client does not match the subject viewer -->
-                    <span class="readSpan" *ngIf="message.isMessageRead && message.senderClient.clientID != selectedHistory.subjectClient.clientID"
+                    <span class="readSpan" *ngIf="showRead(message)"
                     [ngClass]="{'sent-read' : message.subjectMessage,
                     'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span> 
                     
