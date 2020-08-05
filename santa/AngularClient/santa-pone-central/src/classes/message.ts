@@ -40,6 +40,25 @@ export class MessageHistory {
             return count;
         }
     }
+    get adminUnreadCount() : number
+    {
+        
+        if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            var count = 0;
+            this.recieverMessages.forEach((message: Message) => {
+                if(message.isMessageRead == false && !message.fromAdmin)
+                {
+                    count += 1;
+                }
+            });
+            return count;
+        }
+    }
 }
 // Message class for correspondence
 export class Message {
@@ -52,6 +71,7 @@ export class Message {
     isMessageRead: boolean;
     // Determined when getting histories if something is a message of a particular subject (Hence, making it a blue message)
     subjectMessage: boolean;
+    fromAdmin: boolean;
 }
 // Minimized meta information returned from API for easily naming messages without additional API calls
 export class ClientMeta {
