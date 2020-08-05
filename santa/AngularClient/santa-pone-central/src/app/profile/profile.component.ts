@@ -9,6 +9,7 @@ import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/respo
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
+import { InputControlComponent } from '../shared/input-control/input-control.component';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +27,8 @@ export class ProfileComponent implements OnInit {
     public ApiMapper: MapService) { }
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
+  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
+
 
   public profile: Profile = new Profile();
   public authProfile: any;
@@ -98,24 +101,24 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
     await this.gatherer.gatherAllEvents();
     await this.profileService.getHistories(this.profile.clientID);
-    await this.profileService.gatherGeneralHistory(this.profile.clientID)
+    await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID)
   }
   public async showSelectedChat(history: MessageHistory)
   {
     this.showOverlay = true;
     this.showChat = true;
-
+    
+    // If the history object from the event is null, get the general history
     if(history == null)
-    {
-      await this.profileService.getSelectedHistory(this.profile.clientID, null);
+    {      
+      await this.profileService.getSelectedHistory(this.profile.clientID, this.profile.clientID, null);
       setTimeout(() => this.chatComponent.scrollToBottom(), 0);
       
     }
     else
     {
-      await this.profileService.getSelectedHistory(this.profile.clientID, history.relationXrefID);
+      await this.profileService.getSelectedHistory(history.conversationClient.clientID, this.profile.clientID, history.relationXrefID);
       setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
     }
   }
   public hideWindow()
@@ -133,7 +136,8 @@ export class ProfileComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, true);
+    this.inputComponent.clearForm();
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
@@ -143,13 +147,13 @@ export class ProfileComponent implements OnInit {
   {
     this.puttingMessage = true;
 
-    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false && message.recieverClient.clientID == this.profile.clientID });
+    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
     
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
     await this.SantaApiPut.putMessageReadAll(response).toPromise().catch((err) => {console.log(err)});
-    await this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, true);
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, true);
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
@@ -159,6 +163,6 @@ export class ProfileComponent implements OnInit {
   }
   public softRefreshSelectedChat(isSoftUpdate: boolean)
   {
-    this.profileService.getSelectedHistory(this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
+    this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
   }
 }
