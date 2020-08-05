@@ -13,3 +13,7 @@ DROP TABLE app.ClientStatus;
 DROP TABLE app.Tag;
 
 DROP SCHEMA app;
+
+
+--DELETE FROM app.ChatMessage
+--DELETE FROM app.ClientRelationXref

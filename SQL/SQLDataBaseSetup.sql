@@ -100,7 +100,8 @@ CREATE TABLE app.ChatMessage
     clientRelationXrefID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.ClientRelationXref(clientRelationXrefID),
     messageContent NVARCHAR(1000) NOT NULL,
     dateTimeSent DATETIME NOT NULL,
-    isMessageRead BIT NOT NULL);
+    isMessageRead BIT NOT NULL,
+    fromAdmin BIT NOT NULL);
 
 GO
 CREATE TRIGGER app.cascadeTrigger ON app.Client INSTEAD OF DELETE
