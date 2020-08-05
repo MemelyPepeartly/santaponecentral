@@ -126,6 +126,17 @@ namespace Santa.Data.Repository
 
             return logicMeta;
         }
+        public static ClientMeta MapClientMeta(Logic.Objects.Client logicClient)
+        {
+            Logic.Objects.ClientMeta logicMeta = new ClientMeta()
+            {
+                clientId = logicClient.clientID,
+                clientName = logicClient.clientName,
+                clientNickname = logicClient.nickname
+            };
+
+            return logicMeta;
+        }
 
         #endregion
 
