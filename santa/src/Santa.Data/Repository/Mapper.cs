@@ -220,7 +220,8 @@ namespace Santa.Data.Repository
                 },
                 messageContent = contextMessage.MessageContent,
                 dateTimeSent = contextMessage.DateTimeSent,
-                isMessageRead = contextMessage.IsMessageRead
+                isMessageRead = contextMessage.IsMessageRead,
+                fromAdmin = contextMessage.FromAdmin
             };
             return logicMessage;
         }
@@ -234,7 +235,8 @@ namespace Santa.Data.Repository
                 MessageSenderClientId = logicMessage.senderClient.clientId,
                 MessageContent = logicMessage.messageContent,
                 DateTimeSent = logicMessage.dateTimeSent,
-                IsMessageRead = logicMessage.isMessageRead
+                IsMessageRead = logicMessage.isMessageRead,
+                FromAdmin = logicMessage.fromAdmin
             };
             return contextMessage;
         }
