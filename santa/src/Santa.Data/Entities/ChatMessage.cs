@@ -12,6 +12,7 @@ namespace Santa.Data.Entities
         public string MessageContent { get; set; }
         public DateTime DateTimeSent { get; set; }
         public bool IsMessageRead { get; set; }
+        public bool FromAdmin { get; set; }
 
         public virtual ClientRelationXref ClientRelationXref { get; set; }
         public virtual Client MessageReceiverClient { get; set; }
