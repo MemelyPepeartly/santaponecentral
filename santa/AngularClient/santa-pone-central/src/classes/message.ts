@@ -7,8 +7,15 @@ export class MessageHistory {
     relationXrefID: string;
     eventType: EventType = new EventType();
 
-    assignmentClient: ClientMeta = new ClientMeta();
+    // Client event sender... (Relationship dependent)
+    assignmentSenderClient: ClientMeta = new ClientMeta();
+    // Client event reciever... (Relationship dependent)
+    assignmentRecieverClient: ClientMeta = new ClientMeta();
+    // Client chat is with (Relationship Agnostic)
+    conversationClient: ClientMeta = new ClientMeta();
+    // The client that should be the "viewer" of the messages. Their messages should be blue
     subjectClient: ClientMeta = new ClientMeta();
+
 
     subjectMessages: Array<Message> = [];
     recieverMessages: Array<Message> = [];
