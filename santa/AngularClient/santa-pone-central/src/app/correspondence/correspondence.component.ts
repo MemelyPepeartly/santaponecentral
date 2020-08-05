@@ -108,7 +108,7 @@ export class CorrespondenceComponent implements OnInit {
   public sortByUnread()
   {   
     return this.allChats.filter((history: MessageHistory) => {
-      return history.unreadCount > 0;
+      return history.adminUnreadCount > 0;
     });
   }
   public sortByGeneral()

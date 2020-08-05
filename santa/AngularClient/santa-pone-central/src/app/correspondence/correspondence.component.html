@@ -19,6 +19,7 @@
       (sendClicked)="send($event); messages.scrollToBottom();"
       (readAllAction)="readAll()"
       [relationshipID]="selectedHistory.relationXrefID"
+      [eventType]="selectedHistory.eventType"
       [sender]="adminSenderMeta"
       [reciever]="selectedRecieverMeta"
       [disabled]="postingMessage">
