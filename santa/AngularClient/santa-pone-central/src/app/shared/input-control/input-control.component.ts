@@ -77,6 +77,10 @@ export class InputControlComponent implements OnInit {
       this.readAllAction.emit(true);
     }
   }
+  public clearForm()
+  {
+    this.messageFormControl.reset();
+  }
   public getErrorMessage() {
     if (this.messageFormControl.hasError('required')) {
       return 'You must enter a value';
