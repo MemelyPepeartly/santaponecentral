@@ -6,6 +6,7 @@
 <div class="container chatContainer mat-elevation-z3 clientCard scrollbar scrollbar-primary" *ngIf="showChat == true">
     <app-contact-panel
         (messageUpdatedEvent)="softRefreshSelectedChat($event)"
+        [onProfile]="true"
         [selectedHistory]="selectedHistory"
         [sendingClientMeta]="selectedHistory.subjectClient"
         [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage)"
@@ -16,6 +17,8 @@
         [relationshipID]="selectedHistory.relationXrefID"
         [sender]="selectedHistory.subjectClient"
         [reciever]="adminRecieverMeta"
+        [onProfile]="true"
+        [eventType]="selectedHistory.eventType"
         [disabled]="postingMessage">
     </app-input-control>
 </div>
