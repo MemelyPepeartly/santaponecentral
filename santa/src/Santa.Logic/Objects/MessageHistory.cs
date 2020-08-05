@@ -10,9 +10,18 @@ namespace Santa.Logic.Objects
         public Guid? relationXrefID { get; set; }
         public Event eventType { get; set; }
         /// <summary>
+        /// Meta for the client that is involved with the conversation. This is primarily for the front ent to determine information about general histories
+        /// where no assingmentSender or reciever is present
+        /// </summary>
+        public ClientMeta conversationClient { get; set; }
+        /// <summary>
         /// Meta of the client that the conversation is about. This is the client that was assigned if the object has a relationXrefID
         /// </summary>
-        public ClientMeta assignmentClient { get; set; }
+        public ClientMeta assignmentRecieverClient { get; set; }
+        /// <summary>
+        /// Meta of the client that is sending the gift if a relationship is present
+        /// </summary>
+        public ClientMeta assignmentSenderClient { get; set; }
         /// <summary>
         /// Subject client is the one who is requesting to see the messages. Will always be on the blue side
         /// </summary>
