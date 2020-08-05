@@ -7,14 +7,14 @@
     <app-contact-panel
         (messageUpdatedEvent)="softRefreshSelectedChat($event)"
         [selectedHistory]="selectedHistory"
-        [sendingClientMeta]="selectedHistory.conversationClient"
+        [sendingClientMeta]="selectedHistory.subjectClient"
         [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage)"
         [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
         (sendClicked)="send($event)"
         (readAllAction)="readAll()"
         [relationshipID]="selectedHistory.relationXrefID"
-        [sender]="selectedHistory.conversationClient"
+        [sender]="selectedHistory.subjectClient"
         [reciever]="adminRecieverMeta"
         [disabled]="postingMessage">
     </app-input-control>
