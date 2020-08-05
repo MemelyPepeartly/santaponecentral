@@ -39,10 +39,15 @@ th
 }
 .reactive
 {
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+    width: 140px;
+}
+.historyButton
+{
+    width: 100px;
 }
 .center
 {
@@ -57,7 +62,7 @@ th
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 90px;
+        width: 90px;
     }
     .senderImage
     {
