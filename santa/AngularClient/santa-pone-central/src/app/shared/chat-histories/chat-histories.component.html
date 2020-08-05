@@ -42,8 +42,8 @@
         <button mat-raised-button class="historyButton"
           (click)="emitSelectedHistory(history);"
           [disabled]="disabled"
-          [matBadge]="history.unreadCount"
-          [matBadgeHidden]="history.unreadCount == 0">History</button>
+          [matBadge]="!isAdmin ? history.unreadCount : history.adminUnreadCount"
+          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">History</button>
       </td>
     </ng-container>
   
