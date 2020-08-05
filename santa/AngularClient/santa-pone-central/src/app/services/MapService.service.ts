@@ -122,7 +122,9 @@ export class MapService {
   {
     let mappedMessageHistory = new MessageHistory;
     mappedMessageHistory.relationXrefID = messageHistory.relationXrefID;
-    mappedMessageHistory.assignmentClient = this.mapMeta(messageHistory.assignmentClient);
+    mappedMessageHistory.assignmentRecieverClient = this.mapMeta(messageHistory.assignmentRecieverClient);
+    mappedMessageHistory.assignmentSenderClient = this.mapMeta(messageHistory.assignmentSenderClient);
+    mappedMessageHistory.conversationClient = this.mapMeta(messageHistory.conversationClient);
     mappedMessageHistory.eventType = this.mapEvent(messageHistory.eventType);
 
     mappedMessageHistory.subjectClient = this.mapMeta(messageHistory.subjectClient);
@@ -131,7 +133,7 @@ export class MapService {
     });
 
     messageHistory.recieverMessages.forEach(message => {
-      mappedMessageHistory.subjectMessages.push(this.mapMessage(message));
+      mappedMessageHistory.recieverMessages.push(this.mapMessage(message));
     });
 
     return mappedMessageHistory;
