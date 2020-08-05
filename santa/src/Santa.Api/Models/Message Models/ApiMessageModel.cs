@@ -15,5 +15,6 @@ namespace Santa.Api.Models.Message_Models
         /// </summary>
         public Guid? eventTypeID { get; set; }
         public string messageContent { get; set; }
+        public bool fromAdmin { get; set; }
     }
 }
