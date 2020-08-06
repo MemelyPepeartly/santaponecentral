@@ -132,7 +132,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = "create:clients")]
-        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiClient client)
+        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiNewClientModel client)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace Santa.Api.Controllers
         [HttpPost("Signup")]
         [AllowAnonymous]
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
-        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponses clientResponseModel)
+        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponsesModel clientResponseModel)
         {
             try
             {
@@ -254,7 +254,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost("{clientID}/Recipients", Name = "PostRecipients")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationships assignmentsModel)
+        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationshipsModel assignmentsModel)
         {
             try
             {
@@ -339,7 +339,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddress address)
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddressModel address)
         {
             try
             {
@@ -385,7 +385,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Email", Name ="PutEmail")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmail email)
+        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmailModel email)
         {
             try
             {
@@ -453,7 +453,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNickname nickname)
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNicknameModel nickname)
         {
             try
             {
@@ -495,9 +495,9 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Name", Name = "PutName")]
+        [HttpPut("{clientID}/Name")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
+        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody] ApiClientNameModel name)
         {
             try
             {
@@ -521,6 +521,40 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
+        // PUT: api/Client/5/Admin
+        /// <summary>
+        /// Updates a client's actual name
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpPut("{clientID}/Admin")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] ApiClientNameModel name)
+        {
+            try
+            {
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+                targetClient.clientName = name.clientName;
+                try
+                {
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+                    return Ok(updatedClient);
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         // PUT: api/Client/5/Status
         /// <summary>
         /// Updates the status of a certain client by their ID
@@ -530,7 +564,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatus status)
+        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatusModel status)
         {
             try
             {
