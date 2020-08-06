@@ -5,6 +5,7 @@
 #info-div
 {
     min-width: 350px;
+    width: 75%;
     padding: 10px;
     margin-left: auto;
     margin-right: auto;
