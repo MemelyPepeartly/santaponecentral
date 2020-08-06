@@ -3,6 +3,7 @@
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
     <div class="fixedDiv mat-elevation-z6">
         <app-selected-anon
+        [loadingClient]="false"
         [client]="currentClient"
         (action)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
         (refreshSelectedClient)="updateSelectedClient($event)"
