@@ -31,8 +31,8 @@
     <ng-container matColumnDef="event">
       <th mat-header-cell *matHeaderCellDef> Event </th>
       <td mat-cell *matCellDef="let history">
-        <span class="reactive" *ngIf="history.eventType.eventDescription != null">{{history.eventType.eventDescription}}</span>
-        <span class="reactive" *ngIf="history.eventType.eventDescription == null">General Correspondence</span> </td>
+        <span class="reactive chatDescription" *ngIf="history.eventType.eventDescription != null">{{history.eventType.eventDescription}}</span>
+        <span class="reactive chatDescription" *ngIf="history.eventType.eventDescription == null">General Correspondence</span> </td>
     </ng-container>
 
     <!-- Contact Column -->
@@ -43,7 +43,7 @@
           (click)="emitSelectedHistory(history);"
           [disabled]="disabled"
           [matBadge]="!isAdmin ? history.unreadCount : history.adminUnreadCount"
-          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">History</button>
+          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">Chat History</button>
       </td>
     </ng-container>
   
