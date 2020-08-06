@@ -144,9 +144,9 @@ export class SignupFormComponent implements OnInit {
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
 
-    var thing = this.surveyForms.toArray()
+    var forms = this.surveyForms.toArray()
     // Set client's answers
-    thing.forEach((surveyForm: SurveyFormComponent) => {
+    forms.forEach((surveyForm: SurveyFormComponent) => {
       let response = new SurveyApiResponse;
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
@@ -166,7 +166,6 @@ export class SignupFormComponent implements OnInit {
         response = new SurveyApiResponse();
       }
     });
-    console.log(newClient);
     
     // Post client with answers
     await this.SantaPost.postClientSignup(newClient).toPromise();
