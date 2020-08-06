@@ -8,8 +8,8 @@
           <div class="senderInfoDiv">
             <button mat-raised-button class="reactive" *ngIf="!onProfile && history.assignmentRecieverClient.clientID != null && history.assignmentSenderClient.clientID != null"
               (click)="emitSelectedRecipientInformation(history.assignmentSenderClient, history.eventType)">{{ history.assignmentSenderClient.clientNickname }}</button>
-              <button mat-raised-button class="reactive" *ngIf="!onProfile && history.assignmentRecieverClient.clientID == null && history.assignmentSenderClient.clientID == null"
-              (click)="emitSelectedRecipientInformation(history.assignmentSenderClient, history.eventType)">{{ history.conversationClient.clientNickname }}</button>
+              <button mat-raised-button class="reactive" *ngIf="!onProfile && history.relationXrefID == null"
+              (click)="emitSelectedRecipientInformation(history.conversationClient, null)">{{ history.conversationClient.clientNickname }}</button>
             <span *ngIf="onProfile">{{history.assignmentSenderClient.clientNickname}}</span>
           </div>
           <img class="senderImage" [ngClass]="{'cardExchangeIcon' : history.eventType.eventDescription == 'Card Exchange','giftExchangeIcon' : history.eventType.eventDescription == 'Gift Exchange'}">
