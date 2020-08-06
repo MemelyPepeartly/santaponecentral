@@ -23,6 +23,7 @@ export class MapService {
     mappedClient.clientName = client.clientName;
     mappedClient.email = client.email;
     mappedClient.clientNickname = client.nickname;
+    mappedClient.isAdmin = client.isAdmin;
 
     mappedClient.clientStatus.statusID = client.clientStatus.statusID;
     mappedClient.clientStatus.statusDescription = client.clientStatus.statusDescription;
