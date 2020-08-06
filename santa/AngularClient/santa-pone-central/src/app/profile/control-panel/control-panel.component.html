@@ -29,7 +29,8 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button 
+      <!-- Only show a general history if they are not an admin and the app is not initializing -->
+      <button mat-raised-button *ngIf="!isAdmin && !initializing"
         (click)="historySelected(null)"
         [disabled]="gettingProfile || gettingGeneralHistory"
         [matBadge]="generalHistory.unreadCount"
