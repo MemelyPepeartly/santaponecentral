@@ -531,12 +531,12 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Admin")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] ApiClientNameModel name)
+        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] ApiClientIsAdminModel model)
         {
             try
             {
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                targetClient.clientName = name.clientName;
+                targetClient.isAdmin = model.isAdmin;
                 try
                 {
                     await repository.UpdateClientByIDAsync(targetClient);
