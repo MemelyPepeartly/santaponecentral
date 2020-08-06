@@ -21,7 +21,7 @@ export class ClientSignupResponse {
     clientState: string;
     clientPostalCode: string;
     clientCountry: string;
-    isAdmin: boolean;
+    isAdmin: boolean = false;
     responses: Array<SurveySignupApiResponse> = []
 }
 export class ClientAddressResponse {
