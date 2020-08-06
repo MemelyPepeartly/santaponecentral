@@ -9,6 +9,7 @@ export class Client {
     clientName: string;
     clientNickname: string;
     clientStatus = new Status;
+    isAdmin: boolean;
     address = new Address;
     email: string;
     responses: Array<SurveyResponse> = [];
