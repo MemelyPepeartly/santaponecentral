@@ -47,6 +47,7 @@ export class CorrespondenceComponent implements OnInit {
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
   public puttingMessage: boolean = false;
+  public initializing: boolean;
 
   public showClientCard: boolean = false;
   public showChat: boolean = false;
@@ -59,6 +60,8 @@ export class CorrespondenceComponent implements OnInit {
 
 
   public async ngOnInit() {
+    this.initializing = true;
+
     /* Sets the subject viewer of the messages as a meta */
     this.Auth.userProfile$.subscribe((data: any) => {
       this.profile = data
@@ -97,6 +100,7 @@ export class CorrespondenceComponent implements OnInit {
     this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
       this.selectedHistory = history;
     });
+    this.initializing = false;
 
     await this.gatherer.gatherAllEvents();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
