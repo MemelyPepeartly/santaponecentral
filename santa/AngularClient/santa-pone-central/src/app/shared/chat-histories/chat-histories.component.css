@@ -45,9 +45,13 @@ th
     text-overflow: ellipsis;
     width: 140px;
 }
+.chatDescription
+{
+    width: 170px;
+}
 .historyButton
 {
-    width: 100px;
+    width: 110px;
 }
 .center
 {
@@ -62,6 +66,12 @@ th
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        width: 90px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .chatDescription
+    {
         width: 90px;
     }
     .senderImage
