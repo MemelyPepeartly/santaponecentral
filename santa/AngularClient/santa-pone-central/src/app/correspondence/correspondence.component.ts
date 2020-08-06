@@ -131,6 +131,7 @@ export class CorrespondenceComponent implements OnInit {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
     this.inputComponent.clearForm();
+    this.updateOnClickaway = true;
     
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
