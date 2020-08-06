@@ -19,5 +19,6 @@ namespace Santa.Api.Models.Client_Models
         public string clientPostalCode { get; set; }
         public string clientCountry { get; set; }
         public List<ApiSurveyResponse> responses { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
