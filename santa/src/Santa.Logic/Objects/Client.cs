@@ -15,6 +15,7 @@ namespace Santa.Logic.Objects
         public List<Recipient> recipients { get; set; }
         public List<Sender> senders { get; set; }
         public List<Tag> tags { get; set; }
+        public bool isAdmin { get; set; }
 
     }
 }
