@@ -30,6 +30,7 @@ namespace Santa.Data.Repository
                 State = logicClient.address.state,
                 PostalCode = logicClient.address.postalCode,
                 Country = logicClient.address.country,
+                IsAdmin = logicClient.isAdmin
 
             };
             return contextClient;
@@ -48,6 +49,7 @@ namespace Santa.Data.Repository
                 email = contextClient.Email,
                 nickname = contextClient.Nickname,
                 clientName = contextClient.ClientName,
+                isAdmin = contextClient.IsAdmin,
                 address = new Address
                 {
                     addressLineOne = contextClient.AddressLine1,
@@ -59,7 +61,6 @@ namespace Santa.Data.Repository
                 },
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
-
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
                 senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
@@ -68,6 +69,11 @@ namespace Santa.Data.Repository
 
             return logicClient;
         }
+        /// <summary>
+        /// Maps a context recipient relationship xref to a sender logic object
+        /// </summary>
+        /// <param name="contextRecipientXref"></param>
+        /// <returns></returns>
         public static Logic.Objects.Sender MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
         {
             Logic.Objects.Sender logicSender = new Sender()
