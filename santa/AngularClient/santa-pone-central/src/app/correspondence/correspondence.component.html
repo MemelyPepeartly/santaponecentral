@@ -4,6 +4,7 @@
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
+      [loadingClient]="loadingClient"
       [client]="selectedAnon"
       (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
   </div>

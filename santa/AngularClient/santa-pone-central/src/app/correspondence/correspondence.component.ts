@@ -11,6 +11,7 @@ import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/respo
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { AuthService } from '../auth/auth.service';
+import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 
 
 
@@ -31,6 +32,7 @@ export class CorrespondenceComponent implements OnInit {
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
+  @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
 
   public profile: any;
   public subject: Client = new Client();
@@ -43,6 +45,7 @@ export class CorrespondenceComponent implements OnInit {
   public gettingAllChats: boolean = false;
   public gettingAllEventChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
+  public loadingClient: boolean = false;
   public puttingMessage: boolean = false;
 
   public showClientCard: boolean = false;
@@ -172,10 +175,16 @@ export class CorrespondenceComponent implements OnInit {
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
-    this.SantaApiGet.getClientByClientID(meta.clientID).subscribe(client => {
-      this.selectedAnon = this.mapper.mapClient(client);
-      this.showClientCard = true;
-    },err => { console.log(err); });
+    this.loadingClient = true;
+    this.showClientCard = true;
+
+    var data = await this.SantaApiGet.getClientByClientID(meta.clientID).toPromise();
+    var clientThing = this.mapper.mapClient(data);
+    
+    this.selectedAnon = clientThing
+    this.selectedAnonComponent.setup();
+    
+    this.loadingClient = false;
   }
   public async openSelectedChat(history: MessageHistory)
   {
