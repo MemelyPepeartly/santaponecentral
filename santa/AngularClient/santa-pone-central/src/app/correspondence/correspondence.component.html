@@ -48,6 +48,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByUnread()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -65,6 +66,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByGeneral()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -82,6 +84,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByEvent(event)"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -99,6 +102,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="allChats"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"

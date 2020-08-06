@@ -3,6 +3,7 @@ import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { ProfileService } from 'src/app/services/Profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-chat-histories',
@@ -16,6 +17,7 @@ export class ChatHistoriesComponent implements OnInit {
   @Input() onProfile: boolean = false;
   @Input() histories: Array<MessageHistory>
   @Input() disabled: boolean = false;
+  @Input() viewerClient: Client = new Client();
 
   columns: string[] = ["sender", "recipient", "event", "contact"];
 
