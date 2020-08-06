@@ -50,6 +50,7 @@ export class SelectedAnonComponent implements OnInit {
     public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
+  @Input() loadingClient: boolean = true;
 
   @Output() action: EventEmitter<any> = new EventEmitter();
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
@@ -148,13 +149,15 @@ export class SelectedAnonComponent implements OnInit {
 
   public async ngOnInit() {
     this.initializing = true;
-    this.gatherer.onSelectedClient = true;
-
-    //Tells card if client is approved to hide or show the recipient add profile controls
-    if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
+    if(this.loadingClient == false && this.client.clientID != undefined)
     {
-      this.clientApproved = true;
+      this.setup();
     }
+    this.initializing = false;
+  }
+  public async setup()
+  {
+    this.gatherer.onSelectedClient = true;
 
     /* FORM BUILDERS */
     this.clientNicknameFormGroup = this.formBuilder.group({
@@ -242,8 +245,11 @@ export class SelectedAnonComponent implements OnInit {
 
     this.gettingAnswers = false;
     this.gettingEventDetails = false;
-
-    this.initializing = false;
+  }
+  isAnonApproved() : boolean
+  {
+    //Tells card if client is approved to hide or show the recipient add profile controls
+    return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
   }
   public approveAnon()
   {
