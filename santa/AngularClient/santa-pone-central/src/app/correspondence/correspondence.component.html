@@ -4,6 +4,7 @@
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
+      [loadingClient]="loadingClient"
       [client]="selectedAnon"
       (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
   </div>
@@ -19,6 +20,7 @@
       (sendClicked)="send($event); messages.scrollToBottom();"
       (readAllAction)="readAll()"
       [relationshipID]="selectedHistory.relationXrefID"
+      [eventType]="selectedHistory.eventType"
       [sender]="adminSenderMeta"
       [reciever]="selectedRecieverMeta"
       [disabled]="postingMessage">
@@ -30,7 +32,10 @@
       <mat-card-title>Correspondence</mat-card-title>
       <mat-card-subtitle>For contacting anons</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
+    <mat-card-content *ngIf="initializing">
+      <app-loading-spin></app-loading-spin>
+    </mat-card-content>
+    <mat-card-content *ngIf="!initializing">
 
       <!-- Unread Histories -->
       <mat-card class="infoCard">
@@ -43,6 +48,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByUnread()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -60,6 +66,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByGeneral()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -77,6 +84,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="sortByEvent(event)"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
@@ -94,6 +102,7 @@
         <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
             [disabled]="updateOnClickaway"
             [histories]="allChats"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"

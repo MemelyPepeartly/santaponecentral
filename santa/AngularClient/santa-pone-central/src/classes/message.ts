@@ -4,25 +4,35 @@ import { Client } from './client';
 
 //Message History class
 export class MessageHistory {
-    history: Array<Message> = [];
     relationXrefID: string;
-    conversationClient: ClientMeta = new ClientMeta();
     eventType: EventType = new EventType();
-    eventSenderClient: ClientMeta = new ClientMeta();
-    eventRecieverClient: ClientMeta = new ClientMeta();
 
-    get adminUnreadCount() : number
+    // Client event sender... (Relationship dependent)
+    assignmentSenderClient: ClientMeta = new ClientMeta();
+    // Client event reciever... (Relationship dependent)
+    assignmentRecieverClient: ClientMeta = new ClientMeta();
+    // Client chat is with (Relationship Agnostic)
+    conversationClient: ClientMeta = new ClientMeta();
+    // The client that should be the "viewer" of the messages. Their messages should be blue
+    subjectClient: ClientMeta = new ClientMeta();
+
+
+    subjectMessages: Array<Message> = [];
+    recieverMessages: Array<Message> = [];
+
+    /* Unread counts are based on unread messages that are not the subject's messages */
+    get unreadCount() : number
     {
         
-        if(this.history == undefined || this.history == null || this.history.length == 0)
+        if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
         {
             return 0;
         }
         else
         {
             var count = 0;
-            this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && this.conversationClient.clientID != message.recieverClient.clientID)
+            this.recieverMessages.forEach((message: Message) => {
+                if(message.isMessageRead == false)
                 {
                     count += 1;
                 }
@@ -30,18 +40,18 @@ export class MessageHistory {
             return count;
         }
     }
-    get memberUnreadCount() : number
+    get adminUnreadCount() : number
     {
         
-        if(this.history == undefined || this.history == null || this.history.length == 0)
+        if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
         {
             return 0;
         }
         else
         {
             var count = 0;
-            this.history.forEach((message: Message) => {
-                if(message.isMessageRead == false && this.conversationClient.clientID != message.senderClient.clientID)
+            this.recieverMessages.forEach((message: Message) => {
+                if(message.isMessageRead == false && !message.fromAdmin)
                 {
                     count += 1;
                 }
@@ -59,6 +69,9 @@ export class Message {
     messageContent: string;
     dateTimeSent: Date;
     isMessageRead: boolean;
+    // Determined when getting histories if something is a message of a particular subject (Hence, making it a blue message)
+    subjectMessage: boolean;
+    fromAdmin: boolean;
 }
 // Minimized meta information returned from API for easily naming messages without additional API calls
 export class ClientMeta {

@@ -109,34 +109,25 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "Message/" + id).pipe(
       map(this.extractData));
   }
-  getAllMessageHistories(): Observable<any> {
-    return this.http.get(endpoint + "History").pipe(
+  getAllMessageHistories(subjectID: string): Observable<any> {
+    // Gets all the message histories with a defined subjectID to determine the viewing party
+    return this.http.get(endpoint + "History?subjectID=" + subjectID).pipe(
       map(this.extractData));
   }
   getAllMessageHistoriesByClientID(clientID): Observable<any> {
-    return this.http.get(endpoint + "History/Client/" + clientID).pipe(
+    // Gets mesage histories for a client. ClientID is used as the subject of the conversation with this method to determine the viewing party
+    return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship").pipe(
       map(this.extractData));
   }
-  getAllEventMessageHistories(): Observable<any> {
-    return this.http.get(endpoint + "History/Event").pipe(
-      map(this.extractData));
-  }
-  getMessageHistoriesByEventID(eventID): Observable<any> {
-    return this.http.get(endpoint + "History/Event/" + eventID).pipe(
-      map(this.extractData));
-  }
-  getMessageHistoriesWithUnreadMessages(): Observable<any> {
-    return this.http.get(endpoint + "History/Unread").pipe(
-      map(this.extractData));
-  }
-  getMessageHistoryByClientIDAndXrefID(clientID, clientRelationXrefID?): Observable<any> {
-    //Necessary for the correct call to be made where teh clientRelationXrefID is null
+  getClientMessageHistoryBySubjectIDAndXrefID(clientID: string, subjectID: string, clientRelationXrefID?: string): Observable<any> {
+    //Necessary for the correct call to be made where the clientRelationXrefID is null
+    // ClientID is the conversationClient, subjectID is who is reading the messages
     if(clientRelationXrefID == null || clientRelationXrefID == undefined)
     {
-      return this.http.get(endpoint + "History/Client/" + clientID + "/General").pipe(
+      return this.http.get(endpoint + "History/Client/" + clientID + "/General?subjectID=" + subjectID).pipe(
         map(this.extractData));
     }
-    return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship/" + clientRelationXrefID).pipe(
+    return this.http.get(endpoint + "History/Relationship/" + clientRelationXrefID + "?subjectID=" + subjectID).pipe(
       map(this.extractData));
   }
 }

@@ -52,7 +52,7 @@ export class HeadquartersComponent implements OnInit {
     await this.gatherer.gatherAllClients();
   }
 
-  showClientWindow(client)
+  showClientWindow(client: Client)
   {
     this.currentClient = client;
     this.showClientCard = true;

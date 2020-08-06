@@ -91,6 +91,7 @@ namespace Santa.Api.Controllers
                     messageContent = message.messageContent,
                     dateTimeSent = DateTime.UtcNow,
                     isMessageRead = false,
+                    fromAdmin = message.fromAdmin
                 };
                 if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
                 {
@@ -101,10 +102,17 @@ namespace Santa.Api.Controllers
                     await repository.CreateMessage(logicMessage);
                     await repository.SaveAsync();
 
-                    if(logicMessage.recieverClient.clientId.HasValue)
+                    // If this message has an eventTypeID
+                    if(message.eventTypeID.HasValue)
                     {
-                        Logic.Objects.MessageHistory history = logicMessage.clientRelationXrefID != null ? await repository.GetChatHistoryByClientIDAndRelationXrefIDAsync(logicMessage.recieverClient.clientId.Value, logicMessage.clientRelationXrefID.Value) : await repository.GetGeneralChatHistoryByClientIDAsync(logicMessage.recieverClient.clientId.Value);
-                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), history.eventType);
+                        //If the recieverClientID is not null (Implying the message is from an admin, and the recipient is a participant), get the eventType. Else set it to a new one
+                        Logic.Objects.Event logicEvent = logicMessage.recieverClient.clientId.HasValue ? await repository.GetEventByIDAsync(message.eventTypeID.Value) : new Logic.Objects.Event();
+
+                        //If it was an admin sending the message, then send off the notification email
+                        if(logicMessage.recieverClient.clientId.HasValue)
+                        {
+                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
+                        }
                     }
 
                     return Ok();

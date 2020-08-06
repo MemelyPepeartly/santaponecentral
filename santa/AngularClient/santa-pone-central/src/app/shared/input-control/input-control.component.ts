@@ -7,6 +7,7 @@ import { InputControlConstants } from 'src/app/shared/constants/inputControlCons
 import { AuthService } from 'src/app/auth/auth.service';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { MapService } from 'src/app/services/mapService.service';
+import { EventType } from 'src/classes/eventType';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class InputControlComponent implements OnInit {
   @Input() sender: ClientMeta;
   @Input() reciever: ClientMeta;
   @Input() disabled: boolean = false;
+  @Input() onProfile: boolean;
+  @Input() eventType: EventType = new EventType()
 
   private isAdmin: boolean;
   private profile: any;
@@ -55,6 +58,10 @@ export class InputControlComponent implements OnInit {
     newMessage.clientRelationXrefID = this.relationshipID;
     newMessage.messageSenderClientID = this.isAdmin ? this.adminClient.clientID : this.sender.clientID;
     newMessage.messageRecieverClientID = this.reciever.clientID;
+    newMessage.eventTypeID = this.relationshipID == null || undefined ? null : this.eventType.eventTypeID;
+    newMessage.fromAdmin = this.onProfile ? false : this.isAdmin;
+    console.log(newMessage);
+    
 
     this.sendClicked.emit(newMessage);
   }
@@ -76,6 +83,10 @@ export class InputControlComponent implements OnInit {
     {
       this.readAllAction.emit(true);
     }
+  }
+  public clearForm()
+  {
+    this.messageFormControl.reset();
   }
   public getErrorMessage() {
     if (this.messageFormControl.hasError('required')) {

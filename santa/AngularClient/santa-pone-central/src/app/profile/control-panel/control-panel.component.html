@@ -11,6 +11,7 @@
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title>Assigned Anons</mat-card-title>
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="isAdmin">(Admins cannot view their own histories with the admins)</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div *ngIf="(histories.length == 0) && !loading">
@@ -29,10 +30,11 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button 
+      <!-- Only show a general history if they are not an admin and the app is not initializing -->
+      <button mat-raised-button *ngIf="!isAdmin && !initializing"
         (click)="historySelected(null)"
         [disabled]="gettingProfile || gettingGeneralHistory"
-        [matBadge]="generalHistory.memberUnreadCount"
-        [matBadgeHidden]="generalHistory.memberUnreadCount == 0">General Chat</button>
+        [matBadge]="generalHistory.unreadCount"
+        [matBadgeHidden]="generalHistory.unreadCount == 0">General Chat</button>
     </mat-card-actions>
 </mat-card>

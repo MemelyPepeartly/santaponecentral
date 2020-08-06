@@ -9,14 +9,65 @@ namespace Santa.Logic.Interfaces
     public interface IRepository
     {
         #region Client
+        /// <summary>
+        /// Creates a new client by a logic client object
+        /// </summary>
+        /// <param name="newClient"></param>
+        /// <returns></returns>
         Task CreateClient(Client newClient);
+        /// <summary>
+        /// Creates a new client relationship for assignments by a senderID, recipientID, and the eventTypeID that the assignment relates to
+        /// </summary>
+        /// <param name="senderClientID"></param>
+        /// <param name="recipientClientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
         Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
+        /// <summary>
+        /// Gets a client by their ID
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId);
+        /// <summary>
+        /// Gets a client by their email
+        /// </summary>
+        /// <param name="clientEmail"></param>
+        /// <returns></returns>
         Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail);
+        /// <summary>
+        /// Gets a list of all clients
+        /// </summary>
+        /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClients();
+        /// <summary>
+        /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
+        /// </summary>
+        /// <param name="targetClient"></param>
+        /// <returns></returns>
         Task UpdateClientByIDAsync(Client targetClient);
+        /// <summary>
+        /// Updates the completion status of a relation (Assignmnent) by a senderID, recipientID, eventTypeID, and the targeted completion status
+        /// </summary>
+        /// <param name="senderID"></param>
+        /// <param name="recipientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <param name="targetCompletedStatus"></param>
+        /// <returns></returns>
         Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
-        Task DeleteClientByIDAsync(Guid eventID);
+        /// <summary>
+        /// Deletes a client by their ID along with any data about them. This includes chat histories, relationships, and answers
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task DeleteClientByIDAsync(Guid clientID);
+        /// <summary>
+        /// Deletes a reciever from the client by the client's ID, and the IDs of the recipient and event in question
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="recipientID"></param>
+        /// <param name="eventID"></param>
+        /// <returns></returns>
         Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID);
         #endregion
 
@@ -50,16 +101,13 @@ namespace Santa.Logic.Interfaces
         Task UpdateMessageByIDAsync(Message targetMessage);
 
         #region Message Histories
-        // General getters
-        Task<List<MessageHistory>> GetAllChatHistories();
-        // Client getters
-        Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID);
-        Task<MessageHistory> GetChatHistoryByClientIDAndRelationXrefIDAsync(Guid clientID, Guid clientRelationXrefID);
-        Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID);
-        // Event getters
-        Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID);
-
-
+        /* Subject ID's are needed to determine who was the client that made the call. For example, if a person with a profile wants their messages,
+           they will call the endpoint with themselves as the subject
+        */
+        Task<List<MessageHistory>> GetAllChatHistories(Client subjectClient);
+        Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Client subjectClient);
+        Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Client subjectClient);
+        Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Client conversationClient, Client subjectClient);
         #endregion
 
         #endregion

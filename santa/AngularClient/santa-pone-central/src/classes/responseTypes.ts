@@ -94,7 +94,9 @@ export class MessageApiResponse {
     messageSenderClientID?: string = null;
     messageRecieverClientID?: string = null;
     clientRelationXrefID?: string = null;
+    eventTypeID?: string;
     messageContent: string;
+    fromAdmin: boolean;
 }
 //Response for marking messages as read
 export class MessageApiReadResponse {

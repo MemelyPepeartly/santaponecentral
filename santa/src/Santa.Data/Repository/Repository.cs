@@ -20,11 +20,6 @@ namespace Santa.Data.Repository
         }
 
         #region Client
-        /// <summary>
-        /// Creates a new client and adds it to the context
-        /// </summary>
-        /// <param name="newClient"></param>
-        /// <returns></returns>
         public async Task CreateClient(Logic.Objects.Client newClient)
         {
             try
@@ -37,13 +32,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Creates relation between a two clients by an event. A sender and a reciever
-        /// </summary>
-        /// <param name="senderClientID"></param>
-        /// <param name="recipientClientID"></param>
-        /// <param name="eventTypeID"></param>
-        /// <returns></returns>
         public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID)
         {
             try
@@ -64,11 +52,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        
-        /// <summary>
-        /// Gets a list of all clients
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
             try
@@ -102,11 +85,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a client by their ID
-        /// </summary>
-        /// <param name="clientId"></param>
-        /// <returns></returns>
         public async Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId)
         {
             try
@@ -139,11 +117,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a client by their email
-        /// </summary>
-        /// <param name="clientId"></param>
-        /// <returns></returns>
         public async Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail)
         {
             try
@@ -280,11 +253,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Tag
-        /// <summary>
-        /// Creates a new tag
-        /// </summary>
-        /// <param name="newTag"></param>
-        /// <returns></returns>
         public async Task CreateTag(Logic.Objects.Tag newTag)
         {
             try
@@ -297,12 +265,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Creates a new relationship between a client and a tag
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <param name="tagID"></param>
-        /// <returns></returns>
         public async Task CreateClientTagRelationByID(Guid clientID, Guid tagID)
         {
             try
@@ -320,11 +282,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a tag by its ID
-        /// </summary>
-        /// <param name="tagID"></param>
-        /// <returns></returns>
         public async Task<Logic.Objects.Tag> GetTagByIDAsync(Guid tagID)
         {
             try
@@ -337,10 +294,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a list of all tags
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Logic.Objects.Tag>> GetAllTags()
         {
             try
@@ -354,11 +307,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Updates a tag's name by its ID
-        /// </summary>
-        /// <param name="targetLogicTag"></param>
-        /// <returns></returns>
         public async Task UpdateTagNameByIDAsync(Logic.Objects.Tag targetLogicTag)
         {
             try
@@ -374,12 +322,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes a client tag relationship
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <param name="tagID"></param>
-        /// <returns></returns>
         public async Task DeleteClientTagRelationshipByID(Guid clientID, Guid tagID)
         {
             try
@@ -392,11 +334,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes a tag
-        /// </summary>
-        /// <param name="tagID"></param>
-        /// <returns></returns>
         public async Task DeleteTagByIDAsync(Guid tagID)
         {
             try
@@ -412,11 +349,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Message
-        /// <summary>
-        /// Creates a new message in the DB
-        /// </summary>
-        /// <param name="newMessage"></param>
-        /// <returns></returns>
         public async Task CreateMessage(Message newMessage)
         {
             try
@@ -429,10 +361,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a list of all the messages within the DB
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Message>> GetAllMessages()
         {
             try
@@ -451,11 +379,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a single message by its ID
-        /// </summary>
-        /// <param name="chatMessageID"></param>
-        /// <returns></returns>
         public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
             try
@@ -472,11 +395,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Updates the read status of a message by it's ID using a message object
-        /// </summary>
-        /// <param name="targetMessage"></param>
-        /// <returns></returns>
         public async Task UpdateMessageByIDAsync(Message targetMessage)
         {
             try
@@ -495,11 +413,7 @@ namespace Santa.Data.Repository
         }
 
         #region Message Histories
-        /// <summary>
-        /// Gets all the chat histories for every client relationship and includes general chats with null XrefID.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<MessageHistory>> GetAllChatHistories()
+        public async Task<List<MessageHistory>> GetAllChatHistories(Logic.Objects.Client subjectClient)
         {
             try
             {
@@ -510,17 +424,17 @@ namespace Santa.Data.Repository
                 {
                     if(client.ClientRelationXrefRecipientClient.Count() > 0)
                     {
-                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryByClientIDAsync(client.ClientId);
+                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryBySubjectIDAsync(Mapper.MapClient(client), subjectClient);
                         listLogicMessageHistory.Add(logicGeneralHistory);
                         foreach (ClientRelationXref relationship in client.ClientRelationXrefRecipientClient)
                         {
-                            MessageHistory logicHistory = await GetChatHistoryByClientIDAndRelationXrefIDAsync(relationship.SenderClientId, relationship.ClientRelationXrefId);
+                            MessageHistory logicHistory = await GetChatHistoryByXrefIDAndSubjectIDAsync(relationship.ClientRelationXrefId, subjectClient);
                             listLogicMessageHistory.Add(logicHistory);
                         }
                     }
                     else
                     {
-                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryByClientIDAsync(client.ClientId);
+                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryBySubjectIDAsync(Mapper.MapClient(client), subjectClient);
                         listLogicMessageHistory.Add(logicGeneralHistory);
                     }
                 }
@@ -531,24 +445,18 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
-        /// <summary>
-        /// Gets all the chat histories of clients by their ID. Does not include general chats with null relationship Xref ID
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <returns></returns>
-        public async Task<List<MessageHistory>> GetAllChatHistoriesByClientIDAsync(Guid clientID)
+        public async Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Logic.Objects.Client subjectClient)
         {
             try
             {
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == clientID).ToListAsync();
+                List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == subjectClient.clientID).ToListAsync();
 
 
                 foreach (ClientRelationXref relationship in XrefList)
                 {
                     MessageHistory logicHistory = new MessageHistory();
-                    logicHistory = await GetChatHistoryByClientIDAndRelationXrefIDAsync(clientID, relationship.ClientRelationXrefId);
+                    logicHistory = await GetChatHistoryByXrefIDAndSubjectIDAsync(relationship.ClientRelationXrefId, subjectClient);
                     listLogicMessageHistory.Add(logicHistory);
                 }
 
@@ -559,54 +467,46 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a chat history by eventID. Does not include general chats, as those are not tied to any event
-        /// </summary>
-        /// <param name="eventID"></param>
-        /// <param name="clientRelationXrefID"></param>
-        /// <returns></returns>
-        public async Task<List<MessageHistory>> GetAllChatHistoriesByEventIDAsync(Guid eventID)
-        {
-            try
-            {
-                List<MessageHistory> listLogicHistories = await GetAllChatHistories();
-
-                return listLogicHistories.Where(h => h.eventType.eventTypeID == eventID).ToList();
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
-        }
-        /// <summary>
-        /// Gets a single chat history by clientID and XrefID. This is a relationship between a person sending a gift that was assigned.
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <param name="clientRelationXrefID"></param>
-        /// <returns></returns>
-        public async Task<MessageHistory> GetChatHistoryByClientIDAndRelationXrefIDAsync(Guid clientID, Guid clientRelationXrefID)
+        public async Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Logic.Objects.Client subjectClient)
         {
             try
             {
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
-                    .Include(e => e.EventType)
-                    .Include(s => s.SenderClient)
+                    .Include(r => r.EventType)
+                    .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
-                    .Include(m => m.ChatMessage)
+                    .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageReceiverClient)
-                    .Include(m => m.ChatMessage)
+                    .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageSenderClient)
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
-                List<Logic.Objects.Message> logicListMessages = contextRelationship.ChatMessage.Select(Mapper.MapMessage).OrderBy(dt => dt.dateTimeSent).ToList();
 
-                logicHistory.history = logicListMessages;
                 logicHistory.relationXrefID = clientRelationXrefID;
-
                 logicHistory.eventType = Mapper.MapEvent(contextRelationship.EventType);
-                logicHistory.conversationClient = contextRelationship.SenderClient.ClientId == clientID ? Mapper.MapClientMeta(contextRelationship.SenderClient) : Mapper.MapClientMeta(contextRelationship.RecipientClient);
-                logicHistory.eventSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
-                logicHistory.eventRecieverClient = Mapper.MapClientMeta(contextRelationship.RecipientClient);
+
+
+                logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);
+                logicHistory.subjectMessages = contextRelationship.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.senderClient.clientId == subjectClient.clientID)
+                    .ToList();
+                foreach(Message logicMessage in logicHistory.subjectMessages)
+                {
+                    logicMessage.subjectMessage = true;
+                }
+
+                logicHistory.recieverMessages = contextRelationship.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.senderClient.clientId != subjectClient.clientID)
+                    .ToList();
+
+                logicHistory.assignmentRecieverClient = Mapper.MapClientMeta(contextRelationship.RecipientClient);
+                logicHistory.assignmentSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
+                logicHistory.conversationClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
+
 
                 return logicHistory;
             }
@@ -615,34 +515,45 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// This gets the general history of a client where there is no Xref ID or relationship to attach to
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <returns></returns>
-        public async Task<MessageHistory> GetGeneralChatHistoryByClientIDAsync(Guid clientID)
+        public async Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Logic.Objects.Client conversationClient, Logic.Objects.Client subjectClient)
         {
             try
             {
                 MessageHistory logicHistory = new MessageHistory();
                 List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage
-                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == clientID || m.MessageReceiverClientId == clientID))
+                    .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == conversationClient.clientID || m.MessageReceiverClientId == conversationClient.clientID))
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageReceiverClient)
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 
-                logicHistory.history = contextListMessages.Select(Mapper.MapMessage).ToList();
+                // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
                 logicHistory.relationXrefID = null;
                 logicHistory.eventType = new Event();
-                logicHistory.eventSenderClient = new ClientMeta();
-                logicHistory.eventRecieverClient = new ClientMeta();
+                logicHistory.assignmentRecieverClient = new ClientMeta();
+                logicHistory.assignmentSenderClient = new ClientMeta();
+                logicHistory.conversationClient = Mapper.MapClientMeta(conversationClient);
 
-                logicHistory.conversationClient = Mapper.MapClientMeta(await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == clientID));
+                logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);
+                logicHistory.subjectMessages = contextListMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.senderClient.clientId == subjectClient.clientID)
+                    .ToList();
+                foreach (Message logicMessage in logicHistory.subjectMessages)
+                {
+                    logicMessage.subjectMessage = true;
+                }
+
+                logicHistory.recieverMessages = contextListMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.senderClient.clientId != subjectClient.clientID)
+                    .ToList();
 
                 return logicHistory;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e.InnerException;
             }
@@ -652,10 +563,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region ClientStatus
-        /// <summary>
-        /// Gets a list of all statuses
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Status>> GetAllClientStatus()
         {
             try
@@ -668,11 +575,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a status by clientStatusID
-        /// </summary>
-        /// <param name="clientStatusID"></param>
-        /// <returns></returns>
         public async Task<Status> GetClientStatusByID(Guid clientStatusID)
         {
             try
@@ -686,11 +588,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Creates a new status
-        /// </summary>
-        /// <param name="newStatus"></param>
-        /// <returns></returns>
         public async Task CreateStatusAsync(Status newStatus)
         {
             try
@@ -703,11 +600,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Updates a status description that exists in the database
-        /// </summary>
-        /// <param name="changedLogicStatus"></param>
-        /// <returns></returns>
         public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
         {
             try
@@ -726,11 +618,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes a status by a given ID
-        /// </summary>
-        /// <param name="clientStatusID"></param>
-        /// <returns></returns>
         public async Task DeleteStatusByIDAsync(Guid clientStatusID)
         {
             try
@@ -746,11 +633,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Event
-        /// <summary>
-        /// Creates a new event type in the database
-        /// </summary>
-        /// <param name="newEvent"></param>
-        /// <returns></returns>
         public async Task CreateEventAsync(Event newEvent)
         {
             try
@@ -763,11 +645,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes an event by eventID 
-        /// </summary>
-        /// <param name="eventID"></param>
-        /// <returns></returns>
         public async Task DeleteEventByIDAsync(Guid eventID)
         {
             try
@@ -780,10 +657,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a list of all events
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Event>> GetAllEvents()
         {
             try
@@ -796,11 +669,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets an event by a given ID
-        /// </summary>
-        /// <param name="eventID"></param>
-        /// <returns></returns>
         public async Task<Event> GetEventByIDAsync(Guid eventID)
         {
             try
@@ -813,11 +681,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Updates either an eventDescripton or active state that exists in database
-        /// </summary>
-        /// <param name="targetEvent"></param>
-        /// <returns></returns>
         public async Task UpdateEventByIDAsync(Event targetEvent)
         {
             try
@@ -837,11 +700,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Survey
-        /// <summary>
-        /// Creates a survey and adds it to the context
-        /// </summary>
-        /// <param name="newSurvey"></param>
-        /// <returns></returns>
         public async Task CreateSurveyAsync(Logic.Objects.Survey newSurvey)
         {
             try
@@ -854,10 +712,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets all surveys
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Logic.Objects.Survey>> GetAllSurveys()
         {
             try
@@ -878,11 +732,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Gets a survey by its ID
-        /// </summary>
-        /// <param name="surveyId"></param>
-        /// <returns></returns>
         public async Task<Logic.Objects.Survey> GetSurveyByID(Guid surveyId)
         {
             try
@@ -901,11 +750,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Updates a survey with targetSurvey information
-        /// </summary>
-        /// <param name="targetSurvey"></param>
-        /// <returns></returns>
         public async Task UpdateSurveyByIDAsync(Logic.Objects.Survey targetSurvey)
         {
             try
@@ -921,11 +765,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes a survey by its ID
-        /// </summary>
-        /// <param name="surveyID"></param>
-        /// <returns></returns>
         public async Task DeleteSurveyByIDAsync(Guid surveyID)
         {
             try
@@ -938,12 +777,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        /// <summary>
-        /// Deletes a relationship between a survey and the question in it, taking it off of the survey, but not deleting the question.
-        /// </summary>
-        /// <param name="surveyID"></param>
-        /// <param name="surveyQuestionID"></param>
-        /// <returns></returns>
         public async Task DeleteSurveyQuestionXrefBySurveyIDAndQuestionID(Guid surveyID, Guid surveyQuestionID)
         {
             try
@@ -1045,11 +878,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region SurveyQuestionOptionXref
-        /// <summary>
-        /// Creates the Xref between a Survey Question and a Survey Option
-        /// </summary>
-        /// <param name="newQuestionOption"></param>
-        /// <returns></returns>
         public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, string sortOrder)
         {
             try
@@ -1069,10 +897,6 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Question
-        /// <summary>
-        /// Gets a list of all surveyQuestions
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Question>> GetAllSurveyQuestions()
         {
             try
@@ -1105,12 +929,6 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
-        /// <summary>
-        /// Creates a survey question and adds it to the context
-        /// </summary>
-        /// <param name="newQuestion"></param>
-        /// <returns></returns>
         public async Task CreateSurveyQuestionAsync(Question newQuestion)
         {
             try
@@ -1124,11 +942,6 @@ namespace Santa.Data.Repository
             }
 
         }
-        /// <summary>
-        /// Creates the cross reference between a survey and the questions it has and adds it to the context
-        /// </summary>
-        /// <param name="logicQuestion"></param>
-        /// <returns></returns>
         public async Task CreateSurveyQuestionXrefAsync(Question logicQuestion)
         {
             try
@@ -1276,10 +1089,6 @@ namespace Santa.Data.Repository
         #endregion
         
         #region Utility
-        /// <summary>
-        /// Saves changes made to the context
-        /// </summary>
-        /// <returns></returns>
         public async Task SaveAsync()
         {
             try

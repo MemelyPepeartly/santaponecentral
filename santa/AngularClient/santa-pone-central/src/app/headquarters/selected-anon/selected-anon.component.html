@@ -1,13 +1,14 @@
 <div class="centerSpin">
-    <app-loading-spin *ngIf="beingSwitched || deletingClient"></app-loading-spin>
+    <app-loading-spin *ngIf="beingSwitched || deletingClient || loadingClient"></app-loading-spin>
 </div>
 
-<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient">
+<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient && !loadingClient">
     <mat-card class="infoCard mat-elevation-z5">
 
         <mat-card-header>
             <mat-card-title>{{ client.clientNickname }}</mat-card-title>
             <mat-card-subtitle>{{ client.clientName }} <p>{{client.email}}</p></mat-card-subtitle>
+            <mat-card-subtitle *ngIf="client.clientNickname == 'Anon'">Change the clients nickname to a holiday ID before approving</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content id="headerContentContainer">
             <mat-card id="tagCard">
@@ -68,7 +69,7 @@
 
         <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
-                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess || client.clientNickname == 'Anon' "
                 (click)="approveAnon()">Approve</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
@@ -248,7 +249,7 @@
     </mat-card>
 
     <!-- Response Card -->
-    <ng-container *ngIf="clientApproved && responses?.length != 0">
+    <ng-container *ngIf="isAnonApproved() && responses?.length != 0">
         <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
                 Survey Answers
@@ -293,7 +294,7 @@
         <app-loading-spin *ngIf="gettingEventDetails"></app-loading-spin>
     </div> 
     <ng-container *ngIf="!gettingEventDetails">
-        <ng-container *ngIf="clientApproved">
+        <ng-container *ngIf="isAnonApproved()">
             <div class="relationDiv" *ngFor="let event of events">
                 <mat-toolbar id="relationshipEventHeader">
                     <mat-toolbar-row>
@@ -384,7 +385,7 @@
         <mat-card-actions>
 
             <!--Add recipient option-->
-            <div class="optionDiv" id="recipientOptionDiv" *ngIf="clientApproved">
+            <div class="optionDiv" id="recipientOptionDiv" *ngIf="isAnonApproved()">
                 <div>
                     <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
                                                       'recipientDrawerContainerClosed' : !recipientOpen}" autosize>

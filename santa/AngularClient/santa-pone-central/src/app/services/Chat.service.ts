@@ -65,7 +65,7 @@ export class ChatService {
 
 
   // * GATHERING METHODS * //
-  public async gatherAllChats(isSoftGather?: boolean)
+  public async gatherAllChats(subjectID: string, isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {
@@ -74,7 +74,8 @@ export class ChatService {
     
     let historyArray: Array<MessageHistory> = [];
 
-    var data = await this.SantaApiGet.getAllMessageHistories().toPromise().catch(err => {console.log(err); this._gettingAllChats.next(false);});
+    var data = await this.SantaApiGet.getAllMessageHistories(subjectID).toPromise().catch(err => {console.log(err); this._gettingAllChats.next(false);});
+    
     for(let i = 0; i < data.length; i++)
     {
       historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))
@@ -82,25 +83,8 @@ export class ChatService {
     this.updateAllChats(historyArray);
     this._gettingAllChats.next(false);
   }
-  public async gatherEventChats(isSoftGather?: boolean)
-  {
-    if(!isSoftGather)
-    {
-      this._gettingAllEventChats.next(true);
-    }
-    let historyArray: Array<MessageHistory> = [];
 
-    var data = await this.SantaApiGet.getAllEventMessageHistories().toPromise().catch(err => {console.log(err); this._gettingAllEventChats.next(false);});
-
-    for(let i = 0; i < data.length; i++)
-    {
-      historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))
-    }
-    this.updateAllEventChats(historyArray);
-    this._gettingAllEventChats.next(false);
-  }
-
-  public async getSelectedHistory(clientID, relationXrefID, isSoftGather?: boolean)
+  public async getSelectedHistory(conversationClientID, subjectID, relationXrefID, isSoftGather?: boolean)
   {
     if(!isSoftGather)
     {
@@ -108,7 +92,7 @@ export class ChatService {
     }
 
     let messageHistory = new MessageHistory;
-    var data = await this.SantaApiGet.getMessageHistoryByClientIDAndXrefID(clientID, relationXrefID).toPromise().catch(err => {console.log(err); this._gettingSelectedHistory.next(false);});
+    var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID ,subjectID, relationXrefID).toPromise().catch(err => {console.log(err); this._gettingSelectedHistory.next(false);});
     messageHistory = this.ApiMapper.mapMessageHistory(data);
     this.updateSelectedHistory(messageHistory);
     this._gettingSelectedHistory.next(false);

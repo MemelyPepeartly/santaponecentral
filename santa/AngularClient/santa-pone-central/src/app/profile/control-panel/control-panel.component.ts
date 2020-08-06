@@ -32,10 +32,18 @@ export class ControlPanelComponent implements OnInit {
 
   public selectedRecipient: ProfileRecipient;
 
+  public isAdmin: boolean;
+  public initializing: boolean;
+
   public showRecipientData: boolean = false;
 
 
   ngOnInit(): void {
+    this.initializing = true;
+    this.auth.isAdmin.subscribe((admin: boolean) => {
+      this.isAdmin = admin;
+      this.initializing = false;
+    });
   }
   // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
   public showRecipientCard(eventInformation)
@@ -58,16 +66,5 @@ export class ControlPanelComponent implements OnInit {
   public async historySelected(history: MessageHistory)
   {
     this.chatClickedEvent.emit(history);
-  }
-  public checkBadgeHidden()
-  {
-    if(this.histories.find((history: MessageHistory) => { return history.eventSenderClient.clientID == null && history.eventRecieverClient.clientID == null; }).memberUnreadCount == 0)
-    {
-      return true;
-    }
-    else 
-    {
-      return false;
-    }
   }
 }
