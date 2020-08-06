@@ -201,6 +201,7 @@ namespace Santa.Api.Controllers
                     email = clientResponseModel.clientEmail,
                     nickname = clientResponseModel.clientNickname,
                     clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
+                    isAdmin = clientResponseModel.isAdmin,
                     address = new Logic.Objects.Address()
                     {
                         addressLineOne = clientResponseModel.clientAddressLine1,
