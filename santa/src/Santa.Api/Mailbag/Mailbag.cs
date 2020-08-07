@@ -198,12 +198,12 @@ namespace Santa.Api.SendGrid
             string subject = "SantaPone Central Re-Enlistment";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
             string plainTextContent = "Your tenacity and dedication to the cause is incredible, agent! You have been successfully re-enlisted to the cause! The world could do with more santa's like you. " +
-                "Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!";
+                "Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If you have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!";
             string htmlContent = emailStart +
                 @$"
                     <p>Your tenacity and dedication to the cause is incredible, agent! You have been successfully re-enlisted to the cause! The world could do with more santa's like you.</p>
                     <br>
-                    <p>Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!</p>
+                    <p>Intelligence is working on assigning you new ponies to bring cheer to, so sit tight and await that email! If you have any other questions, feel free to reach out to the admins under your profile's General Correspondence section! Keep on being awesome, agent!</p>
                     <br>
                     <p>Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"
@@ -218,13 +218,13 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Completed Confirmation";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
-            string plainTextContent = "Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest! " +
-                "Now of course, if you feel there can be more to do, more cheer to bring, or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!";
+            string plainTextContent = "Well done, agent! You were called to answer a cry for cheer and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest! " +
+                "Now of course, if you feel there can be more to do  or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
-                    <p>Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent, and the world a better place, you are free to take a rest!</p>
+                    <p>Well done, agent! You were called to answer the call for cheer, and answered with due diligence! With your assignments sent and the world a better place, you are free to take a rest!</p>
                     <br>
-                    <p>Now of course, if you feel there can be more to do, more cheer to bring, or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    <p>Now of course, if you feel there can be more to do or have any other questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
                     <br>
                     <p>Thanks again for joining the cause, Agent, Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"
