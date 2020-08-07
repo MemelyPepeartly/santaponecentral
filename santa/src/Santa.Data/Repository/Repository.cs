@@ -682,6 +682,18 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+        public async Task<Event> GetEventByNameAsync(string eventName)
+        {
+            try
+            {
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType.FirstOrDefaultAsync(e => e.EventDescription == eventName));
+                return logicEvent;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         public async Task UpdateEventByIDAsync(Event targetEvent)
         {
             try

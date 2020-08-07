@@ -90,6 +90,7 @@ namespace Santa.Logic.Interfaces
         Task CreateEventAsync(Event newEvent);
         Task<List<Logic.Objects.Event>> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync(Guid eventID);
+        Task<Event> GetEventByNameAsync(string eventName);
         Task UpdateEventByIDAsync(Event targetEvent);
         Task DeleteEventByIDAsync(Guid logicEvent);
         #endregion
@@ -165,7 +166,6 @@ namespace Santa.Logic.Interfaces
 
         #region Utility
         Task SaveAsync();
-
         #endregion
 
     }
