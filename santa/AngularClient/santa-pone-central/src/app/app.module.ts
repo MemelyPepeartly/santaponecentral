@@ -49,6 +49,7 @@ import { InputControlComponent } from './shared/input-control/input-control.comp
 import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './headquarters/completed-anons/completed-anons.component';
 import { MessageControlPanelComponent } from './shared/message-control-panel/message-control-panel.component';
+import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-assignment.component';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { MessageControlPanelComponent } from './shared/message-control-panel/mes
       InputControlComponent,
       DeniedAnonsComponent,
       CompletedAnonsComponent,
-      MessageControlPanelComponent
+      MessageControlPanelComponent,
+      AutoAssignmentComponent
    ],
    entryComponents: [
       LoginComponent
