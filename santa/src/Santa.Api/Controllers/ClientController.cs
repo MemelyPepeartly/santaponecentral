@@ -681,9 +681,12 @@ namespace Santa.Api.Controllers
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
                     await repository.DeleteClientByIDAsync(clientID);
 
-#warning Need a check here. Use case when a client has data, but maybe doesnt have an auth0 account for some reason. This would not allow for the deletion of the account and cause an exception. 
-                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
-                    await authHelper.deleteAuthClient(authUser.user_id);
+                    if(logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                    {
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
+                        await authHelper.deleteAuthClient(authUser.user_id);
+                    }
+                    
                 }
                 catch (Exception e)
                 {
