@@ -165,6 +165,11 @@ export class SantaApiPostService {
   postPasswordResetToClient(id: string): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + "/Password", {});
   }
+  postAutoAssignmentRequest(): Observable<any> {
+    // Returns a list of strings of added relationships
+    return this.http.post(endpoint + 'Client/AutoAssign', {}).pipe(
+      map(this.extractData));
+  }
 }
 
 @Injectable({
