@@ -280,6 +280,7 @@ export class MapService {
 
     mappedTag.tagID = tag.tagID;
     mappedTag.tagName = tag.tagName;
+    mappedTag.deletable = tag.deletable;
 
     return mappedTag;
   }
