@@ -180,7 +180,8 @@ namespace Santa.Data.Repository
             Logic.Objects.Tag logicTag = new Logic.Objects.Tag()
             {
                 tagID = contextTag.TagId,
-                tagName = contextTag.TagName
+                tagName = contextTag.TagName,
+                deletable = contextTag.ClientTagXref.Count > 0 ? false : true
             };
             return logicTag;
         }

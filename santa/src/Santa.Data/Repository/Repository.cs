@@ -287,7 +287,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Tag logicTag = Mapper.MapTag(await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == tagID));
+                Logic.Objects.Tag logicTag = Mapper.MapTag(await santaContext.Tag
+                    .Include(t => t.ClientTagXref)
+                    .FirstOrDefaultAsync(t => t.TagId == tagID));
                 return logicTag;
             }
             catch (Exception e)
@@ -299,7 +301,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Tag> logicTags = (await santaContext.Tag.ToListAsync()).Select(Mapper.MapTag).ToList();
+                List<Logic.Objects.Tag> logicTags = (await santaContext.Tag
+                    .Include(t => t.ClientTagXref)
+                    .ToListAsync())
+                    .Select(Mapper.MapTag)
+                    .ToList();
 
                 return logicTags;
             }
