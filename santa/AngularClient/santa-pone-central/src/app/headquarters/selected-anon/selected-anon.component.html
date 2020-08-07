@@ -8,7 +8,7 @@
         <mat-card-header>
             <mat-card-title>{{ client.clientNickname }}</mat-card-title>
             <mat-card-subtitle>{{ client.clientName }} <p>{{client.email}}</p></mat-card-subtitle>
-            <mat-card-subtitle *ngIf="client.clientNickname == 'Anon'"><mat-icon>info</mat-icon>Change the clients nickname to a holiday ID before approving</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="client.clientNickname == 'Anon'"><mat-icon>info</mat-icon>Change the clients nickname to something other than Anon before approving</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content id="headerContentContainer">
             <mat-card id="tagCard">
