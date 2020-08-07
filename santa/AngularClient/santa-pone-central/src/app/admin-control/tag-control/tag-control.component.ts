@@ -25,7 +25,7 @@ export class TagControlComponent implements OnInit {
     public ApiMapper: MapService) { }
 
   @Input() allTags: Array<Tag> = [];
-  
+
   public addTagFormGroup: FormGroup;
   public editTagFormGroup: FormGroup;
 
@@ -46,14 +46,6 @@ export class TagControlComponent implements OnInit {
     var formControlObj = this.editTagFormGroup.get('editTag') as FormControl
     return formControlObj.value
   }
-  get newTagFormControls()
-  {
-    return this.addTagFormGroup.controls;
-  }
-  get editTagFormControls()
-  {
-    return this.editTagFormGroup.controls;
-  }
 
   //KCHERE check console for bugs when this component is initialized
   ngOnInit() {
@@ -64,10 +56,10 @@ export class TagControlComponent implements OnInit {
   }
   private constructFormGroups() {
     this.addTagFormGroup = this.formBuilder.group({
-      newTag: [null, [Validators.nullValidator, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
+      newTag: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
     });
     this.editTagFormGroup = this.formBuilder.group({
-      editTag: [null, [Validators.nullValidator, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
+      editTag: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
     });
   }
   public setSelectedTag(tag: Tag)
@@ -87,6 +79,7 @@ export class TagControlComponent implements OnInit {
     
     await this.SantaApiPost.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
     await this.gatherer.gatherAllTags();
+    this.addTagFormGroup.reset();
 
     this.postingNewTag = false;
   }
@@ -99,6 +92,7 @@ export class TagControlComponent implements OnInit {
     
     await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
     await this.gatherer.gatherAllTags();
+    this.editTagFormGroup.reset();
 
     this.updatingTagName = false;
   }

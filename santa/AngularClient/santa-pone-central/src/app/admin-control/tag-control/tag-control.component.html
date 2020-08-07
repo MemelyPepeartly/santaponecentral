@@ -34,7 +34,7 @@
             mat-raised-button
             matTooltip="Add tag to the list of tags"
             (click)="addNewTag()"
-            [disabled]="newTagFormControls.invalid"
+            [disabled]="addTagFormGroup.invalid"
             [matTooltipPosition]="'left'">Add Tag</button>
         </div>
     </mat-card-content>
@@ -86,7 +86,7 @@
                 mat-raised-button
                 matTooltip="Add tag to the list of tags"
                 (click)="editTag()"
-                [disabled]="selectedTag == undefined || editTagFormControls.valid"
+                [disabled]="selectedTag == undefined || editTagFormGroup.invalid"
                 [matTooltipPosition]="'left'">Submit</button>
             <button class="tagButton"
                 (click)="selectedTag = undefined"
