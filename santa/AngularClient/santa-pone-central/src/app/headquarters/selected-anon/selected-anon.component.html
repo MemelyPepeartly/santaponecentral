@@ -8,7 +8,7 @@
         <mat-card-header>
             <mat-card-title>{{ client.clientNickname }}</mat-card-title>
             <mat-card-subtitle>{{ client.clientName }} <p>{{client.email}}</p></mat-card-subtitle>
-            <mat-card-subtitle *ngIf="client.clientNickname == 'Anon'">Change the clients nickname to a holiday ID before approving</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="client.clientNickname == 'Anon'"><mat-icon>info</mat-icon>Change the clients nickname to a holiday ID before approving</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content id="headerContentContainer">
             <mat-card id="tagCard">
@@ -485,10 +485,11 @@
                 matTooltip="Delete an anon's account entirely"
                 color="warn"
                 [matTooltipPosition]="'right'"
-                [disabled]="gatheringAllStatuses"
+                [disabled]="gatheringAllStatuses || client.isAdmin"
                 (click)="deleteAnon()">Delete Agent</button>
                 <mat-card-subtitle class="optionSub">
                     <p>Delete a client and their Auth0 login account entirely, along with any chat involvement (No undo)</p>
+                    <span class="error" *ngIf="client.isAdmin">(An admin cannot be deleted)</span>
                 </mat-card-subtitle>
             </div>
         </mat-card-actions>
