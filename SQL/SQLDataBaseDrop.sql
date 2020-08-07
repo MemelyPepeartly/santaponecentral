@@ -17,4 +17,7 @@ DROP SCHEMA app;
 
 --DELETE FROM app.ChatMessage
 --DELETE FROM app.ClientRelationXref
+--DELETE FROM app.ClientTagXref
+--DELETE FROM app.Tag
+
 --ALTER TABLE app.Client ADD isAdmin BIT NOT NULL DEFAULT 0

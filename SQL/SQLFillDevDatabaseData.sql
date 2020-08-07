@@ -184,7 +184,7 @@ INSERT INTO app.Tag (tagID, tagName)
 VALUES
     (@tag1IDGUID, 'Grinch'),
     (@tag2IDGUID, 'Mass Mailer'),
-    (@tag3IDGUID, 'Twifag');
+    (@tag3IDGUID, 'Mass Mail Recipient');
 
 
 SELECT * FROM app.SurveyQuestion;
