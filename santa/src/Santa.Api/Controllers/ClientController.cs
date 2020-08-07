@@ -276,6 +276,54 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
+        // POST: api/Client/AutoAssign
+        /// <summary>
+        /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("AutoAssign")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<List<string>>> PostAutoAssignmentsToMassMailers()
+        {
+            try
+            {
+                List<Client> allClients = await repository.GetAllClients();
+                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == "Mass Mailer")).ToList();
+                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == " Unibomber")).ToList();
+
+                List<string> assignmentsAddedLogList = new List<string>();
+
+                Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+
+                // Foreach mailer
+                foreach(Client mailer in massMailers)
+                {
+                    // Foreach clients to be assigned mass mail
+                    foreach(Client potentialAssignment in clientsToBeAssignedToMassMailers)
+                    {
+                        // If the mass mailer doesnt already have the potential assignment in their assignments list
+                        if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID))
+                        {
+                            // Add that potential assignment to their list
+                            await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID);
+                            assignmentsAddedLogList.Add($"Added {potentialAssignment.nickname} to {mailer.nickname}'s assignment list for the {logicCardExchangeEvent.eventDescription} Event");
+                        }
+                    }   
+                }
+                if(assignmentsAddedLogList.Count == 0)
+                {
+                    assignmentsAddedLogList.Add($"All mass mailers are already up to date with their assignments for the {logicCardExchangeEvent.eventDescription} Event");
+                }
+
+                return Ok(assignmentsAddedLogList);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         // POST: api/Client/5/Tag
         /// <summary>
         /// Assigns a specific user a tag by ID
