@@ -252,7 +252,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="assignmentsModel"></param>
         /// <returns></returns>
-        [HttpPost("{clientID}/Recipients", Name = "PostRecipients")]
+        [HttpPost("{clientID}/Recipients")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationshipsModel assignmentsModel)
         {
@@ -448,7 +448,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Email", Name ="PutEmail")]
+        [HttpPut("{clientID}/Email")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmailModel email)
         {
@@ -516,7 +516,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="nickname"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
+        [HttpPut("{clientID}/Nickname")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNicknameModel nickname)
         {
