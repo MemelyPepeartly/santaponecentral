@@ -50,7 +50,7 @@ export class MapService {
     client.tags.forEach(tag => {
       mappedClient.tags.push(this.mapTag(tag))
     });
-
+    
     return mappedClient;
   }
   mapProfile(profile)

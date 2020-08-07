@@ -44,6 +44,9 @@ export class ClientNameResponse {
 export class ClientStatusResponse {
     clientStatusID: string;
 }
+export class ClientIsAdminResponse {
+    isAdmin: boolean;
+}
 
 export class ClientRelationshipsResponse {
     eventTypeID: string;
