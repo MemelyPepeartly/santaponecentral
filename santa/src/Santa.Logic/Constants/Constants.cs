@@ -22,5 +22,8 @@ namespace Santa.Logic.Constants
         public const string GIFT_EXCHANGE_EVENT = "Gift Exchange";
         public const string CARD_EXCHANGE_EVENT = "Card Exchange";
 
+        // Default tags for clients
+        public const string MASS_MAILER_TAG = "Mass Mailer";
+
     }
 }
