@@ -289,8 +289,8 @@ namespace Santa.Api.Controllers
             try
             {
                 List<Client> allClients = await repository.GetAllClients();
-                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == "Mass Mailer")).ToList();
-                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == " Unibomber")).ToList();
+                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
+                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
 
                 List<Client> clientsThatGotNewAssignments = new List<Client>();
                 List<string> assignmentsAddedLogList = new List<string>();
