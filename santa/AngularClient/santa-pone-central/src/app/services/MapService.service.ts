@@ -16,9 +16,9 @@ export class MapService {
   constructor() { }
 
   mapClient(client)
-  { 
+  {
     let mappedClient = new Client;
-    
+
     mappedClient.clientID = client.clientID;
     mappedClient.clientName = client.clientName;
     mappedClient.email = client.email;
@@ -50,7 +50,7 @@ export class MapService {
     client.tags.forEach(tag => {
       mappedClient.tags.push(this.mapTag(tag))
     });
-    
+
     return mappedClient;
   }
   mapProfile(profile)
@@ -107,7 +107,7 @@ export class MapService {
   mapMessage(message)
   {
     let mappedMessage = new Message;
-    
+
     mappedMessage.chatMessageID = message.chatMessageID;
     mappedMessage.senderClient = this.mapMeta(message.senderClient);
     mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
@@ -281,6 +281,7 @@ export class MapService {
     mappedTag.tagID = tag.tagID;
     mappedTag.tagName = tag.tagName;
     mappedTag.deletable = tag.deletable;
+    mappedTag.tagImmutable = tag.tagImmutable;
 
     return mappedTag;
   }
@@ -298,7 +299,7 @@ export class MapResponse
     messageResponse.messageRecieverClientID = recieverClientID;
     messageResponse.clientRelationXrefID = relationXrefID;
     messageResponse.messageContent = messageContent;
-    
+
     return messageResponse;
   }
   mapClientEmailResponse(client: Client)
@@ -331,7 +332,7 @@ export class MapResponse
     clientAddressResponse.clientState = client.address.state;
     clientAddressResponse.clientCountry = client.address.country;
     clientAddressResponse.clientPostalCode = client.address.postalCode;
-    
+
     return clientAddressResponse
   }
   mapSurveyApiResponse(response: SurveyQA)
@@ -350,7 +351,7 @@ export class MapResponse
     {
       surveyApiResponse.responseText = response.responseInputText;
     }
-    
+
     return surveyApiResponse;
   }
   mapTagResponse(tag: Tag)
@@ -358,7 +359,7 @@ export class MapResponse
     let tagResponse: TagResponse = new TagResponse();
 
     tagResponse.tagName = tag.tagName;
-    
+
     return tagResponse;
   }
 }
