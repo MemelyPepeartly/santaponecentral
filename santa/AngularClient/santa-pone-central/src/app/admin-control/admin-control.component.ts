@@ -33,6 +33,7 @@ export class AdminControlComponent implements OnInit
   public eventControlSelected: boolean = false;
   public surveyControlSelected: boolean = false;
   public questionControlSelected: boolean = false;
+  public autoAssignControlSelected: boolean = false;
 
   async ngOnInit() {
     this.allTags = [];
@@ -68,6 +69,7 @@ export class AdminControlComponent implements OnInit
     this.eventControlSelected = false;
     this.surveyControlSelected = false;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
   }
   public selectEventControl()
   {
@@ -75,6 +77,7 @@ export class AdminControlComponent implements OnInit
     this.eventControlSelected = true;
     this.surveyControlSelected = false;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
   }
   public selectSurveyControl()
   {
@@ -82,6 +85,8 @@ export class AdminControlComponent implements OnInit
     this.eventControlSelected = false;
     this.surveyControlSelected = true;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
+
   }
   public selectQuestionControl()
   {
@@ -89,5 +94,14 @@ export class AdminControlComponent implements OnInit
     this.eventControlSelected = false;
     this.surveyControlSelected = false;
     this.questionControlSelected = true;
+    this.autoAssignControlSelected = false;
+  }
+  public selectAutoAssignControl()
+  {
+    this.tagControlSelected = false;
+    this.eventControlSelected = false;
+    this.surveyControlSelected = false;
+    this.questionControlSelected = false;
+    this.autoAssignControlSelected = true;
   }
 }
