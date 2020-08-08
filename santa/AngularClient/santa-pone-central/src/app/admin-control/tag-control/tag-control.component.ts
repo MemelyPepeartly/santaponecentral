@@ -47,7 +47,6 @@ export class TagControlComponent implements OnInit {
     return formControlObj.value
   }
 
-  //KCHERE check console for bugs when this component is initialized
   ngOnInit() {
     this.constructFormGroups();
     this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
@@ -76,7 +75,7 @@ export class TagControlComponent implements OnInit {
 
     let newTagResponse: TagResponse = new TagResponse();
     newTagResponse.tagName = this.newTag;
-    
+
     await this.SantaApiPost.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
     await this.gatherer.gatherAllTags();
     this.addTagFormGroup.reset();
@@ -84,12 +83,12 @@ export class TagControlComponent implements OnInit {
     this.postingNewTag = false;
   }
   public async editTag()
-  {    
+  {
     this.updatingTagName = true;
     let updatedTag: Tag = this.selectedTag
     updatedTag.tagName = this.editedTagName
     let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
-    
+
     await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
     await this.gatherer.gatherAllTags();
     this.editTagFormGroup.reset();
@@ -108,6 +107,10 @@ export class TagControlComponent implements OnInit {
   }
   public sortDeletable() : Array<Tag>
   {
-    return this.allTags.filter((tag: Tag) => {return tag.deletable == true})
+    return this.allTags.filter((tag: Tag) => {return tag.deletable == true && tag.tagImmutable == false})
+  }
+  public sortEditable() : Array<Tag>
+  {
+    return this.allTags.filter((tag: Tag) => {return tag.tagImmutable != true})
   }
 }

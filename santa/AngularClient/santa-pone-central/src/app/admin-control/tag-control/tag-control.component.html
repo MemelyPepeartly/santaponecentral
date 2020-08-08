@@ -27,10 +27,10 @@
                     placeholder="Ex. Happy Camper">
             </mat-form-field>
         </form>
-        
+
         <!--Tag Control buttons-->
         <div id="tagButtonContainer">
-            <button class="tagButton" 
+            <button class="tagButton"
             mat-raised-button
             matTooltip="Add tag to the list of tags"
             (click)="addNewTag()"
@@ -50,14 +50,14 @@
     </mat-card-header>
     <mat-card-content>
 
-        <!--All Tag Chip list-->
+        <!--Tag Chip list-->
         <mat-toolbar>All currently editable tags</mat-toolbar>
 
         <div>
             <app-small-loading-spin *ngIf="gatheringAllTags"></app-small-loading-spin>
-            
+
             <mat-chip-list *ngIf="!gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
-                <mat-chip *ngFor="let tag of allTags" [value]="tag" (click)="setSelectedTag(tag);"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+                <mat-chip *ngFor="let tag of sortEditable()" [value]="tag" (click)="setSelectedTag(tag);"><span class="tagText">{{tag.tagName}}</span></mat-chip>
             </mat-chip-list>
         </div>
 
@@ -66,8 +66,13 @@
             <div id="selectedEditChipDiv">
                 <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedTag.tagName }}</span></mat-chip>
             </div>
+            <div class="informationalText">
+              <mat-card-subtitle>Tags that are default tags are not editable</mat-card-subtitle>
+            </div>
             <mat-divider [inset]="true"></mat-divider>
-        
+            <span *ngIf="sortEditable().length == 0 && !gatheringAllTags">No tags to display</span>
+            <mat-divider [inset]="true"></mat-divider>
+
 
             <app-small-loading-spin *ngIf="updatingTagName"></app-small-loading-spin>
             <form [formGroup]="editTagFormGroup" *ngIf="!gatheringAllTags && !updatingTagName">
@@ -78,11 +83,11 @@
                         placeholder="Ex. Happy Camper">
                 </mat-form-field>
             </form>
-            
-            
+
+
             <!--Tag Control buttons-->
             <div id="tagButtonContainer">
-                <button class="tagButton" 
+                <button class="tagButton"
                 mat-raised-button
                 matTooltip="Add tag to the list of tags"
                 (click)="editTag()"
@@ -106,16 +111,16 @@
     </mat-card-header>
     <mat-card-content>
 
-        <!--All Tag Chip list-->
+        <!--Tag Chip list-->
         <mat-toolbar>All currently deletable tags</mat-toolbar>
-        <div id="deleteInformationalText">
-            <mat-card-subtitle>Tags already assigned to users are not deletable</mat-card-subtitle>
+        <div class="informationalText">
+            <mat-card-subtitle>Tags already assigned to users, or default tags are not deletable</mat-card-subtitle>
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
         <div>
             <app-small-loading-spin *ngIf="gatheringAllTags || deletingTag"></app-small-loading-spin>
-            
+
             <mat-chip-list *ngIf="!gatheringAllTags && !deletingTag">
                 <mat-chip *ngFor="let tag of sortDeletable()" [value]="tag"><span class="tagText">{{tag.tagName}}</span><mat-icon matChipRemove (click)="deleteTag(tag)">cancel</mat-icon></mat-chip>
             </mat-chip-list>
