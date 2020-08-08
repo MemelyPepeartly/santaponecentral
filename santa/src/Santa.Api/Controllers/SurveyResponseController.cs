@@ -47,19 +47,23 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/SurveyResponses/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
+        /// <summary>
+        /// Updates a response by ID
+        /// </summary>
+        /// <param name="surveyResponseID"></param>
+        /// <param name="responseText"></param>
+        /// <returns></returns>
         [HttpPut("{surveyResponseID}/ResponseText")]
-        [Authorize(Policy = "modify:responses")]
+        [Authorize(Policy = "update:responses")]
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
-            
+#warning clients and admins can do this. Needs check to ensure the response is coming from the right person
             try
             {
-                Logic.Objects.Response surveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
-                surveyResponse.responseText = responseText.responseText;
+                Logic.Objects.Response logicSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
+                logicSurveyResponse.responseText = responseText.responseText;
 
-                await repository.UpdateSurveyResponseByIDAsync(surveyResponse);
+                await repository.UpdateSurveyResponseByIDAsync(logicSurveyResponse);
                 await repository.SaveAsync();
 
                 return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
