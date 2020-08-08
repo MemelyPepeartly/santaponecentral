@@ -1,3 +1,16 @@
+<div id="overlay" *ngIf="showClientCard" (click)="hideClientWindow()">
+</div>
+
+<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard">
+  <div class="fixedDiv mat-elevation-z6">
+      <app-selected-anon
+      [loadingClient]="false"
+      [client]="selectedClient"
+      (refreshSelectedClient)="updateSelectedClient($event)"
+      (actionTaken)="setRefreshListAction($event)"></app-selected-anon>
+  </div>
+</div>
+
 <mat-card class="api-card mat-elevation-z5">
   <mat-card-header>
       <mat-card-title>Auto Assign</mat-card-title>
@@ -12,7 +25,7 @@
           <app-small-loading-spin *ngIf="gatheringAllClients"></app-small-loading-spin>
 
           <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailers().length != 0">
-              <mat-chip *ngFor="let client of sortMassMailers()"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+              <mat-chip *ngFor="let client of sortMassMailers()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
           </mat-chip-list>
           <span *ngIf="sortMassMailers().length == 0 && !gatheringAllClients">No mass mailers to display</span>
       </div>
@@ -23,7 +36,7 @@
           <app-small-loading-spin *ngIf="gatheringAllClients"></app-small-loading-spin>
 
           <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailRecipients().length != 0">
-              <mat-chip *ngFor="let client of sortMassMailRecipients()"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+              <mat-chip *ngFor="let client of sortMassMailRecipients()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
           </mat-chip-list>
           <span *ngIf="sortMassMailRecipients().length == 0 && !gatheringAllClients">No mass mail recipients to display</span>
       </div>
