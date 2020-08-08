@@ -305,8 +305,8 @@ namespace Santa.Api.Controllers
                         // Foreach clients to be assigned mass mail
                         foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                         {
-                            // If the mass mailer doesnt already have the potential assignment in their assignments list
-                            if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID))
+                            // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
+                            if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
                                 // Add that potential assignment to their list
                                 await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID);
@@ -321,12 +321,16 @@ namespace Santa.Api.Controllers
                         }
                     }
                 }
+                // If no assignments were added
                 if(assignmentsAddedLogList.Count == 0)
                 {
                     assignmentsAddedLogList.Add($"All mass mailers are already up to date with their assignments for the {logicCardExchangeEvent.eventDescription} Event");
                 }
+                // If assignments where added
                 else if (assignmentsAddedLogList.Count > 0)
                 {
+                    // Save changes and send out emails
+                    await repository.SaveAsync();
                     foreach(Client massMailer in clientsThatGotNewAssignments)
                     {
                         await mailbag.sendAssignedRecipientEmail(massMailer, logicCardExchangeEvent);
