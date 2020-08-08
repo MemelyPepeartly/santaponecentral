@@ -13,7 +13,7 @@
     <app-contact-panel #messages
       (messageUpdatedEvent)="updateChats($event)"
       [showActionProgressBar]="postingMessage || puttingMessage"
-      [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedChat && selectedHistory.history.length == 0"
+      [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedHistory && selectedHistory.subjectMessages.length + selectedHistory.recieverMessages.length == 0"
       [selectedHistory]="selectedHistory"
       [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control

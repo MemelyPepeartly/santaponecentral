@@ -5,7 +5,7 @@
         <app-selected-anon
         [loadingClient]="false"
         [client]="currentClient"
-        (action)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
+        (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
         (refreshSelectedClient)="updateSelectedClient($event)"
         (deletedAnon)="hideClientWindow(true);">
         </app-selected-anon>
