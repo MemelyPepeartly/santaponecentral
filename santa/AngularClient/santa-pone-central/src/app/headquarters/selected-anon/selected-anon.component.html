@@ -28,7 +28,7 @@
                             </mat-chip>
                         </mat-chip-list>
                     </div>
-                    
+
                     <!--Tag Selection list-->
                     <div id="tagSelectionList">
                         <mat-divider [inset]="true" *ngIf="editingTags && !modyingTagRelationships"></mat-divider>
@@ -39,19 +39,19 @@
 
                     <!--Tag Control buttons-->
                     <div id="tagButtonContainer">
-                        <button *ngIf="!editingTags && !modyingTagRelationships" class="tagButton" 
+                        <button *ngIf="!editingTags && !modyingTagRelationships" class="tagButton"
                         mat-raised-button
                         matTooltip="Add tag to the Anon"
-                        [disabled]="settingClientTags || initializing"
+                        [disabled]="settingClientTags || initializing || gatheringAllTags"
                         (click)="showAvailableTags()"
                         [matTooltipPosition]="'left'">Add Tags</button>
-                    <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton" 
+                    <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton"
                         mat-raised-button
                         matTooltip="Confirm Tag Selection"
                         (click)="addTagsToClient()"
                         [disabled]="selectedTags?.length == 0"
                         [matTooltipPosition]="'left'">Confirm Tag Selection</button>
-                    <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton" 
+                    <button *ngIf="editingTags && !modyingTagRelationships" class="tagButton"
                         mat-raised-button
                         matTooltip="Cancel Tag Action"
                         (click)="cancelTagAction()"
@@ -77,10 +77,10 @@
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
-            <button mat-raised-button class="mainActionButton" 
+            <button mat-raised-button class="mainActionButton"
                 [disabled]="showNameChangeForm"
                 (click)="showNameChangeForm = true">Change Agent's Name</button>
-            <button mat-raised-button class="mainActionButton" 
+            <button mat-raised-button class="mainActionButton"
                 [disabled]="showEmailChangeForm"
                 (click)="showEmailChangeForm = true">Change Agent's Email</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Approved'"
@@ -112,7 +112,7 @@
                             <div *ngIf="nameFormControls.firstName.errors.maxlength">First name is too long. 20 Characters is the maximum</div>
                             <div *ngIf="nameFormControls.firstName.errors.pattern">First name must be a proper first name</div>
                         </div>
-    
+
                         <!-- Last Name -->
                         <mat-form-field class="changeFormField">
                             <mat-label>Last Name</mat-label>
@@ -132,7 +132,7 @@
                     </div>
                 </mat-card-actions>
             </mat-card>
-            
+
             <!-- Email change form group -->
             <mat-card class="infoCard mat-elevation-z2" *ngIf="showEmailChangeForm">
                 <mat-card-header>
@@ -224,7 +224,7 @@
                     </div>
 
                     <mat-form-field class="changeFormField">
-                        <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
+                        <mat-select name="country" formControlName="country" placeholder="Select a Country">
                             <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -249,7 +249,7 @@
     </mat-card>
 
     <!-- Response Card -->
-    <ng-container *ngIf="isAnonApproved() && responses?.length != 0">
+    <ng-container>
         <mat-toolbar id="relationshipEventHeader">
             <mat-toolbar-row>
                 Survey Answers
@@ -275,14 +275,14 @@
                                             <span class="questionText">{{response.surveyQuestion.questionText}}</span>
                                         </mat-panel-title>
                                         <mat-panel-description>
-                                            <mat-icon 
+                                            <mat-icon
                                             matTooltip="{{response.surveyQuestion.questionText}}"
                                             [matTooltipPosition]="'right'">question_answer</mat-icon>
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
                                     <p>{{response.responseText}}</p>
                                 </mat-expansion-panel>
-            
+
                             </mat-accordion>
                         </mat-card-content>
                     </mat-card>
@@ -292,7 +292,7 @@
     </ng-container>
     <div class="centerSpin">
         <app-loading-spin *ngIf="gettingEventDetails"></app-loading-spin>
-    </div> 
+    </div>
     <ng-container *ngIf="!gettingEventDetails">
         <ng-container *ngIf="isAnonApproved()">
             <div class="relationDiv" *ngFor="let event of events">
@@ -318,7 +318,7 @@
                                         <mat-panel-description>
                                             <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>                
+                                    </mat-expansion-panel-header>
                                     <div class="expansionPanelButtonContainer">
                                         <button class="expansionPanelButton" mat-raised-button
                                         matTooltip="Switch to this Anon"
@@ -345,7 +345,7 @@
                                         <mat-panel-description>
                                             <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
                                         </mat-panel-description>
-                                    </mat-expansion-panel-header>       
+                                    </mat-expansion-panel-header>
                                     <div class="expansionPanelButtonContainer" *ngIf="beingRemoved || markingAsComplete">
                                         <app-small-loading-spin></app-small-loading-spin>
                                     </div>
@@ -376,7 +376,7 @@
             </div>
         </ng-container>
     </ng-container>
-    
+
     <mat-card class="infoCard mat-elevation-z5">
         <mat-card-header>
             <mat-card-title>Profile Actions</mat-card-title>
@@ -409,7 +409,7 @@
                         </mat-drawer>
                         <div
                             [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
-                            <mat-icon>person_add</mat-icon> 
+                            <mat-icon>person_add</mat-icon>
                             <div id="toggleDiv">
                                 <button mat-raised-button
                                     matTooltip="Shows the list of assignable Anon's"
@@ -442,7 +442,7 @@
                 </div>
             </div>
             <mat-divider [inset]="true"></mat-divider>
-            
+
             <!--Change Nickname Card-->
             <div class="optionDiv">
                 <button mat-raised-button
