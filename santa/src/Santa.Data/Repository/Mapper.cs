@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Santa.Data.Entities;
+using Santa.Logic.Constants;
 using Santa.Logic.Objects;
 
 namespace Santa.Data.Repository
@@ -181,7 +182,8 @@ namespace Santa.Data.Repository
             {
                 tagID = contextTag.TagId,
                 tagName = contextTag.TagName,
-                deletable = contextTag.ClientTagXref.Count > 0 ? false : true
+                deletable = contextTag.ClientTagXref.Count > 0 ? false : true,
+                tagImmutable = contextTag.TagName == Constants.MASS_MAILER_TAG || contextTag.TagName == Constants.MASS_MAIL_RECIPIENT_TAG || contextTag.TagName == Constants.GRINCH_TAG ? true : false
             };
             return logicTag;
         }
