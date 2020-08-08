@@ -15,7 +15,10 @@
             <mat-chip-list *ngIf="!postingNewTag && !gatheringAllTags && allTags?.length != 0">
                 <mat-chip *ngFor="let tag of allTags"><span class="tagText">{{tag.tagName}}</span></mat-chip>
             </mat-chip-list>
-            <span *ngIf="allTags.length == 0 && !gatheringAllTags">No tags to display</span>
+
+            <div class="informationalText" *ngIf="allTags.length == 0 && !gatheringAllTags">
+              <mat-card-subtitle>No tags to display</mat-card-subtitle>
+            </div>
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
@@ -53,12 +56,19 @@
         <!--Tag Chip list-->
         <mat-toolbar>All currently editable tags</mat-toolbar>
 
+        <div class="informationalText">
+          <mat-card-subtitle>Tags that are default tags are not editable</mat-card-subtitle>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
         <div>
             <app-small-loading-spin *ngIf="gatheringAllTags"></app-small-loading-spin>
 
             <mat-chip-list *ngIf="!gatheringAllTags" (selectable)="true" (change)="unsetSelectedTag()">
                 <mat-chip *ngFor="let tag of sortEditable()" [value]="tag" (click)="setSelectedTag(tag);"><span class="tagText">{{tag.tagName}}</span></mat-chip>
             </mat-chip-list>
+
+            <span *ngIf="sortEditable().length == 0 && !gatheringAllTags">No tags to display</span>
         </div>
 
         <ng-container *ngIf="selectedTag != undefined">
@@ -66,11 +76,6 @@
             <div id="selectedEditChipDiv">
                 <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedTag.tagName }}</span></mat-chip>
             </div>
-            <div class="informationalText">
-              <mat-card-subtitle>Tags that are default tags are not editable</mat-card-subtitle>
-            </div>
-            <mat-divider [inset]="true"></mat-divider>
-            <span *ngIf="sortEditable().length == 0 && !gatheringAllTags">No tags to display</span>
             <mat-divider [inset]="true"></mat-divider>
 
 
