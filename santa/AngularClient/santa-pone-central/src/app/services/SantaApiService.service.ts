@@ -2,7 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse, ClientTagRelationshipsResponse, ClientTagRelationshipResponse, ClientIsAdminResponse } from '../../classes/responseTypes';
+import { ClientResponse,
+  ClientAddressResponse,
+  ClientEmailResponse,
+  ClientNicknameResponse,
+  ClientNameResponse,
+  ClientStatusResponse,
+  SurveyApiResponse,
+  TagResponse,
+  MessageApiResponse,
+  MessageApiReadResponse,
+  ClientSignupResponse,
+  ClientRelationshipsResponse,
+  RecipientCompletionResponse,
+  QuestionReadabilityResponse,
+  ClientSenderRecipientRelationshipReponse,
+  MessageApiReadAllResponse,
+  ClientTagRelationshipsResponse,
+  ClientTagRelationshipResponse,
+  ClientIsAdminResponse,
+  ChangeSurveyResponseModel } from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -88,7 +107,7 @@ export class SantaApiGetService {
   getAllSurveyResponses(): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse').pipe(
       map(this.extractData));
-  } 
+  }
   getSurveyResponse(id): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse/' + id).pipe(
       map(this.extractData));
@@ -215,12 +234,15 @@ export class SantaApiPutService {
   putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
     return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
   }
+  putResponse(surveyResponseID: string, responseModel: ChangeSurveyResponseModel): Observable<any> {
+    return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel);
+  }
 }
 @Injectable({
   providedIn: 'root'
 })
 export class SantaApiDeleteService {
-  
+
   constructor(private http: HttpClient) { }
   deleteClient(id: string): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id);
