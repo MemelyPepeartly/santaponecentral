@@ -59,6 +59,9 @@ export class SurveyApiResponse {
     surveyOptionID?: string = null;
     responseText: string;
 }
+export class ChangeSurveyResponseModel {
+  responseText: string;
+}
 export class SurveySignupApiResponse {
     surveyID: string;
     surveyQuestionID: string;
