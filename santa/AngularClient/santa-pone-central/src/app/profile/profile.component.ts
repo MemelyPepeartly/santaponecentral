@@ -10,6 +10,8 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
+import { SurveyResponse } from 'src/classes/survey';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +20,8 @@ import { InputControlComponent } from '../shared/input-control/input-control.com
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public profileService: ProfileService,
+  constructor(private formBuilder: FormBuilder,
+    public profileService: ProfileService,
     public gatherer: GathererService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
@@ -52,26 +55,32 @@ export class ProfileComponent implements OnInit {
   public gettingSelectedHistory: boolean = false;
   public gettingProfile: boolean = false;
 
+  public clientResponseFormGroup: FormGroup;
+
 
   public async ngOnInit() {
     // Boolean subscribes
-    this.profileService._gettingProfile.subscribe((status: boolean) => {
+    this.profileService.gettingProfile.subscribe((status: boolean) => {
       this.gettingProfile = status;
     });
-    this.profileService._gettingGeneralHistory.subscribe((status: boolean) => {
+    this.profileService.gettingGeneralHistory.subscribe((status: boolean) => {
       this.gettingGeneralHistory = status;
     });
-    this.profileService._gettingHistories.subscribe((status: boolean) => {
+    this.profileService.gettingHistories.subscribe((status: boolean) => {
       this.gettingAllHistories = status;
     });
-    this.profileService._gettingSelectedHistory.subscribe((status: boolean) => {
+    this.profileService.gettingSelectedHistory.subscribe((status: boolean) => {
       this.gettingSelectedHistory = status;
     });
     // Profile service subscribe
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
+      this.clientResponseFormGroup = this.formBuilder.group({});
+      this.profile.responses.forEach((response: SurveyResponse) => {
+        this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      });
     });
-    
+
     // Auth profile
     this.auth.userProfile$.subscribe(data => {
       this.authProfile = data;
@@ -95,25 +104,27 @@ export class ProfileComponent implements OnInit {
     // Events subscribe
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray
-      
     });
 
+
+
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
+
     await this.gatherer.gatherAllEvents();
     await this.profileService.getHistories(this.profile.clientID);
-    await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID)
+    await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
   }
   public async showSelectedChat(history: MessageHistory)
   {
     this.showOverlay = true;
     this.showChat = true;
-    
+
     // If the history object from the event is null, get the general history
     if(history == null)
-    {      
+    {
       await this.profileService.getSelectedHistory(this.profile.clientID, this.profile.clientID, null);
       setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-      
+
     }
     else
     {
@@ -148,7 +159,7 @@ export class ProfileComponent implements OnInit {
     this.puttingMessage = true;
 
     let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
-    
+
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
@@ -159,7 +170,7 @@ export class ProfileComponent implements OnInit {
 
     this.puttingMessage = false;
 
-    
+
   }
   public softRefreshSelectedChat(isSoftUpdate: boolean)
   {
