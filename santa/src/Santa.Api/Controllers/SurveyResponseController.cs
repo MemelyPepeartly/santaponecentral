@@ -31,7 +31,7 @@ namespace Santa.Api.Controllers
             return Ok(await repository.GetAllSurveyResponses());
         }
         
-        // GET: api/SurveyResponses/5
+        // GET: api/SurveyResponse/5
         [HttpGet("{surveyResponseID}")]
         [Authorize(Policy = "read:responses")]
         public async Task<ActionResult<Response>> GetSurveyResponse(Guid surveyResponseID)
@@ -46,7 +46,7 @@ namespace Santa.Api.Controllers
             return Ok(surveyResponse);
         }
 
-        // PUT: api/SurveyResponses/5
+        // PUT: api/SurveyResponse/5
         /// <summary>
         /// Updates a response by ID
         /// </summary>
@@ -74,7 +74,7 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/SurveyResponses
+        // POST: api/SurveyResponse
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -103,7 +103,7 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/SurveyResponses/5
+        // DELETE: api/SurveyResponse/5
         [HttpDelete("{surveyResponseID}")]
         [Authorize(Policy = "delete:responses")]
         public async Task<ActionResult> DeleteSurveyResponse(Guid surveyResponseID)
