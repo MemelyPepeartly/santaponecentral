@@ -252,3 +252,7 @@ mat-panel-description
     min-width: 250px;
     background-color: white;
 }
+.changeAnswerDiv
+{
+  margin-top: 10px;
+}

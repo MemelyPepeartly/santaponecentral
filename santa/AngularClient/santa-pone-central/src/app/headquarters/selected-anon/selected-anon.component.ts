@@ -5,10 +5,10 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse} from 'src/classes/responseTypes';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel} from 'src/classes/responseTypes';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
-import { Survey, Question } from 'src/classes/survey';
+import { Survey, Question, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { CountriesService } from 'src/app/services/countries.service';
@@ -71,6 +71,7 @@ export class SelectedAnonComponent implements OnInit {
   public clientAddressFormGroup: FormGroup;
   public clientNameFormGroup: FormGroup;
   public clientEmailFormGroup: FormGroup;
+  public clientResponseFormGroup: FormGroup;
 
   public showAddressChangeForm: boolean = false;
   public showNameChangeForm: boolean = false;
@@ -117,6 +118,7 @@ export class SelectedAnonComponent implements OnInit {
   public changingEmail: boolean = false;
   public deletingClient: boolean = false;
   public sendingReset: boolean = false;
+  public editingResponse: boolean = false;
 
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
@@ -177,6 +179,11 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.clientEmailFormGroup = this.formBuilder.group({
       email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
+    });
+
+    this.clientResponseFormGroup = this.formBuilder.group({});
+    this.client.responses.forEach((response: SurveyResponse) => {
+      this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
     });
 
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
@@ -240,6 +247,8 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherer.gatherAllQuestions();
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllTags();
+
+
 
 
     this.gettingAnswers = false;
@@ -571,12 +580,8 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async setClientTags()
   {
-    this.settingClientTags = true;
-
     this.currentTags = [];
     this.currentTags = this.client.tags;
-
-    this.settingClientTags = false;
   }
   public async gatherRecipients()
   {
@@ -652,5 +657,17 @@ export class SelectedAnonComponent implements OnInit {
     this.actionTaken.emit(true);
 
     this.changingEmail = false;
+  }
+  public async submitNewResponse(surveyResponseID: string)
+  {
+    this.editingResponse = true;
+
+    let editedResponse = new ChangeSurveyResponseModel();
+    editedResponse.responseText = this.clientResponseFormGroup.get(surveyResponseID).value
+    await this.SantaApiPut.putResponse(surveyResponseID, editedResponse).toPromise();
+    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
+
+
+    this.editingResponse = false;
   }
 }
