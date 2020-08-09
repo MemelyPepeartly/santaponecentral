@@ -3,7 +3,7 @@ import { Address } from './address';
 import { SurveyResponse } from './survey';
 import { EventType } from './eventType';
 
-export class Profile 
+export class Profile
 {
     clientID: string;
     clientStatus: Status = new Status();
@@ -13,8 +13,9 @@ export class Profile
     address: Address = new Address;
     recipients: Array<ProfileRecipient> = [];
     responses: Array<SurveyResponse> = [];
+    answersEditable: boolean;
 }
-export class ProfileRecipient 
+export class ProfileRecipient
 {
     clientID: string;
     relationXrefID?: string = null;
