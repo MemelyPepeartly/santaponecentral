@@ -9,7 +9,7 @@
             </button>
             <button mat-raised-button class="controlButton" title="Save Excel File">
                 <mat-icon class="icons">save_alt</mat-icon>
-            </button>     
+            </button>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -19,7 +19,10 @@
 <mat-list>
     <mat-card mat-list-item *ngFor="let client of completedClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
-            {{ client.clientNickname }}
+          <h1 class="inline">{{ client.clientNickname }}</h1>
+          <mat-chip-list class="inline tagList">
+            <mat-chip *ngFor="let tag of client.tags"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+          </mat-chip-list>
         </mat-card-title>
         <mat-card-subtitle>
             {{ client.email }}

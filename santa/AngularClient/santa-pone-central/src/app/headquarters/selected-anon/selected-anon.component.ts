@@ -571,6 +571,7 @@ export class SelectedAnonComponent implements OnInit {
 
     await this.setClientTags();
     await this.showAvailableTags();
+    this.actionTaken.emit(true)
     this.modyingTagRelationships = false;
     this.editingTags = false;
   }
