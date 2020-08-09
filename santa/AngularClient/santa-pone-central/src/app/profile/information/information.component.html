@@ -10,7 +10,7 @@
                 <mat-card-header>
                     <mat-card-title>Holiday Information</mat-card-title>
                     <mat-card-subtitle>Holiday ID and name information</mat-card-subtitle>
-                </mat-card-header>        
+                </mat-card-header>
                 <mat-card-content>
                     <app-small-loading-spin *ngIf="loading"></app-small-loading-spin>
                     <h3 *ngIf="!loading">{{profile.clientNickname}}</h3>
@@ -23,7 +23,7 @@
                 <mat-card-header>
                     <mat-card-title>Address</mat-card-title>
                     <mat-card-subtitle>Your mailing address</mat-card-subtitle>
-                </mat-card-header>        
+                </mat-card-header>
                 <mat-card-content>
                     <app-small-loading-spin *ngIf="loading"></app-small-loading-spin>
                     <div *ngIf="!loading">
@@ -57,12 +57,33 @@
                                     <span class="questionText">{{response.surveyQuestion.questionText}}</span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    <mat-icon 
+                                    <mat-icon
                                     matTooltip="{{response.surveyQuestion.questionText}}"
                                     [matTooltipPosition]="'right'">question_answer</mat-icon>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <p>{{response.responseText}}</p>
+
+                            <div class="expansionPanelButtonContainer" *ngIf="editingResponse">
+                              <app-small-loading-spin></app-small-loading-spin>
+                            </div>
+                            <mat-divider *ngIf="profile.answersEditable" [inset]="true"></mat-divider>
+                            <div class="changeAnswerDiv" *ngIf="!editingResponse && profile.answersEditable" [formGroup]="clientResponseFormGroup">
+                              <mat-form-field class="inputForm">
+                                <textarea matInput placeholder="Answer" formControlName="{{response.surveyResponseID}}"></textarea>
+                              </mat-form-field>
+                              <div class="error" *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors && clientResponseFormGroup.get(response.surveyResponseID).touched">
+                                <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.required">Answer is required</div>
+                                <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>
+                              </div>
+                              <div class="expansionPanelButtonContainer">
+                                  <button class="expansionPanelButton" mat-raised-button
+                                  matTooltip="Submit a change to this answer"
+                                  [matTooltipPosition]="'right'"
+                                  [disabled]="clientResponseFormGroup.get(response.surveyResponseID).invalid"
+                                  (click)="submitNewResponse(response.surveyResponseID)">Submit</button>
+                              </div>
+                            </div>
                         </mat-expansion-panel>
 
                     </mat-accordion>
