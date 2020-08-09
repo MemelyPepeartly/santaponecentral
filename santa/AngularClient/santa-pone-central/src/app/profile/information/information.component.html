@@ -70,7 +70,7 @@
                             <mat-divider *ngIf="profile.answersEditable" [inset]="true"></mat-divider>
                             <div class="changeAnswerDiv" *ngIf="!editingResponse && profile.answersEditable" [formGroup]="clientResponseFormGroup">
                               <mat-form-field class="inputForm">
-                                <textarea matInput placeholder="Answer" formControlName="{{response.surveyResponseID}}"></textarea>
+                                <textarea matInput placeholder="Edit Answer" formControlName="{{response.surveyResponseID}}"></textarea>
                               </mat-form-field>
                               <div class="error" *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors && clientResponseFormGroup.get(response.surveyResponseID).touched">
                                 <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.required">Answer is required</div>
