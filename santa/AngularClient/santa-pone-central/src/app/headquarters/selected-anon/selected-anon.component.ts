@@ -181,11 +181,6 @@ export class SelectedAnonComponent implements OnInit {
       email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
 
-    this.clientResponseFormGroup = this.formBuilder.group({});
-    this.client.responses.forEach((response: SurveyResponse) => {
-      this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
-    });
-
     /* Status subscribe and gather comes first to ensure the user doesn't click the button before they are allowed, causing an error */
     this.gatherer.allStatuses.subscribe((statusArray: Array<Status>) => {
       this.statuses = statusArray;
@@ -231,6 +226,11 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.gatherer.gatheringAllQuestions.subscribe((status: boolean) => {
       this.gatheringAllQuestions = status;
+
+      this.clientResponseFormGroup = this.formBuilder.group({});
+      this.client.responses.forEach((response: SurveyResponse) => {
+        this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      });
     });
     this.gatherer.gatheringAllStatuses.subscribe((status: boolean) => {
       this.gatheringAllStatuses = status;
