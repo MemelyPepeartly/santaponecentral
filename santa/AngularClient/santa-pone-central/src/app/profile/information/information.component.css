@@ -20,7 +20,7 @@
     margin-right: auto;
 }
 .questionText
-{ 
+{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -34,4 +34,23 @@
     margin-right: auto;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+.expansionPanelButton
+{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+.expansionPanelButtonContainer
+{
+    width: 100%;
+    text-align: center;
+}
+.changeAnswerDiv
+{
+  margin-top: 10px;
+}
+.error
+{
+    color: #F44336;
 }
