@@ -28,9 +28,6 @@
         </mat-chip-list>
       </mat-card-title>
       <mat-card-subtitle>
-          <span>Email: {{ client.email }}</span>
-      </mat-card-subtitle>
-      <mat-card-subtitle>
         <span [ngClass]="{'notice' : client.recipients.length == 0}">Assignments: {{ client.recipients.length }}</span>
       </mat-card-subtitle>
       <mat-card-subtitle>
