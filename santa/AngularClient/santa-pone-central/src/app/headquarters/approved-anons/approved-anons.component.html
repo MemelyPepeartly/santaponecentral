@@ -20,15 +20,24 @@
     <mat-card mat-list-item *ngFor="let client of approvedClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
           <h1 class="inline">{{ client.clientNickname }}</h1>
-          <mat-chip-list class="inline tagList">
-            <mat-chip *ngFor="let tag of client.tags"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+          <mat-chip-list class="inline tagList" [selectable]="false" >
+            <mat-chip *ngFor="let tag of client.tags"
+            matTooltip="{{tag.tagName}}"
+            [matTooltipPosition]="'below'"
+            [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
           </mat-chip-list>
         </mat-card-title>
         <mat-card-subtitle>
-            {{ client.email }}
+            <span>Email: {{ client.email }}</span>
         </mat-card-subtitle>
-        <mat-card-content>
-            Client Name: {{ client.clientName }}
-        </mat-card-content>
+        <mat-card-subtitle>
+          <span [ngClass]="{'notice' : client.recipients.length == 0}">Assignments: {{ client.recipients.length }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Senders: {{ client.senders.length }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Client Name: {{ client.clientName }}</span>
+        </mat-card-subtitle>
     </mat-card>
 </mat-list>
