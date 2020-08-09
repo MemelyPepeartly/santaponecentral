@@ -236,6 +236,7 @@ namespace Santa.Data.Repository
                                 .ThenInclude(sr => sr.SurveyQuestion)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
                     .Include(s => s.ClientStatus)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(s => s.SurveyQuestion)

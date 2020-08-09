@@ -166,8 +166,9 @@ namespace Santa.Data.Repository
                     postalCode = contextClient.PostalCode
                 },
                 clientStatus = MapStatus(contextClient.ClientStatus),
-                recipients = contextClient.ClientRelationXrefSenderClient.Select(s=> Mapper.MapRelationProfileRecipientXref(s ,s.RecipientClient)).ToList(),
-                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapRelationProfileRecipientXref(s, s.RecipientClient)).ToList(),
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
+                answersEditable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
             };
 
             return logicProfile;
