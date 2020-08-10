@@ -27,36 +27,17 @@ export class EventControlComponent implements OnInit {
   public addEventFormGroup: FormGroup;
   public editEventFormGroup: FormGroup;
 
-
-  public selectedEvent: EventType;
-  public deletableEvents: Array<EventType> = [];
   public tagsInUse: Array<EventType> = [];
-  public allClients: Array<Client> = [];
 
-  public postingNewEvent: boolean = false;
-  public updatingEventName: boolean = false;
-  public deletingEvent: boolean = false;
-
-  // Getters for form values for ease-of-use
-  get newEvent() {
-    var formControlObj = this.addEventFormGroup.get('newEvent') as FormControl
-    return formControlObj.value
-  }
-  get editedEventName() {
-    var formControlObj = this.editEventFormGroup.get('editEvent') as FormControl
-    return formControlObj.value
-  }
+  public gatheringAllEvents: boolean = false;
 
   ngOnInit(): void {
     this.constructFormGroups();
+    this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
+      this.gatheringAllEvents = status;
+    })
   }
   private constructFormGroups() {
-    this.addEventFormGroup = this.formBuilder.group({
-      newEvent: [null, Validators.nullValidator && Validators.pattern],
-    });
-    this.editEventFormGroup = this.formBuilder.group({
-      editEvent: [null, Validators.nullValidator && Validators.pattern],
-    });
   }
   public deleteEvent(event: EventType)
   {
@@ -76,6 +57,6 @@ export class EventControlComponent implements OnInit {
   }
   public addNewEvent()
   {
-    
+
   }
 }

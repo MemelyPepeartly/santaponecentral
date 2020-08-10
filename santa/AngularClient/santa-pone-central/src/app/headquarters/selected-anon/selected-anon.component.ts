@@ -248,9 +248,6 @@ export class SelectedAnonComponent implements OnInit {
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllTags();
 
-
-
-
     this.gettingAnswers = false;
     this.gettingEventDetails = false;
   }
@@ -429,18 +426,13 @@ export class SelectedAnonComponent implements OnInit {
     let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter((relationship: ClientSenderRecipientRelationship) => {return (relationship.clientEventTypeID == eventType.eventTypeID)})
     let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
 
-
-    //refresh all API clients
-    //await this.gatherer.gatherAllClients();
-
-    //For all the clients in the DB,
-    //If the client status is approved (&&)
-    //the ID is not the currently selected client's ID (&&)
-    //the client from DB is not in the list of the selected client's recipient ID list by event already
-    //Push a new possible relationship into the approvedRecipientClient's list
-
+    //For all the clients in the DB
     for(let i = 0; i < this.allClients.length; i++)
     {
+      //If the client status is approved (&&)
+      //the ID is not the currently selected client's ID (&&)
+      //the client from DB is not in the list of the selected client's recipient ID list by event already
+      //Push a new possible relationship into the approvedRecipientClient's list
       if(this.allClients[i].clientStatus.statusDescription == StatusConstants.APPROVED &&
         this.allClients[i].clientID != this.client.clientID &&
         !recipientIDList.includes(this.allClients[i].clientID))

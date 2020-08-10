@@ -23,40 +23,21 @@ export class SurveyControlComponent implements OnInit {
     public ApiMapper: MapService) { }
 
   @Input() allSurveys: Array<Survey> = []
-  
-  public addSurveyFormGroup: FormGroup;
-  public editSurveyFormGroup: FormGroup;
-
-
-  public selectedSurvey: Survey;
-  public deletableSurveys: Array<Survey> = [];
-  public tagsInUse: Array<Survey> = [];
-  public allClients: Array<Client> = [];
 
   public postingNewSurvey: boolean = false;
   public updatingSurveyName: boolean = false;
   public deletingSurvey: boolean = false;
 
-  // Getters for form values for ease-of-use
-  get newSurvey() {
-    var formControlObj = this.addSurveyFormGroup.get('newSurvey') as FormControl
-    return formControlObj.value
-  }
-  get editedSurveyName() {
-    var formControlObj = this.editSurveyFormGroup.get('editSurvey') as FormControl
-    return formControlObj.value
-  }
+  public gatheringAllSurveys: boolean = false;
 
   ngOnInit(): void {
+    this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
+      this.gatheringAllSurveys = status;
+    });
     this.constructFormGroups();
   }
   private constructFormGroups() {
-    this.addSurveyFormGroup = this.formBuilder.group({
-      newSurvey: [null, Validators.nullValidator && Validators.pattern],
-    });
-    this.editSurveyFormGroup = this.formBuilder.group({
-      editSurvey: [null, Validators.nullValidator && Validators.pattern],
-    });
+
   }
   public deleteSurvey(survey: Survey)
   {
@@ -76,6 +57,6 @@ export class SurveyControlComponent implements OnInit {
   }
   public addNewSurvey()
   {
-    
+
   }
 }
