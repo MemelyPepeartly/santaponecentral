@@ -220,6 +220,7 @@ export class MapService {
     mappedEventType.eventDescription = event.eventDescription;
     mappedEventType.isActive = event.active;
     mappedEventType.removable = event.removable;
+    mappedEventType.immutable = event.immutable;
 
     return mappedEventType;
   }
