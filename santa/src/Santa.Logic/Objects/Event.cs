@@ -7,5 +7,7 @@ namespace Santa.Logic.Objects
         public Guid eventTypeID { get; set; }
         public string eventDescription { get; set; }
         public bool active { get; set; }
+        public bool removable { get; set; }
+
     }
 }
