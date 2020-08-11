@@ -986,11 +986,18 @@ namespace Santa.Data.Repository
             }
 
         }
-        public async Task CreateSurveyQuestionXrefAsync(Question logicQuestion)
+        public async Task CreateSurveyQuestionXrefAsync(Guid surveyID, Guid questionID)
         {
             try
             {
-                Data.Entities.SurveyQuestionXref contextQuestionXref = Mapper.MapQuestionXref(logicQuestion);
+                Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
+                {
+                    SurveyQuestionXrefId = Guid.NewGuid(),
+                    SurveyQuestionId = questionID,
+                    SurveyId = surveyID,
+                    SortOrder = "asc",
+                    IsActive = true
+                };
                 await santaContext.SurveyQuestionXref.AddAsync(contextQuestionXref);
             }
             catch (Exception e)
