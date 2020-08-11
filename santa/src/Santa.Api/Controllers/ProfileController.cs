@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using Santa.Logic.Objects;
 using System.Security.Claims;
+using Santa.Api.Models;
 
 namespace Santa.Api.Controllers
 {
@@ -50,6 +51,62 @@ namespace Santa.Api.Controllers
                 {
                     Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
 
+                    if (logicProfile == null)
+                    {
+                        return NoContent();
+                    }
+                    else
+                    {
+                        return Ok(logicProfile);
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
+        }
+        // GET: api/Profile/email@domain.com/Address
+        /// <summary>
+        /// Allows a client who owns the email and profile to update their address
+        /// 
+        /// Conditions: Have an Auth0 account, implying you have been approved
+        /// </summary>
+        /// <param clientID="clientID"></param>
+        /// <returns></returns>
+        [HttpPut("{clientID}/Address")]
+        [Authorize(Policy = "update:profile")]
+        public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressByEmailAsync(Guid clientID, [FromBody] ApiClientAddressModel newAddress)
+        {
+            try
+            {
+
+                // Gets the claims from the token
+                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+
+
+                // Checks to make sure the token's email is only getting the email for its own profile
+                if (claimEmail == logicClient.email)
+                {
+                    logicClient.address = new Address()
+                    {
+                        addressLineOne = newAddress.clientAddressLine1,
+                        addressLineTwo = newAddress.clientAddressLine2,
+                        city = newAddress.clientCity,
+                        state = newAddress.clientState,
+                        country = newAddress.clientCountry,
+                        postalCode = newAddress.clientPostalCode
+                    };
+                    await repository.UpdateClientByIDAsync(logicClient);
+                    await repository.SaveAsync();
+
+                    Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
                     if (logicProfile == null)
                     {
                         return NoContent();
