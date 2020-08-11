@@ -168,7 +168,7 @@ namespace Santa.Data.Repository
                 clientStatus = MapStatus(contextClient.ClientStatus),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapRelationProfileRecipientXref(s, s.RecipientClient)).ToList(),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
-                answersEditable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
+                editable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
             };
 
             return logicProfile;

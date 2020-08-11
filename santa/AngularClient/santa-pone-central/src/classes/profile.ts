@@ -13,7 +13,7 @@ export class Profile
     address: Address = new Address;
     recipients: Array<ProfileRecipient> = [];
     responses: Array<SurveyResponse> = [];
-    answersEditable: boolean;
+    editable: boolean;
 }
 export class ProfileRecipient
 {

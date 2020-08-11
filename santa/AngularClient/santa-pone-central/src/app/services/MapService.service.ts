@@ -71,7 +71,7 @@ export class MapService {
     mappedProfile.address.state = profile.address.state;
     mappedProfile.address.country = profile.address.country;
     mappedProfile.address.postalCode = profile.address.postalCode;
-    mappedProfile.answersEditable = profile.answersEditable;
+    mappedProfile.editable = profile.editable;
 
     profile.recipients.forEach(recipient => {
       mappedProfile.recipients.push(this.mapProfileRecipient(recipient));
