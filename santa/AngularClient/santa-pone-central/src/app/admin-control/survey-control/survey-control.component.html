@@ -22,7 +22,7 @@
 <!-- Questions on selected survey -->
 <mat-card class="api-card mat-elevation-z5" *ngIf="selectedSurvey.surveyID != undefined">
   <mat-card-header>
-      <mat-card-title>Questions for the {{selectedSurvey.surveyDescription}} survey</mat-card-title>
+      <mat-card-title>Questions for the {{selectedSurvey.surveyDescription}}</mat-card-title>
       <mat-card-subtitle>Questions asked on the selected survey</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -48,7 +48,7 @@
         <div>
             <button class="surveyButton"
             mat-raised-button
-            matTooltip="Remove this question from the {{ selectedSurvey.surveyDescription }} survey"
+            matTooltip="Remove this question from the {{ selectedSurvey.surveyDescription }}"
             (click)="removeQuestion(selectedQuestion)"
             [disabled]="selectedSurvey.surveyID == undefined || selectedQuestion.questionID == undefined"
             [matTooltipPosition]="'left'">Remove Question from survey</button>
@@ -60,7 +60,7 @@
 <!-- Selectable question list for questions that can be added to this survey (Needs API multiple response update) -->
 <mat-card class="api-card mat-elevation-z5" *ngIf="selectedSurvey.surveyID != undefined">
   <mat-card-header>
-      <mat-card-title>Questions able to be added to the {{selectedSurvey.surveyDescription}} survey</mat-card-title>
+      <mat-card-title>Questions able to be added to the {{selectedSurvey.surveyDescription}}</mat-card-title>
       <mat-card-subtitle>List of available questions</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
