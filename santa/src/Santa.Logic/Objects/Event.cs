@@ -8,6 +8,6 @@ namespace Santa.Logic.Objects
         public string eventDescription { get; set; }
         public bool active { get; set; }
         public bool removable { get; set; }
-
+        public bool immutable { get; set; }
     }
 }
