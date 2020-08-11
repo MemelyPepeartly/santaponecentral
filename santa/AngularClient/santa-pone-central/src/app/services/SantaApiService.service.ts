@@ -260,4 +260,7 @@ export class SantaApiDeleteService {
   deleteTag(id: string): Observable<any> {
     return this.http.delete(endpoint + 'Tag/' + id);
   }
+  deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> {
+    return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestions/" + surveyQuestionId);
+  }
 }
