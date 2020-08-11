@@ -9,11 +9,7 @@ mat-drawer-content
 }
 .sidenav-container
 {
-  height: fit-content;
-  width: fit-content;
-  text-align: center;
   background-color: white;
-  display: inline-block;
 }
 #component-div
 {
