@@ -16,7 +16,6 @@
                 <mat-chip *ngFor="let survey of allSurveys" [value]="survey" (click)="setSelectedSurvey(survey)"><span class="chipSpanText">{{survey.surveyDescription}}</span></mat-chip>
             </mat-chip-list>
         </div>
-        <mat-divider [inset]="true"></mat-divider>
     </mat-card-content>
 </mat-card>
 
@@ -34,7 +33,6 @@
               <mat-chip *ngFor="let question of selectedSurvey.surveyQuestions"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
           </mat-chip-list>
       </div>
-      <mat-divider [inset]="true"></mat-divider>
   </mat-card-content>
 </mat-card>
 
@@ -48,10 +46,9 @@
       <mat-toolbar>Questions</mat-toolbar>
 
       <div>
-          <mat-chip-list>
-              <mat-chip *ngFor="let question of sortAddableQuestions()"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
-          </mat-chip-list>
+        <mat-selection-list [(ngModel)]="selectedQuestions">
+          <mat-list-option *ngFor="let question of sortAddableQuestions()" [value]="question">{{ question.questionText }}</mat-list-option>
+        </mat-selection-list>
       </div>
-      <mat-divider [inset]="true"></mat-divider>
   </mat-card-content>
 </mat-card>
