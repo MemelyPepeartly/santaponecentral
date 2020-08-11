@@ -21,7 +21,8 @@ import { ClientResponse,
   ClientTagRelationshipsResponse,
   ClientTagRelationshipResponse,
   ClientIsAdminResponse,
-  ChangeSurveyResponseModel } from '../../classes/responseTypes';
+  ChangeSurveyResponseModel,
+  SurveyQuestionXrefsResponseModel} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -161,32 +162,44 @@ export class SantaApiPostService {
     return body || { };
   }
   postClient(client: ClientResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client', client);
+    return this.http.post(endpoint + 'Client', client).pipe(
+      map(this.extractData));
   }
   postClientRecipients(id: string, relationships: ClientRelationshipsResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/' + id + '/Recipients', relationships);
+    return this.http.post(endpoint + 'Client/' + id + '/Recipients', relationships).pipe(
+      map(this.extractData));
   }
   postClientSignup(signup: ClientSignupResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/Signup', signup);
+    return this.http.post(endpoint + 'Client/Signup', signup).pipe(
+      map(this.extractData));
   }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
-    return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
+    return this.http.post(endpoint + 'SurveyResponse', surveyResponse).pipe(
+      map(this.extractData));
   }
   postTag(tagResponse: TagResponse): Observable<any> {
-    return this.http.post(endpoint + 'Tag', tagResponse);
+    return this.http.post(endpoint + 'Tag', tagResponse).pipe(
+      map(this.extractData));
   }
   postTagsToClient(clientID: string, clientTagRelationships: ClientTagRelationshipsResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships);
+    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships).pipe(
+      map(this.extractData));
   }
   postMessage(messageResponse: MessageApiResponse): Observable<any> {
-    return this.http.post(endpoint + 'Message', messageResponse);
+    return this.http.post(endpoint + 'Message', messageResponse).pipe(
+      map(this.extractData));
   }
   postPasswordResetToClient(id: string): Observable<any> {
-    return this.http.post(endpoint + 'Client/' + id + "/Password", {});
+    return this.http.post(endpoint + 'Client/' + id + "/Password", {}).pipe(
+      map(this.extractData));
   }
   postAutoAssignmentRequest(): Observable<any> {
     // Returns a list of strings of added relationships
     return this.http.post(endpoint + 'Client/AutoAssign', {}).pipe(
+      map(this.extractData));
+  }
+  postQuestionsToSurvey(surveyID: string, questions: SurveyQuestionXrefsResponseModel): Observable<any> {
+    return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions).pipe(
       map(this.extractData));
   }
 }
@@ -261,6 +274,6 @@ export class SantaApiDeleteService {
     return this.http.delete(endpoint + 'Tag/' + id);
   }
   deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> {
-    return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestions/" + surveyQuestionId);
+    return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestion/" + surveyQuestionId);
   }
 }
