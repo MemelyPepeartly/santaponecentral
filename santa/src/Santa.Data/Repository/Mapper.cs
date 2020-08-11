@@ -347,7 +347,8 @@ namespace Santa.Data.Repository
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
                 senderCanView = contextSurveyQuestion.SenderCanView,
-                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList()
+                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList(),
+                removable = contextSurveyQuestion.SurveyResponse.Count == 0 && contextSurveyQuestion.SurveyQuestionOptionXref.Count == 0
             };
             return logicQuestion;
         }

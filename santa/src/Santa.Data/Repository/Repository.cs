@@ -936,6 +936,7 @@ namespace Santa.Data.Repository
             try
             {
                 List<Question> listLogicQuestion = (await santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyResponse)
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
                     .ToListAsync())
@@ -953,6 +954,7 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Question logicQuestion = Mapper.MapQuestion(await santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyResponse)
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
                     .FirstOrDefaultAsync(q => q.SurveyQuestionId == questionID));
