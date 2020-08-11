@@ -59,9 +59,14 @@ export class SurveyApiResponse {
     surveyOptionID?: string = null;
     responseText: string;
 }
+// Used for posting multiple questions to a survey relationship to add questions to a survey
+export class SurveyQuestionXrefsResponseModel {
+  questions: Array<string> = [];
+}
 export class ChangeSurveyResponseModel {
   responseText: string;
 }
+
 export class SurveySignupApiResponse {
     surveyID: string;
     surveyQuestionID: string;
