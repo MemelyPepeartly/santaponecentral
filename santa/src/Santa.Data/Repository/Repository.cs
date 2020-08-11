@@ -831,7 +831,12 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Option> listLogicSurveyOption = (await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).ToListAsync()).Select(Mapper.MapSurveyOption).ToList();
+                List<Option> listLogicSurveyOption = (await santaContext.SurveyOption
+                    .Include(s => s.SurveyQuestionOptionXref)
+                    .Include(s => s.SurveyResponse)
+                    .ToListAsync())
+                    .Select(Mapper.MapSurveyOption)
+                    .ToList();
                 return listLogicSurveyOption;
             }
             catch(Exception e)
@@ -844,7 +849,10 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).FirstOrDefaultAsync(so => so.SurveyOptionId == surveyOptionID));
+                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption
+                    .Include(s => s.SurveyResponse)
+                    .Include(s => s.SurveyQuestionOptionXref)
+                    .FirstOrDefaultAsync(so => so.SurveyOptionId == surveyOptionID));
                 return logicOption;
             }
             catch (Exception e)

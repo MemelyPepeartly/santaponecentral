@@ -386,15 +386,15 @@ namespace Santa.Data.Repository
         /// <summary>
         /// Takes a logic survey option and returns a context survey option
         /// </summary>
-        /// <param name="newSurveyOption"></param>
+        /// <param name="logicSurveyOption"></param>
         /// <returns></returns>
-        public static SurveyOption MapSurveyOption(Option newSurveyOption)
+        public static SurveyOption MapSurveyOption(Option logicSurveyOption)
         {
             Entities.SurveyOption contextSurveyOption = new SurveyOption()
             {
-                SurveyOptionId = newSurveyOption.surveyOptionID,
-                DisplayText = newSurveyOption.displayText,
-                SurveyOptionValue = newSurveyOption.surveyOptionValue
+                SurveyOptionId = logicSurveyOption.surveyOptionID,
+                DisplayText = logicSurveyOption.displayText,
+                SurveyOptionValue = logicSurveyOption.surveyOptionValue
             };
             return contextSurveyOption;
         }
@@ -404,7 +404,8 @@ namespace Santa.Data.Repository
             {
                 surveyOptionID = contextSurveyOption.SurveyOptionId,
                 displayText = contextSurveyOption.DisplayText,
-                surveyOptionValue = contextSurveyOption.SurveyOptionValue
+                surveyOptionValue = contextSurveyOption.SurveyOptionValue,
+                removable = contextSurveyOption.SurveyResponse.Count == 0
             };
             return logicSurveyOption;
         }
