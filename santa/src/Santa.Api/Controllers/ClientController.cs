@@ -468,40 +468,42 @@ namespace Santa.Api.Controllers
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
 
-                    try
+                    // If the client isn't awaiting or denied (meaning they have an auth account)
+                    if(updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
                     {
-                        // Gets the original client ID by the old email
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
-
-                        // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
-
-                        if(string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                        try
                         {
-                            return Ok(updatedClient);
+                            // Gets the original client ID by the old email
+                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+
+                            // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
+
+                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                            {
+                                return Ok(updatedClient);
+                            }
+                            // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
+                            else if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                            {
+                                targetClient.email = oldEmail;
+                                await repository.UpdateClientByIDAsync(targetClient);
+                                await repository.SaveAsync();
+                                return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
+                            }
+
+                            // Updates a client's email in Auth0
+                            await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
+
+                            // Sends the client a password change ticket
+                            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
+                            await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
                         }
-                        // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
-                        else if(string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                        catch (Exception e)
                         {
-                            targetClient.email = oldEmail;
-                            await repository.UpdateClientByIDAsync(targetClient);
-                            await repository.SaveAsync();
-                            return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
+                            throw e.InnerException;
                         }
-
-                        // Updates a client's email in Auth0
-                        await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
-
-                        // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
-                        await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
-
-                        return Ok(updatedClient);
-
                     }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException;
-                    }
+                    return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
