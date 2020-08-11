@@ -26,7 +26,7 @@ export class SurveyControlComponent implements OnInit {
   @Input() allSurveys: Array<Survey> = []
   @Input() allQuestions: Array<Question> = []
 
-  public selectedSurvey: Survey
+  public selectedSurvey: Survey = new Survey();
 
   public postingNewSurvey: boolean = false;
   public updatingSurveyName: boolean = false;
@@ -39,6 +39,8 @@ export class SurveyControlComponent implements OnInit {
       this.gatheringAllSurveys = status;
     });
     this.constructFormGroups();
+    console.log(this.selectedSurvey);
+    console.log(this.allSurveys);
   }
   private constructFormGroups() {
 
@@ -54,9 +56,7 @@ export class SurveyControlComponent implements OnInit {
   public setSelectedSurvey(survey: Survey)
   {
     this.selectedSurvey = survey;
-  }
-  public unsetSelectedSurvey()
-  {
+    console.log(this.selectedSurvey);
 
   }
   public addNewSurvey()

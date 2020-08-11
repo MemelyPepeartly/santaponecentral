@@ -21,7 +21,7 @@
 </mat-card>
 
 <!-- Questions on selected survey -->
-<mat-card class="api-card mat-elevation-z5">
+<mat-card class="api-card mat-elevation-z5" *ngIf="selectedSurvey.surveyID != undefined">
   <mat-card-header>
       <mat-card-title>Questions for the {{selectedSurvey.surveyDescription}} survey</mat-card-title>
       <mat-card-subtitle>Questions asked on the selected survey</mat-card-subtitle>
