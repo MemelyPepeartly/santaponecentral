@@ -28,7 +28,7 @@
         <app-tag-control [allTags]="allTags" *ngIf="tagControlSelected"></app-tag-control>
         <app-auto-assignment [allClients]="allClients" *ngIf="autoAssignControlSelected"></app-auto-assignment>
         <app-event-control [allEvents]="allEvents" *ngIf="eventControlSelected"></app-event-control>
-        <app-survey-control [allSurveys]="allSurveys" *ngIf="surveyControlSelected"></app-survey-control>
+        <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions" *ngIf="surveyControlSelected"></app-survey-control>
         <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
     </div>
 </div>

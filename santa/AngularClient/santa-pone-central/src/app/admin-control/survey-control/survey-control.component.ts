@@ -5,6 +5,7 @@ import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDe
 import { MapResponse, MapService } from 'src/app/services/mapService.service';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Client } from 'src/classes/client';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-survey-control',
@@ -52,7 +53,7 @@ export class SurveyControlComponent implements OnInit {
   }
   public setSelectedSurvey(survey: Survey)
   {
-
+    this.selectedSurvey = survey;
   }
   public unsetSelectedSurvey()
   {

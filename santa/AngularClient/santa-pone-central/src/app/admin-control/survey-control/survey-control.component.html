@@ -13,7 +13,7 @@
             <app-small-loading-spin *ngIf="gatheringAllSurveys || postingNewSurvey"></app-small-loading-spin>
 
             <mat-chip-list *ngIf="!postingNewSurvey && !gatheringAllSurveys">
-                <mat-chip *ngFor="let survey of allSurveys"><span class="chipSpanText">{{survey.surveyDescription}}</span></mat-chip>
+                <mat-chip *ngFor="let survey of allSurveys" [value]="survey" (click)="setSelectedSurvey(survey)"><span class="chipSpanText">{{survey.surveyDescription}}</span></mat-chip>
             </mat-chip-list>
         </div>
         <mat-divider [inset]="true"></mat-divider>
