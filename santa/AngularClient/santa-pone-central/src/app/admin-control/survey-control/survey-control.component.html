@@ -30,9 +30,30 @@
 
       <div>
           <mat-chip-list>
-              <mat-chip *ngFor="let question of selectedSurvey.surveyQuestions"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
+              <mat-chip *ngFor="let question of selectedSurvey.surveyQuestions" [value]="question" (click)="setSelectedQuestion(question)"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
           </mat-chip-list>
       </div>
+
+      <mat-divider [inset]="true"></mat-divider>
+
+      <app-small-loading-spin *ngIf="removingQuestion"></app-small-loading-spin>
+      <ng-container *ngIf="selectedQuestion.questionID != undefined">
+        <mat-divider [inset]="true"></mat-divider>
+        <div id="selectedEditChipDiv">
+            <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedQuestion.questionText }}</span></mat-chip>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <app-small-loading-spin *ngIf="removingQuestion"></app-small-loading-spin>
+        <div>
+            <button class="surveyButton"
+            mat-raised-button
+            matTooltip="Remove this question from the {{ selectedSurvey.surveyDescription }} survey"
+            (click)="removeQuestion(selectedQuestion)"
+            [disabled]="selectedSurvey.surveyID == undefined || selectedQuestion.questionID == undefined"
+            [matTooltipPosition]="'left'">Remove Question from survey</button>
+        </div>
+    </ng-container>
   </mat-card-content>
 </mat-card>
 

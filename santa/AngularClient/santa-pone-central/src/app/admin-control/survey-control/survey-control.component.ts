@@ -27,11 +27,13 @@ export class SurveyControlComponent implements OnInit {
   @Input() allQuestions: Array<Question> = []
 
   public selectedSurvey: Survey = new Survey();
+  public selectedQuestion: Question = new Question();
   public selectedQuestions: Array<Question> = [];
 
   public postingNewSurvey: boolean = false;
   public updatingSurveyName: boolean = false;
   public deletingSurvey: boolean = false;
+  public removingQuestion: boolean = false;
 
   public gatheringAllSurveys: boolean = false;
 
@@ -44,17 +46,20 @@ export class SurveyControlComponent implements OnInit {
   private constructFormGroups() {
 
   }
-  public deleteSurvey(survey: Survey)
+  public removeQuestion(question: Question)
   {
+    this.removingQuestion = true;
 
+    this.removingQuestion = false;
   }
-  public editSurvey()
+  public setSelectedQuestion(question: Question)
   {
-
+    this.selectedQuestion = question;
   }
   public setSelectedSurvey(survey: Survey)
   {
     this.selectedSurvey = survey;
+    this.selectedQuestion = new Question();
   }
   public addNewSurvey()
   {

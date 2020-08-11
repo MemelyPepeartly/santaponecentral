@@ -78,7 +78,6 @@
             </div>
             <mat-divider [inset]="true"></mat-divider>
 
-
             <app-small-loading-spin *ngIf="updatingTagName"></app-small-loading-spin>
             <form [formGroup]="editTagFormGroup" *ngIf="!gatheringAllTags && !updatingTagName">
                 <mat-form-field id="tagField">
@@ -88,8 +87,6 @@
                         placeholder="Ex. Happy Camper">
                 </mat-form-field>
             </form>
-
-
             <!--Tag Control buttons-->
             <div id="tagButtonContainer">
                 <button class="tagButton"
