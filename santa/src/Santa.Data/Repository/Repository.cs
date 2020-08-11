@@ -482,6 +482,7 @@ namespace Santa.Data.Repository
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
+                        .ThenInclude(e => e.ClientRelationXref)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(r => r.ChatMessage)
@@ -669,7 +670,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Event> eventList = (await santaContext.EventType.ToListAsync()).Select(Mapper.MapEvent).ToList();
+                List<Logic.Objects.Event> eventList = (await santaContext.EventType
+                    .Include(e => e.ClientRelationXref)
+                    .ToListAsync())
+                    .Select(Mapper.MapEvent)
+                    .ToList();
                 return eventList;
             }
             catch (Exception e)
@@ -681,7 +686,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType.FirstOrDefaultAsync(e => e.EventTypeId == eventID));
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
+                    .Include(e => e.ClientRelationXref)
+                    .FirstOrDefaultAsync(e => e.EventTypeId == eventID));
                 return logicEvent;
             }
             catch (Exception e)
@@ -693,7 +700,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType.FirstOrDefaultAsync(e => e.EventDescription == eventName));
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
+                    .Include(e => e.ClientRelationXref)
+                    .FirstOrDefaultAsync(e => e.EventDescription == eventName));
                 return logicEvent;
             }
             catch (Exception e)
