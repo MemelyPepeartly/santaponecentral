@@ -31,8 +31,71 @@
                         <p>{{ profile.address.addressLineTwo }}</p>
                         <p>{{ profile.address.city }}</p>
                         <p>{{ profile.address.state }}</p>
-                        <p>{{ profile.address.postalCode }}</p>
                         <p>{{ profile.address.country }}</p>
+                        <p>{{ profile.address.postalCode }}</p>
+                    </div>
+                    <button mat-raised-button *ngIf="!showAddressChangeForm && !loading && this.profile.editable && this.profile.clientID != undefined"
+                      (click)="showAddressChangeForm = !showAddressChangeForm">Change Address</button>
+                    <div id="addressChangeForm" *ngIf="showAddressChangeForm">
+                        <form [formGroup]="clientAddressFormGroup">
+
+                            <!-- Address line 1 -->
+                            <mat-form-field class="changeFormField">
+                                <input matInput formControlName="addressLine1" placeholder="Street Address">
+                            </mat-form-field>
+                            <div class="error" *ngIf="addressFormControls.addressLine1.errors && addressFormControls.addressLine1.touched">
+                                <div *ngIf="addressFormControls.addressLine1.errors.required">An address line is required</div>
+                                <div *ngIf="addressFormControls.addressLine1.errors.maxlength">First address line is too long. 50 Characters is the maximum</div>
+                            </div>
+
+                            <!-- Address line 2 -->
+                            <mat-form-field class="changeFormField">
+                                <input matInput #secondLine formControlName="addressLine2"
+                                    placeholder="Second Street Address (Optional)">
+                            </mat-form-field>
+                            <div class="error" *ngIf="addressFormControls.addressLine2.errors && addressFormControls.addressLine2.touched">
+                                <div *ngIf="addressFormControls.addressLine2.errors.maxlength">Second address line is too long. 50 Characters is the maximum</div>
+                            </div>
+
+                            <!-- City -->
+                            <mat-form-field class="changeFormField">
+                                <input matInput formControlName="city" placeholder="City">
+                            </mat-form-field>
+                            <div class="error" *ngIf="addressFormControls.city.errors && addressFormControls.city.touched">
+                                <div *ngIf="addressFormControls.city.errors.required">A city is required</div>
+                                <div *ngIf="addressFormControls.city.errors.maxlength">City field is too long. 50 Characters is the maximum</div>
+                            </div>
+
+                            <!-- State -->
+                            <mat-form-field class="changeFormField">
+                                <input matInput formControlName="state" placeholder="State">
+                            </mat-form-field>
+                            <div class="error" *ngIf="addressFormControls.state.errors && addressFormControls.state.touched">
+                                <div *ngIf="addressFormControls.state.errors.required">A state is required</div>
+                                <div *ngIf="addressFormControls.state.errors.maxlength">State line is too long. 50 Characters is the maximum</div>
+                            </div>
+
+                            <mat-form-field class="changeFormField">
+                                <mat-select name="country" formControlName="country" placeholder="Select a Country">
+                                    <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <!-- Postal Code -->
+                            <mat-form-field class="changeFormField">
+                                <input matInput formControlName="postalCode" placeholder="Postal Code">
+                            </mat-form-field>
+                            <div class="error" *ngIf="addressFormControls.postalCode.errors && addressFormControls.postalCode.touched">
+                              <div *ngIf="addressFormControls.postalCode.errors.required">A postal code is required</div>
+                              <div *ngIf="addressFormControls.postalCode.errors.maxlength">Postal code is too long. 25 Characters is the maximum</div>
+                              <div *ngIf="addressFormControls.postalCode.errors.pattern">Postal code can only have letters and numbers</div>
+                            </div>
+
+                            <div>
+                                <button mat-raised-button [disabled]="clientAddressFormGroup.invalid" (click)="submitNewAddress()">Submit Change</button>
+                                <button mat-raised-button (click)="showAddressChangeForm = !showAddressChangeForm">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -67,8 +130,8 @@
                             <div class="expansionPanelButtonContainer" *ngIf="editingResponse">
                               <app-small-loading-spin></app-small-loading-spin>
                             </div>
-                            <mat-divider *ngIf="profile.answersEditable" [inset]="true"></mat-divider>
-                            <div class="changeAnswerDiv" *ngIf="!editingResponse && profile.answersEditable" [formGroup]="clientResponseFormGroup">
+                            <mat-divider *ngIf="profile.editable" [inset]="true"></mat-divider>
+                            <div class="changeAnswerDiv" *ngIf="!editingResponse && profile.editable" [formGroup]="clientResponseFormGroup">
                               <mat-form-field class="inputForm">
                                 <textarea matInput placeholder="Edit Answer" formControlName="{{response.surveyResponseID}}"></textarea>
                               </mat-form-field>
