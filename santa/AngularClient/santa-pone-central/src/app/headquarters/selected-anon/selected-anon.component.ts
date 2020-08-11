@@ -170,7 +170,7 @@ export class SelectedAnonComponent implements OnInit {
       addressLine2: ['', [Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       city: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
-      postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
+      postalCode: ['', [Validators.required, Validators.maxLength(25)]],
       country: ['', Validators.required]
     });
     this.clientNameFormGroup = this.formBuilder.group({
@@ -494,7 +494,7 @@ export class SelectedAnonComponent implements OnInit {
     {
       await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
     }
-
+    this.actionTaken.emit(true);
     this.beingRemoved = false;
   }
   public async markAsComplete(anon: ClientSenderRecipientRelationship)

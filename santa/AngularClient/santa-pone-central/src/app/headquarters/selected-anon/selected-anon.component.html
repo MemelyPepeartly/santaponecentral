@@ -180,8 +180,8 @@
                 <p>{{ client.address.addressLineTwo }}</p>
                 <p>{{ client.address.city }}</p>
                 <p>{{ client.address.state }}</p>
-                <p>{{ client.address.postalCode }}</p>
                 <p>{{ client.address.country }}</p>
+                <p>{{ client.address.postalCode }}</p>
             </div>
             <button mat-raised-button *ngIf="!showAddressChangeForm" (click)="showAddressChangeForm = !showAddressChangeForm">Change Address</button>
             <div id="addressChangeForm" *ngIf="showAddressChangeForm">
