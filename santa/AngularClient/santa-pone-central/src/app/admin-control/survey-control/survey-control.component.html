@@ -35,8 +35,6 @@
       </div>
 
       <mat-divider [inset]="true"></mat-divider>
-
-      <app-small-loading-spin *ngIf="removingQuestion"></app-small-loading-spin>
       <ng-container *ngIf="selectedQuestion.questionID != undefined">
         <mat-divider [inset]="true"></mat-divider>
         <div id="selectedEditChipDiv">
@@ -70,6 +68,17 @@
         <mat-selection-list [(ngModel)]="selectedQuestions">
           <mat-list-option *ngFor="let question of sortAddableQuestions()" [value]="question">{{ question.questionText }}</mat-list-option>
         </mat-selection-list>
+      </div>
+      <mat-divider [inset]="true"></mat-divider>
+
+      <app-small-loading-spin *ngIf="addingQuestions"></app-small-loading-spin>
+      <div>
+          <button class="surveyButton"
+          mat-raised-button
+          matTooltip="Adds the selected questions to the {{ selectedSurvey.surveyDescription }}"
+          (click)="addQuestions()"
+          [disabled]="selectedQuestions.length == 0"
+          [matTooltipPosition]="'left'">Add questions to the {{ selectedSurvey.surveyDescription }}</button>
       </div>
   </mat-card-content>
 </mat-card>

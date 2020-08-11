@@ -6,6 +6,7 @@ import { MapResponse, MapService } from 'src/app/services/mapService.service';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Client } from 'src/classes/client';
 import { ThrowStmt } from '@angular/compiler';
+import { SurveyQuestionXrefsResponseModel } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-survey-control',
@@ -34,6 +35,7 @@ export class SurveyControlComponent implements OnInit {
   public updatingSurveyName: boolean = false;
   public deletingSurvey: boolean = false;
   public removingQuestion: boolean = false;
+  public addingQuestions: boolean = false;
 
   public gatheringAllSurveys: boolean = false;
 
@@ -46,9 +48,14 @@ export class SurveyControlComponent implements OnInit {
   private constructFormGroups() {
 
   }
-  public removeQuestion(question: Question)
+  public async removeQuestion(question: Question)
   {
     this.removingQuestion = true;
+
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiDelete.deleteQuestionRelationFromSurvey(this.selectedSurvey.surveyID, question.questionID).toPromise());
+    await this.gatherer.gatherAllQuestions();
+    await this.gatherer.gatherAllSurveys();
+    this.selectedQuestion = new Question();
 
     this.removingQuestion = false;
   }
@@ -61,9 +68,17 @@ export class SurveyControlComponent implements OnInit {
     this.selectedSurvey = survey;
     this.selectedQuestion = new Question();
   }
-  public addNewSurvey()
+  public async addQuestions()
   {
+    this.addingQuestions = true;
+    let response: SurveyQuestionXrefsResponseModel = new SurveyQuestionXrefsResponseModel();
+    this.selectedQuestions.forEach((question: Question) => {
+      response.questions.push(question.questionID);
+    })
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiPost.postQuestionsToSurvey(this.selectedSurvey.surveyID, response).toPromise());
+    await this.gatherer.gatherAllSurveys();
 
+    this.addingQuestions = false;
   }
   public sortAddableQuestions() : Array<Question>
   {
