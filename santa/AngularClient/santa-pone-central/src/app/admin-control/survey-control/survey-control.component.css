@@ -6,7 +6,7 @@ mat-chip-list
 {
     margin: 5px;
 }
-.surveyText
+.chipSpanText
 {
     white-space: nowrap;
     overflow: hidden;

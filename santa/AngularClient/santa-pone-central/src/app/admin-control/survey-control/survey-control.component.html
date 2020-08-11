@@ -1,8 +1,8 @@
 <!-- Add global survey card-->
 <mat-card class="api-card mat-elevation-z5">
     <mat-card-header>
-        <mat-card-title>Add Survey</mat-card-title>
-        <mat-card-subtitle>Add surveys to the api</mat-card-subtitle>
+        <mat-card-title>Surveys</mat-card-title>
+        <mat-card-subtitle>Surveys that exist that are available on signup</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
 
@@ -13,13 +13,29 @@
             <app-small-loading-spin *ngIf="gatheringAllSurveys || postingNewSurvey"></app-small-loading-spin>
 
             <mat-chip-list *ngIf="!postingNewSurvey && !gatheringAllSurveys">
-                <mat-chip *ngFor="let survey of allSurveys"><span class="surveyText">{{survey.surveyDescription}}</span></mat-chip>
+                <mat-chip *ngFor="let survey of allSurveys"><span class="chipSpanText">{{survey.surveyDescription}}</span></mat-chip>
             </mat-chip-list>
         </div>
         <mat-divider [inset]="true"></mat-divider>
     </mat-card-content>
 </mat-card>
 
-<!-- Questions that are part of this survey -->
+<!-- Questions on selected survey -->
+<mat-card class="api-card mat-elevation-z5">
+  <mat-card-header>
+      <mat-card-title>Questions for the {{selectedSurvey.surveyDescription}} survey</mat-card-title>
+      <mat-card-subtitle>Questions asked on the selected survey</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+      <mat-toolbar>Questions</mat-toolbar>
+
+      <div>
+          <mat-chip-list>
+              <mat-chip *ngFor="let question of selectedSurvey.surveyQuestions"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
+          </mat-chip-list>
+      </div>
+      <mat-divider [inset]="true"></mat-divider>
+  </mat-card-content>
+</mat-card>
 
 <!-- Selectable question list for questions that can be added to this survey (Needs API multiple response update) -->

@@ -24,6 +24,8 @@ export class SurveyControlComponent implements OnInit {
 
   @Input() allSurveys: Array<Survey> = []
 
+  public selectedSurvey: Survey
+
   public postingNewSurvey: boolean = false;
   public updatingSurveyName: boolean = false;
   public deletingSurvey: boolean = false;
