@@ -315,10 +315,15 @@ namespace Santa.Data.Repository
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
                 surveyQuestions = contextSurvey.SurveyQuestionXref.Select(q => Mapper.MapQuestion(q.SurveyQuestion)).ToList(),
+                removable = contextSurvey.SurveyQuestionXref.Count == 0
             };
             return logicSurvey;
         }
-
+        /// <summary>
+        /// Maps a logic survey to an entity survey type
+        /// </summary>
+        /// <param name="logicSurvey"></param>
+        /// <returns></returns>
         public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
         {
             Data.Entities.Survey contextSurvey = new Entities.Survey()

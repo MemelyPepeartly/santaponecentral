@@ -10,5 +10,7 @@ namespace Santa.Logic.Objects
         public string surveyDescription { get; set; }
         public bool active { get; set; }
         public List<Question> surveyQuestions { get; set; }
+        public bool removable { get; set; }
+
     }
 }
