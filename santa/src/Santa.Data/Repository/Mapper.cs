@@ -283,7 +283,7 @@ namespace Santa.Data.Repository
                 eventTypeID = contextEventType.EventTypeId,
                 eventDescription = contextEventType.EventDescription,
                 active = contextEventType.IsActive,
-                removable = contextEventType.ClientRelationXref.Count == 0,
+                removable = contextEventType.ClientRelationXref.Count == 0 && contextEventType.Survey.Count == 0,
                 immutable = contextEventType.EventDescription == Constants.CARD_EXCHANGE_EVENT || contextEventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT
             };
             return logicEvent;

@@ -483,6 +483,8 @@ namespace Santa.Data.Repository
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
                         .ThenInclude(e => e.ClientRelationXref)
+                    .Include(r => r.EventType)
+                        .ThenInclude(e => e.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(r => r.ChatMessage)
@@ -672,6 +674,7 @@ namespace Santa.Data.Repository
             {
                 List<Logic.Objects.Event> eventList = (await santaContext.EventType
                     .Include(e => e.ClientRelationXref)
+                    .Include(e => e.Survey)
                     .ToListAsync())
                     .Select(Mapper.MapEvent)
                     .ToList();
@@ -688,6 +691,7 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
                     .Include(e => e.ClientRelationXref)
+                    .Include(e => e.Survey)
                     .FirstOrDefaultAsync(e => e.EventTypeId == eventID));
                 return logicEvent;
             }
@@ -701,6 +705,7 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
+                    .Include(e => e.Survey)
                     .Include(e => e.ClientRelationXref)
                     .FirstOrDefaultAsync(e => e.EventDescription == eventName));
                 return logicEvent;
