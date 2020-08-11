@@ -98,6 +98,7 @@ export class SelectedAnonComponent implements OnInit {
   public showReenlistedSuccess: boolean = false;
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
+  public showSentPasswordResetSuccess: boolean = false;
 
   /* FUNCTIONAL COMPONENT BOOLEANS */
   public showFiller: boolean = false;
@@ -357,8 +358,9 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.sendingReset = true;
 
-    this.SantaApiPost.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+    await this.SantaApiPost.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
 
+    this.showSentPasswordResetSuccess = true;
     this.sendingReset = false;
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
