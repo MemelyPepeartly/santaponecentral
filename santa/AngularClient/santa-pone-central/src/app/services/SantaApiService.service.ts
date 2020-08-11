@@ -202,40 +202,44 @@ export class SantaApiPutService {
     return body || { };
   }
   putClientAddress(id: string, updatedClient: ClientAddressResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient).pipe(map(this.extractData));
   }
   putClientEmail(id: string, updatedClient: ClientEmailResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient).pipe(map(this.extractData));
   }
   putClientNickname(id: string, updatedClient: ClientNicknameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient).pipe(map(this.extractData));
   }
   putClientName(id: string, updatedClient: ClientNameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient).pipe(map(this.extractData));
   }
   putClientIsAdmin(id: string, updatedClient: ClientIsAdminResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient).pipe(map(this.extractData));
   }
   putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel);
+    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel).pipe(map(this.extractData));
   }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
   }
   putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
-    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
+    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage).pipe(map(this.extractData));
   }
   putMessageReadAll(messages: MessageApiReadAllResponse): Observable<any> {
-    return this.http.put(endpoint + 'Message/ReadAll', messages);
+    return this.http.put(endpoint + 'Message/ReadAll', messages).pipe(map(this.extractData));
   }
   putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
-    return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
+    return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel).pipe(map(this.extractData));
   }
   putResponse(surveyResponseID: string, responseModel: ChangeSurveyResponseModel): Observable<any> {
-    return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel);
+    return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel).pipe(map(this.extractData));
+  }
+  putProfileAddress(clientID: string, updatedAddress: ClientAddressResponse): Observable<any> {
+    // Endpoints specifically has security checks to make sure data is secure in address change call
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Address', updatedAddress).pipe(map(this.extractData));
   }
 }
 @Injectable({
