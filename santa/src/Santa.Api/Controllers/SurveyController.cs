@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models;
+using Santa.Api.Models.Survey_Question_Models;
 using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
@@ -144,6 +145,31 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        // POST: api/Survey/5/SurveyQuestion
+        /// <summary>
+        /// Delete's a question within a survey by deleting it's Xref relationship.
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="questionsToAdd"></param>
+        /// <returns></returns>
+        [HttpPost("{surveyID}/SurveyQuestion")]
+        [Authorize(Policy = "update:surveys")]
+        public async Task<ActionResult<Logic.Objects.Survey>> AddSurveyQuestionRelation(Guid surveyID, [FromBody] ApiQuestionsToSurveyModel questionsToAdd)
+        {
+            try
+            {
+                foreach(Guid questionID in questionsToAdd.questions)
+                {
+                    await repository.CreateSurveyQuestionXrefAsync(surveyID, questionID);
+                }
+                await repository.SaveAsync();
+                return Ok(await repository.GetSurveyByID(surveyID));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
 
         // PUT: api/Survey/5
         /// <summary>
@@ -209,15 +235,15 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // DELETE: api/Survey/5
+        // DELETE: api/Survey/5/SurveyQuestion/5
         /// <summary>
         /// Delete's a question within a survey by deleting it's Xref relationship.
         /// </summary>
         /// <param name="surveyID"></param>
         /// <param name="surveyQuestionID"></param>
         /// <returns></returns>
-        [HttpDelete("{surveyID}/SurveyQuestions/{surveyQuestionID}")]
-        [Authorize(Policy = "delete:surveys")]
+        [HttpDelete("{surveyID}/SurveyQuestion/{surveyQuestionID}")]
+        [Authorize(Policy = "update:surveys")]
         public async Task<ActionResult<Logic.Objects.Survey>> DeleteSurveyQuestionRelation(Guid surveyID, Guid surveyQuestionID)
         {
             try
