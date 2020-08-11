@@ -219,6 +219,7 @@ export class MapService {
     mappedEventType.eventTypeID = event.eventTypeID;
     mappedEventType.eventDescription = event.eventDescription;
     mappedEventType.isActive = event.active;
+    mappedEventType.removable = event.removable;
 
     return mappedEventType;
   }
@@ -230,6 +231,8 @@ export class MapService {
     mappedSurvey.eventTypeID = survey.eventTypeID;
     mappedSurvey.surveyDescription = survey.surveyDescription;
     mappedSurvey.active = survey.active;
+    mappedSurvey.removable = survey.removable;
+
     survey.surveyQuestions.forEach(question => {
       mappedSurvey.surveyQuestions.push(this.mapQuestion(question));
     });
@@ -244,6 +247,8 @@ export class MapService {
     mappedQuestion.questionText = question.questionText;
     mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
     mappedQuestion.senderCanView = question.senderCanView;
+    mappedQuestion.removable = question.removable;
+
     question.surveyOptionList.forEach(surveyOption => {
       mappedQuestion.surveyOptionList.push(this.mapSurveyOption(surveyOption));
     });
@@ -257,6 +262,7 @@ export class MapService {
     mappedSurveyOption.surveyOptionID = surveyOption.surveyOptionID;
     mappedSurveyOption.displayText = surveyOption.displayText;
     mappedSurveyOption.surveyOptionValue = surveyOption.surveyOptionValue;
+    mappedSurveyOption.removable = surveyOption.removable;
 
     return mappedSurveyOption;
   }
