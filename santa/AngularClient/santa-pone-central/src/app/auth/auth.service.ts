@@ -20,6 +20,9 @@ export class AuthService {
 
   private isAdminSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
   public isAdmin = this.isAdminSubject$.asObservable();
+
+  private isDevSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
+  public isDev = this.isDevSubject$.asObservable();
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
@@ -67,10 +70,17 @@ export class AuthService {
         if(user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.ADMIN))
         {
           this.isAdminSubject$.next(true);
+          this.isDevSubject$.next(false);
         }
         else if (user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.USER))
         {
           this.isAdminSubject$.next(false);
+          this.isDevSubject$.next(false);
+        }
+        else if (user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.DEVELOPER))
+        {
+          this.isDevSubject$.next(true);
+          this.isAdminSubject$.next(true);
         }
       })
     );
