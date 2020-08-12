@@ -30,7 +30,7 @@
 
       <div>
           <mat-chip-list>
-              <mat-chip *ngFor="let question of selectedSurvey.surveyQuestions" [value]="question" (click)="setSelectedQuestion(question)"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
+              <mat-chip *ngFor="let question of sortRemovableQuestions()" [value]="question" (click)="setSelectedQuestion(question)"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
           </mat-chip-list>
       </div>
 

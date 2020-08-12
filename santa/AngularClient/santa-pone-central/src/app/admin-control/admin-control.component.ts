@@ -7,6 +7,7 @@ import { EventType } from 'src/classes/eventType';
 import { GathererService } from '../services/gatherer.service';
 import { TagControlComponent } from './tag-control/tag-control.component';
 import { Client } from 'src/classes/client';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-admin-control',
@@ -16,12 +17,16 @@ import { Client } from 'src/classes/client';
 export class AdminControlComponent implements OnInit
 {
 
-  constructor(public SantaApiGet: SantaApiGetService,
+  constructor(public auth: AuthService,
+    public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
     public gatherer: GathererService,
     public ApiMapper: MapService) { }
+
+  public profile: any;
+  public isDev: boolean;
 
   public allTags: Array<Tag> = [];
   public allEvents: Array<EventType> = [];
@@ -41,7 +46,7 @@ export class AdminControlComponent implements OnInit
     this.allEvents = [];
     this.allQuestions = [];
     this.allSurveys = [];
-    
+
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
@@ -57,6 +62,15 @@ export class AdminControlComponent implements OnInit
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
+
+    // Auth
+    this.auth.userProfile$.subscribe(data => {
+      this.profile = data;
+    });
+    this.auth.isDev.subscribe((status: boolean) => {
+      this.isDev = status;
+    });
+
     await this.gatherer.gatherAllClients();
     await this.gatherer.gatherAllTags();
     await this.gatherer.gatherAllEvents();

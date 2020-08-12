@@ -13,14 +13,17 @@
             <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
+            [disabled]="!isDev"
             (click)="selectEventControl()">Events</mat-list-item>
             <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
+            [disabled]="!isDev"
             (click)="selectSurveyControl()">Surveys</mat-list-item>
             <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
+            [disabled]="!isDev"
             (click)="selectQuestionControl()">Questions</mat-list-item>
         </mat-nav-list>
     </div>

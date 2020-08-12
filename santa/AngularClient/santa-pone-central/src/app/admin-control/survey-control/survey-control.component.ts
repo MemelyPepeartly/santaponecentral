@@ -55,6 +55,7 @@ export class SurveyControlComponent implements OnInit {
     this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiDelete.deleteQuestionRelationFromSurvey(this.selectedSurvey.surveyID, question.questionID).toPromise());
     await this.gatherer.gatherAllQuestions();
     await this.gatherer.gatherAllSurveys();
+
     this.selectedQuestion = new Question();
 
     this.removingQuestion = false;
@@ -84,11 +85,15 @@ export class SurveyControlComponent implements OnInit {
   {
     let questionsThatCanBeAdded: Array<Question>= []
     this.allQuestions.forEach((question: Question) => {
-      if(!this.selectedSurvey.surveyQuestions.some((thing: Question) => {return thing.questionID == question.questionID}))
+      if(!this.selectedSurvey.surveyQuestions.some((questionObj: Question) => {return questionObj.questionID == question.questionID}))
       {
         questionsThatCanBeAdded.push(question);
       }
     });
     return questionsThatCanBeAdded;
+  }
+  public sortRemovableQuestions() : Array<Question>
+  {
+    return this.selectedSurvey.surveyQuestions.filter((question: Question) => {return question.removable})
   }
 }
