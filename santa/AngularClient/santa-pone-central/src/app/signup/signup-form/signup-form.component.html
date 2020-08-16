@@ -135,13 +135,12 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Done</ng-template>
-                <p *ngIf="showSomethingWrong==false">Verify your information and change anything as necessary. When you
+                <p *ngIf="!showSomethingWrong">Verify your information and change anything as necessary. When you
                     are ready, click "Submit"</p>
-                <p *ngIf="showSomethingWrong==true">Something is wrong with the information provided that doesnt allow
-                    it to be put into the database.</p>
-                <p>Double check your information and try submitting again</p>
+                <span class="error" *ngIf="showSomethingWrong">Double check you information, and make sure you did not use an email that is already in queue for approval or tied to an existing account</span>
+                <p class="error" *ngIf="showSomethingWrong">Once you have checked, try submitting again</p>
                 <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
-                <div *ngIf="showSpinner==false && showFinished==false">
+                <div *ngIf="!showSpinner && !showFinished">
                     <button mat-raised-button matStepperPrevious>Back</button>
                     <button mat-raised-button type="submit" (click)="onSubmit()">Submit</button>
                 </div>
