@@ -23,7 +23,7 @@ import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-an
 export class CorrespondenceComponent implements OnInit {
 
   constructor(public SantaApiGet: SantaApiGetService,
-    public Auth: AuthService, 
+    public Auth: AuthService,
     public SantaApiPost: SantaApiPostService,
     public SantaApiPut: SantaApiPutService,
     public ChatService: ChatService,
@@ -37,7 +37,7 @@ export class CorrespondenceComponent implements OnInit {
   public profile: any;
   public subject: Client = new Client();
   public adminSenderMeta: ClientMeta = new ClientMeta();
-  
+
   public allChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
@@ -47,6 +47,7 @@ export class CorrespondenceComponent implements OnInit {
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
   public puttingMessage: boolean = false;
+  public refreshing: boolean = false;
   public initializing: boolean;
 
   public showClientCard: boolean = false;
@@ -72,7 +73,7 @@ export class CorrespondenceComponent implements OnInit {
     this.adminSenderMeta.clientName = this.subject.clientName
     this.adminSenderMeta.clientNickname = this.subject.clientNickname
 
-    
+
     // Boolean subscribes
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
       this.gettingAllChats = status;
@@ -84,7 +85,7 @@ export class CorrespondenceComponent implements OnInit {
     this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
       this.gettingSelectedHistory = status;
     });
-    
+
     /* -- Data subscribes -- */
     // All chats
     this.ChatService.allChats.subscribe((historyArray: Array<MessageHistory>) => {
@@ -95,7 +96,7 @@ export class CorrespondenceComponent implements OnInit {
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray;
     });
-    
+
     // Selected history
     this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
       this.selectedHistory = history;
@@ -104,22 +105,22 @@ export class CorrespondenceComponent implements OnInit {
 
     await this.gatherer.gatherAllEvents();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
-    
+
   }
   public sortByEvent(eventType: EventType)
-  { 
+  {
     return this.allChats.filter((history: MessageHistory) => {
       return history.eventType.eventTypeID == eventType.eventTypeID;
     });
   }
   public sortByUnread()
-  {   
+  {
     return this.allChats.filter((history: MessageHistory) => {
       return history.adminUnreadCount > 0;
     });
   }
   public sortByGeneral()
-  {   
+  {
     return this.allChats.filter((history: MessageHistory) => {
       return history.relationXrefID == null;
     });
@@ -132,11 +133,11 @@ export class CorrespondenceComponent implements OnInit {
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
     this.inputComponent.clearForm();
     this.updateOnClickaway = true;
-    
+
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
-    
+
   }
   public async readAll()
   {
@@ -155,7 +156,7 @@ export class CorrespondenceComponent implements OnInit {
 
     //Updates all the chats to update the read messages on that particular chat against all the others for sorting
     await this.ChatService.gatherAllChats(this.subject.clientID, true);
-    
+
   }
   public async hideWindow()
   {
@@ -176,7 +177,7 @@ export class CorrespondenceComponent implements OnInit {
         this.updateOnClickaway = false;
       }
     }
-    
+
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
@@ -185,10 +186,10 @@ export class CorrespondenceComponent implements OnInit {
 
     var data = await this.SantaApiGet.getClientByClientID(meta.clientID).toPromise();
     var clientThing = this.mapper.mapClient(data);
-    
+
     this.selectedAnon = clientThing
     this.selectedAnonComponent.setup();
-    
+
     this.loadingClient = false;
   }
   public async openSelectedChat(history: MessageHistory)
@@ -207,5 +208,12 @@ export class CorrespondenceComponent implements OnInit {
     this.updateOnClickaway = true
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
+  }
+  public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
+  {
+    this.refreshing = true;
+    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    this.refreshing = false;
   }
 }
