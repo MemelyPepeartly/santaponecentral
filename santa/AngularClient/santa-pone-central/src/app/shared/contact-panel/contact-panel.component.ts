@@ -61,11 +61,6 @@ export class ContactPanelComponent implements OnInit{
       return '<a style="color: #123765;" href="' + url + '"target="_blank">' + url + '</a>';
     }))
   }
-  parseElement(htmlString: string)
-  {
-    let parser = new DOMParser();
-    return parser.parseFromString(htmlString, 'text/html');
-  }
   public scrollToBottom(): void {
     try {
         this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
