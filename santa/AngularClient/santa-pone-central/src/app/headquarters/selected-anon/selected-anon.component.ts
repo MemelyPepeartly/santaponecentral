@@ -508,8 +508,6 @@ export class SelectedAnonComponent implements OnInit {
     response.completed = true;
     response.eventTypeID = anon.clientEventTypeID;
     response.recipientID = anon.clientID;
-    console.log("Client ID: " + this.client.clientID);
-    console.log("Recipient ID: " + anon.clientID);
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
 
