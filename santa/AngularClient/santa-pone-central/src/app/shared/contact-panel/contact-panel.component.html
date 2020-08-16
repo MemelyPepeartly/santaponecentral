@@ -6,6 +6,12 @@
             <mat-card-subtitle>Chat history for {{ selectedHistory.conversationClient.clientNickname }}</mat-card-subtitle>
             <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription != undefined">Assigned {{selectedHistory.assignmentRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
             <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription == undefined">General Coversation History</mat-card-subtitle>
+            <mat-card-subtitle>
+              <button mat-raised-button (click)="manualRefreshChat()" [disabled]="refreshing">
+                <mat-icon>refresh</mat-icon>
+                Refresh Chat
+              </button>
+            </mat-card-subtitle>
 
         </mat-card-header>
         <mat-card-content>
@@ -37,13 +43,13 @@
                                 [disabled]="markingRead"
                                 (click)="markRead(message)">
                                 <mat-icon mat-icon-button>check</mat-icon>
-                            </button> 
+                            </button>
                         </div>
                     </div>
                     <span class="readSpan" *ngIf="showRead(message)"
                     [ngClass]="{'sent-read' : message.subjectMessage,
-                    'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span> 
-                    
+                    'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span>
+
                 </ng-container>
             </div>
         </mat-card-content>

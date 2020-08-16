@@ -17,16 +17,18 @@ export class ContactPanelComponent implements OnInit{
     public SantaApiPut: SantaApiPutService,
     public responseMapper: MapResponse,
     public auth: AuthService) { }
-  
+
   // Boolean value for passing whether or not the emit is a soft update or not
   @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
   @Input() onProfile: boolean
   @Input() showLoading: boolean = false;
   @Input() showActionProgressBar: boolean = false;
-  
+  @Input() refreshing: boolean = false;
+
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 
   public isAdmin: boolean;
@@ -36,7 +38,7 @@ export class ContactPanelComponent implements OnInit{
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
-    
+
   }
   public totalHistory() : Array<Message>
   {
@@ -49,12 +51,17 @@ export class ContactPanelComponent implements OnInit{
     });
     return allMessages.sort((a: Message, b: Message) => {
       return a.dateTimeSent.getTime() - b.dateTimeSent.getTime();
-    }); 
+    });
   }
   public scrollToBottom(): void {
     try {
         this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
     } catch(err) { }
+  }
+  public async manualRefreshChat()
+  {
+    // Lets any parent components know that the user clicked manual refresh
+    this.manualRefreshClickedEvent.emit(true);
   }
   public async markRead(message: Message)
   {
