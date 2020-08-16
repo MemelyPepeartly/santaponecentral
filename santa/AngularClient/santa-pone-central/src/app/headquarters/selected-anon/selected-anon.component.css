@@ -20,6 +20,10 @@ mat-panel-description
     display: inline-block;
     text-align: right;
 }
+app-small-loading-spin
+{
+  display: block;
+}
 #addressChangeForm
 {
     display: block;

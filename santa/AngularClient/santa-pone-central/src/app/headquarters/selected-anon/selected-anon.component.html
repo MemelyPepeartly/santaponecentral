@@ -473,7 +473,7 @@
                     <p>Assign the Anon a proper or different Holiday Nickname</p>
                 </mat-card-subtitle>
 
-                <app-loading-spin *ngIf="showNickSpinner"></app-loading-spin>
+                <app-small-loading-spin *ngIf="showNickSpinner"></app-small-loading-spin>
                 <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
@@ -485,17 +485,18 @@
             </div>
 
             <mat-divider [inset]="true"></mat-divider>
-            <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+            <div class="optionDiv">
+              <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
-            <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
-            <div class="optionDiv" *ngIf="!sendingReset">
-                <button mat-raised-button
-                matTooltip="Send a password reset email to the agent to reset their password"
-                [matTooltipPosition]="'right'"
-                (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
-                </mat-card-subtitle>
+              <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
+              <button mat-raised-button
+              matTooltip="Send a password reset email to the agent to reset their password"
+              [matTooltipPosition]="'right'"
+              [disabled]="sendingReset"
+              (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
+              <mat-card-subtitle class="optionSub">
+                  <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
+              </mat-card-subtitle>
             </div>
 
             <mat-divider [inset]="true"></mat-divider>
