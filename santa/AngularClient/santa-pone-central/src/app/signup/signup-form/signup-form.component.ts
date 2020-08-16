@@ -75,7 +75,7 @@ export class SignupFormComponent implements OnInit {
     this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
       this.events = events;
     });
-    
+
     // API Call for getting surveys
     this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
       this.surveys = surveys;
@@ -83,10 +83,10 @@ export class SignupFormComponent implements OnInit {
     await this.gatherer.gatherAllStatuses();
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllSurveys();
-    
+
     this.isDoneLoading = true;
   }
-  get clientName() 
+  get clientName()
   {
     var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
     var formControlLast = this.clientInfoFormGroup.get('lastName') as FormControl
@@ -98,7 +98,7 @@ export class SignupFormComponent implements OnInit {
     var formControlEmail = this.clientInfoFormGroup.get('email') as FormControl
     return formControlEmail.value;
   }
-  get clientAddress() 
+  get clientAddress()
   {
     let address: Address = new Address();
     var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
@@ -166,16 +166,21 @@ export class SignupFormComponent implements OnInit {
         response = new SurveyApiResponse();
       }
     });
-    
+
     // Post client with answers
-    await this.SantaPost.postClientSignup(newClient).toPromise();
+    this.SantaPost.postClientSignup(newClient).subscribe((res) => {
+      this.clientInfoFormGroup.reset();
+      this.clientAddressFormGroup.reset();
 
-    this.clientInfoFormGroup.reset();
-    this.clientAddressFormGroup.reset();
+      this.showSpinner = false;
+      this.showFinished = true;
+    },(err) => {
+      console.log("Something went wrong on signup. Error is as follows: ");
+      console.log(err);
 
-    this.showSomethingWrong = false;
-    this.showSpinner = false;
-    this.showFinished = true;
+      this.showSpinner = false;
+      this.showSomethingWrong = true
+    });
   }
   public resetSubmitBools()
   {
