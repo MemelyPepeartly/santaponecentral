@@ -3,7 +3,7 @@ mat-card
     vertical-align: top;
     text-align: left;
 }
-.list-card 
+.list-card
 {
     width: 100%;
     min-width: 350px;
@@ -74,12 +74,12 @@ mat-card
     padding: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
-    
+
 }
 .recieved-message
 {
     background-color: #E9E9EB;
-    color: black;
+    color: rgb(70 70 70);;
     text-align: left;
     margin-right: auto;
     margin-left: 10px;
