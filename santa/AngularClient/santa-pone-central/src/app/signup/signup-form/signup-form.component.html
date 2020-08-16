@@ -85,7 +85,7 @@
                     </div>
 
                     <mat-form-field class="addressFormField">
-                        <mat-select name="country" formControlName="country" placeholder="Select a Country"> 
+                        <mat-select name="country" formControlName="country" placeholder="Select a Country">
                             <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -150,5 +150,32 @@
     </div>
 </div>
 <div *ngIf="showSpinner==false && showFinished==true" id="backHomeBtn">
-    <button mat-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>
+  <div class="small-box mat-elevation-z8 contentBox">
+    <mat-toolbar>Signup Successful!</mat-toolbar>
+
+    <h2>So what now?</h2>
+    <p>
+      Just like in events past, SantaPone and the organizers will look over your application, and make sure everything is good to go!
+      If everything is as it should be, you will be approved for the event, and recieve 2 emails, one as a welcome, and one with a link to set
+      your password.
+    </p>
+    <h2>After I set my password?</h2>
+    <p>
+      After you set your password, you can log in with your email you signed up with, and the password you set to be able to view your profile.
+      Before you are given as an assignment to someone, you can change what your answers to the surveys were, and any address details in you need.
+    </p>
+    <h2>How will I know when I recieved an assignment?</h2>
+    <p>
+      Once an event organizer gives you an assignment, you will recieve an email notification letting you know that you have recieved new
+      assignments to keep you informed, which are viewable on your profile along with chat histories related to each assignment.
+    </p>
+    <h2>Contacting the event organizers?</h2>
+    <p>
+      Every profile, once accepted has a "General History" chat that you can discuss any questions you might have in a way that is easy for both you,
+      and them.
+
+      If you have any other questions before you are accepted and have an account, however, feel free to reach out to <a href="mailto: mlpsantapone@gmail.com">mlpsantapone@gmail.com</a>!
+     </p>
+  </div>
+  <button mat-raised-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>
 </div>
