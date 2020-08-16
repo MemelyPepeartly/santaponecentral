@@ -49,6 +49,8 @@ export class ProfileComponent implements OnInit {
 
   public postingMessage: boolean = false;
   public puttingMessage: boolean = false;
+  public softUpdating: boolean = false;
+  public refreshing: boolean = false;
 
   public gettingAllHistories: boolean = false;
   public gettingGeneralHistory: boolean = false;
@@ -172,8 +174,17 @@ export class ProfileComponent implements OnInit {
 
 
   }
-  public softRefreshSelectedChat(isSoftUpdate: boolean)
+  public async softRefreshSelectedChat(isSoftUpdate: boolean)
   {
-    this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
+    this.softUpdating = true;
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
+    this.softUpdating = false;
+  }
+  public async manualRefreshSelectedChat(isSoftUpdate: boolean)
+  {
+    this.refreshing = true;
+    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    this.refreshing = false;
   }
 }
