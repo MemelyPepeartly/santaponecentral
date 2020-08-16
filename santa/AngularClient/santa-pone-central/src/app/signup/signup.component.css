@@ -1,7 +1,3 @@
-button{
-    background-color: #ec407a;
-    color:white
-}
 .container {
     display: block;
     justify-content: center;
@@ -13,25 +9,4 @@ button{
     background-color:white;
     opacity: 1.0;
     overflow:auto;
-}
-.contentDiv {
-    margin: 15px;
-    justify-items: center;
-    border-radius: 8px;
-    height: auto;
-    color: white;
-}
-.small-box {
-    display: block;
-    align-items: center;
-    justify-content: center;
-    margin: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    min-width: 150px;
-}
-.small-box {
-    text-align: center;
-    height: auto;
-    width: auto;
 }
