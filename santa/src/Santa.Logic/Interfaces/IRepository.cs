@@ -176,7 +176,7 @@ namespace Santa.Logic.Interfaces
         Task<BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID);
         Task<BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber);
         Task UpdateBoardEntryAsync(BoardEntry newEntry);
-        Task DeleteBoardEntryAsync();
+        Task DeleteBoardEntryByIDAsync(Guid boardEntryID);
         #endregion
 
         #region Utility

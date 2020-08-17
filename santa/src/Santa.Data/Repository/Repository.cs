@@ -1165,7 +1165,7 @@ namespace Santa.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task DeleteBoardEntryAsync()
+        public Task DeleteBoardEntryByIDAsync(Guid boardEntryID)
         {
             throw new NotImplementedException();
         }
