@@ -90,6 +90,7 @@ namespace Santa.Logic.Interfaces
         Task CreateEventAsync(Event newEvent);
         Task<List<Logic.Objects.Event>> GetAllEvents();
         Task<Logic.Objects.Event> GetEventByIDAsync(Guid eventID);
+        Task<Event> GetEventByNameAsync(string eventName);
         Task UpdateEventByIDAsync(Event targetEvent);
         Task DeleteEventByIDAsync(Guid logicEvent);
         #endregion
@@ -156,7 +157,13 @@ namespace Santa.Logic.Interfaces
         #region SurveyQuestions
         Task<List<Question>> GetAllSurveyQuestions();
         Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
-        Task CreateSurveyQuestionXrefAsync(Logic.Objects.Question logicQuestion);
+        /// <summary>
+        /// Creates a relationship between a survey and a question based on their ID
+        /// </summary>
+        /// <param name="surveyID"></param>
+        /// <param name="questionID"></param>
+        /// <returns></returns>
+        Task CreateSurveyQuestionXrefAsync(Guid surveyID, Guid questionID);
         Task CreateSurveyQuestionAsync(Question newQuestion);
 
         Task UpdateSurveyQuestionByIDAsync(Question targetQuestion);
@@ -165,7 +172,6 @@ namespace Santa.Logic.Interfaces
 
         #region Utility
         Task SaveAsync();
-
         #endregion
 
     }

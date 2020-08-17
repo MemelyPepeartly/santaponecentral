@@ -168,6 +168,7 @@ namespace Santa.Data.Repository
 
                 contextOldClient.Email = targetLogicClient.email;
                 contextOldClient.Nickname = targetLogicClient.nickname;
+                contextOldClient.IsAdmin = targetLogicClient.isAdmin;
 
                 santaContext.Client.Update(contextOldClient);
             }
@@ -235,6 +236,7 @@ namespace Santa.Data.Repository
                                 .ThenInclude(sr => sr.SurveyQuestion)
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
+                    .Include(r => r.ClientRelationXrefRecipientClient)
                     .Include(s => s.ClientStatus)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(s => s.SurveyQuestion)
@@ -286,7 +288,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Tag logicTag = Mapper.MapTag(await santaContext.Tag.FirstOrDefaultAsync(t => t.TagId == tagID));
+                Logic.Objects.Tag logicTag = Mapper.MapTag(await santaContext.Tag
+                    .Include(t => t.ClientTagXref)
+                    .FirstOrDefaultAsync(t => t.TagId == tagID));
                 return logicTag;
             }
             catch (Exception e)
@@ -298,7 +302,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Tag> logicTags = (await santaContext.Tag.ToListAsync()).Select(Mapper.MapTag).ToList();
+                List<Logic.Objects.Tag> logicTags = (await santaContext.Tag
+                    .Include(t => t.ClientTagXref)
+                    .ToListAsync())
+                    .Select(Mapper.MapTag)
+                    .ToList();
 
                 return logicTags;
             }
@@ -474,6 +482,9 @@ namespace Santa.Data.Repository
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
+                        .ThenInclude(e => e.ClientRelationXref)
+                    .Include(r => r.EventType)
+                        .ThenInclude(e => e.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(r => r.ChatMessage)
@@ -661,7 +672,12 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Event> eventList = (await santaContext.EventType.ToListAsync()).Select(Mapper.MapEvent).ToList();
+                List<Logic.Objects.Event> eventList = (await santaContext.EventType
+                    .Include(e => e.ClientRelationXref)
+                    .Include(e => e.Survey)
+                    .ToListAsync())
+                    .Select(Mapper.MapEvent)
+                    .ToList();
                 return eventList;
             }
             catch (Exception e)
@@ -673,7 +689,25 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType.FirstOrDefaultAsync(e => e.EventTypeId == eventID));
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
+                    .Include(e => e.ClientRelationXref)
+                    .Include(e => e.Survey)
+                    .FirstOrDefaultAsync(e => e.EventTypeId == eventID));
+                return logicEvent;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task<Event> GetEventByNameAsync(string eventName)
+        {
+            try
+            {
+                Logic.Objects.Event logicEvent = Mapper.MapEvent(await santaContext.EventType
+                    .Include(e => e.Survey)
+                    .Include(e => e.ClientRelationXref)
+                    .FirstOrDefaultAsync(e => e.EventDescription == eventName));
                 return logicEvent;
             }
             catch (Exception e)
@@ -797,7 +831,12 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Option> listLogicSurveyOption = (await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).ToListAsync()).Select(Mapper.MapSurveyOption).ToList();
+                List<Option> listLogicSurveyOption = (await santaContext.SurveyOption
+                    .Include(s => s.SurveyQuestionOptionXref)
+                    .Include(s => s.SurveyResponse)
+                    .ToListAsync())
+                    .Select(Mapper.MapSurveyOption)
+                    .ToList();
                 return listLogicSurveyOption;
             }
             catch(Exception e)
@@ -810,7 +849,10 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption.Include(s => s.SurveyQuestionOptionXref).FirstOrDefaultAsync(so => so.SurveyOptionId == surveyOptionID));
+                Option logicOption = Mapper.MapSurveyOption(await santaContext.SurveyOption
+                    .Include(s => s.SurveyResponse)
+                    .Include(s => s.SurveyQuestionOptionXref)
+                    .FirstOrDefaultAsync(so => so.SurveyOptionId == surveyOptionID));
                 return logicOption;
             }
             catch (Exception e)
@@ -902,6 +944,7 @@ namespace Santa.Data.Repository
             try
             {
                 List<Question> listLogicQuestion = (await santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyResponse)
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
                     .ToListAsync())
@@ -919,6 +962,7 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Question logicQuestion = Mapper.MapQuestion(await santaContext.SurveyQuestion
+                    .Include(sq => sq.SurveyResponse)
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
                     .FirstOrDefaultAsync(q => q.SurveyQuestionId == questionID));
@@ -942,11 +986,18 @@ namespace Santa.Data.Repository
             }
 
         }
-        public async Task CreateSurveyQuestionXrefAsync(Question logicQuestion)
+        public async Task CreateSurveyQuestionXrefAsync(Guid surveyID, Guid questionID)
         {
             try
             {
-                Data.Entities.SurveyQuestionXref contextQuestionXref = Mapper.MapQuestionXref(logicQuestion);
+                Data.Entities.SurveyQuestionXref contextQuestionXref = new SurveyQuestionXref()
+                {
+                    SurveyQuestionXrefId = Guid.NewGuid(),
+                    SurveyQuestionId = questionID,
+                    SurveyId = surveyID,
+                    SortOrder = "asc",
+                    IsActive = true
+                };
                 await santaContext.SurveyQuestionXref.AddAsync(contextQuestionXref);
             }
             catch (Exception e)

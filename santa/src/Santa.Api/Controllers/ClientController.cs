@@ -132,7 +132,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = "create:clients")]
-        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiClient client)
+        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiNewClientModel client)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace Santa.Api.Controllers
         [HttpPost("Signup")]
         [AllowAnonymous]
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
-        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponses clientResponseModel)
+        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponsesModel clientResponseModel)
         {
             try
             {
@@ -201,6 +201,7 @@ namespace Santa.Api.Controllers
                     email = clientResponseModel.clientEmail,
                     nickname = clientResponseModel.clientNickname,
                     clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
+                    isAdmin = clientResponseModel.isAdmin,
                     address = new Logic.Objects.Address()
                     {
                         addressLineOne = clientResponseModel.clientAddressLine1,
@@ -251,9 +252,9 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="assignmentsModel"></param>
         /// <returns></returns>
-        [HttpPost("{clientID}/Recipients", Name = "PostRecipients")]
+        [HttpPost("{clientID}/Recipients")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationships assignmentsModel)
+        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationshipsModel assignmentsModel)
         {
             try
             {
@@ -275,6 +276,75 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
+        // POST: api/Client/AutoAssign
+        /// <summary>
+        /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("AutoAssign")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<List<string>>> PostAutoAssignmentsToMassMailers()
+        {
+            try
+            {
+                List<Client> allClients = await repository.GetAllClients();
+                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
+                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
+
+                List<Client> clientsThatGotNewAssignments = new List<Client>();
+                List<string> assignmentsAddedLogList = new List<string>();
+
+                Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+
+                if(massMailers.Count > 0 && clientsToBeAssignedToMassMailers.Count > 0)
+                {
+                    // Foreach mailer
+                    foreach (Client mailer in massMailers)
+                    {
+                        // Foreach clients to be assigned mass mail
+                        foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
+                        {
+                            // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
+                            if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            {
+                                // Add that potential assignment to their list
+                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID);
+
+                                // If that mailer isnt already on the list of clients that already got a new assignment, add them to it
+                                if(!clientsThatGotNewAssignments.Any<Client>(c => c.clientID == mailer.clientID))
+                                {
+                                    clientsThatGotNewAssignments.Add(mailer);
+                                }
+                                assignmentsAddedLogList.Add($"Added {potentialAssignment.nickname} to {mailer.nickname}'s assignment list for the {logicCardExchangeEvent.eventDescription} Event");
+                            }
+                        }
+                    }
+                }
+                // If no assignments were added
+                if(assignmentsAddedLogList.Count == 0)
+                {
+                    assignmentsAddedLogList.Add($"All mass mailers are already up to date with their assignments for the {logicCardExchangeEvent.eventDescription} Event");
+                }
+                // If assignments where added
+                else if (assignmentsAddedLogList.Count > 0)
+                {
+                    // Save changes and send out emails
+                    await repository.SaveAsync();
+                    foreach(Client massMailer in clientsThatGotNewAssignments)
+                    {
+                        await mailbag.sendAssignedRecipientEmail(massMailer, logicCardExchangeEvent);
+                    }
+                }
+
+                return Ok(assignmentsAddedLogList);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         // POST: api/Client/5/Tag
         /// <summary>
         /// Assigns a specific user a tag by ID
@@ -338,7 +408,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddress address)
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddressModel address)
         {
             try
             {
@@ -382,9 +452,9 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Email", Name ="PutEmail")]
+        [HttpPut("{clientID}/Email")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmail email)
+        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmailModel email)
         {
             try
             {
@@ -398,40 +468,42 @@ namespace Santa.Api.Controllers
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
 
-                    try
+                    // If the client isn't awaiting or denied (meaning they have an auth account)
+                    if(updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
                     {
-                        // Gets the original client ID by the old email
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
-
-                        // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
-
-                        if(string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                        try
                         {
-                            return Ok(updatedClient);
+                            // Gets the original client ID by the old email
+                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+
+                            // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
+
+                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                            {
+                                return Ok(updatedClient);
+                            }
+                            // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
+                            else if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                            {
+                                targetClient.email = oldEmail;
+                                await repository.UpdateClientByIDAsync(targetClient);
+                                await repository.SaveAsync();
+                                return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
+                            }
+
+                            // Updates a client's email in Auth0
+                            await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
+
+                            // Sends the client a password change ticket
+                            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
+                            await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
                         }
-                        // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
-                        else if(string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                        catch (Exception e)
                         {
-                            targetClient.email = oldEmail;
-                            await repository.UpdateClientByIDAsync(targetClient);
-                            await repository.SaveAsync();
-                            return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
+                            throw e.InnerException;
                         }
-
-                        // Updates a client's email in Auth0
-                        await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
-
-                        // Sends the client a password change ticket
-                        Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
-                        await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
-
-                        return Ok(updatedClient);
-
                     }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException;
-                    }
+                    return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
@@ -450,9 +522,9 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="nickname"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Nickname", Name = "PutNickname")]
+        [HttpPut("{clientID}/Nickname")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNickname nickname)
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNicknameModel nickname)
         {
             try
             {
@@ -494,9 +566,9 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Name", Name = "PutName")]
+        [HttpPut("{clientID}/Name")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody, Bind("clientName")] ApiClientName name)
+        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody] ApiClientNameModel name)
         {
             try
             {
@@ -520,6 +592,40 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+
+        // PUT: api/Client/5/Admin
+        /// <summary>
+        /// Updates a client's actual name
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpPut("{clientID}/Admin")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] ApiClientIsAdminModel model)
+        {
+            try
+            {
+                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+                targetClient.isAdmin = model.isAdmin;
+                try
+                {
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+                    return Ok(updatedClient);
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
         // PUT: api/Client/5/Status
         /// <summary>
         /// Updates the status of a certain client by their ID
@@ -529,7 +635,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatus status)
+        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatusModel status)
         {
             try
             {
@@ -646,9 +752,12 @@ namespace Santa.Api.Controllers
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
                     await repository.DeleteClientByIDAsync(clientID);
 
-#warning Need a check here. Use case when a client has data, but maybe doesnt have an auth0 account for some reason. This would not allow for the deletion of the account and cause an exception. 
-                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
-                    await authHelper.deleteAuthClient(authUser.user_id);
+                    if(logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                    {
+                        Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
+                        await authHelper.deleteAuthClient(authUser.user_id);
+                    }
+                    
                 }
                 catch (Exception e)
                 {

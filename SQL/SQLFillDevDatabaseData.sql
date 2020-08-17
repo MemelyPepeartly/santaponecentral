@@ -173,18 +173,18 @@ VALUES
     (@statusID3GUID, 'Denied'),
     (@statusID4GUID, 'Completed');
     
-INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
+INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country, isAdmin)
 VALUES
-    (@client1IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client4IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country');
+    (@client1IDGUID, @statusID2GUID, 'Memely Pepeartly', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
+    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
+    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
+    (@client4IDGUID, @statusID2GUID, 'Venport Measure', 'Picky Wikket', 'moox100@gmail.com', 'Address 1', 'Address 2', 'City', 'State', 'Postal Code', 'Country', 1);
 
 INSERT INTO app.Tag (tagID, tagName)
 VALUES
     (@tag1IDGUID, 'Grinch'),
     (@tag2IDGUID, 'Mass Mailer'),
-    (@tag3IDGUID, 'Twifag');
+    (@tag3IDGUID, 'Mass Mail Recipient');
 
 
 SELECT * FROM app.SurveyQuestion;

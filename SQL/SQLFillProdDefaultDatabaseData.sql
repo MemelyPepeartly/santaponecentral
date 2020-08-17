@@ -28,6 +28,10 @@ DECLARE @client1IDGUID UNIQUEIDENTIFIER;
 DECLARE @client2IDGUID UNIQUEIDENTIFIER;
 DECLARE @client3IDGUID UNIQUEIDENTIFIER;
 
+DECLARE @tag1IDGUID UNIQUEIDENTIFIER;
+DECLARE @tag2IDGUID UNIQUEIDENTIFIER;
+DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
+
 SET @eventTypeID1GUID = NEWID();
 SET @eventTypeID2GUID = NEWID();
 
@@ -58,6 +62,10 @@ SET @statusID4GUID = NEWID();
 SET @client1IDGUID = NEWID();
 SET @client2IDGUID = NEWID();
 SET @client3IDGUID = NEWID();
+
+SET @tag1IDGUID = NEWID();
+SET @tag2IDGUID = NEWID();
+SET @tag3IDGUID = NEWID();
 
 INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
 VALUES
@@ -139,12 +147,17 @@ VALUES
     (@statusID3GUID, 'Denied'),
     (@statusID4GUID, 'Completed');
     
-INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country)
+INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country, isAdmin)
 VALUES
-    (@client1IDGUID, @statusID1GUID, 'Memely', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania'),
-    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania');
+    (@client1IDGUID, @statusID1GUID, 'Memely', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
+    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
+    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1);
 
+INSERT INTO app.Tag (tagID, tagName)
+VALUES
+    (@tag1IDGUID, 'Grinch'),
+    (@tag2IDGUID, 'Mass Mailer'),
+    (@tag3IDGUID, 'Mass Mail Recipient');
 
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;

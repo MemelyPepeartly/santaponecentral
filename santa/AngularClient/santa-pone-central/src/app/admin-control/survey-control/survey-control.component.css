@@ -6,33 +6,6 @@ mat-chip-list
 {
     margin: 5px;
 }
-.surveyText
-{ 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-}
-.api-card 
-{
-    width: 325px;
-    margin: 15px;
-    display: inline-block;
-    vertical-align: top;
-}
-.surveyButton
-{
-    margin-top: 10px;
-    margin-right: 5px;
-}
-#surveyField
-{
-    margin: 10px;
-}
-#component-container
-{
-    padding:10px;
-}
 #selectedEditChipDiv
 {
     margin: 10px;
@@ -47,8 +20,22 @@ mat-chip-list
 {
     min-width: 250px;
 }
-#deleteInformationalText
+.chipSpanText
 {
-    text-align: center;
-    padding-top: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.api-card
+{
+    width: 325px;
+    margin: 15px;
+    display: inline-block;
+    vertical-align: top;
+}
+.surveyButton
+{
+    margin-top: 10px;
+    margin-right: 5px;
 }

@@ -2,7 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { ClientResponse, ClientAddressResponse, ClientEmailResponse, ClientNicknameResponse, ClientNameResponse, ClientStatusResponse, SurveyApiResponse, TagResponse, MessageApiResponse, MessageApiReadResponse, ClientSignupResponse, ClientRelationshipsResponse, RecipientCompletionResponse, QuestionReadabilityResponse, ClientSenderRecipientRelationshipReponse, MessageApiReadAllResponse, ClientTagRelationshipsResponse, ClientTagRelationshipResponse } from '../../classes/responseTypes';
+import { ClientResponse,
+  ClientAddressResponse,
+  ClientEmailResponse,
+  ClientNicknameResponse,
+  ClientNameResponse,
+  ClientStatusResponse,
+  SurveyApiResponse,
+  TagResponse,
+  MessageApiResponse,
+  MessageApiReadResponse,
+  ClientSignupResponse,
+  ClientRelationshipsResponse,
+  RecipientCompletionResponse,
+  QuestionReadabilityResponse,
+  ClientSenderRecipientRelationshipReponse,
+  MessageApiReadAllResponse,
+  ClientTagRelationshipsResponse,
+  ClientTagRelationshipResponse,
+  ClientIsAdminResponse,
+  ChangeSurveyResponseModel,
+  SurveyQuestionXrefsResponseModel} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -88,7 +108,7 @@ export class SantaApiGetService {
   getAllSurveyResponses(): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse').pipe(
       map(this.extractData));
-  } 
+  }
   getSurveyResponse(id): Observable<any> {
     return this.http.get(endpoint + 'SurveyResponse/' + id).pipe(
       map(this.extractData));
@@ -142,28 +162,45 @@ export class SantaApiPostService {
     return body || { };
   }
   postClient(client: ClientResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client', client);
+    return this.http.post(endpoint + 'Client', client).pipe(
+      map(this.extractData));
   }
   postClientRecipients(id: string, relationships: ClientRelationshipsResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/' + id + '/Recipients', relationships);
+    return this.http.post(endpoint + 'Client/' + id + '/Recipients', relationships).pipe(
+      map(this.extractData));
   }
   postClientSignup(signup: ClientSignupResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/Signup', signup);
+    return this.http.post(endpoint + 'Client/Signup', signup).pipe(
+      map(this.extractData));
   }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
-    return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
+    return this.http.post(endpoint + 'SurveyResponse', surveyResponse).pipe(
+      map(this.extractData));
   }
   postTag(tagResponse: TagResponse): Observable<any> {
-    return this.http.post(endpoint + 'Tag', tagResponse);
+    return this.http.post(endpoint + 'Tag', tagResponse).pipe(
+      map(this.extractData));
   }
   postTagsToClient(clientID: string, clientTagRelationships: ClientTagRelationshipsResponse): Observable<any> {
-    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships);
+    return this.http.post(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships).pipe(
+      map(this.extractData));
   }
   postMessage(messageResponse: MessageApiResponse): Observable<any> {
-    return this.http.post(endpoint + 'Message', messageResponse);
+    return this.http.post(endpoint + 'Message', messageResponse).pipe(
+      map(this.extractData));
   }
   postPasswordResetToClient(id: string): Observable<any> {
-    return this.http.post(endpoint + 'Client/' + id + "/Password", {});
+    return this.http.post(endpoint + 'Client/' + id + "/Password", {}).pipe(
+      map(this.extractData));
+  }
+  postAutoAssignmentRequest(): Observable<any> {
+    // Returns a list of strings of added relationships
+    return this.http.post(endpoint + 'Client/AutoAssign', {}).pipe(
+      map(this.extractData));
+  }
+  postQuestionsToSurvey(surveyID: string, questions: SurveyQuestionXrefsResponseModel): Observable<any> {
+    return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions).pipe(
+      map(this.extractData));
   }
 }
 
@@ -178,41 +215,51 @@ export class SantaApiPutService {
     return body || { };
   }
   putClientAddress(id: string, updatedClient: ClientAddressResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient).pipe(map(this.extractData));
   }
   putClientEmail(id: string, updatedClient: ClientEmailResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient).pipe(map(this.extractData));
   }
   putClientNickname(id: string, updatedClient: ClientNicknameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient).pipe(map(this.extractData));
   }
   putClientName(id: string, updatedClient: ClientNameResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient).pipe(map(this.extractData));
+  }
+  putClientIsAdmin(id: string, updatedClient: ClientIsAdminResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient).pipe(map(this.extractData));
   }
   putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel);
+    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel).pipe(map(this.extractData));
   }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient);
+    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
   }
   putMessageReadStatus(id: string, updatedMessage: MessageApiReadResponse): Observable<any> {
-    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage);
+    return this.http.put(endpoint + 'Message/' + id + '/Read', updatedMessage).pipe(map(this.extractData));
   }
   putMessageReadAll(messages: MessageApiReadAllResponse): Observable<any> {
-    return this.http.put(endpoint + 'Message/ReadAll', messages);
+    return this.http.put(endpoint + 'Message/ReadAll', messages).pipe(map(this.extractData));
   }
   putQuestionReadability(id: string, questionModel: QuestionReadabilityResponse): Observable<any> {
-    return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel);
+    return this.http.put(endpoint + 'SurveyQuestion/' + id + '/Readability', questionModel).pipe(map(this.extractData));
+  }
+  putResponse(surveyResponseID: string, responseModel: ChangeSurveyResponseModel): Observable<any> {
+    return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel).pipe(map(this.extractData));
+  }
+  putProfileAddress(clientID: string, updatedAddress: ClientAddressResponse): Observable<any> {
+    // Endpoints specifically has security checks to make sure data is secure in address change call
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Address', updatedAddress).pipe(map(this.extractData));
   }
 }
 @Injectable({
   providedIn: 'root'
 })
 export class SantaApiDeleteService {
-  
+
   constructor(private http: HttpClient) { }
   deleteClient(id: string): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + id);
@@ -225,5 +272,8 @@ export class SantaApiDeleteService {
   }
   deleteTag(id: string): Observable<any> {
     return this.http.delete(endpoint + 'Tag/' + id);
+  }
+  deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> {
+    return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestion/" + surveyQuestionId);
   }
 }

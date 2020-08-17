@@ -52,7 +52,7 @@ export class InputControlComponent implements OnInit {
   }
   public emitMessage(message: string)
   {
-    
+
     let newMessage = new MessageApiResponse();
     newMessage.messageContent = message;
     newMessage.clientRelationXrefID = this.relationshipID;
@@ -60,8 +60,6 @@ export class InputControlComponent implements OnInit {
     newMessage.messageRecieverClientID = this.reciever.clientID;
     newMessage.eventTypeID = this.relationshipID == null || undefined ? null : this.eventType.eventTypeID;
     newMessage.fromAdmin = this.onProfile ? false : this.isAdmin;
-    console.log(newMessage);
-    
 
     this.sendClicked.emit(newMessage);
   }

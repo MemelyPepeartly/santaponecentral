@@ -1,10 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Survey } from 'src/classes/survey';
+import { Survey, Question } from 'src/classes/survey';
 import { Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapResponse, MapService } from 'src/app/services/mapService.service';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Client } from 'src/classes/client';
+import { ThrowStmt } from '@angular/compiler';
+import { SurveyQuestionXrefsResponseModel } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-survey-control',
@@ -23,59 +25,75 @@ export class SurveyControlComponent implements OnInit {
     public ApiMapper: MapService) { }
 
   @Input() allSurveys: Array<Survey> = []
-  
-  public addSurveyFormGroup: FormGroup;
-  public editSurveyFormGroup: FormGroup;
+  @Input() allQuestions: Array<Question> = []
 
-
-  public selectedSurvey: Survey;
-  public deletableSurveys: Array<Survey> = [];
-  public tagsInUse: Array<Survey> = [];
-  public allClients: Array<Client> = [];
+  public selectedSurvey: Survey = new Survey();
+  public selectedQuestion: Question = new Question();
+  public selectedQuestions: Array<Question> = [];
 
   public postingNewSurvey: boolean = false;
   public updatingSurveyName: boolean = false;
   public deletingSurvey: boolean = false;
+  public removingQuestion: boolean = false;
+  public addingQuestions: boolean = false;
 
-  // Getters for form values for ease-of-use
-  get newSurvey() {
-    var formControlObj = this.addSurveyFormGroup.get('newSurvey') as FormControl
-    return formControlObj.value
-  }
-  get editedSurveyName() {
-    var formControlObj = this.editSurveyFormGroup.get('editSurvey') as FormControl
-    return formControlObj.value
-  }
+  public gatheringAllSurveys: boolean = false;
 
   ngOnInit(): void {
+    this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
+      this.gatheringAllSurveys = status;
+    });
     this.constructFormGroups();
   }
   private constructFormGroups() {
-    this.addSurveyFormGroup = this.formBuilder.group({
-      newSurvey: [null, Validators.nullValidator && Validators.pattern],
-    });
-    this.editSurveyFormGroup = this.formBuilder.group({
-      editSurvey: [null, Validators.nullValidator && Validators.pattern],
-    });
-  }
-  public deleteSurvey(survey: Survey)
-  {
 
   }
-  public editSurvey()
+  public async removeQuestion(question: Question)
   {
+    this.removingQuestion = true;
 
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiDelete.deleteQuestionRelationFromSurvey(this.selectedSurvey.surveyID, question.questionID).toPromise());
+    await this.gatherer.gatherAllQuestions();
+    await this.gatherer.gatherAllSurveys();
+
+    this.selectedQuestion = new Question();
+
+    this.removingQuestion = false;
+  }
+  public setSelectedQuestion(question: Question)
+  {
+    this.selectedQuestion = question;
   }
   public setSelectedSurvey(survey: Survey)
   {
-
+    this.selectedSurvey = survey;
+    this.selectedQuestion = new Question();
   }
-  public unsetSelectedSurvey()
+  public async addQuestions()
   {
+    this.addingQuestions = true;
+    let response: SurveyQuestionXrefsResponseModel = new SurveyQuestionXrefsResponseModel();
+    this.selectedQuestions.forEach((question: Question) => {
+      response.questions.push(question.questionID);
+    })
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiPost.postQuestionsToSurvey(this.selectedSurvey.surveyID, response).toPromise());
+    await this.gatherer.gatherAllSurveys();
 
+    this.addingQuestions = false;
   }
-  public addNewSurvey()
+  public sortAddableQuestions() : Array<Question>
   {
-    
+    let questionsThatCanBeAdded: Array<Question>= []
+    this.allQuestions.forEach((question: Question) => {
+      if(!this.selectedSurvey.surveyQuestions.some((questionObj: Question) => {return questionObj.questionID == question.questionID}))
+      {
+        questionsThatCanBeAdded.push(question);
+      }
+    });
+    return questionsThatCanBeAdded;
+  }
+  public sortRemovableQuestions() : Array<Question>
+  {
+    return this.selectedSurvey.surveyQuestions.filter((question: Question) => {return question.removable})
   }
 }

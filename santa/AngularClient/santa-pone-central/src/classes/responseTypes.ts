@@ -21,6 +21,7 @@ export class ClientSignupResponse {
     clientState: string;
     clientPostalCode: string;
     clientCountry: string;
+    isAdmin: boolean = false;
     responses: Array<SurveySignupApiResponse> = []
 }
 export class ClientAddressResponse {
@@ -43,6 +44,9 @@ export class ClientNameResponse {
 export class ClientStatusResponse {
     clientStatusID: string;
 }
+export class ClientIsAdminResponse {
+    isAdmin: boolean;
+}
 
 export class ClientRelationshipsResponse {
     eventTypeID: string;
@@ -55,6 +59,14 @@ export class SurveyApiResponse {
     surveyOptionID?: string = null;
     responseText: string;
 }
+// Used for posting multiple questions to a survey relationship to add questions to a survey
+export class SurveyQuestionXrefsResponseModel {
+  questions: Array<string> = [];
+}
+export class ChangeSurveyResponseModel {
+  responseText: string;
+}
+
 export class SurveySignupApiResponse {
     surveyID: string;
     surveyQuestionID: string;

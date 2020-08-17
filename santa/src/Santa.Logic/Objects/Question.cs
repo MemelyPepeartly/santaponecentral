@@ -12,5 +12,6 @@ namespace Santa.Logic.Objects
         public bool isSurveyOptionList { get; set; }
         public bool senderCanView { get; set; }
         public List<Option> surveyOptionList { get; set; }
+        public bool removable { get; set; }
     }
 }

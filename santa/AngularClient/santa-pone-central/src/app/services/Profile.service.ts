@@ -13,25 +13,25 @@ export class ProfileService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
-  public _gettingProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gettingProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingProfile()
   {
     return this._gettingProfile.asObservable();
   }
 
-  public _gettingHistories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gettingHistories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingHistories()
   {
     return this._gettingHistories.asObservable();
   }
 
-  public _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingSelectedHistory()
   {
     return this._gettingSelectedHistory.asObservable();
   }
 
-  public _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingGeneralHistory()
   {
     return this._gettingGeneralHistory.asObservable();
@@ -111,7 +111,7 @@ export class ProfileService {
 
     this.updateChatHistories(histories);
     this._gettingHistories.next(false);
-    
+
   }
   public async gatherGeneralHistory(conversationClientID: string, subjectID: string, isSoftUpdate: boolean = false)
   {
@@ -128,7 +128,7 @@ export class ProfileService {
   public async getSelectedHistory(conversationClientID: string, subjectID: string, relationXrefID: string, isSoftUpdate: boolean = false)
   {
     if(isSoftUpdate == false)
-    { 
+    {
       this._gettingSelectedHistory.next(true);
     }
 
@@ -147,7 +147,7 @@ export class ProfileService {
       this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
     }
 
-    
+
     this._gettingSelectedHistory.next(false);
   }
 

@@ -6,6 +6,7 @@ export class Survey {
     surveyDescription: string;
     active: boolean;
     surveyQuestions: Array<Question> = [];
+    removable: boolean;
 }
 export class SurveyResponse {
     surveyResponseID: string;
@@ -23,14 +24,16 @@ export class Question {
     isSurveyOptionList: boolean;
     senderCanView: boolean;
     surveyOptionList: Array<SurveyOption> = [];
+    removable: boolean;
 }
 export class SurveyOption {
     surveyOptionID: string;
     displayText: string;
     surveyOptionValue: number;
+    removable: boolean;
 }
 // Below classes for making responses with necessary information in the surveyform component
-export class SurveyQA 
+export class SurveyQA
 {
     clientID: string;
     surveyID: string;
@@ -44,7 +47,7 @@ export class SurveyQA
     surveyOptionList: Array<SurveyFormOption> = [];
 }
 
-export class SurveyFormOption 
+export class SurveyFormOption
 {
     surveyOptionID: string;
     optionText: string;

@@ -5,7 +5,7 @@ mat-card {
 #paginatorRow
 {
     display: inline-block;
-    width: 100%; 
+    width: 100%;
     background-color: white;
 }
 #paginatorDiv
@@ -41,4 +41,23 @@ mat-card {
 .spinnerWrap {
     display: inline-block;
     padding: 30px;
+}
+.tagText
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.inline
+{
+  display: inline-block;
+}
+.tagList
+{
+  margin-left: 10px;
+}
+.notice
+{
+    color: #d07973;
 }

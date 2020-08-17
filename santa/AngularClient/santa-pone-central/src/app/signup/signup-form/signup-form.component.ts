@@ -75,7 +75,7 @@ export class SignupFormComponent implements OnInit {
     this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
       this.events = events;
     });
-    
+
     // API Call for getting surveys
     this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
       this.surveys = surveys;
@@ -83,10 +83,10 @@ export class SignupFormComponent implements OnInit {
     await this.gatherer.gatherAllStatuses();
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllSurveys();
-    
+
     this.isDoneLoading = true;
   }
-  get clientName() 
+  get clientName()
   {
     var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
     var formControlLast = this.clientInfoFormGroup.get('lastName') as FormControl
@@ -98,7 +98,7 @@ export class SignupFormComponent implements OnInit {
     var formControlEmail = this.clientInfoFormGroup.get('email') as FormControl
     return formControlEmail.value;
   }
-  get clientAddress() 
+  get clientAddress()
   {
     let address: Address = new Address();
     var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
@@ -144,9 +144,9 @@ export class SignupFormComponent implements OnInit {
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
     newClient.clientStatusID = awaitingStatusID.statusID
 
-    var thing = this.surveyForms.toArray()
+    var forms = this.surveyForms.toArray()
     // Set client's answers
-    thing.forEach((surveyForm: SurveyFormComponent) => {
+    forms.forEach((surveyForm: SurveyFormComponent) => {
       let response = new SurveyApiResponse;
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
@@ -166,17 +166,21 @@ export class SignupFormComponent implements OnInit {
         response = new SurveyApiResponse();
       }
     });
-    console.log(newClient);
-    
+
     // Post client with answers
-    await this.SantaPost.postClientSignup(newClient).toPromise();
+    this.SantaPost.postClientSignup(newClient).subscribe((res) => {
+      this.clientInfoFormGroup.reset();
+      this.clientAddressFormGroup.reset();
 
-    this.clientInfoFormGroup.reset();
-    this.clientAddressFormGroup.reset();
+      this.showSpinner = false;
+      this.showFinished = true;
+    },(err) => {
+      console.log("Something went wrong on signup. Error is as follows: ");
+      console.log(err);
 
-    this.showSomethingWrong = false;
-    this.showSpinner = false;
-    this.showFinished = true;
+      this.showSpinner = false;
+      this.showSomethingWrong = true
+    });
   }
   public resetSubmitBools()
   {
@@ -197,7 +201,7 @@ export class SignupFormComponent implements OnInit {
       addressLine2: ['', [Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       city: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
-      postalCode: ['', [Validators.required, Validators.pattern("[0-9]{1,25}"), Validators.maxLength(25)]],
+      postalCode: ['', [Validators.required, Validators.maxLength(25)]],
       country: ['', Validators.required]
     });
     this.clientEventFormGroup = this.formBuilder.group({

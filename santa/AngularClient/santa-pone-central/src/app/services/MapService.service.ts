@@ -16,13 +16,14 @@ export class MapService {
   constructor() { }
 
   mapClient(client)
-  { 
+  {
     let mappedClient = new Client;
-    
+
     mappedClient.clientID = client.clientID;
     mappedClient.clientName = client.clientName;
     mappedClient.email = client.email;
     mappedClient.clientNickname = client.nickname;
+    mappedClient.isAdmin = client.isAdmin;
 
     mappedClient.clientStatus.statusID = client.clientStatus.statusID;
     mappedClient.clientStatus.statusDescription = client.clientStatus.statusDescription;
@@ -70,6 +71,7 @@ export class MapService {
     mappedProfile.address.state = profile.address.state;
     mappedProfile.address.country = profile.address.country;
     mappedProfile.address.postalCode = profile.address.postalCode;
+    mappedProfile.editable = profile.editable;
 
     profile.recipients.forEach(recipient => {
       mappedProfile.recipients.push(this.mapProfileRecipient(recipient));
@@ -106,7 +108,7 @@ export class MapService {
   mapMessage(message)
   {
     let mappedMessage = new Message;
-    
+
     mappedMessage.chatMessageID = message.chatMessageID;
     mappedMessage.senderClient = this.mapMeta(message.senderClient);
     mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
@@ -217,6 +219,8 @@ export class MapService {
     mappedEventType.eventTypeID = event.eventTypeID;
     mappedEventType.eventDescription = event.eventDescription;
     mappedEventType.isActive = event.active;
+    mappedEventType.removable = event.removable;
+    mappedEventType.immutable = event.immutable;
 
     return mappedEventType;
   }
@@ -228,6 +232,8 @@ export class MapService {
     mappedSurvey.eventTypeID = survey.eventTypeID;
     mappedSurvey.surveyDescription = survey.surveyDescription;
     mappedSurvey.active = survey.active;
+    mappedSurvey.removable = survey.removable;
+
     survey.surveyQuestions.forEach(question => {
       mappedSurvey.surveyQuestions.push(this.mapQuestion(question));
     });
@@ -242,6 +248,8 @@ export class MapService {
     mappedQuestion.questionText = question.questionText;
     mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
     mappedQuestion.senderCanView = question.senderCanView;
+    mappedQuestion.removable = question.removable;
+
     question.surveyOptionList.forEach(surveyOption => {
       mappedQuestion.surveyOptionList.push(this.mapSurveyOption(surveyOption));
     });
@@ -255,6 +263,7 @@ export class MapService {
     mappedSurveyOption.surveyOptionID = surveyOption.surveyOptionID;
     mappedSurveyOption.displayText = surveyOption.displayText;
     mappedSurveyOption.surveyOptionValue = surveyOption.surveyOptionValue;
+    mappedSurveyOption.removable = surveyOption.removable;
 
     return mappedSurveyOption;
   }
@@ -279,6 +288,8 @@ export class MapService {
 
     mappedTag.tagID = tag.tagID;
     mappedTag.tagName = tag.tagName;
+    mappedTag.deletable = tag.deletable;
+    mappedTag.tagImmutable = tag.tagImmutable;
 
     return mappedTag;
   }
@@ -296,7 +307,7 @@ export class MapResponse
     messageResponse.messageRecieverClientID = recieverClientID;
     messageResponse.clientRelationXrefID = relationXrefID;
     messageResponse.messageContent = messageContent;
-    
+
     return messageResponse;
   }
   mapClientEmailResponse(client: Client)
@@ -329,7 +340,7 @@ export class MapResponse
     clientAddressResponse.clientState = client.address.state;
     clientAddressResponse.clientCountry = client.address.country;
     clientAddressResponse.clientPostalCode = client.address.postalCode;
-    
+
     return clientAddressResponse
   }
   mapSurveyApiResponse(response: SurveyQA)
@@ -348,7 +359,7 @@ export class MapResponse
     {
       surveyApiResponse.responseText = response.responseInputText;
     }
-    
+
     return surveyApiResponse;
   }
   mapTagResponse(tag: Tag)
@@ -356,7 +367,7 @@ export class MapResponse
     let tagResponse: TagResponse = new TagResponse();
 
     tagResponse.tagName = tag.tagName;
-    
+
     return tagResponse;
   }
 }

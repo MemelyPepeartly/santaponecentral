@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/santaApiService.service';
 import { Tag } from 'src/classes/tag';
 import { MapService } from '../services/mapService.service';
@@ -6,37 +6,47 @@ import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
 import { GathererService } from '../services/gatherer.service';
 import { TagControlComponent } from './tag-control/tag-control.component';
+import { Client } from 'src/classes/client';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-admin-control',
   templateUrl: './admin-control.component.html',
   styleUrls: ['./admin-control.component.css']
 })
-export class AdminControlComponent implements OnInit, AfterViewInit
+export class AdminControlComponent implements OnInit
 {
 
-  constructor(public SantaApiGet: SantaApiGetService,
+  constructor(public auth: AuthService,
+    public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
     public gatherer: GathererService,
     public ApiMapper: MapService) { }
 
+  public profile: any;
+  public isDev: boolean;
+
   public allTags: Array<Tag> = [];
   public allEvents: Array<EventType> = [];
   public allSurveys: Array<Survey> = [];
   public allQuestions: Array<Question> = [];
+  public allClients: Array<Client> = [];
 
   public tagControlSelected: boolean = false;
   public eventControlSelected: boolean = false;
   public surveyControlSelected: boolean = false;
   public questionControlSelected: boolean = false;
+  public autoAssignControlSelected: boolean = false;
 
-  ngOnInit() {
-    
-  }
-  
-  async ngAfterViewInit() {
+  async ngOnInit() {
+    this.allTags = [];
+    this.allClients = [];
+    this.allEvents = [];
+    this.allQuestions = [];
+    this.allSurveys = [];
+
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
@@ -49,7 +59,23 @@ export class AdminControlComponent implements OnInit, AfterViewInit
     this.gatherer.allQuestions.subscribe((questionArray: Array<Question>) => {
       this.allQuestions = questionArray;
     });
-    await this.gatherer.allGather();
+    this.gatherer.allClients.subscribe((clients: Array<Client>) => {
+      this.allClients = clients;
+    });
+
+    // Auth
+    this.auth.userProfile$.subscribe(data => {
+      this.profile = data;
+    });
+    this.auth.isDev.subscribe((status: boolean) => {
+      this.isDev = status;
+    });
+
+    await this.gatherer.gatherAllClients();
+    await this.gatherer.gatherAllTags();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllQuestions();
   }
   public selectTagControl()
   {
@@ -57,6 +83,7 @@ export class AdminControlComponent implements OnInit, AfterViewInit
     this.eventControlSelected = false;
     this.surveyControlSelected = false;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
   }
   public selectEventControl()
   {
@@ -64,6 +91,7 @@ export class AdminControlComponent implements OnInit, AfterViewInit
     this.eventControlSelected = true;
     this.surveyControlSelected = false;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
   }
   public selectSurveyControl()
   {
@@ -71,6 +99,8 @@ export class AdminControlComponent implements OnInit, AfterViewInit
     this.eventControlSelected = false;
     this.surveyControlSelected = true;
     this.questionControlSelected = false;
+    this.autoAssignControlSelected = false;
+
   }
   public selectQuestionControl()
   {
@@ -78,5 +108,14 @@ export class AdminControlComponent implements OnInit, AfterViewInit
     this.eventControlSelected = false;
     this.surveyControlSelected = false;
     this.questionControlSelected = true;
+    this.autoAssignControlSelected = false;
+  }
+  public selectAutoAssignControl()
+  {
+    this.tagControlSelected = false;
+    this.eventControlSelected = false;
+    this.surveyControlSelected = false;
+    this.questionControlSelected = false;
+    this.autoAssignControlSelected = true;
   }
 }

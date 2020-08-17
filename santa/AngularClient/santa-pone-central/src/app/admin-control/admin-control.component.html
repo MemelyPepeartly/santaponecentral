@@ -4,29 +4,34 @@
         <mat-nav-list>
             <mat-list-item role="listitem" (click)="selectTagControl()">Tags</mat-list-item>
         </mat-nav-list>
+        <mat-toolbar>Mass-Assignment</mat-toolbar>
+        <mat-nav-list>
+            <mat-list-item role="listitem" (click)="selectAutoAssignControl()">Mass Mail</mat-list-item>
+        </mat-nav-list>
         <mat-toolbar>Event and Survey</mat-toolbar>
         <mat-nav-list>
-            <mat-list-item role="listitem" 
+            <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
-            [disabled]="true"
+            [disabled]="!isDev"
             (click)="selectEventControl()">Events</mat-list-item>
             <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
-            [disabled]="true"
+            [disabled]="!isDev"
             (click)="selectSurveyControl()">Surveys</mat-list-item>
-            <mat-list-item role="listitem" 
+            <mat-list-item role="listitem"
             matTooltip="Not functional yet"
             [matTooltipPosition]="'right'"
-            [disabled]="true"
+            [disabled]="!isDev"
             (click)="selectQuestionControl()">Questions</mat-list-item>
         </mat-nav-list>
     </div>
     <div id="component-div">
         <app-tag-control [allTags]="allTags" *ngIf="tagControlSelected"></app-tag-control>
+        <app-auto-assignment [allClients]="allClients" *ngIf="autoAssignControlSelected"></app-auto-assignment>
         <app-event-control [allEvents]="allEvents" *ngIf="eventControlSelected"></app-event-control>
-        <app-survey-control [allSurveys]="allSurveys" *ngIf="surveyControlSelected"></app-survey-control>
+        <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions" *ngIf="surveyControlSelected"></app-survey-control>
         <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
     </div>
 </div>

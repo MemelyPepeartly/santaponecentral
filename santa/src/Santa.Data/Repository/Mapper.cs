@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Santa.Data.Entities;
+using Santa.Logic.Constants;
 using Santa.Logic.Objects;
 
 namespace Santa.Data.Repository
@@ -30,6 +31,7 @@ namespace Santa.Data.Repository
                 State = logicClient.address.state,
                 PostalCode = logicClient.address.postalCode,
                 Country = logicClient.address.country,
+                IsAdmin = logicClient.isAdmin
 
             };
             return contextClient;
@@ -48,6 +50,7 @@ namespace Santa.Data.Repository
                 email = contextClient.Email,
                 nickname = contextClient.Nickname,
                 clientName = contextClient.ClientName,
+                isAdmin = contextClient.IsAdmin,
                 address = new Address
                 {
                     addressLineOne = contextClient.AddressLine1,
@@ -59,7 +62,6 @@ namespace Santa.Data.Repository
                 },
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
-
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
                 senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
@@ -68,6 +70,11 @@ namespace Santa.Data.Repository
 
             return logicClient;
         }
+        /// <summary>
+        /// Maps a context recipient relationship xref to a sender logic object
+        /// </summary>
+        /// <param name="contextRecipientXref"></param>
+        /// <returns></returns>
         public static Logic.Objects.Sender MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
         {
             Logic.Objects.Sender logicSender = new Sender()
@@ -159,8 +166,9 @@ namespace Santa.Data.Repository
                     postalCode = contextClient.PostalCode
                 },
                 clientStatus = MapStatus(contextClient.ClientStatus),
-                recipients = contextClient.ClientRelationXrefSenderClient.Select(s=> Mapper.MapRelationProfileRecipientXref(s ,s.RecipientClient)).ToList(),
-                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapRelationProfileRecipientXref(s, s.RecipientClient)).ToList(),
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
+                editable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
             };
 
             return logicProfile;
@@ -174,7 +182,9 @@ namespace Santa.Data.Repository
             Logic.Objects.Tag logicTag = new Logic.Objects.Tag()
             {
                 tagID = contextTag.TagId,
-                tagName = contextTag.TagName
+                tagName = contextTag.TagName,
+                deletable = contextTag.ClientTagXref.Count > 0 ? false : true,
+                tagImmutable = contextTag.TagName == Constants.MASS_MAILER_TAG || contextTag.TagName == Constants.MASS_MAIL_RECIPIENT_TAG || contextTag.TagName == Constants.GRINCH_TAG ? true : false
             };
             return logicTag;
         }
@@ -272,7 +282,9 @@ namespace Santa.Data.Repository
             {
                 eventTypeID = contextEventType.EventTypeId,
                 eventDescription = contextEventType.EventDescription,
-                active = contextEventType.IsActive
+                active = contextEventType.IsActive,
+                removable = contextEventType.ClientRelationXref.Count == 0 && contextEventType.Survey.Count == 0,
+                immutable = contextEventType.EventDescription == Constants.CARD_EXCHANGE_EVENT || contextEventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT
             };
             return logicEvent;
         }
@@ -303,10 +315,15 @@ namespace Santa.Data.Repository
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
                 surveyQuestions = contextSurvey.SurveyQuestionXref.Select(q => Mapper.MapQuestion(q.SurveyQuestion)).ToList(),
+                removable = contextSurvey.SurveyQuestionXref.Count == 0
             };
             return logicSurvey;
         }
-
+        /// <summary>
+        /// Maps a logic survey to an entity survey type
+        /// </summary>
+        /// <param name="logicSurvey"></param>
+        /// <returns></returns>
         public static Entities.Survey MapSurvey(Logic.Objects.Survey logicSurvey)
         {
             Data.Entities.Survey contextSurvey = new Entities.Survey()
@@ -335,7 +352,8 @@ namespace Santa.Data.Repository
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
                 senderCanView = contextSurveyQuestion.SenderCanView,
-                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList()
+                surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList(),
+                removable = contextSurveyQuestion.SurveyResponse.Count == 0 && contextSurveyQuestion.SurveyQuestionOptionXref.Count == 0
             };
             return logicQuestion;
         }
@@ -368,15 +386,15 @@ namespace Santa.Data.Repository
         /// <summary>
         /// Takes a logic survey option and returns a context survey option
         /// </summary>
-        /// <param name="newSurveyOption"></param>
+        /// <param name="logicSurveyOption"></param>
         /// <returns></returns>
-        public static SurveyOption MapSurveyOption(Option newSurveyOption)
+        public static SurveyOption MapSurveyOption(Option logicSurveyOption)
         {
             Entities.SurveyOption contextSurveyOption = new SurveyOption()
             {
-                SurveyOptionId = newSurveyOption.surveyOptionID,
-                DisplayText = newSurveyOption.displayText,
-                SurveyOptionValue = newSurveyOption.surveyOptionValue
+                SurveyOptionId = logicSurveyOption.surveyOptionID,
+                DisplayText = logicSurveyOption.displayText,
+                SurveyOptionValue = logicSurveyOption.surveyOptionValue
             };
             return contextSurveyOption;
         }
@@ -386,7 +404,8 @@ namespace Santa.Data.Repository
             {
                 surveyOptionID = contextSurveyOption.SurveyOptionId,
                 displayText = contextSurveyOption.DisplayText,
-                surveyOptionValue = contextSurveyOption.SurveyOptionValue
+                surveyOptionValue = contextSurveyOption.SurveyOptionValue,
+                removable = contextSurveyOption.SurveyResponse.Count == 0
             };
             return logicSurveyOption;
         }

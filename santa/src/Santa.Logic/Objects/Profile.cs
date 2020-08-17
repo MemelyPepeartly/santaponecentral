@@ -14,5 +14,6 @@ namespace Santa.Logic.Objects
         public Address address { get; set; }
         public List<ProfileRecipient> recipients { get; set; }
         public List<Response> responses { get; set; }
+        public bool editable { get; set; }
     }
 }

@@ -17,44 +17,45 @@ export class GathererService {
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 
   public onSelectedClient: boolean = false;
+
   /* BEHAVIOR SUBJECTS FOR GATHERING STATUS */
-  public _gatheringAllClients: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllClients: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllClients()
   {
     return this._gatheringAllClients.asObservable();
   }
 
-  public _gatheringAllTags: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllTags: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllTags()
   {
     return this._gatheringAllTags.asObservable();
   }
 
-  public _gatheringAllSurveys: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllSurveys: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllSurveys()
   {
     return this._gatheringAllSurveys.asObservable();
   }
 
-  public _gatheringAllQuestions: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllQuestions: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllQuestions()
   {
     return this._gatheringAllQuestions.asObservable();
   }
 
-  public _gatheringAllEvents: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllEvents: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllEvents()
   {
     return this._gatheringAllEvents.asObservable();
   }
 
-  public _gatheringAllStatuses: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllStatuses: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllStatuses()
   {
     return this._gatheringAllStatuses.asObservable();
   }
 
-  public _gatheringAllMessages: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _gatheringAllMessages: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllMessages()
   {
     return this._gatheringAllMessages.asObservable();

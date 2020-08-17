@@ -24,39 +24,18 @@ export class QuestionControlComponent implements OnInit {
 
   @Input() allQuestions: Array<Question> = [];
 
-  public addQuestionFormGroup: FormGroup;
-  public editQuestionFormGroup: FormGroup;
-
-
-  public selectedQuestion: Question;
-  public deletableQuestions: Array<Question> = [];
   public tagsInUse: Array<Question> = [];
   public allClients: Array<Client> = [];
 
-  public postingNewQuestion: boolean = false;
-  public updatingQuestionName: boolean = false;
-  public deletingQuestion: boolean = false;
-
-  // Getters for form values for ease-of-use
-  get newQuestion() {
-    var formControlObj = this.addQuestionFormGroup.get('newQuestion') as FormControl
-    return formControlObj.value
-  }
-  get editedQuestionName() {
-    var formControlObj = this.editQuestionFormGroup.get('editQuestion') as FormControl
-    return formControlObj.value
-  }
+  public gatheringAllQuestions: boolean = false;
 
   ngOnInit(): void {
     this.constructFormGroups();
+    this.gatherer.gatheringAllQuestions.subscribe((status: boolean) => {
+      this.gatheringAllQuestions = status;
+    })
   }
   private constructFormGroups() {
-    this.addQuestionFormGroup = this.formBuilder.group({
-      newQuestion: [null, Validators.nullValidator && Validators.pattern],
-    });
-    this.editQuestionFormGroup = this.formBuilder.group({
-      editQuestion: [null, Validators.nullValidator && Validators.pattern],
-    });
   }
   public deleteQuestion(question: Question)
   {
@@ -76,6 +55,6 @@ export class QuestionControlComponent implements OnInit {
   }
   public addNewQuestion()
   {
-    
+
   }
 }

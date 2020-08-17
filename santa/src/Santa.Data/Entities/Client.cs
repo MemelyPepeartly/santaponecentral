@@ -26,6 +26,7 @@ namespace Santa.Data.Entities
         public string State { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
+        public bool IsAdmin { get; set; }
 
         public virtual ClientStatus ClientStatus { get; set; }
         public virtual ICollection<ChatMessage> ChatMessageMessageReceiverClient { get; set; }

@@ -13,7 +13,7 @@ import { Client } from 'src/classes/client';
   templateUrl: './tag-control.component.html',
   styleUrls: ['./tag-control.component.css']
 })
-export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
+export class TagControlComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     public SantaApiGet: SantaApiGetService,
@@ -29,15 +29,13 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
   public addTagFormGroup: FormGroup;
   public editTagFormGroup: FormGroup;
 
-
   public selectedTag: Tag;
-  public deletableTags: Array<Tag> = [];
-  public tagsInUse: Array<Tag> = [];
-  public allClients: Array<Client> = [];
 
   public postingNewTag: boolean = false;
   public updatingTagName: boolean = false;
   public deletingTag: boolean = false;
+
+  public gatheringAllTags: boolean = false;
 
   // Getters for form values for ease-of-use
   get newTag() {
@@ -49,26 +47,18 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
     return formControlObj.value
   }
 
-  //KCHERE check console for bugs when this component is initialized
   ngOnInit() {
     this.constructFormGroups();
-  }
-  async ngAfterViewInit() {
-    this.gatherer.allClients.subscribe((clients: Array<Client>) => {
-      this.allClients = clients;
-    });
-    await this.gatherer.gatherAllTags();
-    await this.sortDeletableTags();
-  }
-  async ngOnChanges() {
-    await this.sortDeletableTags();
+    this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
+      this.gatheringAllTags = status;
+    })
   }
   private constructFormGroups() {
     this.addTagFormGroup = this.formBuilder.group({
-      newTag: [null, Validators.nullValidator && Validators.pattern],
+      newTag: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
     });
     this.editTagFormGroup = this.formBuilder.group({
-      editTag: [null, Validators.nullValidator && Validators.pattern],
+      editTag: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2), Validators.pattern("[A-Za-z0-9 ]{2,50}")]],
     });
   }
   public setSelectedTag(tag: Tag)
@@ -79,79 +69,48 @@ export class TagControlComponent implements OnInit, AfterViewInit, OnChanges {
   {
     this.selectedTag = undefined;
   }
-  public addNewTag()
+  public async addNewTag()
   {
     this.postingNewTag = true;
 
     let newTagResponse: TagResponse = new TagResponse();
     newTagResponse.tagName = this.newTag;
-    
-    this.SantaApiPost.postTag(newTagResponse).subscribe(res =>
-      {
-        this.gatherer.gatherAllTags();
-        this.postingNewTag = false;
-      },
-      err =>
-      {
-        this.postingNewTag = false;
-        console.log(err)
-      })
+
+    await this.SantaApiPost.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
+    await this.gatherer.gatherAllTags();
+    this.addTagFormGroup.reset();
+
+    this.postingNewTag = false;
   }
   public async editTag()
-  {    
+  {
     this.updatingTagName = true;
     let updatedTag: Tag = this.selectedTag
     updatedTag.tagName = this.editedTagName
     let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
-    
+
     await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
     await this.gatherer.gatherAllTags();
+    this.editTagFormGroup.reset();
+
     this.updatingTagName = false;
   }
   public async deleteTag(tag: Tag)
   {
     this.deletingTag = true;
-    this.SantaApiDelete.deleteTag(tag.tagID).subscribe(() => {
-      this.gatherer.gatherAllTags();
-      this.selectedTag = undefined;
-      this.deletingTag = false;
-    },
-    err => {
-      this.deletingTag = false;
-      console.log(err); 
-    });
-  }
-  public async sortDeletableTags()
-  {
-    this.deletableTags = [];
-    //For all the clients
-    for(let i = 0; i < this.allClients.length; i++)
-    {
-      //If the client has more than 0 tags
-      if(this.allClients[i].tags.length > 0)
-      {
-        //Look through each tag
-        for(let j = 0; j < this.allClients[i].tags.length; j++)
-        {
-          //If the tag in question doesnt already exist in the list of in-use tags
-          if(!this.tagsInUse.some((tag: Tag) => tag.tagID == this.allClients[i].tags[j].tagID))
-          {
-            //Add the tag to the list of used tags
-            this.tagsInUse.push(this.allClients[i].tags[j])
-          }
-        } 
-      }
-    }
 
-    //For each tag available
-    for(let i = 0; i < this.allTags.length; i++)
-    {
-      //If the list of tagsInUse does not have the current tag in it
-      if(!this.tagsInUse.some((tag: Tag) => tag.tagID == this.allTags[i].tagID))
-      {
-        //Add it to the list of deletable tags
-        this.deletableTags.push(this.allTags[i]);
-      }
-    }
+    await this.SantaApiDelete.deleteTag(tag.tagID).toPromise().catch((err) => {console.log(err)});
+    await this.gatherer.gatherAllTags();
+    this.selectedTag = undefined;
+
+    this.deletingTag = false;
+  }
+  public sortDeletable() : Array<Tag>
+  {
+    return this.allTags.filter((tag: Tag) => {return tag.deletable == true && tag.tagImmutable == false})
+  }
+  public sortEditable() : Array<Tag>
+  {
+    return this.allTags.filter((tag: Tag) => {return tag.tagImmutable != true})
   }
 }
