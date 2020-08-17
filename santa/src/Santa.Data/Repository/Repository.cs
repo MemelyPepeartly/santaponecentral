@@ -1193,15 +1193,29 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-
-        public async Task UpdateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        public async Task UpdateBoardEntryPostNumberAsync(Logic.Objects.BoardEntry newEntry)
         {
             try
             {
                 Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
 
-                contextBoardEntry.PostDescription = newEntry.postDescription != contextBoardEntry.PostDescription ? newEntry.postDescription : contextBoardEntry.PostDescription;
-                contextBoardEntry.PostNumber = newEntry.postNumber != contextBoardEntry.PostNumber ? newEntry.postNumber : contextBoardEntry.PostNumber;
+                contextBoardEntry.PostNumber = newEntry.postNumber;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateBoardEntryPostDescriptionAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.PostDescription = newEntry.postDescription;
 
                 santaContext.BoardEntry.Update(contextBoardEntry);
             }

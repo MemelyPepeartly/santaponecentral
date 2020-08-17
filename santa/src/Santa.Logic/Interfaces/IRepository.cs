@@ -171,15 +171,54 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Board Entries
+        /// <summary>
+        /// Creates a board entry with a new logic board object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
         Task CreateBoardEntryAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Gets a logic list of all the board entries
+        /// </summary>
+        /// <returns></returns>
         Task<List<BoardEntry>> GetAllBoardEntriesAsync();
+        /// <summary>
+        /// Gets a certain board entry by its boardEntryID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <returns></returns>
         Task<BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID);
+        /// <summary>
+        /// Gets a board entry by its post number
+        /// </summary>
+        /// <param name="postNumber"></param>
+        /// <returns></returns>
         Task<BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber);
-        Task UpdateBoardEntryAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates a post number in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryPostNumberAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates a post description in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryPostDescriptionAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Deletes a board entry by its board entry ID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <returns></returns>
         Task DeleteBoardEntryByIDAsync(Guid boardEntryID);
         #endregion
 
         #region Utility
+        /// <summary>
+        /// Saves changes of any CRUD operations in the queue
+        /// </summary>
+        /// <returns></returns>
         Task SaveAsync();
         #endregion
 
