@@ -1138,7 +1138,40 @@ namespace Santa.Data.Repository
             }
         }
         #endregion
-        
+
+        #region Board Entry
+        public Task CreateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Logic.Objects.BoardEntry>> GetAllBoardEntriesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Logic.Objects.BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Logic.Objects.BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteBoardEntryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {

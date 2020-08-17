@@ -170,6 +170,15 @@ namespace Santa.Logic.Interfaces
         Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID);
         #endregion
 
+        #region Board Entries
+        Task CreateBoardEntryAsync(BoardEntry newEntry);
+        Task<List<BoardEntry>> GetAllBoardEntriesAsync();
+        Task<BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID);
+        Task<BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber);
+        Task UpdateBoardEntryAsync(BoardEntry newEntry);
+        Task DeleteBoardEntryAsync();
+        #endregion
+
         #region Utility
         Task SaveAsync();
         #endregion
