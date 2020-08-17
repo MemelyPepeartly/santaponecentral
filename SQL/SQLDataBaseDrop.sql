@@ -11,6 +11,7 @@ DROP TABLE app.ClientTagXref;
 DROP TABLE app.Client;
 DROP TABLE app.ClientStatus;
 DROP TABLE app.Tag;
+DROP TABLE app.BoardEntry;
 
 DROP SCHEMA app;
 

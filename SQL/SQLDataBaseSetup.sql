@@ -108,7 +108,7 @@ CREATE TABLE app.ChatMessage
 CREATE TABLE app.BoardEntry
 (
     boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
-    postNumber INT NOT NULL,
+    postNumber INT NOT NULL UNIQUE,
     postDescription NVARCHAR(100) NOT NULL
 );
 

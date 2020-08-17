@@ -36,6 +36,10 @@ namespace Santa.Data.Entities
             {
                 entity.ToTable("BoardEntry", "app");
 
+                entity.HasIndex(x => x.PostNumber)
+                    .HasName("UQ__BoardEnt__51816384708E8E40")
+                    .IsUnique();
+
                 entity.Property(e => e.BoardEntryId)
                     .HasColumnName("boardEntryID")
                     .HasViewColumnName("boardEntryID")
