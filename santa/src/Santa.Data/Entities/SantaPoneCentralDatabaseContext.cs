@@ -15,6 +15,7 @@ namespace Santa.Data.Entities
         {
         }
 
+        public virtual DbSet<BoardEntry> BoardEntry { get; set; }
         public virtual DbSet<ChatMessage> ChatMessage { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientRelationXref> ClientRelationXref { get; set; }
@@ -31,6 +32,26 @@ namespace Santa.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BoardEntry>(entity =>
+            {
+                entity.ToTable("BoardEntry", "app");
+
+                entity.Property(e => e.BoardEntryId)
+                    .HasColumnName("boardEntryID")
+                    .HasViewColumnName("boardEntryID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.PostDescription)
+                    .IsRequired()
+                    .HasColumnName("postDescription")
+                    .HasViewColumnName("postDescription")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.PostNumber)
+                    .HasColumnName("postNumber")
+                    .HasViewColumnName("postNumber");
+            });
+
             modelBuilder.Entity<ChatMessage>(entity =>
             {
                 entity.ToTable("ChatMessage", "app");

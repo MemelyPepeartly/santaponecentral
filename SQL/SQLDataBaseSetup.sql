@@ -102,7 +102,15 @@ CREATE TABLE app.ChatMessage
     messageContent NVARCHAR(1000) NOT NULL,
     dateTimeSent DATETIME NOT NULL,
     isMessageRead BIT NOT NULL,
-    fromAdmin BIT NOT NULL);
+    fromAdmin BIT NOT NULL
+);
+
+CREATE TABLE app.BoardEntry
+(
+    boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
+    postNumber INT NOT NULL,
+    postDescription NVARCHAR(100) NOT NULL
+);
 
 GO
 CREATE TRIGGER app.cascadeTrigger ON app.Client INSTEAD OF DELETE
