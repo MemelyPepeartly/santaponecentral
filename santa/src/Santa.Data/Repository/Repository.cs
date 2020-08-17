@@ -1140,34 +1140,88 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Board Entry
-        public Task CreateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        public async Task CreateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await santaContext.AddAsync(Mapper.MapBoardEntry(newEntry));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public Task<List<Logic.Objects.BoardEntry>> GetAllBoardEntriesAsync()
+        public async Task<List<Logic.Objects.BoardEntry>> GetAllBoardEntriesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Logic.Objects.BoardEntry> logicListBoardEntries = (await santaContext.BoardEntry
+                    .ToListAsync())
+                    .Select(Mapper.MapBoardEntry)
+                    .ToList();
+                return logicListBoardEntries;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public Task<Logic.Objects.BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID)
+        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID));
+                return logicBoardEntry;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public Task<Logic.Objects.BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber)
+        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.PostNumber == postNumber));
+                return logicBoardEntry;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public Task UpdateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        public async Task UpdateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.PostDescription = newEntry.postDescription != contextBoardEntry.PostDescription ? newEntry.postDescription : contextBoardEntry.PostDescription;
+                contextBoardEntry.PostNumber = newEntry.postNumber != contextBoardEntry.PostNumber ? newEntry.postNumber : contextBoardEntry.PostNumber;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
-        public Task DeleteBoardEntryByIDAsync(Guid boardEntryID)
+        public async Task DeleteBoardEntryByIDAsync(Guid boardEntryID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID);
+                santaContext.Remove(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         #endregion

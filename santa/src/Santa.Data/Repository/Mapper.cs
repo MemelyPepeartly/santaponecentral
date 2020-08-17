@@ -467,5 +467,38 @@ namespace Santa.Data.Repository
         }
         #endregion
         #endregion
+
+        #region Board Entry
+        /// <summary>
+        /// Maps a context board entry to a logic board entry
+        /// </summary>
+        /// <param name="contextBoardEntry"></param>
+        /// <returns></returns>
+        public static Logic.Objects.BoardEntry MapBoardEntry(Data.Entities.BoardEntry contextBoardEntry)
+        {
+            Logic.Objects.BoardEntry logicBoardEntry = new Logic.Objects.BoardEntry()
+            {
+                boardEntryID = contextBoardEntry.BoardEntryId,
+                postNumber = contextBoardEntry.PostNumber,
+                postDescription = contextBoardEntry.PostDescription
+            };
+            return logicBoardEntry;
+        }
+        /// <summary>
+        /// Maps a logic board entry to a context board entry
+        /// </summary>
+        /// <param name="logicBoardEntry"></param>
+        /// <returns></returns>
+        public static Data.Entities.BoardEntry MapBoardEntry(Logic.Objects.BoardEntry logicBoardEntry)
+        {
+            Data.Entities.BoardEntry contextBoardEntry = new Entities.BoardEntry()
+            {
+                BoardEntryId = logicBoardEntry.boardEntryID,
+                PostNumber = logicBoardEntry.postNumber,
+                PostDescription = logicBoardEntry.postDescription
+            };
+            return contextBoardEntry;
+        }
+        #endregion
     }
 }
