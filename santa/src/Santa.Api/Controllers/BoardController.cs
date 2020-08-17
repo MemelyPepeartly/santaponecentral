@@ -82,6 +82,11 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/Board
+        /// <summary>
+        /// Posts a new board entry object to the database
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BoardEntry>> PostNewBoardEntry([FromBody] NewBoardEntryModel model)
         {
@@ -93,7 +98,7 @@ namespace Santa.Api.Controllers
                     postNumber = model.postNumber,
                     postDescription = model.postDescription
                 };
-                await repository.UpdateBoardEntryAsync(newLogicBoardEntry);
+                await repository.CreateBoardEntryAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
 
                 return Ok(await repository.GetBoardEntryByIDAsync(newLogicBoardEntry.boardEntryID));
@@ -121,7 +126,7 @@ namespace Santa.Api.Controllers
                     boardEntryID = boardEntryID,
                     postNumber = model.postNumber
                 };
-                await repository.UpdateBoardEntryAsync(newLogicBoardEntry);
+                await repository.UpdateBoardEntryPostNumberAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
                 return Ok(await repository.GetBoardEntryByIDAsync(boardEntryID));
             }
@@ -148,7 +153,7 @@ namespace Santa.Api.Controllers
                     boardEntryID = boardEntryID,
                     postDescription = model.postDescription
                 };
-                await repository.UpdateBoardEntryAsync(newLogicBoardEntry);
+                await repository.UpdateBoardEntryPostDescriptionAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
                 return Ok(await repository.GetBoardEntryByIDAsync(boardEntryID));
             }
