@@ -21,6 +21,7 @@ namespace Santa.Data.Entities
         public virtual DbSet<ClientRelationXref> ClientRelationXref { get; set; }
         public virtual DbSet<ClientStatus> ClientStatus { get; set; }
         public virtual DbSet<ClientTagXref> ClientTagXref { get; set; }
+        public virtual DbSet<EntryType> EntryType { get; set; }
         public virtual DbSet<EventType> EventType { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
         public virtual DbSet<SurveyOption> SurveyOption { get; set; }
@@ -37,13 +38,17 @@ namespace Santa.Data.Entities
                 entity.ToTable("BoardEntry", "app");
 
                 entity.HasIndex(x => x.PostNumber)
-                    .HasName("UQ__BoardEnt__51816384708E8E40")
+                    .HasName("UQ__BoardEnt__51816384FDFAB2E3")
                     .IsUnique();
 
                 entity.Property(e => e.BoardEntryId)
                     .HasColumnName("boardEntryID")
                     .HasViewColumnName("boardEntryID")
                     .ValueGeneratedNever();
+
+                entity.Property(e => e.EntryTypeId)
+                    .HasColumnName("entryTypeID")
+                    .HasViewColumnName("entryTypeID");
 
                 entity.Property(e => e.PostDescription)
                     .IsRequired()
@@ -54,6 +59,11 @@ namespace Santa.Data.Entities
                 entity.Property(e => e.PostNumber)
                     .HasColumnName("postNumber")
                     .HasViewColumnName("postNumber");
+
+                entity.HasOne(d => d.EntryType)
+                    .WithMany(p => p.BoardEntry)
+                    .HasForeignKey(x => x.EntryTypeId)
+                    .HasConstraintName("FK__BoardEntr__entry__763AA32E");
             });
 
             modelBuilder.Entity<ChatMessage>(entity =>
@@ -288,6 +298,28 @@ namespace Santa.Data.Entities
                     .HasForeignKey(x => x.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ClientTag__tagID__55CDD39C");
+            });
+
+            modelBuilder.Entity<EntryType>(entity =>
+            {
+                entity.ToTable("EntryType", "app");
+
+                entity.Property(e => e.EntryTypeId)
+                    .HasColumnName("entryTypeID")
+                    .HasViewColumnName("entryTypeID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.EntryTypeDescription)
+                    .IsRequired()
+                    .HasColumnName("entryTypeDescription")
+                    .HasViewColumnName("entryTypeDescription")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.EntryTypeName)
+                    .IsRequired()
+                    .HasColumnName("entryTypeName")
+                    .HasViewColumnName("entryTypeName")
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<EventType>(entity =>
