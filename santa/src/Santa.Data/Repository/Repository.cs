@@ -1157,6 +1157,7 @@ namespace Santa.Data.Repository
             try
             {
                 List<Logic.Objects.BoardEntry> logicListBoardEntries = (await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
                     .ToListAsync())
                     .Select(Mapper.MapBoardEntry)
                     .ToList();
@@ -1172,7 +1173,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID));
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
+                    .FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID));
                 return logicBoardEntry;
             }
             catch (Exception e)
@@ -1185,7 +1188,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.PostNumber == postNumber));
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
+                    .FirstOrDefaultAsync(b => b.PostNumber == postNumber));
                 return logicBoardEntry;
             }
             catch (Exception e)
