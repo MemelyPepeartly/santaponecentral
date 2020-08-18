@@ -155,8 +155,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyQuestions
-        Task<List<Question>> GetAllSurveyQuestions();
-        Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
+        Task CreateSurveyQuestionAsync(Question newQuestion);
         /// <summary>
         /// Creates a relationship between a survey and a question based on their ID
         /// </summary>
@@ -164,8 +163,8 @@ namespace Santa.Logic.Interfaces
         /// <param name="questionID"></param>
         /// <returns></returns>
         Task CreateSurveyQuestionXrefAsync(Guid surveyID, Guid questionID);
-        Task CreateSurveyQuestionAsync(Question newQuestion);
-
+        Task<List<Question>> GetAllSurveyQuestions();
+        Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
         Task UpdateSurveyQuestionByIDAsync(Question targetQuestion);
         Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID);
         #endregion
@@ -212,6 +211,15 @@ namespace Santa.Logic.Interfaces
         /// <param name="boardEntryID"></param>
         /// <returns></returns>
         Task DeleteBoardEntryByIDAsync(Guid boardEntryID);
+        #endregion
+
+        #region Entry Type
+        Task CreateNewEntryTypeAsync(EntryType newEntryType);
+        Task<List<EntryType>> GetAllEntryTypesAsync();
+        Task<EntryType> GetEntryTypeByIDAsync(Guid entryTypeID);
+        Task UpdateEntryTypeName(EntryType updatedEntryType);
+        Task UpdateEntryTypeDescription(EntryType updatedEntryType);
+        Task DeleteEntryType(Guid entryTypeID);
         #endregion
 
         #region Utility

@@ -1240,6 +1240,80 @@ namespace Santa.Data.Repository
 
         #endregion
 
+        #region Entry Type
+        public async Task CreateNewEntryTypeAsync(Logic.Objects.EntryType newEntryType)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<Logic.Objects.EntryType>> GetAllEntryTypesAsync()
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Logic.Objects.EntryType> GetEntryTypeByIDAsync(Guid entryTypeID)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateEntryTypeName(Logic.Objects.EntryType updatedEntryType)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateEntryTypeDescription(Logic.Objects.EntryType updatedEntryType)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task DeleteEntryType(Guid entryTypeID)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {
