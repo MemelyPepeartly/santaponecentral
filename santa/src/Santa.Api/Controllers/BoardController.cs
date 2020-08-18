@@ -95,6 +95,10 @@ namespace Santa.Api.Controllers
                 BoardEntry newLogicBoardEntry = new BoardEntry()
                 {
                     boardEntryID = Guid.NewGuid(),
+                    entryType = new EntryType()
+                    {
+                        entryTypeID = model.entryTypeID
+                    },
                     postNumber = model.postNumber,
                     postDescription = model.postDescription
                 };
@@ -152,6 +156,35 @@ namespace Santa.Api.Controllers
                 {
                     boardEntryID = boardEntryID,
                     postDescription = model.postDescription
+                };
+                await repository.UpdateBoardEntryPostDescriptionAsync(newLogicBoardEntry);
+                await repository.SaveAsync();
+                return Ok(await repository.GetBoardEntryByIDAsync(boardEntryID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+            }
+        }
+        // PUT: api/Board/5/EntryType
+        /// <summary>
+        /// Updates a board entry's post description by its boardEntryID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{boardEntryID}/EntryType")]
+        public async Task<ActionResult<BoardEntry>> PutEntryType(Guid boardEntryID, [FromBody] EditEntryTypeModel model)
+        {
+            try
+            {
+                BoardEntry newLogicBoardEntry = new BoardEntry()
+                {
+                    boardEntryID = boardEntryID,
+                    entryType = new EntryType()
+                    {
+                        entryTypeID = model.entryTypeID
+                    }
                 };
                 await repository.UpdateBoardEntryPostDescriptionAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
