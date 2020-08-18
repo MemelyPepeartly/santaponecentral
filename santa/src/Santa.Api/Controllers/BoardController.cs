@@ -168,7 +168,7 @@ namespace Santa.Api.Controllers
         }
         // PUT: api/Board/5/EntryType
         /// <summary>
-        /// Updates a board entry's post description by its boardEntryID
+        /// Updates a board entry's type by boardEntryID
         /// </summary>
         /// <param name="boardEntryID"></param>
         /// <param name="model"></param>
