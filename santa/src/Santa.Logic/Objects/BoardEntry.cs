@@ -10,6 +10,7 @@ namespace Santa.Logic.Objects
     public class BoardEntry
     {
         public Guid boardEntryID { get; set; }
+        public EntryType entryType { get; set; }
         public int postNumber { get; set; }
         public string postDescription { get; set; }
     }
