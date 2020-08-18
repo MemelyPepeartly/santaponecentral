@@ -206,6 +206,12 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task UpdateBoardEntryPostDescriptionAsync(BoardEntry newEntry);
         /// <summary>
+        /// Updates the entry type of a board post
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryTypeAsync(BoardEntry newEntry);
+        /// <summary>
         /// Deletes a board entry by its board entry ID
         /// </summary>
         /// <param name="boardEntryID"></param>

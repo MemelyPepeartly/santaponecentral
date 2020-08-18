@@ -1225,6 +1225,22 @@ namespace Santa.Data.Repository
             }
         }
 
+        public async Task UpdateBoardEntryTypeAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.EntryTypeId = newEntry.entryType.entryTypeID;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
         public async Task DeleteBoardEntryByIDAsync(Guid boardEntryID)
         {
             try
