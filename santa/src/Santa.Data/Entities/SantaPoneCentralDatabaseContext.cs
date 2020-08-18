@@ -38,7 +38,7 @@ namespace Santa.Data.Entities
                 entity.ToTable("BoardEntry", "app");
 
                 entity.HasIndex(x => x.PostNumber)
-                    .HasName("UQ__BoardEnt__51816384FDFAB2E3")
+                    .HasName("UQ__BoardEnt__518163840475589E")
                     .IsUnique();
 
                 entity.Property(e => e.BoardEntryId)
@@ -63,7 +63,7 @@ namespace Santa.Data.Entities
                 entity.HasOne(d => d.EntryType)
                     .WithMany(p => p.BoardEntry)
                     .HasForeignKey(x => x.EntryTypeId)
-                    .HasConstraintName("FK__BoardEntr__entry__763AA32E");
+                    .HasConstraintName("FK__BoardEntr__entry__7CE7A0BD");
             });
 
             modelBuilder.Entity<ChatMessage>(entity =>
@@ -303,6 +303,10 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<EntryType>(entity =>
             {
                 entity.ToTable("EntryType", "app");
+
+                entity.HasIndex(x => x.EntryTypeName)
+                    .HasName("UQ__EntryTyp__2E52653CC30C336F")
+                    .IsUnique();
 
                 entity.Property(e => e.EntryTypeId)
                     .HasColumnName("entryTypeID")

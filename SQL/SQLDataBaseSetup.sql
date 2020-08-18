@@ -108,7 +108,7 @@ CREATE TABLE app.ChatMessage
 CREATE TABLE app.EntryType
 (
     entryTypeID UNIQUEIDENTIFIER PRIMARY KEY,
-    entryTypeName NVARCHAR(100) NOT NULL,
+    entryTypeName NVARCHAR(100) NOT NULL UNIQUE,
     entryTypeDescription NVARCHAR(200) NOT NULL
 );
 CREATE TABLE app.BoardEntry
