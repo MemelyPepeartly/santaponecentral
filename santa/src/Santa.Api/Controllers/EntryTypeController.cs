@@ -22,6 +22,10 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/EntryType
+        /// <summary>
+        /// Gets a list of all entry types
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<EntryType>>> GetAllEntryTypes()
         {
@@ -37,6 +41,11 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/EntryType/5
+        /// <summary>
+        /// Gets a specific entry type by ID
+        /// </summary>
+        /// <param name="entryTypeID"></param>
+        /// <returns></returns>
         [HttpGet("{entryTypeID}")]
         public async Task<ActionResult<EntryType>> GetEntryTypeByID(Guid entryTypeID)
         {
@@ -52,6 +61,11 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/EntryType
+        /// <summary>
+        /// Posts a new entry type
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EntryType>> PostNewEntryType([FromBody] NewEntryTypeModel model)
         {
@@ -75,6 +89,12 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/EntryType/5/Name
+        /// <summary>
+        /// Modify's a specific entry type's name
+        /// </summary>
+        /// <param name="entryTypeID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{entryTypeID}/Name")]
         public async Task<ActionResult<EntryType>> PutEntryTypeName(Guid entryTypeID, [FromBody] EditEntryTypeNameModel model)
         {
@@ -97,6 +117,12 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/EntryType/5/Description
+        /// <summary>
+        /// Modify's a specific entry type's description
+        /// </summary>
+        /// <param name="entryTypeID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{entryTypeID}/Description")]
         public async Task<ActionResult<EntryType>> PutEntryTypeDescription(Guid entryTypeID, [FromBody] EditEntryTypeDescriptionModel model)
         {
@@ -119,6 +145,11 @@ namespace Santa.Api.Controllers
         }
 
         // DELETE: api/EntryType/5
+        /// <summary>
+        /// Deletes a specific entry type
+        /// </summary>
+        /// <param name="entryTypeID"></param>
+        /// <returns></returns>
         [HttpDelete("{entryTypeID}")]
         public async Task<ActionResult> DeleteEntryType(Guid entryTypeID)
         {
