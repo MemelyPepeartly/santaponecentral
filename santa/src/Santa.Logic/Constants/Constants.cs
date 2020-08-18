@@ -27,5 +27,7 @@ namespace Santa.Logic.Constants
         public const string MASS_MAILER_TAG = "Mass Mailer";
         public const string MASS_MAIL_RECIPIENT_TAG = "Mass Mail Recipient";
 
+        // Entry types
+
     }
 }

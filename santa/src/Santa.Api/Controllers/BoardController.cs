@@ -186,7 +186,7 @@ namespace Santa.Api.Controllers
                         entryTypeID = model.entryTypeID
                     }
                 };
-                await repository.UpdateBoardEntryPostDescriptionAsync(newLogicBoardEntry);
+                await repository.UpdateBoardEntryTypeAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
                 return Ok(await repository.GetBoardEntryByIDAsync(boardEntryID));
             }
