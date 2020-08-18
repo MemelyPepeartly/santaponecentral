@@ -105,9 +105,16 @@ CREATE TABLE app.ChatMessage
     fromAdmin BIT NOT NULL
 );
 
+CREATE TABLE app.EntryType
+(
+    entryTypeID UNIQUEIDENTIFIER PRIMARY KEY,
+    entryTypeName NVARCHAR(100) NOT NULL,
+    entryTypeDescription NVARCHAR(200) NOT NULL
+);
 CREATE TABLE app.BoardEntry
 (
     boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
+    entryTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EntryType(EntryTypeID),
     postNumber INT NOT NULL UNIQUE,
     postDescription NVARCHAR(100) NOT NULL
 );
