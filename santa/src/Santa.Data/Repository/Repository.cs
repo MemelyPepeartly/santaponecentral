@@ -1266,7 +1266,7 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                await santaContext.EntryType.AddAsync(Mapper.MapEntryType(newEntryType));
             }
             catch(Exception e)
             {
@@ -1278,7 +1278,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                List<Logic.Objects.EntryType> listLogicEntryType = (await santaContext.EntryType
+                    .ToListAsync())
+                    .Select(Mapper.MapEntryType)
+                    .ToList();
+                return listLogicEntryType;
             }
             catch (Exception e)
             {
@@ -1290,7 +1294,8 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                Logic.Objects.EntryType logicEntryType = Mapper.MapEntryType(await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == entryTypeID));
+                return logicEntryType;
             }
             catch (Exception e)
             {
@@ -1302,7 +1307,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == updatedEntryType.entryTypeID);
+
+                contextEntryType.EntryTypeName = updatedEntryType.entryTypeName;
+
+                santaContext.EntryType.Update(contextEntryType);
             }
             catch (Exception e)
             {
@@ -1314,7 +1323,11 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == updatedEntryType.entryTypeID);
+
+                contextEntryType.EntryTypeDescription = updatedEntryType.entryTypeDescription;
+
+                santaContext.EntryType.Update(contextEntryType);
             }
             catch (Exception e)
             {
@@ -1326,7 +1339,9 @@ namespace Santa.Data.Repository
         {
             try
             {
-                throw new NotImplementedException();
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == entryTypeID);
+
+                santaContext.EntryType.Remove(contextEntryType);
             }
             catch (Exception e)
             {
