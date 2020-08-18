@@ -214,12 +214,12 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Entry Type
-        Task CreateNewEntryTypeAsync(EntryType newEntryType);
+        Task CreateEntryTypeAsync(EntryType newEntryType);
         Task<List<EntryType>> GetAllEntryTypesAsync();
         Task<EntryType> GetEntryTypeByIDAsync(Guid entryTypeID);
         Task UpdateEntryTypeName(EntryType updatedEntryType);
         Task UpdateEntryTypeDescription(EntryType updatedEntryType);
-        Task DeleteEntryType(Guid entryTypeID);
+        Task DeleteEntryTypeByID(Guid entryTypeID);
         #endregion
 
         #region Utility

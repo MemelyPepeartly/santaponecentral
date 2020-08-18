@@ -1241,7 +1241,7 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Entry Type
-        public async Task CreateNewEntryTypeAsync(Logic.Objects.EntryType newEntryType)
+        public async Task CreateEntryTypeAsync(Logic.Objects.EntryType newEntryType)
         {
             try
             {
@@ -1301,7 +1301,7 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task DeleteEntryType(Guid entryTypeID)
+        public async Task DeleteEntryTypeByID(Guid entryTypeID)
         {
             try
             {
