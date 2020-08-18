@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.NetworkInformation;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects;
@@ -480,7 +481,8 @@ namespace Santa.Data.Repository
             {
                 boardEntryID = contextBoardEntry.BoardEntryId,
                 postNumber = contextBoardEntry.PostNumber,
-                postDescription = contextBoardEntry.PostDescription
+                postDescription = contextBoardEntry.PostDescription,
+                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType)
             };
             return logicBoardEntry;
         }
@@ -494,10 +496,34 @@ namespace Santa.Data.Repository
             Data.Entities.BoardEntry contextBoardEntry = new Entities.BoardEntry()
             {
                 BoardEntryId = logicBoardEntry.boardEntryID,
+                EntryTypeId = logicBoardEntry.entryType.entryTypeID,
                 PostNumber = logicBoardEntry.postNumber,
                 PostDescription = logicBoardEntry.postDescription
             };
             return contextBoardEntry;
+        }
+        #endregion
+
+        #region Entry Type
+        public static Logic.Objects.EntryType MapEntryType(Data.Entities.EntryType contextEntryType)
+        {
+            Logic.Objects.EntryType logicEntryType = new Logic.Objects.EntryType()
+            {
+                entryTypeID = contextEntryType.EntryTypeId,
+                entryTypeName = contextEntryType.EntryTypeName,
+                entryTypeDescription = contextEntryType.EntryTypeDescription
+            };
+            return logicEntryType;
+        }
+        public static Data.Entities.EntryType MapEntryType(Logic.Objects.EntryType logicEntryType)
+        {
+            Data.Entities.EntryType contextEntryType = new Entities.EntryType()
+            {
+                EntryTypeId = logicEntryType.entryTypeID,
+                EntryTypeName = logicEntryType.entryTypeName,
+                EntryTypeDescription = logicEntryType.entryTypeDescription
+            };
+            return contextEntryType;
         }
         #endregion
     }
