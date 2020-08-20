@@ -13,16 +13,21 @@ import { AdminControlComponent } from './admin-control/admin-control.component';
 import { AuthGuard } from './auth/auth.guard'
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './auth/interceptor.service';
+import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
 
 
 const appRoutes: Routes = [
+  {
+    path: 'home',
+    component: HomeComponent
+  },
   { path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'home',
-    component: HomeComponent
+    path: 'mission-boards',
+    component: MissionBoardsComponent
   },
   {
     path: 'signup',
@@ -51,7 +56,7 @@ const appRoutes: Routes = [
 		path: "**",
 		redirectTo: "home"
   },
-  { 
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
