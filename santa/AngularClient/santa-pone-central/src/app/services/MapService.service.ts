@@ -7,6 +7,7 @@ import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/cl
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
+import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 
 @Injectable({
   providedIn: 'root'
@@ -369,5 +370,33 @@ export class MapResponse
     tagResponse.tagName = tag.tagName;
 
     return tagResponse;
+  }
+}
+@Injectable({
+  providedIn: 'root'
+})
+export class MissionMapper
+{
+  mapBoardEntry(boardEntry: any) : BoardEntry
+  {
+    let mappedBoardEntry: BoardEntry = new BoardEntry;
+
+    mappedBoardEntry.boardEntryID = boardEntry.boardEntryID;
+    mappedBoardEntry.entryType = this.mapEntryType(boardEntry.entryType);
+    mappedBoardEntry.postDescription = boardEntry.postDescription;
+    mappedBoardEntry.postNumber = boardEntry.postNumber;
+
+    return mappedBoardEntry;
+  }
+  mapEntryType(entryType: any) : EntryType
+  {
+    let mappedEntryType: EntryType = new EntryType;
+
+    mappedEntryType.entryTypeID = entryType.entryTypeID;
+    mappedEntryType.entryTypeName = entryType.entryTypeName;
+    mappedEntryType.entryTypeDescription = entryType.entryTypeDescription;
+    mappedEntryType.adminOnly = entryType.adminOnly;
+
+    return mappedEntryType;
   }
 }
