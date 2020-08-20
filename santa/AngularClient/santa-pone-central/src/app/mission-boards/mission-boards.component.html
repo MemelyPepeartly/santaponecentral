@@ -8,10 +8,10 @@
     <mat-card-content>
 
       <!-- Important Intelligence -->
-      <mat-card class="infoCard">
+      <mat-card class="infoCard" *ngFor="let type of adminTypes()">
         <mat-card-header>
-          <mat-card-title>Important Intelligence</mat-card-title>
-          <mat-card-subtitle>Important posts that are good for agents to be aware of, posted here by event organizers</mat-card-subtitle>
+          <mat-card-title>{{ type.entryTypeName }}</mat-card-title>
+          <mat-card-subtitle>{{ type.entryTypeDescription }}</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
@@ -20,10 +20,10 @@
       </mat-card>
 
       <!-- Agent Intelligence -->
-      <mat-card class="infoCard">
+      <mat-card class="infoCard" *ngFor="let type of agentTypes()">
         <mat-card-header>
-          <mat-card-title>TITLE</mat-card-title>
-          <mat-card-subtitle>More stuff here, this will be dynamic based on the type or something idk</mat-card-subtitle>
+          <mat-card-title>{{ type.entryTypeName }}</mat-card-title>
+          <mat-card-subtitle>{{ type.entryTypeDescription }}</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>

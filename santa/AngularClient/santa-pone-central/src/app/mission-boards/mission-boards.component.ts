@@ -44,4 +44,12 @@ export class MissionBoardsComponent implements OnInit {
     await this.missionBoardService.gatherAllBoardEntries();
     await this.missionBoardService.gatherAllEntryTypes();
   }
+  public adminTypes() : Array<EntryType>
+  {
+    return this.allEntryTypes.filter((entryType: EntryType) => {return entryType.adminOnly});
+  }
+  public agentTypes() : Array<EntryType>
+  {
+    return this.allEntryTypes.filter((entryType: EntryType) => {return entryType.adminOnly == false});
+  }
 }
