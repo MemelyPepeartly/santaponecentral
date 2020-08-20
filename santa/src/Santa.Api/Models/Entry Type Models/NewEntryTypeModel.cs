@@ -9,5 +9,6 @@ namespace Santa.Api.Models.Entry_Type_Models
     {
         public string entryTypeName { get; set; }
         public string entryTypeDescription { get; set; }
+        public bool adminOnly { get; set; }
     }
 }

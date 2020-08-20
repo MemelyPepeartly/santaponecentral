@@ -75,7 +75,8 @@ namespace Santa.Api.Controllers
                 {
                     entryTypeID = Guid.NewGuid(),
                     entryTypeName = model.entryTypeName,
-                    entryTypeDescription = model.entryTypeDescription
+                    entryTypeDescription = model.entryTypeDescription,
+                    adminOnly = model.adminOnly
                 };
                 await repository.CreateEntryTypeAsync(logicEntryType);
                 await repository.SaveAsync();

@@ -67,7 +67,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/PostNumber/{postNumber}")]
+        [HttpGet("PostNumber/{postNumber}")]
         public async Task<ActionResult<BoardEntry>> GetBoardEntryByPostNumber(int postNumber)
         {
             try
