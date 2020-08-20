@@ -51,6 +51,7 @@ import { CompletedAnonsComponent } from './headquarters/completed-anons/complete
 import { MessageControlPanelComponent } from './shared/message-control-panel/message-control-panel.component';
 import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-assignment.component';
 import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
+import { MissionBoardTableComponent } from './shared/mission-board-table/mission-board-table.component';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { MissionBoardsComponent } from './mission-boards/mission-boards.componen
       CompletedAnonsComponent,
       MessageControlPanelComponent,
       AutoAssignmentComponent,
-      MissionBoardsComponent
+      MissionBoardsComponent,
+      MissionBoardTableComponent
    ],
    entryComponents: [
       LoginComponent
