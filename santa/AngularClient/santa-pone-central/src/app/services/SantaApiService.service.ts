@@ -22,7 +22,8 @@ import { ClientResponse,
   ClientTagRelationshipResponse,
   ClientIsAdminResponse,
   ChangeSurveyResponseModel,
-  SurveyQuestionXrefsResponseModel} from '../../classes/responseTypes';
+  SurveyQuestionXrefsResponseModel,
+  NewBoardEntryResponse} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -275,5 +276,44 @@ export class SantaApiDeleteService {
   }
   deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> {
     return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestion/" + surveyQuestionId);
+  }
+}
+@Injectable({
+  providedIn: 'root'
+})
+export class MissionBoardAPIService {
+
+  constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
+  getAllBoardEntries(): Observable<any> {
+    return this.http.get(endpoint + 'Board').pipe(
+      map(this.extractData));
+  }
+  getBoardEntryByID(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Board/' + id).pipe(
+      map(this.extractData));
+  }
+  getBoardEntryByPostNumber(postNumber: number): Observable<any> {
+    return this.http.get(endpoint + 'Board/PostNumber/' + postNumber).pipe(
+      map(this.extractData));
+  }
+  postNewBoardEntry(body: NewBoardEntryResponse): Observable<any> {
+    return this.http.get(endpoint + 'Board', body).pipe(
+      map(this.extractData));
+  }
+  putBoardEntryPostNumber(body: EditBoardEntryPostNumberResponse): Observable<any> {
+    return this.http.get(endpoint + 'Board', body).pipe(
+      map(this.extractData));
+  }
+  putBoardEntryPostDescription(body: EditBoardEntryPostDescriptionResponse): Observable<any> {
+    return this.http.get(endpoint + 'Board', body).pipe(
+      map(this.extractData));
+  }
+  putBoardEntryType(body: EditBoardEntryTypeResponse): Observable<any> {
+    return this.http.get(endpoint + 'Board', body).pipe(
+      map(this.extractData));
   }
 }
