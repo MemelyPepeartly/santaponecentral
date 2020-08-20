@@ -9,5 +9,6 @@ namespace Santa.Logic.Objects
         public Guid entryTypeID { get; set; }
         public string entryTypeName { get; set; }
         public string entryTypeDescription { get; set; }
+        public bool adminOnly { get; set; }
     }
 }

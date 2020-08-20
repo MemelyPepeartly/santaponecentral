@@ -313,6 +313,10 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("entryTypeID")
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.AdminOnly)
+                    .HasColumnName("adminOnly")
+                    .HasViewColumnName("adminOnly");
+
                 entity.Property(e => e.EntryTypeDescription)
                     .IsRequired()
                     .HasColumnName("entryTypeDescription")

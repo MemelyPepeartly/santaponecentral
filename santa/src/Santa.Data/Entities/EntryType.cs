@@ -13,6 +13,7 @@ namespace Santa.Data.Entities
         public Guid EntryTypeId { get; set; }
         public string EntryTypeName { get; set; }
         public string EntryTypeDescription { get; set; }
+        public bool AdminOnly { get; set; }
 
         public virtual ICollection<BoardEntry> BoardEntry { get; set; }
     }
