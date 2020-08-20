@@ -23,7 +23,13 @@ import { ClientResponse,
   ClientIsAdminResponse,
   ChangeSurveyResponseModel,
   SurveyQuestionXrefsResponseModel,
-  NewBoardEntryResponse} from '../../classes/responseTypes';
+  NewBoardEntryResponse,
+  EditBoardEntryPostNumberResponse,
+  EditBoardEntryPostDescriptionResponse,
+  EditBoardEntryTypeResponse,
+  NewEntryTypeResponse,
+  EditEntryTypeName,
+  EditEntryTypeDescription} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -288,12 +294,13 @@ export class MissionBoardAPIService {
     const body = res;
     return body || { };
   }
+  /* BOARD ENTRIES */
   getAllBoardEntries(): Observable<any> {
     return this.http.get(endpoint + 'Board').pipe(
       map(this.extractData));
   }
-  getBoardEntryByID(id: string): Observable<any> {
-    return this.http.get(endpoint + 'Board/' + id).pipe(
+  getBoardEntryByID(entryID: string): Observable<any> {
+    return this.http.get(endpoint + 'Board/' + entryID).pipe(
       map(this.extractData));
   }
   getBoardEntryByPostNumber(postNumber: number): Observable<any> {
@@ -301,19 +308,40 @@ export class MissionBoardAPIService {
       map(this.extractData));
   }
   postNewBoardEntry(body: NewBoardEntryResponse): Observable<any> {
-    return this.http.get(endpoint + 'Board', body).pipe(
+    return this.http.post(endpoint + 'Board', body).pipe(
       map(this.extractData));
   }
-  putBoardEntryPostNumber(body: EditBoardEntryPostNumberResponse): Observable<any> {
-    return this.http.get(endpoint + 'Board', body).pipe(
+  putBoardEntryPostNumber(entryID: string, body: EditBoardEntryPostNumberResponse): Observable<any> {
+    return this.http.put(endpoint + 'Board/' + entryID + "/PostNumber", body).pipe(
       map(this.extractData));
   }
-  putBoardEntryPostDescription(body: EditBoardEntryPostDescriptionResponse): Observable<any> {
-    return this.http.get(endpoint + 'Board', body).pipe(
+  putBoardEntryPostDescription(entryID: string, body: EditBoardEntryPostDescriptionResponse): Observable<any> {
+    return this.http.put(endpoint + 'Board/' + entryID + "/PostDescription", body).pipe(
       map(this.extractData));
   }
-  putBoardEntryType(body: EditBoardEntryTypeResponse): Observable<any> {
-    return this.http.get(endpoint + 'Board', body).pipe(
+  putBoardEntryType(entryID: string, body: EditBoardEntryTypeResponse): Observable<any> {
+    return this.http.put(endpoint + 'Board/' + entryID + "/EntryType", body).pipe(
+      map(this.extractData));
+  }
+  /* ENTRY TYPES */
+  getAllEntryTypes(): Observable<any> {
+    return this.http.get(endpoint + 'EntryType').pipe(
+      map(this.extractData));
+  }
+  getEntryTypeByID(entryTypeID: string): Observable<any> {
+    return this.http.get(endpoint + 'EntryType/' + entryTypeID).pipe(
+      map(this.extractData));
+  }
+  postNewEntryType(body: NewEntryTypeResponse): Observable<any> {
+    return this.http.post(endpoint + 'EntryType', body).pipe(
+      map(this.extractData));
+  }
+  putEntryTypeName(entryTypeID: string, body: EditEntryTypeName): Observable<any> {
+    return this.http.put(endpoint + 'EntryType/' + entryTypeID + "/Name", body).pipe(
+      map(this.extractData));
+  }
+  putEntryTypeDescription(entryTypeID: string, body: EditEntryTypeDescription): Observable<any> {
+    return this.http.put(endpoint + 'EntryType/' + entryTypeID + "/Description", body).pipe(
       map(this.extractData));
   }
 }
