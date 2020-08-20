@@ -50,6 +50,7 @@ import { DeniedAnonsComponent } from './headquarters/denied-anons/denied-anons.c
 import { CompletedAnonsComponent } from './headquarters/completed-anons/completed-anons.component';
 import { MessageControlPanelComponent } from './shared/message-control-panel/message-control-panel.component';
 import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-assignment.component';
+import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
 
 
 @NgModule({
@@ -89,7 +90,8 @@ import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-as
       DeniedAnonsComponent,
       CompletedAnonsComponent,
       MessageControlPanelComponent,
-      AutoAssignmentComponent
+      AutoAssignmentComponent,
+      MissionBoardsComponent
    ],
    entryComponents: [
       LoginComponent
