@@ -505,23 +505,35 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Entry Type
+        /// <summary>
+        /// Maps a context entry type into a logic entry type
+        /// </summary>
+        /// <param name="contextEntryType"></param>
+        /// <returns></returns>
         public static Logic.Objects.EntryType MapEntryType(Data.Entities.EntryType contextEntryType)
         {
             Logic.Objects.EntryType logicEntryType = new Logic.Objects.EntryType()
             {
                 entryTypeID = contextEntryType.EntryTypeId,
                 entryTypeName = contextEntryType.EntryTypeName,
-                entryTypeDescription = contextEntryType.EntryTypeDescription
+                entryTypeDescription = contextEntryType.EntryTypeDescription,
+                adminOnly = contextEntryType.AdminOnly
             };
             return logicEntryType;
         }
+        /// <summary>
+        /// Maps a logic entry type into a context entry type
+        /// </summary>
+        /// <param name="logicEntryType"></param>
+        /// <returns></returns>
         public static Data.Entities.EntryType MapEntryType(Logic.Objects.EntryType logicEntryType)
         {
             Data.Entities.EntryType contextEntryType = new Entities.EntryType()
             {
                 EntryTypeId = logicEntryType.entryTypeID,
                 EntryTypeName = logicEntryType.entryTypeName,
-                EntryTypeDescription = logicEntryType.entryTypeDescription
+                EntryTypeDescription = logicEntryType.entryTypeDescription,
+                AdminOnly = logicEntryType.adminOnly
             };
             return contextEntryType;
         }
