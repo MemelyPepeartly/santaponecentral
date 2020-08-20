@@ -118,3 +118,16 @@ export class MessageApiReadResponse {
 export class MessageApiReadAllResponse {
     messages: Array<string> = [];
 }
+/* MISSION BOARD RESPONSE TYPES */
+export class NewBoardEntryResponse {
+
+}
+export class EditBoardEntryPostNumberResponse {
+
+}
+export class EditBoardEntryPostDescriptionResponse {
+
+}
+export class EditBoardEntryTypeResponse {
+
+}
