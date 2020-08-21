@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models.Entry_Type_Models;
@@ -12,6 +14,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EntryTypeController : ControllerBase
     {
         private readonly IRepository repository;
@@ -27,6 +30,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<EntryType>>> GetAllEntryTypes()
         {
             try
@@ -47,6 +51,7 @@ namespace Santa.Api.Controllers
         /// <param name="entryTypeID"></param>
         /// <returns></returns>
         [HttpGet("{entryTypeID}")]
+        [AllowAnonymous]
         public async Task<ActionResult<EntryType>> GetEntryTypeByID(Guid entryTypeID)
         {
             try
@@ -67,6 +72,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Policy = "create:entryTypes")]
         public async Task<ActionResult<EntryType>> PostNewEntryType([FromBody] NewEntryTypeModel model)
         {
             try
@@ -97,6 +103,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{entryTypeID}/Name")]
+        [Authorize(Policy = "update:entryTypes")]
         public async Task<ActionResult<EntryType>> PutEntryTypeName(Guid entryTypeID, [FromBody] EditEntryTypeNameModel model)
         {
             try
@@ -125,6 +132,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{entryTypeID}/Description")]
+        [Authorize(Policy = "update:entryTypes")]
         public async Task<ActionResult<EntryType>> PutEntryTypeDescription(Guid entryTypeID, [FromBody] EditEntryTypeDescriptionModel model)
         {
             try
@@ -152,6 +160,7 @@ namespace Santa.Api.Controllers
         /// <param name="entryTypeID"></param>
         /// <returns></returns>
         [HttpDelete("{entryTypeID}")]
+        [Authorize(Policy = "delete:entryTypes")]
         public async Task<ActionResult> DeleteEntryType(Guid entryTypeID)
         {
             try
