@@ -52,4 +52,12 @@ export class MissionBoardsComponent implements OnInit {
   {
     return this.allEntryTypes.filter((entryType: EntryType) => {return entryType.adminOnly == false});
   }
+  public getAdminEntriesWithType(type: EntryType) : Array<BoardEntry>
+  {
+    return this.allBoardEntries.filter((boardEntry: BoardEntry) => {return boardEntry.entryType.adminOnly && boardEntry.entryType.entryTypeID == type.entryTypeID})
+  }
+  public getAgentEntriesWithType(type: EntryType) : Array<BoardEntry>
+  {
+    return this.allBoardEntries.filter((boardEntry: BoardEntry) => {return !boardEntry.entryType.adminOnly && boardEntry.entryType.entryTypeID == type.entryTypeID})
+  }
 }
