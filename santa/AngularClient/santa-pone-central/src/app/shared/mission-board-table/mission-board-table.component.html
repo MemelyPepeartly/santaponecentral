@@ -1,1 +1,23 @@
-<p>mission-board-table works!</p>
+<table mat-table [dataSource]="boardEntries" id="data-table" class="mat-elevation-z8">
+
+  <!-- Post Number Column -->
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef>Post Number</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.postNumber }}</td>
+  </ng-container>
+
+  <!-- Post Description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Post Description</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.postDescription }}</td>
+  </ng-container>
+
+  <!-- Type Column -->
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.entryType.entryTypeName }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>

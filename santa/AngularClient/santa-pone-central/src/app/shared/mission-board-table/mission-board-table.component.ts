@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { BoardEntry } from 'src/classes/missionBoards';
 
 @Component({
   selector: 'app-mission-board-table',
@@ -9,7 +10,10 @@ export class MissionBoardTableComponent implements OnInit {
 
   constructor() { }
 
+  @Input() boardEntries: Array<BoardEntry> = [];
+
+  columns: string[] = ["number", "description", "type"];
+
   ngOnInit(): void {
   }
-
 }
