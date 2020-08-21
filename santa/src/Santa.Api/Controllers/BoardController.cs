@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Models.Board_Entry_Models;
@@ -12,6 +15,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BoardController : ControllerBase
     {
         private readonly IRepository repository;
@@ -27,6 +31,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<BoardEntry>>> GetAllEntries()
         {
             try
@@ -48,6 +53,7 @@ namespace Santa.Api.Controllers
         /// <param name="boardEntryID"></param>
         /// <returns></returns>
         [HttpGet("{boardEntryID}")]
+        [AllowAnonymous]
         public async Task<ActionResult<BoardEntry>> GetBoardEntryByID(Guid boardEntryID)
         {
             try
@@ -68,6 +74,7 @@ namespace Santa.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("PostNumber/{postNumber}")]
+        [AllowAnonymous]
         public async Task<ActionResult<BoardEntry>> GetBoardEntryByPostNumber(int postNumber)
         {
             try
@@ -88,6 +95,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Policy = "create:boardEntries")]
         public async Task<ActionResult<BoardEntry>> PostNewBoardEntry([FromBody] NewBoardEntryModel model)
         {
             try
@@ -121,6 +129,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{boardEntryID}/PostNumber")]
+        [Authorize(Policy = "update:boardEntries")]
         public async Task<ActionResult<BoardEntry>> PutPostNumber(Guid boardEntryID, [FromBody] EditPostNumberModel model)
         {
             try
@@ -148,6 +157,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{boardEntryID}/PostDescription")]
+        [Authorize(Policy = "update:boardEntries")]
         public async Task<ActionResult<BoardEntry>> PutPostDescription(Guid boardEntryID, [FromBody] EditPostDescriptionModel model)
         {
             try
@@ -174,6 +184,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{boardEntryID}/EntryType")]
+        [Authorize(Policy = "update:boardEntries")]
         public async Task<ActionResult<BoardEntry>> PutEntryType(Guid boardEntryID, [FromBody] EditEntryTypeModel model)
         {
             try
@@ -203,6 +214,7 @@ namespace Santa.Api.Controllers
         /// <param name="boardEntryID"></param>
         /// <returns></returns>
         [HttpDelete("{boardEntryID}")]
+        [Authorize(Policy = "delete:boardEntries")]
         public async Task<ActionResult> DeleteBoardEntry(Guid boardEntryID)
         {
             try
