@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="boardEntries" id="data-table" class="mat-elevation-z8">
+<table mat-table [dataSource]="boardEntries" id="data-table" class="mat-elevation-z3">
 
   <!-- Post Number Column -->
   <ng-container matColumnDef="number">
@@ -21,3 +21,48 @@
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 </table>
+
+<div id="addPostButtonDiv">
+  <button mat-raised-button *ngIf="allowForm && !showFormFields" (click)="showFormFields = true;">Add a post</button>
+</div>
+<!-- Board entry form group -->
+<mat-card class="infoCard mat-elevation-z3" *ngIf="allowForm && showFormFields">
+  <mat-card-header>
+      <mat-card-title>Add board entry</mat-card-title>
+      <mat-card-subtitle>Add a board entry to the {{ entryType.entryTypeName }} category</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content *ngIf="postingEntry">
+      <app-loading-spin></app-loading-spin>
+  </mat-card-content>
+  <mat-card-content *ngIf="showFormFields && !postingEntry">
+      <form [formGroup]="boardEntryFormGroup">
+          <!-- Post Number -->
+          <mat-form-field class="changeFormField">
+              <mat-label>Post Number</mat-label>
+              <input matInput formControlName="postNumber" placeholder="12345">
+          </mat-form-field>
+          <div class="error" *ngIf="boardEntryFormControls.postNumber.errors && boardEntryFormControls.postNumber.touched">
+              <div *ngIf="boardEntryFormControls.postNumber.errors.required">A post number is required</div>
+              <div *ngIf="boardEntryFormControls.postNumber.errors.maxlength">Post Number is too long</div>
+              <div *ngIf="boardEntryFormControls.postNumber.errors.pattern">Post number must be only numbers, and no decimals</div>
+          </div>
+
+          <!-- Post Description -->
+          <mat-form-field class="changeFormField">
+            <mat-label>Post Number</mat-label>
+            <input matInput formControlName="postDescription" placeholder="What is this about?">
+        </mat-form-field>
+        <div class="error" *ngIf="boardEntryFormControls.postDescription.errors && boardEntryFormControls.postDescription.touched">
+            <div *ngIf="boardEntryFormControls.postDescription.errors.required">A post description is required</div>
+            <div *ngIf="boardEntryFormControls.postDescription.errors.maxlength">Post descriptoin is too long</div>
+        </div>
+      </form>
+  </mat-card-content>
+  <mat-card-actions>
+      <div>
+          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid">Submit</button>
+          <button mat-raised-button (click)="showFormFields = false">Cancel</button>
+      </div>
+  </mat-card-actions>
+</mat-card>
+
