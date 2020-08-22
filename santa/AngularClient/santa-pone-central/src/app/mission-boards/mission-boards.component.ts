@@ -21,6 +21,9 @@ export class MissionBoardsComponent implements OnInit {
     public missionBoardService: MissionBoardService,
     public missionMapper: MissionMapper) { }
 
+  public profile: any;
+  public isAdmin: boolean;
+
   public allBoardEntries: Array<BoardEntry> = [];
   public allEntryTypes: Array<EntryType> = [];
 
@@ -28,6 +31,13 @@ export class MissionBoardsComponent implements OnInit {
   public gettingAllEntryTypes: boolean = false;
 
   async ngOnInit() {
+    this.auth.userProfile$.subscribe(data => {
+      this.profile = data;
+    });
+    this.auth.isAdmin.subscribe((admin: boolean) => {
+      this.isAdmin = admin;
+    });
+
     this.missionBoardService.gettingAllBoardEntries.subscribe((status: boolean) => {
       this.gettingAllBoardEntries = status;
     });
@@ -43,6 +53,11 @@ export class MissionBoardsComponent implements OnInit {
 
     await this.missionBoardService.gatherAllBoardEntries();
     await this.missionBoardService.gatherAllEntryTypes();
+
+    console.log(this.isAdmin);
+    console.log(this.auth.loggedIn);
+
+
   }
   public adminTypes() : Array<EntryType>
   {

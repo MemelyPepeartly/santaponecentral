@@ -3,3 +3,27 @@
     width: 100%;
     text-align: left;
 }
+#addPostButtonDiv
+{
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+.infoCard
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    max-width: 90%;
+    height: auto;
+}
+.changeFormField
+{
+    display: block;
+}
+.error
+{
+    color: #F44336;
+}
