@@ -116,6 +116,7 @@ CREATE TABLE app.BoardEntry
 (
     boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
     entryTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EntryType(EntryTypeID),
+    threadNumber INT NOT NULL UNIQUE,
     postNumber INT NOT NULL UNIQUE,
     postDescription NVARCHAR(100) NOT NULL,
     dateTimeEntered DATETIME NOT NULL,
