@@ -49,8 +49,13 @@
           <mat-label>Thread Number</mat-label>
           <input matInput formControlName="threadNumber" placeholder="12345">
         </mat-form-field>
-        <div class="error" *ngIf="boardEntryFormControls.threadNumber.touched && threadNumberExists">
-          <div *ngIf="postNumberExists">Thread number already exists!</div>
+        <div class="error" *ngIf="boardEntryFormControls.threadNumber.errors && boardEntryFormControls.threadNumber.touched">
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.required">A thread number is required</div>
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.maxlength">Thread Number is too long</div>
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.pattern">Thread number must be only numbers, and no decimals</div>
+        </div>
+        <div class="error" *ngIf="boardEntryFormControls.threadNumber.touched && !areNumbersValid()">
+          <div *ngIf="threadNumberExists">thread and post number pairing already exists!</div>
         </div>
 
         <!-- Post Number -->
@@ -63,11 +68,9 @@
             <div *ngIf="boardEntryFormControls.postNumber.errors.maxlength">Post Number is too long</div>
             <div *ngIf="boardEntryFormControls.postNumber.errors.pattern">Post number must be only numbers, and no decimals</div>
         </div>
-        <div class="error" *ngIf="boardEntryFormControls.postNumber.touched && postNumberExists">
-          <div *ngIf="postNumberExists">Post number already exists!</div>
+        <div class="error" *ngIf="boardEntryFormControls.postNumber.touched && !areNumbersValid()">
+          <div *ngIf="postNumberExists">thread and post number pairing already exists!</div>
         </div>
-
-
 
         <!-- Post Description -->
         <mat-form-field class="changeFormField">
@@ -82,7 +85,7 @@
   </mat-card-content>
   <mat-card-actions>
       <div>
-          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid || postNumberExists || threadNumberExists">Submit</button>
+          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid || areNumbersValid() == false">Submit</button>
           <button mat-raised-button (click)="showFormFields = false">Cancel</button>
       </div>
   </mat-card-actions>

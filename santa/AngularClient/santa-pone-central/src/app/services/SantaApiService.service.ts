@@ -303,8 +303,8 @@ export class MissionBoardAPIService {
     return this.http.get(endpoint + 'Board/' + entryID).pipe(
       map(this.extractData));
   }
-  getBoardEntryByPostNumber(postNumber: number): Observable<any> {
-    return this.http.get(endpoint + 'Board/PostNumber/' + postNumber).pipe(
+  getBoardEntryByPostNumber(threadNumber: number, postNumber: number): Observable<any> {
+    return this.http.get(endpoint + 'Board/ThreadNumber/' + threadNumber + 'PostNumber/' + postNumber).pipe(
       map(this.extractData));
   }
   postNewBoardEntry(body: NewBoardEntryResponse): Observable<any> {

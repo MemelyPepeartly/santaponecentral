@@ -68,6 +68,7 @@ export class MissionBoardTableComponent implements OnInit {
 
     await this.missionBoardAPIService.postNewBoardEntry(response).toPromise().catch((err) => {console.log("Something went wrong: " + err); this.postSuccess = false});
     this.formPostedEvent.emit(this.postSuccess);
+    this.boardEntryFormGroup.reset();
 
     this.postingEntry = false;
   }
@@ -80,5 +81,25 @@ export class MissionBoardTableComponent implements OnInit {
   {
     let url: string = "https://boards.4channel.org/mlp/thread/" + threadNumber + "#p" + postNumber
     window.open(url, "_blank");
+  }
+  areNumbersValid() : boolean
+  {
+    if(Number(this.boardEntryFormControls.threadNumber.value) == NaN || Number(this.boardEntryFormControls.postNumber.value) == NaN)
+    {
+      return false;
+    }
+    else
+    {
+      // If thread exists, but post number doesnt, it is valid
+      if(this.threadNumberExists && !this.postNumberExists)
+      {
+        return true;
+      }
+      // else if the thread number exists and the post numer exists, it is invalid
+      else if(this.threadNumberExists && this.postNumberExists)
+      {
+        return false;
+      }
+    }
   }
 }
