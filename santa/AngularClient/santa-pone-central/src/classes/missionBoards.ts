@@ -3,6 +3,7 @@ export class BoardEntry
   boardEntryID: string;
   entryType: EntryType = new EntryType;
   dateTimeEntered: Date;
+  threadNumber: number;
   postNumber: number;
   postDescription: string;
 }

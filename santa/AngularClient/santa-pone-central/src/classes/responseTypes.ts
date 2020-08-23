@@ -121,6 +121,7 @@ export class MessageApiReadAllResponse {
 /* MISSION BOARD RESPONSE TYPES */
 export class NewBoardEntryResponse {
   entryTypeID: string;
+  threadNumber: number;
   postNumber: number;
   postDescription: string;
 }
