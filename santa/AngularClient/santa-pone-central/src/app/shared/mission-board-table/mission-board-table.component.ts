@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MissionBoardAPIService } from 'src/app/services/santaApiService.service';
+import { NewBoardEntryResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-mission-board-table',
@@ -9,11 +11,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class MissionBoardTableComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+    private missionBoardAPIService: MissionBoardAPIService) { }
 
   @Input() boardEntries: Array<BoardEntry> = [];
   @Input() entryType: EntryType = new EntryType();
   @Input() allowForm: boolean;
+
+  @Output() formPostedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public boardEntryFormGroup: FormGroup;
   get boardEntryFormControls()
@@ -23,6 +28,7 @@ export class MissionBoardTableComponent implements OnInit {
 
   public showFormFields: boolean = false;
   public postingEntry: boolean = false;
+  public postSuccess: boolean = false;
 
   columns: string[] = ["number", "description", "type"];
 
@@ -32,8 +38,21 @@ export class MissionBoardTableComponent implements OnInit {
       postDescription: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
-  submitBoardEntry()
+  async submitBoardEntry()
   {
+    this.postingEntry = true;
+    this.postSuccess = true;
 
+    let response: NewBoardEntryResponse = new NewBoardEntryResponse();
+
+    response.entryTypeID = this.entryType.entryTypeID;
+
+    response.postNumber = Number(this.boardEntryFormControls.postNumber.value);
+    response.postDescription = this.boardEntryFormControls.postDescription.value;
+
+    await this.missionBoardAPIService.postNewBoardEntry(response).toPromise().catch((err) => {console.log("Something went wrong: " + err); this.postSuccess = false});
+    this.formPostedEvent.emit(this.postSuccess);
+
+    this.postingEntry = false;
   }
 }
