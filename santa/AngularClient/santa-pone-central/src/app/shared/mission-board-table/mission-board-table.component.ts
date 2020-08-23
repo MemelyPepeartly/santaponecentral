@@ -37,11 +37,18 @@ export class MissionBoardTableComponent implements OnInit {
       return postNumber == Number(this.boardEntryFormControls.postNumber.value);
     });
   }
+  get threadNumberExists(): boolean
+  {
+    return this.allPostNumbers.some((postNumber: number) => {
+      return postNumber == Number(this.boardEntryFormControls.postNumber.value);
+    });
+  }
 
-  columns: string[] = ["number", "description", "type"];
+  columns: string[] = ["threadNumber", "postNumber", "description", "dateEntered"];
 
   ngOnInit(): void {
     this.boardEntryFormGroup = this.formBuilder.group({
+      threadNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       postNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       postDescription: ['', [Validators.required, Validators.maxLength(100)]],
     });
@@ -55,6 +62,7 @@ export class MissionBoardTableComponent implements OnInit {
 
     response.entryTypeID = this.entryType.entryTypeID;
 
+    response.threadNumber = Number(this.boardEntryFormControls.threadNumber.value);
     response.postNumber = Number(this.boardEntryFormControls.postNumber.value);
     response.postDescription = this.boardEntryFormControls.postDescription.value;
 
@@ -62,5 +70,15 @@ export class MissionBoardTableComponent implements OnInit {
     this.formPostedEvent.emit(this.postSuccess);
 
     this.postingEntry = false;
+  }
+  async goToThreadLink(threadNumber: number)
+  {
+    let url: string = "https://boards.4channel.org/mlp/thread/" + threadNumber
+    window.open(url, "_blank");
+  }
+  async goToPostLink(threadNumber: number, postNumber: number)
+  {
+    let url: string = "https://boards.4channel.org/mlp/thread/" + threadNumber + "#p" + postNumber
+    window.open(url, "_blank");
   }
 }

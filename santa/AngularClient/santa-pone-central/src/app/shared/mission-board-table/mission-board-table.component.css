@@ -23,7 +23,21 @@
 {
     display: block;
 }
+.descriptionSpan
+{
+  display: block;
+  max-width: 250px;
+}
 .error
 {
     color: #F44336;
+}
+
+@media (max-width:550px)
+{
+  .descriptionSpan
+  {
+    display: block;
+    max-width: 150px;
+  }
 }
