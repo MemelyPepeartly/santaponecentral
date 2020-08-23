@@ -109,14 +109,16 @@ CREATE TABLE app.EntryType
 (
     entryTypeID UNIQUEIDENTIFIER PRIMARY KEY,
     entryTypeName NVARCHAR(100) NOT NULL UNIQUE,
-    entryTypeDescription NVARCHAR(200) NOT NULL
+    entryTypeDescription NVARCHAR(200) NOT NULL,
+    adminOnly BIT NOT NULL
 );
 CREATE TABLE app.BoardEntry
 (
     boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
     entryTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EntryType(EntryTypeID),
     postNumber INT NOT NULL UNIQUE,
-    postDescription NVARCHAR(100) NOT NULL
+    postDescription NVARCHAR(100) NOT NULL,
+    dateTimeEntered DATETIME NOT NULL,
 );
 
 GO
