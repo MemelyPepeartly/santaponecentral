@@ -53,11 +53,13 @@ export class MissionBoardsComponent implements OnInit {
 
     await this.missionBoardService.gatherAllBoardEntries();
     await this.missionBoardService.gatherAllEntryTypes();
-
-    console.log(this.isAdmin);
-    console.log(this.auth.loggedIn);
-
-
+  }
+  public async refreshEntryList(successfullyPosted: boolean)
+  {
+    if(successfullyPosted)
+    {
+      await this.missionBoardService.gatherAllBoardEntries();
+    }
   }
   public adminTypes() : Array<EntryType>
   {
