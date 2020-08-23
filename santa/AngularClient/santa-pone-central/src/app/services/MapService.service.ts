@@ -385,6 +385,7 @@ export class MissionMapper
     mappedBoardEntry.entryType = this.mapEntryType(boardEntry.entryType);
     mappedBoardEntry.postDescription = boardEntry.postDescription;
     mappedBoardEntry.postNumber = boardEntry.postNumber;
+    mappedBoardEntry.threadNumber = boardEntry.threadNumber;
     mappedBoardEntry.dateTimeEntered = new Date(boardEntry.dateTimeEntered);
 
     return mappedBoardEntry;
