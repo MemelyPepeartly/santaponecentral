@@ -482,7 +482,8 @@ namespace Santa.Data.Repository
                 boardEntryID = contextBoardEntry.BoardEntryId,
                 postNumber = contextBoardEntry.PostNumber,
                 postDescription = contextBoardEntry.PostDescription,
-                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType)
+                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType),
+                dateTimeEntered = contextBoardEntry.DateTimeEntered
             };
             return logicBoardEntry;
         }
@@ -498,7 +499,8 @@ namespace Santa.Data.Repository
                 BoardEntryId = logicBoardEntry.boardEntryID,
                 EntryTypeId = logicBoardEntry.entryType.entryTypeID,
                 PostNumber = logicBoardEntry.postNumber,
-                PostDescription = logicBoardEntry.postDescription
+                PostDescription = logicBoardEntry.postDescription,
+                DateTimeEntered = logicBoardEntry.dateTimeEntered
             };
             return contextBoardEntry;
         }

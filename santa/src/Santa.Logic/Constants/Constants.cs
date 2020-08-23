@@ -29,5 +29,11 @@ namespace Santa.Logic.Constants
 
         // Entry types
 
+        public const string DEADLINE_ANNOUNCEMENTS_ENTRYTYPE = "Announcements (Deadlines)";
+        public const string CONTEST_ANNOUNCEMENTS_ENTRYTYPE = "Announcements (Contests)";
+        public const string GIFT_DELIVERIES_ENTRYTYPE = "Deliveries (Gifts)";
+        public const string CARD_DELIVERIES_ENTRYTYPE = "Deliveries (Cards)";
+        public const string GENERAL_ENTRYTYPE = "General";
+
     }
 }
