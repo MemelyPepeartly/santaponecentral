@@ -2,6 +2,7 @@ export class BoardEntry
 {
   boardEntryID: string;
   entryType: EntryType = new EntryType;
+  dateTimeEntered: Date;
   postNumber: number;
   postDescription: string;
 }
