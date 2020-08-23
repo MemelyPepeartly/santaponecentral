@@ -116,10 +116,11 @@ CREATE TABLE app.BoardEntry
 (
     boardEntryID UNIQUEIDENTIFIER PRIMARY KEY,
     entryTypeID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.EntryType(EntryTypeID),
-    threadNumber INT NOT NULL UNIQUE,
-    postNumber INT NOT NULL UNIQUE,
+    threadNumber INT NOT NULL,
+    postNumber INT NOT NULL,
     postDescription NVARCHAR(100) NOT NULL,
     dateTimeEntered DATETIME NOT NULL,
+    CONSTRAINT boardEntryID UNIQUE (threadNumber, postNumber) 
 );
 
 GO
