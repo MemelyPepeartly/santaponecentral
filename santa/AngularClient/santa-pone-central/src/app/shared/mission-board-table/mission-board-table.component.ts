@@ -3,6 +3,7 @@ import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MissionBoardAPIService } from 'src/app/services/santaApiService.service';
 import { NewBoardEntryResponse } from 'src/classes/responseTypes';
+import { MissionBoardService } from 'src/app/services/MissionBoardService.service';
 
 @Component({
   selector: 'app-mission-board-table',
@@ -15,6 +16,7 @@ export class MissionBoardTableComponent implements OnInit {
     private missionBoardAPIService: MissionBoardAPIService) { }
 
   @Input() boardEntries: Array<BoardEntry> = [];
+  @Input() allPostNumbers: Array<number>= []
   @Input() entryType: EntryType = new EntryType();
   @Input() allowForm: boolean;
 
@@ -29,6 +31,12 @@ export class MissionBoardTableComponent implements OnInit {
   public showFormFields: boolean = false;
   public postingEntry: boolean = false;
   public postSuccess: boolean = false;
+  get postNumberExists(): boolean
+  {
+    return this.allPostNumbers.some((postNumber: number) => {
+      return postNumber == Number(this.boardEntryFormControls.postNumber.value);
+    });
+  }
 
   columns: string[] = ["number", "description", "type"];
 

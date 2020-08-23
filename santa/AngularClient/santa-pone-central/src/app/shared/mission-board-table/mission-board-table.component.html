@@ -46,7 +46,9 @@
               <div *ngIf="boardEntryFormControls.postNumber.errors.maxlength">Post Number is too long</div>
               <div *ngIf="boardEntryFormControls.postNumber.errors.pattern">Post number must be only numbers, and no decimals</div>
           </div>
-
+          <div class="error" *ngIf="boardEntryFormControls.postNumber.touched && postNumberExists">
+            <div *ngIf="postNumberExists">Post number already exists!</div>
+          </div>
           <!-- Post Description -->
           <mat-form-field class="changeFormField">
             <mat-label>Post Description</mat-label>
@@ -60,7 +62,7 @@
   </mat-card-content>
   <mat-card-actions>
       <div>
-          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid">Submit</button>
+          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid || postNumberExists">Submit</button>
           <button mat-raised-button (click)="showFormFields = false">Cancel</button>
       </div>
   </mat-card-actions>
