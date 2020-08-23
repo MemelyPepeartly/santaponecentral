@@ -9,7 +9,10 @@
   <!-- Post Number Column -->
   <ng-container matColumnDef="postNumber">
     <th mat-header-cell *matHeaderCellDef>Post Number</th>
-    <td mat-cell *matCellDef="let entry"><button mat-raised-button (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button></td>
+    <td mat-cell *matCellDef="let entry">
+      <button mat-raised-button *ngIf="entry.threadNumber != entry.postNumber" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
+      <span *ngIf="entry.threadNumber == entry.postNumber">{{ entry.postNumber }}</span>
+    </td>
   </ng-container>
 
   <!-- Post Description Column -->
