@@ -11,6 +11,7 @@ namespace Santa.Api.Models.Board_Entry_Models
     public class NewBoardEntryModel
     {
         public Guid entryTypeID { get; set; }
+        public int threadNumber { get; set; }
         public int postNumber { get; set; }
         public string postDescription { get; set; }
     }

@@ -108,6 +108,7 @@ namespace Santa.Api.Controllers
                         entryTypeID = model.entryTypeID
                     },
                     dateTimeEntered = DateTime.UtcNow,
+                    threadNumber = model.threadNumber,
                     postNumber = model.postNumber,
                     postDescription = model.postDescription
                 };

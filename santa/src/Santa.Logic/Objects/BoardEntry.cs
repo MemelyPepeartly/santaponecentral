@@ -12,6 +12,7 @@ namespace Santa.Logic.Objects
         public Guid boardEntryID { get; set; }
         public EntryType entryType { get; set; }
         public DateTime dateTimeEntered { get; set; }
+        public int threadNumber { get; set; }
         public int postNumber { get; set; }
         public string postDescription { get; set; }
     }

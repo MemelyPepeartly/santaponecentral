@@ -480,9 +480,10 @@ namespace Santa.Data.Repository
             Logic.Objects.BoardEntry logicBoardEntry = new Logic.Objects.BoardEntry()
             {
                 boardEntryID = contextBoardEntry.BoardEntryId,
+                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType),
+                threadNumber = contextBoardEntry.ThreadNumber,
                 postNumber = contextBoardEntry.PostNumber,
                 postDescription = contextBoardEntry.PostDescription,
-                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType),
                 dateTimeEntered = contextBoardEntry.DateTimeEntered
             };
             return logicBoardEntry;
@@ -498,6 +499,7 @@ namespace Santa.Data.Repository
             {
                 BoardEntryId = logicBoardEntry.boardEntryID,
                 EntryTypeId = logicBoardEntry.entryType.entryTypeID,
+                ThreadNumber = logicBoardEntry.threadNumber,
                 PostNumber = logicBoardEntry.postNumber,
                 PostDescription = logicBoardEntry.postDescription,
                 DateTimeEntered = logicBoardEntry.dateTimeEntered

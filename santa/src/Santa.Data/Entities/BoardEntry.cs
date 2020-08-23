@@ -7,6 +7,7 @@ namespace Santa.Data.Entities
     {
         public Guid BoardEntryId { get; set; }
         public Guid? EntryTypeId { get; set; }
+        public int ThreadNumber { get; set; }
         public int PostNumber { get; set; }
         public string PostDescription { get; set; }
         public DateTime DateTimeEntered { get; set; }
