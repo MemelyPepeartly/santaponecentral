@@ -1184,13 +1184,13 @@ namespace Santa.Data.Repository
             }
         }
 
-        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber)
+        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByThreadAndPostNumberAsync(int threadNumber, int postNumber)
         {
             try
             {
                 Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry
                     .Include(b => b.EntryType)
-                    .FirstOrDefaultAsync(b => b.PostNumber == postNumber));
+                    .FirstOrDefaultAsync(b => b.ThreadNumber == threadNumber && b.PostNumber == postNumber));
                 return logicBoardEntry;
             }
             catch (Exception e)
@@ -1205,6 +1205,21 @@ namespace Santa.Data.Repository
                 Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
 
                 contextBoardEntry.PostNumber = newEntry.postNumber;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task UpdateBoardEntryThreadNumberAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.ThreadNumber = newEntry.threadNumber;
 
                 santaContext.BoardEntry.Update(contextBoardEntry);
             }

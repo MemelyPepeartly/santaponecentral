@@ -192,13 +192,19 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <param name="postNumber"></param>
         /// <returns></returns>
-        Task<BoardEntry> GetBoardEntryByPostNumberAsync(int postNumber);
+        Task<BoardEntry> GetBoardEntryByThreadAndPostNumberAsync(int threadNumber, int postNumber);
         /// <summary>
         /// Updates a post number in a board entry using an updated logic board entry object
         /// </summary>
         /// <param name="newEntry"></param>
         /// <returns></returns>
         Task UpdateBoardEntryPostNumberAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates a thread number in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryThreadNumberAsync(BoardEntry newEntry);
         /// <summary>
         /// Updates a post description in a board entry using an updated logic board entry object
         /// </summary>
