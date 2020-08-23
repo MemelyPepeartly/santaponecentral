@@ -23,6 +23,7 @@ export class MissionBoardsComponent implements OnInit {
 
   public profile: any;
   public isAdmin: boolean;
+  public isHelper: boolean;
 
   public allBoardEntries: Array<BoardEntry> = [];
   public allEntryTypes: Array<EntryType> = [];
@@ -44,6 +45,9 @@ export class MissionBoardsComponent implements OnInit {
     });
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
+    });
+    this.auth.isHelper.subscribe((helper: boolean) => {
+      this.isHelper = helper;
     });
 
     this.missionBoardService.gettingAllBoardEntries.subscribe((status: boolean) => {

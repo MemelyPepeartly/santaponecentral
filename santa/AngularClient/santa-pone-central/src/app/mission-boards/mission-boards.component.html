@@ -56,7 +56,7 @@
             [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAgentEntriesWithType(type)"
             [entryType]="type"
-            [allowForm]="this.auth.loggedIn"></app-mission-board-table>
+            [allowForm]="isHelper || isAdmin"></app-mission-board-table>
         </mat-card-content>
       </mat-card>
 

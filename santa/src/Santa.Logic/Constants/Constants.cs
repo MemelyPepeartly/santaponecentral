@@ -15,6 +15,7 @@ namespace Santa.Logic.Constants
 
         // Auth0 role descriptions
         public const string PARTICIPANT = "Participant";
+        public const string HELPER = "Santa's Lil Helper";
         public const string EVENT_ADMIN = "Event Admin";
         public const string SANTADEV = "SantaDev";
 
