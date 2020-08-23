@@ -17,6 +17,7 @@
         <mat-card-content>
           <app-mission-board-table
             (formPostedEvent)="refreshEntryList($event)"
+            [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAdminEntriesWithType(type)"
             [entryType]="type"
             [allowForm]="isAdmin"></app-mission-board-table>
@@ -46,6 +47,7 @@
         <mat-card-content>
           <app-mission-board-table
             (formPostedEvent)="refreshEntryList($event)"
+            [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAgentEntriesWithType(type)"
             [entryType]="type"
             [allowForm]="this.auth.loggedIn"></app-mission-board-table>

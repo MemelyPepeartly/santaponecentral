@@ -26,6 +26,14 @@ export class MissionBoardsComponent implements OnInit {
 
   public allBoardEntries: Array<BoardEntry> = [];
   public allEntryTypes: Array<EntryType> = [];
+  get allPostNumbers(): Array<number>
+  {
+    let array: Array<number> = []
+    this.allBoardEntries.forEach((entry: BoardEntry) => {
+      array.push(entry.postNumber);
+    });
+    return array;
+  }
 
   public gettingAllBoardEntries: boolean = false;
   public gettingAllEntryTypes: boolean = false;
