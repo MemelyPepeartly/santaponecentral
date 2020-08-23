@@ -67,19 +67,19 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // GET: api/Board/PostNumber/5
+        // GET: api/Board/ThreadNumber/5/PostNumber/5
         /// <summary>
-        /// Gets a board entry by it's post number
+        /// Gets a board entry by it's thread and post numbers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("PostNumber/{postNumber}")]
+        [HttpGet("ThreadNumber/{threadNumber}/PostNumber/{postNumber}")]
         [AllowAnonymous]
-        public async Task<ActionResult<BoardEntry>> GetBoardEntryByPostNumber(int postNumber)
+        public async Task<ActionResult<BoardEntry>> GetBoardEntryByPostNumber(int threadNumber, int postNumber)
         {
             try
             {
-                BoardEntry logicBoardEntry = await repository.GetBoardEntryByPostNumberAsync(postNumber);
+                BoardEntry logicBoardEntry = await repository.GetBoardEntryByThreadAndPostNumberAsync(threadNumber, postNumber);
                 return logicBoardEntry;
             }
             catch (Exception e)
@@ -140,6 +140,34 @@ namespace Santa.Api.Controllers
                 {
                     boardEntryID = boardEntryID,
                     postNumber = model.postNumber
+                };
+                await repository.UpdateBoardEntryPostNumberAsync(newLogicBoardEntry);
+                await repository.SaveAsync();
+                return Ok(await repository.GetBoardEntryByIDAsync(boardEntryID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+            }
+        }
+
+        // PUT: api/Board/5/ThreadNumber
+        /// <summary>
+        /// Updates a board entry's thread number by its boardEntryID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{boardEntryID}/ThreadNumber")]
+        [Authorize(Policy = "update:boardEntries")]
+        public async Task<ActionResult<BoardEntry>> PutThreadNumber(Guid boardEntryID, [FromBody] EditThreadNumberModel model)
+        {
+            try
+            {
+                BoardEntry newLogicBoardEntry = new BoardEntry()
+                {
+                    boardEntryID = boardEntryID,
+                    threadNumber = model.threadNumber
                 };
                 await repository.UpdateBoardEntryPostNumberAsync(newLogicBoardEntry);
                 await repository.SaveAsync();
