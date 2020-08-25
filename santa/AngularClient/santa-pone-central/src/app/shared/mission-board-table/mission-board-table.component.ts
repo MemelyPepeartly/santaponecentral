@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MissionBoardAPIService } from 'src/app/services/santaApiService.service';
-import { NewBoardEntryResponse } from 'src/classes/responseTypes';
+import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/responseTypes';
 import { MissionBoardService } from 'src/app/services/MissionBoardService.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class MissionBoardTableComponent implements OnInit {
   @Input() entryType: EntryType = new EntryType();
   @Input() allowForm: boolean;
 
-  @Output() formPostedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() refreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public boardEntryFormGroup: FormGroup;
   public editPostFormGroup: FormGroup;
@@ -30,8 +30,6 @@ export class MissionBoardTableComponent implements OnInit {
   }
 
   public showFormFields: boolean = false;
-  public postingEntry: boolean = false;
-  public postSuccess: boolean = false;
   get postNumberExists(): boolean
   {
     return this.allPostNumbers.some((postNumber: number) => {
@@ -47,6 +45,14 @@ export class MissionBoardTableComponent implements OnInit {
 
   viewerColumns: string[] = ["threadNumber", "postNumber", "description"];
   helperColumns: string[] = ["threadNumber", "postNumber", "description", "actions"];
+
+  public deletingEntry: boolean;
+  public editingEntry: boolean;
+  public postingEntry: boolean;
+
+  public postSuccess: boolean;
+  public totalPutSuccess: boolean;
+  public deleteSuccess: boolean;
 
   ngOnInit() {
     this.editPostFormGroup = this.formBuilder.group({});
@@ -90,19 +96,89 @@ export class MissionBoardTableComponent implements OnInit {
     response.postNumber = Number(this.boardEntryFormControls.postNumber.value);
     response.postDescription = this.boardEntryFormControls.postDescription.value;
 
-    await this.missionBoardAPIService.postNewBoardEntry(response).toPromise().catch((err) => {console.log("Something went wrong: " + err); this.postSuccess = false});
-    this.formPostedEvent.emit(this.postSuccess);
+    await this.missionBoardAPIService.postNewBoardEntry(response).toPromise().catch((err) => {
+      console.log("Something went wrong submitting the entry");
+      console.log(err);
+      this.postSuccess = false
+    });
+    this.refreshEvent.emit(this.postSuccess);
     this.boardEntryFormGroup.reset();
 
     this.postingEntry = false;
   }
   async deleteEntry(entry: BoardEntry)
   {
+    this.deletingEntry = true;
+    this.deleteSuccess = true;
 
+    await this.missionBoardAPIService.deleteBoardEntryByID(entry.boardEntryID).toPromise().catch((err) => {
+      console.log("Something went wrong deleting the entry");
+      console.log(err);
+      this.deleteSuccess = false
+    });
+    this.refreshEvent.emit(this.deleteSuccess);
+
+    this.deletingEntry = false;
   }
   async submitEntryEdits(entry: BoardEntry)
   {
+    this.editingEntry = true;
+    let partialSuccess: boolean = false;
 
+    let threadSuccess: boolean = true;
+    let postSuccess: boolean = true;
+    let descriptionSuccess: boolean = true;
+
+
+
+    // If thread number was changed
+    if(entry.threadNumber != this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).value)
+    {
+      let threadResponse: EditBoardEntryThreadNumberResponse = new EditBoardEntryThreadNumberResponse();
+      threadResponse.threadNumber = Number(this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).value);
+
+      await this.missionBoardAPIService.putBoardEntryThreadNumber(entry.boardEntryID, threadResponse).toPromise().catch((err) => {
+        console.log("Something went wrong changing the thread number");
+        console.log(err);
+        threadSuccess = false
+      });
+    }
+    // If post number was changed
+    if(entry.postNumber != this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).value)
+    {
+      let postResponse: EditBoardEntryPostNumberResponse = new EditBoardEntryPostNumberResponse();
+      postResponse.postNumber = Number(this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).value);
+
+      await this.missionBoardAPIService.putBoardEntryPostNumber(entry.boardEntryID, postResponse).toPromise().catch((err) => {
+        console.log("Something went wrong changing the post number");
+        console.log(err);
+        postSuccess = false
+      });
+    }
+    // If thread number was changed
+    if(entry.postDescription != this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).value)
+    {
+      let descriptionResponse: EditBoardEntryPostDescriptionResponse = new EditBoardEntryPostDescriptionResponse();
+      descriptionResponse.postDescription = this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).value;
+
+      await this.missionBoardAPIService.putBoardEntryPostDescription(entry.boardEntryID, descriptionResponse).toPromise().catch((err) => {
+        console.log("Something went wrong changing the entry description");
+        console.log(err);
+        descriptionSuccess = false
+      });
+    }
+
+    if(!threadSuccess || !postSuccess || !descriptionSuccess)
+    {
+      this.totalPutSuccess = false;
+    }
+    if(threadSuccess || postSuccess || descriptionSuccess)
+    {
+      partialSuccess = true;
+      this.refreshEvent.emit(partialSuccess);
+    }
+
+    this.editingEntry = false;
   }
   async goToThreadLink(threadNumber: number)
   {
