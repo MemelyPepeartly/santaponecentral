@@ -48,6 +48,7 @@
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 15px;
+  margin-bottom: 15px;
   width: 100px;
 }
 .descriptionEditField
@@ -62,10 +63,6 @@
 {
   margin-left: 5px;
   margin-right: 5px;
-}
-.linkButton
-{
-
 }
 
 @media (max-width:550px)

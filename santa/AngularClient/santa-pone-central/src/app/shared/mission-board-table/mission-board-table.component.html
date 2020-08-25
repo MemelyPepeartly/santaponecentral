@@ -4,10 +4,13 @@
     <ng-container matColumnDef="threadNumber">
       <th mat-header-cell *matHeaderCellDef>Thread Number</th>
       <td mat-cell *matCellDef="let entry">
-        <button class="info linkButton" *ngIf="!entry.editing" mat-raised-button (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
-        <mat-form-field *ngIf="entry.editing" class="editField">
-          <input matInput formControlName="{{getThreadNumberFormGroupSignature(entry)}}" placeholder="Thread Number" value="{{ entry.threadNumber }}">
-        </mat-form-field>
+        <button class="info" *ngIf="!entry.editing" mat-raised-button (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="editField">
+            <input matInput formControlName="{{getThreadNumberFormGroupSignature(entry)}}" placeholder="Thread Number" value="{{ entry.threadNumber }}" [disabled]="editingEntry">
+            <mat-hint>Original Number: {{ entry.threadNumber }}</mat-hint>
+          </mat-form-field>
+        </div>
       </td>
     </ng-container>
 
@@ -15,11 +18,14 @@
     <ng-container matColumnDef="postNumber">
       <th mat-header-cell *matHeaderCellDef>Post Number</th>
       <td mat-cell *matCellDef="let entry">
-        <button class="info linkButton" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
-        <span class="info linkButton" *ngIf="entry.threadNumber == entry.postNumber && !entry.editing">{{ entry.postNumber }}</span>
-        <mat-form-field class="editField" *ngIf="entry.editing">
-          <input matInput formControlName="{{getPostNumberFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postNumber }}">
-        </mat-form-field>
+        <button class="info" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
+        <span class="info" *ngIf="entry.threadNumber == entry.postNumber && !entry.editing">{{ entry.postNumber }}</span>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="editField">
+            <input matInput formControlName="{{getPostNumberFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postNumber }}" [disabled]="editingEntry">
+            <mat-hint>Original Number: {{ entry.postNumber }}</mat-hint>
+          </mat-form-field>
+        </div>
       </td>
     </ng-container>
 
@@ -28,9 +34,15 @@
       <th mat-header-cell *matHeaderCellDef>Post Description</th>
       <td mat-cell *matCellDef="let entry">
         <span class="info" class="descriptionSpan" *ngIf="!entry.editing">{{ entry.postDescription }}</span>
-        <mat-form-field class="descriptionEditField" *ngIf="entry.editing">
-          <textarea matInput formControlName="{{getDescriptionFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postDescription }}"></textarea>
-        </mat-form-field>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="descriptionEditField">
+            <textarea matInput formControlName="{{getDescriptionFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postDescription }}"
+              [disabled]="editingEntry"
+              [matAutosizeMinRows]="3"
+              [matAutosizeMaxRows]="10"
+              [matTextareaAutosize]="true"></textarea>
+          </mat-form-field>
+        </div>
       </td>
     </ng-container>
 
@@ -42,15 +54,20 @@
           <button *ngIf="!entry.editing" mat-mini-fab class="actionButton mat-elevation-z2" color="default" (click)="entry.editing = true">
             <mat-icon>edit</mat-icon>
           </button>
-          <button *ngIf="entry.editing" mat-mini-fab class="actionButton mat-elevation-z2" color="default" (click)="entry.editing = false">
+          <button *ngIf="entry.editing" mat-mini-fab class="actionButton mat-elevation-z2" color="default"
+            [disabled]="editingEntry"
+            (click)="entry.editing = false">
             <mat-icon>cancel</mat-icon>
           </button>
           <button mat-mini-fab *ngIf="!entry.editing" class="actionButton mat-elevation-z2" color="warn" (click)="deleteEntry(entry)">
             <mat-icon>delete</mat-icon>
           </button>
-          <button mat-mini-fab *ngIf="entry.editing" class="actionButton mat-elevation-z2" color="primary" (click)="submitEntryEdits(entry)">
+          <button mat-mini-fab *ngIf="entry.editing" class="actionButton mat-elevation-z2" color="primary"
+            [disabled]="editingEntry"
+            (click)="submitEntryEdits(entry)">
             <mat-icon>check</mat-icon>
           </button>
+          <app-small-loading-spin *ngIf="editingEntry"></app-small-loading-spin>
         </div>
       </td>
     </ng-container>
