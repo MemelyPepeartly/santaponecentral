@@ -29,7 +29,8 @@ import { ClientResponse,
   EditBoardEntryTypeResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
-  EditEntryTypeDescription} from '../../classes/responseTypes';
+  EditEntryTypeDescription,
+  EditBoardEntryThreadNumberResponse} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -311,6 +312,10 @@ export class MissionBoardAPIService {
     return this.http.post(endpoint + 'Board', body).pipe(
       map(this.extractData));
   }
+  putBoardEntryThreadNumber(entryID: string, body: EditBoardEntryThreadNumberResponse): Observable<any> {
+    return this.http.put(endpoint + 'Board/' + entryID + "/ThreadNumber", body).pipe(
+      map(this.extractData));
+  }
   putBoardEntryPostNumber(entryID: string, body: EditBoardEntryPostNumberResponse): Observable<any> {
     return this.http.put(endpoint + 'Board/' + entryID + "/PostNumber", body).pipe(
       map(this.extractData));
@@ -322,6 +327,9 @@ export class MissionBoardAPIService {
   putBoardEntryType(entryID: string, body: EditBoardEntryTypeResponse): Observable<any> {
     return this.http.put(endpoint + 'Board/' + entryID + "/EntryType", body).pipe(
       map(this.extractData));
+  }
+  deleteBoardEntryByID(boardEntryID: string): Observable<any> {
+    return this.http.delete(endpoint + 'Board/' + boardEntryID);
   }
   /* ENTRY TYPES */
   getAllEntryTypes(): Observable<any> {
@@ -344,4 +352,5 @@ export class MissionBoardAPIService {
     return this.http.put(endpoint + 'EntryType/' + entryTypeID + "/Description", body).pipe(
       map(this.extractData));
   }
+
 }
