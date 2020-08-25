@@ -128,6 +128,9 @@ export class NewBoardEntryResponse {
 export class EditBoardEntryPostNumberResponse {
   postNumber: number;
 }
+export class EditBoardEntryThreadNumberResponse {
+  threadNumber: number;
+}
 export class EditBoardEntryPostDescriptionResponse {
   postDescription: string;
 }
