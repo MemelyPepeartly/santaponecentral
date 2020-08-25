@@ -6,7 +6,7 @@
       <td mat-cell *matCellDef="let entry">
         <button class="info" *ngIf="!entry.editing" mat-raised-button (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
         <div *ngIf="entry.editing">
-          <mat-form-field class="editField">
+          <mat-form-field class="editField" appearance="outline">
             <input matInput formControlName="{{getThreadNumberFormGroupSignature(entry)}}" placeholder="Thread Number" value="{{ entry.threadNumber }}" [disabled]="editingEntry">
             <mat-hint>Original Number: {{ entry.threadNumber }}</mat-hint>
           </mat-form-field>
@@ -21,7 +21,7 @@
         <button class="info" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
         <span class="info" *ngIf="entry.threadNumber == entry.postNumber && !entry.editing">{{ entry.postNumber }}</span>
         <div *ngIf="entry.editing">
-          <mat-form-field class="editField">
+          <mat-form-field class="editField" appearance="outline">
             <input matInput formControlName="{{getPostNumberFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postNumber }}" [disabled]="editingEntry">
             <mat-hint>Original Number: {{ entry.postNumber }}</mat-hint>
           </mat-form-field>
@@ -35,7 +35,7 @@
       <td mat-cell *matCellDef="let entry">
         <span class="info" class="descriptionSpan" *ngIf="!entry.editing">{{ entry.postDescription }}</span>
         <div *ngIf="entry.editing">
-          <mat-form-field class="descriptionEditField">
+          <mat-form-field class="descriptionEditField" appearance="outline">
             <textarea matInput formControlName="{{getDescriptionFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postDescription }}"
               [disabled]="editingEntry"
               [matAutosizeMinRows]="3"
