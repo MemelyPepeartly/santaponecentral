@@ -66,11 +66,18 @@ export class MissionBoardsComponent implements OnInit {
     await this.missionBoardService.gatherAllBoardEntries();
     await this.missionBoardService.gatherAllEntryTypes();
   }
-  public async refreshEntryList(successfullyPosted: boolean)
+  public async hardRefreshEntryList(successfullyPosted: boolean)
   {
     if(successfullyPosted)
     {
       await this.missionBoardService.gatherAllBoardEntries();
+    }
+  }
+  public async softRefreshEntryList(successfullyPosted: boolean)
+  {
+    if(successfullyPosted)
+    {
+      await this.missionBoardService.gatherAllBoardEntries(true);
     }
   }
   public adminTypes() : Array<EntryType>

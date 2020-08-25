@@ -45,9 +45,12 @@ constructor(private missionBoardAPIService: MissionBoardAPIService, private miss
   }
 
   /* GATHERERS */
-  public async gatherAllBoardEntries()
+  public async gatherAllBoardEntries(isSoftUpdate: boolean = false)
   {
-    this._gettingAllBoardEntries.next(true);
+    if(!isSoftUpdate)
+    {
+      this._gettingAllBoardEntries.next(true);
+    }
     let boardEntryArray: Array<BoardEntry> = [];
 
     var data = await this.missionBoardAPIService.getAllBoardEntries().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});
@@ -60,9 +63,12 @@ constructor(private missionBoardAPIService: MissionBoardAPIService, private miss
 
     this._gettingAllBoardEntries.next(false);
   }
-  public async gatherAllEntryTypes()
+  public async gatherAllEntryTypes(isSoftUpdate: boolean = false)
   {
-    this._gettingAllEntryTypes.next(true);
+    if(!isSoftUpdate)
+    {
+      this._gettingAllEntryTypes.next(true);
+    }
     let entryTypeArray: Array<EntryType> = [];
 
     var data = await this.missionBoardAPIService.getAllEntryTypes().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});

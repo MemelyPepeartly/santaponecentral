@@ -19,7 +19,8 @@
 
         <mat-card-content>
           <app-mission-board-table
-            (refreshEvent)="refreshEntryList($event)"
+            (hardRefreshEvent)="hardRefreshEntryList($event)"
+            (softRefreshEvent)="softRefreshEntryList($event)"
             [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAdminEntriesWithType(type)"
             [entryType]="type"
@@ -52,7 +53,8 @@
 
         <mat-card-content>
           <app-mission-board-table
-            (refreshEvent)="refreshEntryList($event)"
+            (hardRefreshEvent)="hardRefreshEntryList($event)"
+            (softRefreshEvent)="softRefreshEntryList($event)"
             [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAgentEntriesWithType(type)"
             [entryType]="type"

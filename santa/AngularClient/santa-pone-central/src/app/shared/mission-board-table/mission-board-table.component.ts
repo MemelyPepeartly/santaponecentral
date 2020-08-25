@@ -20,7 +20,8 @@ export class MissionBoardTableComponent implements OnInit {
   @Input() entryType: EntryType = new EntryType();
   @Input() allowForm: boolean;
 
-  @Output() refreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() hardRefreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() softRefreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public boardEntryFormGroup: FormGroup;
   public editPostFormGroup: FormGroup;
@@ -101,7 +102,7 @@ export class MissionBoardTableComponent implements OnInit {
       console.log(err);
       this.postSuccess = false
     });
-    this.refreshEvent.emit(this.postSuccess);
+    this.hardRefreshEvent.emit(this.postSuccess);
     this.boardEntryFormGroup.reset();
 
     this.postingEntry = false;
@@ -116,7 +117,7 @@ export class MissionBoardTableComponent implements OnInit {
       console.log(err);
       this.deleteSuccess = false
     });
-    this.refreshEvent.emit(this.deleteSuccess);
+    this.hardRefreshEvent.emit(this.deleteSuccess);
 
     this.deletingEntry = false;
   }
@@ -175,8 +176,9 @@ export class MissionBoardTableComponent implements OnInit {
     if(threadSuccess || postSuccess || descriptionSuccess)
     {
       partialSuccess = true;
-      this.refreshEvent.emit(partialSuccess);
+      this.softRefreshEvent.emit(partialSuccess);
     }
+    this.boardEntries.find((item: BoardEntry) => {return item.boardEntryID == entry.boardEntryID}).editing = false;
 
     this.editingEntry = false;
   }
