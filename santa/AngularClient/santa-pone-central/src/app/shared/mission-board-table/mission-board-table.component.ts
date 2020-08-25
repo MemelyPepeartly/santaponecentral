@@ -130,6 +130,9 @@ export class MissionBoardTableComponent implements OnInit {
     let postSuccess: boolean = true;
     let descriptionSuccess: boolean = true;
 
+    this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).disable
+    this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).disable
+    this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).disable
 
 
     // If thread number was changed
@@ -180,6 +183,9 @@ export class MissionBoardTableComponent implements OnInit {
     }
     this.boardEntries.find((item: BoardEntry) => {return item.boardEntryID == entry.boardEntryID}).editing = false;
 
+    this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).enable
+    this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).enable
+    this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).enable
     this.editingEntry = false;
   }
   async goToThreadLink(threadNumber: number)
