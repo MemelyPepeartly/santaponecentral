@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MissionBoardAPIService } from 'src/app/services/santaApiService.service';
 import { NewBoardEntryResponse } from 'src/classes/responseTypes';
 import { MissionBoardService } from 'src/app/services/MissionBoardService.service';
@@ -23,6 +23,7 @@ export class MissionBoardTableComponent implements OnInit {
   @Output() formPostedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public boardEntryFormGroup: FormGroup;
+  public editPostFormGroup: FormGroup;
   get boardEntryFormControls()
   {
     return this.boardEntryFormGroup.controls;
@@ -44,14 +45,37 @@ export class MissionBoardTableComponent implements OnInit {
     });
   }
 
-  columns: string[] = ["threadNumber", "postNumber", "description", "dateEntered"];
+  viewerColumns: string[] = ["threadNumber", "postNumber", "description"];
+  helperColumns: string[] = ["threadNumber", "postNumber", "description", "actions"];
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.editPostFormGroup = this.formBuilder.group({});
+    this.addControls();
     this.boardEntryFormGroup = this.formBuilder.group({
       threadNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       postNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       postDescription: ['', [Validators.required, Validators.maxLength(100)]],
     });
+  }
+  private addControls()
+  {
+    this.boardEntries.forEach((entry: BoardEntry) => {
+      this.editPostFormGroup.addControl(this.getThreadNumberFormGroupSignature(entry), new FormControl(entry.threadNumber, [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]));
+      this.editPostFormGroup.addControl(this.getPostNumberFormGroupSignature(entry), new FormControl(entry.postNumber, [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]));
+      this.editPostFormGroup.addControl(this.getDescriptionFormGroupSignature(entry), new FormControl(entry.postDescription, [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9]*$")]));
+    });
+  }
+  public getDescriptionFormGroupSignature(entry: BoardEntry) : string
+  {
+    return entry.boardEntryID + "DESCRIPTION";
+  }
+  public getThreadNumberFormGroupSignature(entry: BoardEntry) : string
+  {
+    return entry.boardEntryID + "THREAD";
+  }
+  public getPostNumberFormGroupSignature(entry: BoardEntry) : string
+  {
+    return entry.boardEntryID + "POST";
   }
   async submitBoardEntry()
   {
@@ -72,6 +96,14 @@ export class MissionBoardTableComponent implements OnInit {
 
     this.postingEntry = false;
   }
+  async deleteEntry(entry: BoardEntry)
+  {
+
+  }
+  async submitEntryEdits(entry: BoardEntry)
+  {
+
+  }
   async goToThreadLink(threadNumber: number)
   {
     let url: string = "https://boards.4channel.org/mlp/thread/" + threadNumber
@@ -82,7 +114,7 @@ export class MissionBoardTableComponent implements OnInit {
     let url: string = "https://boards.4channel.org/mlp/thread/" + threadNumber + "#p" + postNumber
     window.open(url, "_blank");
   }
-  areNumbersValid() : boolean
+  public areNumbersValid() : boolean
   {
     if(Number(this.boardEntryFormControls.threadNumber.value) == NaN || Number(this.boardEntryFormControls.postNumber.value) == NaN)
     {
@@ -101,5 +133,17 @@ export class MissionBoardTableComponent implements OnInit {
         return false;
       }
     }
+  }
+  public getThreadNumberFormControl(entry: BoardEntry)
+  {
+    return this.editPostFormGroup.get(entry.threadNumber.toString()) as FormControl;
+  }
+  public getPostNumberFormControl(entry: BoardEntry)
+  {
+    return this.editPostFormGroup.get(entry.postNumber.toString()) as FormControl;
+  }
+  public getDescriptionFormControl(entry: BoardEntry)
+  {
+    return this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)) as FormControl;
   }
 }

@@ -6,6 +6,7 @@ export class BoardEntry
   threadNumber: number;
   postNumber: number;
   postDescription: string;
+  editing: boolean = false;
 }
 export class EntryType
 {

@@ -32,6 +32,41 @@
 {
     color: #F44336;
 }
+.actionButton
+{
+  max-width: 40px;
+  max-height: 40px;
+  margin: 5px;
+}
+.actionContainer
+{
+  display: block;
+  min-width: 50px;
+}
+.editField
+{
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 15px;
+  width: 100px;
+}
+.descriptionEditField
+{
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 250px;
+}
+.info
+{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.linkButton
+{
+
+}
 
 @media (max-width:550px)
 {
@@ -39,5 +74,13 @@
   {
     display: block;
     max-width: 150px;
+  }
+  .descriptionEditField
+  {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 15px;
+    width: 100%;
+    max-width: 100px;
   }
 }
