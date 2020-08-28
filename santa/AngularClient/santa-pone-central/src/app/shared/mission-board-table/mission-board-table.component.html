@@ -59,7 +59,9 @@
             (click)="entry.editing = false">
             <mat-icon>cancel</mat-icon>
           </button>
-          <button mat-mini-fab *ngIf="!entry.editing" class="actionButton mat-elevation-z2" color="warn" (click)="deleteEntry(entry)">
+          <button mat-mini-fab *ngIf="!entry.editing" class="actionButton mat-elevation-z2" color="warn"
+            [disabled]="deletingEntry"
+            (click)="deleteEntry(entry)">
             <mat-icon>delete</mat-icon>
           </button>
           <button mat-mini-fab *ngIf="entry.editing" class="actionButton mat-elevation-z2" color="primary"
@@ -67,7 +69,7 @@
             (click)="submitEntryEdits(entry)">
             <mat-icon>check</mat-icon>
           </button>
-          <app-small-loading-spin *ngIf="editingEntry"></app-small-loading-spin>
+          <app-small-loading-spin *ngIf="editingEntry || deletingEntry"></app-small-loading-spin>
         </div>
       </td>
     </ng-container>
