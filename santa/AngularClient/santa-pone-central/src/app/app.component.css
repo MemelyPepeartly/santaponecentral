@@ -21,6 +21,34 @@
   background-size: cover;
   background-position: 50%;
 }
+#wordContainer
+{
+  width: 100%;
+}
+#div1 {
+  position: absolute;
+  height: 250px;
+  width: fit-content;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  perspective: 60px;
+}
+
+#div2 {
+  display: block;
+  height: 100px;
+  width: 700px;
+  margin-top: 35px;
+  text-align: center;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 78px;
+  color: #ce4355;
+  transform-style: preserve-3d;
+  transform: rotateX(-4deg);
+}
+
 @media (max-width:550px)
 {
   .title{
