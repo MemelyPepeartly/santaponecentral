@@ -42,7 +42,9 @@
   width: 700px;
   margin-top: 35px;
   text-align: center;
-  font-family: Impacto, Impact, sans-serif;
+  font-family: 'Impact';
+  font-weight: normal;
+  font-style: normal;
   font-size: 78px;
   color: #ce4355;
   transform-style: preserve-3d;
@@ -97,7 +99,9 @@
     width: 400px;
     margin-top: 18px;
     text-align: center;
-    font-family: Impacto, Impact, sans-serif;
+    font-family: 'Impact';
+    font-weight: normal;
+    font-style: normal;
     font-size: 45px;
     color: #ce4355;
     transform-style: preserve-3d;
@@ -105,9 +109,11 @@
   }
 }
 @font-face {
-  font-family: Impacto;
-  font-weight: bold;
-  src: url(data:font/ttf;base64,AAEAAAAXAQ...);
+  font-family: 'Impact';
+  src: url('../assets/font/Impact.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 
