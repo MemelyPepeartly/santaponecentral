@@ -15,6 +15,7 @@ namespace Santa.Logic.Constants
 
         // Auth0 role descriptions
         public const string PARTICIPANT = "Participant";
+        public const string HELPER = "Santa's Lil Helper";
         public const string EVENT_ADMIN = "Event Admin";
         public const string SANTADEV = "SantaDev";
 
@@ -26,6 +27,14 @@ namespace Santa.Logic.Constants
         public const string GRINCH_TAG = "Grinch";
         public const string MASS_MAILER_TAG = "Mass Mailer";
         public const string MASS_MAIL_RECIPIENT_TAG = "Mass Mail Recipient";
+
+        // Entry types
+
+        public const string DEADLINE_ANNOUNCEMENTS_ENTRYTYPE = "Announcements (Deadlines)";
+        public const string CONTEST_ANNOUNCEMENTS_ENTRYTYPE = "Announcements (Contests)";
+        public const string GIFT_DELIVERIES_ENTRYTYPE = "Deliveries (Gifts)";
+        public const string CARD_DELIVERIES_ENTRYTYPE = "Deliveries (Cards)";
+        public const string GENERAL_ENTRYTYPE = "General";
 
     }
 }

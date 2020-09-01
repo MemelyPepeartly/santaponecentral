@@ -23,6 +23,10 @@ export class AuthService {
 
   private isDevSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
   public isDev = this.isDevSubject$.asObservable();
+
+  private isHelperSubject$: BehaviorSubject<boolean>= new BehaviorSubject(false);
+  public isHelper = this.isHelperSubject$.asObservable();
+
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
@@ -81,6 +85,15 @@ export class AuthService {
         {
           this.isDevSubject$.next(true);
           this.isAdminSubject$.next(true);
+        }
+        // Finds if the person is a mission board helper
+        if(user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].includes(RoleConstants.HELPER))
+        {
+          this.isHelperSubject$.next(true);
+        }
+        else
+        {
+          this.isHelperSubject$.next(false);
         }
       })
     );

@@ -118,3 +118,33 @@ export class MessageApiReadResponse {
 export class MessageApiReadAllResponse {
     messages: Array<string> = [];
 }
+/* MISSION BOARD RESPONSE TYPES */
+export class NewBoardEntryResponse {
+  entryTypeID: string;
+  threadNumber: number;
+  postNumber: number;
+  postDescription: string;
+}
+export class EditBoardEntryPostNumberResponse {
+  postNumber: number;
+}
+export class EditBoardEntryThreadNumberResponse {
+  threadNumber: number;
+}
+export class EditBoardEntryPostDescriptionResponse {
+  postDescription: string;
+}
+export class EditBoardEntryTypeResponse {
+  entryTypeID: string;
+}
+export class NewEntryTypeResponse {
+  entryTypeName: string;
+  entryTypeDescription: string;
+  adminOnly: boolean;
+}
+export class EditEntryTypeName {
+  entryTypeName: string;
+}
+export class EditEntryTypeDescription {
+  entryTypeDescription: string;
+}

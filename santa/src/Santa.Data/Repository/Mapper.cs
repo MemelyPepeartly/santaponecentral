@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.NetworkInformation;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects;
@@ -466,6 +467,80 @@ namespace Santa.Data.Repository
             return contextResponse;
         }
         #endregion
+        #endregion
+
+        #region Board Entry
+        /// <summary>
+        /// Maps a context board entry to a logic board entry
+        /// </summary>
+        /// <param name="contextBoardEntry"></param>
+        /// <returns></returns>
+        public static Logic.Objects.BoardEntry MapBoardEntry(Data.Entities.BoardEntry contextBoardEntry)
+        {
+            Logic.Objects.BoardEntry logicBoardEntry = new Logic.Objects.BoardEntry()
+            {
+                boardEntryID = contextBoardEntry.BoardEntryId,
+                entryType = Mapper.MapEntryType(contextBoardEntry.EntryType),
+                threadNumber = contextBoardEntry.ThreadNumber,
+                postNumber = contextBoardEntry.PostNumber,
+                postDescription = contextBoardEntry.PostDescription,
+                dateTimeEntered = contextBoardEntry.DateTimeEntered
+            };
+            return logicBoardEntry;
+        }
+        /// <summary>
+        /// Maps a logic board entry to a context board entry
+        /// </summary>
+        /// <param name="logicBoardEntry"></param>
+        /// <returns></returns>
+        public static Data.Entities.BoardEntry MapBoardEntry(Logic.Objects.BoardEntry logicBoardEntry)
+        {
+            Data.Entities.BoardEntry contextBoardEntry = new Entities.BoardEntry()
+            {
+                BoardEntryId = logicBoardEntry.boardEntryID,
+                EntryTypeId = logicBoardEntry.entryType.entryTypeID,
+                ThreadNumber = logicBoardEntry.threadNumber,
+                PostNumber = logicBoardEntry.postNumber,
+                PostDescription = logicBoardEntry.postDescription,
+                DateTimeEntered = logicBoardEntry.dateTimeEntered
+            };
+            return contextBoardEntry;
+        }
+        #endregion
+
+        #region Entry Type
+        /// <summary>
+        /// Maps a context entry type into a logic entry type
+        /// </summary>
+        /// <param name="contextEntryType"></param>
+        /// <returns></returns>
+        public static Logic.Objects.EntryType MapEntryType(Data.Entities.EntryType contextEntryType)
+        {
+            Logic.Objects.EntryType logicEntryType = new Logic.Objects.EntryType()
+            {
+                entryTypeID = contextEntryType.EntryTypeId,
+                entryTypeName = contextEntryType.EntryTypeName,
+                entryTypeDescription = contextEntryType.EntryTypeDescription,
+                adminOnly = contextEntryType.AdminOnly
+            };
+            return logicEntryType;
+        }
+        /// <summary>
+        /// Maps a logic entry type into a context entry type
+        /// </summary>
+        /// <param name="logicEntryType"></param>
+        /// <returns></returns>
+        public static Data.Entities.EntryType MapEntryType(Logic.Objects.EntryType logicEntryType)
+        {
+            Data.Entities.EntryType contextEntryType = new Entities.EntryType()
+            {
+                EntryTypeId = logicEntryType.entryTypeID,
+                EntryTypeName = logicEntryType.entryTypeName,
+                EntryTypeDescription = logicEntryType.entryTypeDescription,
+                AdminOnly = logicEntryType.adminOnly
+            };
+            return contextEntryType;
+        }
         #endregion
     }
 }

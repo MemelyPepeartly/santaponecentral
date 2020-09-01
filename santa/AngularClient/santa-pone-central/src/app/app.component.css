@@ -21,17 +21,34 @@
   background-size: cover;
   background-position: 50%;
 }
-@media (max-width:550px)
+#wordContainer
 {
-  .title{
-    display: inline-block;
-    width: 100%;
-    height: 150px;
-    vertical-align: top;
-    background-image: url(../assets/banner/bg.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
+  width: 100%;
+}
+#perspectiveContainer {
+  position: absolute;
+  height: 250px;
+  width: fit-content;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  perspective: 60px;
+}
+
+#perspectiveContentDiv {
+  display: block;
+  height: 100px;
+  width: 700px;
+  margin-top: 35px;
+  text-align: center;
+  font-family: 'Impact';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 78px;
+  color: #ce4355;
+  transform-style: preserve-3d;
+  transform: rotateX(-4deg);
 }
 .main-container
 {
@@ -39,7 +56,6 @@
   height: 100%;
   display: contents;
 }
-
 .bg
 {
   display: inline-block;
@@ -54,3 +70,50 @@
   background-size: contain;
   background-repeat: no-repeat;
 }
+
+@media (max-width:550px)
+{
+  .title{
+    display: inline-block;
+    width: 100%;
+    height: 150px;
+    vertical-align: top;
+    background-image: url(../assets/banner/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  #perspectiveContainer {
+    position: absolute;
+    height: 150px;
+    width: fit-content;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    perspective: 60px;
+  }
+
+  #perspectiveContentDiv {
+    display: block;
+    height: 100px;
+    width: 400px;
+    margin-top: 18px;
+    text-align: center;
+    font-family: 'Impact';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 45px;
+    color: #ce4355;
+    transform-style: preserve-3d;
+    transform: rotateX(-4deg);
+  }
+}
+@font-face {
+  font-family: 'Impact';
+  src: url('../assets/font/Impact.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+

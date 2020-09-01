@@ -1138,7 +1138,233 @@ namespace Santa.Data.Repository
             }
         }
         #endregion
-        
+
+        #region Board Entry
+        public async Task CreateBoardEntryAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                await santaContext.AddAsync(Mapper.MapBoardEntry(newEntry));
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<Logic.Objects.BoardEntry>> GetAllBoardEntriesAsync()
+        {
+            try
+            {
+                List<Logic.Objects.BoardEntry> logicListBoardEntries = (await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
+                    .ToListAsync())
+                    .Select(Mapper.MapBoardEntry)
+                    .ToList();
+                return logicListBoardEntries;
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID)
+        {
+            try
+            {
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
+                    .FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID));
+                return logicBoardEntry;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Logic.Objects.BoardEntry> GetBoardEntryByThreadAndPostNumberAsync(int threadNumber, int postNumber)
+        {
+            try
+            {
+                Logic.Objects.BoardEntry logicBoardEntry = Mapper.MapBoardEntry(await santaContext.BoardEntry
+                    .Include(b => b.EntryType)
+                    .FirstOrDefaultAsync(b => b.ThreadNumber == threadNumber && b.PostNumber == postNumber));
+                return logicBoardEntry;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task UpdateBoardEntryPostNumberAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.PostNumber = newEntry.postNumber;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        public async Task UpdateBoardEntryThreadNumberAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.ThreadNumber = newEntry.threadNumber;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateBoardEntryPostDescriptionAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.PostDescription = newEntry.postDescription;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateBoardEntryTypeAsync(Logic.Objects.BoardEntry newEntry)
+        {
+            try
+            {
+                Data.Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == newEntry.boardEntryID);
+
+                contextBoardEntry.EntryTypeId = newEntry.entryType.entryTypeID;
+
+                santaContext.BoardEntry.Update(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task DeleteBoardEntryByIDAsync(Guid boardEntryID)
+        {
+            try
+            {
+                Entities.BoardEntry contextBoardEntry = await santaContext.BoardEntry.FirstOrDefaultAsync(b => b.BoardEntryId == boardEntryID);
+                santaContext.Remove(contextBoardEntry);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        #endregion
+
+        #region Entry Type
+        public async Task CreateEntryTypeAsync(Logic.Objects.EntryType newEntryType)
+        {
+            try
+            {
+                await santaContext.EntryType.AddAsync(Mapper.MapEntryType(newEntryType));
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<Logic.Objects.EntryType>> GetAllEntryTypesAsync()
+        {
+            try
+            {
+                List<Logic.Objects.EntryType> listLogicEntryType = (await santaContext.EntryType
+                    .ToListAsync())
+                    .Select(Mapper.MapEntryType)
+                    .ToList();
+                return listLogicEntryType;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Logic.Objects.EntryType> GetEntryTypeByIDAsync(Guid entryTypeID)
+        {
+            try
+            {
+                Logic.Objects.EntryType logicEntryType = Mapper.MapEntryType(await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == entryTypeID));
+                return logicEntryType;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateEntryTypeName(Logic.Objects.EntryType updatedEntryType)
+        {
+            try
+            {
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == updatedEntryType.entryTypeID);
+
+                contextEntryType.EntryTypeName = updatedEntryType.entryTypeName;
+
+                santaContext.EntryType.Update(contextEntryType);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateEntryTypeDescription(Logic.Objects.EntryType updatedEntryType)
+        {
+            try
+            {
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == updatedEntryType.entryTypeID);
+
+                contextEntryType.EntryTypeDescription = updatedEntryType.entryTypeDescription;
+
+                santaContext.EntryType.Update(contextEntryType);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task DeleteEntryTypeByID(Guid entryTypeID)
+        {
+            try
+            {
+                Entities.EntryType contextEntryType = await santaContext.EntryType.FirstOrDefaultAsync(e => e.EntryTypeId == entryTypeID);
+
+                santaContext.EntryType.Remove(contextEntryType);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {

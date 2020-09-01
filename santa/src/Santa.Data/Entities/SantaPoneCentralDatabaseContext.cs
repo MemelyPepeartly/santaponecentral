@@ -15,11 +15,13 @@ namespace Santa.Data.Entities
         {
         }
 
+        public virtual DbSet<BoardEntry> BoardEntry { get; set; }
         public virtual DbSet<ChatMessage> ChatMessage { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientRelationXref> ClientRelationXref { get; set; }
         public virtual DbSet<ClientStatus> ClientStatus { get; set; }
         public virtual DbSet<ClientTagXref> ClientTagXref { get; set; }
+        public virtual DbSet<EntryType> EntryType { get; set; }
         public virtual DbSet<EventType> EventType { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
         public virtual DbSet<SurveyOption> SurveyOption { get; set; }
@@ -31,6 +33,48 @@ namespace Santa.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BoardEntry>(entity =>
+            {
+                entity.ToTable("BoardEntry", "app");
+
+                entity.HasIndex(x => new { x.ThreadNumber, x.PostNumber })
+                    .HasName("boardEntryID")
+                    .IsUnique();
+
+                entity.Property(e => e.BoardEntryId)
+                    .HasColumnName("boardEntryID")
+                    .HasViewColumnName("boardEntryID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.DateTimeEntered)
+                    .HasColumnName("dateTimeEntered")
+                    .HasViewColumnName("dateTimeEntered")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.EntryTypeId)
+                    .HasColumnName("entryTypeID")
+                    .HasViewColumnName("entryTypeID");
+
+                entity.Property(e => e.PostDescription)
+                    .IsRequired()
+                    .HasColumnName("postDescription")
+                    .HasViewColumnName("postDescription")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.PostNumber)
+                    .HasColumnName("postNumber")
+                    .HasViewColumnName("postNumber");
+
+                entity.Property(e => e.ThreadNumber)
+                    .HasColumnName("threadNumber")
+                    .HasViewColumnName("threadNumber");
+
+                entity.HasOne(d => d.EntryType)
+                    .WithMany(p => p.BoardEntry)
+                    .HasForeignKey(x => x.EntryTypeId)
+                    .HasConstraintName("FK__BoardEntr__entry__1983DF6B");
+            });
+
             modelBuilder.Entity<ChatMessage>(entity =>
             {
                 entity.ToTable("ChatMessage", "app");
@@ -263,6 +307,36 @@ namespace Santa.Data.Entities
                     .HasForeignKey(x => x.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ClientTag__tagID__55CDD39C");
+            });
+
+            modelBuilder.Entity<EntryType>(entity =>
+            {
+                entity.ToTable("EntryType", "app");
+
+                entity.HasIndex(x => x.EntryTypeName)
+                    .HasName("UQ__EntryTyp__2E52653CD59B4508")
+                    .IsUnique();
+
+                entity.Property(e => e.EntryTypeId)
+                    .HasColumnName("entryTypeID")
+                    .HasViewColumnName("entryTypeID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.AdminOnly)
+                    .HasColumnName("adminOnly")
+                    .HasViewColumnName("adminOnly");
+
+                entity.Property(e => e.EntryTypeDescription)
+                    .IsRequired()
+                    .HasColumnName("entryTypeDescription")
+                    .HasViewColumnName("entryTypeDescription")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.EntryTypeName)
+                    .IsRequired()
+                    .HasColumnName("entryTypeName")
+                    .HasViewColumnName("entryTypeName")
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<EventType>(entity =>

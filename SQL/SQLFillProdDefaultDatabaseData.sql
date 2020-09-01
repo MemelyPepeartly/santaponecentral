@@ -158,6 +158,14 @@ VALUES
     (@tag1IDGUID, 'Grinch'),
     (@tag2IDGUID, 'Mass Mailer'),
     (@tag3IDGUID, 'Mass Mail Recipient');
+    
+INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adminOnly)
+VALUES
+    (NEWID(), 'Announcements (Deadlines)', 'Deadline announcement and news', 1),
+    (NEWID(), 'Announcements (Contests)', 'Contest announcements and information', 1),
+    (NEWID(), 'Deliveries (Gifts)', 'Delivery posts for the Gift Exchange', 0),
+    (NEWID(), 'Deliveries (Cards)', 'Delivery posts for the Card Exchange', 0),
+    (NEWID(), 'General', 'Any other noteworthy intelligence', 0);
 
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;

@@ -155,8 +155,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region SurveyQuestions
-        Task<List<Question>> GetAllSurveyQuestions();
-        Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
+        Task CreateSurveyQuestionAsync(Question newQuestion);
         /// <summary>
         /// Creates a relationship between a survey and a question based on their ID
         /// </summary>
@@ -164,13 +163,82 @@ namespace Santa.Logic.Interfaces
         /// <param name="questionID"></param>
         /// <returns></returns>
         Task CreateSurveyQuestionXrefAsync(Guid surveyID, Guid questionID);
-        Task CreateSurveyQuestionAsync(Question newQuestion);
-
+        Task<List<Question>> GetAllSurveyQuestions();
+        Task<Question> GetSurveyQuestionByIDAsync(Guid questionID);
         Task UpdateSurveyQuestionByIDAsync(Question targetQuestion);
         Task DeleteSurveyQuestionByIDAsync(Guid surveyQuestionID);
         #endregion
 
+        #region Board Entries
+        /// <summary>
+        /// Creates a board entry with a new logic board object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task CreateBoardEntryAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Gets a logic list of all the board entries
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BoardEntry>> GetAllBoardEntriesAsync();
+        /// <summary>
+        /// Gets a certain board entry by its boardEntryID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <returns></returns>
+        Task<BoardEntry> GetBoardEntryByIDAsync(Guid boardEntryID);
+        /// <summary>
+        /// Gets a board entry by its post number
+        /// </summary>
+        /// <param name="postNumber"></param>
+        /// <returns></returns>
+        Task<BoardEntry> GetBoardEntryByThreadAndPostNumberAsync(int threadNumber, int postNumber);
+        /// <summary>
+        /// Updates a post number in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryPostNumberAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates a thread number in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryThreadNumberAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates a post description in a board entry using an updated logic board entry object
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryPostDescriptionAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Updates the entry type of a board post
+        /// </summary>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        Task UpdateBoardEntryTypeAsync(BoardEntry newEntry);
+        /// <summary>
+        /// Deletes a board entry by its board entry ID
+        /// </summary>
+        /// <param name="boardEntryID"></param>
+        /// <returns></returns>
+        Task DeleteBoardEntryByIDAsync(Guid boardEntryID);
+        #endregion
+
+        #region Entry Type
+        Task CreateEntryTypeAsync(EntryType newEntryType);
+        Task<List<EntryType>> GetAllEntryTypesAsync();
+        Task<EntryType> GetEntryTypeByIDAsync(Guid entryTypeID);
+        Task UpdateEntryTypeName(EntryType updatedEntryType);
+        Task UpdateEntryTypeDescription(EntryType updatedEntryType);
+        Task DeleteEntryTypeByID(Guid entryTypeID);
+        #endregion
+
         #region Utility
+        /// <summary>
+        /// Saves changes of any CRUD operations in the queue
+        /// </summary>
+        /// <returns></returns>
         Task SaveAsync();
         #endregion
 

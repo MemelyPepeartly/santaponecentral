@@ -12,6 +12,9 @@ DROP TABLE app.Client;
 DROP TABLE app.ClientStatus;
 DROP TABLE app.Tag;
 
+DROP TABLE app.BoardEntry;
+DROP TABLE app.EntryType;
+
 DROP SCHEMA app;
 
 
@@ -20,4 +23,4 @@ DROP SCHEMA app;
 --DELETE FROM app.ClientTagXref
 --DELETE FROM app.Tag
 
---ALTER TABLE app.Client ADD isAdmin BIT NOT NULL DEFAULT 0
+--ALTER TABLE app.EntryType ADD adminOnly BIT NOT NULL DEFAULT 0
