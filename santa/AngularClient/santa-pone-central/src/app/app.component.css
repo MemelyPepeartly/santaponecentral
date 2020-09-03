@@ -60,14 +60,12 @@
 {
   display: inline-block;
   position: fixed;
+  top: 0px;
   width: 100%;
-  min-width: 550px;;
-  min-height: 800px;
-  left: 0;
+  height: 100%;
   z-index: -1;
-  background-position-y: bottom;
-  background-image: url(../assets/images/santa.png);
-  background-size: contain;
+  background-image: url(../assets/images/pipes.gif);
+  background-size: cover;
   background-repeat: no-repeat;
 }
 
