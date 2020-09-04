@@ -260,8 +260,8 @@
         </div>
         <ng-container *ngIf="!gettingAnswers">
             <div class="infoContainer">
-                <div class="responseCard" *ngFor="let event of events">
-                    <mat-card>
+                <div class="responseCardDiv" *ngFor="let event of events">
+                    <mat-card class="responseCard">
                         <mat-card-header>
                             <mat-card-title>{{event.eventDescription}}</mat-card-title>
                             <mat-card-subtitle>Answers for the {{event.eventDescription}} survey</mat-card-subtitle>
