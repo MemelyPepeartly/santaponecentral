@@ -52,40 +52,10 @@ export class SignupFormComponent implements OnInit {
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
-  public surveyFormGroup: FormGroup
+  public surveyFormGroup: FormGroup;
 
   @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
 
-  async ngOnInit() {
-    this.isLinear = true;
-    this.isDoneLoading = false;
-
-    // Creates form groups
-    this.createFormGroups();
-
-    // JSON call for getting country data
-    this.countries = this.countryService.allCountries();
-
-    // API Call for getting statuses
-    this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
-      this.statuses = statuses;
-    });
-
-    // API Call for getting events
-    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
-      this.events = events;
-    });
-
-    // API Call for getting surveys
-    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
-      this.surveys = surveys;
-    });
-    await this.gatherer.gatherAllStatuses();
-    await this.gatherer.gatherAllEvents();
-    await this.gatherer.gatherAllSurveys();
-
-    this.isDoneLoading = true;
-  }
   get clientName()
   {
     var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
@@ -123,6 +93,37 @@ export class SignupFormComponent implements OnInit {
   get nameFormControls()
   {
     return this.clientInfoFormGroup.controls;
+  }
+
+  async ngOnInit() {
+    this.isLinear = true;
+    this.isDoneLoading = false;
+
+    // Creates form groups
+    this.createFormGroups();
+
+    // JSON call for getting country data
+    this.countries = this.countryService.allCountries();
+
+    // API Call for getting statuses
+    this.gatherer.allStatuses.subscribe((statuses: Array<Status>) => {
+      this.statuses = statuses;
+    });
+
+    // API Call for getting events
+    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
+      this.events = events;
+    });
+
+    // API Call for getting surveys
+    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
+      this.surveys = surveys;
+    });
+    await this.gatherer.gatherAllStatuses();
+    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
+
+    this.isDoneLoading = true;
   }
   public async onSubmit()
   {
