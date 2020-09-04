@@ -31,8 +31,8 @@
     margin-right: auto;
     border-radius: 8px;
     background-color: white;
-    width: 95%;
-    min-width: 550px;;
+    width: 90%;
+    min-width: 400px;
 }
 
 .small-box {
@@ -50,15 +50,43 @@
 }
 #overlay
 {
-    position: fixed; /* Sit on top of the page content */
-    display: block;
-    width: 100%; /* Full width (cover the whole page) */
-    height: 100%; /* Full height (cover the whole page) */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
+  position: fixed; /* Sit on top of the page content */
+  display: block;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
 }
+#tabGroupContainer
+{
+  display: block;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  width: 80%;
+  min-width: 525px;
+  background-color: white;
+  border-radius: 8px;
+}
+@media (max-width:550px)
+{
+  #tabGroupContainer
+  {
+    display: block;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    width: 80%;
+    min-width: 525px;
+    background-color: white;
+    border-radius: 8px;
+  }
+}
+

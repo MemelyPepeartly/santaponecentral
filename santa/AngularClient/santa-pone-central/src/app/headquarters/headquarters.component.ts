@@ -35,6 +35,7 @@ export class HeadquartersComponent implements OnInit {
 
 
   public showClientCard: boolean = false;
+  public showManualSignupCard: boolean = false;
   public currentClient: Client;
   public allClients: Array<Client> = [];
 
@@ -58,13 +59,24 @@ export class HeadquartersComponent implements OnInit {
     this.showClientCard = true;
     this.gatherer.onSelectedClient = true;
   }
-  async hideClientWindow(forceRefresh: boolean = false)
+  showManualSignupWindow()
   {
-    this.showClientCard = false;
-    this.gatherer.onSelectedClient = false;
-    if(forceRefresh)
+    this.showManualSignupCard = true;
+  }
+  async hideOpenWindow(forceRefresh: boolean = false)
+  {
+    if(this.showClientCard)
     {
-      await this.gatherer.gatherAllClients();
+      this.showClientCard = false;
+      this.gatherer.onSelectedClient = false;
+      if(forceRefresh)
+      {
+        await this.gatherer.gatherAllClients();
+      }
+    }
+    else if(this.showManualSignupCard)
+    {
+      this.showManualSignupCard = false;
     }
   }
   async updateSelectedClient(clientID: string)
