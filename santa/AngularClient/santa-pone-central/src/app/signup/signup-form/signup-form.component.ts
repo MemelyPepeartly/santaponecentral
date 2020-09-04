@@ -29,9 +29,9 @@ export class SignupFormComponent implements OnInit {
     public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
 
-  public events: Array<EventType> = [];
   public selectedEvents: Array<EventType> = new Array<EventType>();
 
+  public events: Array<EventType> = [];
   public statuses: Array<Status> = [];
   public surveys: Array<Survey> = [];
   public countries: Array<any>=[];
