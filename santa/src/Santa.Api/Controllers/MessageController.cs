@@ -114,6 +114,13 @@ namespace Santa.Api.Controllers
                             await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
                         }
                     }
+                    else
+                    {
+                        //If the if the body doesnt have an eventTypeId as a value, then mark it as a new event object for the mailbag. Otherwise, get the event
+                        Logic.Objects.Event logicEvent = !message.eventTypeID.HasValue ? new Logic.Objects.Event() : await repository.GetEventByIDAsync(message.eventTypeID.Value);
+
+                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                    }
 
                     return Ok();
                 }
