@@ -1,29 +1,157 @@
-<mat-card class="formCard mat-elevation-z3">
-  <mat-card-header>
-    <mat-card-title>Anon's Information</mat-card-title>
-    <mat-card-subtitle>Personal info about the Anon's identity</mat-card-subtitle>
-  </mat-card-header>
+<div class="shell scrollbar scrollbar-primary mat-elevation-z2">
+  <mat-card class="formCard mat-elevation-z3">
+    <mat-card-header>
+      <mat-card-title>Anon's Information</mat-card-title>
+      <mat-card-subtitle>Personal info about the Anon's identity</mat-card-subtitle>
+    </mat-card-header>
 
-  <mat-card-content>Content</mat-card-content>
-  <mat-card-actions>Actions</mat-card-actions>
-</mat-card>
+    <mat-card-content>
+      <form [formGroup]="clientInfoFormGroup">
+        <!-- First Name -->
+        <mat-form-field class="formField">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="First Name">
+        </mat-form-field>
+        <div class="error" *ngIf="nameFormControls.firstName.errors && nameFormControls.firstName.touched">
+            <div *ngIf="nameFormControls.firstName.errors.required">A first name is required</div>
+            <div *ngIf="nameFormControls.firstName.errors.maxlength">First name is too long. 20 Characters is the maximum</div>
+            <div *ngIf="nameFormControls.firstName.errors.pattern">First name must be a proper first name</div>
+        </div>
 
-<mat-card class="formCard mat-elevation-z3">
-  <mat-card-header>
-    <mat-card-title>Anon's Shipping Information</mat-card-title>
-    <mat-card-subtitle>Shipping Address of the Anon</mat-card-subtitle>
-  </mat-card-header>
+        <!-- Last Name -->
+        <mat-form-field class="formField">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Last Name">
+        </mat-form-field>
+        <div class="error" *ngIf="nameFormControls.lastName.errors && nameFormControls.lastName.touched">
+            <div *ngIf="nameFormControls.lastName.errors.required">A last name is required</div>
+            <div *ngIf="nameFormControls.lastName.errors.maxlength">Last name is too long. 20 Characters is the maximum</div>
+            <div *ngIf="nameFormControls.lastName.errors.pattern">Last name must be a proper last name</div>
+        </div>
 
-  <mat-card-content>Content</mat-card-content>
-  <mat-card-actions>Actions</mat-card-actions>
-</mat-card>
+        <!-- Email -->
+        <mat-form-field class="formField">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="email@domain.com">
+        </mat-form-field>
+        <div class="error" *ngIf="nameFormControls.email.errors && nameFormControls.email.touched">
+            <div *ngIf="nameFormControls.email.errors.required">An email is required</div>
+            <div *ngIf="nameFormControls.email.errors.maxlength">Email is too long. 50 Characters is the maximum</div>
+            <div *ngIf="nameFormControls.email.errors.pattern">Email must be a proper email</div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-<mat-card class="formCard mat-elevation-z3">
-  <mat-card-header>
-    <mat-card-title>Anon's Responses</mat-card-title>
-    <mat-card-subtitle>Anon's Responses to surveys</mat-card-subtitle>
-  </mat-card-header>
+  <mat-card class="formCard mat-elevation-z3">
+    <mat-card-header>
+      <mat-card-title>Anon's Shipping Information</mat-card-title>
+      <mat-card-subtitle>Shipping Address of the Anon</mat-card-subtitle>
+    </mat-card-header>
 
-  <mat-card-content>Content</mat-card-content>
-  <mat-card-actions>Actions</mat-card-actions>
-</mat-card>
+    <mat-card-content>
+      <form [formGroup]="clientAddressFormGroup">
+        <!-- Address line 1 -->
+        <mat-form-field class="formField">
+            <input matInput formControlName="addressLine1" placeholder="Street Address">
+        </mat-form-field>
+        <div class="error" *ngIf="addressFormControls.addressLine1.errors && addressFormControls.addressLine1.touched">
+            <div *ngIf="addressFormControls.addressLine1.errors.required">An address line is required</div>
+            <div *ngIf="addressFormControls.addressLine1.errors.maxlength">First address line is too long. 50 Characters is the maximum</div>
+        </div>
+
+        <!-- Address line 2 -->
+        <mat-form-field class="formField">
+            <input matInput #secondLine formControlName="addressLine2"
+                placeholder="Second Street Address (Optional)">
+        </mat-form-field>
+        <div class="error" *ngIf="addressFormControls.addressLine2.errors && addressFormControls.addressLine2.touched">
+            <div *ngIf="addressFormControls.addressLine2.errors.maxlength">Second address line is too long. 50 Characters is the maximum</div>
+        </div>
+
+        <!-- City -->
+        <mat-form-field class="formField">
+            <input matInput formControlName="city" placeholder="City">
+        </mat-form-field>
+        <div class="error" *ngIf="addressFormControls.city.errors && addressFormControls.city.touched">
+            <div *ngIf="addressFormControls.city.errors.required">A city is required</div>
+            <div *ngIf="addressFormControls.city.errors.maxlength">City field is too long. 50 Characters is the maximum</div>
+        </div>
+
+        <!-- State -->
+        <mat-form-field class="formField">
+            <input matInput formControlName="state" placeholder="State">
+        </mat-form-field>
+        <div class="error" *ngIf="addressFormControls.state.errors && addressFormControls.state.touched">
+            <div *ngIf="addressFormControls.state.errors.required">A state is required</div>
+            <div *ngIf="addressFormControls.state.errors.maxlength">State line is too long. 50 Characters is the maximum</div>
+        </div>
+
+        <mat-form-field class="formField">
+            <mat-select name="country" formControlName="country" placeholder="Select a Country">
+                <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Postal Code -->
+        <mat-form-field class="formField">
+            <input matInput formControlName="postalCode" placeholder="Postal Code">
+        </mat-form-field>
+        <div class="error" *ngIf="addressFormControls.postalCode.errors && addressFormControls.postalCode.touched">
+            <div *ngIf="addressFormControls.postalCode.errors.required">A postal code is required</div>
+            <div *ngIf="addressFormControls.postalCode.errors.maxlength">Postal code is too long. 25 Characters is the maximum</div>
+            <div *ngIf="addressFormControls.postalCode.errors.pattern">Postal code can only have letters and numbers</div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="formCard mat-elevation-z3">
+    <mat-card-header>
+      <mat-card-title>Anon's Events</mat-card-title>
+      <mat-card-subtitle>Event the anon is participating in</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div>
+        <mat-selection-list [(ngModel)]="selectedEvents">
+          <mat-list-option *ngFor="let event of events" [value]="event">{{ event.eventDescription }}</mat-list-option>
+        </mat-selection-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="formCard mat-elevation-z3" *ngIf="selectedEvents.length != 0">
+    <mat-card-header>
+      <mat-card-title>Anon's Answers</mat-card-title>
+      <mat-card-subtitle>Anon's survey answers</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div>
+        <ng-container *ngFor="let event of selectedEvents">
+          <mat-card-title>{{event.eventDescription}}</mat-card-title>
+          <ng-container *ngFor="let survey of surveys">
+              <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true"
+              (validity)="setQuestionValidity($event)"
+              [questions]="survey.surveyQuestions"
+              [surveyID]="survey.surveyID"></app-survey-form>
+          </ng-container>
+        </ng-container>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="formCard mat-elevation-z3" *ngIf="selectedEvents.length != 0">
+    <mat-card-header>
+      <mat-card-title>Submit</mat-card-title>
+      <mat-card-subtitle>Submit this new client</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button mat-raised-button type="submit"
+        [disabled]="!readyToSubmit"
+        (click)="onSubmit()">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
