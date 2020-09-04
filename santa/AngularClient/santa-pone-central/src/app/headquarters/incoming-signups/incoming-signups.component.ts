@@ -35,19 +35,24 @@ export class IncomingSignupsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
 
   @Input() incomingClients: Array<Client> = [];
   @Input() gatheringAllClients: boolean;
 
   showSpinner: boolean = false;
   actionTaken: boolean = false;
-  
+
 
   ngOnInit() {
   }
   showCardInfo(client)
   {
     this.clickedClient.emit(client);
+  }
+  emitOpenManualSignupWindow()
+  {
+    this.manualSignUpClickedEvent.emit(true);
   }
   async refreshSignupClientList()
   {
