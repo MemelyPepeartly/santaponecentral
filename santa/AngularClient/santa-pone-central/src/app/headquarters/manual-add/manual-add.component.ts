@@ -43,7 +43,8 @@ export class ManualAddComponent implements OnInit {
 
   //For determining of all questions on the surveys selected are answered
   public allQuestionsAnswered: boolean = false;
-
+  public showSpinner: boolean = false;
+  public showError: boolean = false;
 
   get readyToSubmit(): boolean
   {
@@ -131,6 +132,7 @@ export class ManualAddComponent implements OnInit {
   }
   public async onSubmit()
   {
+    this.showSpinner = true;
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
 
     // Construction of new client response
@@ -178,9 +180,13 @@ export class ManualAddComponent implements OnInit {
     this.SantaPost.postClientSignup(newClient).subscribe((res) => {
       this.clientInfoFormGroup.reset();
       this.clientAddressFormGroup.reset();
+      this.showSpinner = false;
+      this.showError = false;
     },(err) => {
       console.log("Something went wrong on signup. Error is as follows: ");
       console.log(err);
+      this.showSpinner = false
+      this.showError = true;
     });
   }
   public setQuestionValidity(childValidity: boolean)

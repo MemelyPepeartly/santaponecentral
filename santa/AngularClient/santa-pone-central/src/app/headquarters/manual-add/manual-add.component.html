@@ -142,14 +142,19 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="formCard mat-elevation-z3" *ngIf="selectedEvents.length != 0">
+  <mat-card class="submitFormCard formCard mat-elevation-z3">
     <mat-card-header>
       <mat-card-title>Submit</mat-card-title>
       <mat-card-subtitle>Submit this new client</mat-card-subtitle>
     </mat-card-header>
     <mat-card-actions>
+      <div id="spinnerDiv">
+        <app-small-loading-spin *ngIf="showSpinner"></app-small-loading-spin>
+      </div>
+
+      <span class="error" *ngIf="showError">Something went wrong with submitting this application. Please try again</span>
       <button mat-raised-button type="submit"
-        [disabled]="!readyToSubmit"
+        [disabled]="!readyToSubmit || showSpinner"
         (click)="onSubmit()">Submit</button>
     </mat-card-actions>
   </mat-card>
