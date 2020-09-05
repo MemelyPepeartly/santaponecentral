@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaApiService.service';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
@@ -11,6 +11,7 @@ import { Status } from 'src/classes/status';
 import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/responseTypes';
 import { Address } from 'src/classes/address';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-manual-add',
@@ -26,6 +27,9 @@ export class ManualAddComponent implements OnInit {
     public responseMapper: MapResponse,
     public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
+
+  @Output() clientPostedEvent: EventEmitter<Client> = new EventEmitter();
+  @Output() actionTaken: EventEmitter<any> = new EventEmitter();
 
   @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
 
@@ -182,9 +186,12 @@ export class ManualAddComponent implements OnInit {
       this.clientAddressFormGroup.reset();
       this.showSpinner = false;
       this.showError = false;
+      this.actionTaken.emit(true);
+      this.clientPostedEvent.emit(this.mapper.mapClient(res));
     },(err) => {
       console.log("Something went wrong on signup. Error is as follows: ");
       console.log(err);
+      this.actionTaken.emit(false);
       this.showSpinner = false
       this.showError = true;
     });
