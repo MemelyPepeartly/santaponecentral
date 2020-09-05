@@ -2,7 +2,9 @@
 </div>
 <div class="container mat-elevation-z3 clientCard" *ngIf="showManualSignupCard">
   <div class="fixedDiv mat-elevation-z6">
-      <app-manual-add>
+      <app-manual-add
+      (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
+      (clientPostedEvent)="showClientWindow($event)">
       </app-manual-add>
   </div>
 </div>
