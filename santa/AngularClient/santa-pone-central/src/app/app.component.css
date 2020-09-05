@@ -79,9 +79,8 @@
 .pipesFront
 {
   display: inline-block;
-  width: 60%;
-  max-width: 900px;
-  max-height: 900px;
+  width: 70%;
+  height: 100%;
   top: 100px;
   position: fixed;
 }
