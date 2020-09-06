@@ -129,21 +129,24 @@ export class SignupFormComponent implements OnInit {
   {
     this.showSpinner = true;
 
-    // Construction of new client response
-    let newClient: ClientSignupResponse = new ClientSignupResponse();
-    newClient.clientName = this.clientName;
-    newClient.clientEmail = this.clientEmail;
-    newClient.clientNickname = "Anon"
-
-    newClient.clientAddressLine1 = this.clientAddress.addressLineOne;
-    newClient.clientAddressLine2 = this.clientAddress.addressLineTwo;
-    newClient.clientCity = this.clientAddress.city;
-    newClient.clientState = this.clientAddress.state
-    newClient.clientPostalCode = this.clientAddress.postalCode;
-    newClient.clientCountry = this.clientAddress.country;
-
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
-    newClient.clientStatusID = awaitingStatusID.statusID
+    // Construction of new client response
+    let newClient: ClientSignupResponse =
+    {
+      clientStatusID: awaitingStatusID.statusID,
+      clientName: this.clientName,
+      clientEmail: this.clientInfoFormGroup.get('email').value,
+      clientNickname: "Anon",
+      clientAddressLine1: this.clientAddress.addressLineOne,
+      clientAddressLine2: this.clientAddress.addressLineTwo,
+      clientCity: this.clientAddress.city,
+      clientState: this.clientAddress.state,
+      clientPostalCode: this.clientAddress.postalCode,
+      clientCountry: this.clientAddress.country,
+      isAdmin: false,
+      hasAccount: false,
+      responses: []
+    }
 
     var forms = this.surveyForms.toArray()
     // Set client's answers

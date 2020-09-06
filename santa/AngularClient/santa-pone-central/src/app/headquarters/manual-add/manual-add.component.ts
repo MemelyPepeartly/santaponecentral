@@ -153,6 +153,7 @@ export class ManualAddComponent implements OnInit {
       clientPostalCode: this.clientAddress.postalCode,
       clientCountry: this.clientAddress.country,
       isAdmin: false,
+      hasAccount: false,
       responses: []
     }
 
