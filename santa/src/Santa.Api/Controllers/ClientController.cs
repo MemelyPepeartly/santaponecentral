@@ -368,7 +368,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -396,7 +396,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -459,17 +459,17 @@ namespace Santa.Api.Controllers
                     }
                     catch(Exception e)
                     {
-                        throw e.InnerException;
+                        return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                     }
                 }
                 catch(Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch(Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Email
@@ -535,19 +535,19 @@ namespace Santa.Api.Controllers
                         }
                         catch (Exception e)
                         {
-                            throw e.InnerException;
+                            return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                         }
                     }
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Nickname
@@ -589,12 +589,12 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -622,13 +622,13 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
                 
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -656,13 +656,13 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
 
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Status
@@ -759,7 +759,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Recipient
@@ -788,7 +788,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // DELETE: api/Client/5
@@ -848,7 +848,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // DELETE: api/Client/5/Tag
@@ -870,7 +870,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
