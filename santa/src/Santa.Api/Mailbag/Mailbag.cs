@@ -88,6 +88,33 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+        public async Task sendApprovedForEventWithNoAccountEmail(Client emailRecipientClient)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central Approval Status";
+            EmailAddress to = new EmailAddress(emailRecipientClient.email, emailRecipientClient.nickname);
+            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! An account for you through the website has not been created on your behalf, either per request, or admin consideration. " +
+                "Your holiday nickname given to you is {emailRecipientClient.nickname}, and you will recieve an email as soon as you are given your assignments! " +
+                "You are free to continue to email santapone at mlpsantapone@gmail.com, or thecardslut@gmail.com still about your any updates, however, if you would like an account to make things a fair " +
+                "bit easier to keep track of, just let the shark, or any other event organizers know!.";
+            string htmlContent = emailStart +
+                @$"
+                    <p>After consideration, you were approved to join the Secret Santa Event!An account for you through the website has not been created on your behalf, either per request, or admin consideration. 
+                       Your holiday nickname given to you is {emailRecipientClient.nickname}, and you will recieve an email as soon as you are given your assignments!
+                    </p>
+                    <br>
+                    <p>You are free to continue to email santapone at mlpsantapone@gmail.com, or thecardslut@gmail.com still about your any updates, however, if you would like an account to make things a fair 
+                       bit easier to keep track of, just let the shark, or any other event organizers know!.
+                    </p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
+
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
 
         public async Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType)
         {
