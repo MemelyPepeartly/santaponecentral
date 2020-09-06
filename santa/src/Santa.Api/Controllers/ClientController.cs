@@ -202,6 +202,7 @@ namespace Santa.Api.Controllers
                     nickname = clientResponseModel.clientNickname,
                     clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
                     isAdmin = clientResponseModel.isAdmin,
+                    hasAccount = clientResponseModel.hasAccount,
                     address = new Logic.Objects.Address()
                     {
                         addressLineOne = clientResponseModel.clientAddressLine1,
@@ -639,18 +640,19 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                // If the status ID is empty on the request, return 400 bad request
                 if(status.clientStatusID.Equals(Guid.Empty))
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
-                // Grab original client
+
+                // Grab original client and set the original stattus to its own object for later comparison
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 Status originalStatus = targetClient.clientStatus;
-
                 
                 try
                 {
-                    // Updates client status
+                    // Updates client status and account status
                     targetClient.clientStatus.statusID = status.clientStatusID;
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
@@ -667,13 +669,29 @@ namespace Santa.Api.Controllers
                     // Send approval steps for a client that was awaiting and approved for the event
                     if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                     {
-                        await ApprovalSteps(updatedClient);
+                        await ApprovalSteps(updatedClient, status.wantsAccount);
+
+                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                        if(status.wantsAccount)
+                        {
+                            updatedClient.hasAccount = true;
+                            await repository.UpdateClientByIDAsync(updatedClient);
+                            await repository.SaveAsync();
+                        }
                     }
                     // Send approval steps for client that was denied, and was accepted after appeal
                     else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                     {
                         await mailbag.sendUndeniedEmail(updatedClient);
-                        await ApprovalSteps(updatedClient);
+                        await ApprovalSteps(updatedClient, status.wantsAccount);
+
+                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                        if (status.wantsAccount)
+                        {
+                            updatedClient.hasAccount = true;
+                            await repository.UpdateClientByIDAsync(updatedClient);
+                            await repository.SaveAsync();
+                        }
                     }
                     // Send congrats on completing the gift assignments
                     else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
@@ -823,21 +841,28 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="logicClient"></param>
         /// <returns></returns>
-        private async Task ApprovalSteps(Client logicClient)
+        private async Task ApprovalSteps(Client logicClient, bool wantsAccount)
         {
-            // Creates auth client
-            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicClient.email, logicClient.nickname);
+            if(wantsAccount)
+            {
+                // Creates auth client
+                Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicClient.email, logicClient.nickname);
 
-            // Gets all the roles, and grabs the role for participants
-            List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
-            Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
+                // Gets all the roles, and grabs the role for participants
+                List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
+                Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
 
-            // Updates client with the participant role
-            await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+                // Updates client with the participant role
+                await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
-            // Sends the client a password change ticket
-            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
-            await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
+                // Sends the client a password change ticket
+                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
+                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
+            }
+            else
+            {
+                await mailbag.sendApprovedForEventWithNoAccountEmail(logicClient);
+            }
         }
     }
 }
