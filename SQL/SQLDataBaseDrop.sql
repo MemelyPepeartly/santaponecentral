@@ -23,4 +23,6 @@ DROP SCHEMA app;
 --DELETE FROM app.ClientTagXref
 --DELETE FROM app.Tag
 
+--ALTER TABLE app.Client DROP COLUMN hasAccount
 --ALTER TABLE app.Client ALTER COLUMN hasAccount BIT NOT NULL
+ALTER TABLE app.Client ALTER COLUMN hasAccount BIT
