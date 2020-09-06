@@ -183,6 +183,12 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("email")
                     .HasMaxLength(50);
 
+                entity.Property(e => e.HasAccount)
+                    .IsRequired()
+                    .HasColumnName("hasAccount")
+                    .HasViewColumnName("hasAccount")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.IsAdmin)
                     .HasColumnName("isAdmin")
                     .HasViewColumnName("isAdmin");
