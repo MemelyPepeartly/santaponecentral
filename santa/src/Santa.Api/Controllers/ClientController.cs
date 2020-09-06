@@ -274,7 +274,33 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        // POST: api/Client/5/CreateAccount
+        /// <summary>
+        /// Endpoint for creating an auth0 account for an existing client
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpPost("{clientID}/CreateAccount")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> PostNewAuth0AccountForClientByID(Guid clientID)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await Auth0Steps(logicClient, true);
+
+                logicClient.hasAccount = true;
+                await repository.UpdateClientByIDAsync(logicClient);
+                await repository.SaveAsync();
+
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -669,7 +695,7 @@ namespace Santa.Api.Controllers
                     // Send approval steps for a client that was awaiting and approved for the event
                     if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                     {
-                        await ApprovalSteps(updatedClient, status.wantsAccount);
+                        await Auth0Steps(updatedClient, status.wantsAccount);
 
                         // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
                         if(status.wantsAccount)
@@ -683,7 +709,7 @@ namespace Santa.Api.Controllers
                     else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                     {
                         await mailbag.sendUndeniedEmail(updatedClient);
-                        await ApprovalSteps(updatedClient, status.wantsAccount);
+                        await Auth0Steps(updatedClient, status.wantsAccount);
 
                         // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
                         if (status.wantsAccount)
@@ -770,7 +796,7 @@ namespace Santa.Api.Controllers
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
                     await repository.DeleteClientByIDAsync(clientID);
 
-                    if(logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                    if (logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && logicClient.hasAccount)
                     {
                         Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
                         await authHelper.deleteAuthClient(authUser.user_id);
@@ -841,7 +867,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="logicClient"></param>
         /// <returns></returns>
-        private async Task ApprovalSteps(Client logicClient, bool wantsAccount)
+        private async Task Auth0Steps(Client logicClient, bool wantsAccount)
         {
             if(wantsAccount)
             {
