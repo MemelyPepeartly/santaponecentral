@@ -495,35 +495,43 @@ namespace Santa.Api.Controllers
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
 
-                    // If the client isn't awaiting or denied (meaning they have an auth account)
+                    // If the client isn't awaiting or denied (meaning they might have an auth account)
                     if(updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
                     {
                         try
                         {
-                            // Gets the original client ID by the old email
-                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = new Models.Auth0_Response_Models.Auth0UserInfoModel();
 
-                            // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
-
-                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                            // Gets the original client ID by the old email if they have an account
+                            if (updatedClient.hasAccount)
+                            {
+                                authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                            }
+                            // If the user does not have an account, return the update
+                            else if(!updatedClient.hasAccount)
                             {
                                 return Ok(updatedClient);
                             }
-                            // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
-                            else if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+
+                            // If the response was null or empty, and the user is marked to have an account, something went wrong with updating their auth0 account. 
+                            // Returns a bad request, and sets the email back to the old email in question
+                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
                             {
                                 targetClient.email = oldEmail;
                                 await repository.UpdateClientByIDAsync(targetClient);
                                 await repository.SaveAsync();
                                 return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
                             }
+                            // Else if the authclient userId response is not null or empty, and the user is marked to have an account
+                            else if(!string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
+                            {
+                                // Updates a client's email in Auth0
+                                await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
 
-                            // Updates a client's email in Auth0
-                            await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
-
-                            // Sends the client a password change ticket
-                            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
-                            await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
+                                // Sends the client a password change ticket
+                                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
+                                await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
+                            }
                         }
                         catch (Exception e)
                         {
@@ -555,25 +563,29 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                // Gets client and sets new nickname
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.nickname = nickname.clientNickname;
 
                 try
                 {
+                    // Update prep
                     await repository.UpdateClientByIDAsync(targetClient);
 
-                    if (targetClient.clientStatus.statusDescription == Constants.AWAITING_STATUS || targetClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
+                    // If the client does not have an account
+                    if (!targetClient.hasAccount)
                     {
+                        // Save the changes
                         await repository.SaveAsync();
                     }
-                    else if (targetClient.clientStatus.statusDescription == Constants.APPROVED_STATUS || targetClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS)
+                    else
                     {
+                        // Set their Auth0 client name to the new nickname and save the repo
                         Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(targetClient.email);
                         await authHelper.updateAuthClientName(authClient.user_id, nickname.clientNickname);
                         await repository.SaveAsync();
                     }
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                    return Ok(updatedClient);
+                    return Ok(await repository.GetClientByIDAsync(targetClient.clientID));
                 }
                 catch (Exception e)
                 {
