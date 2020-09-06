@@ -510,22 +510,31 @@
             <ng-container *ngIf="!client.hasAccount && client.clientStatus.statusDescription != 'Awaiting'">
               <mat-divider [inset]="true"></mat-divider>
               <div class="optionDiv">
-                <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+                <app-small-loading-spin *ngIf="creatingAuthAccount"></app-small-loading-spin>
 
                 <p class="success" *ngIf="creatingAuthAccountSuccess">{{ client.clientNickname }} now has a login!</p>
                 <button mat-raised-button
                 matTooltip="Create a login for this Anon to be able to log in with"
                 [matTooltipPosition]="'right'"
-                [disabled]="false"
-                (click)="createAnonAuth0Account()">Create Anon Login</button>
+                [disabled]="creatingAuthAccount || creatingAuthAccountSuccess"
+                (click)="createAnonAuth0Account()">Create Login</button>
                 <mat-card-subtitle class="optionSub">
-                    <p>Creates an account for this client to log in with</p>
+                    <p>Creates an Auth0 account for this client to log in with</p>
+                </mat-card-subtitle>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="creatingAuthAccountSuccess">
+              <mat-divider [inset]="true"></mat-divider>
+              <div class="optionDiv">
+                <p class="success">{{ client.clientNickname }} now has a login!</p>
+                <mat-card-subtitle class="optionSub">
+                    <p>Creates an Auth0 account for this client to log in with</p>
                 </mat-card-subtitle>
               </div>
             </ng-container>
 
             <mat-divider [inset]="true"></mat-divider>
-
             <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>
 
             <div class="optionDiv" *ngIf="!deletingClient">

@@ -376,6 +376,8 @@ export class SelectedAnonComponent implements OnInit {
     this.SantaApiPost.postClientNewAuth0Account(this.client.clientID).subscribe((res) => {
       this.creatingAuthAccountSuccess = true;
       this.creatingAuthAccount = false;
+      this.actionTaken.emit(true);
+      this.client = this.ApiMapper.mapClient(res);
     },
     err => {
       console.log(err);
