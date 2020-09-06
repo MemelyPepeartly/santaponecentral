@@ -99,6 +99,7 @@ export class SelectedAnonComponent implements OnInit {
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
   public showSentPasswordResetSuccess: boolean = false;
+  public creatingAuthAccountSuccess: boolean = false;
 
   /* FUNCTIONAL COMPONENT BOOLEANS */
   public showFiller: boolean = false;
@@ -120,6 +121,7 @@ export class SelectedAnonComponent implements OnInit {
   public deletingClient: boolean = false;
   public sendingReset: boolean = false;
   public editingResponse: boolean = false;
+  public creatingAuthAccount: boolean = false;
 
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
@@ -257,14 +259,17 @@ export class SelectedAnonComponent implements OnInit {
     //Tells card if client is approved to hide or show the recipient add profile controls
     return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
   }
-  public approveAnon()
+  public approveAnon(wantsAccount: boolean)
   {
 
     this.showButtonSpinner = true;
     var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID = approvedStatus.statusID
+    let clientStatusResponse: ClientStatusResponse =
+    {
+      clientStatusID: approvedStatus.statusID,
+      wantsAccount: wantsAccount
+    };
 
     this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
@@ -362,6 +367,21 @@ export class SelectedAnonComponent implements OnInit {
 
     this.showSentPasswordResetSuccess = true;
     this.sendingReset = false;
+  }
+  public createAnonAuth0Account()
+  {
+    this.creatingAuthAccount = true;
+
+
+    this.SantaApiPost.postClientNewAuth0Account(this.client.clientID).subscribe((res) => {
+      this.creatingAuthAccountSuccess = true;
+      this.creatingAuthAccount = false;
+    },
+    err => {
+      console.log(err);
+      this.creatingAuthAccount = false;
+      this.creatingAuthAccountSuccess = false;
+    });
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {

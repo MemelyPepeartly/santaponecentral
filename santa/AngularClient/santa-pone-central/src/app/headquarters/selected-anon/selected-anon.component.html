@@ -70,10 +70,16 @@
         <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess || client.clientNickname == 'Anon' "
-                (click)="approveAnon()">Approve</button>
+                (click)="approveAnon(true)">Approve (With Account)</button>
+            <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess || client.clientNickname == 'Anon' "
+                (click)="approveAnon(false)">Approve (Without Account)</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
-                (click)="approveAnon()">Re-Approve</button>
+                (click)="approveAnon(true)">Re-Approve (With Account)</button>
+            <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                (click)="approveAnon(false)">Re-Approve (Without Account)</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
@@ -489,17 +495,37 @@
               <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
               <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
+              <p class="error" *ngIf="!client.hasAccount">You cannot send a password reset email to a client who does not have an account</p>
               <button mat-raised-button
               matTooltip="Send a password reset email to the agent to reset their password"
               [matTooltipPosition]="'right'"
-              [disabled]="sendingReset"
+              [disabled]="sendingReset || !client.hasAccount"
               (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
               <mat-card-subtitle class="optionSub">
                   <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
               </mat-card-subtitle>
             </div>
 
+            <!-- Create a new Auth0 account for users without one -->
+            <ng-container *ngIf="!client.hasAccount && client.clientStatus.statusDescription != 'Awaiting'">
+              <mat-divider [inset]="true"></mat-divider>
+              <div class="optionDiv">
+                <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+
+                <p class="success" *ngIf="creatingAuthAccountSuccess">{{ client.clientNickname }} now has a login!</p>
+                <button mat-raised-button
+                matTooltip="Create a login for this Anon to be able to log in with"
+                [matTooltipPosition]="'right'"
+                [disabled]="false"
+                (click)="createAnonAuth0Account()">Create Anon Login</button>
+                <mat-card-subtitle class="optionSub">
+                    <p>Creates an account for this client to log in with</p>
+                </mat-card-subtitle>
+              </div>
+            </ng-container>
+
             <mat-divider [inset]="true"></mat-divider>
+
             <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>
 
             <div class="optionDiv" *ngIf="!deletingClient">
