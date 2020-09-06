@@ -16,25 +16,31 @@ export class MapService {
 
   constructor() { }
 
-  mapClient(client)
+  mapClient(client) : Client
   {
-    let mappedClient = new Client;
-
-    mappedClient.clientID = client.clientID;
-    mappedClient.clientName = client.clientName;
-    mappedClient.email = client.email;
-    mappedClient.clientNickname = client.nickname;
-    mappedClient.isAdmin = client.isAdmin;
-
-    mappedClient.clientStatus.statusID = client.clientStatus.statusID;
-    mappedClient.clientStatus.statusDescription = client.clientStatus.statusDescription;
-
-    mappedClient.address.addressLineOne = client.address.addressLineOne;
-    mappedClient.address.addressLineTwo = client.address.addressLineTwo;
-    mappedClient.address.city = client.address.city;
-    mappedClient.address.state = client.address.state;
-    mappedClient.address.country = client.address.country;
-    mappedClient.address.postalCode = client.address.postalCode;
+    let mappedClient: Client =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      email: client.email,
+      clientNickname: client.nickname,
+      clientStatus: this.mapStatus(client.clientStatus),
+      isAdmin: client.isAdmin,
+      hasAccount: client.hasAccount,
+      address:
+      {
+        addressLineOne: client.address.addressLineOne,
+        addressLineTwo: client.address.addressLineTwo,
+        city: client.address.city,
+        state: client.address.state,
+        country: client.address.country,
+        postalCode: client.address.postalCode,
+      },
+      responses: [],
+      senders: [],
+      recipients: [],
+      tags: [],
+    };
 
     client.responses.forEach(response => {
       mappedClient.responses.push(this.mapResponse(response))
@@ -204,7 +210,7 @@ export class MapService {
 
     return mappedSender
   }
-  mapStatus(status)
+  mapStatus(status) : Status
   {
     let mappedStatus = new Status;
 
