@@ -94,18 +94,18 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Approval Status";
             EmailAddress to = new EmailAddress(emailRecipientClient.email, emailRecipientClient.nickname);
-            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! An account for you through the website has not been created on your behalf, either per request, or admin consideration. " +
-                "Your holiday nickname given to you is {emailRecipientClient.nickname}, and you will receive an email as soon as you are given your assignments! " +
-                "You are free to continue to email Santapone at mlpsantapone@gmail.com, or thecardslut@gmail.com still about your any updates, however, if you would like an account to make things a fair " +
-                "bit easier to keep track of, just let the shark, or any other event organizers know!";
+            string plainTextContent = "HEY ANON! You were approved to join the Secret Santa Event! " +
+                $"Your holiday nickname given to you is {emailRecipientClient.nickname} and you will receive an email as soon as you are given your assignments! " +
+                "A login for you has not been created per request, so be sure to continue to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com about any updates to your assignment(s). If you decide later on you would like a login to help see and organize your assignments, " +
+                "just let the shark, or any other event organizers know!";
             string htmlContent = emailStart +
                 @$"
-                    <p>After consideration, you were approved to join the Secret Santa Event!An account for you through the website has not been created on your behalf, either per request, or admin consideration. 
+                    <p>HEY ANON! You were approved to join the Secret Santa Event! 
                        Your holiday nickname given to you is {emailRecipientClient.nickname}, and you will receive an email as soon as you are given your assignments!
                     </p>
                     <br>
-                    <p>You are free to continue to email Santapone at mlpsantapone@gmail.com, or thecardslut@gmail.com still about your any updates, however, if you would like an account to make things a fair 
-                       bit easier to keep track of, just let the shark, or any other event organizers know!
+                    <p>A login for you has not been created per request, so be sure to continue to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com about any updates to your assignment(s). 
+                       If you decide later on you would like a login to help see and organize your assignments, just let the shark, or any other event organizers know!
                     </p>
                     <br>
                     <p>Over and Out</p>
