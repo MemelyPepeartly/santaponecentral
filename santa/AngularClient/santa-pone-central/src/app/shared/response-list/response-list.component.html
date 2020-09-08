@@ -1,11 +1,23 @@
-<mat-card>
+<mat-card class="containingCard mat-elevation-z5">
   <mat-card-header>
-    <mat-card-title>TITLE</mat-card-title>
-    <mat-card-subtitle>SUBTITLE</mat-card-subtitle>
+    <mat-card-title>{{ survey.surveyDescription }}</mat-card-title>
+    <mat-card-subtitle>Answers for the {{ survey.surveyDescription }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-selection-list #questionsSelectionList [multiple]="false">
-      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question"></mat-list-option>
+    <mat-selection-list #questionsSelectionList class="questionSelection mat-elevation-z3" [multiple]="false">
+      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question" (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
+
+    <mat-card class="answerCard mat-elevation-z3">
+      <mat-card-header>
+        <mat-card-title>{{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}</mat-card-title>
+        <mat-card-subtitle>Answer for this question</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content *ngIf="selectedQuestion.questionText != undefined">
+        <mat-divider [inset]="true"></mat-divider>
+        <span>{{ getResponseFromSelectedQuestion().responseText }}</span>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+    </mat-card>
   </mat-card-content>
 </mat-card>

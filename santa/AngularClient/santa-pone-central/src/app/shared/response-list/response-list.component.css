@@ -1,0 +1,38 @@
+.containingCard
+{
+  width: 100%;
+}
+.questionSelection
+{
+  display: inline-block;
+  width: 35%;
+  height: fit-content;
+  vertical-align: top;
+  clear: both;
+}
+.answerCard
+{
+  display: inline-block;
+  width: 63%;
+  margin-left: 2%;
+}
+@media (max-width:550px)
+{
+  .questionSelection
+  {
+    display: inline-block;
+    width: 35%;
+    min-width: 350px;
+    height: fit-content;
+    vertical-align: top;
+    clear: both;
+  }
+  .answerCard
+  {
+    display: inline-block;
+    width: 63%;
+    min-width: 350px;
+    margin-left: 0px;
+    margin-top: 15px;
+  }
+}
