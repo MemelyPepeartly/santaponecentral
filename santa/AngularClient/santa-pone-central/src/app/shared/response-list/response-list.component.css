@@ -16,6 +16,27 @@
   width: 63%;
   margin-left: 2%;
 }
+.responseText
+{
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.editDiv
+{
+  display: block;
+  width: 100%;
+}
+.inputForm
+{
+  width: 100%;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
 @media (max-width:550px)
 {
   .questionSelection
