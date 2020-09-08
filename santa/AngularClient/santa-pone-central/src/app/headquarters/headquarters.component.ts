@@ -56,6 +56,7 @@ export class HeadquartersComponent implements OnInit {
   showClientWindow(client: Client)
   {
     this.currentClient = client;
+    this.showManualSignupCard = false;
     this.showClientCard = true;
     this.gatherer.onSelectedClient = true;
   }
