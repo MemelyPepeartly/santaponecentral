@@ -53,6 +53,7 @@ import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-as
 import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
 import { MissionBoardTableComponent } from './shared/mission-board-table/mission-board-table.component';
 import { ManualAddComponent } from './headquarters/manual-add/manual-add.component';
+import { ResponseListComponent } from './shared/response-list/response-list.component';
 
 
 @NgModule({
@@ -95,7 +96,8 @@ import { ManualAddComponent } from './headquarters/manual-add/manual-add.compone
       AutoAssignmentComponent,
       MissionBoardsComponent,
       MissionBoardTableComponent,
-      ManualAddComponent
+      ManualAddComponent,
+      ResponseListComponent
    ],
    entryComponents: [
       LoginComponent
