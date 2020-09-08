@@ -1,1 +1,11 @@
-<p>response-list works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>TITLE</mat-card-title>
+    <mat-card-subtitle>SUBTITLE</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-selection-list #questionsSelectionList [multiple]="false">
+      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question"></mat-list-option>
+    </mat-selection-list>
+  </mat-card-content>
+</mat-card>
