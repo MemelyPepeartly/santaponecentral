@@ -2,10 +2,16 @@
   <mat-card-header>
     <mat-card-title>{{ survey.surveyDescription }}</mat-card-title>
     <mat-card-subtitle>Answers for the {{ survey.surveyDescription }}</mat-card-subtitle>
+    <mat-card-subtitle *ngIf="showDidNotAnswerWarning()">None of the questions here are answered. This Anon did not opt in for this event</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-selection-list #questionsSelectionList class="questionSelection mat-elevation-z3" [multiple]="false">
+    <mat-selection-list #questionsSelectionList *ngIf="!viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
       <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question"
+        (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list #questionsSelectionList *ngIf="viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
+      <mat-list-option *ngFor="let question of getViewableQuestions()" [value]="question"
         (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
@@ -39,7 +45,9 @@
               Characters is the maximum</div>
           </div>
         </div>
-        <mat-card-actions style="text-align: center;">
+        <mat-card-subtitle *ngIf="!editable && !viewingAssignment" style="margin-top: 15px;">If you would like to edit your answer, reach out to the organizers with your General History correspondence button below</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="!editable && viewingAssignment" style="margin-top: 15px;">If you have any questions about this answer, be sure to ask the organizers through this assignment's attatched chat feature</mat-card-subtitle>
+        <mat-card-actions *ngIf="editable" style="text-align: center;">
           <button mat-raised-button
             [disabled]="puttingResponse || surveyFormGroup.get(selectedQuestion.questionID).invalid"
             (click)="submitNewResponse()">Submit</button>

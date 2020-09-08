@@ -18,12 +18,10 @@ export class ResponseListComponent implements OnInit {
     private SantaApiPost: SantaApiPostService) { }
 
   @Input() survey: Survey = new Survey();
-
-  // A client or profile can be input here
   @Input() clientID: string;
-
   @Input() responses: Array<SurveyResponse> = [];
   @Input() editable: boolean = false;
+  @Input() viewingAssignment: boolean = false;
 
   @Output() submitClickedRefreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -103,5 +101,21 @@ export class ResponseListComponent implements OnInit {
         this.puttingResponse = false;
       });
     }
+  }
+  public getViewableQuestions() : Array<Question>
+  {
+    return this.survey.surveyQuestions.filter((question: Question) => {return question.senderCanView})
+  }
+  public showDidNotAnswerWarning() : boolean
+  {
+    let result: boolean = true;
+    // Foreach response, if any questions have a response, break and return
+    this.responses.forEach((response: SurveyResponse) => {
+      if(this.survey.surveyQuestions.some((question: Question) => {return question.questionID == response.surveyQuestion.questionID}))
+      {
+        result = false;
+      }
+    });
+    return result
   }
 }
