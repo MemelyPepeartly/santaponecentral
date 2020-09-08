@@ -5,18 +5,45 @@
   </mat-card-header>
   <mat-card-content>
     <mat-selection-list #questionsSelectionList class="questionSelection mat-elevation-z3" [multiple]="false">
-      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question" (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
+      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question"
+        (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
     <mat-card class="answerCard mat-elevation-z3">
       <mat-card-header>
-        <mat-card-title>{{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}</mat-card-title>
+        <mat-card-title>
+          {{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}
+        </mat-card-title>
         <mat-card-subtitle>Answer for this question</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content *ngIf="selectedQuestion.questionText != undefined">
+
+        <!-- Response shown here -->
         <mat-divider [inset]="true"></mat-divider>
-        <span>{{ getResponseFromSelectedQuestion().responseText }}</span>
+        <span *ngIf="getResponseFromSelectedQuestion().responseText != undefined"
+          class="responseText">{{ getResponseFromSelectedQuestion().responseText }}</span>
+        <span *ngIf="getResponseFromSelectedQuestion().responseText == undefined" class="responseText error">An answer
+          for this question does not exist</span>
         <mat-divider [inset]="true"></mat-divider>
+
+        <!-- Form group field for editing reponse -->
+        <div class="editDiv" *ngIf="editable" [formGroup]="surveyFormGroup">
+          <ng-container *ngFor="let question of survey.surveyQuestions">
+            <mat-form-field *ngIf="question.questionID == selectedQuestion.questionID" class="inputForm">
+              <textarea matInput placeholder="Edit Answer" formControlName="{{question.questionID}}"></textarea>
+            </mat-form-field>
+          </ng-container>
+          <div class="error" *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors && surveyFormGroup.get(selectedQuestion.questionID).touched">
+            <div *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors.required">Answer is required</div>
+            <div *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors.maxlength">Answer is too long. 2000
+              Characters is the maximum</div>
+          </div>
+        </div>
+        <mat-card-actions style="text-align: center;">
+          <button mat-raised-button
+            [disabled]="puttingResponse || surveyFormGroup.get(selectedQuestion.questionID).invalid"
+            (click)="submitNewResponse()">Submit</button>
+        </mat-card-actions>
       </mat-card-content>
     </mat-card>
   </mat-card-content>
