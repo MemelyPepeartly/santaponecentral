@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { ChangeSurveyResponseModel, SurveyApiResponse } from 'src/classes/responseTypes';
 import { SantaApiPutService, SantaApiPostService } from 'src/app/services/santaApiService.service';
 import { Client } from 'src/classes/client';
+import { Profile } from 'src/classes/profile';
 
 @Component({
   selector: 'app-response-list',
@@ -17,7 +18,10 @@ export class ResponseListComponent implements OnInit {
     private SantaApiPost: SantaApiPostService) { }
 
   @Input() survey: Survey = new Survey();
-  @Input() client: Client = new Client();
+
+  // A client or profile can be input here
+  @Input() clientID: string;
+
   @Input() responses: Array<SurveyResponse> = [];
   @Input() editable: boolean = false;
 
@@ -83,7 +87,7 @@ export class ResponseListComponent implements OnInit {
       let newResponse: SurveyApiResponse =
       {
         surveyID: this.survey.surveyID,
-        clientID: this.client.clientID,
+        clientID: this.clientID,
         surveyQuestionID: this.selectedQuestion.questionID,
         responseText: this.surveyFormGroup.get(this.selectedQuestion.questionID).value
       };
