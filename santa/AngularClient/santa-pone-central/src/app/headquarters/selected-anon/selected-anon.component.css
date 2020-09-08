@@ -62,22 +62,6 @@ app-small-loading-spin {
   width: 100%;
   text-align: center;
 }
-.responseCardDiv {
-  display: inline-block;
-  vertical-align: top;
-  width: 40%;
-  margin: 10px;
-  min-width: 250px;
-}
-.responseCard {
-  width: 100%;
-}
-.questionText {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px;
-}
 .relationDiv {
   clear: both;
 }
@@ -216,6 +200,11 @@ app-small-loading-spin {
   min-width: 250px;
   background-color: white;
 }
-.changeAnswerDiv {
-  margin-top: 10px;
+.responseCard
+{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
