@@ -40,26 +40,15 @@
     text-overflow: ellipsis;
     max-width: 150px;
 }
-.expansionPanelButton
-{
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-}
-.expansionPanelButtonContainer
-{
-    width: 100%;
-    text-align: center;
-}
-.changeAnswerDiv
-{
-  margin-top: 10px;
-}
-.changeFormField
-{
-    display: block;
-}
 .error
 {
     color: #F44336;
+}
+.responseListDiv
+{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
