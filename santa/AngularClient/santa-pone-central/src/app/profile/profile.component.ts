@@ -10,7 +10,7 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
-import { SurveyResponse } from 'src/classes/survey';
+import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -42,6 +42,7 @@ export class ProfileComponent implements OnInit {
 
   public histories: Array<MessageHistory> = [];
   public events: Array<EventType> = [];
+  public surveys: Array<Survey> = [];
   public adminRecieverMeta: ClientMeta = new ClientMeta;
 
   public showOverlay: boolean = false;
@@ -56,8 +57,6 @@ export class ProfileComponent implements OnInit {
   public gettingGeneralHistory: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public gettingProfile: boolean = false;
-
-  public clientResponseFormGroup: FormGroup;
 
 
   public async ngOnInit() {
@@ -77,10 +76,6 @@ export class ProfileComponent implements OnInit {
     // Profile service subscribe
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
-      this.clientResponseFormGroup = this.formBuilder.group({});
-      this.profile.responses.forEach((response: SurveyResponse) => {
-        this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
-      });
     });
 
     // Auth profile
@@ -103,16 +98,16 @@ export class ProfileComponent implements OnInit {
       this.generalHistory = generalHistory;
     });
 
-    // Events subscribe
-    this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
-      this.events = eventArray
+    // Gatherer subscribes
+    this.gatherer.allSurveys.subscribe((surveyArray: Array<Survey>) => {
+      this.surveys = surveyArray
     });
 
 
 
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
-    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
     await this.profileService.getHistories(this.profile.clientID);
     await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
   }
