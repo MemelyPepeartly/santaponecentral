@@ -1,3 +1,7 @@
+mat-card-header
+{
+  text-align: left;
+}
 .containingCard
 {
   width: 100%;
@@ -47,7 +51,7 @@
   {
     display: inline-block;
     width: 35%;
-    min-width: 350px;
+    min-width: 300px;
     height: fit-content;
     vertical-align: top;
     clear: both;
@@ -56,7 +60,7 @@
   {
     display: inline-block;
     width: 63%;
-    min-width: 350px;
+    min-width: 300px;
     margin-left: 0px;
     margin-top: 15px;
   }
