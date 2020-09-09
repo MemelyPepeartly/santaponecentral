@@ -152,11 +152,13 @@ export class MapService {
   // Maps the meta info for messages
   mapMeta(meta)
   {
-    let mappedMeta = new ClientMeta;
-
-    mappedMeta.clientID = meta.clientId;
-    mappedMeta.clientName = meta.clientName;
-    mappedMeta.clientNickname = meta.clientNickname;
+    let mappedMeta: ClientMeta =
+    {
+      clientID: meta.clientId,
+      clientName: meta.clientName,
+      clientNickname: meta.clientNickname,
+      hasAccount: meta.hasAccount
+    }
 
     return mappedMeta;
   }
