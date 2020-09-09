@@ -23,7 +23,7 @@ export class MessageHistory {
     /* Unread counts are based on unread messages that are not the subject's messages */
     get unreadCount() : number
     {
-        
+
         if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
         {
             return 0;
@@ -42,7 +42,7 @@ export class MessageHistory {
     }
     get adminUnreadCount() : number
     {
-        
+
         if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
         {
             return 0;
@@ -78,5 +78,6 @@ export class ClientMeta {
     clientID?: string = null;
     clientName?: string = null;
     clientNickname?: string = null;
+    hasAccount: boolean;
 }
 
