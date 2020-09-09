@@ -1,5 +1,5 @@
 <table mat-table [dataSource]="histories" id="data-table" class="mat-elevation-z8">
-    
+
     <!-- Sender Column -->
     <ng-container matColumnDef="sender">
       <th mat-header-cell *matHeaderCellDef> Sender </th>
@@ -26,7 +26,7 @@
           (click)="emitSelectedRecipientInformation(history.assignmentRecieverClient, history.eventType)" mat-raised-button>{{ history.assignmentRecieverClient.clientNickname }}</button>
       </td>
     </ng-container>
-  
+
     <!-- Event Column -->
     <ng-container matColumnDef="event">
       <th mat-header-cell *matHeaderCellDef> Event </th>
@@ -39,14 +39,16 @@
     <ng-container matColumnDef="contact">
       <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
       <td mat-cell *matCellDef="let history">
-        <button mat-raised-button class="historyButton"
+        <!-- Disabled if disabled overall, is an admin and on profile, if the viewerClient is the same as the conversation client (implying it is the same person), or the conversation client does not have an account-->
+        <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount"
           (click)="emitSelectedHistory(history);"
           [disabled]="disabled || (isAdmin && onProfile) || viewerClient.clientID == history.conversationClient.clientID"
           [matBadge]="!isAdmin ? history.unreadCount : history.adminUnreadCount"
           [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">Chat History</button>
+        <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 </table>
