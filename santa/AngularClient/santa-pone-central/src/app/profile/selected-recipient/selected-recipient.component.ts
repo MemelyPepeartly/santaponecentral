@@ -22,8 +22,8 @@ export class SelectedRecipientComponent implements OnInit {
   }
   public showSurvey(survey: Survey)
   {
-    // If the responses from the client have any responses for the survey, return true to show that survey
-    if(this.selectedRecipient.responses.some((response: SurveyResponse) => {return response.surveyID == survey.surveyID}))
+    // If the responses from the client have any responses for the survey and it is for the event they are assigned, return true to show that survey
+    if(this.selectedRecipient.responses.some((response: SurveyResponse) => {return response.surveyID == survey.surveyID && survey.eventTypeID == this.selectedRecipient.recipientEvent.eventTypeID}))
     {
       return true;
     }
