@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -105,23 +106,23 @@ namespace Santa.Api.Controllers
                     // If this message has an eventTypeID
                     if(message.eventTypeID.HasValue)
                     {
-                        //If the recieverClientID is not null (Implying the message is from an admin, and the recipient is a participant), get the eventType. Else set it to a new one
-                        Logic.Objects.Event logicEvent = logicMessage.recieverClient.clientId.HasValue ? await repository.GetEventByIDAsync(message.eventTypeID.Value) : new Logic.Objects.Event();
-
-                        //If it was an admin sending the message, then send off the notification email
-                        if(logicMessage.recieverClient.clientId.HasValue)
+                        // If the message is from an admin, get the event for the notification, and send the email
+                        if(message.fromAdmin)
                         {
+                            Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
                             await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
                         }
                     }
+                    // Else if it doesnt have an event (It is a general message)
                     else
                     {
-                        //If the if the body doesnt have an eventTypeId as a value, then mark it as a new event object for the mailbag. Otherwise, get the event
-                        Logic.Objects.Event logicEvent = !message.eventTypeID.HasValue ? new Logic.Objects.Event() : await repository.GetEventByIDAsync(message.eventTypeID.Value);
-
-                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                        // If it's from an admin, make a new event object, and send the client a notification
+                        if(message.fromAdmin)
+                        {
+                            Logic.Objects.Event logicEvent = new Logic.Objects.Event();
+                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                        }
                     }
-
                     return Ok();
                 }
             }
