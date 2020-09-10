@@ -1,10 +1,15 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { Client } from '../../classes/client';
 import { MapService } from '../services/mapService.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santaApiService.service';
 import { GathererService } from '../services/gatherer.service';
 import { StatusConstants } from '../shared/constants/statusConstants.enum';
+import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';
+import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
+import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';
+import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
+import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 
 @Component({
   selector: 'app-headquarters',
@@ -41,6 +46,17 @@ export class HeadquartersComponent implements OnInit {
 
   public gatheringAllClients: boolean;
 
+  @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
+  @ViewChild(CompletedAnonsComponent) completedAnonsComponent: CompletedAnonsComponent;
+  @ViewChild(DeniedAnonsComponent) deniedAnonsComponent: DeniedAnonsComponent;
+  @ViewChild(IncomingSignupsComponent) incomingSignupsComponent: IncomingSignupsComponent;
+  @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
+
+  get readyForRefresh() : boolean
+  {
+    return this.approvedAnonsComponent.actionTaken || this.completedAnonsComponent.actionTaken || this.deniedAnonsComponent.actionTaken || this.incomingSignupsComponent.actionTaken
+  }
+
   async ngOnInit() {
     /* GET STATUS BOOLEAN SUBSCRIBE */
     this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
@@ -52,13 +68,17 @@ export class HeadquartersComponent implements OnInit {
     });
     await this.gatherer.gatherAllClients();
   }
-
-  showClientWindow(client: Client)
+  public async showClientWindow(client: Client)
   {
     this.currentClient = client;
     this.showManualSignupCard = false;
     this.showClientCard = true;
     this.gatherer.onSelectedClient = true;
+    // If the list of all clients does not have the input client in it, refresh the list in the background (Used namely for manual refresh)
+    if(!this.allClients.some((c: Client) => {return c.clientID == client.clientID}))
+    {
+      await this.gatherer.gatherAllClients()
+    }
   }
   showManualSignupWindow()
   {
@@ -79,6 +99,19 @@ export class HeadquartersComponent implements OnInit {
     {
       this.showManualSignupCard = false;
     }
+    // If any of the viewchildren are set to refresh
+    if(this.readyForRefresh)
+    {
+      await this.gatherer.gatherAllClients();
+      this.setChildrenAction(false);
+    }
+  }
+  public setChildrenAction(actionTaken: boolean)
+  {
+    this.approvedAnonsComponent.actionTaken = actionTaken;
+    this.completedAnonsComponent.actionTaken = actionTaken;
+    this.deniedAnonsComponent.actionTaken = actionTaken;
+    this.incomingSignupsComponent.actionTaken = actionTaken;
   }
   async updateSelectedClient(clientID: string)
   {

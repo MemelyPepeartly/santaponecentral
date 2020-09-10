@@ -54,23 +54,15 @@ export class IncomingSignupsComponent implements OnInit {
   {
     this.manualSignUpClickedEvent.emit(true);
   }
-  async refreshSignupClientList()
-  {
-    if(this.actionTaken)
-    {
-      await this.gatherer.gatherAllClients();
-      this.actionTaken = false;
-      this.showSpinner = false;
-    }
-  }
   setAction(event: boolean)
   {
     this.actionTaken = event;
   }
   async manualRefresh()
   {
-    this.actionTaken = true;
     this.showSpinner = true;
-    await this.refreshSignupClientList();
+    await this.gatherer.gatherAllClients();
+    this.showSpinner = false;
+    this.actionTaken = false;
   }
 }

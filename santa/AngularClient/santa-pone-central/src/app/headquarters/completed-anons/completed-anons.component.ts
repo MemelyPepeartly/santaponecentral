@@ -24,24 +24,16 @@ export class CompletedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshCompletedClientList()
-  {
-    if(this.actionTaken)
-    {
-      await this.gatherer.gatherAllClients();
-      this.actionTaken = false;
-      this.showSpinner = false;
-    }
-  }
   setAction(event: boolean)
   {
     this.actionTaken = event;
   }
-  manualRefresh()
+  async manualRefresh()
   {
-    this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshCompletedClientList();
+    await this.gatherer.gatherAllClients();
+    this.showSpinner = false;
+    this.actionTaken = false;
   }
 
 }

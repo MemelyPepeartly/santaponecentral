@@ -29,7 +29,6 @@ export class ManualAddComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   @Output() clientPostedEvent: EventEmitter<Client> = new EventEmitter();
-  @Output() actionTaken: EventEmitter<any> = new EventEmitter();
 
   @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
 
@@ -72,7 +71,6 @@ export class ManualAddComponent implements OnInit {
   }
   get clientAddress()
   {
-    let address: Address = new Address();
     var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
     var formControlLine2 = this.clientAddressFormGroup.get('addressLine2') as FormControl;
     var formControlCity = this.clientAddressFormGroup.get('city') as FormControl;
@@ -80,12 +78,16 @@ export class ManualAddComponent implements OnInit {
     var formControlPostal = this.clientAddressFormGroup.get('postalCode') as FormControl;
     var formControlCountry = this.clientAddressFormGroup.get('country') as FormControl;
 
-    address.addressLineOne = formControlLine1.value;
-    address.addressLineTwo = formControlLine2.value;
-    address.city = formControlCity.value;
-    address.state = formControlState.value;
-    address.postalCode = formControlPostal.value;
-    address.country = formControlCountry.value;
+    let address: Address =
+    {
+      addressLineOne: formControlLine1.value,
+      addressLineTwo: formControlLine2.value,
+      city: formControlCity.value,
+      state: formControlState.value,
+      country: formControlCountry.value,
+      postalCode: formControlPostal.value,
+    }
+
     return address;
   }
 
@@ -182,17 +184,15 @@ export class ManualAddComponent implements OnInit {
     });
 
     // Post client with answers
-    this.SantaPost.postClientSignup(newClient).subscribe((res) => {
+    this.SantaPost.postClientSignup(newClient).subscribe(async (res) => {
       this.clientInfoFormGroup.reset();
       this.clientAddressFormGroup.reset();
       this.showSpinner = false;
       this.showError = false;
-      this.actionTaken.emit(true);
       this.clientPostedEvent.emit(this.mapper.mapClient(res));
     },(err) => {
       console.log("Something went wrong on signup. Error is as follows: ");
       console.log(err);
-      this.actionTaken.emit(false);
       this.showSpinner = false
       this.showError = true;
     });

@@ -1,9 +1,8 @@
-<div id="overlay" *ngIf="showClientCard || showManualSignupCard" (click)="hideOpenWindow(); signups.refreshSignupClientList(); approved.refreshApprovedClientList(); denied.refreshDeniedClientList(); completed.refreshCompletedClientList();" [@simpleFadeAnimation]="'in'">
+<div id="overlay" *ngIf="showClientCard || showManualSignupCard" (click)="hideOpenWindow();" [@simpleFadeAnimation]="'in'">
 </div>
 <div class="container mat-elevation-z3 clientCard" *ngIf="showManualSignupCard">
   <div class="fixedDiv mat-elevation-z6">
       <app-manual-add
-      (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
       (clientPostedEvent)="showClientWindow($event)">
       </app-manual-add>
   </div>
