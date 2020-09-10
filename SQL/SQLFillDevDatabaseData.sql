@@ -7,6 +7,8 @@ DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion4IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion5IDGUID UNIQUEIDENTIFIER;
 DECLARE @surveyQuestion6IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion7IDGUID UNIQUEIDENTIFIER;
+DECLARE @surveyQuestion8IDGUID UNIQUEIDENTIFIER;
 
 DECLARE @survey1IDGUID UNIQUEIDENTIFIER;
 DECLARE @survey2IDGUID UNIQUEIDENTIFIER;
@@ -51,6 +53,8 @@ SET @surveyQuestion3IDGUID = NEWID();
 SET @surveyQuestion4IDGUID = NEWID();
 SET @surveyQuestion5IDGUID = NEWID();
 SET @surveyQuestion6IDGUID = NEWID();
+SET @surveyQuestion7IDGUID = NEWID();
+SET @surveyQuestion8IDGUID = NEWID();
 
 SET @survey1IDGUID = NEWID();
 SET @survey2IDGUID = NEWID();
@@ -87,6 +91,10 @@ PRINT N'surveyQuestion1IDGUID:------- ' + (CAST (@surveyQuestion1IDGUID AS NVARC
 PRINT N'surveyQuestion2IDGUID:------- ' + (CAST (@surveyQuestion2IDGUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion3IDGUID:------- ' + (CAST (@surveyQuestion3IDGUID AS NVARCHAR(50)));
 PRINT N'surveyQuestion4IDGUID:------- ' + (CAST (@surveyQuestion4IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion5IDGUID:------- ' + (CAST (@surveyQuestion5IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion6IDGUID:------- ' + (CAST (@surveyQuestion6IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion7IDGUID:------- ' + (CAST (@surveyQuestion7IDGUID AS NVARCHAR(50)));
+PRINT N'surveyQuestion8IDGUID:------- ' + (CAST (@surveyQuestion8IDGUID AS NVARCHAR(50)));
 PRINT N'survey1IDGUID:--------------- ' + (CAST (@survey1IDGUID AS NVARCHAR(50)));
 PRINT N'survey2IDGUID:--------------- ' + (CAST (@survey2IDGUID AS NVARCHAR(50)));
 PRINT N'surveyOptionID1GUID:--------- ' + (CAST (@surveyOptionID1GUID AS NVARCHAR(50)));
@@ -131,7 +139,10 @@ VALUES
     (@surveyQuestion3IDGUID,'Gift text question', 1, 0),
     (@surveyQuestion4IDGUID,'Gift option question', 1, 1),
     (@surveyQuestion5IDGUID,'Card secret question', 0, 0),
-    (@surveyQuestion6IDGUID,'Gift secret question', 0, 0);
+    (@surveyQuestion6IDGUID,'Gift secret question', 0, 0),
+    (@surveyQuestion7IDGUID,'Shared text question', 1, 0),
+    (@surveyQuestion8IDGUID,'Shared secret question', 0, 0);
+
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
@@ -150,11 +161,14 @@ VALUES
     (NEWID(), @survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
     (NEWID(), @survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
     (NEWID(), @survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
+    (NEWID(), @survey1IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
 -- Card survey
     (NEWID(), @survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
     (NEWID(), @survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1);
-
+    (NEWID(), @survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
+    (NEWID(), @survey2IDGUID, @surveyQuestion8IDGUID, 'asc', 1);
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
@@ -216,6 +230,3 @@ SELECT * FROM app.ClientRelationXref;
 SELECT * FROM app.Tag;
 SELECT * FROM app.ClientTagXref;
 SELECT * FROM app.ChatMessage;
-
-
-

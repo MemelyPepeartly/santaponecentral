@@ -6,13 +6,14 @@
       <app-selected-anon
       [loadingClient]="loadingClient"
       [client]="selectedAnon"
+      (actionTaken)="updateChats(true, true)"
       (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
   </div>
 </div>
 <div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
     <app-contact-panel #messages
       (messageUpdatedEvent)="updateChats($event)"
-      (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)"
+      (manualRefreshClickedEvent)="manualRefreshSelectedChat($event, false)"
       [refreshing]="refreshing"
       [showActionProgressBar]="postingMessage || puttingMessage"
       [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedHistory && selectedHistory.subjectMessages.length + selectedHistory.recieverMessages.length == 0"

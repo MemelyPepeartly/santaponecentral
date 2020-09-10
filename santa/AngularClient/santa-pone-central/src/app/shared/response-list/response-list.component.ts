@@ -42,7 +42,7 @@ export class ResponseListComponent implements OnInit {
   addFields()
   {
     this.survey.surveyQuestions.forEach((question: Question) => {
-      this.surveyFormGroup.addControl(question.questionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      this.surveyFormGroup.addControl(this.survey.surveyID + question.questionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
     });
   }
   setSelectedQuestion(question: Question)
@@ -51,7 +51,7 @@ export class ResponseListComponent implements OnInit {
   }
   getResponseFromSelectedQuestion() : SurveyResponse
   {
-    let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID})
+    let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID && response.surveyID == this.survey.surveyID})
     return  response == undefined ? new SurveyResponse() : response
   }
   public submitNewResponse()
@@ -64,12 +64,12 @@ export class ResponseListComponent implements OnInit {
       // Get the response body, and put the response
       let editedResponse: ChangeSurveyResponseModel =
       {
-        responseText: this.surveyFormGroup.get(this.selectedQuestion.questionID).value
+        responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
       this.SantaApiPut.putResponse(this.getResponseFromSelectedQuestion().surveyResponseID, editedResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
-        this.surveyFormGroup.get(this.selectedQuestion.questionID).reset();
+        this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;
       },
       err => {
@@ -87,12 +87,12 @@ export class ResponseListComponent implements OnInit {
         surveyID: this.survey.surveyID,
         clientID: this.clientID,
         surveyQuestionID: this.selectedQuestion.questionID,
-        responseText: this.surveyFormGroup.get(this.selectedQuestion.questionID).value
+        responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
       this.SantaApiPost.postSurveyResponse(newResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
-        this.surveyFormGroup.get(this.selectedQuestion.questionID).reset();
+        this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;
       },
       err => {
@@ -117,5 +117,9 @@ export class ResponseListComponent implements OnInit {
       }
     });
     return result
+  }
+  public getFormControlNameFromQuestion(question: Question) : string
+  {
+    return this.survey.surveyID + question.questionID
   }
 }
