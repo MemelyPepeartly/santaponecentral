@@ -64,12 +64,12 @@ export class ResponseListComponent implements OnInit {
       // Get the response body, and put the response
       let editedResponse: ChangeSurveyResponseModel =
       {
-        responseText: this.surveyFormGroup.get(this.selectedQuestion.questionID).value
+        responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
       this.SantaApiPut.putResponse(this.getResponseFromSelectedQuestion().surveyResponseID, editedResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
-        this.surveyFormGroup.get(this.selectedQuestion.questionID).reset();
+        this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;
       },
       err => {
@@ -87,12 +87,12 @@ export class ResponseListComponent implements OnInit {
         surveyID: this.survey.surveyID,
         clientID: this.clientID,
         surveyQuestionID: this.selectedQuestion.questionID,
-        responseText: this.surveyFormGroup.get(this.selectedQuestion.questionID).value
+        responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
       this.SantaApiPost.postSurveyResponse(newResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
-        this.surveyFormGroup.get(this.selectedQuestion.questionID).reset();
+        this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;
       },
       err => {
