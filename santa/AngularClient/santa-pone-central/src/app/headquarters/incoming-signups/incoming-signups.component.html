@@ -10,6 +10,9 @@
             <button mat-raised-button class="controlButton" title="Save Excel File">
                 <mat-icon class="icons">save_alt</mat-icon>
             </button>
+            <button mat-raised-button class="controlButton" matTooltip="Manually add an anon without an Auth0 Account" [matTooltipPosition]="'above'" (click)="emitOpenManualSignupWindow()">
+              <mat-icon class="icons">add_circle</mat-icon>
+          </button>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>

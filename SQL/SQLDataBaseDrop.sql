@@ -23,4 +23,9 @@ DROP SCHEMA app;
 --DELETE FROM app.ClientTagXref
 --DELETE FROM app.Tag
 
---ALTER TABLE app.EntryType ADD adminOnly BIT NOT NULL DEFAULT 0
+--ALTER TABLE app.Client DROP COLUMN hasAccount
+ALTER TABLE app.Client ADD hasAccount BIT NOT NULL DEFAULT 0
+--alter table app.Client drop constraint [DF__Client__hasAccou__230D49A5]
+--ALTER TABLE app.Client DROP COLUMN hasAccount
+
+--UPDATE app.Client SET hasAccount=1

@@ -10,7 +10,7 @@ mat-panel-description
     overflow-y: scroll;
     border-radius: 8px;
 }
-    
+
 .scrollbar-primary::-webkit-scrollbar {
 width: 12px;
 background-color: #F5F5F5;
@@ -32,17 +32,6 @@ background-color: #4285F4;
     margin-bottom: 10px;
     vertical-align: top;
 }
-.responseCard
-{
-    width: 70%;
-}
-.questionText
-{ 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
-}
 #relationshipEventHeader
 {
     display: block;
@@ -51,4 +40,12 @@ background-color: #4285F4;
     margin-right: auto;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+.responseListDiv
+{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }

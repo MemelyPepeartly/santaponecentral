@@ -24,24 +24,16 @@ export class DeniedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshDeniedClientList()
-  {
-    if(this.actionTaken)
-    {
-      await this.gatherer.gatherAllClients();
-      this.actionTaken = false;
-      this.showSpinner = false;
-    }
-  }
   setAction(event: boolean)
   {
     this.actionTaken = event;
   }
-  manualRefresh()
+  async manualRefresh()
   {
-    this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshDeniedClientList();
+    await this.gatherer.gatherAllClients();
+    this.showSpinner = false;
+    this.actionTaken = false;
   }
 
 }

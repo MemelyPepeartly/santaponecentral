@@ -5,6 +5,7 @@ import { SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapService.service';
 import { ProfileService } from 'src/app/services/Profile.service';
+import { Survey } from 'src/classes/survey';
 
 @Component({
   selector: 'app-control-panel',
@@ -22,11 +23,12 @@ export class ControlPanelComponent implements OnInit {
   @Input() gettingGeneralHistory: boolean;
   @Input() gettingSelectedHistory: boolean;
   @Input() gettingProfile: boolean;
-  
+
   @Input() loading: boolean;
   @Input() histories: Array<MessageHistory> = []
   @Input() generalHistory: MessageHistory = new MessageHistory();
   @Input() profile: Profile;
+  @Input() surveys: Array<Survey>;
 
   @Output() chatClickedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
 

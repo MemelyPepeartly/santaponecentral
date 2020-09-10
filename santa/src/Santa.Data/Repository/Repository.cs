@@ -169,6 +169,7 @@ namespace Santa.Data.Repository
                 contextOldClient.Email = targetLogicClient.email;
                 contextOldClient.Nickname = targetLogicClient.nickname;
                 contextOldClient.IsAdmin = targetLogicClient.isAdmin;
+                contextOldClient.HasAccount = targetLogicClient.hasAccount;
 
                 santaContext.Client.Update(contextOldClient);
             }

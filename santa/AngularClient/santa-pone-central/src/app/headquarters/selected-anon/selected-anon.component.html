@@ -70,10 +70,16 @@
         <mat-card-actions *ngIf="!showButtonSpinner">
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess || client.clientNickname == 'Anon' "
-                (click)="approveAnon()">Approve</button>
+                (click)="approveAnon(true)">Approve (With Account)</button>
+            <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showApproveSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess || client.clientNickname == 'Anon' "
+                (click)="approveAnon(false)">Approve (Without Account)</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
-                (click)="approveAnon()">Re-Approve</button>
+                (click)="approveAnon(true)">Re-Approve (With Account)</button>
+            <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Denied' && !showApproveSuccess"
+                [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
+                (click)="approveAnon(false)">Re-Approve (Without Account)</button>
             <button mat-raised-button class="mainActionButton" *ngIf="client.clientStatus.statusDescription == 'Awaiting' && !showDeniedSuccess"
                 [disabled]="gatheringAllStatuses || showApproveSuccess || showDeniedSuccess"
                 (click)="denyAnon()">Deny</button>
@@ -248,69 +254,22 @@
         </mat-card-content>
     </mat-card>
 
-    <!-- Response Card -->
     <ng-container>
-        <mat-toolbar id="relationshipEventHeader">
-            <mat-toolbar-row>
-                Survey Answers
-            </mat-toolbar-row>
-        </mat-toolbar>
-        <div class="centerSpin">
-            <app-loading-spin *ngIf="gettingAnswers && !gettingEventDetails"></app-loading-spin>
-        </div>
-        <ng-container *ngIf="!gettingAnswers">
-            <div class="infoContainer">
-                <div class="responseCard" *ngFor="let event of events">
-                    <mat-card>
-                        <mat-card-header>
-                            <mat-card-title>{{event.eventDescription}}</mat-card-title>
-                            <mat-card-subtitle>Answers for the {{event.eventDescription}} survey</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <mat-accordion multi>
-                                <!-- Expansion panels for responses -->
-                                <mat-expansion-panel *ngFor="let response of client.responses">
-                                    <mat-expansion-panel-header *ngIf="event.eventTypeID == response.responseEvent.eventTypeID">
-                                        <mat-panel-title>
-                                            <span class="questionText">{{response.surveyQuestion.questionText}}</span>
-                                        </mat-panel-title>
-                                        <mat-panel-description>
-                                            <mat-icon
-                                            matTooltip="{{response.surveyQuestion.questionText}}"
-                                            [matTooltipPosition]="'right'">question_answer</mat-icon>
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <p>{{ response.responseText}}</p>
-
-                                    <div class="expansionPanelButtonContainer" *ngIf="editingResponse">
-                                      <app-small-loading-spin></app-small-loading-spin>
-                                    </div>
-                                    <mat-divider [inset]="true"></mat-divider>
-                                    <div class="changeAnswerDiv" *ngIf="!editingResponse" [formGroup]="clientResponseFormGroup">
-                                      <mat-form-field class="inputForm">
-                                        <textarea matInput placeholder="Edit Answer" formControlName="{{response.surveyResponseID}}"></textarea>
-                                      </mat-form-field>
-                                      <div class="error" *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors && clientResponseFormGroup.get(response.surveyResponseID).touched">
-                                        <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.required">Answer is required</div>
-                                        <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>
-                                      </div>
-                                      <div class="expansionPanelButtonContainer">
-                                          <button class="expansionPanelButton" mat-raised-button
-                                          matTooltip="Submit a change to this answer"
-                                          [matTooltipPosition]="'right'"
-                                          [disabled]="clientResponseFormGroup.get(response.surveyResponseID).invalid"
-                                          (click)="submitNewResponse(response.surveyResponseID)">Submit</button>
-                                      </div>
-                                    </div>
-                                </mat-expansion-panel>
-
-                            </mat-accordion>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </div>
-        </ng-container>
+      <mat-toolbar id="relationshipEventHeader">
+        <mat-toolbar-row>
+            Survey Answers
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div class="responseCard" *ngFor="let survey of surveys">
+        <app-response-list
+        (submitClickedRefreshEvent)="softRefreshClient($event)"
+        [clientID]="client.clientID"
+        [survey]="survey"
+        [responses]="client.responses"
+        [editable]="true"></app-response-list>
+      </div>
     </ng-container>
+
     <div class="centerSpin">
         <app-loading-spin *ngIf="gettingEventDetails"></app-loading-spin>
     </div>
@@ -489,15 +448,44 @@
               <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
               <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
+              <p class="error" *ngIf="!client.hasAccount">You cannot send a password reset email to a client who does not have an account</p>
               <button mat-raised-button
               matTooltip="Send a password reset email to the agent to reset their password"
               [matTooltipPosition]="'right'"
-              [disabled]="sendingReset"
+              [disabled]="sendingReset || !client.hasAccount"
               (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
               <mat-card-subtitle class="optionSub">
                   <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
               </mat-card-subtitle>
             </div>
+
+            <!-- Create a new Auth0 account for users without one -->
+            <ng-container *ngIf="!client.hasAccount && client.clientStatus.statusDescription != 'Awaiting'">
+              <mat-divider [inset]="true"></mat-divider>
+              <div class="optionDiv">
+                <app-small-loading-spin *ngIf="creatingAuthAccount"></app-small-loading-spin>
+
+                <p class="success" *ngIf="creatingAuthAccountSuccess">{{ client.clientNickname }} now has a login!</p>
+                <button mat-raised-button
+                matTooltip="Create a login for this Anon to be able to log in with"
+                [matTooltipPosition]="'right'"
+                [disabled]="creatingAuthAccount || creatingAuthAccountSuccess"
+                (click)="createAnonAuth0Account()">Create Login</button>
+                <mat-card-subtitle class="optionSub">
+                    <p>Creates an Auth0 account for this client to log in with</p>
+                </mat-card-subtitle>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="creatingAuthAccountSuccess">
+              <mat-divider [inset]="true"></mat-divider>
+              <div class="optionDiv">
+                <p class="success">{{ client.clientNickname }} now has a login!</p>
+                <mat-card-subtitle class="optionSub">
+                    <p>Creates an Auth0 account for this client to log in with</p>
+                </mat-card-subtitle>
+              </div>
+            </ng-container>
 
             <mat-divider [inset]="true"></mat-divider>
             <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>

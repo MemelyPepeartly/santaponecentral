@@ -100,59 +100,19 @@
                 </mat-card-content>
             </mat-card>
 
-            <!-- Response Card -->
             <mat-toolbar id="relationshipEventHeader">
-                <mat-toolbar-row>
-                    Survey Answers
-                </mat-toolbar-row>
+              <mat-toolbar-row>
+                  Survey Answers
+              </mat-toolbar-row>
             </mat-toolbar>
-            <mat-card class="infoCard mat-elevation-z3" *ngFor="let event of events">
-                <mat-card-header>
-                    <mat-card-title>{{event.eventDescription}} Survey Responses</mat-card-title>
-                    <mat-card-subtitle>Your own answers for the {{event.eventDescription}} survey</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                    <mat-accordion multi>
-                        <!-- Expansion panels for responses -->
-                        <mat-expansion-panel *ngFor="let response of profile.responses">
-                            <mat-expansion-panel-header *ngIf="event.eventTypeID == response.responseEvent.eventTypeID">
-                                <mat-panel-title>
-                                    <span class="questionText">{{response.surveyQuestion.questionText}}</span>
-                                </mat-panel-title>
-                                <mat-panel-description>
-                                    <mat-icon
-                                    matTooltip="{{response.surveyQuestion.questionText}}"
-                                    [matTooltipPosition]="'right'">question_answer</mat-icon>
-                                </mat-panel-description>
-                            </mat-expansion-panel-header>
-                            <p>{{response.responseText}}</p>
-
-                            <div class="expansionPanelButtonContainer" *ngIf="editingResponse">
-                              <app-small-loading-spin></app-small-loading-spin>
-                            </div>
-                            <mat-divider *ngIf="profile.editable" [inset]="true"></mat-divider>
-                            <div class="changeAnswerDiv" *ngIf="!editingResponse && profile.editable" [formGroup]="clientResponseFormGroup">
-                              <mat-form-field class="inputForm">
-                                <textarea matInput placeholder="Edit Answer" formControlName="{{response.surveyResponseID}}"></textarea>
-                              </mat-form-field>
-                              <div class="error" *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors && clientResponseFormGroup.get(response.surveyResponseID).touched">
-                                <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.required">Answer is required</div>
-                                <div *ngIf="clientResponseFormGroup.get(response.surveyResponseID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>
-                              </div>
-                              <div class="expansionPanelButtonContainer">
-                                  <button class="expansionPanelButton" mat-raised-button
-                                  matTooltip="Submit a change to this answer"
-                                  [matTooltipPosition]="'right'"
-                                  [disabled]="clientResponseFormGroup.get(response.surveyResponseID).invalid"
-                                  (click)="submitNewResponse(response.surveyResponseID)">Submit</button>
-                              </div>
-                            </div>
-                        </mat-expansion-panel>
-
-                    </mat-accordion>
-                </mat-card-content>
-            </mat-card>
+            <div class="responseListDiv" *ngFor="let survey of surveys">
+              <app-response-list *ngIf="showSurvey(survey)"
+              (submitClickedRefreshEvent)="softRefreshProfile($event)"
+              [clientID]="profile.clientID"
+              [survey]="survey"
+              [responses]="profile.responses"
+              [editable]="profile.editable"></app-response-list>
+            </div>
         </mat-card-content>
     </mat-card>
-
 </div>

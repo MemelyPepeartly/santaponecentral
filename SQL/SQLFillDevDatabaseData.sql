@@ -194,6 +194,10 @@ VALUES
     (NEWID(), 'Deliveries (Cards)', 'Delivery posts for the Card Exchange', 0),
     (NEWID(), 'General', 'Any other noteworthy intelligence', 0);
 
+INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adminOnly)
+VALUES
+    (NEWID(), 'Announcements (Development)', 'Developer announcements', 1);
+
 
 
 

@@ -8,5 +8,6 @@ namespace Santa.Api.Models.Client_Models
     public class ApiClientStatusModel
     {
         public Guid clientStatusID { get; set; }
+        public bool wantsAccount { get; set; }
     }
 }

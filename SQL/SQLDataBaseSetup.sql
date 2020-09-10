@@ -18,7 +18,8 @@ CREATE TABLE app.Client
     [state] NVARCHAR(50) NOT NULL,
     postalCode NVARCHAR(25) NOT NULL,
     country NVARCHAR(50) NOT NULL,
-    isAdmin BIT NOT NULL
+    isAdmin BIT NOT NULL,
+    hasAccount BIT NOT NULL
 );
 CREATE TABLE app.EventType
 (

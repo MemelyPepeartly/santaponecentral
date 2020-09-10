@@ -46,7 +46,7 @@
   font-weight: normal;
   font-style: normal;
   font-size: 78px;
-  color: #ce4355;
+  color: #C84254;
   transform-style: preserve-3d;
   transform: rotateX(-4deg);
 }
@@ -56,19 +56,57 @@
   height: 100%;
   display: contents;
 }
-.bg
+.pipesContainer
+{
+  position: fixed;
+  display: block;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: #2B332C;
+}
+.backPipes
 {
   display: inline-block;
   position: fixed;
-  width: 100%;
-  min-width: 550px;;
-  min-height: 800px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  height: 100%;
+  max-width: 60%;
+}
+.pipesFront
+{
+  display: inline-block;
+  width: 70%;
+  height: 100%;
+  top: 100px;
+  position: fixed;
+}
+.pipesMiddle
+{
+  display: inline-block;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  top: 0;
+  max-width: 60%;
+}
+.pipesMiddleMirror
+{
+  display: inline-block;
+  position: fixed;
+  bottom: 0;
   left: 0;
+  top: 0;
   z-index: -1;
-  background-position-y: bottom;
-  background-image: url(../assets/images/santa.png);
-  background-size: contain;
-  background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  height: 100%;
+  max-width: 60%;
 }
 
 @media (max-width:550px)
@@ -81,6 +119,25 @@
     background-image: url(../assets/banner/bg.png);
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  .backPipes
+  {
+    display: none;
+  }
+  .pipesFront
+  {
+    display: none;
+  }
+  .pipesMiddle
+  {
+    display: none;
+  }
+  .pipesMiddleMirror
+  {
+    display: inline-block;
+    position: fixed;
+    min-width: 100%;
+    padding-top: 200px;
   }
   #perspectiveContainer {
     position: absolute;

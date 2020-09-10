@@ -35,13 +35,14 @@ export class IncomingSignupsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
 
   @Input() incomingClients: Array<Client> = [];
   @Input() gatheringAllClients: boolean;
 
   showSpinner: boolean = false;
   actionTaken: boolean = false;
-  
+
 
   ngOnInit() {
   }
@@ -49,14 +50,9 @@ export class IncomingSignupsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  async refreshSignupClientList()
+  emitOpenManualSignupWindow()
   {
-    if(this.actionTaken)
-    {
-      await this.gatherer.gatherAllClients();
-      this.actionTaken = false;
-      this.showSpinner = false;
-    }
+    this.manualSignUpClickedEvent.emit(true);
   }
   setAction(event: boolean)
   {
@@ -64,8 +60,9 @@ export class IncomingSignupsComponent implements OnInit {
   }
   async manualRefresh()
   {
-    this.actionTaken = true;
     this.showSpinner = true;
-    await this.refreshSignupClientList();
+    await this.gatherer.gatherAllClients();
+    this.showSpinner = false;
+    this.actionTaken = false;
   }
 }

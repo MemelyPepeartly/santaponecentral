@@ -1,0 +1,50 @@
+.shell {
+  border-radius: 8px;
+  display: inline-block;
+}
+.scrollbar {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  overflow-y: scroll;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #4285f4;
+}
+
+.formCard
+{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+.submitFormCard
+{
+  width: 50%;
+  text-align: center;
+}
+.formField
+{
+  display: block;
+}
+.error {
+  color: #f44336;
+}
+#spinnerDiv
+{
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}

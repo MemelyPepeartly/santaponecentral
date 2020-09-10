@@ -32,8 +32,8 @@ namespace Santa.Data.Repository
                 State = logicClient.address.state,
                 PostalCode = logicClient.address.postalCode,
                 Country = logicClient.address.country,
-                IsAdmin = logicClient.isAdmin
-
+                IsAdmin = logicClient.isAdmin,
+                HasAccount = logicClient.hasAccount
             };
             return contextClient;
         }
@@ -52,6 +52,7 @@ namespace Santa.Data.Repository
                 nickname = contextClient.Nickname,
                 clientName = contextClient.ClientName,
                 isAdmin = contextClient.IsAdmin,
+                hasAccount = contextClient.HasAccount,
                 address = new Address
                 {
                     addressLineOne = contextClient.AddressLine1,
@@ -129,7 +130,8 @@ namespace Santa.Data.Repository
             {
                 clientId = contextClient.ClientId,
                 clientName = contextClient.ClientName,
-                clientNickname = contextClient.Nickname
+                clientNickname = contextClient.Nickname,
+                hasAccount = contextClient.HasAccount
             };
 
             return logicMeta;
@@ -140,7 +142,8 @@ namespace Santa.Data.Repository
             {
                 clientId = logicClient.clientID,
                 clientName = logicClient.clientName,
-                clientNickname = logicClient.nickname
+                clientNickname = logicClient.nickname,
+                hasAccount = logicClient.hasAccount
             };
 
             return logicMeta;

@@ -53,13 +53,15 @@ export class InputControlComponent implements OnInit {
   public emitMessage(message: string)
   {
 
-    let newMessage = new MessageApiResponse();
-    newMessage.messageContent = message;
-    newMessage.clientRelationXrefID = this.relationshipID;
-    newMessage.messageSenderClientID = this.isAdmin ? this.adminClient.clientID : this.sender.clientID;
-    newMessage.messageRecieverClientID = this.reciever.clientID;
-    newMessage.eventTypeID = this.relationshipID == null || undefined ? null : this.eventType.eventTypeID;
-    newMessage.fromAdmin = this.onProfile ? false : this.isAdmin;
+    let newMessage: MessageApiResponse =
+    {
+      messageSenderClientID: this.isAdmin ? this.adminClient.clientID : this.sender.clientID,
+      messageRecieverClientID: this.reciever.clientID,
+      clientRelationXrefID: this.relationshipID,
+      eventTypeID: this.relationshipID == null || undefined ? null : this.eventType.eventTypeID,
+      messageContent: message,
+      fromAdmin: this.onProfile ? false : this.isAdmin,
+    };
 
     this.sendClicked.emit(newMessage);
   }

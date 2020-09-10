@@ -1,0 +1,74 @@
+mat-card-header
+{
+  text-align: left;
+}
+.containingCard
+{
+  width: 100%;
+}
+.questionSelection
+{
+  display: inline-block;
+  width: 35%;
+  height: fit-content;
+  vertical-align: top;
+  clear: both;
+}
+.answerCard
+{
+  display: inline-block;
+  width: 63%;
+  margin-left: 2%;
+}
+.responseText
+{
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.spinnerDiv
+{
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.editDiv
+{
+  display: block;
+  width: 100%;
+}
+.inputForm
+{
+  width: 100%;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
+.subtitleWarning
+{
+  color: #d07973;
+}
+@media (max-width:550px)
+{
+  .questionSelection
+  {
+    display: inline-block;
+    width: 35%;
+    min-width: 300px;
+    height: fit-content;
+    vertical-align: top;
+    clear: both;
+  }
+  .answerCard
+  {
+    display: inline-block;
+    width: 63%;
+    min-width: 300px;
+    margin-left: 0px;
+    margin-top: 15px;
+  }
+}

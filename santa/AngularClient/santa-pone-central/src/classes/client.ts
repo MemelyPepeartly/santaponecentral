@@ -8,8 +8,9 @@ export class Client {
     clientID: string;
     clientName: string;
     clientNickname: string;
-    clientStatus = new Status;
+    clientStatus = new Status();
     isAdmin: boolean;
+    hasAccount: boolean;
     address = new Address;
     email: string;
     responses: Array<SurveyResponse> = [];

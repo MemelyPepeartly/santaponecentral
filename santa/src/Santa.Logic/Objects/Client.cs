@@ -16,6 +16,10 @@ namespace Santa.Logic.Objects
         public List<Sender> senders { get; set; }
         public List<Tag> tags { get; set; }
         public bool isAdmin { get; set; }
+        /// <summary>
+        /// Determines if they have an auth0 account. This is false if they are a manual signup by default
+        /// </summary>
+        public bool hasAccount { get; set; }
 
     }
 }

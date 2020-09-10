@@ -52,6 +52,8 @@ import { MessageControlPanelComponent } from './shared/message-control-panel/mes
 import { AutoAssignmentComponent } from './admin-control/auto-assignment/auto-assignment.component';
 import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
 import { MissionBoardTableComponent } from './shared/mission-board-table/mission-board-table.component';
+import { ManualAddComponent } from './headquarters/manual-add/manual-add.component';
+import { ResponseListComponent } from './shared/response-list/response-list.component';
 
 
 @NgModule({
@@ -93,7 +95,9 @@ import { MissionBoardTableComponent } from './shared/mission-board-table/mission
       MessageControlPanelComponent,
       AutoAssignmentComponent,
       MissionBoardsComponent,
-      MissionBoardTableComponent
+      MissionBoardTableComponent,
+      ManualAddComponent,
+      ResponseListComponent
    ],
    entryComponents: [
       LoginComponent

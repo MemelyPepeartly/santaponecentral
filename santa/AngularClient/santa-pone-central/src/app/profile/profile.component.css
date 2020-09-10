@@ -7,10 +7,11 @@
 .component-container
 {
     width: 90%;
-    min-width: fit-content;
+    min-width: 525px;
     margin: auto;
-    padding: 5px;
-    height: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
     background-color: white;
 }
 .request-container
@@ -19,7 +20,7 @@
     position: fixed;
     width: 80%;
     height: fit-content;
-    min-width: 550px;;
+    min-width: 550px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -54,7 +55,7 @@
     overflow-y: scroll;
     border-radius: 8px;
 }
-    
+
 .scrollbar-primary::-webkit-scrollbar
 {
     width: 12px;

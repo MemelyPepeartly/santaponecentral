@@ -202,6 +202,7 @@ namespace Santa.Api.Controllers
                     nickname = clientResponseModel.clientNickname,
                     clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
                     isAdmin = clientResponseModel.isAdmin,
+                    hasAccount = clientResponseModel.hasAccount,
                     address = new Logic.Objects.Address()
                     {
                         addressLineOne = clientResponseModel.clientAddressLine1,
@@ -273,7 +274,33 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        // POST: api/Client/5/CreateAccount
+        /// <summary>
+        /// Endpoint for creating an auth0 account for an existing client
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpPost("{clientID}/CreateAccount")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult<Logic.Objects.Client>> PostNewAuth0AccountForClientByID(Guid clientID)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await Auth0Steps(logicClient, true);
+
+                logicClient.hasAccount = true;
+                await repository.UpdateClientByIDAsync(logicClient);
+                await repository.SaveAsync();
+
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
 
@@ -341,7 +368,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -369,7 +396,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -432,17 +459,17 @@ namespace Santa.Api.Controllers
                     }
                     catch(Exception e)
                     {
-                        throw e.InnerException;
+                        return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                     }
                 }
                 catch(Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch(Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Email
@@ -468,51 +495,59 @@ namespace Santa.Api.Controllers
                     await repository.SaveAsync();
                     Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
 
-                    // If the client isn't awaiting or denied (meaning they have an auth account)
+                    // If the client isn't awaiting or denied (meaning they might have an auth account)
                     if(updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
                     {
                         try
                         {
-                            // Gets the original client ID by the old email
-                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = new Models.Auth0_Response_Models.Auth0UserInfoModel();
 
-                            // If the auth response is null, and the client was still awaiting, means that they didn't have an auth account yet. Return the update
-
-                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription == Constants.AWAITING_STATUS)
+                            // Gets the original client ID by the old email if they have an account
+                            if (updatedClient.hasAccount)
+                            {
+                                authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                            }
+                            // If the user does not have an account, return the update
+                            else if(!updatedClient.hasAccount)
                             {
                                 return Ok(updatedClient);
                             }
-                            // Else if the result is null but they weren't awaiting, something went wrong. Change the email back and send a bad request
-                            else if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+
+                            // If the response was null or empty, and the user is marked to have an account, something went wrong with updating their auth0 account. 
+                            // Returns a bad request, and sets the email back to the old email in question
+                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
                             {
                                 targetClient.email = oldEmail;
                                 await repository.UpdateClientByIDAsync(targetClient);
                                 await repository.SaveAsync();
                                 return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
                             }
+                            // Else if the authclient userId response is not null or empty, and the user is marked to have an account
+                            else if(!string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
+                            {
+                                // Updates a client's email in Auth0
+                                await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
 
-                            // Updates a client's email in Auth0
-                            await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
-
-                            // Sends the client a password change ticket
-                            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
-                            await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
+                                // Sends the client a password change ticket
+                                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
+                                await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
+                            }
                         }
                         catch (Exception e)
                         {
-                            throw e.InnerException;
+                            return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                         }
                     }
                     return Ok(updatedClient);
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Nickname
@@ -528,34 +563,38 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                // Gets client and sets new nickname
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 targetClient.nickname = nickname.clientNickname;
 
                 try
                 {
+                    // Update prep
                     await repository.UpdateClientByIDAsync(targetClient);
 
-                    if (targetClient.clientStatus.statusDescription == Constants.AWAITING_STATUS || targetClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
+                    // If the client does not have an account
+                    if (!targetClient.hasAccount)
                     {
+                        // Save the changes
                         await repository.SaveAsync();
                     }
-                    else if (targetClient.clientStatus.statusDescription == Constants.APPROVED_STATUS || targetClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS)
+                    else
                     {
+                        // Set their Auth0 client name to the new nickname and save the repo
                         Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(targetClient.email);
                         await authHelper.updateAuthClientName(authClient.user_id, nickname.clientNickname);
                         await repository.SaveAsync();
                     }
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                    return Ok(updatedClient);
+                    return Ok(await repository.GetClientByIDAsync(targetClient.clientID));
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -583,13 +622,13 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
                 
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -617,13 +656,13 @@ namespace Santa.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException;
+                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
                 }
 
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Status
@@ -639,18 +678,19 @@ namespace Santa.Api.Controllers
         {
             try
             {
+                // If the status ID is empty on the request, return 400 bad request
                 if(status.clientStatusID.Equals(Guid.Empty))
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
-                // Grab original client
+
+                // Grab original client and set the original stattus to its own object for later comparison
                 Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
                 Status originalStatus = targetClient.clientStatus;
-
                 
                 try
                 {
-                    // Updates client status
+                    // Updates client status and account status
                     targetClient.clientStatus.statusID = status.clientStatusID;
                     await repository.UpdateClientByIDAsync(targetClient);
                     await repository.SaveAsync();
@@ -667,13 +707,29 @@ namespace Santa.Api.Controllers
                     // Send approval steps for a client that was awaiting and approved for the event
                     if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                     {
-                        await ApprovalSteps(updatedClient);
+                        await Auth0Steps(updatedClient, status.wantsAccount);
+
+                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                        if(status.wantsAccount)
+                        {
+                            updatedClient.hasAccount = true;
+                            await repository.UpdateClientByIDAsync(updatedClient);
+                            await repository.SaveAsync();
+                        }
                     }
                     // Send approval steps for client that was denied, and was accepted after appeal
                     else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                     {
                         await mailbag.sendUndeniedEmail(updatedClient);
-                        await ApprovalSteps(updatedClient);
+                        await Auth0Steps(updatedClient, status.wantsAccount);
+
+                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                        if (status.wantsAccount)
+                        {
+                            updatedClient.hasAccount = true;
+                            await repository.UpdateClientByIDAsync(updatedClient);
+                            await repository.SaveAsync();
+                        }
                     }
                     // Send congrats on completing the gift assignments
                     else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
@@ -703,7 +759,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // PUT: api/Client/5/Recipient
@@ -732,7 +788,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // DELETE: api/Client/5
@@ -752,7 +808,7 @@ namespace Santa.Api.Controllers
                     Client logicClient = await repository.GetClientByIDAsync(clientID);
                     await repository.DeleteClientByIDAsync(clientID);
 
-                    if(logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS)
+                    if (logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && logicClient.hasAccount)
                     {
                         Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
                         await authHelper.deleteAuthClient(authUser.user_id);
@@ -792,7 +848,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
         // DELETE: api/Client/5/Tag
@@ -814,7 +870,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception e)
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
@@ -823,21 +879,28 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param name="logicClient"></param>
         /// <returns></returns>
-        private async Task ApprovalSteps(Client logicClient)
+        private async Task Auth0Steps(Client logicClient, bool wantsAccount)
         {
-            // Creates auth client
-            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicClient.email, logicClient.nickname);
+            if(wantsAccount)
+            {
+                // Creates auth client
+                Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicClient.email, logicClient.nickname);
 
-            // Gets all the roles, and grabs the role for participants
-            List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
-            Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
+                // Gets all the roles, and grabs the role for participants
+                List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
+                Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
 
-            // Updates client with the participant role
-            await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+                // Updates client with the participant role
+                await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
-            // Sends the client a password change ticket
-            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
-            await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
+                // Sends the client a password change ticket
+                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
+                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
+            }
+            else
+            {
+                await mailbag.sendApprovedForEventWithNoAccountEmail(logicClient);
+            }
         }
     }
 }

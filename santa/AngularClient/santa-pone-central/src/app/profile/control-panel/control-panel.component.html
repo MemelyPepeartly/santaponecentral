@@ -3,7 +3,9 @@
 <div id="overlay" *ngIf="showRecipientData" (click)="hideRecipientCard()"></div>
 <div class="container" *ngIf="showRecipientData">
     <div class="fixedDiv mat-elevation-z4">
-        <app-selected-recipient [selectedRecipient]="selectedRecipient"></app-selected-recipient>
+        <app-selected-recipient
+          [surveys]="surveys"
+          [selectedRecipient]="selectedRecipient"></app-selected-recipient>
     </div>
 </div>
 <mat-card class="list-card mat-elevation-z5">
@@ -21,7 +23,7 @@
         <app-small-loading-spin></app-small-loading-spin>
       </div>
       <div *ngIf="histories.length != 0">
-        <app-chat-histories 
+        <app-chat-histories
         [disabled]="gettingAllHistories"
         [onProfile]="true"
         [histories]="histories"
@@ -35,6 +37,6 @@
         (click)="historySelected(null)"
         [disabled]="gettingProfile || gettingGeneralHistory"
         [matBadge]="generalHistory.unreadCount"
-        [matBadgeHidden]="generalHistory.unreadCount == 0">General Chat</button>
+        [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence</button>
     </mat-card-actions>
 </mat-card>

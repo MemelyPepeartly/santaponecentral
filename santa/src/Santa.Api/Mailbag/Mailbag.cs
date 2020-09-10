@@ -88,6 +88,33 @@ namespace Santa.Api.SendGrid
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
+        public async Task sendApprovedForEventWithNoAccountEmail(Client emailRecipientClient)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central Approval Status";
+            EmailAddress to = new EmailAddress(emailRecipientClient.email, emailRecipientClient.nickname);
+            string plainTextContent = "HEY ANON! You were approved to join the Secret Santa Event! " +
+                $"Your holiday nickname given to you is {emailRecipientClient.nickname} and you will receive an email as soon as you are given your assignments! " +
+                "A login for you has not been created per request, so be sure to continue to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com about any updates to your assignment(s). If you decide later on you would like a login to help see and organize your assignments, " +
+                "just let the shark, or any other event organizers know!";
+            string htmlContent = emailStart +
+                @$"
+                    <p>HEY ANON! You were approved to join the Secret Santa Event! 
+                       Your holiday nickname given to you is {emailRecipientClient.nickname}, and you will receive an email as soon as you are given your assignments!
+                    </p>
+                    <br>
+                    <p>A login for you has not been created per request, so be sure to continue to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com about any updates to your assignment(s). 
+                       If you decide later on you would like a login to help see and organize your assignments, just let the shark, or any other event organizers know!
+                    </p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
+
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
 
         public async Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType)
         {
@@ -136,12 +163,14 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central New Assignment";
             EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+
+            string accountText = recipient.hasAccount ? "<p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>" : "<p>If you have any questions or updates, be sure to email Santapone at mlpsantapone@gmail.com for gift assignments, or Cardslut at thecardslut@gmail.com for card assignments!</p>";
             string plainTextContent = $"You have been given your assignment(s) for the {eventType.eventDescription} event! If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
                     <p>You have been given your assignment(s) for the {eventType.eventDescription} event!</p>
                     <br>
-                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    {accountText}
                     <br>
                     <p>Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"

@@ -4,7 +4,7 @@ import { ProfileService } from 'src/app/services/Profile.service';
 import { EventType } from 'src/classes/eventType';
 import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/responseTypes';
 import { SantaApiPutService } from 'src/app/services/santaApiService.service';
-import { SurveyResponse } from 'src/classes/survey';
+import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CountriesService } from 'src/app/services/countries.service';
 
@@ -22,8 +22,7 @@ export class InformationComponent implements OnInit {
 
   @Input() loading: boolean;
   @Input() profile: Profile;
-  @Input() events: Array<EventType>;
-  @Input() clientResponseFormGroup: FormGroup;
+  @Input() surveys: Array<Survey>;
 
   public editingResponse: boolean;
   public changingAddress: boolean;
@@ -49,35 +48,42 @@ export class InformationComponent implements OnInit {
       country: ['', Validators.required]
     });
   }
-  public async submitNewResponse(surveyResponseID: string)
-  {
-    this.editingResponse = true;
-
-    let editedResponse = new ChangeSurveyResponseModel();
-    editedResponse.responseText = this.clientResponseFormGroup.get(surveyResponseID).value
-    await this.SantaApiPut.putResponse(surveyResponseID, editedResponse).toPromise();
-    await this.profileService.getProfile(this.profile.email);
-
-    this.editingResponse = false;
-  }
   public async submitNewAddress()
   {
     this.changingAddress = true;
 
-    let newAddressResponse = new ClientAddressResponse();
-
-    newAddressResponse.clientAddressLine1 = this.addressFormControls.addressLine1.value;
-    newAddressResponse.clientAddressLine2 = this.addressFormControls.addressLine2.value;
-    newAddressResponse.clientCity = this.addressFormControls.city.value;
-    newAddressResponse.clientState = this.addressFormControls.state.value;
-    newAddressResponse.clientCountry = this.addressFormControls.country.value;
-    newAddressResponse.clientPostalCode = this.addressFormControls.postalCode.value;
+    let newAddressResponse: ClientAddressResponse =
+    {
+      clientAddressLine1: this.addressFormControls.addressLine1.value,
+      clientAddressLine2: this.addressFormControls.addressLine2.value,
+      clientCity: this.addressFormControls.city.value,
+      clientState: this.addressFormControls.state.value,
+      clientPostalCode: this.addressFormControls.postalCode.value,
+      clientCountry: this.addressFormControls.country.value
+    }
 
     await this.SantaApiPut.putProfileAddress(this.profile.clientID, newAddressResponse).toPromise();
     await this.profileService.getProfile(this.profile.email);
-    
+
     this.clientAddressFormGroup.reset();
     this.showAddressChangeForm = false;
     this.changingAddress = false;
+  }
+  public async softRefreshProfile()
+  {
+    await this.profileService.getProfile(this.profile.email);
+  }
+  public showSurvey(survey: Survey)
+  {
+    // If the responses from the client have any responses for the survey, return true to show that survey
+    if(this.profile.responses.some((response: SurveyResponse) => {return response.surveyID == survey.surveyID}))
+    {
+      return true;
+    }
+    // Else, they didn't answer any questions for it, so dont show it
+    else
+    {
+      return false;
+    }
   }
 }

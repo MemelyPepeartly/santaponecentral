@@ -71,7 +71,6 @@ export class SelectedAnonComponent implements OnInit {
   public clientAddressFormGroup: FormGroup;
   public clientNameFormGroup: FormGroup;
   public clientEmailFormGroup: FormGroup;
-  public clientResponseFormGroup: FormGroup;
 
   public showAddressChangeForm: boolean = false;
   public showNameChangeForm: boolean = false;
@@ -99,6 +98,7 @@ export class SelectedAnonComponent implements OnInit {
   public showNicnameSuccess: boolean = false;
   public addRecipientSuccess: boolean = false;
   public showSentPasswordResetSuccess: boolean = false;
+  public creatingAuthAccountSuccess: boolean = false;
 
   /* FUNCTIONAL COMPONENT BOOLEANS */
   public showFiller: boolean = false;
@@ -120,6 +120,7 @@ export class SelectedAnonComponent implements OnInit {
   public deletingClient: boolean = false;
   public sendingReset: boolean = false;
   public editingResponse: boolean = false;
+  public creatingAuthAccount: boolean = false;
 
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
@@ -227,11 +228,6 @@ export class SelectedAnonComponent implements OnInit {
     });
     this.gatherer.gatheringAllQuestions.subscribe((status: boolean) => {
       this.gatheringAllQuestions = status;
-
-      this.clientResponseFormGroup = this.formBuilder.group({});
-      this.client.responses.forEach((response: SurveyResponse) => {
-        this.clientResponseFormGroup.addControl(response.surveyResponseID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
-      });
     });
     this.gatherer.gatheringAllStatuses.subscribe((status: boolean) => {
       this.gatheringAllStatuses = status;
@@ -257,14 +253,17 @@ export class SelectedAnonComponent implements OnInit {
     //Tells card if client is approved to hide or show the recipient add profile controls
     return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
   }
-  public approveAnon()
+  public approveAnon(wantsAccount: boolean)
   {
 
     this.showButtonSpinner = true;
     var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
-    clientStatusResponse.clientStatusID = approvedStatus.statusID
+    let clientStatusResponse: ClientStatusResponse =
+    {
+      clientStatusID: approvedStatus.statusID,
+      wantsAccount: wantsAccount
+    };
 
     this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
@@ -362,6 +361,23 @@ export class SelectedAnonComponent implements OnInit {
 
     this.showSentPasswordResetSuccess = true;
     this.sendingReset = false;
+  }
+  public createAnonAuth0Account()
+  {
+    this.creatingAuthAccount = true;
+
+
+    this.SantaApiPost.postClientNewAuth0Account(this.client.clientID).subscribe((res) => {
+      this.creatingAuthAccountSuccess = true;
+      this.creatingAuthAccount = false;
+      this.actionTaken.emit(true);
+      this.client = this.ApiMapper.mapClient(res);
+    },
+    err => {
+      console.log(err);
+      this.creatingAuthAccount = false;
+      this.creatingAuthAccountSuccess = false;
+    });
   }
   public getStatusByConstant(statusConstant: StatusConstants) : Status
   {
@@ -605,14 +621,15 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.changingAddress = true;
 
-    let newAddressResponse = new ClientAddressResponse();
-
-    newAddressResponse.clientAddressLine1 = this.addressFormControls.addressLine1.value;
-    newAddressResponse.clientAddressLine2 = this.addressFormControls.addressLine2.value;
-    newAddressResponse.clientCity = this.addressFormControls.city.value;
-    newAddressResponse.clientState = this.addressFormControls.state.value;
-    newAddressResponse.clientCountry = this.addressFormControls.country.value;
-    newAddressResponse.clientPostalCode = this.addressFormControls.postalCode.value;
+    let newAddressResponse: ClientAddressResponse =
+    {
+      clientAddressLine1: this.addressFormControls.addressLine1.value,
+      clientAddressLine2: this.addressFormControls.addressLine2.value,
+      clientCity: this.addressFormControls.city.value,
+      clientState: this.addressFormControls.state.value,
+      clientPostalCode: this.addressFormControls.postalCode.value,
+      clientCountry: this.addressFormControls.country.value,
+    }
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientAddress(this.client.clientID, newAddressResponse).toPromise());
     this.clientAddressFormGroup.reset();
@@ -651,16 +668,12 @@ export class SelectedAnonComponent implements OnInit {
 
     this.changingEmail = false;
   }
-  public async submitNewResponse(surveyResponseID: string)
+  public async softRefreshClient(emitRefresh: boolean)
   {
-    this.editingResponse = true;
-
-    let editedResponse = new ChangeSurveyResponseModel();
-    editedResponse.responseText = this.clientResponseFormGroup.get(surveyResponseID).value
-    await this.SantaApiPut.putResponse(surveyResponseID, editedResponse).toPromise();
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
-
-
-    this.editingResponse = false;
+    if(emitRefresh)
+    {
+      this.actionTaken.emit(true);
+    }
   }
 }

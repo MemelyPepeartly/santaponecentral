@@ -29,9 +29,9 @@ export class SignupFormComponent implements OnInit {
     public countryService: CountriesService,
     private formBuilder: FormBuilder) { }
 
-  public events: Array<EventType> = [];
   public selectedEvents: Array<EventType> = new Array<EventType>();
 
+  public events: Array<EventType> = [];
   public statuses: Array<Status> = [];
   public surveys: Array<Survey> = [];
   public countries: Array<any>=[];
@@ -52,9 +52,51 @@ export class SignupFormComponent implements OnInit {
   public clientInfoFormGroup: FormGroup;
   public clientAddressFormGroup: FormGroup;
   public clientEventFormGroup: FormGroup;
-  public surveyFormGroup: FormGroup
+  public surveyFormGroup: FormGroup;
 
   @ViewChildren(SurveyFormComponent) surveyForms: QueryList<SurveyFormComponent>;
+
+  get clientName()
+  {
+    var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
+    var formControlLast = this.clientInfoFormGroup.get('lastName') as FormControl
+    let clientName: string = formControlFirst.value + " " + formControlLast.value
+    return clientName;
+  }
+  get clientEmail()
+  {
+    var formControlEmail = this.clientInfoFormGroup.get('email') as FormControl
+    return formControlEmail.value;
+  }
+  get clientAddress()
+  {
+    var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
+    var formControlLine2 = this.clientAddressFormGroup.get('addressLine2') as FormControl;
+    var formControlCity = this.clientAddressFormGroup.get('city') as FormControl;
+    var formControlState = this.clientAddressFormGroup.get('state') as FormControl;
+    var formControlPostal = this.clientAddressFormGroup.get('postalCode') as FormControl;
+    var formControlCountry = this.clientAddressFormGroup.get('country') as FormControl;
+
+    let address: Address =
+    {
+      addressLineOne: formControlLine1.value,
+      addressLineTwo: formControlLine2.value,
+      city: formControlCity.value,
+      state: formControlState.value,
+      country: formControlCountry.value,
+      postalCode: formControlPostal.value,
+    }
+
+    return address;
+  }
+  get addressFormControls()
+  {
+    return this.clientAddressFormGroup.controls;
+  }
+  get nameFormControls()
+  {
+    return this.clientInfoFormGroup.controls;
+  }
 
   async ngOnInit() {
     this.isLinear = true;
@@ -86,63 +128,28 @@ export class SignupFormComponent implements OnInit {
 
     this.isDoneLoading = true;
   }
-  get clientName()
-  {
-    var formControlFirst = this.clientInfoFormGroup.get('firstName') as FormControl
-    var formControlLast = this.clientInfoFormGroup.get('lastName') as FormControl
-    let clientName: string = formControlFirst.value + " " + formControlLast.value
-    return clientName;
-  }
-  get clientEmail()
-  {
-    var formControlEmail = this.clientInfoFormGroup.get('email') as FormControl
-    return formControlEmail.value;
-  }
-  get clientAddress()
-  {
-    let address: Address = new Address();
-    var formControlLine1 = this.clientAddressFormGroup.get('addressLine1') as FormControl;
-    var formControlLine2 = this.clientAddressFormGroup.get('addressLine2') as FormControl;
-    var formControlCity = this.clientAddressFormGroup.get('city') as FormControl;
-    var formControlState = this.clientAddressFormGroup.get('state') as FormControl;
-    var formControlPostal = this.clientAddressFormGroup.get('postalCode') as FormControl;
-    var formControlCountry = this.clientAddressFormGroup.get('country') as FormControl;
-
-    address.addressLineOne = formControlLine1.value;
-    address.addressLineTwo = formControlLine2.value;
-    address.city = formControlCity.value;
-    address.state = formControlState.value;
-    address.postalCode = formControlPostal.value;
-    address.country = formControlCountry.value;
-    return address;
-  }
-  get addressFormControls()
-  {
-    return this.clientAddressFormGroup.controls;
-  }
-  get nameFormControls()
-  {
-    return this.clientInfoFormGroup.controls;
-  }
   public async onSubmit()
   {
     this.showSpinner = true;
 
-    // Construction of new client response
-    let newClient: ClientSignupResponse = new ClientSignupResponse();
-    newClient.clientName = this.clientName;
-    newClient.clientEmail = this.clientEmail;
-    newClient.clientNickname = "Anon"
-
-    newClient.clientAddressLine1 = this.clientAddress.addressLineOne;
-    newClient.clientAddressLine2 = this.clientAddress.addressLineTwo;
-    newClient.clientCity = this.clientAddress.city;
-    newClient.clientState = this.clientAddress.state
-    newClient.clientPostalCode = this.clientAddress.postalCode;
-    newClient.clientCountry = this.clientAddress.country;
-
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
-    newClient.clientStatusID = awaitingStatusID.statusID
+    // Construction of new client response
+    let newClient: ClientSignupResponse =
+    {
+      clientStatusID: awaitingStatusID.statusID,
+      clientName: this.clientName,
+      clientEmail: this.clientInfoFormGroup.get('email').value,
+      clientNickname: "Anon",
+      clientAddressLine1: this.clientAddress.addressLineOne,
+      clientAddressLine2: this.clientAddress.addressLineTwo,
+      clientCity: this.clientAddress.city,
+      clientState: this.clientAddress.state,
+      clientPostalCode: this.clientAddress.postalCode,
+      clientCountry: this.clientAddress.country,
+      isAdmin: false,
+      hasAccount: false,
+      responses: []
+    }
 
     var forms = this.surveyForms.toArray()
     // Set client's answers

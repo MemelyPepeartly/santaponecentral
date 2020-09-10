@@ -181,6 +181,10 @@ export class SantaApiPostService {
     return this.http.post(endpoint + 'Client/Signup', signup).pipe(
       map(this.extractData));
   }
+  postClientNewAuth0Account(clientID: string): Observable<any> {
+    return this.http.post(endpoint + 'Client/' + clientID + '/CreateAccount', {}).pipe(
+      map(this.extractData));
+  }
   postSurveyResponse(surveyResponse: SurveyApiResponse): Observable<any> {
     return this.http.post(endpoint + 'SurveyResponse', surveyResponse).pipe(
       map(this.extractData));

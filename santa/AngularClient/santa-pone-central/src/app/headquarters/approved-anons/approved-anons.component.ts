@@ -17,7 +17,7 @@ export class ApprovedAnonsComponent implements OnInit {
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
-  
+
   @Input() approvedClients: Array<Client> = [];
   @Input() gatheringAllClients: boolean;
 
@@ -31,23 +31,15 @@ export class ApprovedAnonsComponent implements OnInit {
   {
     this.clickedClient.emit(client);
   }
-  public async refreshApprovedClientList()
-  {
-    if(this.actionTaken)
-    {
-      await this.gatherer.gatherAllClients();
-      this.actionTaken = false;
-      this.showSpinner = false;
-    }
-  }
   setAction(event: boolean)
   {
     this.actionTaken = event;
   }
-  manualRefresh()
+  async manualRefresh()
   {
-    this.actionTaken = true;
     this.showSpinner = true;
-    this.refreshApprovedClientList();
+    await this.gatherer.gatherAllClients();
+    this.showSpinner = false;
+    this.actionTaken = false;
   }
 }

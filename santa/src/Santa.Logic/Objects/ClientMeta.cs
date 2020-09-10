@@ -9,5 +9,6 @@ namespace Santa.Logic.Objects
         public Guid? clientId { get; set; }
         public string clientName { get; set; }
         public string clientNickname { get; set; }
+        public bool hasAccount { get; set; }
     }
 }
