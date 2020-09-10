@@ -203,10 +203,13 @@ export class CorrespondenceComponent implements OnInit {
   {
     this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
   }
-  public async updateChats(isSoftUpdate: boolean = false)
+  public async updateChats(isSoftUpdate: boolean = false, skipSelected: boolean = false)
   {
-    this.updateOnClickaway = true
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    this.updateOnClickaway = true;
+    if(!skipSelected)
+    {
+      await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
   public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
