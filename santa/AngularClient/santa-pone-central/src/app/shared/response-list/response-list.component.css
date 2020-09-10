@@ -26,6 +26,13 @@ mat-card-header
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.spinnerDiv
+{
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
 .editDiv
 {
   display: block;

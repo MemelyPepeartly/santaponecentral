@@ -26,9 +26,12 @@
 
         <!-- Response shown here -->
         <mat-divider [inset]="true"></mat-divider>
-        <span *ngIf="getResponseFromSelectedQuestion().responseText != undefined"
+        <div *ngIf="puttingResponse" class="spinnerDiv">
+          <app-small-loading-spin ></app-small-loading-spin>
+        </div>
+        <span *ngIf="getResponseFromSelectedQuestion().responseText != undefined && !puttingResponse"
           class="responseText">{{ getResponseFromSelectedQuestion().responseText }}</span>
-        <span *ngIf="getResponseFromSelectedQuestion().responseText == undefined" class="responseText error">An answer
+        <span *ngIf="getResponseFromSelectedQuestion().responseText == undefined && !puttingResponse" class="responseText error">An answer
           for this question does not exist</span>
         <mat-divider [inset]="true"></mat-divider>
 
