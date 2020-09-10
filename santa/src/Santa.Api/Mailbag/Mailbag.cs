@@ -163,12 +163,14 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central New Assignment";
             EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+
+            string accountText = recipient.hasAccount ? "<p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>" : "<p>If you have any questions or updates, be sure to email Santapone at mlpsantapone@gmail.com for gift assignments, or Cardslut at thecardslut@gmail.com for card assignments!</p>";
             string plainTextContent = $"You have been given your assignment(s) for the {eventType.eventDescription} event! If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
             string htmlContent = emailStart +
                 @$"
                     <p>You have been given your assignment(s) for the {eventType.eventDescription} event!</p>
                     <br>
-                    <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
+                    {accountText}
                     <br>
                     <p>Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"
