@@ -39,12 +39,12 @@
         <div class="editDiv" *ngIf="editable" [formGroup]="surveyFormGroup">
           <ng-container *ngFor="let question of survey.surveyQuestions">
             <mat-form-field *ngIf="question.questionID == selectedQuestion.questionID" class="inputForm">
-              <textarea matInput placeholder="Edit Answer" formControlName="{{question.questionID}}"></textarea>
+              <textarea matInput placeholder="Edit Answer" formControlName="{{getFormControlNameFromQuestion(question)}}"></textarea>
             </mat-form-field>
           </ng-container>
-          <div class="error" *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors && surveyFormGroup.get(selectedQuestion.questionID).touched">
-            <div *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors.required">Answer is required</div>
-            <div *ngIf="surveyFormGroup.get(selectedQuestion.questionID).errors.maxlength">Answer is too long. 2000
+          <div class="error" *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors && surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).touched">
+            <div *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors.required">Answer is required</div>
+            <div *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors.maxlength">Answer is too long. 2000
               Characters is the maximum</div>
           </div>
         </div>
@@ -52,7 +52,7 @@
         <mat-card-subtitle *ngIf="!editable && viewingAssignment" style="margin-top: 15px;">If you have any questions about this answer, be sure to ask the organizers through this assignment's correspondence</mat-card-subtitle>
         <mat-card-actions *ngIf="editable" style="text-align: center;">
           <button mat-raised-button
-            [disabled]="puttingResponse || surveyFormGroup.get(selectedQuestion.questionID).invalid"
+            [disabled]="puttingResponse || surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).invalid"
             (click)="submitNewResponse()">Submit</button>
         </mat-card-actions>
       </mat-card-content>

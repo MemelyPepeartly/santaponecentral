@@ -42,7 +42,7 @@ export class ResponseListComponent implements OnInit {
   addFields()
   {
     this.survey.surveyQuestions.forEach((question: Question) => {
-      this.surveyFormGroup.addControl(question.questionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      this.surveyFormGroup.addControl(this.survey.surveyID + question.questionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
     });
   }
   setSelectedQuestion(question: Question)
@@ -51,7 +51,7 @@ export class ResponseListComponent implements OnInit {
   }
   getResponseFromSelectedQuestion() : SurveyResponse
   {
-    let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID})
+    let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID && response.surveyID == this.survey.surveyID})
     return  response == undefined ? new SurveyResponse() : response
   }
   public submitNewResponse()
@@ -117,5 +117,9 @@ export class ResponseListComponent implements OnInit {
       }
     });
     return result
+  }
+  public getFormControlNameFromQuestion(question: Question) : string
+  {
+    return this.survey.surveyID + question.questionID
   }
 }
