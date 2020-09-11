@@ -437,7 +437,7 @@
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
-                    <!-- MEMELYHERE make this reactive-->
+                    <!-- MEMELYHERE make this reactive -->
                     <input matInput #nicknameInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
                         maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}" required>
                 </mat-form-field>
