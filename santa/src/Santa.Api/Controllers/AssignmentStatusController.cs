@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
@@ -11,6 +13,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AssignmentStatusController : ControllerBase
     {
         private readonly IRepository repository;
@@ -22,6 +25,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/AssignmentStatus
         [HttpGet]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentStatuses()
         {
             try
@@ -37,6 +41,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/AssignmentStatus/5
         [HttpGet("{assignmentStatusID}")]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> GetAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
@@ -51,6 +56,7 @@ namespace Santa.Api.Controllers
         }
         // GET: api/AssignmentStatus/GetAll/5
         [HttpGet("GetAll/{assignmentStatusID}")]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentsWithStatusByID(Guid assignmentStatusID)
         {
             try
@@ -66,6 +72,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/AssignmentStatus
         [HttpPost]
+        [Authorize(Policy = "create:assignmentStatuses")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PostNewAssignmentStatus([FromBody] string value)
         {
             try
@@ -84,6 +91,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/AssignmentStatus/5
         [HttpPut("{assignmentStatusID}")]
+        [Authorize(Policy = "update:assignmentStatuses")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PutAssignmentStatus(Guid assignmentStatusID, [FromBody] string value)
         {
             try
@@ -102,6 +110,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{assignmentStatusID}")]
+        [Authorize(Policy = "delete:assignmentStatuses")]
         public async Task<ActionResult> DeleteAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
