@@ -34,8 +34,15 @@ CREATE TABLE app.ClientRelationXref
     senderClientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     recipientClientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     eventTypeID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.EventType(eventTypeID),
+    assignmentStatusID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.AssignmentStatus(assignmentStatusID),
     completed BIT NOT NULL,
     CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
+);
+CREATE TABLE app.AssignmentStatus
+(
+    assignmentStatusID UNIQUEIDENTIFIER PRIMARY KEY,
+    assignmentStatusName NVARCHAR(100) UNIQUE NOT NULL,
+    assignmentStatusDescription NVARCHAR(200) UNIQUE NOT NULL
 );
 CREATE TABLE app.Survey
 (
@@ -105,7 +112,6 @@ CREATE TABLE app.ChatMessage
     isMessageRead BIT NOT NULL,
     fromAdmin BIT NOT NULL
 );
-
 CREATE TABLE app.EntryType
 (
     entryTypeID UNIQUEIDENTIFIER PRIMARY KEY,
@@ -166,8 +172,4 @@ END
 
 
 -- SELECT * FROM app.Client
-
 -- DELETE app.Client WHERE clientID = '45e7198c-4eed-4f4a-881a-93a23dea244d'
-
-
--- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;

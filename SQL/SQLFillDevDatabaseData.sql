@@ -226,6 +226,7 @@ SELECT * FROM app.SurveyResponse;
 SELECT * FROM app.EventType;
 SELECT * FROM app.Client;
 SELECT * FROM app.ClientRelationXref;
+SELECT * FROM app.AssignmentStatus;
 
 SELECT * FROM app.Tag;
 SELECT * FROM app.ClientTagXref;
