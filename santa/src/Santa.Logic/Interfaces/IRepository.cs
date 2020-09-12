@@ -71,6 +71,44 @@ namespace Santa.Logic.Interfaces
         Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID);
         #endregion
 
+        #region Assignment Status
+        /// <summary>
+        /// Creates a new assignment status with the input of a new assignment status logic object
+        /// </summary>
+        /// <param name="newAssignmentStatus"></param>
+        /// <returns></returns>
+        Task CreateAssignmentStatus(AssignmentStatus newAssignmentStatus);
+        /// <summary>
+        /// Gets a logic list of all assignment statuses
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AssignmentStatus>> GetAllAssignmentStatuses();
+        /// <summary>
+        /// Gets a specific assignment status by its ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task<AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID);
+        /// <summary>
+        /// Returns a list of assignments that match the assignment status type by assignment status ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID);
+        /// <summary>
+        /// Updates a chosen assignment with the target values in a logic assignment status type
+        /// </summary>
+        /// <param name="targetAssignmentStatus"></param>
+        /// <returns></returns>
+        Task UpdateAssignmentStatus(AssignmentStatus targetAssignmentStatus);
+        /// <summary>
+        /// Queues up a delete query for an assignment status by its ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task DeleteAssignmentStatusByID(Guid assignmentStatusID);
+        #endregion
+
         #region Profile
         Task<Profile> GetProfileByEmailAsync(string email);
 
