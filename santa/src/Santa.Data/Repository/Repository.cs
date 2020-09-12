@@ -220,6 +220,39 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Assignment Status
+        public async Task CreateAssignmentStatus(Logic.Objects.AssignmentStatus newAssignmentStatus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Logic.Objects.AssignmentStatus>> GetAllAssignmentStatuses()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Logic.Objects.AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateAssignmentStatus(Logic.Objects.AssignmentStatus targetAssignmentStatus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteAssignmentStatusByID(Guid assignmentStatusID)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Profile
         public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
         {
@@ -862,11 +895,6 @@ namespace Santa.Data.Repository
             }
         }
 
-        /// <summary>
-        /// Creates a SurveyOption and adds it to the context
-        /// </summary>
-        /// <param name="newSurveyOption"></param>
-        /// <returns></returns>
         public async Task CreateSurveyOptionAsync(Option newSurveyOption)
         {
             try
@@ -879,12 +907,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        
-        /// <summary>
-        /// Updates a survey option by its ID and queues that update in the context.
-        /// </summary>
-        /// <param name="targetSurveyOption"></param>
-        /// <returns></returns>
+
         public async Task UpdateSurveyOptionByIDAsync(Option targetSurveyOption)
         {
             try
@@ -902,11 +925,6 @@ namespace Santa.Data.Repository
             }
         }
         
-        /// <summary>
-        /// Dletes a survey option by ID and queues the update in the context.
-        /// </summary>
-        /// <param name="surveyOptionID"></param>
-        /// <returns></returns>
         public async Task DeleteSurveyOptionByIDAsync(Guid surveyOptionID)
         {
             try
