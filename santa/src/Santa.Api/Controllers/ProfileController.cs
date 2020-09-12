@@ -46,7 +46,7 @@ namespace Santa.Api.Controllers
                 // Gets the claims from the token
                 string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
-                // Checks to make sure the token's email is only getting the email for its own profile
+                // Checks to make sure the token's email is only getting the email for its own profile. Takes one less call than using the IsAuthorized method here
                 if (claimEmail == email)
                 {
                     Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
@@ -85,14 +85,9 @@ namespace Santa.Api.Controllers
         {
             try
             {
-
-                // Gets the claims from the token
-                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
                 Client logicClient = await repository.GetClientByIDAsync(clientID);
-
-
                 // Checks to make sure the token's email is only getting the email for its own profile
-                if (claimEmail == logicClient.email)
+                if (IsAuthorized(User, logicClient))
                 {
                     logicClient.address = new Address()
                     {
@@ -126,6 +121,39 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
+        }
+        [HttpPut("{clientID}/AssignmentStatus")]
+        [Authorize(Policy = "update:profile")]
+        public async Task<ActionResult<Profile>> UpdateProfileAssignmentStatus(Guid clientID)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                if (IsAuthorized(User, logicClient))
+                {
+                    // Logic needed here for updating assignment status
+
+
+                    // Update profile and send back
+                    Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
+                    return Ok(logicProfile);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        private bool IsAuthorized(ClaimsPrincipal user, Client logicClient)
+        {
+            // Gets the claims from the token
+            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+
+            return claimEmail == logicClient.email;
         }
     }
 }
