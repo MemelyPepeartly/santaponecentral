@@ -8,6 +8,7 @@ import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
+import { Address } from 'src/classes/address';
 
 @Injectable({
   providedIn: 'root'
@@ -27,15 +28,7 @@ export class MapService {
       clientStatus: this.mapStatus(client.clientStatus),
       isAdmin: client.isAdmin,
       hasAccount: client.hasAccount,
-      address:
-      {
-        addressLineOne: client.address.addressLineOne,
-        addressLineTwo: client.address.addressLineTwo,
-        city: client.address.city,
-        state: client.address.state,
-        country: client.address.country,
-        postalCode: client.address.postalCode,
-      },
+      address: this.mapAddress(client.address),
       responses: [],
       senders: [],
       recipients: [],
@@ -60,25 +53,20 @@ export class MapService {
 
     return mappedClient;
   }
-  mapProfile(profile)
+  mapProfile(profile) : Profile
   {
-    let mappedProfile = new Profile;
-
-    mappedProfile.clientID = profile.clientID;
-    mappedProfile.clientName = profile.clientName;
-    mappedProfile.email = profile.email;
-    mappedProfile.clientNickname = profile.nickname;
-
-    mappedProfile.clientStatus.statusID = profile.clientStatus.statusID;
-    mappedProfile.clientStatus.statusDescription = profile.clientStatus.statusDescription;
-
-    mappedProfile.address.addressLineOne = profile.address.addressLineOne;
-    mappedProfile.address.addressLineTwo = profile.address.addressLineTwo;
-    mappedProfile.address.city = profile.address.city;
-    mappedProfile.address.state = profile.address.state;
-    mappedProfile.address.country = profile.address.country;
-    mappedProfile.address.postalCode = profile.address.postalCode;
-    mappedProfile.editable = profile.editable;
+    let mappedProfile: Profile =
+    {
+      clientID: profile.clientID,
+      clientStatus: this.mapStatus(profile.clientStatus),
+      clientName: profile.clientName,
+      clientNickname: profile.nickname,
+      email: profile.email,
+      address: this.mapAddress(profile.address),
+      recipients: [],
+      responses: [],
+      editable: profile.editable
+    };
 
     profile.recipients.forEach(recipient => {
       mappedProfile.recipients.push(this.mapProfileRecipient(recipient));
@@ -88,23 +76,18 @@ export class MapService {
     });
     return mappedProfile
   }
-  mapProfileRecipient(recipient)
+  mapProfileRecipient(recipient) : ProfileRecipient
   {
-    let mappedProfileRecipient = new ProfileRecipient;
-
-    mappedProfileRecipient.clientID = recipient.recipientClientID;
-    mappedProfileRecipient.relationXrefID = recipient.relationXrefID;
-    mappedProfileRecipient.clientName = recipient.name;
-    mappedProfileRecipient.clientNickname = recipient.nickname;
-
-    mappedProfileRecipient.address.addressLineOne = recipient.address.addressLineOne;
-    mappedProfileRecipient.address.addressLineTwo = recipient.address.addressLineTwo;
-    mappedProfileRecipient.address.city = recipient.address.city;
-    mappedProfileRecipient.address.state = recipient.address.state;
-    mappedProfileRecipient.address.country = recipient.address.country;
-    mappedProfileRecipient.address.postalCode = recipient.address.postalCode;
-
-    mappedProfileRecipient.recipientEvent = this.mapEvent(recipient.recipientEvent);
+    let mappedProfileRecipient: ProfileRecipient =
+    {
+      clientID: recipient.recipientClientID,
+      relationXrefID: recipient.relationXrefID,
+      clientName: recipient.name,
+      clientNickname: recipient.nickname,
+      address: this.mapAddress(recipient.address),
+      recipientEvent: this.mapEvent(recipient.recipientEvent),
+      responses: []
+    };
 
     recipient.responses.forEach(response => {
       mappedProfileRecipient.responses.push(this.mapResponse(response));
@@ -112,33 +95,50 @@ export class MapService {
 
     return mappedProfileRecipient;
   }
-  mapMessage(message)
+  mapAddress(address) : Address
   {
-    let mappedMessage = new Message;
-
-    mappedMessage.chatMessageID = message.chatMessageID;
-    mappedMessage.senderClient = this.mapMeta(message.senderClient);
-    mappedMessage.recieverClient = this.mapMeta(message.recieverClient);
-    mappedMessage.clientRelationXrefID = message.clientRelationXrefID;
-    mappedMessage.messageContent = message.messageContent;
-    mappedMessage.dateTimeSent = new Date(message.dateTimeSent);
-    mappedMessage.isMessageRead = message.isMessageRead;
-    mappedMessage.subjectMessage = message.subjectMessage;
-    mappedMessage.fromAdmin = message.fromAdmin;
-
+    let mappedAddress: Address =
+    {
+      addressLineOne: address.addressLineOne,
+      addressLineTwo: address.addressLineTwo,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      postalCode: address.postalCode
+    }
+    return mappedAddress;
+  }
+  mapMessage(message) : Message
+  {
+    let mappedMessage: Message =
+    {
+      chatMessageID: message.chatMessageID,
+      senderClient: this.mapMeta(message.senderClient),
+      recieverClient: this.mapMeta(message.recieverClient),
+      clientRelationXrefID: message.clientRelationXrefID,
+      messageContent: message.messageContent,
+      dateTimeSent: new Date(message.dateTimeSent),
+      isMessageRead: message.isMessageRead,
+      subjectMessage: message.subjectMessage,
+      fromAdmin: message.fromAdmin,
+    };
 
     return mappedMessage;
   }
-  mapMessageHistory(messageHistory)
+  mapMessageHistory(messageHistory) : MessageHistory
   {
-    let mappedMessageHistory = new MessageHistory;
-    mappedMessageHistory.relationXrefID = messageHistory.relationXrefID;
-    mappedMessageHistory.assignmentRecieverClient = this.mapMeta(messageHistory.assignmentRecieverClient);
-    mappedMessageHistory.assignmentSenderClient = this.mapMeta(messageHistory.assignmentSenderClient);
-    mappedMessageHistory.conversationClient = this.mapMeta(messageHistory.conversationClient);
-    mappedMessageHistory.eventType = this.mapEvent(messageHistory.eventType);
+    let mappedMessageHistory: MessageHistory = <MessageHistory>(
+    {
+      relationXrefID: messageHistory.relationXrefID,
+      eventType: this.mapEvent(messageHistory.eventType),
+      assignmentSenderClient: this.mapMeta(messageHistory.assignmentSenderClient),
+      assignmentRecieverClient: this.mapMeta(messageHistory.assignmentRecieverClient),
+      conversationClient: this.mapMeta(messageHistory.conversationClient),
+      subjectClient: this.mapMeta(messageHistory.subjectClient),
+      subjectMessages: [],
+      recieverMessages: [],
+    });
 
-    mappedMessageHistory.subjectClient = this.mapMeta(messageHistory.subjectClient);
     messageHistory.subjectMessages.forEach(message => {
       mappedMessageHistory.subjectMessages.push(this.mapMessage(message));
     });
@@ -150,7 +150,7 @@ export class MapService {
     return mappedMessageHistory;
   }
   // Maps the meta info for messages
-  mapMeta(meta)
+  mapMeta(meta) : ClientMeta
   {
     let mappedMeta: ClientMeta =
     {
@@ -162,86 +162,94 @@ export class MapService {
 
     return mappedMeta;
   }
-  mapClientRecipientRelationship(client: Client, recipientClient: Recipient)
+  mapClientRecipientRelationship(client: Client, recipientClient: Recipient) : ClientSenderRecipientRelationship
   {
-    let mappedRelationship = new ClientSenderRecipientRelationship;
-
-    mappedRelationship.clientID = client.clientID;
-    mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = recipientClient.recipientEventTypeID;
-    mappedRelationship.removable = recipientClient.removable;
-    mappedRelationship.completed = recipientClient.completed;
+    let mappedRelationship: ClientSenderRecipientRelationship =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      clientNickname: client.clientNickname,
+      clientEventTypeID: recipientClient.recipientEventTypeID,
+      removable: recipientClient.removable,
+      completed: recipientClient.completed
+    };
 
     return mappedRelationship;
 
   }
-  mapClientSenderRelationship(client: Client, senderClient: Sender)
+  mapClientSenderRelationship(client: Client, senderClient: Sender) : ClientSenderRecipientRelationship
   {
-    let mappedRelationship = new ClientSenderRecipientRelationship;
-
-    mappedRelationship.clientID = client.clientID;
-    mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = senderClient.senderEventTypeID;
-    mappedRelationship.removable = senderClient.removable;
-    mappedRelationship.completed = senderClient.completed;
+    let mappedRelationship: ClientSenderRecipientRelationship =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      clientNickname: client.clientNickname,
+      clientEventTypeID: senderClient.senderEventTypeID,
+      removable: senderClient.removable,
+      completed: senderClient.completed
+    };
 
     return mappedRelationship;
 
   }
-  mapRecipient(recipient)
+  mapRecipient(recipient) : Recipient
   {
-    let mappedRecipient = new Recipient;
-
-    mappedRecipient.recipientClientID = recipient.recipientClientID;
-    mappedRecipient.recipientEventTypeID = recipient.recipientEventTypeID;
-    mappedRecipient.removable = recipient.removable;
-    mappedRecipient.completed = recipient.completed;
+    let mappedRecipient: Recipient =
+    {
+      recipientClientID: recipient.recipientClientID,
+      recipientEventTypeID: recipient.recipientEventTypeID,
+      removable: recipient.removable,
+      completed: recipient.completed
+    };
 
     return mappedRecipient
   }
-  mapSender(sender)
+  mapSender(sender) : Sender
   {
-    let mappedSender = new Sender;
-
-    mappedSender.senderClientID = sender.senderClientID;
-    mappedSender.senderEventTypeID = sender.senderEventTypeID;
-    mappedSender.removable = sender.removable;
-    mappedSender.completed = sender.completed;
+    let mappedSender: Sender =
+    {
+      senderClientID: sender.senderClientID,
+      senderEventTypeID: sender.senderEventTypeID,
+      removable: sender.removable,
+      completed: sender.completed
+    };
 
     return mappedSender
   }
   mapStatus(status) : Status
   {
-    let mappedStatus = new Status;
-
-    mappedStatus.statusID = status.statusID;
-    mappedStatus.statusDescription = status.statusDescription;
+    let mappedStatus: Status =
+    {
+      statusID: status.statusID,
+      statusDescription: status.statusDescription
+    };
 
     return mappedStatus;
   }
-  mapEvent(event)
+  mapEvent(event) : EventType
   {
-    let mappedEventType = new EventType;
-
-    mappedEventType.eventTypeID = event.eventTypeID;
-    mappedEventType.eventDescription = event.eventDescription;
-    mappedEventType.isActive = event.active;
-    mappedEventType.removable = event.removable;
-    mappedEventType.immutable = event.immutable;
+    let mappedEventType: EventType =
+    {
+      eventTypeID: event.eventTypeID,
+      eventDescription: event.eventDescription,
+      isActive: event.active,
+      removable: event.removable,
+      immutable: event.immutable
+    };
 
     return mappedEventType;
   }
-  mapSurvey(survey)
+  mapSurvey(survey) : Survey
   {
-    let mappedSurvey = new Survey;
-
-    mappedSurvey.surveyID = survey.surveyID;
-    mappedSurvey.eventTypeID = survey.eventTypeID;
-    mappedSurvey.surveyDescription = survey.surveyDescription;
-    mappedSurvey.active = survey.active;
-    mappedSurvey.removable = survey.removable;
+    let mappedSurvey: Survey =
+    {
+      surveyID: survey.surveyID,
+      eventTypeID: survey.eventTypeID,
+      surveyDescription: survey.surveyDescription,
+      active: survey.active,
+      removable: survey.removable,
+      surveyQuestions: []
+    };
 
     survey.surveyQuestions.forEach(question => {
       mappedSurvey.surveyQuestions.push(this.mapQuestion(question));
@@ -249,15 +257,17 @@ export class MapService {
 
     return mappedSurvey;
   }
-  mapQuestion(question)
+  mapQuestion(question) : Question
   {
-    let mappedQuestion = new Question;
-
-    mappedQuestion.questionID = question.questionID;
-    mappedQuestion.questionText = question.questionText;
-    mappedQuestion.isSurveyOptionList = question.isSurveyOptionList;
-    mappedQuestion.senderCanView = question.senderCanView;
-    mappedQuestion.removable = question.removable;
+    let mappedQuestion: Question =
+    {
+      questionID: question.questionID,
+      questionText: question.questionText,
+      isSurveyOptionList: question.isSurveyOptionList,
+      senderCanView: question.senderCanView,
+      removable: question.removable,
+      surveyOptionList: []
+    };
 
     question.surveyOptionList.forEach(surveyOption => {
       mappedQuestion.surveyOptionList.push(this.mapSurveyOption(surveyOption));
@@ -265,40 +275,43 @@ export class MapService {
 
     return mappedQuestion;
   }
-  mapSurveyOption(surveyOption)
+  mapSurveyOption(surveyOption): SurveyOption
   {
-    let mappedSurveyOption = new SurveyOption;
-
-    mappedSurveyOption.surveyOptionID = surveyOption.surveyOptionID;
-    mappedSurveyOption.displayText = surveyOption.displayText;
-    mappedSurveyOption.surveyOptionValue = surveyOption.surveyOptionValue;
-    mappedSurveyOption.removable = surveyOption.removable;
+    let mappedSurveyOption: SurveyOption =
+    {
+      surveyOptionID: surveyOption.surveyOptionID,
+      displayText: surveyOption.displayText,
+      surveyOptionValue: surveyOption.surveyOptionValue,
+      removable: surveyOption.removable
+    };
 
     return mappedSurveyOption;
   }
-  mapResponse(surveyResponse)
+  mapResponse(surveyResponse) : SurveyResponse
   {
-    let mappedSurveyResponse = new SurveyResponse;
-
-    mappedSurveyResponse.surveyResponseID = surveyResponse.surveyResponseID;
-    mappedSurveyResponse.surveyID = surveyResponse.surveyID;
-    mappedSurveyResponse.clientID = surveyResponse.clientID;
-    mappedSurveyResponse.surveyQuestion = this.mapQuestion(surveyResponse.surveyQuestion);
-    mappedSurveyResponse.surveyOptionID = surveyResponse.surveyOptionID;
-    mappedSurveyResponse.responseText = surveyResponse.responseText;
-    mappedSurveyResponse.questionText = surveyResponse.questionText;
-    mappedSurveyResponse.responseEvent = this.mapEvent(surveyResponse.responseEvent);
+    let mappedSurveyResponse: SurveyResponse =
+    {
+      surveyResponseID: surveyResponse.surveyResponseID,
+      surveyID: surveyResponse.surveyID,
+      clientID: surveyResponse.clientID,
+      responseEvent: this.mapEvent(surveyResponse.responseEvent),
+      surveyQuestion: this.mapQuestion(surveyResponse.surveyQuestion),
+      surveyOptionID: surveyResponse.surveyOptionID,
+      questionText: surveyResponse.questionText,
+      responseText: surveyResponse.responseText,
+    };
 
     return mappedSurveyResponse;
   }
-  mapTag(tag)
+  mapTag(tag) : Tag
   {
-    let mappedTag = new Tag;
-
-    mappedTag.tagID = tag.tagID;
-    mappedTag.tagName = tag.tagName;
-    mappedTag.deletable = tag.deletable;
-    mappedTag.tagImmutable = tag.tagImmutable;
+    let mappedTag: Tag =
+    {
+      tagID: tag.tagID,
+      tagName: tag.tagName,
+      deletable: tag.deletable,
+      tagImmutable: tag.tagImmutable
+    };
 
     return mappedTag;
   }
@@ -308,74 +321,80 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent)
+  // Memelyhere, had to add an argument. Add that value to other usages of service
+  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : MessageApiResponse
   {
-    let messageResponse: MessageApiResponse = new MessageApiResponse();
-
-    messageResponse.messageSenderClientID = senderClientID;
-    messageResponse.messageRecieverClientID = recieverClientID;
-    messageResponse.clientRelationXrefID = relationXrefID;
-    messageResponse.messageContent = messageContent;
+    let messageResponse: MessageApiResponse =
+    {
+      messageSenderClientID: senderClientID,
+      messageRecieverClientID: recieverClientID,
+      clientRelationXrefID: relationXrefID,
+      messageContent: messageContent,
+      fromAdmin: fromAdmin
+    };
 
     return messageResponse;
   }
-  mapClientEmailResponse(client: Client)
+  mapClientEmailResponse(client: Client) : ClientEmailResponse
   {
-    let clientEmailResponse: ClientEmailResponse = new ClientEmailResponse();
-
-    clientEmailResponse.clientEmail = client.email
+    let clientEmailResponse: ClientEmailResponse =
+    {
+      clientEmail: client.email
+    };
 
     return clientEmailResponse;
   }
-  mapClientNicknameResponse(client: Client)
+  mapClientNicknameResponse(client: Client) : ClientNicknameResponse
   {
-    let clientNicknameResponse: ClientNicknameResponse = new ClientNicknameResponse();
-    clientNicknameResponse.clientNickname = client.clientNickname;
+    let clientNicknameResponse: ClientNicknameResponse =
+    {
+      clientNickname: client.clientNickname
+    };
+
     return clientNicknameResponse;
   }
-  mapClientNameResponse(client: Client)
+  mapClientNameResponse(client: Client) : ClientNameResponse
   {
-    let clientNameResponse: ClientNameResponse = new ClientNameResponse();
-    clientNameResponse.clientName = client.clientName;
+    let clientNameResponse: ClientNameResponse =
+    {
+      clientName: client.clientName
+    };
+
     return clientNameResponse;
   }
-  mapClientAddressResponse(client: Client)
+  mapClientAddressResponse(client: Client) : ClientAddressResponse
   {
-    let clientAddressResponse: ClientAddressResponse = new ClientAddressResponse();
-
-    clientAddressResponse.clientAddressLine1 = client.address.addressLineOne;
-    clientAddressResponse.clientAddressLine2 = client.address.addressLineTwo;
-    clientAddressResponse.clientCity = client.address.city;
-    clientAddressResponse.clientState = client.address.state;
-    clientAddressResponse.clientCountry = client.address.country;
-    clientAddressResponse.clientPostalCode = client.address.postalCode;
+    let clientAddressResponse: ClientAddressResponse =
+    {
+      clientAddressLine1: client.address.addressLineOne,
+      clientAddressLine2: client.address.addressLineTwo,
+      clientCity: client.address.city,
+      clientState: client.address.state,
+      clientCountry: client.address.country,
+      clientPostalCode: client.address.postalCode
+    };
 
     return clientAddressResponse
   }
-  mapSurveyApiResponse(response: SurveyQA)
+  mapSurveyApiResponse(response: SurveyQA) : SurveyApiResponse
   {
-    let surveyApiResponse: SurveyApiResponse = new SurveyApiResponse();
-
-    surveyApiResponse.surveyID = response.surveyID;
-    surveyApiResponse.clientID = response.clientID;
-    surveyApiResponse.surveyQuestionID = response.surveyQuestionID;
-    if(response.isSurveyOptionList)
+    let surveyApiResponse: SurveyApiResponse =
     {
-      surveyApiResponse.surveyOptionID = response.responseOptionSelected.surveyOptionID;
-      surveyApiResponse.responseText = response.responseOptionSelected.optionText;
-    }
-    else
-    {
-      surveyApiResponse.responseText = response.responseInputText;
-    }
+      surveyID: response.surveyID,
+      clientID: response.clientID,
+      surveyQuestionID: response.surveyQuestionID,
+      surveyOptionID: response.isSurveyOptionList ? response.responseOptionSelected.surveyOptionID : null,
+      responseText: response.isSurveyOptionList ? response.responseOptionSelected.optionText : response.responseInputText
+    };
 
     return surveyApiResponse;
   }
-  mapTagResponse(tag: Tag)
+  mapTagResponse(tag: Tag) : TagResponse
   {
-    let tagResponse: TagResponse = new TagResponse();
-
-    tagResponse.tagName = tag.tagName;
+    let tagResponse: TagResponse =
+    {
+      tagName: tag.tagName
+    };
 
     return tagResponse;
   }
@@ -387,25 +406,28 @@ export class MissionMapper
 {
   mapBoardEntry(boardEntry: any) : BoardEntry
   {
-    let mappedBoardEntry: BoardEntry = new BoardEntry;
-
-    mappedBoardEntry.boardEntryID = boardEntry.boardEntryID;
-    mappedBoardEntry.entryType = this.mapEntryType(boardEntry.entryType);
-    mappedBoardEntry.postDescription = boardEntry.postDescription;
-    mappedBoardEntry.postNumber = boardEntry.postNumber;
-    mappedBoardEntry.threadNumber = boardEntry.threadNumber;
-    mappedBoardEntry.dateTimeEntered = new Date(boardEntry.dateTimeEntered);
+    let mappedBoardEntry: BoardEntry =
+    {
+      boardEntryID: boardEntry.boardEntryID,
+      entryType: this.mapEntryType(boardEntry.entryType),
+      postDescription: boardEntry.postDescription,
+      postNumber: boardEntry.postNumber,
+      threadNumber: boardEntry.threadNumber,
+      dateTimeEntered: new Date(boardEntry.dateTimeEntered),
+      editing: false
+    };
 
     return mappedBoardEntry;
   }
   mapEntryType(entryType: any) : EntryType
   {
-    let mappedEntryType: EntryType = new EntryType;
-
-    mappedEntryType.entryTypeID = entryType.entryTypeID;
-    mappedEntryType.entryTypeName = entryType.entryTypeName;
-    mappedEntryType.entryTypeDescription = entryType.entryTypeDescription;
-    mappedEntryType.adminOnly = entryType.adminOnly;
+    let mappedEntryType: EntryType =
+    {
+      entryTypeID: entryType.entryTypeID,
+      entryTypeName: entryType.entryTypeName,
+      entryTypeDescription: entryType.entryTypeDescription,
+      adminOnly: entryType.adminOnly
+    };
 
     return mappedEntryType;
   }
