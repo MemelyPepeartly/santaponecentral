@@ -83,6 +83,7 @@ namespace Santa.Data.Repository
             {
                 senderClientID = contextRecipientXref.SenderClientId,
                 senderEventTypeID = contextRecipientXref.EventTypeId,
+                assignmentStatus = MapAssignmentStatus(contextRecipientXref.AssignmentStatus),
                 completed = contextRecipientXref.Completed,
                 removable = contextRecipientXref.ChatMessage.Count > 0 ? false : true
             };
@@ -94,6 +95,7 @@ namespace Santa.Data.Repository
             {
                 recipientClientID = contextSenderXref.RecipientClientId,
                 recipientEventTypeID = contextSenderXref.EventTypeId,
+                assignmentStatus = MapAssignmentStatus(contextSenderXref.AssignmentStatus),
                 completed = contextSenderXref.Completed,
                 removable = contextSenderXref.ChatMessage.Count > 0 ? false : true
             };
@@ -108,6 +110,7 @@ namespace Santa.Data.Repository
                 nickname = contextRecipientClientData.Nickname,
                 relationXrefID = contextSenderXref.ClientRelationXrefId,
                 recipientEvent = Mapper.MapEvent(contextSenderXref.EventType),
+                assignmentStatus = MapAssignmentStatus(contextSenderXref.AssignmentStatus),
 
                 address = new Address
                 {
