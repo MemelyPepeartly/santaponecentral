@@ -36,5 +36,13 @@ namespace Santa.Logic.Constants
         public const string CARD_DELIVERIES_ENTRYTYPE = "Deliveries (Cards)";
         public const string GENERAL_ENTRYTYPE = "General";
 
+        // Assignment Status
+
+        public const string ASSIGNED_ASSIGNMENT_STATUS = "Assigned";
+        public const string IN_PROGRESS_ASSIGNMENT_STATUS = "In Progress";
+        public const string SHIPPING_ASSIGNMENT_STATUS = "Shipping";
+        public const string COMPLETED_ASSIGNMENT_STATUS = "Completed";
+
+
     }
 }
