@@ -392,8 +392,9 @@
                                 <button mat-raised-button
                                     matTooltip="Shows the list of assignable Anon's"
                                     [matTooltipPosition]="'right'"
+                                    [disabled]="gatheringAllAssignmentsStatuses"
                                     (click)="drawer.toggle()"
-                                    (click)="recipientOpen = !recipientOpen">Add reciepients</button>
+                                    (click)="recipientOpen = !recipientOpen">Add recipients</button>
                                 <mat-card-subtitle class="optionSub">
                                     <p>Adds people the Anon is sending to</p>
                                 </mat-card-subtitle>

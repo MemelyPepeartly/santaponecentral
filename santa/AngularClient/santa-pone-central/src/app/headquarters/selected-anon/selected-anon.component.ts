@@ -135,6 +135,7 @@ export class SelectedAnonComponent implements OnInit {
   public gatheringAllStatuses: boolean = true;
   public gatheringAllSurveys: boolean = true;
   public gatheringAllTags: boolean = true;
+  public gatheringAllAssignmentsStatuses: boolean = true;
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
@@ -220,6 +221,10 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
     });
+    //Gather all assignment statuses
+    this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
+      this.assignmentStatuses = assignmentStatusArray;
+    });
 
     /* BOOLEAN STATUS SUSCRIBES */
     this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
@@ -240,12 +245,16 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
       this.gatheringAllTags = status;
     });
+    this.gatherer.gatheringAllAssignmentsStatuses.subscribe((status: boolean) => {
+      this.gatheringAllAssignmentsStatuses = status;
+    });
 
     //Runs all gather services
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllQuestions();
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllTags();
+    await this.gatherer.gatherAllAssignmentStatuses();
 
     this.gettingAnswers = false;
     this.gettingEventDetails = false;

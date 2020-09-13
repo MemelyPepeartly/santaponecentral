@@ -151,3 +151,8 @@ export class EditEntryTypeName {
 export class EditEntryTypeDescription {
   entryTypeDescription: string;
 }
+/* RESPONSE TYPES FOR ASSIGNMENT STATUSES */
+export class NewAssignmentStatusResponse {
+  assignmentStatusName: string;
+  assignmentStatusDescription: string;
+}
