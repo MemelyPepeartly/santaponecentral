@@ -151,6 +151,32 @@ namespace Santa.Data.Repository
 
         #endregion
 
+        #region Assignment Status
+        public static Entities.AssignmentStatus MapAssignmentStatus(Logic.Objects.AssignmentStatus logicAssignmentStatus)
+        {
+            Entities.AssignmentStatus contextAssignmentStatus = new Entities.AssignmentStatus()
+            {
+                AssignmentStatusId = logicAssignmentStatus.assignmentStatusID,
+                AssignmentStatusName = logicAssignmentStatus.assignmentStatusName,
+                AssignmentStatusDescription = logicAssignmentStatus.assignmentStatusDescription
+            };
+
+            return contextAssignmentStatus;
+        }
+
+        public static Logic.Objects.AssignmentStatus MapAssignmentStatus(Entities.AssignmentStatus contextAssignmentStatus)
+        {
+            Logic.Objects.AssignmentStatus logicAssignmentStatus = new Logic.Objects.AssignmentStatus()
+            {
+                assignmentStatusID = contextAssignmentStatus.AssignmentStatusId,
+                assignmentStatusName = contextAssignmentStatus.AssignmentStatusName,
+                assignmentStatusDescription = contextAssignmentStatus.AssignmentStatusDescription
+            };
+
+            return logicAssignmentStatus;
+        }
+        #endregion
+
         #region Profile
         public static Profile MapProfile(Entities.Client contextClient)
         {
@@ -239,6 +265,7 @@ namespace Santa.Data.Repository
             };
             return logicMessage;
         }
+
         public static ChatMessage MapMessage(Message logicMessage)
         {
             Data.Entities.ChatMessage contextMessage = new ChatMessage()
