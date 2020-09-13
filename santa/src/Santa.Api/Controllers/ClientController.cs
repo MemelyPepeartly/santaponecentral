@@ -261,7 +261,7 @@ namespace Santa.Api.Controllers
             {
                 foreach(Guid assignmentID in assignmentsModel.assignments)
                 {
-                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID);
+                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
                 }
                 await repository.SaveAsync();
 
@@ -318,6 +318,7 @@ namespace Santa.Api.Controllers
                 List<Client> allClients = await repository.GetAllClients();
                 List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
                 List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
+                AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
                 List<Client> clientsThatGotNewAssignments = new List<Client>();
                 List<string> assignmentsAddedLogList = new List<string>();
@@ -336,7 +337,7 @@ namespace Santa.Api.Controllers
                             if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
                                 // Add that potential assignment to their list
-                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID);
+                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID, defaultNewAssignmentStatus.assignmentStatusID);
 
                                 // If that mailer isnt already on the list of clients that already got a new assignment, add them to it
                                 if(!clientsThatGotNewAssignments.Any<Client>(c => c.clientID == mailer.clientID))
