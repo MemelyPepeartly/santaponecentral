@@ -281,12 +281,8 @@ namespace Santa.Data.Repository
             {
                 Data.Entities.AssignmentStatus contextAssignmentStatus = await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == targetAssignmentStatus.assignmentStatusID);
 
-                contextAssignmentStatus = new Entities.AssignmentStatus()
-                {
-                    AssignmentStatusId = contextAssignmentStatus.AssignmentStatusId,
-                    AssignmentStatusName = targetAssignmentStatus.assignmentStatusName,
-                    AssignmentStatusDescription = targetAssignmentStatus.assignmentStatusDescription
-                };
+                contextAssignmentStatus.AssignmentStatusName = targetAssignmentStatus.assignmentStatusName;
+                contextAssignmentStatus.AssignmentStatusDescription = targetAssignmentStatus.assignmentStatusDescription;
 
                 santaContext.AssignmentStatus.Update(contextAssignmentStatus);
             }

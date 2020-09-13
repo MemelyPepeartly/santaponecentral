@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Models.Assignment_Status_Models;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 
@@ -24,8 +25,13 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/AssignmentStatus
+        /// <summary>
+        /// Gets a list of all assignment statuses
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [Authorize(Policy = "read:profile")]
+        //[Authorize(Policy = "read:profile")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentStatuses()
         {
             try
@@ -40,8 +46,14 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/AssignmentStatus/5
+        /// <summary>
+        /// Gets a specific assignment status by ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
         [HttpGet("{assignmentStatusID}")]
-        [Authorize(Policy = "read:profile")]
+        //[Authorize(Policy = "read:profile")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> GetAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
@@ -55,8 +67,14 @@ namespace Santa.Api.Controllers
             }
         }
         // GET: api/AssignmentStatus/GetAll/5
+        /// <summary>
+        /// Gets a list of current assignments with a specific status by assignment status ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
         [HttpGet("GetAll/{assignmentStatusID}")]
-        [Authorize(Policy = "read:clients")]
+        //[Authorize(Policy = "read:clients")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentsWithStatusByID(Guid assignmentStatusID)
         {
             try
@@ -71,16 +89,28 @@ namespace Santa.Api.Controllers
         }
 
         // POST: api/AssignmentStatus
+        /// <summary>
+        /// Creates a new assignment status
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize(Policy = "create:assignmentStatuses")]
-        public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PostNewAssignmentStatus([FromBody] string value)
+        //[Authorize(Policy = "create:assignmentStatuses")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PostNewAssignmentStatus([FromBody] NewAssignmentStatusModel model)
         {
             try
             {
-                AssignmentStatus targetAssignmentStatus = new AssignmentStatus();
-                await repository.UpdateAssignmentStatus(targetAssignmentStatus);
-                AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(targetAssignmentStatus.assignmentStatusID);
+                AssignmentStatus newLogicAssignmentStatus = new AssignmentStatus()
+                {
+                    assignmentStatusID = Guid.NewGuid(),
+                    assignmentStatusName = model.assignmentStatusName,
+                    assignmentStatusDescription = model.assignmentStatusDescription
+                };
+                await repository.CreateAssignmentStatus(newLogicAssignmentStatus);
+                await repository.SaveAsync();
 
+                AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(newLogicAssignmentStatus.assignmentStatusID);
                 return Ok(newAssignmentStatus);
             }
             catch (ArgumentNullException e)
@@ -90,16 +120,29 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/AssignmentStatus/5
+        /// <summary>
+        /// Edits the details of an assignment status
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{assignmentStatusID}")]
-        [Authorize(Policy = "update:assignmentStatuses")]
-        public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PutAssignmentStatus(Guid assignmentStatusID, [FromBody] string value)
+        //[Authorize(Policy = "update:assignmentStatuses")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PutAssignmentStatus(Guid assignmentStatusID, [FromBody] UpdateAssignmentStatusModel model)
         {
             try
             {
-                AssignmentStatus targetAssignmentStatus = new AssignmentStatus();
+                AssignmentStatus targetAssignmentStatus = new AssignmentStatus()
+                {
+                    assignmentStatusID = assignmentStatusID,
+                    assignmentStatusName = model.assignmentStatusName,
+                    assignmentStatusDescription = model.assignmentStatusDescription
+                };
                 await repository.UpdateAssignmentStatus(targetAssignmentStatus);
-                AssignmentStatus updatedAssignmenStatus = await repository.GetAssignmentStatusByID(assignmentStatusID);
+                await repository.SaveAsync();
 
+                AssignmentStatus updatedAssignmenStatus = await repository.GetAssignmentStatusByID(assignmentStatusID);
                 return Ok(updatedAssignmenStatus);
             }
             catch (ArgumentNullException e)
@@ -109,14 +152,22 @@ namespace Santa.Api.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes an assignment status by ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
         [HttpDelete("{assignmentStatusID}")]
-        [Authorize(Policy = "delete:assignmentStatuses")]
+        //[Authorize(Policy = "delete:assignmentStatuses")]
+        [AllowAnonymous]
         public async Task<ActionResult> DeleteAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
             {
                 await repository.DeleteAssignmentStatusByID(assignmentStatusID);
-                return Ok();
+                await repository.SaveAsync();
+
+                return NoContent();
             }
             catch (ArgumentNullException e)
             {
