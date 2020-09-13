@@ -84,6 +84,7 @@ export class MapService {
       relationXrefID: recipient.relationXrefID,
       clientName: recipient.name,
       clientNickname: recipient.nickname,
+      assignmentStatus: this.mapAssignmentStatus(recipient.assignmentStatus),
       address: this.mapAddress(recipient.address),
       recipientEvent: this.mapEvent(recipient.recipientEvent),
       responses: []
