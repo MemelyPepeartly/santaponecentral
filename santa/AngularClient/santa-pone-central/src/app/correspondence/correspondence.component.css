@@ -4,11 +4,11 @@
 }
 #info-div
 {
-    min-width: 550px;
-    width: 75%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
+  min-width: 600px;
+  width: 80%;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .infoCard
 {
@@ -21,7 +21,7 @@
 .container {
     position: fixed;
     width: 100%;
-    min-width: 550px;;
+    min-width: 600px;
     height: 90%;
     top:5%;
     left: 0;
@@ -34,7 +34,7 @@
 {
     padding: 15px;
     height: fit-content;
-    min-width: 550px;;
+    min-width: 600px;
 }
 #overlay
 {

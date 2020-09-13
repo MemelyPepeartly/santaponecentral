@@ -15,7 +15,7 @@ mat-drawer-content
 {
   display: inline-block;
   width: fit-content;
-  min-width: 550px;
+  min-width: 600px;
   text-align: center;
 }
 #container
@@ -23,7 +23,7 @@ mat-drawer-content
   width: 100%;
   display: flex;
 }
-@media (max-width:550px)
+@media (max-width:600px)
 {
   #component-div
   {
@@ -35,7 +35,7 @@ mat-drawer-content
   {
     height: fit-content;
     width: 100%;
-    min-width: 550px;
+    min-width: 600px;
     text-align: center;
     background-color: white;
   }

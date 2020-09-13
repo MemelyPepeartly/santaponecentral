@@ -3,7 +3,7 @@ mat-card
     margin: 10px;
     vertical-align: top;
 }
-.list-card 
+.list-card
 {
     width: 80%;
     min-width: fit-content;
@@ -31,7 +31,7 @@ mat-card
 .container {
     position: fixed;
     width: 100%;
-    min-width: 550px;;
+    min-width: 600px;
     height: 90%;
     top:5%;
     left: 0;
