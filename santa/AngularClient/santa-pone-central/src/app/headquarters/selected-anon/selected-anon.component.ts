@@ -3,7 +3,8 @@ import { AssignmentStatus, Client, ClientSenderRecipientRelationship } from '../
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
-import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
+import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
@@ -63,6 +64,7 @@ export class SelectedAnonComponent implements OnInit {
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
   public statuses: Array<Status> = new Array<Status>();
+  public assignmentStatuses: Array<AssignmentStatus> = new Array<AssignmentStatus>();
   public allClients: Array<Client> = new Array<Client>();
   public countries: Array<any> = [];
 
@@ -395,7 +397,8 @@ export class SelectedAnonComponent implements OnInit {
       var newNick: string = this.clientNicknameFormGroup.value.newNickname;
 
       putClient.clientNickname = newNick;
-      var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+      let clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+
       await this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).toPromise();
 
       this.actionTaken.emit(true);
@@ -415,8 +418,12 @@ export class SelectedAnonComponent implements OnInit {
 
     var currentEvent = this.selectedRecipientEvent;
 
-    let assignments = new ClientRelationshipsResponse();
-    assignments.eventTypeID = this.selectedRecipientEvent.eventTypeID;
+    let assignments: ClientRelationshipsResponse =
+    {
+      eventTypeID: this.selectedRecipientEvent.eventTypeID,
+      assignmentStatusID: this.assignmentStatuses.find((status: AssignmentStatus) => {return status.assignmentStatusName == AssignmentStatusConstants.ASSIGNED}).assignmentStatusID,
+      assignments: []
+    };
 
     this.selectedRecipients.forEach((selectedRecipient: Client) => {
       assignments.assignments.push(selectedRecipient.clientID);
