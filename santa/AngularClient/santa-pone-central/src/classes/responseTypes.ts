@@ -52,6 +52,7 @@ export class ClientIsAdminResponse {
 
 export class ClientRelationshipsResponse {
     eventTypeID: string;
+    assignmentStatusID: string;
     assignments: Array<string> = []
 }
 export class SurveyApiResponse {
