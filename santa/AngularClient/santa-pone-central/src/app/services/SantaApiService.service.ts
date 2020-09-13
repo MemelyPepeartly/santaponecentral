@@ -30,7 +30,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse} from '../../classes/responseTypes';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -87,6 +87,14 @@ export class SantaApiGetService {
   }
   getStatus(id): Observable<any> {
     return this.http.get(endpoint + 'Status/' + id).pipe(
+      map(this.extractData));
+  }
+  getAllAssignmentStatuses(): Observable<any> {
+    return this.http.get(endpoint + 'AssignmentStatus').pipe(
+      map(this.extractData));
+  }
+  getAssignmentStatusByID(assignmentStatusID: string): Observable<any> {
+    return this.http.get(endpoint + 'AssignmentStatus/' + assignmentStatusID).pipe(
       map(this.extractData));
   }
   getAllSurveys(): Observable<any> {
@@ -212,6 +220,10 @@ export class SantaApiPostService {
   }
   postQuestionsToSurvey(surveyID: string, questions: SurveyQuestionXrefsResponseModel): Observable<any> {
     return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions).pipe(
+      map(this.extractData));
+  }
+  postAssignmentStatus(assignmentStatusResponse: NewAssignmentStatusResponse): Observable<any> {
+    return this.http.post(endpoint + 'AssignmentStatus', assignmentStatusResponse).pipe(
       map(this.extractData));
   }
 }
