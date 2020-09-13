@@ -16,13 +16,13 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task CreateClient(Client newClient);
         /// <summary>
-        /// Creates a new client relationship for assignments by a senderID, recipientID, and the eventTypeID that the assignment relates to
+        /// Creates a new client relationship for assignments by a senderID, recipientID, and the eventTypeID, and its assignmentStatusID that the assignment relates to
         /// </summary>
         /// <param name="senderClientID"></param>
         /// <param name="recipientClientID"></param>
         /// <param name="eventTypeID"></param>
         /// <returns></returns>
-        Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
+        Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID, Guid assignmentStatusID);
         /// <summary>
         /// Gets a client by their ID
         /// </summary>

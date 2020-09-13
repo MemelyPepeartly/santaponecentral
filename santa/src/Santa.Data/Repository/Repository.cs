@@ -32,7 +32,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID)
+        public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID, Guid assignmentStatusID)
         {
             try
             {
@@ -42,7 +42,8 @@ namespace Santa.Data.Repository
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
                     EventTypeId = eventTypeID,
-                    // Value being posted should be false to start by default
+                    // Value being posted should be false to start by default, and assignment status should be set to its default value as well
+                    AssignmentStatusId = assignmentStatusID,
                     Completed = false
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
