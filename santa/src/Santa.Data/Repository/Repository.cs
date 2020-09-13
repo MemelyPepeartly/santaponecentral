@@ -223,32 +223,91 @@ namespace Santa.Data.Repository
         #region Assignment Status
         public async Task CreateAssignmentStatus(Logic.Objects.AssignmentStatus newAssignmentStatus)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.AssignmentStatus newContextAssignmentStatus = Mapper.MapAssignmentStatus(newAssignmentStatus);
+                await santaContext.AssignmentStatus.AddAsync(newContextAssignmentStatus);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task<List<Logic.Objects.AssignmentStatus>> GetAllAssignmentStatuses()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = (await santaContext.AssignmentStatus.ToListAsync()).Select(Mapper.MapAssignmentStatus).ToList();
+
+                return listLogicAssigmentStatus;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task<Logic.Objects.AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Logic.Objects.AssignmentStatus logicAssignmentStatus = Mapper.MapAssignmentStatus(await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == assignmentStatusID));
+
+                return logicAssignmentStatus;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //var assignments = (await santaContext.ClientRelationXref.Select(crxr => crxr.AssignmentStatusId == assignmentStatusID).ToListAsync()).Select(Mapper.MapRelationRecipientXref)
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task UpdateAssignmentStatus(Logic.Objects.AssignmentStatus targetAssignmentStatus)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Data.Entities.AssignmentStatus contextAssignmentStatus = await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == targetAssignmentStatus.assignmentStatusID);
+
+                contextAssignmentStatus = new Entities.AssignmentStatus()
+                {
+                    AssignmentStatusId = contextAssignmentStatus.AssignmentStatusId,
+                    AssignmentStatusName = targetAssignmentStatus.assignmentStatusName,
+                    AssignmentStatusDescription = targetAssignmentStatus.assignmentStatusDescription
+                };
+
+                santaContext.AssignmentStatus.Update(contextAssignmentStatus);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         public async Task DeleteAssignmentStatusByID(Guid assignmentStatusID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Entities.AssignmentStatus contextAssignmentStatus = await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == assignmentStatusID);
+
+                santaContext.Remove(contextAssignmentStatus);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
         }
 
         #endregion
