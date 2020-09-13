@@ -1,11 +1,12 @@
 import { ModuleWithComponentFactories } from '@angular/core';
 import { EventType } from './eventType';
-import { Client } from './client';
+import { AssignmentStatus, Client } from './client';
 
 //Message History class
 export class MessageHistory {
     relationXrefID: string;
     eventType: EventType = new EventType();
+    assignmentStatus: AssignmentStatus;
 
     // Client event sender... (Relationship dependent)
     assignmentSenderClient: ClientMeta = new ClientMeta();
