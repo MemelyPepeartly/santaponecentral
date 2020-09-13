@@ -2,13 +2,13 @@
 
     <!-- Sender Column -->
     <ng-container matColumnDef="sender">
-      <th mat-header-cell *matHeaderCellDef> Sender </th>
+      <th mat-header-cell class="header" *matHeaderCellDef> Sender </th>
       <td mat-cell *matCellDef="let history">
         <div class="senderContainer">
           <div class="senderInfoDiv">
-            <button mat-raised-button class="reactive" *ngIf="!onProfile && history.assignmentRecieverClient.clientID != null && history.assignmentSenderClient.clientID != null"
+            <button mat-raised-button class="reactive senderAssignmentButton" *ngIf="!onProfile && history.assignmentRecieverClient.clientID != null && history.assignmentSenderClient.clientID != null"
               (click)="emitSelectedRecipientInformation(history.assignmentSenderClient, history.eventType)">{{ history.assignmentSenderClient.clientNickname }}</button>
-              <button mat-raised-button class="reactive" *ngIf="!onProfile && history.relationXrefID == null"
+              <button mat-raised-button class="reactive senderAssignmentButton" *ngIf="!onProfile && history.relationXrefID == null"
               (click)="emitSelectedRecipientInformation(history.conversationClient, null)">{{ history.conversationClient.clientNickname }}</button>
             <span *ngIf="onProfile">{{history.assignmentSenderClient.clientNickname}}</span>
           </div>
@@ -17,34 +17,43 @@
       </td>
     </ng-container>
 
-    <!-- Recipient Column -->
-    <ng-container matColumnDef="recipient">
-      <th mat-header-cell *matHeaderCellDef> Recipient </th>
+    <!-- Assignment Column -->
+    <ng-container matColumnDef="assignment">
+      <th mat-header-cell class="header" *matHeaderCellDef> Assignment </th>
       <td mat-cell *matCellDef="let history">
-        <span *ngIf="history.assignmentRecieverClient.clientNickname == undefined || history.assignmentRecieverClient.clientNickname == ''">----------------------</span>
-        <button class="reactive" *ngIf="history.assignmentRecieverClient.clientNickname != undefined && history.assignmentRecieverClient.clientNickname != ''"
+        <span class="reactive" *ngIf="history.assignmentRecieverClient.clientNickname == undefined || history.assignmentRecieverClient.clientNickname == ''">------------</span>
+        <button class="reactive senderAssignmentButton" *ngIf="history.assignmentRecieverClient.clientNickname != undefined && history.assignmentRecieverClient.clientNickname != ''"
           (click)="emitSelectedRecipientInformation(history.assignmentRecieverClient, history.eventType)" mat-raised-button>{{ history.assignmentRecieverClient.clientNickname }}</button>
       </td>
     </ng-container>
 
     <!-- Event Column -->
     <ng-container matColumnDef="event">
-      <th mat-header-cell *matHeaderCellDef> Event </th>
+      <th mat-header-cell class="header" *matHeaderCellDef> Event </th>
       <td mat-cell *matCellDef="let history">
-        <span class="reactive chatDescription" *ngIf="history.eventType.eventDescription != null">{{history.eventType.eventDescription}}</span>
-        <span class="reactive chatDescription" *ngIf="history.eventType.eventDescription == null">General Correspondence</span> </td>
+        <span class="chatDescription" *ngIf="history.eventType.eventDescription != null">{{history.eventType.eventDescription}}</span>
+        <span class="chatDescription" *ngIf="history.eventType.eventDescription == null">General</span> </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell class="header" *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let history">
+        <span class="reactive" *ngIf="history.relationXrefID">{{ history.assignmentStatus.assignmentStatusName }}</span>
+        <span class="reactive" *ngIf="!history.relationXrefID">------------</span>
+      </td>
     </ng-container>
 
     <!-- Contact Column -->
     <ng-container matColumnDef="contact">
-      <th mat-header-cell *matHeaderCellDef> Admin Contact History </th>
+      <th mat-header-cell class="header" *matHeaderCellDef> Correspondence History </th>
       <td mat-cell *matCellDef="let history">
         <!-- Disabled if disabled overall, is an admin and on profile, if the viewerClient is the same as the conversation client (implying it is the same person), or the conversation client does not have an account-->
         <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount"
           (click)="emitSelectedHistory(history);"
           [disabled]="disabled || (isAdmin && onProfile) || viewerClient.clientID == history.conversationClient.clientID"
           [matBadge]="!isAdmin ? history.unreadCount : history.adminUnreadCount"
-          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">Chat History</button>
+          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">Correspondence</button>
         <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
       </td>
     </ng-container>
