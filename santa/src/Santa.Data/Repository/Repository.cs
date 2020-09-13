@@ -351,6 +351,28 @@ namespace Santa.Data.Repository
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
                     .FirstOrDefaultAsync(c => c.Email == email));
+
+                List<Response> responsesToRemove = new List<Response>();
+                // For each recipient in the profile
+                foreach (ProfileRecipient recipient in logicProfile.recipients)
+                {
+                    // And for each response that recipient gave
+                    foreach(Response response in recipient.responses)
+                    {
+                        // If the recipients event does not match the responses event
+                        if(recipient.recipientEvent.eventTypeID != response.responseEvent.eventTypeID)
+                        {
+                            // Add it to the list of responses to remove from thsi assignment
+                            responsesToRemove.Add(response);
+                        }
+                    }
+                    // Then once that is done, remove all the responses from that recipient that were gathered, and reset the list for any others
+                    foreach(Response response in responsesToRemove)
+                    {
+                        recipient.responses.Remove(response);
+                    }
+                    responsesToRemove.Clear();
+                }
                 
                 return logicProfile;
             }
