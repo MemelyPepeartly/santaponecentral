@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SantaApiGetService } from './santaApiService.service';
 import { MapService } from './mapService.service';
-import { Client } from 'src/classes/client';
+import { AssignmentStatus, Client } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
@@ -61,6 +61,12 @@ export class GathererService {
     return this._gatheringAllMessages.asObservable();
   }
 
+  private _gatheringAllAssignmentsStatuses: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllAssignmentsStatuses()
+  {
+    return this._gatheringAllAssignmentsStatuses.asObservable();
+  }
+
   /* BEHAVIOR SUBJECTS FOR DATA */
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
   private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([])
@@ -69,6 +75,8 @@ export class GathererService {
   private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([])
   private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([])
   private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([])
+  private _allAssignmentStatuses: BehaviorSubject<Array<AssignmentStatus>> = new BehaviorSubject([])
+
 
   get allClients()
   {
@@ -123,7 +131,7 @@ export class GathererService {
   {
     this._allStatuses.next(statusArray);
   }
-  
+
   get allMessages()
   {
     return this._allMessages.asObservable();
@@ -132,7 +140,16 @@ export class GathererService {
   {
     this._allMessages.next(messageArray);
   }
-  
+
+  get allAssignmentStatuses()
+  {
+    return this._allAssignmentStatuses.asObservable();
+  }
+  private updateAllAssignmentStatuses(assignmentStatusArray: Array<AssignmentStatus>)
+  {
+    this._allAssignmentStatuses.next(assignmentStatusArray);
+  }
+
   /* GATHERING METHODS */
   public async gatherAllClients()
   {
@@ -142,7 +159,7 @@ export class GathererService {
     let clientList: Array<Client> = []
 
     var res = await this.SantaApiGet.getAllClients().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -159,7 +176,7 @@ export class GathererService {
     let tagList: Array<Tag> = []
 
     var res = await this.SantaApiGet.getAllTags().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -176,7 +193,7 @@ export class GathererService {
     let surveyList: Array<Survey> = []
 
     var res = await this.SantaApiGet.getAllSurveys().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -193,7 +210,7 @@ export class GathererService {
     let questionList: Array<Question> = []
 
     var res = await this.SantaApiGet.getAllSurveyQuestions().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -210,7 +227,7 @@ export class GathererService {
     let eventList: Array<EventType> = []
 
     var res = await this.SantaApiGet.getAllEvents().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -227,7 +244,7 @@ export class GathererService {
     let statusList: Array<Status> = []
 
     var res = await this.SantaApiGet.getAllStatuses().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -244,7 +261,7 @@ export class GathererService {
     let messageList: Array<Message> = []
 
     var res = await this.SantaApiGet.getAllMessages().toPromise().catch(err => {
-      console.log(err); 
+      console.log(err);
     });
 
     for(let i = 0; i < res.length; i++)
@@ -254,7 +271,24 @@ export class GathererService {
     this.updateAllMessages(messageList);
     this._gatheringAllMessages.next(false);
   }
-  
+  public async gatherAllAssignmentStatuses()
+  {
+    this._gatheringAllAssignmentsStatuses.next(true);
+    this.updateAllAssignmentStatuses([])
+    let assignmentStatusList: Array<AssignmentStatus> = []
+
+    var res = await this.SantaApiGet.getAllAssignmentStatuses().toPromise().catch(err => {
+      console.log(err);
+    });
+
+    for(let i = 0; i < res.length; i++)
+    {
+      assignmentStatusList.push(this.ApiMapper.mapAssignmentStatus(res[i]));
+    }
+    this.updateAllAssignmentStatuses(assignmentStatusList);
+    this._gatheringAllAssignmentsStatuses.next(false);
+  }
+
   // Utility methods
   public async allGather()
   {
@@ -264,6 +298,7 @@ export class GathererService {
     await this.gatherAllSurveys();
     await this.gatherAllTags();
     await this.gatherAllStatuses();
+    await this.gatherAllAssignmentStatuses();
     //await this.gatherAllMessages();
   }
   public clearAll()
@@ -274,6 +309,7 @@ export class GathererService {
     this.updateAllSurveys([]);
     this.updateAllTags([]);
     this.updateAllStatuses([]);
+    this.updateAllAssignmentStatuses([]);
     //this.updateAllMessages([]);
   }
 }
