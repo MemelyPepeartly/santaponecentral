@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
-import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
+import { AssignmentStatus, Client, ClientSenderRecipientRelationship } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
@@ -461,16 +461,19 @@ export class SelectedAnonComponent implements OnInit {
 
     this.recipientsAreLoaded=true;
   }
+  // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component
   public mapAllowedClientRelationship(client: Client, eventID: string)
   {
-    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component
-    let mappedRelationship = new ClientSenderRecipientRelationship;
-
-    mappedRelationship.clientID = client.clientID;
-    mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = eventID;
-    mappedRelationship.removable
+    let mappedRelationship: ClientSenderRecipientRelationship =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      clientNickname: client.clientNickname,
+      clientEventTypeID: eventID,
+      assignmentStatus: new AssignmentStatus(),
+      removable: undefined,
+      completed: undefined
+    };
 
     return mappedRelationship;
   }
@@ -519,11 +522,12 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.markingAsComplete = true;
 
-    let response = new RecipientCompletionResponse();
-
-    response.completed = true;
-    response.eventTypeID = anon.clientEventTypeID;
-    response.recipientID = anon.clientID;
+    let response: RecipientCompletionResponse =
+    {
+      completed: true,
+      eventTypeID: anon.clientEventTypeID,
+      recipientID: anon.clientID
+    };
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
 
