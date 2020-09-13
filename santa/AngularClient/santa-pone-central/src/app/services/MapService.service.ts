@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Recipient, Sender, ClientSenderRecipientRelationship } from '../../classes/client';
+import { Client, Recipient, Sender, ClientSenderRecipientRelationship, AssignmentStatus } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -149,7 +149,7 @@ export class MapService {
 
     return mappedMessageHistory;
   }
-  // Maps the meta info for messages
+
   mapMeta(meta) : ClientMeta
   {
     let mappedMeta: ClientMeta =
@@ -170,6 +170,7 @@ export class MapService {
       clientName: client.clientName,
       clientNickname: client.clientNickname,
       clientEventTypeID: recipientClient.recipientEventTypeID,
+      assignmentStatus: recipientClient.assignmentStatus,
       removable: recipientClient.removable,
       completed: recipientClient.completed
     };
@@ -185,6 +186,7 @@ export class MapService {
       clientName: client.clientName,
       clientNickname: client.clientNickname,
       clientEventTypeID: senderClient.senderEventTypeID,
+      assignmentStatus: senderClient.assignmentStatus,
       removable: senderClient.removable,
       completed: senderClient.completed
     };
@@ -198,6 +200,7 @@ export class MapService {
     {
       recipientClientID: recipient.recipientClientID,
       recipientEventTypeID: recipient.recipientEventTypeID,
+      assignmentStatus: this.mapAssignmentStatus(recipient.assignmentStatus),
       removable: recipient.removable,
       completed: recipient.completed
     };
@@ -210,11 +213,23 @@ export class MapService {
     {
       senderClientID: sender.senderClientID,
       senderEventTypeID: sender.senderEventTypeID,
+      assignmentStatus: this.mapAssignmentStatus(sender.assignmentStatus),
       removable: sender.removable,
       completed: sender.completed
     };
 
     return mappedSender
+  }
+  mapAssignmentStatus(assignmentStatus) : AssignmentStatus
+  {
+    let mappedAssignmentStatus: AssignmentStatus =
+    {
+      assignmentStatusID: assignmentStatus.assignmentStatusID,
+      assignmentStatusName: assignmentStatus.assignmentStatusName,
+      assignmentStatusDescription: assignmentStatus.assignmentStatusDescription
+    };
+
+    return mappedAssignmentStatus;
   }
   mapStatus(status) : Status
   {
@@ -321,7 +336,6 @@ export class MapService {
 })
 export class MapResponse
 {
-  // Memelyhere, had to add an argument. Add that value to other usages of service
   mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : MessageApiResponse
   {
     let messageResponse: MessageApiResponse =
