@@ -40,3 +40,5 @@
 --UPDATE app.Client SET hasAccount=1
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
+
+--TRUNCATE TABLE app.AssignmentStatus

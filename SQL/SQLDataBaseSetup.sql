@@ -28,6 +28,12 @@ CREATE TABLE app.EventType
     isActive BIT NOT NULL
 
 );
+CREATE TABLE app.AssignmentStatus
+(
+    assignmentStatusID UNIQUEIDENTIFIER PRIMARY KEY,
+    assignmentStatusName NVARCHAR(100) UNIQUE NOT NULL,
+    assignmentStatusDescription NVARCHAR(200) UNIQUE NOT NULL
+);
 CREATE TABLE app.ClientRelationXref
 (
     clientRelationXrefID UNIQUEIDENTIFIER PRIMARY KEY,
@@ -37,12 +43,6 @@ CREATE TABLE app.ClientRelationXref
     assignmentStatusID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.AssignmentStatus(assignmentStatusID),
     completed BIT NOT NULL,
     CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
-);
-CREATE TABLE app.AssignmentStatus
-(
-    assignmentStatusID UNIQUEIDENTIFIER PRIMARY KEY,
-    assignmentStatusName NVARCHAR(100) UNIQUE NOT NULL,
-    assignmentStatusDescription NVARCHAR(200) UNIQUE NOT NULL
 );
 CREATE TABLE app.Survey
 (
