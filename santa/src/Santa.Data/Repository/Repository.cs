@@ -374,6 +374,7 @@ namespace Santa.Data.Repository
                     responsesToRemove.Clear();
                 }
                 
+                
                 return logicProfile;
             }
             catch (Exception e)
@@ -555,7 +556,12 @@ namespace Santa.Data.Repository
             try
             {
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<Entities.Client> listContextClient = await santaContext.Client.Include(c => c.ClientStatus).Include(x => x.ClientRelationXrefRecipientClient).ToListAsync();
+                List<Entities.Client> listContextClient = await santaContext.Client
+                    .Include(c => c.ClientStatus)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.AssignmentStatus)
+                    .ToListAsync();
 
                 foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
                 {
@@ -616,6 +622,7 @@ namespace Santa.Data.Repository
                         .ThenInclude(e => e.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
+                    .Include(r => r.AssignmentStatus)
                     .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageReceiverClient)
                     .Include(r => r.ChatMessage)
@@ -647,6 +654,8 @@ namespace Santa.Data.Repository
                 logicHistory.assignmentSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
                 logicHistory.conversationClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
 
+                logicHistory.assignmentStatus = Mapper.MapAssignmentStatus(contextRelationship.AssignmentStatus);
+
 
                 return logicHistory;
             }
@@ -672,6 +681,7 @@ namespace Santa.Data.Repository
                 logicHistory.eventType = new Event();
                 logicHistory.assignmentRecieverClient = new ClientMeta();
                 logicHistory.assignmentSenderClient = new ClientMeta();
+                logicHistory.assignmentStatus = new Logic.Objects.AssignmentStatus();
                 logicHistory.conversationClient = Mapper.MapClientMeta(conversationClient);
 
                 logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);

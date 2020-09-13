@@ -15,6 +15,10 @@ namespace Santa.Logic.Objects
         /// </summary>
         public ClientMeta conversationClient { get; set; }
         /// <summary>
+        /// Status of the assignment this history relates to
+        /// </summary>
+        public AssignmentStatus assignmentStatus { get; set; }
+        /// <summary>
         /// Meta of the client that the conversation is about. This is the client that was assigned if the object has a relationXrefID
         /// </summary>
         public ClientMeta assignmentRecieverClient { get; set; }
