@@ -134,6 +134,7 @@ export class MapService {
       eventType: this.mapEvent(messageHistory.eventType),
       assignmentSenderClient: this.mapMeta(messageHistory.assignmentSenderClient),
       assignmentRecieverClient: this.mapMeta(messageHistory.assignmentRecieverClient),
+      assignmentStatus: this.mapAssignmentStatus(messageHistory.assignmentStatus),
       conversationClient: this.mapMeta(messageHistory.conversationClient),
       subjectClient: this.mapMeta(messageHistory.subjectClient),
       subjectMessages: [],
