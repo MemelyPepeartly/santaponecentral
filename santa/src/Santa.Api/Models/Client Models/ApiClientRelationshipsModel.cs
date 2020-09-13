@@ -12,5 +12,6 @@ namespace Santa.Api.Models.Client_Models
     {
         public List<Guid> assignments { get; set; }
         public Guid eventTypeID { get; set; }
+        public Guid assignmentStatusID { get; set; }
     }
 }
