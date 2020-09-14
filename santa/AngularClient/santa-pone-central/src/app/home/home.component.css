@@ -1,6 +1,5 @@
 .container
 {
-  padding: 10px;
   display: block;
   text-align: center;
   min-width: 600px;
@@ -11,6 +10,7 @@
   background-color: white;
   padding: 16px;
   border-radius: 8px;
+  margin-top: 15px;
 }
 .small-box, .large-box {
   display: block;
