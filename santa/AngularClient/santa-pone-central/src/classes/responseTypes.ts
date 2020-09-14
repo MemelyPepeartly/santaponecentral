@@ -156,3 +156,6 @@ export class NewAssignmentStatusResponse {
   assignmentStatusName: string;
   assignmentStatusDescription: string;
 }
+export class EditProfileAssignmentStatusResponse {
+  assignmentStatusID: string;
+}
