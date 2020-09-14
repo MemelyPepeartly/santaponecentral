@@ -30,7 +30,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse} from '../../classes/responseTypes';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse} from '../../classes/responseTypes';
 import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
@@ -258,6 +258,9 @@ export class SantaApiPutService {
   }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
+  }
+  putProfileAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Profile/' + clientID + 'Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
