@@ -54,7 +54,14 @@ namespace Santa.Logic.Interfaces
         /// <param name="eventTypeID"></param>
         /// <param name="targetCompletedStatus"></param>
         /// <returns></returns>
-        Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
+        Task UpdateClientAssignmentCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
+        /// <summary>
+        /// Updates an assignment's progress to a chosen assignment status ID
+        /// </summary>
+        /// <param name="assignmentID"></param>
+        /// <param name="newAssignmentStatusID"></param>
+        /// <returns></returns>
+        Task UpdateAssignmentProgressStatusByID(Guid assignmentID, Guid newAssignmentStatusID);
         /// <summary>
         /// Deletes a client by their ID along with any data about them. This includes chat histories, relationships, and answers
         /// </summary>
