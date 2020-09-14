@@ -1,0 +1,21 @@
+mat-card-header
+{
+  text-align: left;
+}
+.containingCard
+{
+  width: 100%;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
+.subtitleWarning
+{
+  color: #d07973;
+}
+@media (max-width:600px)
+{
+}
