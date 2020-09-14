@@ -782,7 +782,7 @@ namespace Santa.Api.Controllers
                 }
                 else
                 {
-                    await repository.UpdateClientRelationCompletedStatusByID(clientID, recipientCompletionModel.recipientID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
+                    await repository.UpdateClientAssignmentCompletedStatusByID(clientID, recipientCompletionModel.recipientID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
                     await repository.SaveAsync();
                     return (await repository.GetClientByIDAsync(clientID));
                 }

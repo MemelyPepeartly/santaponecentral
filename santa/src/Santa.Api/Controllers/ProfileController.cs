@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using Santa.Logic.Objects;
 using System.Security.Claims;
 using Santa.Api.Models;
+using Santa.Api.Models.Profile_Models;
 
 namespace Santa.Api.Controllers
 {
@@ -122,9 +123,9 @@ namespace Santa.Api.Controllers
             }
 
         }
-        [HttpPut("{clientID}/AssignmentStatus")]
+        [HttpPut("{clientID}/Assignment/{assignmentXrefID}/AssignmentStatus")]
         [Authorize(Policy = "update:profile")]
-        public async Task<ActionResult<Profile>> UpdateProfileAssignmentStatus(Guid clientID)
+        public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
         {
             try
             {
@@ -132,11 +133,12 @@ namespace Santa.Api.Controllers
                 if (IsAuthorized(User, logicClient))
                 {
                     // Logic needed here for updating assignment status
+                    await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
+                    await repository.SaveAsync();
 
-
-                    // Update profile and send back
+                    // Update profile and send back the updated recipient
                     Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
-                    return Ok(logicProfile);
+                    return Ok(logicProfile.recipients.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
                 }
                 else
                 {
