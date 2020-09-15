@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Santa.Logic.Objects
 {
-    public class Sender
+    public class RelationshipMeta
     {
-        public Guid senderClientID { get; set; }
-        public Guid senderEventTypeID { get; set; }
+        public ClientMeta relationshipClient { get; set; }
+        public Guid relationshipEventTypeID { get; set; }
         public Guid clientRelationXrefID { get; set; }
         public AssignmentStatus assignmentStatus { get; set; }
         public bool completed { get; set; }
