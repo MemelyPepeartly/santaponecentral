@@ -49,29 +49,9 @@ app-small-loading-spin {
 .changeFormField {
   display: block;
 }
-.expansionPanelButton {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
-}
-.expansionPanelButtonContainer {
-  width: 100%;
-  text-align: center;
-}
 .infoContainer {
   width: 100%;
   text-align: center;
-}
-.relationDiv {
-  clear: both;
-}
-.relationshipIcon {
-  width: 60%;
-  position: absolute;
-  top: -9px;
-  right: 5%;
-  z-index: 0;
-  opacity: 0.5;
 }
 .cardExchangeIcon {
   content: url(../../../assets/images/cardAndClawWithoutSparkle.png);
