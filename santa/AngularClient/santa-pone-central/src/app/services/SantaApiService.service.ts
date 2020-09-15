@@ -31,7 +31,6 @@ import { ClientResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
   EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse} from '../../classes/responseTypes';
-import { ClientSenderRecipientRelationship } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 
