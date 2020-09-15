@@ -88,7 +88,7 @@ namespace Santa.Api.Controllers
             {
                 Client logicClient = await repository.GetClientByIDAsync(clientID);
                 // Checks to make sure the token's email is only getting the email for its own profile
-                if (IsAuthorized(User, logicClient))
+                if (IsAuthorized(logicClient))
                 {
                     logicClient.address = new Address()
                     {
@@ -130,7 +130,7 @@ namespace Santa.Api.Controllers
             try
             {
                 Client logicClient = await repository.GetClientByIDAsync(clientID);
-                if (IsAuthorized(User, logicClient))
+                if (IsAuthorized(logicClient))
                 {
                     // Logic needed here for updating assignment status
                     await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
@@ -150,7 +150,7 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
-        private bool IsAuthorized(ClaimsPrincipal user, Client logicClient)
+        private bool IsAuthorized(Client logicClient)
         {
             // Gets the claims from the token
             string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
