@@ -260,7 +260,7 @@ export class SantaApiPutService {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
   }
   putProfileAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
-    return this.http.put(endpoint + 'Profile/' + clientID + 'Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
