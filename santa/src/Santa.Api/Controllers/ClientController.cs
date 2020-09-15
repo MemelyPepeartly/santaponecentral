@@ -152,8 +152,8 @@ namespace Santa.Api.Controllers
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
                     },
-                    recipients = new List<Recipient>(),
-                    senders = new List<Sender>()
+                    recipients = new List<RelationshipMeta>(),
+                    senders = new List<RelationshipMeta>()
                 };
                 
                 try
@@ -212,8 +212,8 @@ namespace Santa.Api.Controllers
                         postalCode = clientResponseModel.clientPostalCode,
                         country = clientResponseModel.clientCountry
                     },
-                    recipients = new List<Recipient>(),
-                    senders = new List<Sender>()
+                    recipients = new List<RelationshipMeta>(),
+                    senders = new List<RelationshipMeta>()
                 };
 
                 try
@@ -334,7 +334,7 @@ namespace Santa.Api.Controllers
                         foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                         {
                             // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
-                            if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            if (!mailer.recipients.Any<RelationshipMeta>(c => c.relationshipClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
                                 // Add that potential assignment to their list
                                 await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID, defaultNewAssignmentStatus.assignmentStatusID);
