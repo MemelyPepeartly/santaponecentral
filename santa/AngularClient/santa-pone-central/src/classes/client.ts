@@ -3,48 +3,30 @@ import { Status } from './status';
 import { EventType } from './eventType';
 import { Tag } from './tag';
 import { SurveyResponse } from './survey';
+import { ClientMeta } from './message';
 
 export class Client {
-    clientID: string;
-    clientName: string;
-    clientNickname: string;
-    clientStatus = new Status();
-    isAdmin: boolean;
-    hasAccount: boolean;
-    address = new Address;
-    email: string;
-    responses: Array<SurveyResponse> = [];
-    senders: Array<Sender> = [];
-    recipients: Array<Recipient> = [];
-    tags: Array<Tag> = [];
+  clientID: string;
+  clientName: string;
+  clientNickname: string;
+  clientStatus = new Status();
+  isAdmin: boolean;
+  hasAccount: boolean;
+  address = new Address;
+  email: string;
+  responses: Array<SurveyResponse> = [];
+  senders: Array<RelationshipMeta> = [];
+  recipients: Array<RelationshipMeta> = [];
+  tags: Array<Tag> = [];
 }
 // Class used for holding sender and event ID information
-export class Sender {
-    senderClientID: string;
-    senderEventTypeID: string;
-    clientRelationXrefID: string;
-    assignmentStatus: AssignmentStatus;
-    removable: boolean;
-    completed: boolean;
-}
-// Class used for holding recipient and event ID information
-export class Recipient {
-    recipientClientID: string;
-    recipientEventTypeID: string;
-    clientRelationXrefID: string;
-    assignmentStatus: AssignmentStatus;
-    removable: boolean;
-    completed: boolean;
-}
-// Class used for holding smaller amounts of data for clients in the sender/reciever lists for a client. More data can be recieved by using API get methods with the clientID
-export class ClientSenderRecipientRelationship {
-    clientID: string;
-    clientNickname: string;
-    clientName: string;
-    clientEventTypeID: string;
-    assignmentStatus: AssignmentStatus;
-    removable: boolean;
-    completed: boolean;
+export class RelationshipMeta {
+  relationshipClient: ClientMeta;
+  relationshipEventTypeID: string;
+  clientRelationXrefID: string;
+  assignmentStatus: AssignmentStatus;
+  removable: boolean;
+  completed: boolean;
 }
 export class AssignmentStatus {
   assignmentStatusID: string;
