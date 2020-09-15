@@ -85,9 +85,12 @@ export class ProfileService {
 
   // * METHODS * //
   // passed option softUpdate boolean for determining if something is a hard or soft update. Used for telling app is spinners should be used or not
-  public async getProfile(email)
+  public async getProfile(email: string, isSoftUpdate: boolean = false)
   {
-    this._gettingProfile.next(true);
+    if(!isSoftUpdate)
+    {
+      this._gettingProfile.next(true);
+    }
 
     var data = await this.SantaApiGet.getProfile(email).toPromise().catch(err => {console.log(err); this._gettingProfile.next(false);});
     let profile = this.ApiMapper.mapProfile(data);
@@ -97,7 +100,7 @@ export class ProfileService {
   }
   public async getHistories(clientID: string, isSoftUpdate: boolean = false)
   {
-    if(isSoftUpdate != undefined || isSoftUpdate == false)
+    if(!isSoftUpdate)
     {
       this._gettingHistories.next(true);
     }
@@ -115,7 +118,7 @@ export class ProfileService {
   }
   public async gatherGeneralHistory(conversationClientID: string, subjectID: string, isSoftUpdate: boolean = false)
   {
-    if(isSoftUpdate != undefined || isSoftUpdate == false)
+    if(!isSoftUpdate)
     {
       this._gettingGeneralHistory.next(true);
     }
@@ -127,7 +130,7 @@ export class ProfileService {
   }
   public async getSelectedHistory(conversationClientID: string, subjectID: string, relationXrefID: string, isSoftUpdate: boolean = false)
   {
-    if(isSoftUpdate == false)
+    if(!isSoftUpdate)
     {
       this._gettingSelectedHistory.next(true);
     }
