@@ -88,8 +88,6 @@ export class ClientTagRelationshipsResponse {
 }
 export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
-    clientNickname: string;
-    clientName: string;
     clientEventTypeID: string;
 }
 // Response model for modifying the completion status of a sender/reciever relationship
