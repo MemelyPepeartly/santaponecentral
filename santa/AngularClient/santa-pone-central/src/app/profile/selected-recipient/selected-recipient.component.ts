@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ProfileRecipient } from 'src/classes/profile';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { ProfileService } from 'src/app/services/Profile.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
+import { AssignmentStatus } from 'src/classes/client';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -17,6 +18,11 @@ export class SelectedRecipientComponent implements OnInit {
 
   @Input() selectedRecipient: ProfileRecipient;
   @Input() surveys: Array<Survey>;
+  @Input() profile: Profile;
+
+  @Output() actionTaken: EventEmitter<boolean> = new EventEmitter();
+
+  public clickAwayLocked: boolean = false;
 
   ngOnInit(): void {
   }
@@ -32,5 +38,14 @@ export class SelectedRecipientComponent implements OnInit {
     {
       return false;
     }
+  }
+  public setNewStatus(newAssignmentStatusEvent: AssignmentStatus)
+  {
+    this.selectedRecipient.assignmentStatus = newAssignmentStatusEvent
+    this.actionTaken.emit(true);
+  }
+  public setClickawayLock(event)
+  {
+    this.clickAwayLocked = event;
   }
 }
