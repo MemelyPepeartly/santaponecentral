@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santaApiService.service';
@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapService.service';
 import { ProfileService } from 'src/app/services/Profile.service';
 import { Survey } from 'src/classes/survey';
+import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
 
 @Component({
   selector: 'app-control-panel',
@@ -31,6 +32,10 @@ export class ControlPanelComponent implements OnInit {
   @Input() surveys: Array<Survey>;
 
   @Output() chatClickedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
+  @Output() refreshClientEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  @ViewChild(SelectedRecipientComponent) selectedRecipientComponent: SelectedRecipientComponent;
+
 
   public selectedRecipient: ProfileRecipient;
 
@@ -38,6 +43,7 @@ export class ControlPanelComponent implements OnInit {
   public initializing: boolean;
 
   public showRecipientData: boolean = false;
+  public actionTaken: boolean = false;
 
 
   ngOnInit(): void {
@@ -55,8 +61,16 @@ export class ControlPanelComponent implements OnInit {
   }
   public hideRecipientCard()
   {
-    this.selectedRecipient = undefined;
-    this.showRecipientData = false;
+    if(!this.selectedRecipientComponent.clickAwayLocked)
+    {
+      this.selectedRecipient = undefined;
+      this.showRecipientData = false;
+    }
+
+    if(this.actionTaken)
+    {
+      this.refreshClientEvent.emit(true);
+    }
   }
   public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)
   {
@@ -68,5 +82,9 @@ export class ControlPanelComponent implements OnInit {
   public async historySelected(history: MessageHistory)
   {
     this.chatClickedEvent.emit(history);
+  }
+  public setActionTaken(event: boolean)
+  {
+    this.actionTaken = event;
   }
 }
