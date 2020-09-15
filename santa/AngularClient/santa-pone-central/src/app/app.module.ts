@@ -55,6 +55,7 @@ import { MissionBoardTableComponent } from './shared/mission-board-table/mission
 import { ManualAddComponent } from './headquarters/manual-add/manual-add.component';
 import { ResponseListComponent } from './shared/response-list/response-list.component';
 import { AssignmentStatusControllerComponent } from './shared/assignment-status-controller/assignment-status-controller.component';
+import { AssignmentsPanelComponent } from './headquarters/selected-anon/assignments-panel/assignments-panel.component';
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import { AssignmentStatusControllerComponent } from './shared/assignment-status-
       MissionBoardTableComponent,
       ManualAddComponent,
       ResponseListComponent,
-      AssignmentStatusControllerComponent
+      AssignmentStatusControllerComponent,
+      AssignmentsPanelComponent
    ],
    entryComponents: [
       LoginComponent
