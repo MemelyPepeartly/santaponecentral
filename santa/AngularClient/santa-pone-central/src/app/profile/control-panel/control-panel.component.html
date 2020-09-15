@@ -26,7 +26,7 @@
       </div>
       <div *ngIf="histories.length != 0">
         <app-chat-histories
-        [disabled]="gettingAllHistories"
+        [disabled]="gettingAllHistories || gettingProfile"
         [onProfile]="true"
         [histories]="histories"
         (chatSelectedEvent)="historySelected($event)"
