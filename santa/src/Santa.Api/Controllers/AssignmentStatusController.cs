@@ -30,8 +30,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        //[Authorize(Policy = "read:profile")]
-        [AllowAnonymous]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentStatuses()
         {
             try
@@ -52,8 +51,7 @@ namespace Santa.Api.Controllers
         /// <param name="assignmentStatusID"></param>
         /// <returns></returns>
         [HttpGet("{assignmentStatusID}")]
-        //[Authorize(Policy = "read:profile")]
-        [AllowAnonymous]
+        [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> GetAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
@@ -73,8 +71,7 @@ namespace Santa.Api.Controllers
         /// <param name="assignmentStatusID"></param>
         /// <returns></returns>
         [HttpGet("GetAll/{assignmentStatusID}")]
-        //[Authorize(Policy = "read:clients")]
-        [AllowAnonymous]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentsWithStatusByID(Guid assignmentStatusID)
         {
             try
@@ -95,8 +92,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        //[Authorize(Policy = "create:assignmentStatuses")]
-        [AllowAnonymous]
+        [Authorize(Policy = "create:assignmentStatuses")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PostNewAssignmentStatus([FromBody] NewAssignmentStatusModel model)
         {
             try
@@ -127,8 +123,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{assignmentStatusID}")]
-        //[Authorize(Policy = "update:assignmentStatuses")]
-        [AllowAnonymous]
+        [Authorize(Policy = "update:assignmentStatuses")]
         public async Task<ActionResult<Logic.Objects.AssignmentStatus>> PutAssignmentStatus(Guid assignmentStatusID, [FromBody] UpdateAssignmentStatusModel model)
         {
             try
@@ -158,8 +153,7 @@ namespace Santa.Api.Controllers
         /// <param name="assignmentStatusID"></param>
         /// <returns></returns>
         [HttpDelete("{assignmentStatusID}")]
-        //[Authorize(Policy = "delete:assignmentStatuses")]
-        [AllowAnonymous]
+        [Authorize(Policy = "delete:assignmentStatuses")]
         public async Task<ActionResult> DeleteAssignmentStatusByID(Guid assignmentStatusID)
         {
             try
