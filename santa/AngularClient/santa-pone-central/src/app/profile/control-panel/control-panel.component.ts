@@ -69,7 +69,8 @@ export class ControlPanelComponent implements OnInit {
 
     if(this.actionTaken)
     {
-      this.refreshClientEvent.emit(true);
+      this.refreshClientEvent.emit(this.actionTaken);
+      this.actionTaken = false;
     }
   }
   public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)

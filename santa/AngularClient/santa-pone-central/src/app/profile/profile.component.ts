@@ -186,6 +186,6 @@ export class ProfileComponent implements OnInit {
   public async manualRefreshProfile(isSoftUpdate: boolean = false)
   {
     await this.profileService.getProfile(this.profile.email, isSoftUpdate)
-    await this.profileService.getHistories(this.profile.clientID, isSoftUpdate);
+    await this.profileService.getHistories(this.profile.clientID, false);
   }
 }
