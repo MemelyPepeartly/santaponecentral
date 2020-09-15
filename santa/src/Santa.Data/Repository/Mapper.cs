@@ -65,43 +65,30 @@ namespace Santa.Data.Repository
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
-                recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationSenderXref).ToList(),
-                senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationRecipientXref).ToList(),
+                recipients = contextClient.ClientRelationXrefSenderClient.Select(Mapper.MapRelationshipMeta).ToList(),
+                senders = contextClient.ClientRelationXrefRecipientClient.Select(Mapper.MapRelationshipMeta).ToList(),
                 tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
             };
 
             return logicClient;
         }
         /// <summary>
-        /// Maps a context recipient relationship xref to a sender logic object
+        /// Maps a context relationship to a relationship meta
         /// </summary>
         /// <param name="contextRecipientXref"></param>
         /// <returns></returns>
-        public static Logic.Objects.Sender MapRelationRecipientXref(Data.Entities.ClientRelationXref contextRecipientXref)
+        public static Logic.Objects.RelationshipMeta MapRelationshipMeta(Data.Entities.ClientRelationXref contextXrefRelationship)
         {
-            Logic.Objects.Sender logicSender = new Sender()
+            Logic.Objects.RelationshipMeta logicSender = new RelationshipMeta()
             {
-                senderClientID = contextRecipientXref.SenderClientId,
-                senderEventTypeID = contextRecipientXref.EventTypeId,
-                clientRelationXrefID = contextRecipientXref.ClientRelationXrefId,
-                assignmentStatus = MapAssignmentStatus(contextRecipientXref.AssignmentStatus),
-                completed = contextRecipientXref.Completed,
-                removable = contextRecipientXref.ChatMessage.Count > 0 ? false : true
+                relationshipClient = Mapper.MapClientMeta(contextXrefRelationship.SenderClient),
+                relationshipEventTypeID = contextXrefRelationship.EventTypeId,
+                clientRelationXrefID = contextXrefRelationship.ClientRelationXrefId,
+                assignmentStatus = MapAssignmentStatus(contextXrefRelationship.AssignmentStatus),
+                completed = contextXrefRelationship.Completed,
+                removable = contextXrefRelationship.ChatMessage.Count > 0 ? false : true
             };
             return logicSender;
-        }
-        public static Logic.Objects.Recipient MapRelationSenderXref(Data.Entities.ClientRelationXref contextSenderXref)
-        {
-            Logic.Objects.Recipient logicRecipient = new Recipient()
-            {
-                recipientClientID = contextSenderXref.RecipientClientId,
-                recipientEventTypeID = contextSenderXref.EventTypeId,
-                clientRelationXrefID = contextSenderXref.ClientRelationXrefId,
-                assignmentStatus = MapAssignmentStatus(contextSenderXref.AssignmentStatus),
-                completed = contextSenderXref.Completed,
-                removable = contextSenderXref.ChatMessage.Count > 0 ? false : true
-            };
-            return logicRecipient;
         }
         public static Logic.Objects.ProfileRecipient MapRelationProfileRecipientXref(Data.Entities.ClientRelationXref contextSenderXref, Data.Entities.Client contextRecipientClientData)
         {
