@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Recipient, Sender, ClientSenderRecipientRelationship, AssignmentStatus } from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -40,11 +40,11 @@ export class MapService {
     });
 
     client.recipients.forEach(recipient => {
-      mappedClient.recipients.push(this.mapRecipient(recipient))
+      mappedClient.recipients.push(this.mapRelationshipMeta(recipient))
     });
 
     client.senders.forEach(sender => {
-      mappedClient.senders.push(this.mapSender(sender))
+      mappedClient.senders.push(this.mapRelationshipMeta(sender))
     });
 
     client.tags.forEach(tag => {
@@ -164,65 +164,19 @@ export class MapService {
 
     return mappedMeta;
   }
-  mapClientRecipientRelationship(client: Client, recipientClient: Recipient) : ClientSenderRecipientRelationship
+  mapRelationshipMeta(relationship) : RelationshipMeta
   {
-    let mappedRelationship: ClientSenderRecipientRelationship =
+    let mappedRelationshipMeta: RelationshipMeta =
     {
-      clientID: client.clientID,
-      clientName: client.clientName,
-      clientNickname: client.clientNickname,
-      clientEventTypeID: recipientClient.recipientEventTypeID,
-      assignmentStatus: recipientClient.assignmentStatus,
-      removable: recipientClient.removable,
-      completed: recipientClient.completed
+      relationshipClient: this.mapMeta(relationship.relationshipClient),
+      relationshipEventTypeID: relationship.relationshipEventTypeID,
+      clientRelationXrefID: relationship.clientRelationXrefID,
+      assignmentStatus: this.mapAssignmentStatus(relationship.assignmentStatus),
+      removable: relationship.removable,
+      completed: relationship.completed
     };
 
-    return mappedRelationship;
-
-  }
-  mapClientSenderRelationship(client: Client, senderClient: Sender) : ClientSenderRecipientRelationship
-  {
-    let mappedRelationship: ClientSenderRecipientRelationship =
-    {
-      clientID: client.clientID,
-      clientName: client.clientName,
-      clientNickname: client.clientNickname,
-      clientEventTypeID: senderClient.senderEventTypeID,
-      assignmentStatus: senderClient.assignmentStatus,
-      removable: senderClient.removable,
-      completed: senderClient.completed
-    };
-
-    return mappedRelationship;
-
-  }
-  mapRecipient(recipient) : Recipient
-  {
-    let mappedRecipient: Recipient =
-    {
-      recipientClientID: recipient.recipientClientID,
-      recipientEventTypeID: recipient.recipientEventTypeID,
-      clientRelationXrefID: recipient.clientRelationXrefID,
-      assignmentStatus: this.mapAssignmentStatus(recipient.assignmentStatus),
-      removable: recipient.removable,
-      completed: recipient.completed
-    };
-
-    return mappedRecipient
-  }
-  mapSender(sender) : Sender
-  {
-    let mappedSender: Sender =
-    {
-      senderClientID: sender.senderClientID,
-      senderEventTypeID: sender.senderEventTypeID,
-      clientRelationXrefID: sender.clientRelationXrefID,
-      assignmentStatus: this.mapAssignmentStatus(sender.assignmentStatus),
-      removable: sender.removable,
-      completed: sender.completed
-    };
-
-    return mappedSender
+    return mappedRelationshipMeta
   }
   mapAssignmentStatus(assignmentStatus) : AssignmentStatus
   {
