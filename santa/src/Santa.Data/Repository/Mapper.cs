@@ -81,7 +81,7 @@ namespace Santa.Data.Repository
         {
             Logic.Objects.RelationshipMeta logicSender = new RelationshipMeta()
             {
-                relationshipClient = Mapper.MapClientMeta(contextXrefRelationship.SenderClient),
+                relationshipClient = contextXrefRelationship.SenderClient != null ? Mapper.MapClientMeta(contextXrefRelationship.SenderClient) : contextXrefRelationship.RecipientClient != null ? Mapper.MapClientMeta(contextXrefRelationship.RecipientClient) : new ClientMeta(),
                 relationshipEventTypeID = contextXrefRelationship.EventTypeId,
                 clientRelationXrefID = contextXrefRelationship.ClientRelationXrefId,
                 assignmentStatus = MapAssignmentStatus(contextXrefRelationship.AssignmentStatus),
