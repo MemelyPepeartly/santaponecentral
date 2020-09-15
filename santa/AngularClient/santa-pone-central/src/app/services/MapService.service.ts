@@ -202,6 +202,7 @@ export class MapService {
     {
       recipientClientID: recipient.recipientClientID,
       recipientEventTypeID: recipient.recipientEventTypeID,
+      clientRelationXrefID: recipient.clientRelationXrefID,
       assignmentStatus: this.mapAssignmentStatus(recipient.assignmentStatus),
       removable: recipient.removable,
       completed: recipient.completed
@@ -215,6 +216,7 @@ export class MapService {
     {
       senderClientID: sender.senderClientID,
       senderEventTypeID: sender.senderEventTypeID,
+      clientRelationXrefID: sender.clientRelationXrefID,
       assignmentStatus: this.mapAssignmentStatus(sender.assignmentStatus),
       removable: sender.removable,
       completed: sender.completed

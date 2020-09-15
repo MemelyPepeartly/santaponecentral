@@ -22,6 +22,7 @@ export class Client {
 export class Sender {
     senderClientID: string;
     senderEventTypeID: string;
+    clientRelationXrefID: string;
     assignmentStatus: AssignmentStatus;
     removable: boolean;
     completed: boolean;
@@ -30,6 +31,7 @@ export class Sender {
 export class Recipient {
     recipientClientID: string;
     recipientEventTypeID: string;
+    clientRelationXrefID: string;
     assignmentStatus: AssignmentStatus;
     removable: boolean;
     completed: boolean;
