@@ -23,10 +23,21 @@
             <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <h3>{{selectedRecipient.clientNickname}}</h3>
-            <p>{{selectedRecipient.clientName}}</p>
+          <h3>{{selectedRecipient.clientName}}</h3>
+          <p>{{selectedRecipient.clientNickname}}</p>
         </mat-card-content>
     </mat-card>
+
+    <div class="statusContainer">
+      <div class="statusDiv">
+        <app-assignment-status-controller
+          (lockClickawayEvent)="setClickawayLock($event)"
+          (newStatusPutEvent)="setNewStatus($event)"
+          [assignment]="selectedRecipient"
+          [clientID]="profile.clientID">
+        </app-assignment-status-controller>
+      </div>
+    </div>
 
     <mat-toolbar>Assignment Responses</mat-toolbar>
 
