@@ -1,8 +1,70 @@
-<mat-card class="containingCard mat-elevation-z5">
+<mat-card class="containingCard mat-elevation-z3">
   <mat-card-header>
     <mat-card-title>Assignment Status Control</mat-card-title>
     <mat-card-subtitle>Modify the status of this assignment</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content style="text-align: center;">
+  <mat-card-content>
+
+    <ng-container *ngIf="!puttingAssignmentStatus">
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-toolbar class="centeredToolbar">Current Status</mat-toolbar>
+      <mat-card-title class="statusTitle">{{ assignment.assignmentStatus.assignmentStatusName }}</mat-card-title>
+      <mat-card-subtitle>{{ assignment.assignmentStatus.assignmentStatusDescription }}</mat-card-subtitle>
+      <mat-divider [inset]="true"></mat-divider>
+    </ng-container>
+
+    <ng-container *ngIf="puttingAssignmentStatus">
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-toolbar class="centeredToolbar">Setting New Status...</mat-toolbar>
+      <app-loading-spin></app-loading-spin>
+      <mat-divider [inset]="true"></mat-divider>
+    </ng-container>
+
+    <div *ngIf="openChangeForm">
+      <mat-card class="changeFormCard mat-elevation-z3" mat-elevation-z3>
+        <mat-card-content>
+          <mat-selection-list class="questionSelection mat-elevation-z3" [multiple]="false" [disabled]="puttingAssignmentStatus">
+            <mat-list-option *ngFor="let assignmentStatus of allowedAssignmentStatuses" [value]="assignmentStatus"
+              (click)="setSelectedStatus(assignmentStatus)">{{assignmentStatus.assignmentStatusName}}</mat-list-option>
+          </mat-selection-list>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="changeFormCard mat-elevation-z3">
+        <mat-card-content *ngIf="selectedAssignmentStatus.assignmentStatusID != undefined">
+          <mat-divider [inset]="true"></mat-divider>
+          <mat-toolbar class="centeredToolbar">Selected Status</mat-toolbar>
+          <mat-card-title class="statusTitle">{{ selectedAssignmentStatus.assignmentStatusName }}</mat-card-title>
+          <mat-card-subtitle>{{ selectedAssignmentStatus.assignmentStatusDescription }}</mat-card-subtitle>
+          <mat-divider [inset]="true"></mat-divider>
+
+
+          <mat-card-subtitle class="subtitleWarning infoSubtitle">
+            If you wish to make this the current status of this assignment, click the submit button below!
+          </mat-card-subtitle>
+        </mat-card-content>
+
+        <mat-card-content *ngIf="selectedAssignmentStatus.assignmentStatusID == undefined">
+          <mat-divider [inset]="true"></mat-divider>
+          <mat-toolbar class="centeredToolbar">Select a status</mat-toolbar>
+          <mat-card-subtitle class="infoSubtitle">This control will allow you to change the status of this assignment. Select a status to begin</mat-card-subtitle>
+          <mat-divider [inset]="true"></mat-divider>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
   </mat-card-content>
+  <mat-card-actions>
+    <div class="buttonDiv" *ngIf="!openChangeForm">
+      <span class="infoSpan success" *ngIf="!showError && showSuccess">Sucessfully updated assignment status!</span>
+      <button mat-raised-button (click)="openChangeForm = true;">Change Status</button>
+    </div>
+    <div class="buttonDiv" *ngIf="openChangeForm">
+      <span class="infoSpan error" *ngIf="!showSuccess && showError">Something went wrong, please try again</span>
+      <button mat-raised-button
+        [disabled]="selectedAssignmentStatus.assignmentStatusID == undefined || puttingAssignmentStatus"
+        (click)="changeAssignmentStatus()">Confirm</button>
+      <button mat-raised-button (click)="openChangeForm = false;">Cancel</button>
+    </div>
+  </mat-card-actions>
 </mat-card>
