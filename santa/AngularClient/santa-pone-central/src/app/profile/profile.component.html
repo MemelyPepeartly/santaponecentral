@@ -5,44 +5,45 @@
 <!-- Chat Window -->
 <div class="container chatContainer mat-elevation-z3 clientCard scrollbar scrollbar-primary" *ngIf="showChat == true">
     <app-contact-panel
-        (messageUpdatedEvent)="softRefreshSelectedChat($event)"
-        (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)"
-        [refreshing]="refreshing"
-        [onProfile]="true"
-        [selectedHistory]="selectedHistory"
-        [sendingClientMeta]="selectedHistory.subjectClient"
-        [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage) || softUpdating"
-        [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
+      (messageUpdatedEvent)="softRefreshSelectedChat($event)"
+      (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)"
+      [refreshing]="refreshing"
+      [onProfile]="true"
+      [selectedHistory]="selectedHistory"
+      [sendingClientMeta]="selectedHistory.subjectClient"
+      [showActionProgressBar]="puttingMessage || postingMessage || (gettingSelectedHistory && puttingMessage) || softUpdating"
+      [showLoading]="gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"></app-contact-panel>
     <app-input-control
-        (sendClicked)="send($event)"
-        (readAllAction)="readAll()"
-        [relationshipID]="selectedHistory.relationXrefID"
-        [sender]="selectedHistory.subjectClient"
-        [reciever]="adminRecieverMeta"
-        [onProfile]="true"
-        [eventType]="selectedHistory.eventType"
-        [disabled]="postingMessage || refreshing">
+      (sendClicked)="send($event)"
+      (readAllAction)="readAll()"
+      [relationshipID]="selectedHistory.relationXrefID"
+      [sender]="selectedHistory.subjectClient"
+      [reciever]="adminRecieverMeta"
+      [onProfile]="true"
+      [eventType]="selectedHistory.eventType"
+      [disabled]="postingMessage || refreshing">
     </app-input-control>
 </div>
 
 <div class = "component-container">
     <div class="components mat-elevation-z3">
         <app-information
-            [profile]="profile"
-            [loading] = "gettingProfile"
-            [surveys]="surveys"
+          [profile]="profile"
+          [loading] = "gettingProfile"
+          [surveys]="surveys"
         ></app-information>
         <app-control-panel
-            [surveys]="surveys"
-            [gettingAllHistories]="gettingAllHistories"
-            [gettingGeneralHistory]="gettingGeneralHistory"
-            [gettingSelectedHistory]="gettingSelectedHistory"
-            [gettingProfile]="gettingProfile"
-            (chatClickedEvent)="showSelectedChat($event)"
-            [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
-            [generalHistory]="generalHistory"
-            [profile]="profile"
-            [histories]="histories">
+          (refreshClientEvent)="manualRefreshProfile($event)"
+          (chatClickedEvent)="showSelectedChat($event)"
+          [surveys]="surveys"
+          [gettingAllHistories]="gettingAllHistories"
+          [gettingGeneralHistory]="gettingGeneralHistory"
+          [gettingSelectedHistory]="gettingSelectedHistory"
+          [gettingProfile]="gettingProfile"
+          [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
+          [generalHistory]="generalHistory"
+          [profile]="profile"
+          [histories]="histories">
         </app-control-panel>
     </div>
 </div>

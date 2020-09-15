@@ -108,6 +108,7 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
     await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllAssignmentStatuses();
     await this.profileService.getHistories(this.profile.clientID);
     await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
   }
@@ -181,5 +182,10 @@ export class ProfileComponent implements OnInit {
     await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     this.refreshing = false;
+  }
+  public async manualRefreshProfile(isSoftUpdate: boolean = false)
+  {
+    await this.profileService.getProfile(this.profile.email, isSoftUpdate)
+    await this.profileService.getHistories(this.profile.clientID, isSoftUpdate);
   }
 }
