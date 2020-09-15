@@ -6,6 +6,39 @@ mat-card-header
 {
   width: 100%;
 }
+.statusTitle
+{
+  margin-top: 10px;
+}
+.centeredToolbar
+{
+  display: block;
+  text-align: center;
+  padding-top: 16px;
+}
+.buttonDiv
+{
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.changeFormCard
+{
+  display: inline-block;
+  width: 46%;
+  min-width: 300px;
+  margin: 2%;
+  vertical-align: top;
+}
+.infoSubtitle
+{
+  margin-top: 15px;
+}
+.infoSpan
+{
+  display: block;
+  margin-bottom: 15px;
+}
 .success {
   color: rgb(19, 141, 19);
 }
