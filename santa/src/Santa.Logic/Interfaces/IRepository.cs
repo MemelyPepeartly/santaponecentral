@@ -285,6 +285,13 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task SaveAsync();
+        /// <summary>
+        /// Gets a list of all the allowed assignments for a client by their ID, and the event's ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
+        Task<List<ClientMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID);
         #endregion
 
     }
