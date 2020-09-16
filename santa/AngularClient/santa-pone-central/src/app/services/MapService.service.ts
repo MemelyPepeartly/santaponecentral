@@ -31,7 +31,7 @@ export class MapService {
       address: this.mapAddress(client.address),
       responses: [],
       senders: [],
-      recipients: [],
+      assignments: [],
       tags: [],
     };
 
@@ -39,8 +39,8 @@ export class MapService {
       mappedClient.responses.push(this.mapResponse(response))
     });
 
-    client.recipients.forEach(recipient => {
-      mappedClient.recipients.push(this.mapRelationshipMeta(recipient))
+    client.assignments.forEach(recipient => {
+      mappedClient.assignments.push(this.mapRelationshipMeta(recipient))
     });
 
     client.senders.forEach(sender => {
@@ -63,13 +63,13 @@ export class MapService {
       clientNickname: profile.nickname,
       email: profile.email,
       address: this.mapAddress(profile.address),
-      recipients: [],
+      assignments: [],
       responses: [],
       editable: profile.editable
     };
 
-    profile.recipients.forEach(recipient => {
-      mappedProfile.recipients.push(this.mapProfileRecipient(recipient));
+    profile.assignments.forEach(recipient => {
+      mappedProfile.assignments.push(this.mapProfileRecipient(recipient));
     });
     profile.responses.forEach(response => {
       mappedProfile.responses.push(this.mapResponse(response));

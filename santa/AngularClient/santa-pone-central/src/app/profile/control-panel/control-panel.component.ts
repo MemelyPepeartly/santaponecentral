@@ -75,7 +75,7 @@ export class ControlPanelComponent implements OnInit {
   }
   public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)
   {
-    let profileRecipient = this.profile.recipients.find((recipient: ProfileRecipient) => {
+    let profileRecipient = this.profile.assignments.find((recipient: ProfileRecipient) => {
       return recipient.clientID == meta.clientID && recipient.recipientEvent.eventTypeID == eventID;
     });
     return profileRecipient;
