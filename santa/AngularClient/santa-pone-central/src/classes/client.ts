@@ -21,10 +21,10 @@ export class Client {
 }
 // Class used for holding sender and event ID information
 export class RelationshipMeta {
-  relationshipClient: ClientMeta;
+  relationshipClient: ClientMeta = new ClientMeta();
   relationshipEventTypeID: string;
   clientRelationXrefID: string;
-  assignmentStatus: AssignmentStatus;
+  assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
   completed: boolean;
 }
