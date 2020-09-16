@@ -66,20 +66,25 @@ app-small-loading-spin {
   margin-right: auto;
   margin-bottom: 10px;
 }
-#noClientSub {
-  padding: 7px;
+.assignmentEventCard
+{
+  display: block;
+  margin-top: 15px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
-#senderCard {
-  display: inline-block;
-  vertical-align: top;
-  width: 35%;
-  min-width: 250px;
+.assignmentPanelsContainer
+{
+  display: block;
+  width: 100%;
 }
-#recieverCard {
-  display: inline-block;
-  vertical-align: top;
-  width: 35%;
-  min-width: 250px;
+.assignmentPanelDiv
+{
+  display: block;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #nickField {
   display: inline-block;
