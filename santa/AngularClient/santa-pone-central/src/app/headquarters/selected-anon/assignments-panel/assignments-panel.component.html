@@ -1,1 +1,22 @@
-<p>assignments-panel works!</p>
+<mat-card>
+  <mat-card-content>
+    <div class="relationshipContainer">
+      <div class="relationshipDiv">
+        <mat-selection-list class="mat-elevation-z3" [multiple]="false">
+          <mat-list-option *ngFor="let relation of senders" [value]="relation"
+            (click)="emitSelectedRelationship(relation)">{{relation.relationshipClient.clientNickname}}
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+      <div class="relationshipDiv">
+        <mat-selection-list class="mat-elevation-z3" [multiple]="false">
+          <mat-list-option *ngFor="let relation of assignments" [value]="relation"
+            (click)="emitSelectedRelationship(relation)">{{relation.relationshipClient.clientNickname}}
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
