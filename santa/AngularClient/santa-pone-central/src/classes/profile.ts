@@ -12,7 +12,7 @@ export class Profile
     clientNickname: string;
     email: string;
     address: Address = new Address;
-    recipients: Array<ProfileRecipient> = [];
+    assignments: Array<ProfileRecipient> = [];
     responses: Array<SurveyResponse> = [];
     editable: boolean;
 }

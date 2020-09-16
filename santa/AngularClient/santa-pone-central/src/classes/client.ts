@@ -16,7 +16,7 @@ export class Client {
   email: string;
   responses: Array<SurveyResponse> = [];
   senders: Array<RelationshipMeta> = [];
-  recipients: Array<RelationshipMeta> = [];
+  assignments: Array<RelationshipMeta> = [];
   tags: Array<Tag> = [];
 }
 // Class used for holding sender and event ID information

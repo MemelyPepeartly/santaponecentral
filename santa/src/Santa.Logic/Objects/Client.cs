@@ -12,7 +12,7 @@ namespace Santa.Logic.Objects
         public string email { get; set; }
         public Address address { get; set; }
         public List<Response> responses { get; set; }
-        public List<RelationshipMeta> recipients { get; set; }
+        public List<RelationshipMeta> assignments { get; set; }
         public List<RelationshipMeta> senders { get; set; }
         public List<Tag> tags { get; set; }
         public bool isAdmin { get; set; }
