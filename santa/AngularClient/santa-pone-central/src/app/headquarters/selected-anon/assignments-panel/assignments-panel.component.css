@@ -1,0 +1,13 @@
+.relationshipContainer
+{
+  display: block;
+  width: 100%;
+}
+.relationshipDiv
+{
+  display: inline-block;
+  vertical-align: top;
+  width: 46%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
