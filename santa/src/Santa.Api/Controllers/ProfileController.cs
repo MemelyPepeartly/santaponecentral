@@ -138,7 +138,7 @@ namespace Santa.Api.Controllers
 
                     // Update profile and send back the updated recipient
                     Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
-                    return Ok(logicProfile.recipients.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
+                    return Ok(logicProfile.assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
                 }
                 else
                 {

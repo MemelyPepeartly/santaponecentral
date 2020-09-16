@@ -1561,7 +1561,7 @@ namespace Santa.Data.Repository
 
                 foreach(Logic.Objects.Client potentialAssignment in allClients)
                 {
-                    // If the client doesnt have any assignments that match the potential assignment, the potential assignment is approved, and the potential assignment is not the current client
+                    // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
                     if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.relationshipEventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                     {
                         allowedAssignments.Add(Mapper.MapClientMeta(potentialAssignment));
