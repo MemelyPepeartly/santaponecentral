@@ -1,18 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
-import { AssignmentStatus, Client, ClientSenderRecipientRelationship } from '../../../classes/client';
+import { AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { CountriesService } from 'src/app/services/countries.service';
+import { ClientMeta } from 'src/classes/message';
 
 @Component({
   selector: 'app-selected-anon',
@@ -57,9 +58,9 @@ export class SelectedAnonComponent implements OnInit {
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
   @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
 
-  public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
-  public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
-  public approvedRecipientClients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
+  public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
+  public recipients: Array<RelationshipMeta> = new Array<RelationshipMeta>();
+  public allowedAssignmentOptions: Array<ClientMeta> = new Array<ClientMeta>();
   public events: Array<EventType> = new Array<EventType>();
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
@@ -203,10 +204,6 @@ export class SelectedAnonComponent implements OnInit {
       this.allClients = clientArray;
     });
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
-    //Gathers all client senders
-    await this.gatherSenders();
-    //Gathers all client recipients
-    await this.gatherRecipients();
     //Gathers all client tags
     await this.setClientTags();
     //Gathers all countries for the form;
@@ -440,8 +437,6 @@ export class SelectedAnonComponent implements OnInit {
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
-    await this.gatherRecipients();
-    await this.gatherSenders();
     await this.getAllowedRecipientsByEvent(currentEvent);
 
     this.actionTaken.emit(true);
@@ -455,59 +450,20 @@ export class SelectedAnonComponent implements OnInit {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
 
-    this.approvedRecipientClients = [];
-
-    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter((relationship: ClientSenderRecipientRelationship) => {return (relationship.clientEventTypeID == eventType.eventTypeID)})
-    let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
-
-    //For all the clients in the DB
-    for(let i = 0; i < this.allClients.length; i++)
-    {
-      //If the client status is approved (&&)
-      //the ID is not the currently selected client's ID (&&)
-      //the client from DB is not in the list of the selected client's recipient ID list by event already
-      //Push a new possible relationship into the approvedRecipientClient's list
-      if(this.allClients[i].clientStatus.statusDescription == StatusConstants.APPROVED &&
-        this.allClients[i].clientID != this.client.clientID &&
-        !recipientIDList.includes(this.allClients[i].clientID))
-      {
-        this.approvedRecipientClients.push(this.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
-      }
-    }
+    var response = await this.SantaApiGet.getAllowedAssignmentsByID(this.client.clientID, this.selectedRecipientEvent.eventTypeID).toPromise();
+    this.allowedAssignmentOptions = [];
+    response.forEach((meta: any) => {
+      this.allowedAssignmentOptions.push(this.ApiMapper.mapMeta(meta))
+    });
 
     this.recipientsAreLoaded=true;
   }
-  // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component
-  public mapAllowedClientRelationship(client: Client, eventID: string)
-  {
-    let mappedRelationship: ClientSenderRecipientRelationship =
-    {
-      clientID: client.clientID,
-      clientName: client.clientName,
-      clientNickname: client.clientNickname,
-      clientEventTypeID: eventID,
-      assignmentStatus: new AssignmentStatus(),
-      removable: undefined,
-      completed: undefined
-    };
-
-    return mappedRelationship;
-  }
-  public relationListToIDList(relationList: Array<ClientSenderRecipientRelationship>): Array<string>
-  {
-    let IDList: Array<string> = []
-    for(let i = 0; i < relationList.length; i++)
-    {
-      IDList.push(relationList[i].clientID);
-    }
-    return IDList;
-  }
-  public async switchAnon(anon: ClientSenderRecipientRelationship)
+  public async switchAnon(anon: RelationshipMeta)
   {
     this.beingSwitched = true;
     this.addRecipientSuccess = false;
     this.recipientOpen = false;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.clientID).toPromise());
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.relationshipClient.clientID).toPromise());
     this.client = switchClient;
 
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
@@ -516,17 +472,18 @@ export class SelectedAnonComponent implements OnInit {
     }
     this.gatherer.gatherAllSurveys();
     this.gatherer.gatherAllEvents();
-    await this.gatherSenders();
-    await this.gatherRecipients();
     this.beingSwitched = false;
   }
-  public async removeRecipient(anon: ClientSenderRecipientRelationship)
+  public async removeRecipient(anon: RelationshipMeta)
   {
     this.beingRemoved = true;
-    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
+    let response: ClientSenderRecipientRelationshipReponse =
+    {
+      clientID: anon.relationshipClient.clientID,
+      clientEventTypeID: anon.relationshipEventTypeID
+    }
+    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, response).toPromise();
     this.client = this.ApiMapper.mapClient(res);
-    await this.gatherSenders();
-    await this.gatherRecipients();
     if(this.selectedRecipientEvent != undefined)
     {
       await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
@@ -534,21 +491,18 @@ export class SelectedAnonComponent implements OnInit {
     this.actionTaken.emit(true);
     this.beingRemoved = false;
   }
-  public async markAsComplete(anon: ClientSenderRecipientRelationship)
+  public async markAsComplete(anon: RelationshipMeta)
   {
     this.markingAsComplete = true;
 
     let response: RecipientCompletionResponse =
     {
       completed: true,
-      eventTypeID: anon.clientEventTypeID,
-      recipientID: anon.clientID
+      eventTypeID: anon.relationshipEventTypeID,
+      recipientID: anon.relationshipClient.clientID
     };
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
-
-    await this.gatherSenders();
-    await this.gatherRecipients();
 
     this.markingAsComplete = false;
   }
@@ -612,31 +566,6 @@ export class SelectedAnonComponent implements OnInit {
     this.currentTags = [];
     this.currentTags = this.client.tags;
   }
-  public async gatherRecipients()
-  {
-    this.gatheringRecipients = true
-    this.recipients = [];
-    //Gets all the recievers form the anon
-    for(let i = 0; i < this.client.recipients.length; i++)
-    {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.recipients[i].recipientClientID).toPromise());
-      this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
-    }
-    this.gatheringRecipients = false;
-  }
-  public async gatherSenders()
-  {
-    this.gatheringSenders = true;
-    this.senders = [];
-
-    //Gets all the senders form the anon
-    for(let i = 0; i < this.client.senders.length; i++)
-    {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.senders[i].senderClientID).toPromise());
-      this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
-    }
-    this.gatheringSenders = false;
-  }
   public async submitNewAddress()
   {
     this.changingAddress = true;
@@ -695,5 +624,21 @@ export class SelectedAnonComponent implements OnInit {
     {
       this.actionTaken.emit(true);
     }
+  }
+  public getEventSenders(eventType: EventType) : Array<RelationshipMeta>
+  {
+    return this.client.senders.filter((sender: RelationshipMeta) => {return sender.relationshipEventTypeID == eventType.eventTypeID});
+  }
+  public getEventAssignments(eventType: EventType) : Array<RelationshipMeta>
+  {
+    return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.relationshipEventTypeID == eventType.eventTypeID});
+  }
+  test()
+  {
+    console.log("client senders");
+    console.log(this.client.senders);
+
+    console.log("client assignments");
+    console.log(this.client.assignments);
   }
 }
