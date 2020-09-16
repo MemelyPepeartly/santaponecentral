@@ -159,8 +159,12 @@ export class GathererService {
     let clientList: Array<Client> = []
 
     var res = await this.SantaApiGet.getAllClients().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all clients in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
+
 
     for(let i = 0; i < res.length; i++)
     {
@@ -176,7 +180,10 @@ export class GathererService {
     let tagList: Array<Tag> = []
 
     var res = await this.SantaApiGet.getAllTags().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all tags in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
@@ -193,7 +200,10 @@ export class GathererService {
     let surveyList: Array<Survey> = []
 
     var res = await this.SantaApiGet.getAllSurveys().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all surveys in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
@@ -210,7 +220,10 @@ export class GathererService {
     let questionList: Array<Question> = []
 
     var res = await this.SantaApiGet.getAllSurveyQuestions().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all questions in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
@@ -227,7 +240,10 @@ export class GathererService {
     let eventList: Array<EventType> = []
 
     var res = await this.SantaApiGet.getAllEvents().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all events in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
@@ -244,7 +260,10 @@ export class GathererService {
     let statusList: Array<Status> = []
 
     var res = await this.SantaApiGet.getAllStatuses().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all statuses in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
@@ -261,7 +280,10 @@ export class GathererService {
     let messageList: Array<Message> = []
 
     var res = await this.SantaApiGet.getAllMessages().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all messages in the gatherer");
       console.log(err);
+      console.groupEnd();;
     });
 
     for(let i = 0; i < res.length; i++)
@@ -278,7 +300,10 @@ export class GathererService {
     let assignmentStatusList: Array<AssignmentStatus> = []
 
     var res = await this.SantaApiGet.getAllAssignmentStatuses().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all assignment statuses in the gatherer");
       console.log(err);
+      console.groupEnd();
     });
 
     for(let i = 0; i < res.length; i++)
