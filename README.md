@@ -1,4 +1,14 @@
 [![Board Status](https://dev.azure.com/santapone/275cd44b-4a45-4978-92cf-c96f59c14bec/73ea5cf8-3ebb-4dba-8c57-95c3427ce42a/_apis/work/boardbadge/f2579203-5dc9-4a6c-8de6-57056d0bb37f)](https://dev.azure.com/santapone/275cd44b-4a45-4978-92cf-c96f59c14bec/_boards/board/t/73ea5cf8-3ebb-4dba-8c57-95c3427ce42a/Microsoft.RequirementCategory)
+
+[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Prod%20Pipelines/API%20Production%20Deployment%20Pipeline?branchName=master)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=12&branchName=master)
+
+[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Prod%20Pipelines/Angular%20Production%20Deployment%20Pipeline?branchName=master)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=13&branchName=master)
+
+[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Dev%20Pipelines/Angular%20Dev%20Deployment%20Pipeline?branchName=feature)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=10&branchName=feature)
+
+[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Dev%20Pipelines/API%20Dev%20Deployment%20Pipeline?branchName=feature)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=11&branchName=feature)
+
+
 # SantaPone Central
 
 ## What is SantaPone Central?
