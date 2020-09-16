@@ -15,10 +15,17 @@ export class AssignmentsPanelComponent implements OnInit {
 
   @Output() relationshipSelectedEvent: EventEmitter<RelationshipMeta> = new EventEmitter<RelationshipMeta>();
 
+  public selectedAsssignment: RelationshipMeta = new RelationshipMeta();
+  public selectedSender: RelationshipMeta = new RelationshipMeta();
+
   ngOnInit(): void {
   }
-  public emitSelectedRelationship(relationship: RelationshipMeta)
+  public selectAssignment(relationship: RelationshipMeta)
   {
-    this.relationshipSelectedEvent.emit(relationship);
+    this.selectedAsssignment = relationship;
+  }
+  public selectSender(relationship: RelationshipMeta)
+  {
+    this.selectedSender = relationship;
   }
 }

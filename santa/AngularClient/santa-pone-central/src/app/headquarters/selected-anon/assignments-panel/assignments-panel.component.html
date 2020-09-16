@@ -1,22 +1,83 @@
-<mat-card>
-  <mat-card-content>
+<mat-card class="relationshipCard">
+  <mat-card-content class="relationshipCardContent">
     <div class="relationshipContainer">
       <div class="relationshipDiv">
-        <mat-selection-list class="mat-elevation-z3" [multiple]="false">
+        <mat-toolbar class="centeredToolbar minWidthConstraint">Senders</mat-toolbar>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-selection-list class="minWidthConstraint relationList mat-elevation-z1" [multiple]="false">
           <mat-list-option *ngFor="let relation of senders" [value]="relation"
-            (click)="emitSelectedRelationship(relation)">{{relation.relationshipClient.clientNickname}}
+            (click)="selectSender(relation)">{{relation.relationshipClient.clientNickname}}
           </mat-list-option>
         </mat-selection-list>
+
+        <div *ngIf="senders.length == 0" class="minWidthConstraint relationList">
+          <mat-toolbar class="centeredToolbar">No existing senders</mat-toolbar>
+        </div>
+
       </div>
       <div class="relationshipDiv">
-        <mat-selection-list class="mat-elevation-z3" [multiple]="false">
+        <mat-toolbar class="centeredToolbar minWidthConstraint">Assignments</mat-toolbar>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-selection-list class="minWidthConstraint relationList mat-elevation-z1" [multiple]="false">
           <mat-list-option *ngFor="let relation of assignments" [value]="relation"
-            (click)="emitSelectedRelationship(relation)">{{relation.relationshipClient.clientNickname}}
+            (click)="selectAssignment(relation)">{{relation.relationshipClient.clientNickname}}
           </mat-list-option>
         </mat-selection-list>
+
+        <div *ngIf="assignments.length == 0" class="minWidthConstraint relationList">
+          <mat-toolbar class="centeredToolbar">No existing assignments</mat-toolbar>
+        </div>
+
       </div>
     </div>
   </mat-card-content>
 </mat-card>
+
+<div class="selectedRelationshipContainer">
+  <div class="selectedRelationshipDiv">
+    <mat-card class="minWidthConstraint selectedRelationshipCard">
+      <mat-card-content *ngIf="selectedSender.clientRelationXrefID == undefined">
+        <mat-divider [inset]="true"></mat-divider>
+
+        <mat-toolbar class="centeredToolbar">Select a sender</mat-toolbar>
+        <mat-card-subtitle class="infoSubtitle">Information and control options will populate here once one is selected</mat-card-subtitle>
+
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="selectedSender.clientRelationXrefID != undefined">
+        <mat-divider [inset]="true"></mat-divider>
+
+        <mat-toolbar class="centeredToolbar">Selected Sender</mat-toolbar>
+        <mat-card-subtitle class="infoSubtitle">Information for {{ selectedSender.relationshipClient.clientNickname }}</mat-card-subtitle>
+
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+
+  <div class="selectedRelationshipDiv">
+    <mat-card class="minWidthConstraint selectedRelationshipCard">
+      <mat-card-content *ngIf="selectedAsssignment.clientRelationXrefID == undefined">
+        <mat-divider [inset]="true"></mat-divider>
+
+        <mat-toolbar class="centeredToolbar">Select an assignment</mat-toolbar>
+        <mat-card-subtitle class="infoSubtitle">Information and control options will populate here once one is selected</mat-card-subtitle>
+
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="selectedAsssignment.clientRelationXrefID != undefined">
+        <mat-divider [inset]="true"></mat-divider>
+
+        <mat-toolbar class="centeredToolbar">Selected Assignment</mat-toolbar>
+        <mat-card-subtitle class="infoSubtitle">Information for {{ selectedAsssignment.relationshipClient.clientNickname }}</mat-card-subtitle>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
 
 
