@@ -124,6 +124,21 @@ namespace Santa.Api.Controllers
 
         }
 
+        // GET: api/Client/5/AllowedAssignment/5
+        [HttpGet("{clientID}/AllowedAssignment/{eventTypeID}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<ClientMeta>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
+        {
+            try
+            {
+                return Ok(await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
         // POST: api/Client
         /// <summary>
         /// Posts a new client. Binds the ApiClient model for input
@@ -152,7 +167,7 @@ namespace Santa.Api.Controllers
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
                     },
-                    recipients = new List<RelationshipMeta>(),
+                    assignments = new List<RelationshipMeta>(),
                     senders = new List<RelationshipMeta>()
                 };
                 
@@ -212,7 +227,7 @@ namespace Santa.Api.Controllers
                         postalCode = clientResponseModel.clientPostalCode,
                         country = clientResponseModel.clientCountry
                     },
-                    recipients = new List<RelationshipMeta>(),
+                    assignments = new List<RelationshipMeta>(),
                     senders = new List<RelationshipMeta>()
                 };
 
@@ -334,7 +349,7 @@ namespace Santa.Api.Controllers
                         foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                         {
                             // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
-                            if (!mailer.recipients.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
                                 // Add that potential assignment to their list
                                 await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID, defaultNewAssignmentStatus.assignmentStatusID);
