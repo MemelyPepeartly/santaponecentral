@@ -4,9 +4,9 @@
 
 [![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Prod%20Pipelines/Angular%20Production%20Deployment%20Pipeline?branchName=master)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=13&branchName=master)
 
-[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Dev%20Pipelines/Angular%20Dev%20Deployment%20Pipeline?branchName=feature)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=10&branchName=feature)
-
 [![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Dev%20Pipelines/API%20Dev%20Deployment%20Pipeline?branchName=feature)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=11&branchName=feature)
+
+[![Build Status](https://dev.azure.com/santapone/Santa%20Pone%20Central/_apis/build/status/Dev%20Pipelines/Angular%20Dev%20Deployment%20Pipeline?branchName=feature)](https://dev.azure.com/santapone/Santa%20Pone%20Central/_build/latest?definitionId=10&branchName=feature)
 
 
 # SantaPone Central
