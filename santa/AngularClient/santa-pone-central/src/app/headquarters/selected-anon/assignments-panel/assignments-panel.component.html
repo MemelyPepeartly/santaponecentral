@@ -80,7 +80,7 @@
 
         <app-assignment-status-controller class="statusController"
           (lockClickawayEvent)="setClickawayLock($event)"
-          (newStatusPutEvent)="setNewStatus($event)"
+          (newStatusRecipientMetaPutEvent)="setNewStatus($event)"
           [isAdmin]="true"
           [assignment]="mappedSelectedAssignment"
           [clientID]="agent.clientID">

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { MapService } from 'src/app/services/mapService.service';
 import { SantaApiPutService } from 'src/app/services/santaApiService.service';
-import { AssignmentStatus } from 'src/classes/client';
+import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileRecipient } from 'src/classes/profile';
 import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
 
@@ -21,7 +21,8 @@ export class AssignmentStatusControllerComponent implements OnInit {
   @Input() clientID: string;
   @Input() isAdmin: boolean;
 
-  @Output() newStatusPutEvent: EventEmitter<AssignmentStatus> = new EventEmitter();
+  @Output() newStatusAssingmentStatusPutEvent: EventEmitter<AssignmentStatus> = new EventEmitter();
+  @Output() newStatusRecipientMetaPutEvent: EventEmitter<RelationshipMeta> = new EventEmitter();
   @Output() lockClickawayEvent: EventEmitter<boolean> = new EventEmitter();
 
   public allAssignmentStatuses: Array<AssignmentStatus> = [];
@@ -62,7 +63,7 @@ export class AssignmentStatusControllerComponent implements OnInit {
     {
       this.santaApiPut.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
         let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
-        this.newStatusPutEvent.emit(newAssignmentStatus);
+        this.newStatusAssingmentStatusPutEvent.emit(newAssignmentStatus);
 
         this.puttingAssignmentStatus = false;
         this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
@@ -85,8 +86,8 @@ export class AssignmentStatusControllerComponent implements OnInit {
     else
     {
       this.santaApiPut.putAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
-        let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
-        this.newStatusPutEvent.emit(newAssignmentStatus);
+        let newRelationshipMeta: RelationshipMeta = this.mapper.mapRelationshipMeta(res);
+        this.newStatusRecipientMetaPutEvent.emit(newRelationshipMeta);
 
         this.puttingAssignmentStatus = false;
         this.lockClickawayEvent.emit(this.puttingAssignmentStatus);

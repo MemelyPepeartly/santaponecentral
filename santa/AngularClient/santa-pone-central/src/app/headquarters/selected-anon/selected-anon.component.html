@@ -375,7 +375,7 @@
               <div class="assignmentPanelDiv">
                 <button *ngIf="false" (click)="test(event)">Test</button>
                 <app-assignments-panel
-                  (relationshipSelectedEvent)="true"
+                  (clickAwayAllowedEvent)="setClickAwayAllowed($event)"
                   [agent]="client"
                   [senders]="getEventSenders(event)"
                   [assignments]="getEventAssignments(event)"></app-assignments-panel>

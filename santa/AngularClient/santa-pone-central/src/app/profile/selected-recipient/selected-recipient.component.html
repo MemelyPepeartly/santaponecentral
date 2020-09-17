@@ -32,7 +32,7 @@
       <div class="statusDiv">
         <app-assignment-status-controller
           (lockClickawayEvent)="setClickawayLock($event)"
-          (newStatusPutEvent)="setNewStatus($event)"
+          (newStatusAssingmentStatusPutEvent)="setNewStatus($event)"
           [assignment]="selectedRecipient"
           [clientID]="profile.clientID">
         </app-assignment-status-controller>

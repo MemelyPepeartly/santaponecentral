@@ -57,6 +57,7 @@ export class SelectedAnonComponent implements OnInit {
   @Output() actionTaken: EventEmitter<any> = new EventEmitter();
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
   @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
+  @Output() setClickAwayLockEvent: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
   public recipients: Array<RelationshipMeta> = new Array<RelationshipMeta>();
@@ -633,12 +634,8 @@ export class SelectedAnonComponent implements OnInit {
   {
     return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.eventType.eventTypeID == eventType.eventTypeID});
   }
-  test()
+  public setClickAwayAllowed(status: boolean)
   {
-    console.log("client senders");
-    console.log(this.client.senders);
-
-    console.log("client assignments");
-    console.log(this.client.assignments);
+    this.setClickAwayLockEvent.emit(status);
   }
 }

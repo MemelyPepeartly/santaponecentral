@@ -45,6 +45,7 @@ export class HeadquartersComponent implements OnInit {
   public allClients: Array<Client> = [];
 
   public gatheringAllClients: boolean;
+  public clickAwayLocked: boolean;
 
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
   @ViewChild(CompletedAnonsComponent) completedAnonsComponent: CompletedAnonsComponent;
@@ -86,24 +87,31 @@ export class HeadquartersComponent implements OnInit {
   }
   async hideOpenWindow(forceRefresh: boolean = false)
   {
-    if(this.showClientCard)
+    if(!this.clickAwayLocked)
     {
-      this.showClientCard = false;
-      this.gatherer.onSelectedClient = false;
-      if(forceRefresh)
+      if(this.showClientCard)
+      {
+        this.showClientCard = false;
+        this.gatherer.onSelectedClient = false;
+        if(forceRefresh)
+        {
+          await this.gatherer.gatherAllClients();
+        }
+      }
+      else if(this.showManualSignupCard)
+      {
+        this.showManualSignupCard = false;
+      }
+      // If any of the viewchildren are set to refresh
+      if(this.readyForRefresh)
       {
         await this.gatherer.gatherAllClients();
+        this.setChildrenAction(false);
       }
     }
-    else if(this.showManualSignupCard)
+    else
     {
-      this.showManualSignupCard = false;
-    }
-    // If any of the viewchildren are set to refresh
-    if(this.readyForRefresh)
-    {
-      await this.gatherer.gatherAllClients();
-      this.setChildrenAction(false);
+      console.log("Clickaway is locked!");
     }
   }
   public setChildrenAction(actionTaken: boolean)
@@ -113,9 +121,13 @@ export class HeadquartersComponent implements OnInit {
     this.deniedAnonsComponent.actionTaken = actionTaken;
     this.incomingSignupsComponent.actionTaken = actionTaken;
   }
-  async updateSelectedClient(clientID: string)
+  public async updateSelectedClient(clientID: string)
   {
     this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
+  }
+  public setClickawayLock(status: boolean)
+  {
+    this.clickAwayLocked = status;
   }
   sortApproved() : Array<Client>
   {

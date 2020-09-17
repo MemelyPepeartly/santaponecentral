@@ -15,7 +15,8 @@ export class AssignmentsPanelComponent implements OnInit {
   @Input() assignments: Array<RelationshipMeta> = [];
   @Input() agent: Client;
 
-  @Output() relationshipSelectedEvent: EventEmitter<RelationshipMeta> = new EventEmitter<RelationshipMeta>();
+  @Output() updatedStatusEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() clickAwayAllowedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public selectedAsssignment: RelationshipMeta = new RelationshipMeta();
   public selectedSender: RelationshipMeta = new RelationshipMeta();
@@ -58,12 +59,13 @@ export class AssignmentsPanelComponent implements OnInit {
   {
     this.selectedSender = relationship;
   }
-  public setClickawayLock()
+  public setClickawayLock(status: boolean)
   {
-
+    this.clickAwayAllowedEvent.emit(status);
   }
-  public setNewStatus(assignmentStatus: AssignmentStatus)
+  public setNewStatus(relationshipMeta: RelationshipMeta)
   {
-
+    this.assignments.find((meta: RelationshipMeta) => {return meta.clientRelationXrefID == this.selectedAsssignment.clientRelationXrefID}).assignmentStatus = relationshipMeta.assignmentStatus;
+    this.updatedStatusEvent.emit(true);
   }
 }
