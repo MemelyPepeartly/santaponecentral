@@ -68,11 +68,29 @@ namespace Santa.Data.Repository
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
 
-                    /* Senders/Assignments */
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.RecipientClient)
+                    /* Sender/Assignment info and Tags */
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.SenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
 
                     /* Chat messages */
                     .Include(c => c.ClientRelationXrefRecipientClient)
@@ -116,11 +134,29 @@ namespace Santa.Data.Repository
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
 
-                    /* Senders/Assignments */
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.RecipientClient)
+                    /* Sender/Assignment info and Tags */
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.SenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
 
                     /* Chat messages */
                     .Include(c => c.ClientRelationXrefRecipientClient)
@@ -168,6 +204,22 @@ namespace Santa.Data.Repository
                         .ThenInclude(crxsc => crxsc.SenderClient)
                     .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(crxrc => crxrc.RecipientClient)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
+
+                    /* Sender/Assignment Tags */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
 
                     /* Chat messages */
                     .Include(c => c.ClientRelationXrefRecipientClient)
@@ -376,6 +428,7 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
+                    /* Assignment information and surveys */
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(clXref => clXref.RecipientClient)
                             .ThenInclude(c => c.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
@@ -385,19 +438,38 @@ namespace Santa.Data.Repository
                         .ThenInclude(clXref => clXref.RecipientClient)
                             .ThenInclude(c => c.SurveyResponse)
                                 .ThenInclude(sr => sr.SurveyQuestion)
+
+                    /* Assignment event types */
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
+
+                    /* Assignment Statuses */
                     .Include(r => r.ClientRelationXrefRecipientClient)
                     .Include(xr => xr.ClientRelationXrefRecipientClient)
                         .ThenInclude(m => m.AssignmentStatus)
                     .Include(xr => xr.ClientRelationXrefSenderClient)
                         .ThenInclude(m => m.AssignmentStatus)
+
+                    /* Sender/Assignment Tags */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+
+                    /* Profile approval status */
                     .Include(s => s.ClientStatus)
+
+                    /* Profile survey responses aand event types */
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(s => s.SurveyQuestion)
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
+
                     .FirstOrDefaultAsync(c => c.Email == email));
 
                 List<Response> responsesToRemove = new List<Response>();
@@ -1562,7 +1634,7 @@ namespace Santa.Data.Repository
                 foreach(Logic.Objects.Client potentialAssignment in allClients)
                 {
                     // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
-                    if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.relationshipEventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
+                    if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                     {
                         allowedAssignments.Add(Mapper.MapClientMeta(potentialAssignment));
                     }
