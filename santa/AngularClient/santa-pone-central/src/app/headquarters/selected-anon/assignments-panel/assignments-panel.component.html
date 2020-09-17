@@ -78,7 +78,28 @@
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
-        <app-assignment-status-controller class="statusController"
+        <div class="actionButtonsDiv">
+          <button class="panelButton" mat-raised-button
+          matTooltip="Switch to this Anon"
+          [matTooltipPosition]="'right'"
+          (click)="emitSwitchAnon(this.selectedAsssignment)">Switch To<mat-icon>swap_horiz</mat-icon></button>
+          <mat-card-subtitle class="infoSubtitle">Switch to this assignment</mat-card-subtitle>
+
+          <mat-divider [inset]="true"></mat-divider>
+
+          <p class="subtitleWarning" *ngIf="!this.selectedAsssignment.removable || true">Note: If a recipient has a chat history, they cannot be removed</p>
+          <button class="panelButton" mat-raised-button
+          matTooltip="Remove the anon as a recipient"
+          color="warn"
+          [disabled]="!this.selectedAsssignment.removable"
+          [matTooltipPosition]="'right'"
+          (click)="emitRemoveRecipient(this.selectedAsssignment)">Remove Assignment<mat-icon>delete_forever</mat-icon></button>
+          <mat-card-subtitle class="infoSubtitle">Remove this assignment from {{ agent.clientNickname }}'s assignment list</mat-card-subtitle>
+        </div>
+
+        <mat-divider [inset]="true"></mat-divider>
+
+        <app-assignment-status-controller #assignmentControl class="statusController"
           (lockClickawayEvent)="setClickawayLock($event)"
           (newStatusRecipientMetaPutEvent)="setNewStatus($event)"
           [isAdmin]="true"
@@ -109,9 +130,49 @@
         <mat-toolbar class="centeredToolbar">Selected Sender</mat-toolbar>
         <mat-card-subtitle class="infoSubtitle">Information for {{ selectedSender.relationshipClient.clientNickname }}</mat-card-subtitle>
 
-        <mat-divider [inset]="true"></mat-divider>
-      </mat-card-content>
+        <div class="tagDiv">
+          <mat-chip class="tag" *ngFor="let tag of selectedSender.tags"
+            matTooltip="{{tag.tagName}}"
+            [matTooltipPosition]="'below'"
+            [disableRipple]="true">
+            <span class="tagText">{{tag.tagName}}</span>
+          </mat-chip>
+        </div>
 
+        <mat-divider [inset]="true"></mat-divider>
+
+        <mat-toolbar class="centeredToolbar">General Information</mat-toolbar>
+
+        <div class="infoDiv">
+          <p class="infoTitle">Assignment Name</p>
+          <p>{{ selectedSender.relationshipClient.clientName }}</p>
+
+          <p class="infoTitle">Assignment Nickname</p>
+          <p>
+            {{ selectedSender.relationshipClient.clientNickname }}
+          </p>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <div class="actionButtonsDiv">
+          <button class="panelButton" mat-raised-button
+          matTooltip="Switch to this Anon"
+          [matTooltipPosition]="'right'"
+          (click)="emitSwitchAnon(this.selectedSender)">Switch To<mat-icon>swap_horiz</mat-icon></button>
+          <mat-card-subtitle class="infoSubtitle">Switch to this assignment</mat-card-subtitle>
+        </div>
+
+        <mat-divider [inset]="true"></mat-divider>
+
+        <app-assignment-status-controller #senderControl class="statusController"
+          (lockClickawayEvent)="setClickawayLock($event)"
+          (newStatusRecipientMetaPutEvent)="setNewStatus($event, true)"
+          [isAdmin]="true"
+          [assignment]="mappedSelectedSender"
+          [clientID]="agent.clientID">
+        </app-assignment-status-controller>
+
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

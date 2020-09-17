@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AssignmentStatusControllerComponent } from 'src/app/shared/assignment-status-controller/assignment-status-controller.component';
 import { AssignmentStatus, Client, RelationshipMeta } from 'src/classes/client';
 import { ProfileRecipient } from 'src/classes/profile';
 
@@ -17,6 +18,12 @@ export class AssignmentsPanelComponent implements OnInit {
 
   @Output() updatedStatusEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clickAwayAllowedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() removeClickedEvent: EventEmitter<RelationshipMeta> = new EventEmitter<RelationshipMeta>();
+  @Output() switchClickedEvent: EventEmitter<RelationshipMeta> = new EventEmitter<RelationshipMeta>();
+
+
+  @ViewChild("assignmentControl") assignmentStatusController: AssignmentStatusControllerComponent;
+  @ViewChild("senderControl") senderStatusController: AssignmentStatusControllerComponent;
 
   public selectedAsssignment: RelationshipMeta = new RelationshipMeta();
   public selectedSender: RelationshipMeta = new RelationshipMeta();
@@ -54,18 +61,44 @@ export class AssignmentsPanelComponent implements OnInit {
   public selectAssignment(relationship: RelationshipMeta)
   {
     this.selectedAsssignment = relationship;
+    if(this.assignmentStatusController)
+    {
+      this.assignmentStatusController.showSuccess = false;
+      this.assignmentStatusController.showError = false;
+    }
   }
   public selectSender(relationship: RelationshipMeta)
   {
     this.selectedSender = relationship;
+    if(this.senderStatusController)
+    {
+      this.senderStatusController.showSuccess = false;
+      this.senderStatusController.showError = false;
+    }
+
   }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayAllowedEvent.emit(status);
   }
-  public setNewStatus(relationshipMeta: RelationshipMeta)
+  public setNewStatus(relationshipMeta: RelationshipMeta, isSender: boolean = false)
   {
-    this.assignments.find((meta: RelationshipMeta) => {return meta.clientRelationXrefID == this.selectedAsssignment.clientRelationXrefID}).assignmentStatus = relationshipMeta.assignmentStatus;
+    if(!isSender)
+    {
+      this.assignments.find((meta: RelationshipMeta) => {return meta.clientRelationXrefID == this.selectedAsssignment.clientRelationXrefID}).assignmentStatus = relationshipMeta.assignmentStatus;
+    }
+    else
+    {
+      this.senders.find((meta: RelationshipMeta) => {return meta.clientRelationXrefID == this.selectedSender.clientRelationXrefID}).assignmentStatus = relationshipMeta.assignmentStatus;
+    }
     this.updatedStatusEvent.emit(true);
+  }
+  public emitSwitchAnon(relationship: RelationshipMeta)
+  {
+    this.switchClickedEvent.emit(relationship);
+  }
+  public emitRemoveRecipient(relationship: RelationshipMeta)
+  {
+    this.removeClickedEvent.emit(relationship);
   }
 }

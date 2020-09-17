@@ -21,15 +21,6 @@
 .relationList::-webkit-scrollbar {
   display: none;
 }
-.relationshipCard
-{
-
-}
-.relationshipCardContent
-{
-  display: block;
-}
-
 .selectedRelationshipContainer
 {
   display: block;
@@ -103,6 +94,24 @@
 {
   display: block;
   margin-top: 15px;
+}
+.actionButtonsDiv
+{
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.panelButton
+{
+  display: block;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.subtitleWarning
+{
+  margin-top:10px;
+  color: #d07973;
 }
 @media (max-width:600px)
 {
