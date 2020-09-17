@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Santa.Api.Models.Client_Models
+namespace Santa.Api.Models
 {
-    public class ApiClientIsAdminModel
+    public class EditClientNameModel
     {
-        public bool isAdmin { get; set; }
+        public string clientName { get; set; }
     }
 }

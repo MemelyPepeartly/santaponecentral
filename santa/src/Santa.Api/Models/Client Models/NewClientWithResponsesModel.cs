@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Client_Models
 {
-    public class ApiClientWithResponsesModel
+    public class NewClientWithResponsesModel
     {
         public Guid clientStatusID { get; set; }
         public string clientName { get; set; }

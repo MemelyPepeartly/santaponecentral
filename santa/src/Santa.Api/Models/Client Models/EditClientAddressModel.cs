@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models
 {
-    public class ApiClientAddressModel
+    public class EditClientAddressModel
     {
         public string clientAddressLine1 { get; set; }
         public string clientAddressLine2 { get; set; }

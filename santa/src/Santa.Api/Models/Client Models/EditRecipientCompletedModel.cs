@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Client_Models
 {
-    public class ApiRecipientCompletionModel
+    public class EditRecipientCompletionModel
     {
         public Guid recipientID { get; set; }
         public Guid eventTypeID { get; set; }

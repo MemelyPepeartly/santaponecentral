@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Santa.Api.Models
 {
-    public class ApiNewClientModel
+    public class EditNewClientModel
     {
         public Guid clientStatusID { get; set; }
         public string clientName { get; set; }

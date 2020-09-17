@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models
 {
-    public class ApiClientNicknameModel
+    public class EditClientNicknameModel
     {
         public string clientNickname { get; set; }
     }

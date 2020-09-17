@@ -8,7 +8,7 @@ namespace Santa.Api.Models.Client_Models
     /// <summary>
     /// Used as a model for multiple relationships posted to a client for an event
     /// </summary>
-    public class ApiClientRelationshipsModel
+    public class AddClientRelationshipsModel
     {
         public List<Guid> assignments { get; set; }
         public Guid eventTypeID { get; set; }

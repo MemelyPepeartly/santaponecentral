@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Santa.Api.Models.Client_Models
 {
-    public class ApiClientTagListResponseModel
+    public class EditClientIsAdminModel
     {
-        public List<Guid> tags { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
