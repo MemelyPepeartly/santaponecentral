@@ -90,7 +90,6 @@ namespace Santa.Data.Repository
                 clientRelationXrefID = contextXrefRelationship.ClientRelationXrefId,
                 tags = tagXrefList.Select(Mapper.MapTagRelationXref).ToList(),
                 assignmentStatus = MapAssignmentStatus(contextXrefRelationship.AssignmentStatus),
-                completed = contextXrefRelationship.Completed,
                 removable = contextXrefRelationship.ChatMessage.Count > 0 ? false : true
             };
             return logicRelationship;
