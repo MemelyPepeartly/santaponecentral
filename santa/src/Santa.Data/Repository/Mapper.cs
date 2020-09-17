@@ -112,7 +112,6 @@ namespace Santa.Data.Repository
                     state = contextRecipientClientData.State,
                     postalCode = contextRecipientClientData.PostalCode
                 },
-                completed = contextSenderXref.Completed,
                 responses = contextRecipientClientData.SurveyResponse.Select(Mapper.MapResponse).ToList()
             };
             return logicProfileRecipient;

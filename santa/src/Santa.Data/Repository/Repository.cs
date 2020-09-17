@@ -42,9 +42,8 @@ namespace Santa.Data.Repository
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
                     EventTypeId = eventTypeID,
-                    // Value being posted should be false to start by default, and assignment status should be set to its default value as well
-                    AssignmentStatusId = assignmentStatusID,
-                    Completed = false
+                    // Assignment status should be set to its default value as well
+                    AssignmentStatusId = assignmentStatusID
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
             }
@@ -57,8 +56,7 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
-                clientList = (await santaContext.Client
+                List<Logic.Objects.Client> clientList = (await santaContext.Client
                     /* Surveys and responses */
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(sr => sr.SurveyQuestion)
@@ -199,27 +197,29 @@ namespace Santa.Data.Repository
                         .ThenInclude(sr => sr.Survey)
                             .ThenInclude(s => s.EventType)
 
-                    /* Senders/Assignments */
-                    .Include(c => c.ClientRelationXrefSenderClient)
+                    /* Sender/Assignment info and Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
                     .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient)
+                            .ThenInclude(c => c.ClientTagXref)
+                                .ThenInclude(txr => txr.Tag)
 
                     /* Relationship event */
                     .Include(c => c.ClientRelationXrefSenderClient)
                         .ThenInclude(crxsc => crxsc.EventType)
                     .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(crxrc => crxrc.EventType)
-
-                    /* Sender/Assignment Tags */
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
 
                     /* Chat messages */
                     .Include(c => c.ClientRelationXrefRecipientClient)
