@@ -19,6 +19,7 @@ export class AssignmentStatusControllerComponent implements OnInit {
 
   @Input() assignment: ProfileRecipient;
   @Input() clientID: string;
+  @Input() isAdmin: boolean;
 
   @Output() newStatusPutEvent: EventEmitter<AssignmentStatus> = new EventEmitter();
   @Output() lockClickawayEvent: EventEmitter<boolean> = new EventEmitter();

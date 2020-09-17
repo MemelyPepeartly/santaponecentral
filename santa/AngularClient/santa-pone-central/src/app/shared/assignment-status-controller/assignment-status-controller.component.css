@@ -25,9 +25,9 @@ mat-card-header
 .changeFormCard
 {
   display: inline-block;
-  width: 46%;
+  width: 80%;
   min-width: 300px;
-  margin: 2%;
+  margin-top: 15px;
   vertical-align: top;
 }
 .infoSubtitle
@@ -51,4 +51,8 @@ mat-card-header
 }
 @media (max-width:600px)
 {
+  .changeFormCard
+  {
+    min-width: 215px;
+  }
 }
