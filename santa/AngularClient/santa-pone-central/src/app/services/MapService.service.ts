@@ -80,10 +80,8 @@ export class MapService {
   {
     let mappedProfileRecipient: ProfileRecipient =
     {
-      clientID: recipient.recipientClientID,
+      recipientClient: this.mapMeta(recipient.recipientClient),
       relationXrefID: recipient.relationXrefID,
-      clientName: recipient.name,
-      clientNickname: recipient.nickname,
       assignmentStatus: this.mapAssignmentStatus(recipient.assignmentStatus),
       address: this.mapAddress(recipient.address),
       recipientEvent: this.mapEvent(recipient.recipientEvent),
@@ -169,12 +167,16 @@ export class MapService {
     let mappedRelationshipMeta: RelationshipMeta =
     {
       relationshipClient: this.mapMeta(relationship.relationshipClient),
-      relationshipEventTypeID: relationship.relationshipEventTypeID,
+      eventType: this.mapEvent(relationship.eventType),
       clientRelationXrefID: relationship.clientRelationXrefID,
       assignmentStatus: this.mapAssignmentStatus(relationship.assignmentStatus),
+      tags: [],
       removable: relationship.removable,
       completed: relationship.completed
     };
+    relationship.tags.forEach(tag => {
+      mappedRelationshipMeta.tags.push(this.mapTag(tag))
+    });
 
     return mappedRelationshipMeta
   }
