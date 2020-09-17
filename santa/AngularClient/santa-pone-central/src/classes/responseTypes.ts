@@ -90,13 +90,6 @@ export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
     clientEventTypeID: string;
 }
-// Response model for modifying the completion status of a sender/reciever relationship
-export class RecipientCompletionResponse
-{
-    recipientID: string;
-    eventTypeID: string;
-    completed: boolean;
-}
 // Response model for marking if a question is viewable by the person(s) sending to them
 export class QuestionReadabilityResponse
 {

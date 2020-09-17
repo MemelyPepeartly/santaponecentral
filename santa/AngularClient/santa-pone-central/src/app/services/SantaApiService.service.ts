@@ -14,7 +14,6 @@ import { ClientResponse,
   MessageApiReadResponse,
   ClientSignupResponse,
   ClientRelationshipsResponse,
-  RecipientCompletionResponse,
   QuestionReadabilityResponse,
   ClientSenderRecipientRelationshipReponse,
   MessageApiReadAllResponse,
@@ -255,9 +254,6 @@ export class SantaApiPutService {
   }
   putClientIsAdmin(id: string, updatedClient: ClientIsAdminResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient).pipe(map(this.extractData));
-  }
-  putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel).pipe(map(this.extractData));
   }
   putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + clientID + '/Relationship/' + assignmentXrefID + "/AssignmentStatus", response).pipe(map(this.extractData));

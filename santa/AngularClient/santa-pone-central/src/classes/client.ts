@@ -27,7 +27,6 @@ export class RelationshipMeta {
   clientRelationXrefID: string;
   assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
-  completed: boolean;
 }
 export class AssignmentStatus {
   assignmentStatusID: string;

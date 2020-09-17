@@ -171,8 +171,7 @@ export class MapService {
       clientRelationXrefID: relationship.clientRelationXrefID,
       assignmentStatus: this.mapAssignmentStatus(relationship.assignmentStatus),
       tags: [],
-      removable: relationship.removable,
-      completed: relationship.completed
+      removable: relationship.removable
     };
     relationship.tags.forEach(tag => {
       mappedRelationshipMeta.tags.push(this.mapTag(tag))
