@@ -39,12 +39,11 @@
 }
 .selectedRelationshipDiv
 {
-  display: inline-block;
-  width: 46%;
-  margin-left: 2%;
-  margin-right: 2%;
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 15px;
-  vertical-align: top;
 }
 .selectedRelationshipCard
 {
@@ -66,7 +65,45 @@
 {
   min-width: 250px;
 }
-
+.infoDiv
+{
+  display: block;
+  color: rgba(0,0,0,.54);
+  margin-top: 15px;
+  text-align: center;
+}
+.infoTitle
+{
+  color: black;
+}
+.tagDiv
+{
+  display: inline-block;
+  width: 90%;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.tag
+{
+  display: inline-block;
+  text-align: center;
+  width: 150px;
+  margin: 2px;
+}
+.tagText
+{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.statusController
+{
+  display: block;
+  margin-top: 15px;
+}
 @media (max-width:600px)
 {
   .relationshipDiv
@@ -91,5 +128,16 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+  }
+  .tagText
+  {
+    max-width: 100px;
+  }
+  .tag
+  {
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    margin: 2px;
   }
 }
