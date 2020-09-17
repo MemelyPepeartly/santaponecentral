@@ -100,5 +100,13 @@ export class AssignmentsPanelComponent implements OnInit {
   public emitRemoveRecipient(relationship: RelationshipMeta)
   {
     this.removeClickedEvent.emit(relationship);
+    if(this.assignments.some((relation: RelationshipMeta) => {return relation.clientRelationXrefID == relationship.clientRelationXrefID}))
+    {
+      this.selectedAsssignment = new RelationshipMeta();
+    }
+    else if(this.senders.some((relation: RelationshipMeta) => {return relation.clientRelationXrefID == relationship.clientRelationXrefID}))
+    {
+      this.selectedSender = new RelationshipMeta();
+    }
   }
 }

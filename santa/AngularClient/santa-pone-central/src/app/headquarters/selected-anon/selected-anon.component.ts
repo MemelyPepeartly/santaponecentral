@@ -483,11 +483,12 @@ export class SelectedAnonComponent implements OnInit {
     }
     var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, response).toPromise();
     this.client = this.ApiMapper.mapClient(res);
-    if(this.selectedRecipientEvent != undefined)
-    {
-      await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
-    }
+
     this.actionTaken.emit(true);
+    this.recipientOpen = false;
+    this.selectedRecipientEvent = new EventType();
+    this.softRefreshClient();
+
     this.beingRemoved = false;
   }
   public async removeTagFromClient(tag: Tag)
@@ -601,7 +602,7 @@ export class SelectedAnonComponent implements OnInit {
 
     this.changingEmail = false;
   }
-  public async softRefreshClient(emitRefresh: boolean)
+  public async softRefreshClient(emitRefresh: boolean = false)
   {
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
     if(emitRefresh)
