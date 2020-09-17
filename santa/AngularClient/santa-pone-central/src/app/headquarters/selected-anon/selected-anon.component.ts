@@ -480,7 +480,7 @@ export class SelectedAnonComponent implements OnInit {
     let response: ClientSenderRecipientRelationshipReponse =
     {
       clientID: anon.relationshipClient.clientID,
-      clientEventTypeID: anon.relationshipEventTypeID
+      clientEventTypeID: anon.eventType.eventTypeID
     }
     var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, response).toPromise();
     this.client = this.ApiMapper.mapClient(res);
@@ -498,7 +498,7 @@ export class SelectedAnonComponent implements OnInit {
     let response: RecipientCompletionResponse =
     {
       completed: true,
-      eventTypeID: anon.relationshipEventTypeID,
+      eventTypeID: anon.eventType.eventTypeID,
       recipientID: anon.relationshipClient.clientID
     };
 
@@ -627,11 +627,11 @@ export class SelectedAnonComponent implements OnInit {
   }
   public getEventSenders(eventType: EventType) : Array<RelationshipMeta>
   {
-    return this.client.senders.filter((sender: RelationshipMeta) => {return sender.relationshipEventTypeID == eventType.eventTypeID});
+    return this.client.senders.filter((sender: RelationshipMeta) => {return sender.eventType.eventTypeID == eventType.eventTypeID});
   }
   public getEventAssignments(eventType: EventType) : Array<RelationshipMeta>
   {
-    return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.relationshipEventTypeID == eventType.eventTypeID});
+    return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.eventType.eventTypeID == eventType.eventTypeID});
   }
   test()
   {
