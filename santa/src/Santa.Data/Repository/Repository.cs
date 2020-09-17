@@ -108,6 +108,7 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
+                    .AsNoTracking()
                     .ToListAsync())
                     .Select(Mapper.MapClient).ToList();
 
@@ -174,6 +175,7 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.ClientId == clientId));
 
                 return logicClient;
@@ -239,6 +241,7 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.Email == clientEmail));
 
                 return logicClient;
@@ -666,6 +669,7 @@ namespace Santa.Data.Repository
                     .Include(c => c.ClientRelationXrefRecipientClient)
                     .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(x => x.AssignmentStatus)
+                    .AsNoTracking()
                     .ToListAsync();
 
                 foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
@@ -732,6 +736,7 @@ namespace Santa.Data.Repository
                         .ThenInclude(cm => cm.MessageReceiverClient)
                     .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageSenderClient)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
 
                 logicHistory.relationXrefID = clientRelationXrefID;
@@ -779,6 +784,7 @@ namespace Santa.Data.Repository
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageReceiverClient)
                     .OrderBy(dt => dt.DateTimeSent)
+                    .AsNoTracking()
                     .ToListAsync();
 
                 // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
