@@ -259,6 +259,9 @@ export class SantaApiPutService {
   putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel).pipe(map(this.extractData));
   }
+  putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + clientID + '/Relationship/' + assignmentXrefID + "/AssignmentStatus", response).pipe(map(this.extractData));
+  }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
   }

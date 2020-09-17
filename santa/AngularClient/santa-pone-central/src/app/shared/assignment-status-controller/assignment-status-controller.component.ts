@@ -58,27 +58,55 @@ export class AssignmentStatusControllerComponent implements OnInit {
       assignmentStatusID: this.selectedAssignmentStatus.assignmentStatusID
     };
 
-    this.santaApiPut.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
-      let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
-      this.newStatusPutEvent.emit(newAssignmentStatus);
+    if(!this.isAdmin)
+    {
+      this.santaApiPut.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
+        let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
+        this.newStatusPutEvent.emit(newAssignmentStatus);
 
-      this.puttingAssignmentStatus = false;
-      this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
-      this.openChangeForm = false;
-      this.showSuccess = true;
-      this.showError = false;
-      this.selectedAssignmentStatus = new AssignmentStatus();
-    }, err => {
-      console.group()
-      console.log("Something went wrong!");
-      console.log(err);
-      console.groupEnd();
+        this.puttingAssignmentStatus = false;
+        this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
+        this.openChangeForm = false;
+        this.showSuccess = true;
+        this.showError = false;
+        this.selectedAssignmentStatus = new AssignmentStatus();
+      }, err => {
+        console.group()
+        console.log("Something went wrong!");
+        console.log(err);
+        console.groupEnd();
 
-      this.puttingAssignmentStatus = false;
-      this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
-      this.showError = true;
-      this.showSuccess = false;
-    });
+        this.puttingAssignmentStatus = false;
+        this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
+        this.showError = true;
+        this.showSuccess = false;
+      });
+    }
+    else
+    {
+      this.santaApiPut.putAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
+        let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
+        this.newStatusPutEvent.emit(newAssignmentStatus);
+
+        this.puttingAssignmentStatus = false;
+        this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
+        this.openChangeForm = false;
+        this.showSuccess = true;
+        this.showError = false;
+        this.selectedAssignmentStatus = new AssignmentStatus();
+      }, err => {
+        console.group()
+        console.log("Something went wrong!");
+        console.log(err);
+        console.groupEnd();
+
+        this.puttingAssignmentStatus = false;
+        this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
+        this.showError = true;
+        this.showSuccess = false;
+      });
+    }
+
   }
   public setSelectedStatus(assignmentStatus: AssignmentStatus)
   {
