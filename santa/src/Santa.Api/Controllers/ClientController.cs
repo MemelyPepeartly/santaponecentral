@@ -50,7 +50,7 @@ namespace Santa.Api.Controllers
                 {
                     return NoContent();
                 }
-                return Ok(JsonConvert.SerializeObject(clients.OrderBy(c => c.nickname), Formatting.Indented));
+                return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (ArgumentNullException e)
             {
@@ -778,35 +778,15 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
-        // PUT: api/Client/5/Recipient
+
+        // PUT: api/Client/5/Relationship/5/AssignmentStatus
         /// <summary>
-        /// Updates the completion status of a relationship by sender, reciever, and event type ID's
+        /// Changes the status of a given assignment by ID's and a body with the new assignment status ID
         /// </summary>
         /// <param name="clientID"></param>
-        /// <param name="recipientCompletionModel"></param>
+        /// <param name="assignmentRelationshipID"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Recipient")]
-        [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> UpdateRecipientXrefCompletionStatus(Guid clientID, [FromBody] EditRecipientCompletionModel recipientCompletionModel)
-        {
-            try
-            {
-                if(recipientCompletionModel.recipientID.Equals(Guid.Empty) || recipientCompletionModel.eventTypeID.Equals(Guid.Empty))
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "One or both of the required ID's for reciever or eventType were not present on the request");
-                }
-                else
-                {
-                    await repository.UpdateClientAssignmentCompletedStatusByID(clientID, recipientCompletionModel.recipientID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
-                    await repository.SaveAsync();
-                    return (await repository.GetClientByIDAsync(clientID));
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
-        }
         [HttpPut("{clientID}/Relationship/{assignmentRelationshipID}/AssignmentStatus")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
