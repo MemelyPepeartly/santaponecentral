@@ -6,7 +6,7 @@ import { MapService, MapResponse } from 'src/app/services/mapService.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question, SurveyResponse } from 'src/classes/survey';
@@ -117,7 +117,6 @@ export class SelectedAnonComponent implements OnInit {
   public editingTags: boolean = false;
   public modyingTagRelationships: boolean = false;
   public initializing: boolean = false;
-  public markingAsComplete: boolean = false;
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
@@ -129,8 +128,6 @@ export class SelectedAnonComponent implements OnInit {
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
   public gettingEventDetails: boolean = true;
-  public gatheringRecipients: boolean = false;
-  public gatheringSenders: boolean = false;
   public gatheringAllEvents: boolean = true;
   public gatheringAllMessages: boolean = true;
   public gatheringAllQuestions: boolean = true;
@@ -307,6 +304,7 @@ export class SelectedAnonComponent implements OnInit {
       this.actionTaken.emit(false);
     });
   }
+
   public async setAsCompleted()
   {
     this.showButtonSpinner = true;
@@ -491,21 +489,6 @@ export class SelectedAnonComponent implements OnInit {
     }
     this.actionTaken.emit(true);
     this.beingRemoved = false;
-  }
-  public async markAsComplete(anon: RelationshipMeta)
-  {
-    this.markingAsComplete = true;
-
-    let response: RecipientCompletionResponse =
-    {
-      completed: true,
-      eventTypeID: anon.eventType.eventTypeID,
-      recipientID: anon.relationshipClient.clientID
-    };
-
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
-
-    this.markingAsComplete = false;
   }
   public async removeTagFromClient(tag: Tag)
   {
