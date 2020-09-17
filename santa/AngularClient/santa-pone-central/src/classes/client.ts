@@ -22,7 +22,8 @@ export class Client {
 // Class used for holding sender and event ID information
 export class RelationshipMeta {
   relationshipClient: ClientMeta = new ClientMeta();
-  relationshipEventTypeID: string;
+  eventType: EventType = new EventType();
+  tags: Array<Tag>;
   clientRelationXrefID: string;
   assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
