@@ -47,15 +47,6 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task UpdateClientByIDAsync(Client targetClient);
         /// <summary>
-        /// Updates the completion status of a relation (Assignmnent) by a senderID, recipientID, eventTypeID, and the targeted completion status
-        /// </summary>
-        /// <param name="senderID"></param>
-        /// <param name="recipientID"></param>
-        /// <param name="eventTypeID"></param>
-        /// <param name="targetCompletedStatus"></param>
-        /// <returns></returns>
-        Task UpdateClientAssignmentCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
-        /// <summary>
         /// Updates an assignment's progress to a chosen assignment status ID
         /// </summary>
         /// <param name="assignmentID"></param>

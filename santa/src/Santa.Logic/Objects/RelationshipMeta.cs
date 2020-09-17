@@ -11,7 +11,6 @@ namespace Santa.Logic.Objects
         public Event eventType { get; set; }
         public AssignmentStatus assignmentStatus { get; set; }
         public List<Tag> tags { get; set; }
-        public bool completed { get; set; }
         public bool removable { get; set; }
     }
 }
