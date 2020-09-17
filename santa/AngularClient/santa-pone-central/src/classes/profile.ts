@@ -3,6 +3,7 @@ import { Address } from './address';
 import { SurveyResponse } from './survey';
 import { EventType } from './eventType';
 import { AssignmentStatus } from './client';
+import { ClientMeta } from './message';
 
 export class Profile
 {
@@ -18,10 +19,8 @@ export class Profile
 }
 export class ProfileRecipient
 {
-    clientID: string;
+    recipientClient: ClientMeta;
     relationXrefID?: string = null;
-    clientName: string;
-    clientNickname: string;
     address: Address = new Address();
     assignmentStatus: AssignmentStatus = new AssignmentStatus();
     recipientEvent: EventType = new EventType();
