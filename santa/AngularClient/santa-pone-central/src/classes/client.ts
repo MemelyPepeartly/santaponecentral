@@ -28,6 +28,12 @@ export class RelationshipMeta {
   assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
 }
+export class AllowedAssignmentMeta {
+  clientMeta: ClientMeta;
+  tags: Array<Tag> = [];
+  totalSenders: number;
+  totalAssignments: number;
+}
 export class AssignmentStatus {
   assignmentStatusID: string;
   assignmentStatusName: string;
