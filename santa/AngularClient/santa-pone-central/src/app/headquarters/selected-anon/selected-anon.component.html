@@ -356,7 +356,7 @@
                       <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
                     </div>
                     <div class="recipientListContentDiv">
-                      <app-small-loading-spin class="recipientListSpinner" *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded) || true"></app-small-loading-spin>
+                      <app-small-loading-spin class="recipientListSpinner" *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
                       <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
                           <mat-list-option class="recipientListOption" *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">
                             <div class="recipientListOptionInfoDiv">
