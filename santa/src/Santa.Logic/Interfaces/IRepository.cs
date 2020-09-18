@@ -282,7 +282,7 @@ namespace Santa.Logic.Interfaces
         /// <param name="clientID"></param>
         /// <param name="eventTypeID"></param>
         /// <returns></returns>
-        Task<List<ClientMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID);
+        Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID);
         #endregion
 
     }

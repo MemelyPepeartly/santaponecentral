@@ -1592,13 +1592,13 @@ namespace Santa.Data.Repository
             }
 
         }
-        public async Task<List<ClientMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
+        public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {
             try
             {
                 Logic.Objects.Client logicClient = await GetClientByIDAsync(clientID);
                 List<Logic.Objects.Client> allClients = await GetAllClients();
-                List<ClientMeta> allowedAssignments = new List<ClientMeta>();
+                List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
 
 
                 foreach(Logic.Objects.Client potentialAssignment in allClients)
@@ -1606,7 +1606,7 @@ namespace Santa.Data.Repository
                     // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
                     if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                     {
-                        allowedAssignments.Add(Mapper.MapClientMeta(potentialAssignment));
+                        allowedAssignments.Add(Mapper.MapAllowedAssignmentMeta(potentialAssignment));
                     }
                 }
                 return allowedAssignments;
