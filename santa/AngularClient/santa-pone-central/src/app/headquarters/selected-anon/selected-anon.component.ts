@@ -85,7 +85,7 @@ export class SelectedAnonComponent implements OnInit {
   public availableTags: Array<Tag> = new Array<Tag>();
   public currentTags: Array<Tag> = new Array<Tag>();
 
-  public selectedRecipients: Array<Client> = new Array<Client>();
+  public selectedRecipients: Array<AllowedAssignmentMeta> = new Array<AllowedAssignmentMeta>();
   public selectedTags: Array<Tag> = new Array<Tag>();
   public selectedRecipientEvent: EventType = new EventType();
 
@@ -430,9 +430,9 @@ export class SelectedAnonComponent implements OnInit {
       assignments: []
     };
 
-    this.selectedRecipients.forEach((selectedRecipient: Client) => {
-      assignments.assignments.push(selectedRecipient.clientID);
-    })
+    this.selectedRecipients.forEach((selectedRecipient: AllowedAssignmentMeta) => {
+      assignments.assignments.push(selectedRecipient.clientMeta.clientID);
+    });
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
