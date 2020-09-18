@@ -358,7 +358,21 @@
                     <div class="recipientListContentDiv">
                       <app-small-loading-spin *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
                       <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
-                          <mat-list-option *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
+                          <mat-list-option class="recipientListOption" *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">
+                            <div class="recipientListOptionInfoDiv">
+                              <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
+                              <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
+                              <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
+                              <div class="recipientTagDiv">
+                                <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
+                                  matTooltip="{{tag.tagName}}"
+                                  [matTooltipPosition]="'below'"
+                                  [disableRipple]="true">
+                                  <span class="recipientTagText">{{tag.tagName}}</span>
+                                </mat-chip>
+                              </div>
+                            </div>
+                          </mat-list-option>
                       </mat-selection-list>
                     </div>
                   </mat-card-content>

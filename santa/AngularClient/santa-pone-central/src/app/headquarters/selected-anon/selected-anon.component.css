@@ -189,3 +189,38 @@ app-small-loading-spin {
 {
   text-align: left;
 }
+.recipientListOption
+{
+  height: fit-content;
+}
+.recipientListOptionInfoDiv
+{
+  display: block;
+}
+.recipientInfoSubtitle
+{
+  margin-left: 20px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.recipientTagDiv
+{
+  display: block;
+  margin-left: 15px;
+}
+.recipientTag
+{
+  text-align: center;
+  font-size: 12px;
+  width: 70px;
+  min-height: 20px;
+  margin: 2px;
+}
+.recipientTagText
+{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
-import { AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
+import { AllowedAssignmentMeta, AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
@@ -61,7 +61,7 @@ export class SelectedAnonComponent implements OnInit {
 
   public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
   public recipients: Array<RelationshipMeta> = new Array<RelationshipMeta>();
-  public allowedAssignmentOptions: Array<ClientMeta> = new Array<ClientMeta>();
+  public allowedAssignmentOptions: Array<AllowedAssignmentMeta> = new Array<AllowedAssignmentMeta>();
   public events: Array<EventType> = new Array<EventType>();
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
@@ -452,7 +452,7 @@ export class SelectedAnonComponent implements OnInit {
     var response = await this.SantaApiGet.getAllowedAssignmentsByID(this.client.clientID, this.selectedRecipientEvent.eventTypeID).toPromise();
     this.allowedAssignmentOptions = [];
     response.forEach((meta: any) => {
-      this.allowedAssignmentOptions.push(this.ApiMapper.mapMeta(meta))
+      this.allowedAssignmentOptions.push(this.ApiMapper.mapAllowedAssignmentMeta(meta))
     });
 
     this.recipientsAreLoaded=true;
