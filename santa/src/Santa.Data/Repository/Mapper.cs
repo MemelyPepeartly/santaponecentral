@@ -144,6 +144,21 @@ namespace Santa.Data.Repository
 
         #endregion
 
+        #region Allowed Assignment Meta
+        public static AllowedAssignmentMeta MapAllowedAssignmentMeta(Logic.Objects.Client logicClient)
+        {
+            AllowedAssignmentMeta logicAllowedAssignmentMeta = new AllowedAssignmentMeta()
+            {
+                clientMeta = Mapper.MapClientMeta(logicClient),
+                tags = logicClient.tags,
+                totalSenders = logicClient.senders.Count,
+                totalAssignments = logicClient.assignments.Count
+            };
+
+            return logicAllowedAssignmentMeta;
+        }
+        #endregion
+
         #region Assignment Status
         public static Entities.AssignmentStatus MapAssignmentStatus(Logic.Objects.AssignmentStatus logicAssignmentStatus)
         {
