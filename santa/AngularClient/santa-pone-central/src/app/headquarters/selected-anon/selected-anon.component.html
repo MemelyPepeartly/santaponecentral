@@ -312,6 +312,7 @@
         <mat-card-actions>
 
             <!--Add recipient option-->
+            <!--
             <div class="optionDiv" id="recipientOptionDiv" *ngIf="isAnonApproved()">
                 <div>
                     <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
@@ -324,9 +325,10 @@
                                 <mat-toolbar-row *ngIf="selectedRecipientEvent.eventDescription == undefined">
                                     Choose an event
                                 </mat-toolbar-row>
-                            </mat-toolbar>
+                            </mat-toolbar>-->
 
                             <!-- For each event in the list of all events -->
+                            <!--
                             <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
                             <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
                                 <mat-list-option *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
@@ -367,6 +369,60 @@
                     </mat-drawer-container>
                 </div>
             </div>
+            <mat-divider [inset]="true"></mat-divider>
+            -->
+
+            <mat-divider [inset]="true"></mat-divider>
+            <div class="optionDiv">
+              <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+
+              <p class="success" *ngIf="false"></p>
+              <p class="error" *ngIf="false"></p>
+              <button mat-raised-button id="toggleDiv"
+              matTooltip="Shows the list of assignable Anon's"
+              [matTooltipPosition]="'right'"
+              [disabled]="gatheringAllAssignmentsStatuses"
+              (click)="recipientOpen = !recipientOpen">Add recipients</button>
+              <mat-card-subtitle class="optionSub">
+                  <p>Adds people the Anon is sending to</p>
+              </mat-card-subtitle>
+
+              <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
+                <button mat-raised-button
+                    matTooltip="Confirm the selected Anon's as recipients"
+                    (click)="showRecipientListPostingSpinner = true;"
+                    (click)="addRecipientsToClient()"
+                    [matTooltipPosition]="'right'"
+                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
+                </button>
+              </div>
+
+              <div *ngIf="recipientOpen" id="eventRadioDiv">
+                <mat-radio-group [(ngModel)]="selectedRecipientEvent" [disabled]="!recipientsAreLoaded">
+                    <mat-radio-button *ngFor="let event of events"
+                      [disabled]="!recipientsAreLoaded"
+                      [value]="event"
+                      (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <p *ngIf="addRecipientSuccess" class="success">Added recipients to {{ client.clientNickname }}!</p>
+              <div class="recipientListContainer">
+                <mat-divider [inset]="true"></mat-divider>
+                <mat-toolbar class="centeredToolbar">Test</mat-toolbar>
+                <mat-card class="recipientListCard">
+                  <mat-card-content>
+                    <div class="recipientListContentDiv">
+                      <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
+                      <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
+                          <mat-list-option *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
+                      </mat-selection-list>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
+            </div>
+
             <mat-divider [inset]="true"></mat-divider>
 
             <!--Change Nickname Card-->
