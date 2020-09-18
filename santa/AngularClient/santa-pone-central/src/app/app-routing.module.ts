@@ -25,12 +25,10 @@ const appRoutes: Routes = [
     component: ProfileComponent,
     canActivate: [AuthGuard]
   },
-  /*
   {
     path: 'mission-boards',
     component: MissionBoardsComponent
   },
-  */
   {
     path: 'signup',
     component: SignupComponent

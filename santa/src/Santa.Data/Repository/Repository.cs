@@ -59,30 +59,18 @@ namespace Santa.Data.Repository
                 List<Logic.Objects.Client> clientList = (await santaContext.Client
                     /* Surveys and responses */
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
+                        .ThenInclude(sr => sr.Survey.EventType)
 
                     /* Sender/Assignment info and Tags */
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
                     .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
 
                     /* Relationship event */
                     .Include(c => c.ClientRelationXrefSenderClient)
@@ -108,6 +96,7 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
+                    .AsNoTracking()
                     .ToListAsync())
                     .Select(Mapper.MapClient).ToList();
 
@@ -125,30 +114,18 @@ namespace Santa.Data.Repository
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
                     /* Surveys and responses */
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
+                        .ThenInclude(sr => sr.Survey.EventType)
 
                     /* Sender/Assignment info and Tags */
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
                     .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
 
                     /* Relationship event */
                     .Include(c => c.ClientRelationXrefSenderClient)
@@ -174,7 +151,9 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
-                    .FirstOrDefaultAsync(c => c.ClientId == clientId));
+                    .Where(c => c.ClientId == clientId)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync());
 
                 return logicClient;
             }
@@ -190,30 +169,18 @@ namespace Santa.Data.Repository
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
                     /* Surveys and responses */
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
+                        .ThenInclude(sr => sr.Survey.EventType)
 
                     /* Sender/Assignment info and Tags */
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
                     .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
 
                     /* Relationship event */
                     .Include(c => c.ClientRelationXrefSenderClient)
@@ -239,7 +206,9 @@ namespace Santa.Data.Repository
 
                     /* Client approval status */
                     .Include(c => c.ClientStatus)
-                    .FirstOrDefaultAsync(c => c.Email == clientEmail));
+                    .Where(c => c.Email == clientEmail)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync());
 
                 return logicClient;
             }
@@ -414,36 +383,30 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
                     /* Assignment information and surveys */
-                    .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient)
-                            .ThenInclude(c => c.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
-                                .ThenInclude(sr => sr.Survey)
-                                    .ThenInclude(s => s.EventType)
-                    .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient)
-                            .ThenInclude(c => c.SurveyResponse)
-                                .ThenInclude(sr => sr.SurveyQuestion)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
+                            .ThenInclude(sr => sr.Survey.EventType)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse)
+                            .ThenInclude(sr => sr.SurveyQuestion)
 
                     /* Assignment event types */
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
 
                     /* Assignment Statuses */
-                    .Include(r => r.ClientRelationXrefRecipientClient)
-                    .Include(xr => xr.ClientRelationXrefRecipientClient)
-                        .ThenInclude(m => m.AssignmentStatus)
-                    .Include(xr => xr.ClientRelationXrefSenderClient)
-                        .ThenInclude(m => m.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(xref => xref.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(xref => xref.AssignmentStatus)
 
                     /* Sender/Assignment Tags */
                     .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(crxsc => crxsc.SenderClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(xref => xref.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
                     .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crxrc => crxrc.RecipientClient)
-                            .ThenInclude(c => c.ClientTagXref)
-                                .ThenInclude(txr => txr.Tag)
+                        .ThenInclude(xref => xref.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
 
                     /* Profile approval status */
                     .Include(s => s.ClientStatus)
@@ -452,10 +415,9 @@ namespace Santa.Data.Repository
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(s => s.SurveyQuestion)
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
-
-                    .FirstOrDefaultAsync(c => c.Email == email));
+                        .ThenInclude(sr => sr.Survey.EventType)
+                    .Where(c => c.Email == email)
+                    .FirstOrDefaultAsync());
 
                 List<Response> responsesToRemove = new List<Response>();
                 // For each recipient in the profile
@@ -629,7 +591,9 @@ namespace Santa.Data.Repository
                 var contextMessage = await santaContext.ChatMessage
                     .Include(r => r.MessageReceiverClient)
                     .Include(s => s.MessageSenderClient)
-                    .FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
+                    .Where(m => m.ChatMessageId == chatMessageID)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
                 return logicMessage;
             }
@@ -663,9 +627,28 @@ namespace Santa.Data.Repository
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
                 List<Entities.Client> listContextClient = await santaContext.Client
                     .Include(c => c.ClientStatus)
-                    .Include(c => c.ClientRelationXrefRecipientClient)
+
+                    /* Assignment Status */
                     .Include(c => c.ClientRelationXrefRecipientClient)
                         .ThenInclude(x => x.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.AssignmentStatus)
+
+                    /* Event types */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.EventType)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.EventType)
+
+                    /* Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    .AsNoTracking()
                     .ToListAsync();
 
                 foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
@@ -722,9 +705,7 @@ namespace Santa.Data.Repository
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
-                        .ThenInclude(e => e.ClientRelationXref)
-                    .Include(r => r.EventType)
-                        .ThenInclude(e => e.Survey)
+                    .Include(r => r.EventType.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(r => r.AssignmentStatus)
@@ -732,7 +713,9 @@ namespace Santa.Data.Repository
                         .ThenInclude(cm => cm.MessageReceiverClient)
                     .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageSenderClient)
-                    .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
+                    .Where(x => x.ClientRelationXrefId == clientRelationXrefID)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
 
                 logicHistory.relationXrefID = clientRelationXrefID;
                 logicHistory.eventType = Mapper.MapEvent(contextRelationship.EventType);
@@ -778,6 +761,7 @@ namespace Santa.Data.Repository
                     .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == conversationClient.clientID || m.MessageReceiverClientId == conversationClient.clientID))
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageReceiverClient)
+                    .AsNoTracking()
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 
@@ -1019,8 +1003,9 @@ namespace Santa.Data.Repository
                         .ThenInclude(sqx => sqx.SurveyQuestion)
                             .ThenInclude(sq => sq.SurveyQuestionOptionXref)
                                 .ThenInclude(sqox => sqox.SurveyOption)
+                    .Where(s => s.SurveyId == surveyId)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
+                    .FirstOrDefaultAsync());
                 return logicSurvey;
             }
             catch (Exception e)
