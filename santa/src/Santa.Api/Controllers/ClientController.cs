@@ -62,7 +62,6 @@ namespace Santa.Api.Controllers
         // GET: api/Client/5
         /// <summary>
         /// Gets a client by an ID
-        /// 
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
@@ -82,8 +81,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Client/Email/email@domain.com
         /// <summary>
-        /// Gets a client by an ID
-        /// 
+        /// Gets a client by an email
         /// </summary>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
@@ -127,7 +125,7 @@ namespace Santa.Api.Controllers
         // GET: api/Client/5/AllowedAssignment/5
         [HttpGet("{clientID}/AllowedAssignment/{eventTypeID}")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<ClientMeta>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
+        public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
             try
             {
