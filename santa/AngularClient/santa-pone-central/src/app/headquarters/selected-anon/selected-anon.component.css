@@ -181,6 +181,10 @@ app-small-loading-spin {
   margin-left: auto;
   margin-right: auto;
 }
+.recipientListContentSelectEventDiv
+{
+  text-align: center;
+}
 .recipientListContentDiv
 {
   text-align: left;

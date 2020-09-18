@@ -311,68 +311,9 @@
         </mat-card-header>
         <mat-card-actions>
 
+            <mat-divider [inset]="true"></mat-divider>
+
             <!--Add recipient option-->
-            <!--
-            <div class="optionDiv" id="recipientOptionDiv" *ngIf="isAnonApproved()">
-                <div>
-                    <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
-                                                      'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
-                        <mat-drawer #drawer class="recipientNav" mode="side">
-                            <mat-toolbar>
-                                <mat-toolbar-row *ngIf="selectedRecipientEvent.eventDescription != undefined">
-                                    {{selectedRecipientEvent.eventDescription}}
-                                </mat-toolbar-row>
-                                <mat-toolbar-row *ngIf="selectedRecipientEvent.eventDescription == undefined">
-                                    Choose an event
-                                </mat-toolbar-row>
-                            </mat-toolbar>-->
-
-                            <!-- For each event in the list of all events -->
-                            <!--
-                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                            <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
-                                <mat-list-option *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
-                            </mat-selection-list>
-                        </mat-drawer>
-                        <div
-                            [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
-                            <mat-icon>person_add</mat-icon>
-                            <div id="toggleDiv">
-                                <button mat-raised-button
-                                    matTooltip="Shows the list of assignable Anon's"
-                                    [matTooltipPosition]="'right'"
-                                    [disabled]="gatheringAllAssignmentsStatuses"
-                                    (click)="drawer.toggle()"
-                                    (click)="recipientOpen = !recipientOpen">Add recipients</button>
-                                <mat-card-subtitle class="optionSub">
-                                    <p>Adds people the Anon is sending to</p>
-                                </mat-card-subtitle>
-                            </div>
-                            <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button
-                                    matTooltip="Confirm the selected Anon's as recipients"
-                                    (click)="showRecipientListPostingSpinner = true;"
-                                    (click)="addRecipientsToClient()"
-                                    [matTooltipPosition]="'right'"
-                                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
-                                </button>
-                            </div>
-                            <div *ngIf="recipientOpen" id="eventRadioDiv">
-                                <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent" *ngIf="recipientsAreLoaded">
-                                    <mat-radio-button *ngFor="let event of events" [value]="event" (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                            <p *ngIf="addRecipientSuccess" class="success">Added recipients to
-                                {{ client.clientNickname }}!</p>
-                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                        </div>
-                    </mat-drawer-container>
-                </div>
-            </div>
-            <mat-divider [inset]="true"></mat-divider>
-            -->
-
-            <mat-divider [inset]="true"></mat-divider>
             <div class="optionDiv">
               <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
@@ -405,15 +346,18 @@
                       (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
                 </mat-radio-group>
               </div>
-              <p *ngIf="addRecipientSuccess" class="success">Added recipients to {{ client.clientNickname }}!</p>
-              <div class="recipientListContainer">
+              <p *ngIf="addRecipientSuccess" class="success">Added assignments to {{ client.clientNickname }} for the {{ selectedRecipientEvent.eventDescription }}!</p>
+              <div class="recipientListContainer" *ngIf="recipientOpen">
                 <mat-divider [inset]="true"></mat-divider>
-                <mat-toolbar class="centeredToolbar">Test</mat-toolbar>
+                <mat-toolbar class="centeredToolbar">Add an Assignment</mat-toolbar>
                 <mat-card class="recipientListCard">
                   <mat-card-content>
+                    <div class="recipientListContentSelectEventDiv" *ngIf="selectedRecipientEvent.eventTypeID == undefined">
+                      <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
+                    </div>
                     <div class="recipientListContentDiv">
-                      <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                      <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
+                      <app-small-loading-spin *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
+                      <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
                           <mat-list-option *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
                       </mat-selection-list>
                     </div>
