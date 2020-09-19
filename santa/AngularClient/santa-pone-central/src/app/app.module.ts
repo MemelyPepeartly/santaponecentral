@@ -56,6 +56,7 @@ import { ManualAddComponent } from './headquarters/manual-add/manual-add.compone
 import { ResponseListComponent } from './shared/response-list/response-list.component';
 import { AssignmentStatusControllerComponent } from './shared/assignment-status-controller/assignment-status-controller.component';
 import { AssignmentsPanelComponent } from './headquarters/selected-anon/assignments-panel/assignments-panel.component';
+import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
 
 
 @NgModule({
@@ -101,7 +102,8 @@ import { AssignmentsPanelComponent } from './headquarters/selected-anon/assignme
       ManualAddComponent,
       ResponseListComponent,
       AssignmentStatusControllerComponent,
-      AssignmentsPanelComponent
+      AssignmentsPanelComponent,
+      AgentCatalogueComponent
    ],
    entryComponents: [
       LoginComponent
