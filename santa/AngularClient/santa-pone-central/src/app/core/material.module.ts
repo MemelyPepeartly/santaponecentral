@@ -23,6 +23,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
   MatTooltipModule,
   MatChipsModule,
   MatBadgeModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatAutocompleteModule
   ],
   exports: [
   CommonModule,
@@ -78,7 +80,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
    MatTooltipModule,
    MatChipsModule,
    MatBadgeModule,
-   MatProgressBarModule
+   MatProgressBarModule,
+   MatAutocompleteModule
    ],
 })
 export class CustomMaterialModule { }

@@ -1,1 +1,68 @@
-<p>agent-catalogue works!</p>
+
+
+<div class="searchBarContainer mat-elevation-z3">
+  <div class="searchBarDiv">
+    <mat-form-field class="searchBarFormField mat-elevation-z3">
+      <mat-label>Search Query</mat-label>
+      <input matInput type="text" [(ngModel)]="value">
+      <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-card class="helperCard mat-elevation-z3">
+      <mat-card-header>
+        <mat-card-title>Search Term Helper</mat-card-title>
+        <mat-card-subtitle>Click on any of these to add them to your search query</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div class="searchBarObjectsDiv">
+          <div class="recommendedDiv">
+            <mat-toolbar>Tags</mat-toolbar>
+            <div class="chipDiv">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let tag of allTags"
+                  matTooltip="{{tag.tagName}}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{tag.tagName}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+
+          <mat-divider class="recommendedDividerStyle" [inset]="true"></mat-divider>
+
+          <div class="recommendedDiv">
+            <mat-toolbar>Client Statuses</mat-toolbar>
+            <div class="chipDiv">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let status of allClientStatuses"
+                  matTooltip="{{ status.statusDescription }}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{status.statusDescription}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+
+          <mat-divider class="recommendedDividerStyle" [inset]="true"></mat-divider>
+
+          <div class="recommendedDiv">
+            <mat-toolbar>Events</mat-toolbar>
+            <div class="chipDiv">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let event of allEvents"
+                  matTooltip="{{ event.eventDescription }}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{event.eventDescription}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
