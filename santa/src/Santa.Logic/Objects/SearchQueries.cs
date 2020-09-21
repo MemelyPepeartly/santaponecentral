@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Santa.Api.Models.Catalogue_Models
+namespace Santa.Logic.Objects
 {
-    public class searchQueryModel
+    public class SearchQueries
     {
         public List<Guid> tags { get; set; }
         public List<Guid> events { get; set; }
