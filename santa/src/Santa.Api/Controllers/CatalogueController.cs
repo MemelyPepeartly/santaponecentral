@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Santa.Api.Models.Catalogue_Models;
-using Santa.Api.Services.Searcher_Service;
-using Santa.Data.Entities;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -16,20 +13,20 @@ namespace Santa.Api.Controllers
     [ApiController]
     public class CatalogueController : ControllerBase
     {
-        private readonly ICatalogue catalogue;
+        private readonly IRepository repository;
 
-        public CatalogueController(ICatalogue _catalogue)
+        public CatalogueController(IRepository _repository)
         {
-            catalogue = _catalogue ?? throw new ArgumentNullException(nameof(_catalogue));
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
 
-        // POST: api/Search/Clients
-        [HttpPost]
-        public async Task<ActionResult<List<Client>>> GetClientsByQuery([FromBody] searchQueryModel model)
+        // POST: api/Catalogue/SearchClients
+        [HttpPost("SearchClients")]
+        public async Task<ActionResult<List<Client>>> GetClientsByQuery([FromBody] SearchQueries model)
         {
             try
             {
-                List<Logic.Objects.Client> listLogicClient = await catalogue.searchClientByQuery(model);
+                List<Logic.Objects.Client> listLogicClient = await repository.SearchClientByQuery(model);
 
                 return Ok(listLogicClient);
             }

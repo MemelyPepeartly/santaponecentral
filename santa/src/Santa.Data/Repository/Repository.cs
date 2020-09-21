@@ -1616,6 +1616,28 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
+
+        public async Task<List<Logic.Objects.Client>> SearchClientByQuery(SearchQueries searchQuery)
+        {
+            List<Logic.Objects.Client> allClientList = await GetAllClients();
+
+            List<Logic.Objects.Client> matchingClients = allClientList
+                .Where(c => !searchQuery.tags.Any() || c.tags.Any(t => searchQuery.tags.Contains(t.tagID)))
+                .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Contains(c.clientStatus.statusID))
+                .Where(c => !searchQuery.events.Any() || c.responses.Any(r => searchQuery.events.Contains(r.responseEvent.eventTypeID))).ToList();
+
+            /*
+            IEnumerable<Logic.Objects.Client> matchingClientsQuery = new List<Logic.Objects.Client>();
+
+            if (searchQuery.tags.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.tags.Any(t => searchQuery.tags.Contains(t.tagID)));
+            if (searchQuery.statuses.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => searchQuery.statuses.Contains(c.clientStatus.statusID));
+            if (searchQuery.events.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.responses.Any(r => searchQuery.events.Contains(r.responseEvent.eventTypeID)));
+
+            List<Logic.Objects.Client> matchingClients = matchingClientsQuery.ToList();
+            */
+
+            return matchingClients;
+        }
         #endregion
     }
 }

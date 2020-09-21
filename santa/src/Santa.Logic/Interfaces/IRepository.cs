@@ -283,6 +283,12 @@ namespace Santa.Logic.Interfaces
         /// <param name="eventTypeID"></param>
         /// <returns></returns>
         Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID);
+        /// <summary>
+        /// Search a list of clients and returns a list based on a model of queries
+        /// </summary>
+        /// <param name="searchQuery"></param>
+        /// <returns></returns>
+        Task<List<Client>> SearchClientByQuery(SearchQueries searchQuery);
         #endregion
 
     }
