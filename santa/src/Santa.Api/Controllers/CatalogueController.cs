@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
@@ -11,6 +13,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CatalogueController : ControllerBase
     {
         private readonly IRepository repository;
@@ -22,6 +25,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Catalogue/SearchClients
         [HttpPost("SearchClients")]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Client>>> GetClientsByQuery([FromBody] SearchQueries model)
         {
             try
