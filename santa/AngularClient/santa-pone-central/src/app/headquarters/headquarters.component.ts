@@ -121,10 +121,6 @@ export class HeadquartersComponent implements OnInit {
     this.deniedAnonsComponent.actionTaken = actionTaken;
     this.incomingSignupsComponent.actionTaken = actionTaken;
   }
-  public async updateSelectedClient(clientID: string)
-  {
-    this.currentClient = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
-  }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
