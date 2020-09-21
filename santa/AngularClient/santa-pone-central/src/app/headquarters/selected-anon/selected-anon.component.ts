@@ -56,7 +56,6 @@ export class SelectedAnonComponent implements OnInit {
 
   @Output() actionTaken: EventEmitter<any> = new EventEmitter();
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
-  @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
   @Output() setClickAwayLockEvent: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
