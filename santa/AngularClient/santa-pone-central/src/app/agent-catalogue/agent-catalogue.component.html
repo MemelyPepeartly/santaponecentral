@@ -1,4 +1,17 @@
+<div id="overlay" *ngIf="showClientCard" (click)="hideOpenWindow();" [@simpleFadeAnimation]="'in'">
+</div>
 
+<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard">
+  <div class="fixedDiv mat-elevation-z6">
+      <app-selected-anon
+      [loadingClient]="false"
+      [client]="selectedClient"
+      (setClickAwayLockEvent)="clickLocked = $event"
+      (actionTaken)="search()"
+      (deletedAnon)="hideOpenWindow();">
+      </app-selected-anon>
+  </div>
+</div>
 
 <div class="searchBarContainer mat-elevation-z3">
   <div class="searchBarDiv">
@@ -61,7 +74,10 @@
         <div class="helperObjectsContainer">
           <div class="helperDiv">
             <mat-toolbar>Tags</mat-toolbar>
-            <div class="chipDiv">
+            <div class="spinnerWrap" *ngIf="gatheringAllTags">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllTags">
               <mat-chip-list>
                 <mat-chip class="chip" *ngFor="let tag of allHelperTags"
                   (click)="addQuery(tag)"
@@ -77,7 +93,10 @@
 
           <div class="helperDiv">
             <mat-toolbar>Client Statuses</mat-toolbar>
-            <div class="chipDiv">
+            <div class="spinnerWrap" *ngIf="gatheringAllClientStatuses">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllClientStatuses">
               <mat-chip-list>
                 <mat-chip class="chip" *ngFor="let status of allHelperStatuses"
                   (click)="addQuery(status)"
@@ -93,7 +112,10 @@
 
           <div class="helperDiv">
             <mat-toolbar>Events</mat-toolbar>
-            <div class="chipDiv">
+            <div class="spinnerWrap" *ngIf="gatheringAllEvents">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllEvents">
               <mat-chip-list>
                 <mat-chip class="chip" *ngFor="let event of allHelperEvents"
                   (click)="addQuery(event)"
@@ -119,11 +141,11 @@
         Found Anons
     </mat-toolbar-row>
   </mat-toolbar>
-  <div class="spinnerWrap">
+  <div class="spinnerWrap" *ngIf="searchingClients">
     <app-loading-spin></app-loading-spin>
   </div>
   <mat-list>
-    <mat-card mat-list-item *ngFor="let client of foundClients" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item class="foundClientCard" *ngFor="let client of foundClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
           <h1 class="inline">{{ client.clientNickname }}</h1>
           <mat-chip-list class="inline tagList" [selectable]="false" >
