@@ -4,7 +4,12 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "lib": [
+      "ES2020.String",
+      "dom",
+      "es2018",
+    ]
   },
   "files": [
     "src/main.ts",
