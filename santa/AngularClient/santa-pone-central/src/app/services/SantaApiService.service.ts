@@ -229,7 +229,7 @@ export class SantaApiPostService {
       map(this.extractData));
   }
   searchClients(body: SearchQueryModelResponse): Observable<any> {
-    return this.http.post(endpoint + 'Catalogue/Clients', body).pipe(
+    return this.http.post(endpoint + 'Catalogue/SearchClients', body).pipe(
       map(this.extractData));
   }
 }
