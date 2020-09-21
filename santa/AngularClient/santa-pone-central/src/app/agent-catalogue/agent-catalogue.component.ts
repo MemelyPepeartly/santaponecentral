@@ -9,6 +9,7 @@ import { EventType } from 'src/classes/eventType';
 import { SearchQueryModelResponse } from 'src/classes/responseTypes';
 import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
 import { MapService } from '../services/mapService.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 export class SearchQueryObjectContainer
 {
@@ -51,7 +52,25 @@ export class SearchQueryObjectContainer
 @Component({
   selector: 'app-agent-catalogue',
   templateUrl: './agent-catalogue.component.html',
-  styleUrls: ['./agent-catalogue.component.css']
+  styleUrls: ['./agent-catalogue.component.css'],
+  animations: [
+    // the fade-in/fade-out animation.
+    trigger('simpleFadeAnimation', [
+
+      // the "in" style determines the "resting" state of the element when it is visible.
+      state('in', style({opacity: 1})),
+
+      // fade in when created. this could also be written as transition('void => *')
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(200)
+      ]),
+
+      // fade out when destroyed. this could also be written as transition('void => *')
+      transition(':leave',
+        animate(200, style({opacity: 0})))
+    ])
+  ]
 })
 export class AgentCatalogueComponent implements OnInit {
 
@@ -65,12 +84,16 @@ export class AgentCatalogueComponent implements OnInit {
   public allClientStatuses: Array<Status> = [];
 
   public foundClients: Array<Client> = [];
+  public selectedClient: Client = new Client();
 
   public gatheringAllTags: boolean;
   public gatheringAllClientStatuses: boolean;
   public gatheringAllEvents: boolean;
+  public searchingClients: boolean;
+  public clickLocked: boolean;
 
   public showHelper: boolean;
+  public showClientCard: boolean;
 
   public searchQueryString: string = '';
   public searchQueryObjectHolder: SearchQueryObjectContainer = new SearchQueryObjectContainer();
@@ -130,6 +153,11 @@ export class AgentCatalogueComponent implements OnInit {
     this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
       this.gatheringAllEvents = status;
     });
+
+    /* Default set so they all "load" at the same time */
+    this.gatheringAllTags = true;
+    this.gatheringAllClientStatuses = true;
+    this.gatheringAllEvents = true;
 
     /* Gathering data subscribes */
     this.gatherer.allTags.subscribe((objectArray: Array<Tag>) => {
@@ -216,6 +244,8 @@ export class AgentCatalogueComponent implements OnInit {
   }
   public search()
   {
+    this.searchingClients = true;
+    this.foundClients = [];
     let response: SearchQueryModelResponse =
     {
       tags: this.searchQueryObjectHolder.tagQueryIDs,
@@ -223,15 +253,35 @@ export class AgentCatalogueComponent implements OnInit {
       events: this.searchQueryObjectHolder.eventQueryIDs
     }
     this.santaApiPost.searchClients(response).subscribe((res) => {
+
       res.forEach(client => {
         this.foundClients.push(this.mapper.mapClient(client));
       });
+      this.searchingClients = false;
     },err => {
+      console.group();
+      console.log("Something went wrong searching clients!");
+      console.log(err);
+      console.groupEnd();
 
+      this.searchingClients = false;
     });
+  }
+  public updateSelectedClient()
+  {
+
   }
   public showCardInfo(client: Client)
   {
-
+    this.selectedClient = client;
+    this.showClientCard = true;
+  }
+  public hideOpenWindow()
+  {
+    if(!this.clickLocked)
+    {
+      this.showClientCard = false;
+      this.selectedClient = new Client();
+    }
   }
 }
