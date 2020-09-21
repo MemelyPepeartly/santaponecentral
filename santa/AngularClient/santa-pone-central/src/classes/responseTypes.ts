@@ -150,3 +150,9 @@ export class NewAssignmentStatusResponse {
 export class EditProfileAssignmentStatusResponse {
   assignmentStatusID: string;
 }
+/* CATALOGUE */
+export class SearchQueryModelResponse {
+  tags: Array<string> = [];
+  statuses: Array<string> = [];
+  events: Array<string> = [];
+}
