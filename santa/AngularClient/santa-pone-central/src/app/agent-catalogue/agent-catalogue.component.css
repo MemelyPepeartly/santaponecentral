@@ -23,7 +23,15 @@
   margin-right: auto;
   border-radius: 8px;
 }
-.searchBarObjectsDiv
+.previewChipsDiv
+{
+  display: block;
+  width: 90%;
+  margin-top: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.helperObjectsContainer
 {
   display: block;
   width: 90%;
@@ -41,7 +49,22 @@
   margin-right: auto;
   margin-top: 15px;
 }
-.recommendedDiv
+.actionButtonDiv
+{
+  display: block;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  text-align: center;
+}
+.actionButton
+{
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.helperDiv
 {
   display: block;
   width: 90%;
@@ -52,7 +75,7 @@
   margin-bottom: 15px;
   text-align: center;
 }
-.recommendedDividerStyle
+.helperDividerStyle
 {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -78,4 +101,36 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
+}
+.notice
+{
+    color: #d07973;
+}
+.foundClientContainer
+{
+  display: block;
+  width: 80%;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  background-color: white;
+  border-radius: 8px;
+}
+.spinnerWrap {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+}
+.inline
+{
+  display: inline-block;
+}
+.notice
+{
+  color: #d07973;
+}
+.tagList
+{
+  margin-left: 10px;
 }
