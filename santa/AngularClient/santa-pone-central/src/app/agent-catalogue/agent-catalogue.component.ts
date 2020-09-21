@@ -6,12 +6,47 @@ import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
+import { SearchQueryModelResponse } from 'src/classes/responseTypes';
+import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
+import { MapService } from '../services/mapService.service';
 
 export class SearchQueryObjectContainer
 {
   tags: Array<Tag> = [];
   events: Array<EventType> = [];
   statuses: Array<Status> = [];
+
+  get tagQueryIDs() : Array<string>
+  {
+    let tagIDList: Array<string> = [];
+
+    this.tags.forEach((tag: Tag) => {
+      tagIDList.push(tag.tagID);
+    });
+
+    return tagIDList;
+  }
+  get eventQueryIDs() : Array<string>
+  {
+    let eventIDList: Array<string> = [];
+
+    this.events.forEach((event: EventType) => {
+      eventIDList.push(event.eventTypeID);
+    });
+
+    return eventIDList;
+  }
+  get statusesQueryIDs() : Array<string>
+  {
+    let statusIDList: Array<string> = [];
+
+    this.statuses.forEach((status: Status) => {
+      statusIDList.push(status.statusID);
+    });
+
+    return statusIDList;
+  }
+
 }
 @Component({
   selector: 'app-agent-catalogue',
@@ -21,7 +56,9 @@ export class SearchQueryObjectContainer
 export class AgentCatalogueComponent implements OnInit {
 
   constructor(private gatherer: GathererService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private santaApiPost: SantaApiPostService,
+    private mapper: MapService) { }
 
   public allTags: Array<Tag> = [];
   public allEvents: Array<EventType> = [];
@@ -179,7 +216,19 @@ export class AgentCatalogueComponent implements OnInit {
   }
   public search()
   {
+    let response: SearchQueryModelResponse =
+    {
+      tags: this.searchQueryObjectHolder.tagQueryIDs,
+      statuses: this.searchQueryObjectHolder.statusesQueryIDs,
+      events: this.searchQueryObjectHolder.eventQueryIDs
+    }
+    this.santaApiPost.searchClients(response).subscribe((res) => {
+      res.forEach(client => {
+        this.foundClients.push(this.mapper.mapClient(client));
+      });
+    },err => {
 
+    });
   }
   public showCardInfo(client: Client)
   {
