@@ -16,6 +16,8 @@ export class SearchQueryObjectContainer
   tags: Array<Tag> = [];
   events: Array<EventType> = [];
   statuses: Array<Status> = [];
+  names: Array<string> = [];
+  nicknames: Array<string> = [];
 
   get tagQueryIDs() : Array<string>
   {
@@ -85,6 +87,7 @@ export class AgentCatalogueComponent implements OnInit {
 
   public foundClients: Array<Client> = [];
   public selectedClient: Client = new Client();
+  public selectedSearchType: string = "soft";
 
   public gatheringAllTags: boolean;
   public gatheringAllClientStatuses: boolean;
@@ -95,6 +98,8 @@ export class AgentCatalogueComponent implements OnInit {
   public showHelper: boolean;
   public showClientCard: boolean;
 
+  public infoMessage: string = "Soft searches find any values that might match any values within respective groups of tags, events, statuses, names, and nicknames. Hard searches will show exact matches"
+
   public searchQueryString: string = '';
   public searchQueryObjectHolder: SearchQueryObjectContainer = new SearchQueryObjectContainer();
 
@@ -102,6 +107,8 @@ export class AgentCatalogueComponent implements OnInit {
   public tagReg: RegExp = new RegExp(/"tag:([^"]+)"/g);
   public eventReg: RegExp = new RegExp(/"event:([^"]+)"/g);
   public statusReg: RegExp = new RegExp(/"status:([^"]+)"/g);
+  public nameReg: RegExp = new RegExp(/"name:([^"]+)"/g);
+  public nicknamesReg: RegExp = new RegExp(/"nickname:([^"]+)"/g);
 
   public get allHelperTags() : Array<Tag>
   {
@@ -191,10 +198,13 @@ export class AgentCatalogueComponent implements OnInit {
   }
   constructQueryObject()
   {
-    this.clearHolder();
+    this.clearHolderObjects();
     let tagMatches = Array.from(this.searchQueryString.matchAll(this.tagReg))
     let eventMatches = Array.from(this.searchQueryString.matchAll(this.eventReg))
     let statusMatches = Array.from(this.searchQueryString.matchAll(this.statusReg))
+    let nameMatches = Array.from(this.searchQueryString.matchAll(this.nameReg))
+    let nicknameMatches = Array.from(this.searchQueryString.matchAll(this.nicknamesReg))
+
 
     tagMatches.forEach((element: RegExpMatchArray) => {
       // If allTags has a tag that equals the regex element group, and the searchable query object holder doesnt yet have that tag if so
@@ -220,6 +230,19 @@ export class AgentCatalogueComponent implements OnInit {
         this.searchQueryObjectHolder.statuses.push(this.allClientStatuses.find((status: Status) => {return status.statusDescription == element[1]}));
       }
     });
+    // Same thing as above but with strings. These do not have helper objects so they dont need the first conditional to be pushed into the list
+    nicknameMatches.forEach((element: RegExpMatchArray) => {
+      if(!this.searchQueryObjectHolder.nicknames.some((nickname: string) => {return nickname == element[1]}))
+      {
+        this.searchQueryObjectHolder.nicknames.push(element[1]);
+      }
+    });
+    nameMatches.forEach((element: RegExpMatchArray) => {
+      if(!this.searchQueryObjectHolder.names.some((name: string) => {return name == element[1]}))
+      {
+        this.searchQueryObjectHolder.names.push(element[1]);
+      }
+    });
   }
   public removeTagQuery(tag: Tag)
   {
@@ -236,11 +259,13 @@ export class AgentCatalogueComponent implements OnInit {
     this.searchQueryObjectHolder.statuses.splice(this.searchQueryObjectHolder.statuses.indexOf(status), 1);
     this.searchQueryString = this.searchQueryString.replace('"status:'+ status.statusDescription + '" ', "")
   }
-  clearHolder()
+  public clearHolderObjects()
   {
     this.searchQueryObjectHolder.tags = [];
     this.searchQueryObjectHolder.events = [];
     this.searchQueryObjectHolder.statuses = [];
+    this.searchQueryObjectHolder.names = [];
+    this.searchQueryObjectHolder.nicknames = [];
   }
   public search()
   {
@@ -250,7 +275,10 @@ export class AgentCatalogueComponent implements OnInit {
     {
       tags: this.searchQueryObjectHolder.tagQueryIDs,
       statuses: this.searchQueryObjectHolder.statusesQueryIDs,
-      events: this.searchQueryObjectHolder.eventQueryIDs
+      events: this.searchQueryObjectHolder.eventQueryIDs,
+      names: this.searchQueryObjectHolder.names,
+      nicknames: this.searchQueryObjectHolder.nicknames,
+      isHardSearch: this.selectedSearchType == 'hard' ? true : false
     }
     this.santaApiPost.searchClients(response).subscribe((res) => {
 
@@ -283,5 +311,9 @@ export class AgentCatalogueComponent implements OnInit {
       this.showClientCard = false;
       this.selectedClient = new Client();
     }
+  }
+  test()
+  {
+    console.log(this.selectedSearchType);
   }
 }

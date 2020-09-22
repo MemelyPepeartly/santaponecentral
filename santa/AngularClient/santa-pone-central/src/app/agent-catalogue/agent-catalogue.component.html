@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="searchBarContainer mat-elevation-z3">
+<div class="searchBarContainer reactiveMinWidth mat-elevation-z3">
   <div class="searchBarDiv">
     <mat-form-field class="searchBarFormField mat-elevation-z3" (keyup)="constructQueryObject()">
       <mat-label>Search Query</mat-label>
@@ -59,9 +59,21 @@
     </div>
 
     <div class="actionButtonDiv">
+      <mat-radio-group [(ngModel)]="selectedSearchType">
+        <mat-radio-button #soft class="searchTypeRadioButton" value="soft" [checked]="soft.value == 'soft'">Soft Search</mat-radio-button>
+        <mat-radio-button #hard class="searchTypeRadioButton" value="hard" [checked]="hard.value == 'hard'">Hard Search</mat-radio-button>
+        <div class="infoIconDiv" matTooltip="{{infoMessage}}"
+        [matTooltipPosition]="'right'">
+          <mat-icon>error</mat-icon>
+        </div>
+
+      </mat-radio-group>
+    </div>
+
+    <div class="actionButtonDiv">
       <button mat-raised-button class="actionButton" *ngIf="!showHelper" (click)="showHelper = !showHelper">Show Query Helper</button>
       <button mat-raised-button class="actionButton" *ngIf="showHelper" (click)="showHelper = !showHelper">Hide Query Helper</button>
-      <button mat-raised-button class="actionButton" (click)="search()">Search <mat-icon>search</mat-icon></button>
+      <button mat-raised-button class="actionButton" [disabled]="searchingClients" (click)="search()">Search <mat-icon>search</mat-icon></button>
     </div>
 
     <mat-card *ngIf="showHelper" class="helperCard mat-elevation-z3">
@@ -74,6 +86,7 @@
         <div class="helperObjectsContainer">
           <div class="helperDiv">
             <mat-toolbar>Tags</mat-toolbar>
+            <mat-card-subtitle>List of serachable tags</mat-card-subtitle>
             <div class="spinnerWrap" *ngIf="gatheringAllTags">
               <app-loading-spin></app-loading-spin>
             </div>
@@ -93,6 +106,7 @@
 
           <div class="helperDiv">
             <mat-toolbar>Client Statuses</mat-toolbar>
+            <mat-card-subtitle>List of serachable statuses</mat-card-subtitle>
             <div class="spinnerWrap" *ngIf="gatheringAllClientStatuses">
               <app-loading-spin></app-loading-spin>
             </div>
@@ -112,6 +126,7 @@
 
           <div class="helperDiv">
             <mat-toolbar>Events</mat-toolbar>
+            <mat-card-subtitle>List of serachable events</mat-card-subtitle>
             <div class="spinnerWrap" *ngIf="gatheringAllEvents">
               <app-loading-spin></app-loading-spin>
             </div>
@@ -128,14 +143,14 @@
           </div>
         </div>
       </mat-card-content>
-      <mat-card-actions>
+      <mat-card-actions style="text-align: center;">
         <button mat-raised-button class="actionButton" (click)="showHelper = !showHelper">Hide Query Helper</button>
       </mat-card-actions>
     </mat-card>
   </div>
 </div>
 
-<div class="foundClientContainer">
+<div class="foundClientContainer reactiveMinWidth">
   <mat-toolbar>
     <mat-toolbar-row>
         Found Anons
