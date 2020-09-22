@@ -1620,11 +1620,27 @@ namespace Santa.Data.Repository
         public async Task<List<Logic.Objects.Client>> SearchClientByQuery(SearchQueries searchQuery)
         {
             List<Logic.Objects.Client> allClientList = await GetAllClients();
+            List<Logic.Objects.Client> matchingClients = new List<Logic.Objects.Client>();
 
-            List<Logic.Objects.Client> matchingClients = allClientList
-                .Where(c => !searchQuery.tags.Any() || c.tags.Any(t => searchQuery.tags.Contains(t.tagID)))
-                .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Contains(c.clientStatus.statusID))
-                .Where(c => !searchQuery.events.Any() || c.responses.Any(r => searchQuery.events.Contains(r.responseEvent.eventTypeID))).ToList();
+            if (searchQuery.isHardSearch)
+            {
+                matchingClients = allClientList
+                    .Where(c => !searchQuery.tags.Any() || searchQuery.tags.All(queryTagID => c.tags.Any(clientTag => clientTag.tagID == queryTagID)))
+                    .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.All(queryStatusID => c.clientStatus.statusID == queryStatusID))
+                    .Where(c => !searchQuery.events.Any() || searchQuery.events.All(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
+                    .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList();
+            }
+            else
+            {
+                matchingClients = allClientList
+                    .Where(c => !searchQuery.tags.Any() || searchQuery.tags.Any(queryTagID => c.tags.Any(t => t.tagID == queryTagID)))
+                    .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Any(queryStatusID => c.clientStatus.statusID == queryStatusID))
+                    .Where(c => !searchQuery.events.Any() || searchQuery.events.Any(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
+                    .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList();
+            }
+            
 
             /*
             IEnumerable<Logic.Objects.Client> matchingClientsQuery = new List<Logic.Objects.Client>();
