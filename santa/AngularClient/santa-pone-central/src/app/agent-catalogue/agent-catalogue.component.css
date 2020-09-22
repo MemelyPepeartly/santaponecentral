@@ -2,6 +2,10 @@
 {
   min-width: 550px;
 }
+.helperSubtitle
+{
+  margin-top: 10px !important;
+}
 #overlay
 {
   position: fixed; /* Sit on top of the page content */
