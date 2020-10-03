@@ -14,6 +14,7 @@ import { AuthGuard } from './auth/auth.guard'
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './auth/interceptor.service';
 import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
+import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
 
 
 const appRoutes: Routes = [
@@ -25,12 +26,10 @@ const appRoutes: Routes = [
     component: ProfileComponent,
     canActivate: [AuthGuard]
   },
-  /*
   {
     path: 'mission-boards',
     component: MissionBoardsComponent
   },
-  */
   {
     path: 'signup',
     component: SignupComponent
@@ -52,6 +51,11 @@ const appRoutes: Routes = [
   {
     path: 'admin-control',
     component: AdminControlComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'agent-catalogue',
+    component: AgentCatalogueComponent,
     canActivate: [AuthGuard]
   },
   {

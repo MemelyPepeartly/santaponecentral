@@ -16,13 +16,13 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task CreateClient(Client newClient);
         /// <summary>
-        /// Creates a new client relationship for assignments by a senderID, recipientID, and the eventTypeID that the assignment relates to
+        /// Creates a new client relationship for assignments by a senderID, recipientID, and the eventTypeID, and its assignmentStatusID that the assignment relates to
         /// </summary>
         /// <param name="senderClientID"></param>
         /// <param name="recipientClientID"></param>
         /// <param name="eventTypeID"></param>
         /// <returns></returns>
-        Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID);
+        Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID, Guid assignmentStatusID);
         /// <summary>
         /// Gets a client by their ID
         /// </summary>
@@ -47,14 +47,12 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task UpdateClientByIDAsync(Client targetClient);
         /// <summary>
-        /// Updates the completion status of a relation (Assignmnent) by a senderID, recipientID, eventTypeID, and the targeted completion status
+        /// Updates an assignment's progress to a chosen assignment status ID
         /// </summary>
-        /// <param name="senderID"></param>
-        /// <param name="recipientID"></param>
-        /// <param name="eventTypeID"></param>
-        /// <param name="targetCompletedStatus"></param>
+        /// <param name="assignmentID"></param>
+        /// <param name="newAssignmentStatusID"></param>
         /// <returns></returns>
-        Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus);
+        Task UpdateAssignmentProgressStatusByID(Guid assignmentID, Guid newAssignmentStatusID);
         /// <summary>
         /// Deletes a client by their ID along with any data about them. This includes chat histories, relationships, and answers
         /// </summary>
@@ -69,6 +67,44 @@ namespace Santa.Logic.Interfaces
         /// <param name="eventID"></param>
         /// <returns></returns>
         Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID);
+        #endregion
+
+        #region Assignment Status
+        /// <summary>
+        /// Creates a new assignment status with the input of a new assignment status logic object
+        /// </summary>
+        /// <param name="newAssignmentStatus"></param>
+        /// <returns></returns>
+        Task CreateAssignmentStatus(AssignmentStatus newAssignmentStatus);
+        /// <summary>
+        /// Gets a logic list of all assignment statuses
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AssignmentStatus>> GetAllAssignmentStatuses();
+        /// <summary>
+        /// Gets a specific assignment status by its ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task<AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID);
+        /// <summary>
+        /// Returns a list of assignments that match the assignment status type by assignment status ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID);
+        /// <summary>
+        /// Updates a chosen assignment with the target values in a logic assignment status type
+        /// </summary>
+        /// <param name="targetAssignmentStatus"></param>
+        /// <returns></returns>
+        Task UpdateAssignmentStatus(AssignmentStatus targetAssignmentStatus);
+        /// <summary>
+        /// Queues up a delete query for an assignment status by its ID
+        /// </summary>
+        /// <param name="assignmentStatusID"></param>
+        /// <returns></returns>
+        Task DeleteAssignmentStatusByID(Guid assignmentStatusID);
         #endregion
 
         #region Profile
@@ -240,6 +276,19 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task SaveAsync();
+        /// <summary>
+        /// Gets a list of all the allowed assignments for a client by their ID, and the event's ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
+        Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID);
+        /// <summary>
+        /// Search a list of clients and returns a list based on a model of queries
+        /// </summary>
+        /// <param name="searchQuery"></param>
+        /// <returns></returns>
+        Task<List<Client>> SearchClientByQuery(SearchQueries searchQuery);
         #endregion
 
     }

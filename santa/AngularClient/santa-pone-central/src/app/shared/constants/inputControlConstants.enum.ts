@@ -3,5 +3,4 @@ export enum InputControlConstants {
     PINNED = "pinned",
     TIMEZONE = "timezone",
     COLOR = "color",
-
 }

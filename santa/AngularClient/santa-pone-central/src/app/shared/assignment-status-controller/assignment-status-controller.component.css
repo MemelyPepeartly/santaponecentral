@@ -1,0 +1,58 @@
+mat-card-header
+{
+  text-align: left;
+}
+.containingCard
+{
+  width: 100%;
+}
+.statusTitle
+{
+  margin-top: 10px;
+}
+.centeredToolbar
+{
+  display: block;
+  text-align: center;
+  padding-top: 16px;
+}
+.buttonDiv
+{
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.changeFormCard
+{
+  display: inline-block;
+  width: 80%;
+  min-width: 300px;
+  margin-top: 15px;
+  vertical-align: top;
+}
+.infoSubtitle
+{
+  margin-top: 15px;
+}
+.infoSpan
+{
+  display: block;
+  margin-bottom: 15px;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
+.subtitleWarning
+{
+  color: #d07973;
+}
+@media (max-width:600px)
+{
+  .changeFormCard
+  {
+    min-width: 215px;
+  }
+}

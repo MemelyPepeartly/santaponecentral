@@ -273,89 +273,36 @@
     <div class="centerSpin">
         <app-loading-spin *ngIf="gettingEventDetails"></app-loading-spin>
     </div>
-    <ng-container *ngIf="!gettingEventDetails">
-        <ng-container *ngIf="isAnonApproved()">
-            <div class="relationDiv" *ngFor="let event of events">
-                <mat-toolbar id="relationshipEventHeader">
-                    <mat-toolbar-row>
-                        {{event.eventDescription}}
-                    </mat-toolbar-row>
-                </mat-toolbar>
-                <div class=infoContainer>
-                    <mat-card id="senderCard">
-                        <mat-card-header>
-                            <mat-card-title>Client Senders</mat-card-title>
-                            <mat-card-subtitle>People who are sending to the Anon</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <app-small-loading-spin *ngIf="gatheringSenders || showRecipientListPostingSpinner"></app-small-loading-spin>
-                            <mat-accordion *ngIf="!gatheringSenders && !showRecipientListPostingSpinner">
-                                <mat-expansion-panel *ngFor="let sender of senders">
-                                    <mat-expansion-panel-header *ngIf="sender.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title class="relationshipPanelTitle">
-                                            <span>{{sender.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="sender.completed">check_circle</mat-icon>
-                                        </mat-panel-title>
-                                        <mat-panel-description>
-                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <div class="expansionPanelButtonContainer">
-                                        <button class="expansionPanelButton" mat-raised-button
-                                        matTooltip="Switch to this Anon"
-                                        [matTooltipPosition]="'left'"
-                                        (click)="switchAnon(sender)">Switch</button>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </mat-card-content>
-                    </mat-card>
-                    <mat-card id="recieverCard">
-                        <mat-card-header>
-                            <mat-card-title>Client Recievers</mat-card-title>
-                            <mat-card-subtitle>People the Anon is sending to</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                            <mat-accordion *ngIf="!showRecipientListPostingSpinner">
-                                <mat-expansion-panel *ngFor="let recipient of recipients">
-                                    <mat-expansion-panel-header *ngIf="recipient.clientEventTypeID == event.eventTypeID">
-                                        <mat-panel-title class="relationshipPanelTitle">
-                                            <span>{{recipient.clientNickname}}</span><mat-icon style="margin-left: 5px; z-index: 1;" *ngIf="recipient.completed">check_circle</mat-icon>
-                                        </mat-panel-title>
-                                        <mat-panel-description>
-                                            <div class="relationshipIcon" *ngIf="event.eventDescription == 'Card Exchange' || event.eventDescription == 'Gift Exchange'" [ngClass]="{'cardExchangeIcon' : event.eventDescription == 'Card Exchange','giftExchangeIcon' : event.eventDescription == 'Gift Exchange'}"></div>
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <div class="expansionPanelButtonContainer" *ngIf="beingRemoved || markingAsComplete">
-                                        <app-small-loading-spin></app-small-loading-spin>
-                                    </div>
-                                    <div class="expansionPanelButtonContainer" *ngIf="!beingRemoved && !markingAsComplete">
-                                        <button class="expansionPanelButton" mat-raised-button
-                                        matTooltip="Switch to this Anon"
-                                        [matTooltipPosition]="'right'"
-                                        (click)="switchAnon(recipient)">Switch To<mat-icon>swap_horiz</mat-icon></button>
-                                        <button class="expansionPanelButton" mat-raised-button
-                                        matTooltip="Mark this assignment as complete"
-                                        [matTooltipPosition]="'right'"
-                                        [disabled]="recipient.completed"
-                                        (click)="markAsComplete(recipient)">Mark As Complete<mat-icon>done</mat-icon></button>
-                                        <!-- Removable button is disabled if the client is not removable from the assignments list due to having a chat history -->
-                                        <p *ngIf="!recipient.removable">Note: If a recipient has a chat history, they cannot be removed</p>
-                                        <button class="expansionPanelButton" mat-raised-button
-                                        matTooltip="Remove the anon as a recipient"
-                                        color="warn"
-                                        [disabled]="!recipient.removable"
-                                        [matTooltipPosition]="'right'"
-                                        (click)="removeRecipient(recipient)">Remove Assignment<mat-icon>delete_forever</mat-icon></button>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
+
+    <mat-card class="infoCard mat-elevation-z5" *ngIf="isAnonApproved() && !gettingEventDetails">
+      <mat-card-header>
+        <mat-card-title>Assignments</mat-card-title>
+        <mat-card-subtitle>Controls for {{ client.clientNickname }}'s assignments</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-card class="assignmentEventCard mat-elevation-z5" *ngFor="let event of events">
+          <mat-card-header>
+            <mat-card-title>{{ event.eventDescription }}</mat-card-title>
+            <mat-card-subtitle>Assignment information for the {{ event.eventDescription }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+
+            <div class="assignmentPanelsContainer">
+              <div class="assignmentPanelDiv">
+                <app-assignments-panel
+                  (clickAwayAllowedEvent)="setClickAwayAllowed($event)"
+                  (switchClickedEvent)="switchAnon($event)"
+                  (removeClickedEvent)="removeRecipient($event)"
+                  [agent]="client"
+                  [senders]="getEventSenders(event)"
+                  [assignments]="getEventAssignments(event)"></app-assignments-panel>
+              </div>
             </div>
-        </ng-container>
-    </ng-container>
+
+          </mat-card-content>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
 
     <mat-card class="infoCard mat-elevation-z5">
         <mat-card-header>
@@ -364,61 +311,76 @@
         </mat-card-header>
         <mat-card-actions>
 
-            <!--Add recipient option-->
-            <div class="optionDiv" id="recipientOptionDiv" *ngIf="isAnonApproved()">
-                <div>
-                    <mat-drawer-container [ngClass]="{'recipientDrawerContainerOpen' : recipientOpen,
-                                                      'recipientDrawerContainerClosed' : !recipientOpen}" autosize>
-                        <mat-drawer #drawer class="recipientNav" mode="side">
-                            <mat-toolbar>
-                                <mat-toolbar-row *ngIf="selectedRecipientEvent.eventDescription != undefined">
-                                    {{selectedRecipientEvent.eventDescription}}
-                                </mat-toolbar-row>
-                                <mat-toolbar-row *ngIf="selectedRecipientEvent.eventDescription == undefined">
-                                    Choose an event
-                                </mat-toolbar-row>
-                            </mat-toolbar>
+            <mat-divider [inset]="true"></mat-divider>
 
-                            <!-- For each event in the list of all events -->
-                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                            <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner" [(ngModel)]="selectedRecipients">
-                                <mat-list-option *ngFor="let clientRecipientOption of approvedRecipientClients" [value]="clientRecipientOption">{{ clientRecipientOption.clientNickname }}</mat-list-option>
-                            </mat-selection-list>
-                        </mat-drawer>
-                        <div
-                            [ngClass]="{'recipientContentOpen' : recipientOpen,'recipientContentClosed': !recipientOpen}">
-                            <mat-icon>person_add</mat-icon>
-                            <div id="toggleDiv">
-                                <button mat-raised-button
-                                    matTooltip="Shows the list of assignable Anon's"
-                                    [matTooltipPosition]="'right'"
-                                    (click)="drawer.toggle()"
-                                    (click)="recipientOpen = !recipientOpen">Add reciepients</button>
-                                <mat-card-subtitle class="optionSub">
-                                    <p>Adds people the Anon is sending to</p>
-                                </mat-card-subtitle>
+            <!--Add recipient option-->
+            <div class="optionDiv">
+              <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+
+              <p class="success" *ngIf="false"></p>
+              <p class="error" *ngIf="false"></p>
+              <button mat-raised-button id="toggleDiv"
+              matTooltip="Shows the list of assignable Anon's"
+              [matTooltipPosition]="'right'"
+              [disabled]="gatheringAllAssignmentsStatuses"
+              (click)="recipientOpen = !recipientOpen">Add recipients</button>
+              <mat-card-subtitle class="optionSub">
+                  <p>Adds people the Anon is sending to</p>
+              </mat-card-subtitle>
+
+              <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
+                <button mat-raised-button
+                    matTooltip="Confirm the selected Anon's as recipients"
+                    (click)="showRecipientListPostingSpinner = true;"
+                    (click)="addRecipientsToClient()"
+                    [matTooltipPosition]="'right'"
+                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
+                </button>
+              </div>
+
+              <div *ngIf="recipientOpen" id="eventRadioDiv">
+                <mat-radio-group [(ngModel)]="selectedRecipientEvent" [disabled]="!recipientsAreLoaded">
+                    <mat-radio-button *ngFor="let event of events"
+                      [disabled]="!recipientsAreLoaded"
+                      [value]="event"
+                      (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <p *ngIf="addRecipientSuccess" class="success">Added assignments to {{ client.clientNickname }} for the {{ selectedRecipientEvent.eventDescription }}!</p>
+              <div class="recipientListContainer" *ngIf="recipientOpen">
+                <mat-divider [inset]="true"></mat-divider>
+                <mat-toolbar class="centeredToolbar">Add an Assignment</mat-toolbar>
+                <mat-card class="recipientListCard">
+                  <mat-card-content>
+                    <div class="recipientListContentSelectEventDiv" *ngIf="selectedRecipientEvent.eventTypeID == undefined">
+                      <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
+                    </div>
+                    <div class="recipientListContentDiv">
+                      <app-small-loading-spin class="recipientListSpinner" *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
+                      <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
+                          <mat-list-option class="recipientListOption" *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">
+                            <div class="recipientListOptionInfoDiv">
+                              <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
+                              <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
+                              <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
+                              <div class="recipientTagDiv">
+                                <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
+                                  matTooltip="{{tag.tagName}}"
+                                  [matTooltipPosition]="'below'"
+                                  [disableRipple]="true">
+                                  <span class="recipientTagText">{{tag.tagName}}</span>
+                                </mat-chip>
+                              </div>
                             </div>
-                            <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
-                                <button mat-raised-button
-                                    matTooltip="Confirm the selected Anon's as recipients"
-                                    (click)="showRecipientListPostingSpinner = true;"
-                                    (click)="addRecipientsToClient()"
-                                    [matTooltipPosition]="'right'"
-                                    [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
-                                </button>
-                            </div>
-                            <div *ngIf="recipientOpen" id="eventRadioDiv">
-                                <mat-radio-group aria-label="Select an event" [(ngModel)]="selectedRecipientEvent" *ngIf="recipientsAreLoaded">
-                                    <mat-radio-button *ngFor="let event of events" [value]="event" (click)="getAllowedRecipientsByEvent(event)">{{ event.eventDescription }}</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                            <p *ngIf="addRecipientSuccess" class="success">Added recipients to
-                                {{ client.clientNickname }}!</p>
-                            <app-small-loading-spin *ngIf="showRecipientListPostingSpinner"></app-small-loading-spin>
-                        </div>
-                    </mat-drawer-container>
-                </div>
+                          </mat-list-option>
+                      </mat-selection-list>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
             </div>
+
             <mat-divider [inset]="true"></mat-divider>
 
             <!--Change Nickname Card-->
@@ -437,7 +399,7 @@
                 <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
                     *ngIf="!showNickSpinner">
                     <mat-label>New Nickname</mat-label>
-                    <!-- MEMELYHERE make this reactive-->
+                    <!-- MEMELYHERE make this reactive -->
                     <input matInput #nicknameInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
                         maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}" required>
                 </mat-form-field>
@@ -504,5 +466,4 @@
             </div>
         </mat-card-actions>
     </mat-card>
-    <!-- Good place for an ngFor all the events the client is a part of that they are joining in for -->
 </div>

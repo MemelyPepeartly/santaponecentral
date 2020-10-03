@@ -78,7 +78,7 @@ mat-chip-list
 .container {
   position: fixed;
   width: 100%;
-  min-width: 550px;;
+  min-width: 600px;
   height: 90%;
   top:5%;
   left: 0;

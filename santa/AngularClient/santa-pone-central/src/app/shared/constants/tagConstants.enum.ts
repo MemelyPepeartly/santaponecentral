@@ -3,3 +3,4 @@ export enum TagConstants {
     MASS_MAIL_RECIPIENT = "Mass Mail Recipient",
     GRINCH = "Grinch",
 }
+

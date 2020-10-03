@@ -4,3 +4,4 @@ export enum RoleConstants {
     USER = "Participant",
     DEVELOPER = "SantaDev"
 }
+

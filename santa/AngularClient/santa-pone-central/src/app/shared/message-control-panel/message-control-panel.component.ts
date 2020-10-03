@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
+import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
 
 
 @Component({

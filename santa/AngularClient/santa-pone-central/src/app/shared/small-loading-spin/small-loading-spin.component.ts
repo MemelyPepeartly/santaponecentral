@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-small-loading-spin',
@@ -8,6 +8,11 @@ import { Component, OnInit } from '@angular/core';
 export class SmallLoadingSpinComponent implements OnInit {
 
   constructor() { }
+
+  // Spinner type 1 is for SantaShark loading
+  // Spinner type 2 is for Card dragon loading
+  // Spinner type 3 is for Duk gift loading
+  @Input() spinnerType: number = 1;
 
   ngOnInit() {
   }

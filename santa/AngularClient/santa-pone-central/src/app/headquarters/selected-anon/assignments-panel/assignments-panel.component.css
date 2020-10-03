@@ -1,0 +1,152 @@
+.relationshipContainer
+{
+  display: block;
+  width: 100%;
+}
+.relationshipDiv
+{
+  display: inline-block;
+  vertical-align: top;
+  width: 46%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.relationList
+{
+  display: block;
+  padding-top: 0px;
+  max-height: 300px;
+  overflow: scroll;
+}
+.relationList::-webkit-scrollbar {
+  display: none;
+}
+.selectedRelationshipContainer
+{
+  display: block;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: center;
+}
+.selectedRelationshipDiv
+{
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+}
+.selectedRelationshipCard
+{
+  display: block;
+}
+.centeredToolbar
+{
+  display: block;
+  text-align: center;
+  padding-top: 16px;
+}
+.infoSubtitle
+{
+  text-align: center;
+  margin-top: 15px;
+}
+
+.minWidthConstraint
+{
+  min-width: 250px;
+}
+.infoDiv
+{
+  display: block;
+  color: rgba(0,0,0,.54);
+  margin-top: 15px;
+  text-align: center;
+}
+.infoTitle
+{
+  color: black;
+}
+.tagDiv
+{
+  display: inline-block;
+  width: 90%;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.tag
+{
+  display: inline-block;
+  text-align: center;
+  width: 150px;
+  margin: 2px;
+}
+.tagText
+{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.statusController
+{
+  display: block;
+  margin-top: 15px;
+}
+.actionButtonsDiv
+{
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.panelButton
+{
+  display: block;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.subtitleWarning
+{
+  margin-top:10px;
+  color: #d07973;
+}
+@media (max-width:600px)
+{
+  .relationshipDiv
+  {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .selectedRelationshipDiv
+  {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+  }
+  .relationshipContainer
+  {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tagText
+  {
+    max-width: 100px;
+  }
+  .tag
+  {
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    margin: 2px;
+  }
+}

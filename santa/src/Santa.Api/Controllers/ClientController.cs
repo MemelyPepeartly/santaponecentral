@@ -50,7 +50,7 @@ namespace Santa.Api.Controllers
                 {
                     return NoContent();
                 }
-                return Ok(JsonConvert.SerializeObject(clients.OrderBy(c => c.nickname), Formatting.Indented));
+                return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (ArgumentNullException e)
             {
@@ -62,7 +62,6 @@ namespace Santa.Api.Controllers
         // GET: api/Client/5
         /// <summary>
         /// Gets a client by an ID
-        /// 
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
@@ -82,8 +81,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Client/Email/email@domain.com
         /// <summary>
-        /// Gets a client by an ID
-        /// 
+        /// Gets a client by an email
         /// </summary>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
@@ -124,6 +122,21 @@ namespace Santa.Api.Controllers
 
         }
 
+        // GET: api/Client/5/AllowedAssignment/5
+        [HttpGet("{clientID}/AllowedAssignment/{eventTypeID}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
+        {
+            try
+            {
+                return Ok(await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
         // POST: api/Client
         /// <summary>
         /// Posts a new client. Binds the ApiClient model for input
@@ -132,7 +145,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = "create:clients")]
-        public async Task<ActionResult<Client>> PostClientAsync([FromBody] ApiNewClientModel client)
+        public async Task<ActionResult<Client>> PostClientAsync([FromBody] EditNewClientModel client)
         {
             try
             {
@@ -152,8 +165,8 @@ namespace Santa.Api.Controllers
                         postalCode = client.clientPostalCode,
                         country = client.clientCountry
                     },
-                    recipients = new List<Recipient>(),
-                    senders = new List<Sender>()
+                    assignments = new List<RelationshipMeta>(),
+                    senders = new List<RelationshipMeta>()
                 };
                 
                 try
@@ -190,7 +203,7 @@ namespace Santa.Api.Controllers
         [HttpPost("Signup")]
         [AllowAnonymous]
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
-        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] ApiClientWithResponsesModel clientResponseModel)
+        public async Task<ActionResult<Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
             try
             {
@@ -212,8 +225,8 @@ namespace Santa.Api.Controllers
                         postalCode = clientResponseModel.clientPostalCode,
                         country = clientResponseModel.clientCountry
                     },
-                    recipients = new List<Recipient>(),
-                    senders = new List<Sender>()
+                    assignments = new List<RelationshipMeta>(),
+                    senders = new List<RelationshipMeta>()
                 };
 
                 try
@@ -255,13 +268,13 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost("{clientID}/Recipients")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] ApiClientRelationshipsModel assignmentsModel)
+        public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
             try
             {
                 foreach(Guid assignmentID in assignmentsModel.assignments)
                 {
-                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID);
+                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
                 }
                 await repository.SaveAsync();
 
@@ -318,6 +331,7 @@ namespace Santa.Api.Controllers
                 List<Client> allClients = await repository.GetAllClients();
                 List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
                 List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
+                AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
                 List<Client> clientsThatGotNewAssignments = new List<Client>();
                 List<string> assignmentsAddedLogList = new List<string>();
@@ -333,10 +347,10 @@ namespace Santa.Api.Controllers
                         foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                         {
                             // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
-                            if (!mailer.recipients.Any<Recipient>(c => c.recipientClientID == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
                                 // Add that potential assignment to their list
-                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID);
+                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID, defaultNewAssignmentStatus.assignmentStatusID);
 
                                 // If that mailer isnt already on the list of clients that already got a new assignment, add them to it
                                 if(!clientsThatGotNewAssignments.Any<Client>(c => c.clientID == mailer.clientID))
@@ -381,7 +395,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPost("{clientID}/Tags")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] ApiClientTagListResponseModel tagsModel)
+        public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
             try
             {
@@ -435,7 +449,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] ApiClientAddressModel address)
+        public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] EditClientAddressModel address)
         {
             try
             {
@@ -481,7 +495,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Email")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] ApiClientEmailModel email)
+        public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] EditClientEmailModel email)
         {
             try
             {
@@ -559,7 +573,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Nickname")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] ApiClientNicknameModel nickname)
+        public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] EditClientNicknameModel nickname)
         {
             try
             {
@@ -607,7 +621,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Name")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody] ApiClientNameModel name)
+        public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody] EditClientNameModel name)
         {
             try
             {
@@ -641,7 +655,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Admin")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] ApiClientIsAdminModel model)
+        public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] EditClientIsAdminModel model)
         {
             try
             {
@@ -674,7 +688,7 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] ApiClientStatusModel status)
+        public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] EditClientStatusModel status)
         {
             try
             {
@@ -762,29 +776,30 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
-        // PUT: api/Client/5/Recipient
+
+        // PUT: api/Client/5/Relationship/5/AssignmentStatus
         /// <summary>
-        /// Updates the completion status of a relationship by sender, reciever, and event type ID's
+        /// Changes the status of a given assignment by ID's and a body with the new assignment status ID
         /// </summary>
         /// <param name="clientID"></param>
-        /// <param name="recipientCompletionModel"></param>
+        /// <param name="assignmentRelationshipID"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("{clientID}/Recipient")]
+        [HttpPut("{clientID}/Relationship/{assignmentRelationshipID}/AssignmentStatus")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> UpdateRecipientXrefCompletionStatus(Guid clientID, [FromBody] ApiRecipientCompletionModel recipientCompletionModel)
+        public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
             try
             {
-                if(recipientCompletionModel.recipientID.Equals(Guid.Empty) || recipientCompletionModel.eventTypeID.Equals(Guid.Empty))
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "One or both of the required ID's for reciever or eventType were not present on the request");
-                }
-                else
-                {
-                    await repository.UpdateClientRelationCompletedStatusByID(clientID, recipientCompletionModel.recipientID, recipientCompletionModel.eventTypeID, recipientCompletionModel.completed);
-                    await repository.SaveAsync();
-                    return (await repository.GetClientByIDAsync(clientID));
-                }
+                await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
+                await repository.SaveAsync();
+
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                List<RelationshipMeta> logicMetas = new List<RelationshipMeta>();
+                logicMetas.AddRange(logicClient.assignments);
+                logicMetas.AddRange(logicClient.senders);
+
+                return (logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
             }
             catch (Exception e)
             {

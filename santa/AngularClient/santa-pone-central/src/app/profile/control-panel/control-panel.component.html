@@ -4,6 +4,8 @@
 <div class="container" *ngIf="showRecipientData">
     <div class="fixedDiv mat-elevation-z4">
         <app-selected-recipient
+          (actionTaken)="setActionTaken($event)"
+          [profile]="profile"
           [surveys]="surveys"
           [selectedRecipient]="selectedRecipient"></app-selected-recipient>
     </div>
@@ -20,11 +22,11 @@
         <h1>No assignments to display!</h1>
       </div>
       <div *ngIf="loading">
-        <app-small-loading-spin></app-small-loading-spin>
+        <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
       </div>
-      <div *ngIf="histories.length != 0">
+      <div *ngIf="histories.length != 0 && !loading">
         <app-chat-histories
-        [disabled]="gettingAllHistories"
+        [disabled]="gettingAllHistories || gettingProfile"
         [onProfile]="true"
         [histories]="histories"
         (chatSelectedEvent)="historySelected($event)"

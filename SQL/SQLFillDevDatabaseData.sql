@@ -212,6 +212,13 @@ INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adm
 VALUES
     (NEWID(), 'Announcements (Development)', 'Developer announcements', 1);
 
+INSERT INTO app.AssignmentStatus (assignmentStatusID, assignmentStatusName, assignmentStatusDescription)
+VALUES
+    (NEWID(), 'Assigned', 'Fresh assignment that has yet to be started'),
+    (NEWID(), 'In Progress', 'Assignment is in progress of being made, shopped for, or being completed in some way'),
+    (NEWID(), 'Shipping', 'Assignment is on its way! Cheer inbound!'),
+    (NEWID(), 'Completed', 'Your delivery of cheer has made its mark! Mission accomplished!');
+
 
 
 
@@ -226,6 +233,7 @@ SELECT * FROM app.SurveyResponse;
 SELECT * FROM app.EventType;
 SELECT * FROM app.Client;
 SELECT * FROM app.ClientRelationXref;
+SELECT * FROM app.AssignmentStatus;
 
 SELECT * FROM app.Tag;
 SELECT * FROM app.ClientTagXref;

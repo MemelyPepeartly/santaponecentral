@@ -7,7 +7,7 @@
 .component-container
 {
     width: 90%;
-    min-width: 525px;
+    min-width: 600px;
     margin: auto;
     margin-top: 15px;
     padding: 15px;
@@ -20,7 +20,7 @@
     position: fixed;
     width: 80%;
     height: fit-content;
-    min-width: 550px;
+    min-width: 600px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -42,7 +42,7 @@
 .chatContainer
 {
     padding: 15px;
-    min-width: 550px;;
+    min-width: 600px;
 }
 
 

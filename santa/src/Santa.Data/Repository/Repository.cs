@@ -32,7 +32,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID)
+        public async Task CreateClientRelationByID(Guid senderClientID, Guid recipientClientID, Guid eventTypeID, Guid assignmentStatusID)
         {
             try
             {
@@ -42,8 +42,8 @@ namespace Santa.Data.Repository
                     SenderClientId = senderClientID,
                     RecipientClientId = recipientClientID,
                     EventTypeId = eventTypeID,
-                    // Value being posted should be false to start by default
-                    Completed = false
+                    // Assignment status should be set to its default value as well
+                    AssignmentStatusId = assignmentStatusID
                 };
                 await santaContext.ClientRelationXref.AddAsync(contexRelation);
             }
@@ -56,26 +56,48 @@ namespace Santa.Data.Repository
         {
             try
             {
-                List<Logic.Objects.Client> clientList = new List<Logic.Objects.Client>();
-                clientList = (await santaContext.Client
-                    .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(crx => crx.RecipientClient)
-                    .Include(sc => sc.ClientRelationXrefSenderClient)
-                        .ThenInclude(crx => crx.SenderClient)
-                    .Include(xr => xr.ClientRelationXrefRecipientClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(xr => xr.ClientRelationXrefSenderClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(tx => tx.ClientTagXref)
+                List<Logic.Objects.Client> clientList = (await santaContext.Client
+                    /* Surveys and responses */
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey.EventType)
+
+                    /* Sender/Assignment info and Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
+
+                    /* Chat messages */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+
+                    /* Assignment statuses */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+
+                    /* Tags */
+                    .Include(c => c.ClientTagXref)
                         .ThenInclude(t => t.Tag)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
-                    .Include(s => s.ClientStatus).ToListAsync())
+
+                    /* Client approval status */
+                    .Include(c => c.ClientStatus)
+                    .AsNoTracking()
+                    .ToListAsync())
                     .Select(Mapper.MapClient).ToList();
 
                 return clientList;
@@ -90,25 +112,48 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                    .Include(s => s.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.SenderClient)
-                    .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(u => u.RecipientClient)
-                    .Include(xr => xr.ClientRelationXrefRecipientClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(xr => xr.ClientRelationXrefSenderClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(tx => tx.ClientTagXref)
+                    /* Surveys and responses */
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey.EventType)
+
+                    /* Sender/Assignment info and Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
+
+                    /* Chat messages */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+
+                    /* Assignment statuses */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+
+                    /* Tags */
+                    .Include(c => c.ClientTagXref)
                         .ThenInclude(t => t.Tag)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
-                    .Include(s => s.ClientStatus)
-                    .FirstOrDefaultAsync(c => c.ClientId == clientId));
+
+                    /* Client approval status */
+                    .Include(c => c.ClientStatus)
+                    .Where(c => c.ClientId == clientId)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync());
 
                 return logicClient;
             }
@@ -122,25 +167,48 @@ namespace Santa.Data.Repository
             try
             {
                 Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                    .Include(s => s.ClientRelationXrefSenderClient)
-                        .ThenInclude(u => u.SenderClient)
-                    .Include(r => r.ClientRelationXrefRecipientClient)
-                        .ThenInclude(u => u.RecipientClient)
-                    .Include(xr => xr.ClientRelationXrefRecipientClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(xr => xr.ClientRelationXrefSenderClient)
-                        .ThenInclude(m => m.ChatMessage)
-                    .Include(tx => tx.ClientTagXref)
+                    /* Surveys and responses */
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                            .ThenInclude(sqox => sqox.SurveyOption)
+                    .Include(c => c.SurveyResponse)
+                        .ThenInclude(sr => sr.Survey.EventType)
+
+                    /* Sender/Assignment info and Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    /* Relationship event */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(crxsc => crxsc.EventType)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(crxrc => crxrc.EventType)
+
+                    /* Chat messages */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(cm => cm.ChatMessage)
+
+                    /* Assignment statuses */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(stat => stat.AssignmentStatus)
+
+                    /* Tags */
+                    .Include(c => c.ClientTagXref)
                         .ThenInclude(t => t.Tag)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion)
-                            .ThenInclude(sq => sq.SurveyQuestionOptionXref)
-                                .ThenInclude(sqox => sqox.SurveyOption)
-                    .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
-                    .Include(s => s.ClientStatus)
-                    .FirstOrDefaultAsync(c => c.Email == clientEmail));
+
+                    /* Client approval status */
+                    .Include(c => c.ClientStatus)
+                    .Where(c => c.Email == clientEmail)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync());
 
                 return logicClient;
             }
@@ -178,13 +246,13 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        public async Task UpdateClientRelationCompletedStatusByID(Guid senderID, Guid recipientID, Guid eventTypeID, bool targetCompletedStatus)
+        public async Task UpdateAssignmentProgressStatusByID(Guid assignmentID, Guid newAssignmentStatusID)
         {
             try
             {
-                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.RecipientClientId == recipientID && crxf.SenderClientId == senderID && crxf.EventTypeId == eventTypeID);
+                ClientRelationXref contextRelationship = await santaContext.ClientRelationXref.FirstOrDefaultAsync(crxf => crxf.ClientRelationXrefId == assignmentID);
 
-                contextRelationship.Completed = targetCompletedStatus;
+                contextRelationship.AssignmentStatusId = newAssignmentStatusID;
 
                 santaContext.ClientRelationXref.Update(contextRelationship);
             }
@@ -220,31 +288,159 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Assignment Status
+        public async Task CreateAssignmentStatus(Logic.Objects.AssignmentStatus newAssignmentStatus)
+        {
+            try
+            {
+                Data.Entities.AssignmentStatus newContextAssignmentStatus = Mapper.MapAssignmentStatus(newAssignmentStatus);
+                await santaContext.AssignmentStatus.AddAsync(newContextAssignmentStatus);
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<Logic.Objects.AssignmentStatus>> GetAllAssignmentStatuses()
+        {
+            try
+            {
+                List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = (await santaContext.AssignmentStatus.ToListAsync()).Select(Mapper.MapAssignmentStatus).ToList();
+
+                return listLogicAssigmentStatus;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<Logic.Objects.AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID)
+        {
+            try
+            {
+                Logic.Objects.AssignmentStatus logicAssignmentStatus = Mapper.MapAssignmentStatus(await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == assignmentStatusID));
+
+                return logicAssignmentStatus;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID)
+        {
+            try
+            {
+                //var assignments = (await santaContext.ClientRelationXref.Select(crxr => crxr.AssignmentStatusId == assignmentStatusID).ToListAsync()).Select(Mapper.MapRelationRecipientXref)
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task UpdateAssignmentStatus(Logic.Objects.AssignmentStatus targetAssignmentStatus)
+        {
+            try
+            {
+                Data.Entities.AssignmentStatus contextAssignmentStatus = await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == targetAssignmentStatus.assignmentStatusID);
+
+                contextAssignmentStatus.AssignmentStatusName = targetAssignmentStatus.assignmentStatusName;
+                contextAssignmentStatus.AssignmentStatusDescription = targetAssignmentStatus.assignmentStatusDescription;
+
+                santaContext.AssignmentStatus.Update(contextAssignmentStatus);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task DeleteAssignmentStatusByID(Guid assignmentStatusID)
+        {
+            try
+            {
+                Entities.AssignmentStatus contextAssignmentStatus = await santaContext.AssignmentStatus.FirstOrDefaultAsync(stat => stat.AssignmentStatusId == assignmentStatusID);
+
+                santaContext.Remove(contextAssignmentStatus);
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        #endregion
+
         #region Profile
         public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
         {
             try
             {
                 Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-                    .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient)
-                            .ThenInclude(c => c.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
-                                .ThenInclude(sr => sr.Survey)
-                                    .ThenInclude(s => s.EventType)
-                    .Include(r => r.ClientRelationXrefSenderClient)
-                        .ThenInclude(clXref => clXref.RecipientClient)
-                            .ThenInclude(c => c.SurveyResponse)
-                                .ThenInclude(sr => sr.SurveyQuestion)
+                    /* Assignment information and surveys */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
+                            .ThenInclude(sr => sr.Survey.EventType)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse)
+                            .ThenInclude(sr => sr.SurveyQuestion)
+
+                    /* Assignment event types */
                     .Include(r => r.ClientRelationXrefSenderClient)
                         .ThenInclude(e => e.EventType)
-                    .Include(r => r.ClientRelationXrefRecipientClient)
+
+                    /* Assignment Statuses */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(xref => xref.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(xref => xref.AssignmentStatus)
+
+                    /* Sender/Assignment Tags */
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(xref => xref.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(xref => xref.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    /* Profile approval status */
                     .Include(s => s.ClientStatus)
+
+                    /* Profile survey responses aand event types */
                     .Include(c => c.SurveyResponse)
                         .ThenInclude(s => s.SurveyQuestion)
                     .Include(c => c.SurveyResponse)
-                        .ThenInclude(sr => sr.Survey)
-                            .ThenInclude(s => s.EventType)
-                    .FirstOrDefaultAsync(c => c.Email == email));
+                        .ThenInclude(sr => sr.Survey.EventType)
+                    .Where(c => c.Email == email)
+                    .FirstOrDefaultAsync());
+
+                List<Response> responsesToRemove = new List<Response>();
+                // For each recipient in the profile
+                foreach (ProfileRecipient recipient in logicProfile.assignments)
+                {
+                    // And for each response that recipient gave
+                    foreach(Response response in recipient.responses)
+                    {
+                        // If the recipients event does not match the responses event
+                        if(recipient.recipientEvent.eventTypeID != response.responseEvent.eventTypeID)
+                        {
+                            // Add it to the list of responses to remove from thsi assignment
+                            responsesToRemove.Add(response);
+                        }
+                    }
+                    // Then once that is done, remove all the responses from that recipient that were gathered, and reset the list for any others
+                    foreach(Response response in responsesToRemove)
+                    {
+                        recipient.responses.Remove(response);
+                    }
+                    responsesToRemove.Clear();
+                }
+                
                 
                 return logicProfile;
             }
@@ -395,7 +591,9 @@ namespace Santa.Data.Repository
                 var contextMessage = await santaContext.ChatMessage
                     .Include(r => r.MessageReceiverClient)
                     .Include(s => s.MessageSenderClient)
-                    .FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
+                    .Where(m => m.ChatMessageId == chatMessageID)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
                 return logicMessage;
             }
@@ -427,7 +625,31 @@ namespace Santa.Data.Repository
             try
             {
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<Entities.Client> listContextClient = await santaContext.Client.Include(c => c.ClientStatus).Include(x => x.ClientRelationXrefRecipientClient).ToListAsync();
+                List<Entities.Client> listContextClient = await santaContext.Client
+                    .Include(c => c.ClientStatus)
+
+                    /* Assignment Status */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.AssignmentStatus)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.AssignmentStatus)
+
+                    /* Event types */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.EventType)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.EventType)
+
+                    /* Tags */
+                    .Include(c => c.ClientRelationXrefRecipientClient)
+                        .ThenInclude(x => x.SenderClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+                    .Include(c => c.ClientRelationXrefSenderClient)
+                        .ThenInclude(x => x.RecipientClient.ClientTagXref)
+                            .ThenInclude(txr => txr.Tag)
+
+                    .AsNoTracking()
+                    .ToListAsync();
 
                 foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
                 {
@@ -483,16 +705,17 @@ namespace Santa.Data.Repository
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
-                        .ThenInclude(e => e.ClientRelationXref)
-                    .Include(r => r.EventType)
-                        .ThenInclude(e => e.Survey)
+                    .Include(r => r.EventType.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
+                    .Include(r => r.AssignmentStatus)
                     .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageReceiverClient)
                     .Include(r => r.ChatMessage)
                         .ThenInclude(cm => cm.MessageSenderClient)
-                    .FirstOrDefaultAsync(x => x.ClientRelationXrefId == clientRelationXrefID);
+                    .Where(x => x.ClientRelationXrefId == clientRelationXrefID)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
 
                 logicHistory.relationXrefID = clientRelationXrefID;
                 logicHistory.eventType = Mapper.MapEvent(contextRelationship.EventType);
@@ -519,6 +742,8 @@ namespace Santa.Data.Repository
                 logicHistory.assignmentSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
                 logicHistory.conversationClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
 
+                logicHistory.assignmentStatus = Mapper.MapAssignmentStatus(contextRelationship.AssignmentStatus);
+
 
                 return logicHistory;
             }
@@ -536,6 +761,7 @@ namespace Santa.Data.Repository
                     .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == conversationClient.clientID || m.MessageReceiverClientId == conversationClient.clientID))
                     .Include(s => s.MessageSenderClient)
                     .Include(r => r.MessageReceiverClient)
+                    .AsNoTracking()
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 
@@ -544,6 +770,7 @@ namespace Santa.Data.Repository
                 logicHistory.eventType = new Event();
                 logicHistory.assignmentRecieverClient = new ClientMeta();
                 logicHistory.assignmentSenderClient = new ClientMeta();
+                logicHistory.assignmentStatus = new Logic.Objects.AssignmentStatus();
                 logicHistory.conversationClient = Mapper.MapClientMeta(conversationClient);
 
                 logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);
@@ -776,8 +1003,9 @@ namespace Santa.Data.Repository
                         .ThenInclude(sqx => sqx.SurveyQuestion)
                             .ThenInclude(sq => sq.SurveyQuestionOptionXref)
                                 .ThenInclude(sqox => sqox.SurveyOption)
+                    .Where(s => s.SurveyId == surveyId)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.SurveyId == surveyId));
+                    .FirstOrDefaultAsync());
                 return logicSurvey;
             }
             catch (Exception e)
@@ -862,11 +1090,6 @@ namespace Santa.Data.Repository
             }
         }
 
-        /// <summary>
-        /// Creates a SurveyOption and adds it to the context
-        /// </summary>
-        /// <param name="newSurveyOption"></param>
-        /// <returns></returns>
         public async Task CreateSurveyOptionAsync(Option newSurveyOption)
         {
             try
@@ -879,12 +1102,7 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
         }
-        
-        /// <summary>
-        /// Updates a survey option by its ID and queues that update in the context.
-        /// </summary>
-        /// <param name="targetSurveyOption"></param>
-        /// <returns></returns>
+
         public async Task UpdateSurveyOptionByIDAsync(Option targetSurveyOption)
         {
             try
@@ -902,11 +1120,6 @@ namespace Santa.Data.Repository
             }
         }
         
-        /// <summary>
-        /// Dletes a survey option by ID and queues the update in the context.
-        /// </summary>
-        /// <param name="surveyOptionID"></param>
-        /// <returns></returns>
         public async Task DeleteSurveyOptionByIDAsync(Guid surveyOptionID)
         {
             try
@@ -1378,6 +1591,68 @@ namespace Santa.Data.Repository
                 throw e.InnerException;
             }
 
+        }
+        public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
+        {
+            try
+            {
+                Logic.Objects.Client logicClient = await GetClientByIDAsync(clientID);
+                List<Logic.Objects.Client> allClients = await GetAllClients();
+                List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
+
+
+                foreach(Logic.Objects.Client potentialAssignment in allClients)
+                {
+                    // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
+                    if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
+                    {
+                        allowedAssignments.Add(Mapper.MapAllowedAssignmentMeta(potentialAssignment));
+                    }
+                }
+                return allowedAssignments;
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public async Task<List<Logic.Objects.Client>> SearchClientByQuery(SearchQueries searchQuery)
+        {
+            List<Logic.Objects.Client> allClientList = await GetAllClients();
+            List<Logic.Objects.Client> matchingClients = new List<Logic.Objects.Client>();
+
+            if (searchQuery.isHardSearch)
+            {
+                matchingClients = allClientList
+                    .Where(c => !searchQuery.tags.Any() || searchQuery.tags.All(queryTagID => c.tags.Any(clientTag => clientTag.tagID == queryTagID)))
+                    .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.All(queryStatusID => c.clientStatus.statusID == queryStatusID))
+                    .Where(c => !searchQuery.events.Any() || searchQuery.events.All(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
+                    .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList();
+            }
+            else
+            {
+                matchingClients = allClientList
+                    .Where(c => !searchQuery.tags.Any() || searchQuery.tags.Any(queryTagID => c.tags.Any(t => t.tagID == queryTagID)))
+                    .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Any(queryStatusID => c.clientStatus.statusID == queryStatusID))
+                    .Where(c => !searchQuery.events.Any() || searchQuery.events.Any(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
+                    .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList();
+            }
+            
+
+            /*
+            IEnumerable<Logic.Objects.Client> matchingClientsQuery = new List<Logic.Objects.Client>();
+
+            if (searchQuery.tags.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.tags.Any(t => searchQuery.tags.Contains(t.tagID)));
+            if (searchQuery.statuses.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => searchQuery.statuses.Contains(c.clientStatus.statusID));
+            if (searchQuery.events.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.responses.Any(r => searchQuery.events.Contains(r.responseEvent.eventTypeID)));
+
+            List<Logic.Objects.Client> matchingClients = matchingClientsQuery.ToList();
+            */
+
+            return matchingClients;
         }
         #endregion
     }

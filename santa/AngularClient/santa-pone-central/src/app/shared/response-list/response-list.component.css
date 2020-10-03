@@ -52,7 +52,7 @@ mat-card-header
 {
   color: #d07973;
 }
-@media (max-width:550px)
+@media (max-width:600px)
 {
   .questionSelection
   {

@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using Santa.Logic.Objects;
 using System.Security.Claims;
 using Santa.Api.Models;
+using Santa.Api.Models.Profile_Models;
 
 namespace Santa.Api.Controllers
 {
@@ -46,7 +47,7 @@ namespace Santa.Api.Controllers
                 // Gets the claims from the token
                 string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
-                // Checks to make sure the token's email is only getting the email for its own profile
+                // Checks to make sure the token's email is only getting the email for its own profile. Takes one less call than using the IsAuthorized method here
                 if (claimEmail == email)
                 {
                     Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
@@ -81,18 +82,13 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:profile")]
-        public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressByEmailAsync(Guid clientID, [FromBody] ApiClientAddressModel newAddress)
+        public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressByEmailAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
         {
             try
             {
-
-                // Gets the claims from the token
-                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
                 Client logicClient = await repository.GetClientByIDAsync(clientID);
-
-
                 // Checks to make sure the token's email is only getting the email for its own profile
-                if (claimEmail == logicClient.email)
+                if (IsAuthorized(logicClient))
                 {
                     logicClient.address = new Address()
                     {
@@ -126,6 +122,40 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
 
+        }
+        [HttpPut("{clientID}/Assignment/{assignmentXrefID}/AssignmentStatus")]
+        [Authorize(Policy = "update:profile")]
+        public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
+        {
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                if (IsAuthorized(logicClient))
+                {
+                    // Logic needed here for updating assignment status
+                    await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
+                    await repository.SaveAsync();
+
+                    // Update profile and send back the updated recipient
+                    Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
+                    return Ok(logicProfile.assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        private bool IsAuthorized(Client logicClient)
+        {
+            // Gets the claims from the token
+            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+
+            return claimEmail == logicClient.email;
         }
     }
 }

@@ -1,0 +1,186 @@
+<div id="overlay" *ngIf="showClientCard" (click)="hideOpenWindow();" [@simpleFadeAnimation]="'in'">
+</div>
+
+<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard">
+  <div class="fixedDiv mat-elevation-z6">
+      <app-selected-anon
+      [loadingClient]="false"
+      [client]="selectedClient"
+      (setClickAwayLockEvent)="clickLocked = $event"
+      (actionTaken)="search()"
+      (deletedAnon)="hideOpenWindow();">
+      </app-selected-anon>
+  </div>
+</div>
+
+<div class="searchBarContainer reactiveMinWidth mat-elevation-z3">
+  <div class="searchBarDiv">
+    <mat-form-field class="searchBarFormField mat-elevation-z3" (keyup)="constructQueryObject()">
+      <mat-label>Search Query</mat-label>
+      <input matInput type="text" [(ngModel)]="searchQueryString">
+      <button mat-button *ngIf="searchQueryString" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="previewChipsDiv">
+      <ng-container *ngIf="searchQueryObjectHolder.tags.length > 0">
+        <h2>Tags</h2>
+        <mat-chip-list>
+          <mat-chip class="chip" *ngFor="let tag of searchQueryObjectHolder.tags"
+            (click)="removeTagQuery(tag)"
+            [selectable]="false">
+            <span class="chipText">{{ tag.tagName }}</span>
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+
+      <ng-container *ngIf="searchQueryObjectHolder.statuses.length > 0">
+        <h2>Statuses</h2>
+        <mat-chip-list>
+          <mat-chip class="chip" *ngFor="let status of searchQueryObjectHolder.statuses"
+            (click)="removeStatusQuery(status)"
+            [selectable]="false">
+            <span class="chipText">{{ status.statusDescription }}</span>
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+
+      <ng-container *ngIf="searchQueryObjectHolder.events.length > 0">
+        <h2>Events</h2>
+        <mat-chip-list>
+          <mat-chip class="chip" *ngFor="let event of searchQueryObjectHolder.events"
+            (click)="removeEventQuery(event)"
+            [selectable]="false">
+            <span class="chipText">{{ event.eventDescription }}</span>
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+
+    </div>
+
+    <div class="actionButtonDiv">
+      <mat-radio-group [(ngModel)]="selectedSearchType">
+        <mat-radio-button #soft class="searchTypeRadioButton" value="soft" [checked]="soft.value == 'soft'">Soft Search</mat-radio-button>
+        <mat-radio-button #hard class="searchTypeRadioButton" value="hard" [checked]="hard.value == 'hard'">Hard Search</mat-radio-button>
+        <div class="infoIconDiv" matTooltip="{{infoMessage}}"
+        [matTooltipPosition]="'right'">
+          <mat-icon>error</mat-icon>
+        </div>
+
+      </mat-radio-group>
+    </div>
+
+    <div class="actionButtonDiv">
+      <button mat-raised-button class="actionButton" *ngIf="!showHelper" (click)="showHelper = !showHelper">Show Query Helper</button>
+      <button mat-raised-button class="actionButton" *ngIf="showHelper" (click)="showHelper = !showHelper">Hide Query Helper</button>
+      <button mat-raised-button class="actionButton" [disabled]="searchingClients" (click)="search()">Search <mat-icon>search</mat-icon></button>
+    </div>
+
+    <mat-card *ngIf="showHelper" class="helperCard mat-elevation-z3">
+      <mat-card-header>
+        <mat-card-title>Search Term Helper</mat-card-title>
+        <mat-card-subtitle>Click on any of these to add them to your search query</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div class="helperObjectsContainer">
+          <div class="helperDiv">
+            <mat-toolbar>Tags</mat-toolbar>
+            <mat-card-subtitle class="helperSubtitle">List of serachable tags</mat-card-subtitle>
+            <div class="spinnerWrap" *ngIf="gatheringAllTags">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllTags">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let tag of allHelperTags"
+                  (click)="addQuery(tag)"
+                  matTooltip="{{tag.tagName}}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{tag.tagName}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+
+          <mat-divider class="helperDividerStyle" [inset]="true"></mat-divider>
+
+          <div class="helperDiv">
+            <mat-toolbar>Client Statuses</mat-toolbar>
+            <mat-card-subtitle class="helperSubtitle">List of serachable statuses</mat-card-subtitle>
+            <div class="spinnerWrap" *ngIf="gatheringAllClientStatuses">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllClientStatuses">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let status of allHelperStatuses"
+                  (click)="addQuery(status)"
+                  matTooltip="{{ status.statusDescription }}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{status.statusDescription}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+
+          <mat-divider class="helperDividerStyle" [inset]="true"></mat-divider>
+
+          <div class="helperDiv">
+            <mat-toolbar>Events</mat-toolbar>
+            <mat-card-subtitle class="helperSubtitle">List of serachable events</mat-card-subtitle>
+            <div class="spinnerWrap" *ngIf="gatheringAllEvents">
+              <app-loading-spin></app-loading-spin>
+            </div>
+            <div class="chipDiv" *ngIf="!gatheringAllEvents">
+              <mat-chip-list>
+                <mat-chip class="chip" *ngFor="let event of allHelperEvents"
+                  (click)="addQuery(event)"
+                  matTooltip="{{ event.eventDescription }}"
+                  [matTooltipPosition]="'below'">
+                  <span class="chipText">{{event.eventDescription}}</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions style="text-align: center;">
+        <button mat-raised-button class="actionButton" (click)="showHelper = !showHelper">Hide Query Helper</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<div class="foundClientContainer reactiveMinWidth">
+  <mat-toolbar>
+    <mat-toolbar-row>
+        Found Anons
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="spinnerWrap" *ngIf="searchingClients">
+    <app-loading-spin></app-loading-spin>
+  </div>
+  <mat-list>
+    <mat-card mat-list-item class="foundClientCard" *ngFor="let client of foundClients" appMaterialElevation (click)="showCardInfo(client)">
+        <mat-card-title>
+          <h1 class="inline">{{ client.clientNickname }}</h1>
+          <mat-chip-list class="inline tagList" [selectable]="false" >
+            <mat-chip *ngFor="let tag of client.tags"
+            matTooltip="{{tag.tagName}}"
+            [matTooltipPosition]="'below'"
+            [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+          </mat-chip-list>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <span [ngClass]="{'notice' : client.assignments.length == 0}">Assignments: {{ client.assignments.length }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Senders: {{ client.senders.length }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Client Name: {{ client.clientName }}</span>
+        </mat-card-subtitle>
+    </mat-card>
+  </mat-list>
+</div>
+
+

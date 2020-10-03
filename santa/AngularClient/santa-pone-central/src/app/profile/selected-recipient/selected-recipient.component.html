@@ -3,7 +3,7 @@
     <mat-card class="infoCard">
         <mat-card-header>
             <mat-card-title>Address</mat-card-title>
-            <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s mailing address</mat-card-subtitle>
+            <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s mailing address</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
             <div>
@@ -20,13 +20,24 @@
     <mat-card class="infoCard">
         <mat-card-header>
             <mat-card-title>Shipping name and information</mat-card-title>
-            <mat-card-subtitle>{{ selectedRecipient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
+            <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <h3>{{selectedRecipient.clientNickname}}</h3>
-            <p>{{selectedRecipient.clientName}}</p>
+          <h3>{{selectedRecipient.recipientClient.clientName }}</h3>
+          <p>{{selectedRecipient.recipientClient.clientNickname }}</p>
         </mat-card-content>
     </mat-card>
+
+    <div class="statusContainer">
+      <div class="statusDiv">
+        <app-assignment-status-controller
+          (lockClickawayEvent)="setClickawayLock($event)"
+          (newStatusAssingmentStatusPutEvent)="setNewStatus($event)"
+          [assignment]="selectedRecipient"
+          [clientID]="profile.clientID">
+        </app-assignment-status-controller>
+      </div>
+    </div>
 
     <mat-toolbar>Assignment Responses</mat-toolbar>
 

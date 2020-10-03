@@ -14,7 +14,6 @@ import { ClientResponse,
   MessageApiReadResponse,
   ClientSignupResponse,
   ClientRelationshipsResponse,
-  RecipientCompletionResponse,
   QuestionReadabilityResponse,
   ClientSenderRecipientRelationshipReponse,
   MessageApiReadAllResponse,
@@ -30,8 +29,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse} from '../../classes/responseTypes';
-import { ClientSenderRecipientRelationship } from 'src/classes/client';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse} from '../../classes/responseTypes';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -65,6 +63,10 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client/Email/' + email).pipe(
       map(this.extractData));
   }
+  getAllowedAssignmentsByID(clientID: string, eventTypeID: string) : Observable<any> {
+    return this.http.get(endpoint + 'Client/' + clientID + '/AllowedAssignment/' + eventTypeID).pipe(
+      map(this.extractData));
+  }
   getSurveyResponseByClientID(id): Observable<any> {
     return this.http.get(endpoint + 'Client/'+ id + '/Response').pipe(
       map(this.extractData));
@@ -87,6 +89,14 @@ export class SantaApiGetService {
   }
   getStatus(id): Observable<any> {
     return this.http.get(endpoint + 'Status/' + id).pipe(
+      map(this.extractData));
+  }
+  getAllAssignmentStatuses(): Observable<any> {
+    return this.http.get(endpoint + 'AssignmentStatus').pipe(
+      map(this.extractData));
+  }
+  getAssignmentStatusByID(assignmentStatusID: string): Observable<any> {
+    return this.http.get(endpoint + 'AssignmentStatus/' + assignmentStatusID).pipe(
       map(this.extractData));
   }
   getAllSurveys(): Observable<any> {
@@ -214,6 +224,14 @@ export class SantaApiPostService {
     return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions).pipe(
       map(this.extractData));
   }
+  postAssignmentStatus(assignmentStatusResponse: NewAssignmentStatusResponse): Observable<any> {
+    return this.http.post(endpoint + 'AssignmentStatus', assignmentStatusResponse).pipe(
+      map(this.extractData));
+  }
+  searchClients(body: SearchQueryModelResponse): Observable<any> {
+    return this.http.post(endpoint + 'Catalogue/SearchClients', body).pipe(
+      map(this.extractData));
+  }
 }
 
 @Injectable({
@@ -241,11 +259,14 @@ export class SantaApiPutService {
   putClientIsAdmin(id: string, updatedClient: ClientIsAdminResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient).pipe(map(this.extractData));
   }
-  putClientRelationshipCompletionStatus(id: string, relationshipModel: RecipientCompletionResponse): Observable<any> {
-    return this.http.put(endpoint + 'Client/' + id + '/Recipient', relationshipModel).pipe(map(this.extractData));
+  putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Client/' + clientID + '/Relationship/' + assignmentXrefID + "/AssignmentStatus", response).pipe(map(this.extractData));
   }
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
+  }
+  putProfileAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
   }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));

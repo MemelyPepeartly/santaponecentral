@@ -19,7 +19,7 @@ export class ChatHistoriesComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() viewerClient: Client = new Client();
 
-  columns: string[] = ["sender", "recipient", "event", "contact"];
+  columns: string[] = ["sender", "assignment", "event", "status", "contact"];
 
   public isAdmin: boolean = false;
 

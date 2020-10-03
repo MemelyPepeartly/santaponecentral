@@ -52,6 +52,7 @@ export class ClientIsAdminResponse {
 
 export class ClientRelationshipsResponse {
     eventTypeID: string;
+    assignmentStatusID: string;
     assignments: Array<string> = []
 }
 export class SurveyApiResponse {
@@ -87,16 +88,7 @@ export class ClientTagRelationshipsResponse {
 }
 export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
-    clientNickname: string;
-    clientName: string;
     clientEventTypeID: string;
-}
-// Response model for modifying the completion status of a sender/reciever relationship
-export class RecipientCompletionResponse
-{
-    recipientID: string;
-    eventTypeID: string;
-    completed: boolean;
 }
 // Response model for marking if a question is viewable by the person(s) sending to them
 export class QuestionReadabilityResponse
@@ -149,4 +141,21 @@ export class EditEntryTypeName {
 }
 export class EditEntryTypeDescription {
   entryTypeDescription: string;
+}
+/* RESPONSE TYPES FOR ASSIGNMENT STATUSES */
+export class NewAssignmentStatusResponse {
+  assignmentStatusName: string;
+  assignmentStatusDescription: string;
+}
+export class EditProfileAssignmentStatusResponse {
+  assignmentStatusID: string;
+}
+/* CATALOGUE */
+export class SearchQueryModelResponse {
+  tags: Array<string> = [];
+  statuses: Array<string> = [];
+  events: Array<string> = [];
+  names: Array<string> = [];
+  nicknames: Array<string> = [];
+  isHardSearch: boolean;
 }

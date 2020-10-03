@@ -1,3 +1,5 @@
-<div class="center">
-  <mat-spinner mode="indeterminate" [diameter]="50"></mat-spinner>
+<div class="spinnerDiv"
+  [ngClass]="{'santa' : spinnerType == 1,
+  'card' : spinnerType == 2,
+  'duk' : spinnerType == 3}">
 </div>

@@ -1,17 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
-import { Client, ClientSenderRecipientRelationship } from '../../../classes/client';
+import { AllowedAssignmentMeta, AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
 import { MapService, MapResponse } from 'src/app/services/mapService.service';
-import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
+import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, RecipientCompletionResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question, SurveyResponse } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { CountriesService } from 'src/app/services/countries.service';
+import { ClientMeta } from 'src/classes/message';
 
 @Component({
   selector: 'app-selected-anon',
@@ -54,15 +56,16 @@ export class SelectedAnonComponent implements OnInit {
 
   @Output() actionTaken: EventEmitter<any> = new EventEmitter();
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
-  @Output() refreshSelectedClient: EventEmitter<any> = new EventEmitter();
+  @Output() setClickAwayLockEvent: EventEmitter<any> = new EventEmitter();
 
-  public senders: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
-  public recipients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
-  public approvedRecipientClients: Array<ClientSenderRecipientRelationship> = new Array<ClientSenderRecipientRelationship>();
+  public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
+  public recipients: Array<RelationshipMeta> = new Array<RelationshipMeta>();
+  public allowedAssignmentOptions: Array<AllowedAssignmentMeta> = new Array<AllowedAssignmentMeta>();
   public events: Array<EventType> = new Array<EventType>();
   public surveys: Array<Survey> = new Array<Survey>();
   public questions: Array<Question> = new Array<Question>();
   public statuses: Array<Status> = new Array<Status>();
+  public assignmentStatuses: Array<AssignmentStatus> = new Array<AssignmentStatus>();
   public allClients: Array<Client> = new Array<Client>();
   public countries: Array<any> = [];
 
@@ -81,7 +84,7 @@ export class SelectedAnonComponent implements OnInit {
   public availableTags: Array<Tag> = new Array<Tag>();
   public currentTags: Array<Tag> = new Array<Tag>();
 
-  public selectedRecipients: Array<Client> = new Array<Client>();
+  public selectedRecipients: Array<AllowedAssignmentMeta> = new Array<AllowedAssignmentMeta>();
   public selectedTags: Array<Tag> = new Array<Tag>();
   public selectedRecipientEvent: EventType = new EventType();
 
@@ -113,7 +116,6 @@ export class SelectedAnonComponent implements OnInit {
   public editingTags: boolean = false;
   public modyingTagRelationships: boolean = false;
   public initializing: boolean = false;
-  public markingAsComplete: boolean = false;
   public changingAddress: boolean = false;
   public changingName: boolean = false;
   public changingEmail: boolean = false;
@@ -125,14 +127,13 @@ export class SelectedAnonComponent implements OnInit {
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
   public gettingEventDetails: boolean = true;
-  public gatheringRecipients: boolean = false;
-  public gatheringSenders: boolean = false;
   public gatheringAllEvents: boolean = true;
   public gatheringAllMessages: boolean = true;
   public gatheringAllQuestions: boolean = true;
   public gatheringAllStatuses: boolean = true;
   public gatheringAllSurveys: boolean = true;
   public gatheringAllTags: boolean = true;
+  public gatheringAllAssignmentsStatuses: boolean = true;
 
   //Possibly depreciated
   public settingClientTags: boolean = false;
@@ -200,10 +201,6 @@ export class SelectedAnonComponent implements OnInit {
       this.allClients = clientArray;
     });
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
-    //Gathers all client senders
-    await this.gatherSenders();
-    //Gathers all client recipients
-    await this.gatherRecipients();
     //Gathers all client tags
     await this.setClientTags();
     //Gathers all countries for the form;
@@ -217,6 +214,10 @@ export class SelectedAnonComponent implements OnInit {
     //Gathers all tags
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
+    });
+    //Gather all assignment statuses
+    this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
+      this.assignmentStatuses = assignmentStatusArray;
     });
 
     /* BOOLEAN STATUS SUSCRIBES */
@@ -238,12 +239,16 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
       this.gatheringAllTags = status;
     });
+    this.gatherer.gatheringAllAssignmentsStatuses.subscribe((status: boolean) => {
+      this.gatheringAllAssignmentsStatuses = status;
+    });
 
     //Runs all gather services
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllQuestions();
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllTags();
+    await this.gatherer.gatherAllAssignmentStatuses();
 
     this.gettingAnswers = false;
     this.gettingEventDetails = false;
@@ -298,6 +303,7 @@ export class SelectedAnonComponent implements OnInit {
       this.actionTaken.emit(false);
     });
   }
+
   public async setAsCompleted()
   {
     this.showButtonSpinner = true;
@@ -395,7 +401,8 @@ export class SelectedAnonComponent implements OnInit {
       var newNick: string = this.clientNicknameFormGroup.value.newNickname;
 
       putClient.clientNickname = newNick;
-      var clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+      let clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+
       await this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).toPromise();
 
       this.actionTaken.emit(true);
@@ -415,17 +422,19 @@ export class SelectedAnonComponent implements OnInit {
 
     var currentEvent = this.selectedRecipientEvent;
 
-    let assignments = new ClientRelationshipsResponse();
-    assignments.eventTypeID = this.selectedRecipientEvent.eventTypeID;
+    let assignments: ClientRelationshipsResponse =
+    {
+      eventTypeID: this.selectedRecipientEvent.eventTypeID,
+      assignmentStatusID: this.assignmentStatuses.find((status: AssignmentStatus) => {return status.assignmentStatusName == AssignmentStatusConstants.ASSIGNED}).assignmentStatusID,
+      assignments: []
+    };
 
-    this.selectedRecipients.forEach((selectedRecipient: Client) => {
-      assignments.assignments.push(selectedRecipient.clientID);
-    })
+    this.selectedRecipients.forEach((selectedRecipient: AllowedAssignmentMeta) => {
+      assignments.assignments.push(selectedRecipient.clientMeta.clientID);
+    });
 
     this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
-    await this.gatherRecipients();
-    await this.gatherSenders();
     await this.getAllowedRecipientsByEvent(currentEvent);
 
     this.actionTaken.emit(true);
@@ -439,56 +448,20 @@ export class SelectedAnonComponent implements OnInit {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
 
-    this.approvedRecipientClients = [];
-
-    let recipientList: Array<ClientSenderRecipientRelationship> = this.recipients.filter((relationship: ClientSenderRecipientRelationship) => {return (relationship.clientEventTypeID == eventType.eventTypeID)})
-    let recipientIDList: Array<string> = this.relationListToIDList(recipientList)
-
-    //For all the clients in the DB
-    for(let i = 0; i < this.allClients.length; i++)
-    {
-      //If the client status is approved (&&)
-      //the ID is not the currently selected client's ID (&&)
-      //the client from DB is not in the list of the selected client's recipient ID list by event already
-      //Push a new possible relationship into the approvedRecipientClient's list
-      if(this.allClients[i].clientStatus.statusDescription == StatusConstants.APPROVED &&
-        this.allClients[i].clientID != this.client.clientID &&
-        !recipientIDList.includes(this.allClients[i].clientID))
-      {
-        this.approvedRecipientClients.push(this.mapAllowedClientRelationship(this.allClients[i], eventType.eventTypeID))
-      }
-    }
+    var response = await this.SantaApiGet.getAllowedAssignmentsByID(this.client.clientID, this.selectedRecipientEvent.eventTypeID).toPromise();
+    this.allowedAssignmentOptions = [];
+    response.forEach((meta: any) => {
+      this.allowedAssignmentOptions.push(this.ApiMapper.mapAllowedAssignmentMeta(meta))
+    });
 
     this.recipientsAreLoaded=true;
   }
-  public mapAllowedClientRelationship(client: Client, eventID: string)
-  {
-    // Might need to be revisited for removal purposes or something I dunno. Really only used in Selected Anons component
-    let mappedRelationship = new ClientSenderRecipientRelationship;
-
-    mappedRelationship.clientID = client.clientID;
-    mappedRelationship.clientName = client.clientName;
-    mappedRelationship.clientNickname = client.clientNickname;
-    mappedRelationship.clientEventTypeID = eventID;
-    mappedRelationship.removable
-
-    return mappedRelationship;
-  }
-  public relationListToIDList(relationList: Array<ClientSenderRecipientRelationship>): Array<string>
-  {
-    let IDList: Array<string> = []
-    for(let i = 0; i < relationList.length; i++)
-    {
-      IDList.push(relationList[i].clientID);
-    }
-    return IDList;
-  }
-  public async switchAnon(anon: ClientSenderRecipientRelationship)
+  public async switchAnon(anon: RelationshipMeta)
   {
     this.beingSwitched = true;
     this.addRecipientSuccess = false;
     this.recipientOpen = false;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.clientID).toPromise());
+    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.relationshipClient.clientID).toPromise());
     this.client = switchClient;
 
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
@@ -497,40 +470,25 @@ export class SelectedAnonComponent implements OnInit {
     }
     this.gatherer.gatherAllSurveys();
     this.gatherer.gatherAllEvents();
-    await this.gatherSenders();
-    await this.gatherRecipients();
     this.beingSwitched = false;
   }
-  public async removeRecipient(anon: ClientSenderRecipientRelationship)
+  public async removeRecipient(anon: RelationshipMeta)
   {
     this.beingRemoved = true;
-    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, anon).toPromise();
-    this.client = this.ApiMapper.mapClient(res);
-    await this.gatherSenders();
-    await this.gatherRecipients();
-    if(this.selectedRecipientEvent != undefined)
+    let response: ClientSenderRecipientRelationshipReponse =
     {
-      await this.getAllowedRecipientsByEvent(this.selectedRecipientEvent);
+      clientID: anon.relationshipClient.clientID,
+      clientEventTypeID: anon.eventType.eventTypeID
     }
+    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, response).toPromise();
+    this.client = this.ApiMapper.mapClient(res);
+
     this.actionTaken.emit(true);
+    this.recipientOpen = false;
+    this.selectedRecipientEvent = new EventType();
+    this.softRefreshClient();
+
     this.beingRemoved = false;
-  }
-  public async markAsComplete(anon: ClientSenderRecipientRelationship)
-  {
-    this.markingAsComplete = true;
-
-    let response = new RecipientCompletionResponse();
-
-    response.completed = true;
-    response.eventTypeID = anon.clientEventTypeID;
-    response.recipientID = anon.clientID;
-
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientRelationshipCompletionStatus(this.client.clientID, response).toPromise());
-
-    await this.gatherSenders();
-    await this.gatherRecipients();
-
-    this.markingAsComplete = false;
   }
   public async removeTagFromClient(tag: Tag)
   {
@@ -592,31 +550,6 @@ export class SelectedAnonComponent implements OnInit {
     this.currentTags = [];
     this.currentTags = this.client.tags;
   }
-  public async gatherRecipients()
-  {
-    this.gatheringRecipients = true
-    this.recipients = [];
-    //Gets all the recievers form the anon
-    for(let i = 0; i < this.client.recipients.length; i++)
-    {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.recipients[i].recipientClientID).toPromise());
-      this.recipients.push(this.ApiMapper.mapClientRecipientRelationship(foundClient ,this.client.recipients[i]));
-    }
-    this.gatheringRecipients = false;
-  }
-  public async gatherSenders()
-  {
-    this.gatheringSenders = true;
-    this.senders = [];
-
-    //Gets all the senders form the anon
-    for(let i = 0; i < this.client.senders.length; i++)
-    {
-      let foundClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.senders[i].senderClientID).toPromise());
-      this.senders.push(this.ApiMapper.mapClientSenderRelationship(foundClient , this.client.senders[i]));
-    }
-    this.gatheringSenders = false;
-  }
   public async submitNewAddress()
   {
     this.changingAddress = true;
@@ -668,12 +601,24 @@ export class SelectedAnonComponent implements OnInit {
 
     this.changingEmail = false;
   }
-  public async softRefreshClient(emitRefresh: boolean)
+  public async softRefreshClient(emitRefresh: boolean = false)
   {
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
     if(emitRefresh)
     {
       this.actionTaken.emit(true);
     }
+  }
+  public getEventSenders(eventType: EventType) : Array<RelationshipMeta>
+  {
+    return this.client.senders.filter((sender: RelationshipMeta) => {return sender.eventType.eventTypeID == eventType.eventTypeID});
+  }
+  public getEventAssignments(eventType: EventType) : Array<RelationshipMeta>
+  {
+    return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.eventType.eventTypeID == eventType.eventTypeID});
+  }
+  public setClickAwayAllowed(status: boolean)
+  {
+    this.setClickAwayLockEvent.emit(status);
   }
 }

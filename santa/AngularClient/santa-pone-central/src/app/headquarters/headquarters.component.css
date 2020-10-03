@@ -1,7 +1,7 @@
 .container {
     position: fixed;
     width: 100%;
-    min-width: 550px;;
+    min-width: 600px;
     height: 85%;
     top: 8%;
     left: 0;
@@ -70,11 +70,11 @@
   margin-right: auto;
   padding: 10px;
   width: 80%;
-  min-width: 525px;
+  min-width: 600px;
   background-color: white;
   border-radius: 8px;
 }
-@media (max-width:550px)
+@media (max-width:600px)
 {
   #tabGroupContainer
   {
@@ -84,7 +84,7 @@
     margin-right: auto;
     padding: 10px;
     width: 80%;
-    min-width: 525px;
+    min-width: 600px;
     background-color: white;
     border-radius: 8px;
   }

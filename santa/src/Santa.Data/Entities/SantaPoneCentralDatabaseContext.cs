@@ -15,6 +15,7 @@ namespace Santa.Data.Entities
         {
         }
 
+        public virtual DbSet<AssignmentStatus> AssignmentStatus { get; set; }
         public virtual DbSet<BoardEntry> BoardEntry { get; set; }
         public virtual DbSet<ChatMessage> ChatMessage { get; set; }
         public virtual DbSet<Client> Client { get; set; }
@@ -33,6 +34,36 @@ namespace Santa.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AssignmentStatus>(entity =>
+            {
+                entity.ToTable("AssignmentStatus", "app");
+
+                entity.HasIndex(x => x.AssignmentStatusDescription)
+                    .HasName("UQ__Assignme__9028EF9CFFBD66B0")
+                    .IsUnique();
+
+                entity.HasIndex(x => x.AssignmentStatusName)
+                    .HasName("UQ__Assignme__216918BFA820A697")
+                    .IsUnique();
+
+                entity.Property(e => e.AssignmentStatusId)
+                    .HasColumnName("assignmentStatusID")
+                    .HasViewColumnName("assignmentStatusID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.AssignmentStatusDescription)
+                    .IsRequired()
+                    .HasColumnName("assignmentStatusDescription")
+                    .HasViewColumnName("assignmentStatusDescription")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.AssignmentStatusName)
+                    .IsRequired()
+                    .HasColumnName("assignmentStatusName")
+                    .HasViewColumnName("assignmentStatusName")
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<BoardEntry>(entity =>
             {
                 entity.ToTable("BoardEntry", "app");
@@ -118,17 +149,17 @@ namespace Santa.Data.Entities
                 entity.HasOne(d => d.ClientRelationXref)
                     .WithMany(p => p.ChatMessage)
                     .HasForeignKey(x => x.ClientRelationXrefId)
-                    .HasConstraintName("FK__ChatMessa__clien__5A9288B9");
+                    .HasConstraintName("FK__ChatMessa__clien__62F2C490");
 
                 entity.HasOne(d => d.MessageReceiverClient)
                     .WithMany(p => p.ChatMessageMessageReceiverClient)
                     .HasForeignKey(x => x.MessageReceiverClientId)
-                    .HasConstraintName("FK__ChatMessa__messa__599E6480");
+                    .HasConstraintName("FK__ChatMessa__messa__61FEA057");
 
                 entity.HasOne(d => d.MessageSenderClient)
                     .WithMany(p => p.ChatMessageMessageSenderClient)
                     .HasForeignKey(x => x.MessageSenderClientId)
-                    .HasConstraintName("FK__ChatMessa__messa__58AA4047");
+                    .HasConstraintName("FK__ChatMessa__messa__610A7C1E");
             });
 
             modelBuilder.Entity<Client>(entity =>
@@ -228,9 +259,9 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("clientRelationXrefID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Completed)
-                    .HasColumnName("completed")
-                    .HasViewColumnName("completed");
+                entity.Property(e => e.AssignmentStatusId)
+                    .HasColumnName("assignmentStatusID")
+                    .HasViewColumnName("assignmentStatusID");
 
                 entity.Property(e => e.EventTypeId)
                     .HasColumnName("eventTypeID")
@@ -244,23 +275,29 @@ namespace Santa.Data.Entities
                     .HasColumnName("senderClientID")
                     .HasViewColumnName("senderClientID");
 
+                entity.HasOne(d => d.AssignmentStatus)
+                    .WithMany(p => p.ClientRelationXref)
+                    .HasForeignKey(x => x.AssignmentStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ClientRel__assig__5E2E0F73");
+
                 entity.HasOne(d => d.EventType)
                     .WithMany(p => p.ClientRelationXref)
                     .HasForeignKey(x => x.EventTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__event__3A25B927");
+                    .HasConstraintName("FK__ClientRel__event__5D39EB3A");
 
                 entity.HasOne(d => d.RecipientClient)
                     .WithMany(p => p.ClientRelationXrefRecipientClient)
                     .HasForeignKey(x => x.RecipientClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__recip__393194EE");
+                    .HasConstraintName("FK__ClientRel__recip__5C45C701");
 
                 entity.HasOne(d => d.SenderClient)
                     .WithMany(p => p.ClientRelationXrefSenderClient)
                     .HasForeignKey(x => x.SenderClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ClientRel__sende__383D70B5");
+                    .HasConstraintName("FK__ClientRel__sende__5B51A2C8");
             });
 
             modelBuilder.Entity<ClientStatus>(entity =>

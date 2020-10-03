@@ -40,39 +40,62 @@ th
 .reactive
 {
     display: block;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 140px;
+    width: 130px;
+    margin-right: 10px;
 }
 .chatDescription
 {
     width: 170px;
+    text-align: left;
 }
 .historyButton
 {
-    width: 110px;
+    width: 150px;
 }
-.center
+.header
 {
-    text-align: center;
-    display: block;
+  text-align: left;
 }
-@media (max-width:550px)
+.senderAssignmentButton
+{
+  width: 125px;
+  text-align: center;
+}
+@media (max-width:600px)
 {
     .reactive
     {
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 90px;
-        margin-left: 5px;
-        margin-right: 5px;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 70px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .chatDescription
     {
-        width: 90px;
+      display: block;
+      text-align: center;
+      width: 70px;
+      white-space: normal;
+      word-wrap: normal;
+    }
+    .senderAssignmentButton
+    {
+      width: 85px;
+      text-align: center;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    .header
+    {
+      text-align: center;
     }
     .senderImage
     {
