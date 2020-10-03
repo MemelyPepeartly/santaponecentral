@@ -1,3 +1,4 @@
+import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,6 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class LoadingSpinComponent implements OnInit {
 
   constructor() { }
+
+  // Spinner type 1 is for SantaShark loading
+  // Spinner type 2 is for Card dragon loading
+  // Spinner type 3 is for Duk gift loading
+  @Input() spinnerType: number = 1;
 
   ngOnInit() {
   }
