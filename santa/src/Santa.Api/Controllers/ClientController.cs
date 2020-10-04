@@ -138,6 +138,56 @@ namespace Santa.Api.Controllers
             }
         }
 
+        // GET: api/Client/AutoAssignmentPairs
+        /// <summary>
+        /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("AutoAssignmentPairs")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<PossiblePairing>>> GetAutoAssignmentsToMassMailerPairs()
+        {
+            try
+            {
+                List<Client> allClients = await repository.GetAllClients();
+                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
+                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
+                AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+
+                List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
+
+                Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+
+                if (massMailers.Count > 0 && clientsToBeAssignedToMassMailers.Count > 0)
+                {
+                    // Foreach mailer
+                    foreach (Client mailer in massMailers)
+                    {
+                        // Foreach clients to be assigned mass mail
+                        foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
+                        {
+                            // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
+                            if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            {
+                                // Add the possible pairing to the list
+                                possiblePairings.Add(new PossiblePairing()
+                                {
+                                    sendingAgent = mailer,
+                                    possibleAssignment = potentialAssignment
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return Ok(possiblePairings);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+            }
+        }
+
         // POST: api/Client
         /// <summary>
         /// Posts a new client. Binds the ApiClient model for input
@@ -315,56 +365,6 @@ namespace Santa.Api.Controllers
             catch(Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
-
-        // POST: api/Client/AutoAssignmentPairs
-        /// <summary>
-        /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("AutoAssignmentPairs")]
-        [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<PossiblePairing>>> GetAutoAssignmentsToMassMailerPairs()
-        {
-            try
-            {
-                List<Client> allClients = await repository.GetAllClients();
-                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG)).ToList();
-                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
-                AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
-
-                List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
-
-                Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
-
-                if(massMailers.Count > 0 && clientsToBeAssignedToMassMailers.Count > 0)
-                {
-                    // Foreach mailer
-                    foreach (Client mailer in massMailers)
-                    {
-                        // Foreach clients to be assigned mass mail
-                        foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
-                        {
-                            // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
-                            if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
-                            {
-                                // Add the possible pairing to the list
-                                possiblePairings.Add(new PossiblePairing()
-                                {
-                                    sendingAgent = mailer,
-                                    possibleAssignment = potentialAssignment
-                                });
-                            }
-                        }
-                    }
-                }
-
-                return Ok(possiblePairings);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
             }
         }
 
