@@ -42,3 +42,8 @@
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
 
 --TRUNCATE TABLE app.AssignmentStatus
+
+-- DELETE FROM app.ChatMessage
+-- DELETE FROM app.ClientRelationXref
+
+-- ALTER TABLE app.ClientRelationXref DROP COLUMN completed

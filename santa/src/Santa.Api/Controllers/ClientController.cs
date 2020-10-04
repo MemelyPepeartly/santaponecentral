@@ -14,6 +14,7 @@ using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Api.SendGrid;
 using Santa.Logic.Constants;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -317,14 +318,14 @@ namespace Santa.Api.Controllers
             }
         }
 
-        // POST: api/Client/AutoAssign
+        // POST: api/Client/AutoAssignmentPairs
         /// <summary>
         /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
         /// </summary>
         /// <returns></returns>
-        [HttpPost("AutoAssign")]
-        [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<List<string>>> PostAutoAssignmentsToMassMailers()
+        [HttpGet("AutoAssignmentPairs")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<PossiblePairing>>> GetAutoAssignmentsToMassMailerPairs()
         {
             try
             {
@@ -333,8 +334,7 @@ namespace Santa.Api.Controllers
                 List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG)).ToList();
                 AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
-                List<Client> clientsThatGotNewAssignments = new List<Client>();
-                List<string> assignmentsAddedLogList = new List<string>();
+                List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
 
                 Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
 
@@ -349,36 +349,18 @@ namespace Santa.Api.Controllers
                             // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
                             if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                             {
-                                // Add that potential assignment to their list
-                                await repository.CreateClientRelationByID(mailer.clientID, potentialAssignment.clientID, logicCardExchangeEvent.eventTypeID, defaultNewAssignmentStatus.assignmentStatusID);
-
-                                // If that mailer isnt already on the list of clients that already got a new assignment, add them to it
-                                if(!clientsThatGotNewAssignments.Any<Client>(c => c.clientID == mailer.clientID))
+                                // Add the possible pairing to the list
+                                possiblePairings.Add(new PossiblePairing()
                                 {
-                                    clientsThatGotNewAssignments.Add(mailer);
-                                }
-                                assignmentsAddedLogList.Add($"Added {potentialAssignment.nickname} to {mailer.nickname}'s assignment list for the {logicCardExchangeEvent.eventDescription} Event");
+                                    sendingAgent = mailer,
+                                    possibleAssignment = potentialAssignment
+                                });
                             }
                         }
                     }
                 }
-                // If no assignments were added
-                if(assignmentsAddedLogList.Count == 0)
-                {
-                    assignmentsAddedLogList.Add($"All mass mailers are already up to date with their assignments for the {logicCardExchangeEvent.eventDescription} Event");
-                }
-                // If assignments where added
-                else if (assignmentsAddedLogList.Count > 0)
-                {
-                    // Save changes and send out emails
-                    await repository.SaveAsync();
-                    foreach(Client massMailer in clientsThatGotNewAssignments)
-                    {
-                        await mailbag.sendAssignedRecipientEmail(massMailer, logicCardExchangeEvent);
-                    }
-                }
 
-                return Ok(assignmentsAddedLogList);
+                return Ok(possiblePairings);
             }
             catch (Exception e)
             {
