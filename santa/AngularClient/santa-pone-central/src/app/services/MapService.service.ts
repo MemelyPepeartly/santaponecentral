@@ -184,6 +184,7 @@ export class MapService {
     let mappedAllowedAssignmentMeta: AllowedAssignmentMeta =
     {
       clientMeta: this.mapMeta(allowedAssignmentMeta.clientMeta),
+      clientEvents: [],
       tags: [],
       totalSenders: allowedAssignmentMeta.totalSenders,
       totalAssignments: allowedAssignmentMeta.totalAssignments
@@ -191,6 +192,9 @@ export class MapService {
 
     allowedAssignmentMeta.tags.forEach(tag => {
       mappedAllowedAssignmentMeta.tags.push(this.mapTag(tag))
+    });
+    allowedAssignmentMeta.clientEvents.forEach(event => {
+      mappedAllowedAssignmentMeta.clientEvents.push(this.mapEvent(event));
     });
 
     return mappedAllowedAssignmentMeta;
