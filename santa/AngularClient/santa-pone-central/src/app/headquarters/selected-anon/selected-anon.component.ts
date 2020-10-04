@@ -258,6 +258,10 @@ export class SelectedAnonComponent implements OnInit {
     //Tells card if client is approved to hide or show the recipient add profile controls
     return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
   }
+  isNotParticipatingInSelectedEvent(assignmentChoice: AllowedAssignmentMeta) : boolean
+  {
+    return !assignmentChoice.clientEvents.some((event: EventType) => {return event.eventTypeID == this.selectedRecipientEvent.eventTypeID})
+  }
   public approveAnon(wantsAccount: boolean)
   {
 
