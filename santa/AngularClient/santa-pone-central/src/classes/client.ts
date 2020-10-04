@@ -30,6 +30,7 @@ export class RelationshipMeta {
 }
 export class AllowedAssignmentMeta {
   clientMeta: ClientMeta;
+  clientEvents: Array<EventType> = [];
   tags: Array<Tag> = [];
   totalSenders: number;
   totalAssignments: number;
