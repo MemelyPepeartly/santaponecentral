@@ -168,6 +168,11 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "History/Relationship/" + clientRelationXrefID + "?subjectID=" + subjectID).pipe(
       map(this.extractData));
   }
+  getAutoAssignmentPairings(): Observable<any> {
+    // Returns a list of strings of added relationships
+    return this.http.get(endpoint + 'Client/AutoAssignmentPairs').pipe(
+      map(this.extractData));
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -213,11 +218,6 @@ export class SantaApiPostService {
   }
   postPasswordResetToClient(id: string): Observable<any> {
     return this.http.post(endpoint + 'Client/' + id + "/Password", {}).pipe(
-      map(this.extractData));
-  }
-  postAutoAssignmentRequest(): Observable<any> {
-    // Returns a list of strings of added relationships
-    return this.http.post(endpoint + 'Client/AutoAssign', {}).pipe(
       map(this.extractData));
   }
   postQuestionsToSurvey(surveyID: string, questions: SurveyQuestionXrefsResponseModel): Observable<any> {
