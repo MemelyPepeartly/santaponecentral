@@ -41,7 +41,7 @@
           <span *ngIf="sortMassMailRecipients().length == 0 && !gatheringAllClients">No mass mail recipients to display</span>
       </div>
       <div class="spacingStyle">
-        <button mat-raised-button (click)="giveAssignments()" [disabled]="postingNewAssignments">Auto-Assign</button>
+        <button mat-raised-button (click)="giveAssignments()" [disabled]="postingNewAssignments">Get auto-assignments</button>
       </div>
 
       <mat-divider [inset]="true"></mat-divider>
@@ -55,4 +55,34 @@
       </div>
 
   </mat-card-content>
+</mat-card>
+
+<mat-card class="api-card mat-elevation-z5">
+  <mat-card-header>
+    <mat-card-title>Potential Autoassigns</mat-card-title>
+    <mat-card-subtitle>List of queued assignments to be approved</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- Table headers -->
+    <div class="headerContainer">
+      <div class="headerDiv">
+        <span class="headerSpan">Mass Mailer</span>
+      </div>
+      <div class="headerDiv">
+        <span class="headerSpan">Assignment</span>
+      </div>
+    </div>
+    <!-- Potential Pairing -->
+    <div class="pairingContainer" *ngFor="let clientPairing of possiblePairings">
+      <div class="pairingDiv mat-elevation-z3">
+        {{ clientPairing.sendingAgent.clientNickname }}
+      </div>
+      <div class="pairingDiv mat-elevation-z3">
+        {{ clientPairing.possibleAssignment.clientNickname }}
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button>Confirm Selected Assignments</button>
+  </mat-card-actions>
 </mat-card>

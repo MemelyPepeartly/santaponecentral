@@ -100,3 +100,28 @@ mat-chip-list
 .fixedDiv::-webkit-scrollbar {
     display: none;
 }
+
+/* Possible Pairing Styling */
+.headerContainer
+{
+  display: block;
+}
+.headerDiv
+{
+  display: inline-block;
+  width: 50%;
+  text-align: center;
+}
+.headerSpan
+{
+
+}
+.pairingContainer
+{
+  display: block;
+  margin-top: 10px;
+}
+.pairingDiv
+{
+  display: inline-block;
+}

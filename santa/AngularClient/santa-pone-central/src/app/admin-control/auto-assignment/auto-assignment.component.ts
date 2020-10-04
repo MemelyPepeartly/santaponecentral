@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Client } from 'src/classes/client';
+import { Client, PossiblePairing } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from '../../shared/constants/TagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
@@ -22,6 +22,7 @@ export class AutoAssignmentComponent implements OnInit {
   public logArray: Array<string> = []
 
   public selectedClient: Client = new Client();
+  public possiblePairings: Array<PossiblePairing> = [];
 
   public gatheringAllClients: boolean = false;
   public postingNewAssignments: boolean = false;
