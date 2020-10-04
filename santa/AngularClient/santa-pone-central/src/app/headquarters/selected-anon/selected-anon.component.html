@@ -363,7 +363,7 @@
                               <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
                               <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
                               <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
-                              <mat-card-subtitle *ngIf="isNotParticipatingInSelectedEvent()" class="recipientInfoSubtitle error">Client did not sign up for the {{ selectedRecipientEvent.eventDescription }}</mat-card-subtitle>
+                              <mat-card-subtitle *ngIf="isNotParticipatingInSelectedEvent(clientRecipientOption)" class="recipientInfoSubtitle subtleError">Client did not sign up for the {{ selectedRecipientEvent.eventDescription }}</mat-card-subtitle>
                               <div class="recipientTagDiv">
                                 <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
                                   matTooltip="{{tag.tagName}}"

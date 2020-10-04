@@ -260,7 +260,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   isNotParticipatingInSelectedEvent(assignmentChoice: AllowedAssignmentMeta) : boolean
   {
-    return !assignmentChoice.clientEvents.some((event: EventType) => {return event.eventTypeID == this.selectedRecipientEvent.eventTypeID})
+    return !assignmentChoice.clientEvents.some((event: EventType) => {return event.eventTypeID == this.selectedRecipientEvent.eventTypeID});
   }
   public approveAnon(wantsAccount: boolean)
   {

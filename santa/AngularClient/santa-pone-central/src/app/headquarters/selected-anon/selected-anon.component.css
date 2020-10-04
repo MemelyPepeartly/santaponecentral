@@ -105,6 +105,10 @@ app-small-loading-spin {
 .error {
   color: #f44336;
 }
+.subtleError
+{
+    color: #d07973;
+}
 .shell {
   border-radius: 8px;
   display: inline-block;
