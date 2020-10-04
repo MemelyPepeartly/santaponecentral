@@ -140,7 +140,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Client/AutoAssignmentPairs
         /// <summary>
-        /// Endpoint for looking through who is a mass mailer (by tag), and assigning them any folks that havn't been added to their assignment list for the Card Exchange event specifically
+        /// Endpoint for looking through who is a mass mailer (by tag), and returning a list of potential assignment pairings for mass mailers
         /// </summary>
         /// <returns></returns>
         [HttpGet("AutoAssignmentPairs")]
