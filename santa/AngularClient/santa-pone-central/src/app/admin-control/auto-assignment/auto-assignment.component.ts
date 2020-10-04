@@ -19,13 +19,13 @@ export class AutoAssignmentComponent implements OnInit {
 
   @Input() allClients: Array<Client> = []
 
-  public logArray: Array<string> = []
-
   public selectedClient: Client = new Client();
   public possiblePairings: Array<PossiblePairing> = [];
+  public selectedPairings: Array<PossiblePairing> = [];
 
   public gatheringAllClients: boolean = false;
   public postingNewAssignments: boolean = false;
+  public gettingAssignmentPairings: boolean = false;
 
   public buttonClicked: boolean = false;
   public refreshList: boolean = false;
@@ -46,18 +46,18 @@ export class AutoAssignmentComponent implements OnInit {
   {
     return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT})})
   }
-  public async giveAssignments()
+  public async getAssignmentPairings()
   {
-    this.logArray = []
     this.buttonClicked = true;
-    this.postingNewAssignments = true;
+    this.gettingAssignmentPairings = true;
 
-    var logResponse = await this.SantaApiPost.postAutoAssignmentRequest().toPromise();
-    logResponse.forEach((entry:string) => {
-      this.logArray.push(entry)
+    var response = await this.SantaApiGet.getAutoAssignmentPairings().toPromise();
+    this.possiblePairings = [];
+    response.forEach((pairing) => {
+      this.possiblePairings.push(this.mapper.mapPossiblePairing(pairing));
     });
 
-    this.postingNewAssignments = false;
+    this.gettingAssignmentPairings = false;
   }
   public async updateSelectedClient(clientID: string)
   {
