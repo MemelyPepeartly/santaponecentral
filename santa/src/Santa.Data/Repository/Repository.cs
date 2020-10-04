@@ -1598,6 +1598,7 @@ namespace Santa.Data.Repository
             {
                 Logic.Objects.Client logicClient = await GetClientByIDAsync(clientID);
                 List<Logic.Objects.Client> allClients = await GetAllClients();
+                List<Event> allEvents = await GetAllEvents();
                 List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
 
 
@@ -1606,7 +1607,9 @@ namespace Santa.Data.Repository
                     // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
                     if(!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                     {
-                        allowedAssignments.Add(Mapper.MapAllowedAssignmentMeta(potentialAssignment));
+                        AllowedAssignmentMeta assignment = Mapper.MapAllowedAssignmentMeta(potentialAssignment);
+                        assignment.clientEvents = allEvents.Where(e => potentialAssignment.responses.Any(r => r.responseEvent.eventTypeID == e.eventTypeID)).ToList();
+                        allowedAssignments.Add(assignment);
                     }
                 }
                 return allowedAssignments;
