@@ -744,6 +744,8 @@ namespace Santa.Data.Repository
 
                 logicHistory.assignmentStatus = Mapper.MapAssignmentStatus(contextRelationship.AssignmentStatus);
 
+                logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
+
 
                 return logicHistory;
             }
@@ -789,6 +791,8 @@ namespace Santa.Data.Repository
                     .OrderBy(dt => dt.dateTimeSent)
                     .Where(m => m.senderClient.clientId != subjectClient.clientID)
                     .ToList();
+
+                logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
 
                 return logicHistory;
             }
