@@ -137,6 +137,7 @@ export class MapService {
       subjectClient: this.mapMeta(messageHistory.subjectClient),
       subjectMessages: [],
       recieverMessages: [],
+      unreadCount: messageHistory.unreadCount
     });
 
     messageHistory.subjectMessages.forEach(message => {
