@@ -82,7 +82,7 @@
     <!-- Potential Pairing -->
     <div class="scrollDiv">
       <mat-selection-list class="scrollbar scrollbar-primary" [(ngModel)]="selectedPairings">
-        <mat-list-option class="listOption mat-elevation-z3" *ngFor="let clientPairing of possiblePairings">
+        <mat-list-option class="listOption mat-elevation-z3" *ngFor="let clientPairing of possiblePairings" [value]="clientPairing">
           <div class="pairingContainer">
             <div class="pairingDiv">
               <span>{{ clientPairing.sendingAgent.clientNickname }}</span>
@@ -116,7 +116,7 @@
     </div>
 
   </mat-card-content>
-  <mat-card-actions *ngIf="!gettingAssignmentPairings">
-    <button mat-raised-button>Confirm Selected Assignments</button>
+  <mat-card-actions>
+    <button mat-raised-button (click)="postAssignmentPairings()" [disabled]="postingNewAssignments || gettingAssignmentPairings">Confirm Selected Assignments</button>
   </mat-card-actions>
 </mat-card>

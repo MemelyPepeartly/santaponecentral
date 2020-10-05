@@ -5,6 +5,7 @@ import { TagConstants } from '../../shared/constants/TagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
 import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santaApiService.service';
 import { MapService } from 'src/app/services/mapService.service';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-auto-assignment',
@@ -58,6 +59,40 @@ export class AutoAssignmentComponent implements OnInit {
     });
 
     this.gettingAssignmentPairings = false;
+  }
+  public async postAssignmentPairings()
+  {
+    this.postingNewAssignments = true;
+
+    let pairingModel: Array<Pairing> = [];
+
+    this.selectedPairings.forEach((pair: PossiblePairing) => {
+      let modelPair: Pairing =
+      {
+        senderAgentID: pair.sendingAgent.clientID,
+        assignmentClientID: pair.possibleAssignment.clientID
+      }
+      pairingModel.push(modelPair);
+    });
+
+    let responseModel: SelectedAutoAssignmentsResponse =
+    {
+      pairings: pairingModel
+    }
+
+    this.SantaApiPost.postSelectedAutoAssignments(responseModel).subscribe(async () => {
+      this.possiblePairings = [];
+      await this.getAssignmentPairings();
+      this.postingNewAssignments = false;
+    }, err =>
+    {
+      this.postingNewAssignments = false;
+      console.group()
+      console.log("Something went wrong posting selected auto assignments!")
+      console.log(err);
+      console.groupEnd();
+    });
+
   }
   public async updateSelectedClient(clientID: string)
   {
