@@ -341,6 +341,44 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+
+        // POST: api/Client/AutoAssignments
+        /// <summary>
+        /// Endpoint for posting selected auto assignment options
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("AutoAssignments")]
+        [Authorize(Policy = "update:clients")]
+        public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
+        {
+            try
+            {
+                Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+                AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusDescription == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+
+                // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
+                List<Client> clientsToEmail = (await repository.GetAllClients()).Where(c => model.pairings.Any(p => p.senderAgentID == c.clientID)).ToList();
+
+                foreach(Pairing pair in model.pairings)
+                {
+                    await repository.CreateClientRelationByID(pair.senderAgentID, pair.assignmentClientID, logicCardEvent.eventTypeID , logicAssignedStatus.assignmentStatusID);
+                }
+                await repository.SaveAsync();
+                foreach(Client massMailer in clientsToEmail)
+                {
+                    await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+
         // POST: api/Client/5/CreateAccount
         /// <summary>
         /// Endpoint for creating an auth0 account for an existing client
