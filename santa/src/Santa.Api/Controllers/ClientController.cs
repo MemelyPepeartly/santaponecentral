@@ -355,16 +355,25 @@ namespace Santa.Api.Controllers
             try
             {
                 Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
-                AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusDescription == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+                AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
                 // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
-                List<Client> clientsToEmail = (await repository.GetAllClients()).Where(c => model.pairings.Any(p => p.senderAgentID == c.clientID)).ToList();
+                List<Client> allClients = await repository.GetAllClients();
+                List<Client> clientsToEmail = new List<Client>();
 
                 foreach(Pairing pair in model.pairings)
                 {
                     await repository.CreateClientRelationByID(pair.senderAgentID, pair.assignmentClientID, logicCardEvent.eventTypeID , logicAssignedStatus.assignmentStatusID);
+
+                    // If the clients to email doesnt contain the sending client already in the email list, add them to it
+                    if(!clientsToEmail.Any<Client>(c => c.clientID == pair.senderAgentID))
+                    {
+                        clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
+                    }
                 }
+
                 await repository.SaveAsync();
+
                 foreach(Client massMailer in clientsToEmail)
                 {
                     await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
