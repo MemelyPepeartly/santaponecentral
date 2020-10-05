@@ -52,8 +52,8 @@
         <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount"
           (click)="emitSelectedHistory(history);"
           [disabled]="disabled || (isAdmin && onProfile) || viewerClient.clientID == history.conversationClient.clientID"
-          [matBadge]="!isAdmin ? history.unreadCount : history.adminUnreadCount"
-          [matBadgeHidden]="!isAdmin ? history.unreadCount == 0 : history.adminUnreadCount == 0">Correspondence</button>
+          [matBadge]="history.unreadCount"
+          [matBadgeHidden]="history.unreadCount == 0">Correspondence</button>
         <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
       </td>
     </ng-container>
