@@ -29,7 +29,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse} from '../../classes/responseTypes';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse, SelectedAutoAssignmentsResponse} from '../../classes/responseTypes';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -226,6 +226,10 @@ export class SantaApiPostService {
   }
   postAssignmentStatus(assignmentStatusResponse: NewAssignmentStatusResponse): Observable<any> {
     return this.http.post(endpoint + 'AssignmentStatus', assignmentStatusResponse).pipe(
+      map(this.extractData));
+  }
+  postSelectedAutoAssignments(assignmentPairingResponse: SelectedAutoAssignmentsResponse): Observable<any> {
+    return this.http.post(endpoint + 'AutoAssignments', assignmentPairingResponse).pipe(
       map(this.extractData));
   }
   searchClients(body: SearchQueryModelResponse): Observable<any> {
