@@ -162,7 +162,7 @@ export class SearchQueryModelResponse {
 
 /* AutoAssignment response models */
 export class Pairing {
-  sendingAgentID: string;
+  senderAgentID: string;
   assignmentClientID: string
 }
 export class SelectedAutoAssignmentsResponse
