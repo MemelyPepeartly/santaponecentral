@@ -229,7 +229,7 @@ export class SantaApiPostService {
       map(this.extractData));
   }
   postSelectedAutoAssignments(assignmentPairingResponse: SelectedAutoAssignmentsResponse): Observable<any> {
-    return this.http.post(endpoint + 'AutoAssignments', assignmentPairingResponse).pipe(
+    return this.http.post(endpoint + 'Client/AutoAssignments', assignmentPairingResponse).pipe(
       map(this.extractData));
   }
   searchClients(body: SearchQueryModelResponse): Observable<any> {
