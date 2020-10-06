@@ -3,10 +3,10 @@
     <mat-card-header>
       <mat-card-title>Important Intelligence</mat-card-title>
       <mat-card-subtitle>Collection of important posts for agents to interact with and add to through the event</mat-card-subtitle>
-      <mat-card-subtitle>These mission boards are updated by the event organizers</mat-card-subtitle>
+      <mat-card-subtitle>These mission boards are updated by the event organizers and helpers</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content *ngIf="gettingAllBoardEntries || gettingAllEntryTypes">
-      <app-loading-spin></app-loading-spin>
+      <app-loading-spin [spinnerType]="1"></app-loading-spin>
     </mat-card-content>
     <mat-card-content *ngIf="!gettingAllBoardEntries && !gettingAllEntryTypes">
 
@@ -24,41 +24,7 @@
             [allPostNumbers]="allPostNumbers"
             [boardEntries]="getAdminEntriesWithType(type)"
             [entryType]="type"
-            [allowForm]="isAdmin"></app-mission-board-table>
-        </mat-card-content>
-      </mat-card>
-
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<div id="info-div">
-  <mat-card class="list-card mat-elevation-z5">
-    <mat-card-header>
-      <mat-card-title>Agent Boards</mat-card-title>
-      <mat-card-subtitle>Collection of important posts for agents to interact with and add to through the event</mat-card-subtitle>
-      <mat-card-subtitle>All links are not tied to any person, and link directly out to the posts in question on the board. You can add to these if you have a login</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content *ngIf="gettingAllBoardEntries || gettingAllEntryTypes">
-      <app-loading-spin></app-loading-spin>
-    </mat-card-content>
-    <mat-card-content *ngIf="!gettingAllBoardEntries && !gettingAllEntryTypes">
-
-      <!-- Agent Intelligence -->
-      <mat-card class="infoCard" *ngFor="let type of agentTypes()">
-        <mat-card-header>
-          <mat-card-title>{{ type.entryTypeName }}</mat-card-title>
-          <mat-card-subtitle>{{ type.entryTypeDescription }}</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <app-mission-board-table
-            (hardRefreshEvent)="hardRefreshEntryList($event)"
-            (softRefreshEvent)="softRefreshEntryList($event)"
-            [allPostNumbers]="allPostNumbers"
-            [boardEntries]="getAgentEntriesWithType(type)"
-            [entryType]="type"
-            [allowForm]="isHelper || isAdmin"></app-mission-board-table>
+            [allowForm]="isAdmin || isHelper"></app-mission-board-table>
         </mat-card-content>
       </mat-card>
 
