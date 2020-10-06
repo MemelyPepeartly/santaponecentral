@@ -41,7 +41,6 @@ CREATE TABLE app.ClientRelationXref
     recipientClientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     eventTypeID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.EventType(eventTypeID),
     assignmentStatusID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.AssignmentStatus(assignmentStatusID),
-    completed BIT NOT NULL,
     CONSTRAINT clientRelationXrefID UNIQUE (senderClientID, recipientClientID, eventTypeID) 
 );
 CREATE TABLE app.Survey

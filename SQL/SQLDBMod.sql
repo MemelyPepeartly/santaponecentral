@@ -45,5 +45,7 @@
 
 -- DELETE FROM app.ChatMessage
 -- DELETE FROM app.ClientRelationXref
+-- DELETE FROM app.BoardEntry
+-- DELETE FROM app.EntryType
 
 -- ALTER TABLE app.ClientRelationXref DROP COLUMN completed

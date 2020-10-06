@@ -204,13 +204,8 @@ INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adm
 VALUES
     (NEWID(), 'Announcements (Deadlines)', 'Deadline announcement and news', 1),
     (NEWID(), 'Announcements (Contests)', 'Contest announcements and information', 1),
-    (NEWID(), 'Deliveries (Gifts)', 'Delivery posts for the Gift Exchange', 0),
-    (NEWID(), 'Deliveries (Cards)', 'Delivery posts for the Card Exchange', 0),
-    (NEWID(), 'General', 'Any other noteworthy intelligence', 0);
-
-INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adminOnly)
-VALUES
-    (NEWID(), 'Announcements (Development)', 'Developer announcements', 1);
+    (NEWID(), 'Announcements (Development)', 'Site development announcments', 1),
+    (NEWID(), 'Announcements (Other)', 'Any other important announcements', 1);
 
 INSERT INTO app.AssignmentStatus (assignmentStatusID, assignmentStatusName, assignmentStatusDescription)
 VALUES
@@ -218,23 +213,3 @@ VALUES
     (NEWID(), 'In Progress', 'Assignment is in progress of being made, shopped for, or being completed in some way'),
     (NEWID(), 'Shipping', 'Assignment is on its way! Cheer inbound!'),
     (NEWID(), 'Completed', 'Your delivery of cheer has made its mark! Mission accomplished!');
-
-
-
-
-SELECT * FROM app.SurveyQuestion;
-SELECT * FROM app.Survey;
-SELECT * FROM app.SurveyOption;
-SELECT * FROM app.SurveyQuestionXref;
-SELECT * FROM app.SurveyQuestionOptionXref;
-SELECT * FROM app.ClientStatus;
-SELECT * FROM app.SurveyResponse;
-
-SELECT * FROM app.EventType;
-SELECT * FROM app.Client;
-SELECT * FROM app.ClientRelationXref;
-SELECT * FROM app.AssignmentStatus;
-
-SELECT * FROM app.Tag;
-SELECT * FROM app.ClientTagXref;
-SELECT * FROM app.ChatMessage;

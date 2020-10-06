@@ -4,11 +4,9 @@
   <button mat-button [routerLink]="'/home'" class="button">
       <mat-label>Home</mat-label>
   </button>
-  <!-- DISABLING MISSION BOARDS PER ANON REQUEST
   <button mat-button [routerLink]="'/mission-boards'" class="navButton">
     <mat-label>Mission Boards</mat-label>
   </button>
-  -->
   <app-adminnav *ngIf="auth.loggedIn && isAdmin"></app-adminnav>
   <app-usernav *ngIf="auth.loggedIn && !isAdmin"></app-usernav>
   <app-defaultnav *ngIf="!auth.loggedIn"></app-defaultnav>
