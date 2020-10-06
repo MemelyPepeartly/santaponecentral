@@ -494,10 +494,8 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("isActive");
 
                 entity.Property(e => e.SortOrder)
-                    .IsRequired()
                     .HasColumnName("sortOrder")
-                    .HasViewColumnName("sortOrder")
-                    .HasMaxLength(5);
+                    .HasViewColumnName("sortOrder");
 
                 entity.Property(e => e.SurveyOptionId)
                     .HasColumnName("surveyOptionID")
@@ -534,10 +532,8 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("isActive");
 
                 entity.Property(e => e.SortOrder)
-                    .IsRequired()
                     .HasColumnName("sortOrder")
-                    .HasViewColumnName("sortOrder")
-                    .HasMaxLength(5);
+                    .HasViewColumnName("sortOrder");
 
                 entity.Property(e => e.SurveyId)
                     .HasColumnName("surveyID")
