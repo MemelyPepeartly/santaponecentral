@@ -36,6 +36,11 @@
 --ALTER TABLE app.Client ADD hasAccount BIT NOT NULL DEFAULT 0
 --alter table app.Client drop constraint [DF__Client__hasAccou__230D49A5]
 --ALTER TABLE app.Client DROP COLUMN hasAccount
+--ALTER TABLE app.SurveyQuestionOptionXref DROP COLUMN sortOrder
+--ALTER TABLE app.SurveyQuestionXref DROP COLUMN sortOrder
+
+-- ALTER TABLE app.SurveyQuestionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+-- ALTER TABLE app.SurveyQuestionOptionXref ADD sortOrder INT NOT NULL DEFAULT 0;
 
 --UPDATE app.Client SET hasAccount=1
 
