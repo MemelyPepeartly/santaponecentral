@@ -187,7 +187,7 @@ namespace Santa.Logic.Interfaces
 
         #region SurveyQuestionOptionXref
         Task CreateSurveyOptionAsync(Option newQuestionOption);
-        Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, string sortOrder);
+        Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, int sortOrder);
         #endregion
 
         #region SurveyQuestions

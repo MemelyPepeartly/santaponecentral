@@ -1134,7 +1134,7 @@ namespace Santa.Data.Repository
         #endregion
 
         #region SurveyQuestionOptionXref
-        public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, string sortOrder)
+        public async Task CreateSurveyQuestionOptionXrefAsync(Option newQuestionOption, Guid surveyQuestionID, bool isActive, int sortOrder)
         {
             try
             {
@@ -1209,7 +1209,7 @@ namespace Santa.Data.Repository
                     SurveyQuestionXrefId = Guid.NewGuid(),
                     SurveyQuestionId = questionID,
                     SurveyId = surveyID,
-                    SortOrder = "asc",
+                    SortOrder = 0,
                     IsActive = true
                 };
                 await santaContext.SurveyQuestionXref.AddAsync(contextQuestionXref);
