@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/santaApiService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/santa-api.service';
 import { Tag } from 'src/classes/tag';
-import { MapService } from '../services/mapService.service';
+import { MapService } from '../services/mapper.service';
 import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
 import { GathererService } from '../services/gatherer.service';

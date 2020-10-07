@@ -5,8 +5,8 @@ import { MessageApiResponse } from 'src/classes/responseTypes';
 import { Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SantaApiGetService } from 'src/app/services/santaApiService.service';
-import { MapService } from 'src/app/services/mapService.service';
+import { SantaApiGetService } from 'src/app/services/santa-api.service';
+import { MapService } from 'src/app/services/mapper.service';
 import { EventType } from 'src/classes/eventType';
 
 

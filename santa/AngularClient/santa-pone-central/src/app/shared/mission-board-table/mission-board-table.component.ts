@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { MissionBoardAPIService } from 'src/app/services/santaApiService.service';
+import { MissionBoardAPIService } from 'src/app/services/santa-api.service';
 import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/responseTypes';
-import { MissionBoardService } from 'src/app/services/MissionBoardService.service';
+import { MissionBoardService } from 'src/app/services/mission-board.service';
 
 @Component({
   selector: 'app-mission-board-table',

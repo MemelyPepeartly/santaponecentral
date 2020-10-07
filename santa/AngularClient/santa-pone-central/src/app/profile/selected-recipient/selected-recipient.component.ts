@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { ProfileService } from 'src/app/services/Profile.service';
+import { ProfileService } from 'src/app/services/profile.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
-import { ProfileService } from 'src/app/services/Profile.service';
+import { ProfileService } from 'src/app/services/profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
 import { Client } from 'src/classes/client';

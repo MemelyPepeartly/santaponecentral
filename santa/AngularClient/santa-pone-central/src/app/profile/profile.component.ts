@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
-import { MapService } from '../services/mapService.service';
+import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
+import { MapService } from '../services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
-import { ProfileService } from '../services/Profile.service';
+import { ProfileService } from '../services/profile.service';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { GathererService } from '../services/gatherer.service';

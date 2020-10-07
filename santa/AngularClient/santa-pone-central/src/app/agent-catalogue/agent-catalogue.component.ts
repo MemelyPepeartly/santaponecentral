@@ -7,8 +7,8 @@ import { Tag } from 'src/classes/tag';
 import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { SearchQueryModelResponse } from 'src/classes/responseTypes';
-import { SantaApiGetService, SantaApiPostService } from '../services/santaApiService.service';
-import { MapService } from '../services/mapService.service';
+import { SantaApiGetService, SantaApiPostService } from '../services/santa-api.service';
+import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 export class SearchQueryObjectContainer

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ProfileRecipient, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
-import { SantaApiGetService } from 'src/app/services/santaApiService.service';
+import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MapService } from 'src/app/services/mapService.service';
-import { ProfileService } from 'src/app/services/Profile.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { ProfileService } from 'src/app/services/profile.service';
 import { Survey } from 'src/classes/survey';
 import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
 

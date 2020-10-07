@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService } from './santaApiService.service';
-import { MapService } from './mapService.service';
+import { SantaApiGetService } from './santa-api.service';
+import { MapService } from './mapper.service';
 import { AssignmentStatus, Client } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';

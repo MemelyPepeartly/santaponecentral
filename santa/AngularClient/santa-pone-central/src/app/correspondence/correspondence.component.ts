@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
-import { ChatService } from '../services/Chat.service';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
+import { ChatService } from '../services/chat.service';
+import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
 import { Client } from 'src/classes/client';
-import { MapService } from '../services/mapService.service';
+import { MapService } from '../services/mapper.service';
 import { FormGroup } from '@angular/forms';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';

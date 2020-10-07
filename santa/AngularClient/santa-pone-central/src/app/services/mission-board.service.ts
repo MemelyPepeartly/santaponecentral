@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
-import { MissionBoardAPIService } from './santaApiService.service';
-import { MissionMapper } from './mapService.service';
+import { MissionBoardAPIService } from './santa-api.service';
+import { MissionMapper } from './mapper.service';
 
 @Injectable({
   providedIn: 'root'

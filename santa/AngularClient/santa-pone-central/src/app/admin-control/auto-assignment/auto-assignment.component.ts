@@ -3,8 +3,8 @@ import { Client, PossiblePairing } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from '../../shared/constants/TagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
-import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santaApiService.service';
-import { MapService } from 'src/app/services/mapService.service';
+import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
+import { MapService } from 'src/app/services/mapper.service';
 import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 
 @Component({
