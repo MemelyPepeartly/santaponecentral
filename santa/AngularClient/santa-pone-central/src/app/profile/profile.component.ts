@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
   public softUpdating: boolean = false;
   public refreshing: boolean = false;
 
+  public initializing: boolean = true;
   public gettingAllHistories: boolean = false;
   public gettingGeneralHistory: boolean = false;
   public gettingSelectedHistory: boolean = false;
@@ -105,12 +106,14 @@ export class ProfileComponent implements OnInit {
 
 
 
+    this.initializing =  true;
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllAssignmentStatuses();
     await this.profileService.getHistories(this.profile.clientID);
     await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
+    this.initializing =  false;
   }
   public async showSelectedChat(history: MessageHistory)
   {

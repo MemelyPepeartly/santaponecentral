@@ -18,7 +18,7 @@
         <mat-card-subtitle><button mat-raised-button (click)="exportCSVOfAssignments()">Export CSV of Assignments</button></mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="(histories.length == 0) && !loading">
+      <div *ngIf="(histories.length == 0) && doneGettingInfo">
         <h1>No assignments to display!</h1>
       </div>
       <div *ngIf="loading">

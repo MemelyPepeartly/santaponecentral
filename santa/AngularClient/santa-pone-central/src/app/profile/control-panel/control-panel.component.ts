@@ -28,6 +28,7 @@ export class ControlPanelComponent implements OnInit {
   @Input() gettingProfile: boolean;
 
   @Input() loading: boolean;
+  @Input() doneGettingInfo: boolean;
   @Input() histories: Array<MessageHistory> = []
   @Input() generalHistory: MessageHistory = new MessageHistory();
   @Input() profile: Profile;
