@@ -18,7 +18,8 @@ export class ControlPanelComponent implements OnInit {
   constructor(public ApiMapper: MapService,
     public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
-    public profileService: ProfileService) { }
+    public profileService: ProfileService,
+    public exporter: DataExportService) { }
 
   @Input() gettingAllHistories: boolean;
   @Input() gettingGeneralHistory: boolean;
