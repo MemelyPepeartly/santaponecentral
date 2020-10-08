@@ -7,6 +7,7 @@ import { MapService } from 'src/app/services/mapper.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { Survey } from 'src/classes/survey';
 import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
+import { AssignmentCSVModel, ExporterService } from 'src/app/services/exporter.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -19,7 +20,7 @@ export class ControlPanelComponent implements OnInit {
     public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
     public profileService: ProfileService,
-    public exporter: DataExportService) { }
+    public exporter: ExporterService) { }
 
   @Input() gettingAllHistories: boolean;
   @Input() gettingGeneralHistory: boolean;
@@ -88,5 +89,31 @@ export class ControlPanelComponent implements OnInit {
   public setActionTaken(event: boolean)
   {
     this.actionTaken = event;
+  }
+  public exportCSVOfAssignments()
+  {
+    let downloadModel: Array<AssignmentCSVModel> = this.convertToAssignmentCSVModel();
+
+    this.exporter.downloadFile(downloadModel, this.profile.clientNickname + "'s Assignments");
+
+
+  }
+  public convertToAssignmentCSVModel() : Array<AssignmentCSVModel>
+  {
+    let dataArray: Array<AssignmentCSVModel> = []
+    this.profile.assignments.forEach((assignment: ProfileRecipient) => {
+      dataArray.push({
+        Nickname: assignment.recipientClient.clientNickname,
+        'Real Name': assignment.recipientClient.clientName,
+        Event: assignment.recipientEvent.eventDescription,
+        'Address Line 1': assignment.address.addressLineOne,
+        'Address Line 2': assignment.address.addressLineTwo,
+        City: assignment.address.city,
+        State: assignment.address.state,
+        Country: assignment.address.country,
+        'Postal Code': assignment.address.postalCode,
+      });
+    });
+    return dataArray;
   }
 }

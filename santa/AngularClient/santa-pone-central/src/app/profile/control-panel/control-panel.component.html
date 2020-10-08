@@ -16,6 +16,7 @@
         <mat-card-title>Assigned Anons</mat-card-title>
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
         <mat-card-subtitle *ngIf="isAdmin">(Admins cannot view their own histories with the admins)</mat-card-subtitle>
+        <mat-card-subtitle><button mat-raised-button (click)="exportCSVOfAssignments()">Export CSV of Assignments</button></mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div *ngIf="(histories.length == 0) && !loading">
