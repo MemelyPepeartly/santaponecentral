@@ -311,10 +311,11 @@
         </mat-card-header>
         <mat-card-actions>
 
+          <ng-container *ngIf="clientCanBeGivenAssignments">
             <mat-divider [inset]="true"></mat-divider>
 
             <!--Add recipient option-->
-            <div class="optionDiv">
+            <div class="optionDiv" *ngIf="clientCanBeGivenAssignments">
               <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
               <p class="success" *ngIf="false"></p>
@@ -379,8 +380,9 @@
                   </mat-card-content>
                 </mat-card>
               </div>
-
             </div>
+          </ng-container>
+
 
             <mat-divider [inset]="true"></mat-divider>
 

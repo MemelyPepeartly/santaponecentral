@@ -150,6 +150,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     return this.clientEmailFormGroup.controls;
   }
+  get clientCanBeGivenAssignments()
+  {
+    return this.client.clientStatus.statusDescription == StatusConstants.APPROVED || this.client.clientStatus.statusDescription == StatusConstants.COMPLETED
+  }
 
   public async ngOnInit() {
     this.initializing = true;
