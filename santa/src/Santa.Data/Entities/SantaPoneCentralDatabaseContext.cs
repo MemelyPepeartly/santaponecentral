@@ -473,7 +473,7 @@ namespace Santa.Data.Entities
                     .IsRequired()
                     .HasColumnName("questionText")
                     .HasViewColumnName("questionText")
-                    .HasMaxLength(150);
+                    .HasMaxLength(300);
 
                 entity.Property(e => e.SenderCanView)
                     .HasColumnName("senderCanView")
