@@ -77,6 +77,8 @@ namespace Santa.Api.Controllers
             try
             {
 #warning clients and admins can both use this. Ensure that the requesting client is only posting as a sender and that they are allowed to and such based on their token claims
+                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+
                 Logic.Objects.Message logicMessage = new Logic.Objects.Message()
                 {
                     chatMessageID = Guid.NewGuid(),
@@ -90,7 +92,7 @@ namespace Santa.Api.Controllers
                     },
                     clientRelationXrefID = message.clientRelationXrefID,
                     messageContent = message.messageContent,
-                    dateTimeSent = DateTime.UtcNow,
+                    dateTimeSent = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
                     isMessageRead = false,
                     fromAdmin = message.fromAdmin
                 };
