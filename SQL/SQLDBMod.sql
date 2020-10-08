@@ -38,9 +38,9 @@
 --ALTER TABLE app.Client DROP COLUMN hasAccount
 --ALTER TABLE app.SurveyQuestionOptionXref DROP COLUMN sortOrder
 --ALTER TABLE app.SurveyQuestionXref DROP COLUMN sortOrder
-
--- ALTER TABLE app.SurveyQuestionXref ADD sortOrder INT NOT NULL DEFAULT 0;
--- ALTER TABLE app.SurveyQuestionOptionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+--ALTER TABLE app.SurveyQuestionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+--ALTER TABLE app.SurveyQuestionOptionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+-- ALTER TABLE app.SurveyQuestion ALTER COLUMN questionText nvarchar(300) NOT NULL;
 
 --UPDATE app.Client SET hasAccount=1
 
@@ -52,5 +52,12 @@
 -- DELETE FROM app.ClientRelationXref
 -- DELETE FROM app.BoardEntry
 -- DELETE FROM app.EntryType
+
+DELETE FROM app.SurveyResponse;
+DELETE FROM app.SurveyQuestionOptionXref;
+DELETE FROM app.SurveyOption;
+DELETE FROM app.SurveyQuestionXref;
+DELETE FROM app.SurveyQuestion;
+DELETE FROM app.Survey;
 
 -- ALTER TABLE app.ClientRelationXref DROP COLUMN completed
