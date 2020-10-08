@@ -66,13 +66,13 @@ VALUES
 
     -- Card Exchange --
     (@cardExchangeSurveyQuestion1,'How many cards would you like to exchange?', 0, 0),
-    (@cardExchangeSurveyQuestion2,'Are you a mass mailer? Note: First-year participants that are mass mailers will have a max of 20 assignments. Return mailers can have higher assignment caps', 0, 1), -- Option
+    (@cardExchangeSurveyQuestion2,'Are you a mass mailer? Note: First-year participants that are mass mailers will have a max of 20 assignments. Return mailers can have higher assignment caps.', 0, 1), -- Option
     (@cardExchangeSurveyQuestion3,'Do you aknowledge your info will be shared with other assigned to send to you?', 0 ,1), -- Option
     (@cardExchangeSurveyQuestion4,'Are you willing to send cards internationally?', 0, 1), -- Option
     (@cardExchangeSurveyQuestion5,'Some generous anons like to send extra cards or small goodies to every single participant in the event (this is separate from the regular exchange). Do you consent to receiving such items? You do not have to send anything back.', 0, 1); -- Option
     
-DECLARE @giftExchangeEventGUID UNIQUEIDENTIFIER = '2498b60b-bcad-4f21-b229-fe7e8bf0a39a';
-DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = 'a2c93535-157c-4d7a-b3e6-57023cfd9b35';
+DECLARE @giftExchangeEventGUID UNIQUEIDENTIFIER = '82f3d537-274d-4c64-ac1f-01ce57e16e77';
+DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = '284e1b27-caea-47f1-89e4-0111d2b19cd7';
 
 DECLARE @giftExchangeSurveyID UNIQUEIDENTIFIER = NEWID();
 DECLARE @cardExchangeSurveyID UNIQUEIDENTIFIER = NEWID();

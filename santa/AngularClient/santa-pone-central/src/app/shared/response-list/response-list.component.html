@@ -6,12 +6,12 @@
   </mat-card-header>
   <mat-card-content style="text-align: center;">
     <mat-selection-list #questionsSelectionList *ngIf="!viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
-      <mat-list-option *ngFor="let question of survey.surveyQuestions" [value]="question"
+      <mat-list-option class="questionListOption" *ngFor="let question of survey.surveyQuestions" [value]="question"
         (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
     <mat-selection-list #questionsSelectionList *ngIf="viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
-      <mat-list-option *ngFor="let question of getViewableQuestions()" [value]="question"
+      <mat-list-option class="questionListOption" *ngFor="let question of getViewableQuestions()" [value]="question"
         (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
