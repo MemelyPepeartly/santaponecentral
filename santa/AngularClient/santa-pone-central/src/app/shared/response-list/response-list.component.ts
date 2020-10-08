@@ -30,6 +30,18 @@ export class ResponseListComponent implements OnInit {
   {
     return this.surveyFormGroup.controls
   }
+  public get showDidNotAnswerWarning() : boolean
+  {
+    let result: boolean = true;
+    // Foreach response, if any questions have a response
+    this.responses.forEach((response: SurveyResponse) => {
+      if(this.survey.surveyQuestions.some((question: Question) => {return question.questionID == response.surveyQuestion.questionID && this.survey.surveyID == response.surveyID}))
+      {
+        result = false;
+      }
+    });
+    return result
+  }
 
   public selectedQuestion: Question = new Question();
 
@@ -105,18 +117,6 @@ export class ResponseListComponent implements OnInit {
   public getViewableQuestions() : Array<Question>
   {
     return this.survey.surveyQuestions.filter((question: Question) => {return question.senderCanView})
-  }
-  public showDidNotAnswerWarning() : boolean
-  {
-    let result: boolean = true;
-    // Foreach response, if any questions have a response, break and return
-    this.responses.forEach((response: SurveyResponse) => {
-      if(this.survey.surveyQuestions.some((question: Question) => {return question.questionID == response.surveyQuestion.questionID}))
-      {
-        result = false;
-      }
-    });
-    return result
   }
   public getFormControlNameFromQuestion(question: Question) : string
   {
