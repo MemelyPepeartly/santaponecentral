@@ -353,7 +353,7 @@ namespace Santa.Data.Repository
                 eventTypeID = contextSurvey.EventTypeId,
                 surveyDescription = contextSurvey.SurveyDescription,
                 active = contextSurvey.IsActive,
-                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(q => Mapper.MapQuestion(q.SurveyQuestion)).ToList(),
+                surveyQuestions = contextSurvey.SurveyQuestionXref.Select(q => Mapper.MapQuestion(q.SurveyQuestion)).OrderBy(s => s.sortOrder).ToList(),
                 removable = contextSurvey.SurveyQuestionXref.Count == 0
             };
             return logicSurvey;
@@ -390,6 +390,7 @@ namespace Santa.Data.Repository
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
+                sortOrder = contextSurveyQuestion.SurveyQuestionXref.FirstOrDefault(sqxr => sqxr.SurveyQuestionId == contextSurveyQuestion.SurveyQuestionId).SortOrder,
                 senderCanView = contextSurveyQuestion.SenderCanView,
                 surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).ToList(),
                 removable = contextSurveyQuestion.SurveyResponse.Count == 0 && contextSurveyQuestion.SurveyQuestionOptionXref.Count == 0

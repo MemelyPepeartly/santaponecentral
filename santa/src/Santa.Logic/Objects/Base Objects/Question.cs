@@ -10,6 +10,7 @@ namespace Santa.Logic.Objects
         public Guid questionID { get; set; }
         public string questionText { get; set; }
         public bool isSurveyOptionList { get; set; }
+        public int sortOrder { get; set; }
         public bool senderCanView { get; set; }
         public List<Option> surveyOptionList { get; set; }
         public bool removable { get; set; }
