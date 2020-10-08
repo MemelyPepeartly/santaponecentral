@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageHistory } from 'src/classes/message';
 import { SantaApiGetService } from './santa-api.service';
 import { MapService } from './mapper.service';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
   providedIn: 'root'
