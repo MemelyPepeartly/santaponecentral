@@ -16,10 +16,10 @@ mat-card-header
 }
 .questionListOption
 {
-  display: block;
-  height: fit-content;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  display: block !important;
+  height: fit-content !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 .answerCard
 {
