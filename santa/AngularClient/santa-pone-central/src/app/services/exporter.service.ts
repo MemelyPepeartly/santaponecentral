@@ -5,6 +5,7 @@ export class AssignmentCSVModel
   Nickname: string;
   'Real Name': string;
   Event: string;
+  Status: string;
   'Address Line 1': string;
   'Address Line 2': string;
   City: string;
@@ -19,8 +20,7 @@ export class AssignmentCSVModel
 export class ExporterService {
 
   downloadFile(data, filename = 'data') {
-    let csvData = this.ConvertToCSV(data, ['Nickname', 'Real Name', 'Event', 'Address Line 1', 'Address Line 2', 'City', 'State', 'Country', 'Postal Code']);
-    console.log(csvData)
+    let csvData = this.ConvertToCSV(data, ['Nickname', 'Real Name', 'Event', 'Status', 'Address Line 1', 'Address Line 2', 'City', 'State', 'Country', 'Postal Code']);
     let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
     let dwldLink = document.createElement("a");
     let url = URL.createObjectURL(blob);

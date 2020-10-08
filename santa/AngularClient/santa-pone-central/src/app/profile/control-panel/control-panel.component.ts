@@ -106,6 +106,7 @@ export class ControlPanelComponent implements OnInit {
         Nickname: assignment.recipientClient.clientNickname,
         'Real Name': assignment.recipientClient.clientName,
         Event: assignment.recipientEvent.eventDescription,
+        Status: assignment.assignmentStatus.assignmentStatusName,
         'Address Line 1': assignment.address.addressLineOne,
         'Address Line 2': assignment.address.addressLineTwo,
         City: assignment.address.city,
