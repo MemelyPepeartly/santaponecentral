@@ -1165,6 +1165,7 @@ namespace Santa.Data.Repository
                     .Include(sq => sq.SurveyResponse)
                     .Include(sq => sq.SurveyQuestionOptionXref)
                         .ThenInclude(so => so.SurveyOption)
+                    .Include(sq => sq.SurveyQuestionXref)
                     .ToListAsync())
 
                     .Select(Mapper.MapQuestion).ToList();
