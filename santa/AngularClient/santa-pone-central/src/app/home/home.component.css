@@ -4,6 +4,10 @@
   text-align: center;
   min-width: 600px;
 }
+.subtleError
+{
+    color: #d07973;
+}
 .child{
   display: inline-block;
   width: 100%;
