@@ -1,4 +1,4 @@
-<mat-vertical-stepper [linear]="false">
+<mat-vertical-stepper>
   <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
     <form [formGroup]="surveyFormGroup">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
@@ -30,7 +30,7 @@
     </form>
     <div class="actionButtonContainer">
       <button mat-raised-button matStepperPrevious *ngIf="isFirstQuestion(question) == false">Back</button>
-      <button mat-raised-button matStepperNext *ngIf="isLastQuestion(question) == false">Next</button>
+      <button mat-raised-button matStepperNext *ngIf="isLastQuestion(question) == false" [disabled]="surveyFormGroup.get(question.surveyQuestionID).invalid">Next</button>
     </div>
   </mat-step>
 </mat-vertical-stepper>
