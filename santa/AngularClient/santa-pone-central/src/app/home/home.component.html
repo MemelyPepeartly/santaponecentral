@@ -1,8 +1,8 @@
 <div class="container">
     <div class="child mat-elevation-z8">
-      <div class="contentBox small-box mat-elevation-z8">
+      <div class="contentBox small-box mat-elevation-z8" *ngIf="showMetadata">
         <mat-card>
-          <mat-card-content *ngIf="showMetadata">
+          <mat-card-content>
             <mat-card-title>Environment Notice! <mat-icon>warning</mat-icon></mat-card-title>
             <mat-card-subtitle class="subtleError">This is the dev environment for testing new features, and not the site where the event is actually being hosted. If you are here to participate, you are in the wrong place.</mat-card-subtitle>
             <mat-card-subtitle><a href="https://www.santaponecentral.net/">The production environment here</a> is the proper URL for where the event is taking place</mat-card-subtitle>
