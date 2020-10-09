@@ -27,7 +27,7 @@ export class SurveyFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.formQuestionsFormatted = this.setQuestions(this.questions)
 
     this.surveyFormGroup = this.formBuilder.group({});
@@ -70,7 +70,7 @@ export class SurveyFormComponent implements OnInit {
           QAObject.surveyOptionList.push(formOptionObject);
         }
       }
-      
+
       formQuestions.push(QAObject);
     }
     return formQuestions;
@@ -78,5 +78,29 @@ export class SurveyFormComponent implements OnInit {
   public checkValid() : boolean
   {
     return this.surveyFormGroup.valid
+  }
+  public isFirstQuestion(question: SurveyQA) : boolean
+  {
+    let result: boolean = false;
+    if(question != undefined)
+    {
+      if(this.questions[0].questionID == question.surveyQuestionID)
+      {
+        result = true;
+      }
+    }
+    return result;
+  }
+  public isLastQuestion(question: SurveyQA) : boolean
+  {
+    let result: boolean = false;
+    if(question != undefined)
+    {
+      if(this.questions[this.questions.length - 1].questionID == question.surveyQuestionID)
+      {
+        result = true
+      }
+    }
+    return result;
   }
 }

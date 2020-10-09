@@ -1,4 +1,4 @@
-<mat-horizontal-stepper>
+<mat-vertical-stepper [linear]="false">
   <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
     <form [formGroup]="surveyFormGroup">
       <ng-template matStepLabel>{{ question.questionText}}</ng-template>
@@ -12,21 +12,25 @@
           </mat-form-field>
           <div class="error" *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors && surveyFormGroup.get(question.surveyQuestionID).touched">
             <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>
-            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>                  
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>
           </div>
         </ng-container>
 
         <!-- Form for survey option lists (multiple choice) -->
         <ng-container *ngIf="question.isSurveyOptionList">
-          <mat-radio-group formControlName="{{question.surveyQuestionID}}" required>                             
+          <mat-radio-group formControlName="{{question.surveyQuestionID}}" required>
             <mat-radio-button *ngFor="let option of question.surveyOptionList" [value]="option">
               {{option.optionText}}
             </mat-radio-button>
           </mat-radio-group>
           <div class="error" *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors && surveyFormGroup.get(question.surveyQuestionID).touched">
-            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>             
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>
           </div>
         </ng-container>
     </form>
+    <div class="actionButtonContainer">
+      <button mat-raised-button matStepperPrevious *ngIf="isFirstQuestion(question) == false">Back</button>
+      <button mat-raised-button matStepperNext *ngIf="isLastQuestion(question) == false">Next</button>
+    </div>
   </mat-step>
-</mat-horizontal-stepper>
+</mat-vertical-stepper>
