@@ -159,3 +159,13 @@ export class SearchQueryModelResponse {
   nicknames: Array<string> = [];
   isHardSearch: boolean;
 }
+
+/* AutoAssignment response models */
+export class Pairing {
+  senderAgentID: string;
+  assignmentClientID: string
+}
+export class SelectedAutoAssignmentsResponse
+{
+  pairings: Array<Pairing> = [];
+}

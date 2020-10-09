@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
 import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ProfileService } from 'src/app/services/Profile.service';
+import { ProfileService } from 'src/app/services/profile.service';
 import { MessageApiReadResponse } from 'src/classes/responseTypes';
-import { SantaApiPutService } from 'src/app/services/santaApiService.service';
-import { MapResponse } from 'src/app/services/mapService.service';
+import { SantaApiPutService } from 'src/app/services/santa-api.service';
+import { MapResponse } from 'src/app/services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({

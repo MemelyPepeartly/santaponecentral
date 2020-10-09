@@ -1,9 +1,9 @@
 import { Component, OnInit, Output, Input } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
-import { SantaApiGetService } from '../../services/santaApiService.service';
+import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
-import { MapService } from '../../services/mapService.service';
+import { MapService } from '../../services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 

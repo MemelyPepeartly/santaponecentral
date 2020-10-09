@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta } from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairing } from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -137,6 +137,7 @@ export class MapService {
       subjectClient: this.mapMeta(messageHistory.subjectClient),
       subjectMessages: [],
       recieverMessages: [],
+      unreadCount: messageHistory.unreadCount
     });
 
     messageHistory.subjectMessages.forEach(message => {
@@ -184,6 +185,7 @@ export class MapService {
     let mappedAllowedAssignmentMeta: AllowedAssignmentMeta =
     {
       clientMeta: this.mapMeta(allowedAssignmentMeta.clientMeta),
+      clientEvents: [],
       tags: [],
       totalSenders: allowedAssignmentMeta.totalSenders,
       totalAssignments: allowedAssignmentMeta.totalAssignments
@@ -191,6 +193,9 @@ export class MapService {
 
     allowedAssignmentMeta.tags.forEach(tag => {
       mappedAllowedAssignmentMeta.tags.push(this.mapTag(tag))
+    });
+    allowedAssignmentMeta.clientEvents.forEach(event => {
+      mappedAllowedAssignmentMeta.clientEvents.push(this.mapEvent(event));
     });
 
     return mappedAllowedAssignmentMeta;
@@ -205,6 +210,15 @@ export class MapService {
     };
 
     return mappedAssignmentStatus;
+  }
+  mapPossiblePairing(possiblePairing) : PossiblePairing
+  {
+    let mappedPossiblePairing: PossiblePairing =
+    {
+      sendingAgent: this.mapClient(possiblePairing.sendingAgent),
+      possibleAssignment: this.mapClient(possiblePairing.possibleAssignment)
+    }
+    return mappedPossiblePairing;
   }
   mapStatus(status) : Status
   {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService } from './santaApiService.service';
-import { MapService } from './mapService.service';
+import { SantaApiGetService } from './santa-api.service';
+import { MapService } from './mapper.service';
 import { MessageHistory } from 'src/classes/message';
 import { BehaviorSubject } from 'rxjs';
 
@@ -71,11 +71,11 @@ export class ChatService {
     {
       this._gettingAllChats.next(true);
     }
-    
+
     let historyArray: Array<MessageHistory> = [];
 
     var data = await this.SantaApiGet.getAllMessageHistories(subjectID).toPromise().catch(err => {console.log(err); this._gettingAllChats.next(false);});
-    
+
     for(let i = 0; i < data.length; i++)
     {
       historyArray.push(this.ApiMapper.mapMessageHistory(data[i]))

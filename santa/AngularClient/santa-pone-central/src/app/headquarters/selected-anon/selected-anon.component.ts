@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
 import { AllowedAssignmentMeta, AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santaApiService.service';
-import { MapService, MapResponse } from 'src/app/services/mapService.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
+import { MapService, MapResponse } from 'src/app/services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
@@ -150,6 +150,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     return this.clientEmailFormGroup.controls;
   }
+  get clientCanBeGivenAssignments()
+  {
+    return this.client.clientStatus.statusDescription == StatusConstants.APPROVED || this.client.clientStatus.statusDescription == StatusConstants.COMPLETED
+  }
 
   public async ngOnInit() {
     this.initializing = true;
@@ -257,6 +261,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     //Tells card if client is approved to hide or show the recipient add profile controls
     return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
+  }
+  isNotParticipatingInSelectedEvent(assignmentChoice: AllowedAssignmentMeta) : boolean
+  {
+    return !assignmentChoice.clientEvents.some((event: EventType) => {return event.eventTypeID == this.selectedRecipientEvent.eventTypeID});
   }
   public approveAnon(wantsAccount: boolean)
   {

@@ -21,45 +21,8 @@ export class MessageHistory {
     subjectMessages: Array<Message> = [];
     recieverMessages: Array<Message> = [];
 
-    /* Unread counts are based on unread messages that are not the subject's messages */
-    get unreadCount() : number
-    {
-
-        if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
-        {
-            return 0;
-        }
-        else
-        {
-            var count = 0;
-            this.recieverMessages.forEach((message: Message) => {
-                if(message.isMessageRead == false)
-                {
-                    count += 1;
-                }
-            });
-            return count;
-        }
-    }
-    get adminUnreadCount() : number
-    {
-
-        if(this.recieverMessages == undefined || this.recieverMessages == null || this.recieverMessages.length == 0)
-        {
-            return 0;
-        }
-        else
-        {
-            var count = 0;
-            this.recieverMessages.forEach((message: Message) => {
-                if(message.isMessageRead == false && !message.fromAdmin)
-                {
-                    count += 1;
-                }
-            });
-            return count;
-        }
-    }
+    // Number of unread reciever messages
+    unreadCount: number;
 }
 // Message class for correspondence
 export class Message {

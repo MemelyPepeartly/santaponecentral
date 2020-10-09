@@ -1,10 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Client } from 'src/classes/client';
+import { Client, PossiblePairing } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from '../../shared/constants/TagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
-import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santaApiService.service';
-import { MapService } from 'src/app/services/mapService.service';
+import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-auto-assignment',
@@ -19,12 +20,13 @@ export class AutoAssignmentComponent implements OnInit {
 
   @Input() allClients: Array<Client> = []
 
-  public logArray: Array<string> = []
-
   public selectedClient: Client = new Client();
+  public possiblePairings: Array<PossiblePairing> = [];
+  public selectedPairings: Array<PossiblePairing> = [];
 
   public gatheringAllClients: boolean = false;
   public postingNewAssignments: boolean = false;
+  public gettingAssignmentPairings: boolean = false;
 
   public buttonClicked: boolean = false;
   public refreshList: boolean = false;
@@ -45,18 +47,52 @@ export class AutoAssignmentComponent implements OnInit {
   {
     return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT})})
   }
-  public async giveAssignments()
+  public async getAssignmentPairings()
   {
-    this.logArray = []
     this.buttonClicked = true;
-    this.postingNewAssignments = true;
+    this.gettingAssignmentPairings = true;
 
-    var logResponse = await this.SantaApiPost.postAutoAssignmentRequest().toPromise();
-    logResponse.forEach((entry:string) => {
-      this.logArray.push(entry)
+    var response = await this.SantaApiGet.getAutoAssignmentPairings().toPromise();
+    this.possiblePairings = [];
+    response.forEach((pairing) => {
+      this.possiblePairings.push(this.mapper.mapPossiblePairing(pairing));
     });
 
-    this.postingNewAssignments = false;
+    this.gettingAssignmentPairings = false;
+  }
+  public async postAssignmentPairings()
+  {
+    this.postingNewAssignments = true;
+
+    let pairingModel: Array<Pairing> = [];
+
+    this.selectedPairings.forEach((pair: PossiblePairing) => {
+      let modelPair: Pairing =
+      {
+        senderAgentID: pair.sendingAgent.clientID,
+        assignmentClientID: pair.possibleAssignment.clientID
+      }
+      pairingModel.push(modelPair);
+    });
+
+    let responseModel: SelectedAutoAssignmentsResponse =
+    {
+      pairings: pairingModel
+    }
+
+    this.SantaApiPost.postSelectedAutoAssignments(responseModel).subscribe(async () => {
+      this.possiblePairings = [];
+      await this.getAssignmentPairings();
+      this.postingNewAssignments = false;
+    }, err =>
+    {
+      this.postingNewAssignments = false;
+      console.group()
+      console.log("Something went wrong posting selected auto assignments!")
+      console.log(err);
+      console.groupEnd();
+    });
+
   }
   public async updateSelectedClient(clientID: string)
   {

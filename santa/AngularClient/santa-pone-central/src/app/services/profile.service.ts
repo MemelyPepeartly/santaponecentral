@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { BehaviorSubject } from 'rxjs';
 import { MessageHistory } from 'src/classes/message';
-import { SantaApiGetService } from './santaApiService.service';
-import { MapService } from './mapService.service';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { SantaApiGetService } from './santa-api.service';
+import { MapService } from './mapper.service';
 
 @Injectable({
   providedIn: 'root'

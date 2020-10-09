@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santaApiService.service';
-import { MapService } from '../services/mapService.service';
+import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
+import { MapService } from '../services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
-import { ProfileService } from '../services/Profile.service';
+import { ProfileService } from '../services/profile.service';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { GathererService } from '../services/gatherer.service';
@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
   public softUpdating: boolean = false;
   public refreshing: boolean = false;
 
+  public initializing: boolean = true;
   public gettingAllHistories: boolean = false;
   public gettingGeneralHistory: boolean = false;
   public gettingSelectedHistory: boolean = false;
@@ -105,12 +106,14 @@ export class ProfileComponent implements OnInit {
 
 
 
+    this.initializing =  true;
     await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
 
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllAssignmentStatuses();
     await this.profileService.getHistories(this.profile.clientID);
     await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
+    this.initializing =  false;
   }
   public async showSelectedChat(history: MessageHistory)
   {

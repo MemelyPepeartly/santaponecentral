@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { Client } from '../../classes/client';
-import { MapService } from '../services/mapService.service';
+import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService } from '../services/santaApiService.service';
+import { SantaApiGetService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
 import { StatusConstants } from '../shared/constants/StatusConstants.enum';
 import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';

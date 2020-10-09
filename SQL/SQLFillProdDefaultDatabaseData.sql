@@ -1,24 +1,3 @@
-DECLARE @eventTypeID1GUID UNIQUEIDENTIFIER;
-DECLARE @eventTypeID2GUID UNIQUEIDENTIFIER;
-
-DECLARE @surveyQuestion1IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion2IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion3IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion4IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion5IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion6IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion7IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion8IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion9IDGUID UNIQUEIDENTIFIER;
-DECLARE @surveyQuestion10IDGUID UNIQUEIDENTIFIER;
-
-DECLARE @survey1IDGUID UNIQUEIDENTIFIER;
-DECLARE @survey2IDGUID UNIQUEIDENTIFIER;
-
-DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER;
-DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER;
-DECLARE @surveyOptionID3GUID UNIQUEIDENTIFIER;
-
 DECLARE @statusID1GUID UNIQUEIDENTIFIER;
 DECLARE @statusID2GUID UNIQUEIDENTIFIER;
 DECLARE @statusID3GUID UNIQUEIDENTIFIER;
@@ -32,32 +11,10 @@ DECLARE @tag1IDGUID UNIQUEIDENTIFIER;
 DECLARE @tag2IDGUID UNIQUEIDENTIFIER;
 DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
 
-SET @eventTypeID1GUID = NEWID();
-SET @eventTypeID2GUID = NEWID();
-
-SET @surveyQuestion1IDGUID = NEWID();
-SET @surveyQuestion2IDGUID = NEWID();
-SET @surveyQuestion3IDGUID = NEWID();
-SET @surveyQuestion4IDGUID = NEWID();
-SET @surveyQuestion5IDGUID = NEWID();
-SET @surveyQuestion6IDGUID = NEWID();
-SET @surveyQuestion7IDGUID = NEWID();
-SET @surveyQuestion8IDGUID = NEWID();
-SET @surveyQuestion9IDGUID = NEWID();
-SET @surveyQuestion10IDGUID = NEWID();
-
-SET @survey1IDGUID = NEWID();
-SET @survey2IDGUID = NEWID();
-
-SET @surveyOptionID1GUID = NEWID();
-SET @surveyOptionID2GUID = NEWID();
-SET @surveyOptionID3GUID = NEWID();
-
 SET @statusID1GUID = NEWID();
 SET @statusID2GUID = NEWID();
 SET @statusID3GUID = NEWID();
 SET @statusID4GUID = NEWID();
-
 
 SET @client1IDGUID = NEWID();
 SET @client2IDGUID = NEWID();
@@ -69,76 +26,129 @@ SET @tag3IDGUID = NEWID();
 
 INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
 VALUES
-    (@eventTypeID1GUID,'Gift Exchange', 1),
-    (@eventTypeID2GUID,'Card Exchange', 1);
+    (NEWID(),'Gift Exchange', 1),
+    (NEWID(),'Card Exchange', 1);
+
+DECLARE @sharedSurveyQuestion1GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion2GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion3GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion4GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion5GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion6GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @sharedSurveyQuestion7GUID UNIQUEIDENTIFIER = NEWID();
+
+
+DECLARE @giftExchangeSurveyQuestion1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @giftExchangeSurveyQuestion2 UNIQUEIDENTIFIER = NEWID();
+DECLARE @giftExchangeSurveyQuestion3 UNIQUEIDENTIFIER = NEWID();
+
+DECLARE @cardExchangeSurveyQuestion1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeSurveyQuestion2 UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeSurveyQuestion3 UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeSurveyQuestion4 UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeSurveyQuestion5 UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
 VALUES
-    (@surveyQuestion1IDGUID,'How many cards would you like to send?', 0, 0),
-    (@surveyQuestion2IDGUID,'How many cards would you like to recieve?', 0, 0),
-    (@surveyQuestion3IDGUID,'Who are your favorite characters?', 1, 0),
-    (@surveyQuestion4IDGUID,'Are you okay with spaghetti on the package?', 1, 1),
-    (@surveyQuestion5IDGUID,'Are you okay with lewd?', 1, 1),
-    (@surveyQuestion6IDGUID,'Are you okay with edible items?', 1, 1),
-    (@surveyQuestion7IDGUID,'Are you okay with receiving extra assignments?', 0, 1),
-    (@surveyQuestion8IDGUID,'Additional comments?', 1 ,0),
-    (@surveyQuestion9IDGUID,'Wishlist', 1, 0),
-    (@surveyQuestion10IDGUID,'Do you like handmade items?', 1, 1);
+    -- Shared Questions --
+    (@sharedSurveyQuestion1GUID,'Who are your favorite characters?', 1, 0),
+    (@sharedSurveyQuestion2GUID,'Are you okay with spaghetti on the package?', 1, 1), -- Option
+    (@sharedSurveyQuestion3GUID,'Are you okay with lewd?', 1, 1), -- Option
+    (@sharedSurveyQuestion4GUID,'Are you okay with edible items?', 1, 1), -- Option
+    (@sharedSurveyQuestion5GUID,'Any additional comments or concerns?', 1 ,0),
+    (@sharedSurveyQuestion6GUID,'If you’re a past participant, what was your holiday ID? (N/A if this does not apply)', 0, 0),
+    (@sharedSurveyQuestion7GUID,'If you were a past participant, would you like to keep your holiday ID or get a new one?', 0, 0),
+
+    -- Gift Exchange --
+    (@giftExchangeSurveyQuestion1,'Are you okay with receiving extra assignments?', 0, 1), -- Option
+    (@giftExchangeSurveyQuestion2,'Do you like handmade items?', 1, 1), -- Option
+    (@giftExchangeSurveyQuestion3,'What is your wishlist?', 1, 0),
+
+    -- Card Exchange --
+    (@cardExchangeSurveyQuestion1,'How many cards would you like to exchange?', 0, 0),
+    (@cardExchangeSurveyQuestion2,'Are you a mass mailer? Note: First-year participants that are mass mailers will have a max of 20 assignments. Return mailers can have higher assignment caps.', 0, 1), -- Option
+    (@cardExchangeSurveyQuestion3,'Do you aknowledge your info will be shared with other assigned to send to you?', 0 ,1), -- Option
+    (@cardExchangeSurveyQuestion4,'Are you willing to send cards internationally?', 0, 1), -- Option
+    (@cardExchangeSurveyQuestion5,'Some generous anons like to send extra cards or small goodies to every single participant in the event (this is separate from the regular exchange). Do you consent to receiving such items? You do not have to send anything back.', 0, 1); -- Option
+    
+DECLARE @giftExchangeEventGUID UNIQUEIDENTIFIER = '82f3d537-274d-4c64-ac1f-01ce57e16e77';
+DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = '284e1b27-caea-47f1-89e4-0111d2b19cd7';
+
+DECLARE @giftExchangeSurveyID UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeSurveyID UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
 VALUES
-    (@survey1IDGUID, @eventTypeID1GUID, 'Gift Survey', 1),
-    (@survey2IDGUID, @eventTypeID2GUID, 'Card Survey', 1);
+    (@giftExchangeSurveyID, @giftExchangeEventGUID, 'Gift Survey', 1),
+    (@cardExchangeSurveyID, @cardExchangeEventGUID, 'Card Survey', 1);
+
+DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @surveyOptionID3GUID UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
     (@surveyOptionID1GUID,'Yes','1'),
     (@surveyOptionID2GUID,'No','1'),
-    (@surveyOptionID3GUID,'Maybe','1');
+    (@surveyOptionID3GUID,'Not Applicable','1');
 
 INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
--- Card survey
-    (NEWID(), @survey2IDGUID, @surveyQuestion1IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion2IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
-    (NEWID(), @survey2IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
 -- Gift survey
-    (NEWID(), @survey1IDGUID, @surveyQuestion3IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion4IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion5IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion6IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion7IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion8IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion9IDGUID, 'asc', 1),
-    (NEWID(), @survey1IDGUID, @surveyQuestion10IDGUID, 'asc', 1);
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion6GUID, 1, 1), -- What was your old ID?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion7GUID, 2, 1), -- Want same ID?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion1GUID, 3, 1), -- Fav Characters?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion2GUID, 4, 1), -- Spaghetti?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion3GUID, 5, 1), -- Lewd?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion4GUID, 6, 1), -- Edible items?
+    (NEWID(), @giftExchangeSurveyID, @giftExchangeSurveyQuestion2, 7, 1), -- Handmade stuff?
+    (NEWID(), @giftExchangeSurveyID, @giftExchangeSurveyQuestion1, 8, 1), -- Okay with extra assignments?
+    (NEWID(), @giftExchangeSurveyID, @giftExchangeSurveyQuestion3, 9, 1), -- Your wishlist?
+    (NEWID(), @giftExchangeSurveyID, @sharedSurveyQuestion5GUID, 10, 1), -- Additional Comments?
+
+-- Card survey
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion6GUID, 1, 1), -- What was your old ID?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion7GUID, 2, 1), -- Want same ID?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion1GUID, 3, 1), -- Fav Characters?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion2GUID, 4, 1), -- Spaghetti?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion3GUID, 5, 1), -- Lewd?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion4GUID, 6, 1), -- Edible items?
+    (NEWID(), @cardExchangeSurveyID, @cardExchangeSurveyQuestion3, 7, 1), -- Acknowledge that assignees will see info?
+    (NEWID(), @cardExchangeSurveyID, @cardExchangeSurveyQuestion1, 8, 1), -- How many cards to exchange?
+    (NEWID(), @cardExchangeSurveyID, @cardExchangeSurveyQuestion2, 9, 1), -- Mass Mailer?
+    (NEWID(), @cardExchangeSurveyID, @cardExchangeSurveyQuestion4, 10, 1), -- Sending Internationally?
+    (NEWID(), @cardExchangeSurveyID, @cardExchangeSurveyQuestion5, 11, 1), -- Consent to recieving extra items?
+    (NEWID(), @cardExchangeSurveyID, @sharedSurveyQuestion5GUID, 12, 1); -- Additional Comments?
+
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion4IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID2GUID, 2, 1),
 
+    (NEWID(), @sharedSurveyQuestion3GUID, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @sharedSurveyQuestion3GUID, @surveyOptionID2GUID, 2, 1),
 
-    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion5IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @sharedSurveyQuestion4GUID, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @sharedSurveyQuestion4GUID, @surveyOptionID2GUID, 2, 1),
 
-    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion6IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @giftExchangeSurveyQuestion1, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @giftExchangeSurveyQuestion1, @surveyOptionID2GUID, 2, 1),
 
-    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion7IDGUID, @surveyOptionID3GUID, 'asc', 1),
+    (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID2GUID, 2, 1),
 
-    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID1GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID2GUID, 'asc', 1),
-    (NEWID(), @surveyQuestion10IDGUID, @surveyOptionID3GUID, 'asc', 1);
+    (NEWID(), @cardExchangeSurveyQuestion2, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @cardExchangeSurveyQuestion2, @surveyOptionID2GUID, 2, 1),
+
+    (NEWID(), @cardExchangeSurveyQuestion3, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @cardExchangeSurveyQuestion3, @surveyOptionID2GUID, 2, 1),
+
+    (NEWID(), @cardExchangeSurveyQuestion4, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @cardExchangeSurveyQuestion4, @surveyOptionID2GUID, 2, 1),
+
+    (NEWID(), @cardExchangeSurveyQuestion5, @surveyOptionID1GUID, 1, 1),
+    (NEWID(), @cardExchangeSurveyQuestion5, @surveyOptionID2GUID, 2, 1);
     
 INSERT INTO app.ClientStatus (clientStatusID, statusDescription)
 VALUES
@@ -163,9 +173,15 @@ INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adm
 VALUES
     (NEWID(), 'Announcements (Deadlines)', 'Deadline announcement and news', 1),
     (NEWID(), 'Announcements (Contests)', 'Contest announcements and information', 1),
-    (NEWID(), 'Deliveries (Gifts)', 'Delivery posts for the Gift Exchange', 0),
-    (NEWID(), 'Deliveries (Cards)', 'Delivery posts for the Card Exchange', 0),
-    (NEWID(), 'General', 'Any other noteworthy intelligence', 0);
+    (NEWID(), 'Announcements (Development)', 'Site development announcments', 1),
+    (NEWID(), 'Announcements (Other)', 'Any other important announcements', 1);
+
+INSERT INTO app.AssignmentStatus (assignmentStatusID, assignmentStatusName, assignmentStatusDescription)
+VALUES
+    (NEWID(), 'Assigned', 'Fresh assignment that has yet to be started'),
+    (NEWID(), 'In Progress', 'Assignment is in progress of being made, shopped for, or being completed in some way'),
+    (NEWID(), 'Shipping', 'Assignment is on its way! Cheer inbound!'),
+    (NEWID(), 'Completed', 'Your delivery of cheer has made its mark! Mission accomplished!');
 
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;

@@ -29,7 +29,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse} from '../../classes/responseTypes';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse, SelectedAutoAssignmentsResponse} from '../../classes/responseTypes';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -168,6 +168,11 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "History/Relationship/" + clientRelationXrefID + "?subjectID=" + subjectID).pipe(
       map(this.extractData));
   }
+  getAutoAssignmentPairings(): Observable<any> {
+    // Returns a list of strings of added relationships
+    return this.http.get(endpoint + 'Client/AutoAssignmentPairs').pipe(
+      map(this.extractData));
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -215,17 +220,16 @@ export class SantaApiPostService {
     return this.http.post(endpoint + 'Client/' + id + "/Password", {}).pipe(
       map(this.extractData));
   }
-  postAutoAssignmentRequest(): Observable<any> {
-    // Returns a list of strings of added relationships
-    return this.http.post(endpoint + 'Client/AutoAssign', {}).pipe(
-      map(this.extractData));
-  }
   postQuestionsToSurvey(surveyID: string, questions: SurveyQuestionXrefsResponseModel): Observable<any> {
     return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions).pipe(
       map(this.extractData));
   }
   postAssignmentStatus(assignmentStatusResponse: NewAssignmentStatusResponse): Observable<any> {
     return this.http.post(endpoint + 'AssignmentStatus', assignmentStatusResponse).pipe(
+      map(this.extractData));
+  }
+  postSelectedAutoAssignments(assignmentPairingResponse: SelectedAutoAssignmentsResponse): Observable<any> {
+    return this.http.post(endpoint + 'Client/AutoAssignments', assignmentPairingResponse).pipe(
       map(this.extractData));
   }
   searchClients(body: SearchQueryModelResponse): Observable<any> {

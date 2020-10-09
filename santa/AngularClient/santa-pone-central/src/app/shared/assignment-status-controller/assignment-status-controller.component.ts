@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { MapService } from 'src/app/services/mapService.service';
-import { SantaApiPutService } from 'src/app/services/santaApiService.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileRecipient } from 'src/classes/profile';
 import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';

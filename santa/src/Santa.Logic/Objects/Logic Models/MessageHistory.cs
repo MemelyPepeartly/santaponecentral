@@ -38,6 +38,10 @@ namespace Santa.Logic.Objects
         /// Reciever messages on the grey side. There is no client meta because more than one admin can be the people sending a message
         /// </summary>
         public List<Message> recieverMessages { get; set; }
+        /// <summary>
+        /// Count of all unread messages on the reciever messages
+        /// </summary>
+        public int unreadCount { get; set; }
 
     }
 }

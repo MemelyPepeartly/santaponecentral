@@ -58,15 +58,52 @@
                 </mat-tab-group>
              </div>
           </mat-tab>
-          <mat-tab label="Who is SantaPone?">
+          <mat-tab label="Who are the organizers?">
             <div class="small-box mat-elevation-z8 contentBox">
-               <h1>Who is SantaPone?</h1>
-               <img style="width: 150px;" src="../../assets/images/spinners/LoadingShark.gif">
-               <p>
-                  Agent SantaPone here, and totally NOT a shark! I am one of the event organizers and head up the Santapone Authorization Networking and Telecommunication
-                  Administration of Pretty Online Notification Equines, or better known as S.A.N.T.A.P.O.N.E.
-                  It is my mission to bring cheer to the world, and enlist you, dearest Anon's, to the cause!
-               </p>
+               <h1>Who are the organizers?</h1>
+               <mat-tab-group mat-align-tabs="center">
+                  <mat-tab label="SantaPone">
+                    <div class="small-box mat-elevation-z8 contentBox">
+                        <div class="whoIsDiv"><h2 class="whoIsHeaderText">SantaPone</h2></div>
+                        <mat-divider class="center" [inset]="true"></mat-divider>
+                        <app-small-loading-spin [spinnerType]="1"></app-small-loading-spin>
+                        <mat-divider class="center" [inset]="true"></mat-divider>
+                        <br>
+                        <p>
+                          Howdy nerds! I’m SantaPone, a delightful little pony and definitely NOT a southeastern blue shark wearing a Twilight Sparkle mask in an attempt to infiltrate into pony society because I crave friendship.
+                          :^) Since 2015 it’s been my mission to give everycreature a happy Horsemas full of magic and memery, and I’m recruiting (you) to help!
+                        </p>
+                    </div>
+                  </mat-tab>
+                  <mat-tab label="Cardslut">
+                    <div class="small-box mat-elevation-z8 contentBox">
+                      <div class="whoIsDiv"><h2 class="whoIsHeaderText">CardSlut</h2></div>
+                      <mat-divider class="center" [inset]="true"></mat-divider>
+                      <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
+                      <mat-divider class="center" [inset]="true"></mat-divider>
+                      <br>
+                      <p>
+                        Heya! I’m CardSlut: SantaPone’s holiday card dragon assistant!
+                        Since 2015 it’s been my mission to send out as much holiday cheer in the form of a Horsemas card (and other goodies) that I can.
+                        One small thing can be the biggest thing of all to someone during the holidays and I’m recruiting (You) to spread some cheer!
+                      </p>
+                    </div>
+                  </mat-tab>
+                  <mat-tab label="Kiwi">
+                    <div class="small-box mat-elevation-z8 contentBox">
+                      <div class="whoIsDiv"><h2 class="whoIsHeaderText">Kiwi</h2></div>
+                      <mat-divider class="center" [inset]="true"></mat-divider>
+                      <!--<app-small-loading-spin [spinnerType]="1"></app-small-loading-spin>-->
+                      <img src="../../assets/images/kiwi.png" style="display: block; width: 200px; margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px;">
+                      <mat-divider class="center" [inset]="true"></mat-divider>
+                      <br>
+                      <p>
+                        I'm Kiwi, the overseas operative for this operation, been involved since the very beginning of this wonderful thing. I'm here to help out with questions anons have in the stranger timezones. For the past couple of years I've also been the creator behind the end of year group picture that is made, curating the OCs from that current years Secret Santa as a sort of memento to all the great art and creations that anons and drawfriends have done a lot of work to make.
+                        >Any rumours of my numerous deaths are overly exaggerated
+                      </p>
+                    </div>
+                  </mat-tab>
+                </mat-tab-group>
             </div>
           </mat-tab>
           <mat-tab label="I don't have a login!">

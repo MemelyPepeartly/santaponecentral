@@ -166,5 +166,8 @@
       }
     }
   },
-  "defaultProject": "santa-pone-central"
+  "defaultProject": "santa-pone-central",
+  "cli": {
+    "analytics": false
+  }
 }

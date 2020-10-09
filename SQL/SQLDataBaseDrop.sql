@@ -17,3 +17,22 @@ DROP TABLE app.BoardEntry;
 DROP TABLE app.EntryType;
 
 DROP SCHEMA app;
+
+
+SELECT * FROM app.SurveyResponse;
+SELECT * FROM app.SurveyQuestionOptionXref;
+SELECT * FROM app.SurveyOption;
+SELECT * FROM app.SurveyQuestionXref;
+SELECT * FROM app.SurveyQuestion;
+SELECT * FROM app.Survey;
+SELECT * FROM app.ChatMessage;
+SELECT * FROM app.AssignmentStatus;
+SELECT * FROM app.ClientRelationXref;
+SELECT * FROM app.EventType;
+SELECT * FROM app.ClientTagXref;
+SELECT * FROM app.Client;
+SELECT * FROM app.ClientStatus;
+SELECT * FROM app.Tag;
+
+SELECT * FROM app.BoardEntry;
+SELECT * FROM app.EntryType;

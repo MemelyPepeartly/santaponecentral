@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
 import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../../classes/responseTypes'
-import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santaApiService.service';
+import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
-import { MapService, MapResponse } from '../../services/mapService.service';
+import { MapService, MapResponse } from '../../services/mapper.service';
 import { StatusConstants } from '../../shared/constants/StatusConstants.enum';
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';

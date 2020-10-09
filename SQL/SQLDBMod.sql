@@ -36,9 +36,28 @@
 --ALTER TABLE app.Client ADD hasAccount BIT NOT NULL DEFAULT 0
 --alter table app.Client drop constraint [DF__Client__hasAccou__230D49A5]
 --ALTER TABLE app.Client DROP COLUMN hasAccount
+--ALTER TABLE app.SurveyQuestionOptionXref DROP COLUMN sortOrder
+--ALTER TABLE app.SurveyQuestionXref DROP COLUMN sortOrder
+--ALTER TABLE app.SurveyQuestionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+--ALTER TABLE app.SurveyQuestionOptionXref ADD sortOrder INT NOT NULL DEFAULT 0;
+-- ALTER TABLE app.SurveyQuestion ALTER COLUMN questionText nvarchar(300) NOT NULL;
 
 --UPDATE app.Client SET hasAccount=1
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
 
 --TRUNCATE TABLE app.AssignmentStatus
+
+-- DELETE FROM app.ChatMessage
+-- DELETE FROM app.ClientRelationXref
+-- DELETE FROM app.BoardEntry
+-- DELETE FROM app.EntryType
+
+DELETE FROM app.SurveyResponse;
+DELETE FROM app.SurveyQuestionOptionXref;
+DELETE FROM app.SurveyOption;
+DELETE FROM app.SurveyQuestionXref;
+DELETE FROM app.SurveyQuestion;
+DELETE FROM app.Survey;
+
+-- ALTER TABLE app.ClientRelationXref DROP COLUMN completed

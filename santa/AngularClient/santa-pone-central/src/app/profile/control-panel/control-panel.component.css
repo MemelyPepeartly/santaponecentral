@@ -14,6 +14,10 @@ mat-card
     display: inline-block;
     min-width: 200px;
 }
+.cardHeader
+{
+  text-align: left;
+}
 #overlay
 {
     position: fixed; /* Sit on top of the page content */

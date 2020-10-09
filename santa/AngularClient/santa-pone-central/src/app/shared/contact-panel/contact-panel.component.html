@@ -27,7 +27,7 @@
             <div #chatFrame *ngIf="selectedHistory != undefined && !showLoading" id="chat-window" class="mat-elevation-z5">
                 <ng-container *ngFor="let message of totalHistory()">
                     <div class="date-div">
-                        <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Daylight Time) </span>
+                        <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Standard Time) </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
                     <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage || (isAdmin && message.fromAdmin),

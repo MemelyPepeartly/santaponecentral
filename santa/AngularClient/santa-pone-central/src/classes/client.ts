@@ -30,6 +30,7 @@ export class RelationshipMeta {
 }
 export class AllowedAssignmentMeta {
   clientMeta: ClientMeta;
+  clientEvents: Array<EventType> = [];
   tags: Array<Tag> = [];
   totalSenders: number;
   totalAssignments: number;
@@ -38,5 +39,9 @@ export class AssignmentStatus {
   assignmentStatusID: string;
   assignmentStatusName: string;
   assignmentStatusDescription: string;
+}
+export class PossiblePairing {
+  sendingAgent: Client;
+  possibleAssignment: Client;
 }
 
