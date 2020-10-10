@@ -61,7 +61,7 @@ namespace Santa.Api.Controllers
             }
             catch (ArgumentNullException e)
             {
-                logger.LogInformation($"Get all clients failed: {e.Message}");
+                logger.LogError($"Get all clients failed: {e.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
             
