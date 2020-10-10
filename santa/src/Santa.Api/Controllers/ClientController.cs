@@ -15,6 +15,7 @@ using Santa.Logic.Objects;
 using Santa.Api.SendGrid;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects.Information_Objects;
+using Microsoft.Extensions.Logging;
 
 namespace Santa.Api.Controllers
 {
@@ -27,12 +28,15 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         private readonly IAuthHelper authHelper;
         private readonly IMailbag mailbag;
+        private readonly ILogger logger;
 
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag)
+        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, ILogger<ClientController> _logger = null)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
+            logger = _logger ?? throw new ArgumentNullException(nameof(_logger));
+
         }
         // GET: api/Client
         /// <summary>
@@ -45,16 +49,19 @@ namespace Santa.Api.Controllers
         {
             try
             {
-
+                logger.LogInformation("Get all cients requested");
                 List <Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
+                    logger.LogInformation("No clients found");
                     return NoContent();
                 }
+                logger.LogInformation("Completed get all clients");
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (ArgumentNullException e)
             {
+                logger.LogInformation($"Get all clients failed: {e.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
             
