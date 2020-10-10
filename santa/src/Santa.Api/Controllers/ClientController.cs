@@ -46,19 +46,15 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                System.Diagnostics.Trace.WriteLine("Get all cients requested");
                 List <Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
-                    System.Diagnostics.Trace.WriteLine("No clients found");
                     return NoContent();
                 }
-                System.Diagnostics.Trace.WriteLine("Completed get all clients");
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception e)
             {
-                System.Diagnostics.Trace.WriteLine($"Get all clients failed: {e.InnerException.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException.Message);
             }
             
