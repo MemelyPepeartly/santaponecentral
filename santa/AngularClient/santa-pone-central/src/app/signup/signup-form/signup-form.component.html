@@ -37,7 +37,7 @@
                     <div class="error" *ngIf="nameFormControls.email.errors && nameFormControls.email.touched">
                         <div *ngIf="nameFormControls.email.errors.required">An email is required</div>
                         <div *ngIf="nameFormControls.email.errors.maxlength">Email is too long. 50 Characters is the maximum</div>
-                        <div *ngIf="nameFormControls.email.errors.pattern">Email must be a proper email</div>
+                        <div *ngIf="nameFormControls.email.errors.pattern">Email must be be all lowercase and a proper email@domain.xxx email</div>
                     </div>
 
                     <div>
