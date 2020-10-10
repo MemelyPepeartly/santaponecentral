@@ -28,15 +28,12 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         private readonly IAuthHelper authHelper;
         private readonly IMailbag mailbag;
-        private readonly ILogger logger;
 
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, ILogger<ClientController> _logger = null)
+        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
-            logger = _logger ?? throw new ArgumentNullException(nameof(_logger));
-
         }
         // GET: api/Client
         /// <summary>
@@ -49,19 +46,19 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                logger.LogInformation("Get all cients requested");
+                System.Diagnostics.Trace.WriteLine("Get all cients requested");
                 List <Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
-                    logger.LogInformation("No clients found");
+                    System.Diagnostics.Trace.WriteLine("No clients found");
                     return NoContent();
                 }
-                logger.LogInformation("Completed get all clients");
+                System.Diagnostics.Trace.WriteLine("Completed get all clients");
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception e)
             {
-                logger.LogError($"Get all clients failed: {e.InnerException.Message}");
+                System.Diagnostics.Trace.WriteLine($"Get all clients failed: {e.InnerException.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException.Message);
             }
             
