@@ -59,10 +59,10 @@ namespace Santa.Api.Controllers
                 logger.LogInformation("Completed get all clients");
                 return Ok(clients.OrderBy(c => c.nickname));
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                logger.LogError($"Get all clients failed: {e.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                logger.LogError($"Get all clients failed: {e.InnerException.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException.Message);
             }
             
         }
