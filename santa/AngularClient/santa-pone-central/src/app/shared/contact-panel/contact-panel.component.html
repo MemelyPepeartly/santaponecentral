@@ -18,8 +18,8 @@
             <div *ngIf="selectedHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z5">
                 <span>No chat selected! Select a chat history to see messages</span>
             </div>
-            <div *ngIf="showLoading" class="spinner-container">
-                <app-small-loading-spin></app-small-loading-spin>
+            <div *ngIf="showLoading" id="loader-window" class="mat-elevation-z5">
+              <app-loading-spin [spinnerType]="1"></app-loading-spin>
             </div>
             <div class="actionBarDiv" *ngIf="showActionProgressBar">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>

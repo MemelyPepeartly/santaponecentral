@@ -20,6 +20,14 @@ mat-card
     margin-left: auto;
     margin-right: auto;
 }
+#loader-window
+{
+  height: fit-content;
+  border-radius: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
 #chat-window
 {
     height: 500px;
@@ -28,7 +36,6 @@ mat-card
     margin-left: 5px;
     margin-right: 5px;
     overflow: scroll;
-    height: xyz;
 }
 ::-webkit-scrollbar {
     width: 0px;
@@ -107,17 +114,6 @@ mat-card
 {
     text-align: left;
     margin-left: 10px;
-}
-.spinner-container
-{
-    display: block;
-    text-align: center;
-    height: 100%;
-    position: absolute;
-    bottom: 50%;
-    top: 50%;
-    left: 50%;
-    right: 50%;
 }
 .actionBarDiv
 {
