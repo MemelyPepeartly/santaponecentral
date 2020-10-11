@@ -135,10 +135,10 @@ export class ProfileComponent implements OnInit {
   }
   public hideWindow()
   {
-    if(!this.chatComponent.markingRead)
+    if(!this.chatComponent.markingRead && !this.postingMessage && !this.puttingMessage)
     {
       this.selectedHistory = new MessageHistory();
-      this.profileService.getHistories(this.profile.clientID);
+      this.profileService.getHistories(this.profile.clientID, true);
       this.showChat = false;
       this.showOverlay = false;
     }

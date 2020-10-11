@@ -3,7 +3,7 @@
 </div>
 
 <!-- Chat Window -->
-<div class="container chatContainer mat-elevation-z3 clientCard scrollbar scrollbar-primary" *ngIf="showChat == true">
+<div class="contact-container mat-elevation-z3" *ngIf="showChat">
     <app-contact-panel
       (messageUpdatedEvent)="softRefreshSelectedChat($event)"
       (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)"
@@ -21,7 +21,7 @@
       [reciever]="adminRecieverMeta"
       [onProfile]="true"
       [eventType]="selectedHistory.eventType"
-      [disabled]="postingMessage || refreshing">
+      [disabled]="postingMessage || refreshing || gettingSelectedHistory">
     </app-input-control>
 </div>
 
