@@ -18,23 +18,37 @@
     margin-right: 10px;
     margin-top: 10px;
 }
-.container {
-    position: fixed;
-    width: 100%;
-    min-width: 600px;
-    height: 90%;
-    top:5%;
-    left: 0;
-    right: 0;
-    background-color:white;
-    z-index: 3;
-    border-radius: 8px;
-}
-.chatContainer
+.selected-anon-container
 {
-    padding: 15px;
-    height: fit-content;
-    min-width: 600px;
+  position: fixed;
+  width: 85%;
+  min-width: 600px;
+  height: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color:white;
+  z-index: 3;
+  border-radius: 8px;
+}
+.contact-container
+{
+  position: fixed;
+  width: 85%;
+  min-width: 600px;
+  height: fit-content;
+  max-height: 90vh;
+  padding: 15px;
+  background-color: white;
+  z-index: 2;
+  border-radius: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow-y: scroll;
+}
+.contact-container::-webkit-scrollbar {
+  display: none;
 }
 #overlay
 {

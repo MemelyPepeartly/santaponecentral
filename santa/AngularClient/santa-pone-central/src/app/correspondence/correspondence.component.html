@@ -1,7 +1,7 @@
 <div id="overlay" *ngIf="showClientCard == true || showChat == true" (click)="hideWindow();">
 </div>
 
-<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard == true">
+<div class="selected-anon-container mat-elevation-z3" *ngIf="showClientCard == true">
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
       [loadingClient]="loadingClient"
@@ -10,7 +10,7 @@
       (refreshSelectedClient)="updateSelectedClient($event)"></app-selected-anon>
   </div>
 </div>
-<div class="container chatContainer mat-elevation-z3 clientCard" *ngIf="showChat == true">
+<div class="contact-container mat-elevation-z3" *ngIf="showChat == true">
     <app-contact-panel #messages
       (messageUpdatedEvent)="updateChats($event)"
       (manualRefreshClickedEvent)="manualRefreshSelectedChat($event, false)"
