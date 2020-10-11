@@ -199,8 +199,8 @@ export class SignupFormComponent implements OnInit {
   public createFormGroups()
   {
     this.clientInfoFormGroup = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
-      lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern("[A-Za-z]{1,20}")]],
+      firstName: ['', [Validators.required, Validators.maxLength(20)]],
+      lastName: ['', [Validators.required, Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.maxLength(50), Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]]
     });
     this.clientAddressFormGroup = this.formBuilder.group({
