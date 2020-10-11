@@ -54,20 +54,20 @@ VALUES
     (@sharedSurveyQuestion1GUID,'Who are your favorite characters?', 1, 0),
     (@sharedSurveyQuestion2GUID,'Are you okay with spaghetti on the package?', 1, 1), -- Option
     (@sharedSurveyQuestion3GUID,'Are you okay with lewd?', 1, 1), -- Option
-    (@sharedSurveyQuestion4GUID,'Are you okay with edible items?', 1, 1), -- Option
+    (@sharedSurveyQuestion4GUID,'Are you okay with food items? If so, do you have any allergies?', 1, 0),
     (@sharedSurveyQuestion5GUID,'Any additional comments or concerns?', 1 ,0),
     (@sharedSurveyQuestion6GUID,'If you’re a past participant, what was your holiday ID? (N/A if this does not apply)', 0, 0),
     (@sharedSurveyQuestion7GUID,'If you were a past participant, would you like to keep your holiday ID or get a new one?', 0, 0),
 
     -- Gift Exchange --
-    (@giftExchangeSurveyQuestion1,'Are you okay with receiving extra assignments?', 0, 1), -- Option
+    (@giftExchangeSurveyQuestion1,'Are you okay with receiving extra assignments for things such as Grinch rescue?', 0, 1), -- Option
     (@giftExchangeSurveyQuestion2,'Do you like handmade items?', 1, 1), -- Option
     (@giftExchangeSurveyQuestion3,'What is your wishlist?', 1, 0),
 
     -- Card Exchange --
     (@cardExchangeSurveyQuestion1,'How many cards would you like to exchange?', 0, 0),
     (@cardExchangeSurveyQuestion2,'Are you a mass mailer? Note: First-year participants that are mass mailers will have a max of 20 assignments. Return mailers can have higher assignment caps.', 0, 1), -- Option
-    (@cardExchangeSurveyQuestion3,'Do you aknowledge your info will be shared with other assigned to send to you?', 0 ,1), -- Option
+    (@cardExchangeSurveyQuestion3,'Do you acknowledge your info will be shared with others assigned to send to you?', 0 ,1), -- Option
     (@cardExchangeSurveyQuestion4,'Are you willing to send cards internationally?', 0, 1), -- Option
     (@cardExchangeSurveyQuestion5,'Some generous anons like to send extra cards or small goodies to every single participant in the event (this is separate from the regular exchange). Do you consent to receiving such items? You do not have to send anything back.', 0, 1); -- Option
     
@@ -86,11 +86,22 @@ DECLARE @surveyOptionID1GUID UNIQUEIDENTIFIER = NEWID();
 DECLARE @surveyOptionID2GUID UNIQUEIDENTIFIER = NEWID();
 DECLARE @surveyOptionID3GUID UNIQUEIDENTIFIER = NEWID();
 
+DECLARE @surveyOptionID4GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @surveyOptionID5GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @surveyOptionID6GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @surveyOptionID7GUID UNIQUEIDENTIFIER = NEWID();
+
 INSERT INTO app.SurveyOption (surveyOptionID, displayText, surveyOptionValue)
 VALUES
     (@surveyOptionID1GUID,'Yes','1'),
     (@surveyOptionID2GUID,'No','1'),
-    (@surveyOptionID3GUID,'Not Applicable','1');
+    (@surveyOptionID3GUID,'Not Applicable','1'),
+
+    (@surveyOptionID4GUID,'Yes, go nuts','1'),
+    (@surveyOptionID5GUID,'Mildly suggestive is fine','1'),
+    (@surveyOptionID6GUID,'No, none at all','1'),
+
+    (@surveyOptionID7GUID,'Yes, but I perfer official merchandise','1');
 
 INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
 VALUES
@@ -123,8 +134,9 @@ VALUES
 
 INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 VALUES
-    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID1GUID, 1, 1),
-    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID2GUID, 2, 1),
+    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID4GUID, 1, 1),
+    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID5GUID, 2, 1),
+    (NEWID(), @sharedSurveyQuestion2GUID, @surveyOptionID6GUID, 3, 1),
 
     (NEWID(), @sharedSurveyQuestion3GUID, @surveyOptionID1GUID, 1, 1),
     (NEWID(), @sharedSurveyQuestion3GUID, @surveyOptionID2GUID, 2, 1),
@@ -136,7 +148,8 @@ VALUES
     (NEWID(), @giftExchangeSurveyQuestion1, @surveyOptionID2GUID, 2, 1),
 
     (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID1GUID, 1, 1),
-    (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID2GUID, 2, 1),
+    (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID7GUID, 2, 1),
+    (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID2GUID, 3, 1),
 
     (NEWID(), @cardExchangeSurveyQuestion2, @surveyOptionID1GUID, 1, 1),
     (NEWID(), @cardExchangeSurveyQuestion2, @surveyOptionID2GUID, 2, 1),

@@ -9,6 +9,23 @@
           </mat-card-content>
         </mat-card>
       </div>
+      <div class="contentBox small-box mat-elevation-z8" *ngIf="showCovidWarning">
+        <mat-card>
+          <mat-card-content>
+            <mat-card-title>Covid-19 Announcement! <mat-icon>warning</mat-icon></mat-card-title>
+            <mat-card-subtitle class="subtleError">
+              Due to the ongoing pandemic we here at SantaPone Central have had to adjust our plans for the event in the best interest of all our Agents!
+              International gifting is being temporarily restricted this year and all Agents are to be limited to shipping within their own countries/continents only.
+            </mat-card-subtitle>
+            <span>
+              International delays and restrictions as a result of Covid-19 have made shipping times too unreliable to safely mail packages in reasonable timeframes for the event.
+              Sadly this may limit some of our more geographically rare participants however we will do our best to find suitable matches for everyone. This change is not permanent and we look forward to going back to normal
+              in regards to international participation in future events! <u>Cards will proceed as normal</u> with the understanding that any international letters may take upwards of several weeks to months to arrive.
+              Any extra gifts or items sent internationally between Agents is done so at their own discretion.
+            </span>
+          </mat-card-content>
+        </mat-card>
+      </div>
       <mat-tab-group mat-align-tabs="center" dynamicHeight>
         <mat-tab label="What is it?">
             <div class="small-box mat-elevation-z8 contentBox">
