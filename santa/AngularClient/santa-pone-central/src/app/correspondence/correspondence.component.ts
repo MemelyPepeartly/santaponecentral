@@ -149,13 +149,14 @@ export class CorrespondenceComponent implements OnInit {
 
     await this.SantaApiPut.putMessageReadAll(response).toPromise();
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, true);
-
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.puttingMessage = false;
 
     //Updates all the chats to update the read messages on that particular chat against all the others for sorting
     await this.ChatService.gatherAllChats(this.subject.clientID, true);
+
+    this.puttingMessage = false;
+
+
 
   }
   public async hideWindow()
