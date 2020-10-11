@@ -37,7 +37,7 @@
       <!-- Only show a general history if they are not an admin and the app is not initializing -->
       <button mat-raised-button *ngIf="!isAdmin && !initializing"
         (click)="historySelected(null)"
-        [disabled]="gettingProfile || gettingGeneralHistory"
+        [disabled]="gettingProfile || gettingGeneralHistory || gettingAllHistories || gettingProfile"
         [matBadge]="generalHistory.unreadCount"
         [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence</button>
     </mat-card-actions>
