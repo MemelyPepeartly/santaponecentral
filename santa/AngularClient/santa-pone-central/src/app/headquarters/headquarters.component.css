@@ -1,11 +1,11 @@
 .container {
     position: fixed;
-    width: 100%;
+    width: 85%;
     min-width: 600px;
     height: 85%;
-    top: 8%;
-    left: 0;
-    right: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color:white;
     z-index: 3;
     border-radius: 8px;
