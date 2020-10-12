@@ -7,9 +7,14 @@
 
     <ng-container *ngIf="!puttingAssignmentStatus">
       <mat-divider [inset]="true"></mat-divider>
-      <mat-toolbar class="centeredToolbar">Current Status</mat-toolbar>
-      <mat-card-title class="statusTitle">{{ assignment.assignmentStatus.assignmentStatusName }}</mat-card-title>
-      <mat-card-subtitle>{{ assignment.assignmentStatus.assignmentStatusDescription }}</mat-card-subtitle>
+      <div class="currentStatusContainer">
+        <div class="currentStatusDiv">
+          <mat-toolbar class="centeredToolbar">Current Status</mat-toolbar>
+          <mat-card-title class="statusTitle">{{ assignment.assignmentStatus.assignmentStatusName }}</mat-card-title>
+          <mat-card-subtitle>{{ assignment.assignmentStatus.assignmentStatusDescription }}</mat-card-subtitle>
+        </div>
+        <div [ngClass]="{'completedBG' : isCompleted(assignment)}"></div>
+      </div>
       <mat-divider [inset]="true"></mat-divider>
     </ng-container>
 

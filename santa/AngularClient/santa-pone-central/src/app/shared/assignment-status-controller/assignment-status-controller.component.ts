@@ -5,6 +5,7 @@ import { SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileRecipient } from 'src/classes/profile';
 import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
+import { AssignmentStatusConstants } from '../constants/AssignmentStatusConstants.enum';
 
 @Component({
   selector: 'app-assignment-status-controller',
@@ -112,5 +113,9 @@ export class AssignmentStatusControllerComponent implements OnInit {
   public setSelectedStatus(assignmentStatus: AssignmentStatus)
   {
     this.selectedAssignmentStatus = assignmentStatus;
+  }
+  public isCompleted(assignment: ProfileRecipient)
+  {
+    return assignment.assignmentStatus.assignmentStatusName == AssignmentStatusConstants.COMPLETED
   }
 }
