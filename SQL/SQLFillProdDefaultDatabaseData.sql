@@ -7,10 +7,6 @@ DECLARE @client1IDGUID UNIQUEIDENTIFIER;
 DECLARE @client2IDGUID UNIQUEIDENTIFIER;
 DECLARE @client3IDGUID UNIQUEIDENTIFIER;
 
-DECLARE @tag1IDGUID UNIQUEIDENTIFIER;
-DECLARE @tag2IDGUID UNIQUEIDENTIFIER;
-DECLARE @tag3IDGUID UNIQUEIDENTIFIER;
-
 SET @statusID1GUID = NEWID();
 SET @statusID2GUID = NEWID();
 SET @statusID3GUID = NEWID();
@@ -19,10 +15,6 @@ SET @statusID4GUID = NEWID();
 SET @client1IDGUID = NEWID();
 SET @client2IDGUID = NEWID();
 SET @client3IDGUID = NEWID();
-
-SET @tag1IDGUID = NEWID();
-SET @tag2IDGUID = NEWID();
-SET @tag3IDGUID = NEWID();
 
 INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
 VALUES
@@ -176,11 +168,42 @@ VALUES
     (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
     (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1);
 
+DECLARE @tag1IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag2IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag3IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag4IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag5IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag6IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag7IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag8IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag9IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag10IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag11IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag12IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag13IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag14IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag15IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @tag16IDGUID UNIQUEIDENTIFIER = NEWID();
+
 INSERT INTO app.Tag (tagID, tagName)
 VALUES
-    (@tag1IDGUID, 'Grinch'),
-    (@tag2IDGUID, 'Mass Mailer'),
-    (@tag3IDGUID, 'Mass Mail Recipient');
+    -- (@tag1IDGUID, 'Grinch'),
+    -- (@tag2IDGUID, 'Mass Mailer'),
+    -- (@tag3IDGUID, 'Mass Mail Recipient'),
+    (@tag4IDGUID, 'Accepts Food'),
+    (@tag5IDGUID, 'Canada Only'),
+    (@tag6IDGUID, 'Declines Food'),
+    (@tag7IDGUID, 'US Only'),
+    (@tag8IDGUID, 'Perfers Show Merchandise'),
+    (@tag9IDGUID, 'Perfers Handmade Gifts'),
+    (@tag10IDGUID, 'No Spaghetti'),
+    (@tag11IDGUID, 'Russian'),
+    (@tag12IDGUID, 'No Lewd'),
+    (@tag13IDGUID, 'Lewd'),
+    (@tag14IDGUID, 'US Anon'),
+    (@tag15IDGUID, 'International Anon'),
+    (@tag16IDGUID, 'Spaghetti On the Outside');
+
     
 INSERT INTO app.EntryType (entryTypeID, entryTypeName, entryTypeDescription, adminOnly)
 VALUES
