@@ -11,7 +11,7 @@
                     <mat-card-title>Holiday Information</mat-card-title>
                     <mat-card-subtitle>Holiday ID and name information</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
+                <mat-card-content class="left-margin">
                     <app-small-loading-spin *ngIf="loading"></app-small-loading-spin>
                     <h3 *ngIf="!loading">{{profile.clientNickname}}</h3>
                     <p *ngIf="!loading">{{profile.clientName}}</p>
@@ -24,7 +24,7 @@
                     <mat-card-title>Address</mat-card-title>
                     <mat-card-subtitle>Your mailing address</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
+                <mat-card-content class="left-margin">
                     <app-small-loading-spin *ngIf="loading"></app-small-loading-spin>
                     <div *ngIf="!loading">
                         <p>{{ profile.address.addressLineOne }}</p>
