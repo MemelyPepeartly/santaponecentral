@@ -30,6 +30,7 @@
     </form>
     <div class="actionButtonContainer">
       <button mat-raised-button matStepperPrevious *ngIf="isFirstQuestion(question) == false">Back</button>
+      <mat-card-subtitle style="margin-top: 15px;" *ngIf="isLastQuestion(question) == true">Once you are done, ensure you have answered all the other survey questions, and the next button will allow you to continue to submit your answers below.</mat-card-subtitle>
       <button mat-raised-button matStepperNext *ngIf="isLastQuestion(question) == false" [disabled]="surveyFormGroup.get(question.surveyQuestionID).invalid">Next</button>
     </div>
   </mat-step>
