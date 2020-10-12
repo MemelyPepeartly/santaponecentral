@@ -13,7 +13,7 @@
       [disabled]="messageFormControl.invalid || disabled" (click)="emitMessage(messageFormControl.value)">
       <mat-icon mat-icon-button>send</mat-icon>
     </button>
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">

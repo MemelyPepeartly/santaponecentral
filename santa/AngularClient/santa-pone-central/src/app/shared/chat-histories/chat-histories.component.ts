@@ -4,6 +4,7 @@ import { ProfileService } from 'src/app/services/profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
 import { Client } from 'src/classes/client';
+import { AssignmentStatusConstants } from '../constants/AssignmentStatusConstants.enum';
 
 @Component({
   selector: 'app-chat-histories',
@@ -39,5 +40,9 @@ export class ChatHistoriesComponent implements OnInit {
   public emitSelectedRecipientInformation(historyMeta: ClientMeta, historyEvent: EventType)
   {
     this.recipientSelectedEvent.emit({meta: historyMeta, event: historyEvent});
+  }
+  public isCompleted(history: MessageHistory)
+  {
+    return history.assignmentStatus.assignmentStatusName == AssignmentStatusConstants.COMPLETED;
   }
 }
