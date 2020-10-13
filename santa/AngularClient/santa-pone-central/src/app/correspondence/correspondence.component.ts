@@ -43,6 +43,7 @@ export class CorrespondenceComponent implements OnInit {
   public events: Array<EventType> = []
 
   public gettingAllChats: boolean = false;
+  public softGettingAllChats: boolean = false;
   public gettingAllEventChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
@@ -54,6 +55,7 @@ export class CorrespondenceComponent implements OnInit {
   public showChat: boolean = false;
   public postingMessage: boolean = false;
   public updateOnClickaway: boolean = false;
+  public clickAwayLocked: boolean = false;
 
   public selectedAnon: Client = new Client();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
@@ -78,8 +80,10 @@ export class CorrespondenceComponent implements OnInit {
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
       this.gettingAllChats = status;
     });
+    this.ChatService.softGettingAllChats.subscribe((status: boolean) => {
+      this.softGettingAllChats = status;
+    });
     this.ChatService.gettingAllEventChats.subscribe((status: boolean) => {
-
       this.gettingAllEventChats = status;
     });
     this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
@@ -161,24 +165,30 @@ export class CorrespondenceComponent implements OnInit {
   }
   public async hideWindow()
   {
-    if(this.chatComponent == undefined && this.showClientCard == true)
+    if(!this.clickAwayLocked)
     {
-      this.showClientCard = false;
-      this.selectedAnon = new Client();
-    }
-    // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
-    else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
-    {
-      this.showChat = false;
-      this.selectedHistory = new MessageHistory();
-      // If the updater variable is true, refresh on clicking away
-      if(this.updateOnClickaway)
+      if(this.chatComponent == undefined && this.showClientCard == true)
       {
-        await this.ChatService.gatherAllChats(this.subject.clientID, true);
-        this.updateOnClickaway = false;
+        this.showClientCard = false;
+        this.selectedAnon = new Client();
+      }
+      // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
+      else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
+      {
+        this.showChat = false;
+        this.selectedHistory = new MessageHistory();
+        // If the updater variable is true, refresh on clicking away
+        if(this.updateOnClickaway)
+        {
+          await this.ChatService.gatherAllChats(this.subject.clientID, true);
+          this.updateOnClickaway = false;
+        }
       }
     }
-
+  }
+  public setClickawayLock(status: boolean)
+  {
+    this.clickAwayLocked = status;
   }
   public async populateSelectAnonCard(meta: ClientMeta)
   {
