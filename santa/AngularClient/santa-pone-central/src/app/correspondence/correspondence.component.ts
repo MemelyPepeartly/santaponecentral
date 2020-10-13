@@ -44,7 +44,6 @@ export class CorrespondenceComponent implements OnInit {
 
   public gettingAllChats: boolean = false;
   public softGettingAllChats: boolean = false;
-  public gettingAllEventChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
   public puttingMessage: boolean = false;
@@ -82,9 +81,6 @@ export class CorrespondenceComponent implements OnInit {
     });
     this.ChatService.softGettingAllChats.subscribe((status: boolean) => {
       this.softGettingAllChats = status;
-    });
-    this.ChatService.gettingAllEventChats.subscribe((status: boolean) => {
-      this.gettingAllEventChats = status;
     });
     this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
       this.gettingSelectedHistory = status;
@@ -159,9 +155,6 @@ export class CorrespondenceComponent implements OnInit {
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.puttingMessage = false;
-
-    //Updates all the chats to update the read messages on that particular chat against all the others for sorting
-    await this.ChatService.gatherAllChats(this.subject.clientID, true);
   }
   public async hideWindow()
   {

@@ -17,7 +17,7 @@
       (manualRefreshClickedEvent)="manualRefreshSelectedChat($event, false)"
       [refreshing]="refreshing"
       [showActionProgressBar]="postingMessage || puttingMessage"
-      [showLoading]="gettingAllChats || gettingAllEventChats || gettingSelectedHistory && selectedHistory.subjectMessages.length + selectedHistory.recieverMessages.length == 0"
+      [showLoading]="gettingAllChats || gettingSelectedHistory && selectedHistory.subjectMessages.length + selectedHistory.recieverMessages.length == 0"
       [selectedHistory]="selectedHistory"
       [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
     <app-input-control
@@ -53,6 +53,7 @@
           <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
             [viewerClient]="subject"
             [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByUnread()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -71,6 +72,7 @@
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
             [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByGeneral()"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -89,6 +91,7 @@
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
             [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByEvent(event)"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
@@ -107,6 +110,7 @@
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
             [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="allChats"
             (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
