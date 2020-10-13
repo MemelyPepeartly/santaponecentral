@@ -18,6 +18,7 @@ export class ChatHistoriesComponent implements OnInit {
   @Input() onProfile: boolean = false;
   @Input() histories: Array<MessageHistory>
   @Input() disabled: boolean = false;
+  @Input() isRefreshingChats: boolean = false;
   @Input() viewerClient: Client = new Client();
 
   columns: string[] = ["sender", "assignment", "event", "status", "contact"];
@@ -41,8 +42,12 @@ export class ChatHistoriesComponent implements OnInit {
   {
     this.recipientSelectedEvent.emit({meta: historyMeta, event: historyEvent});
   }
-  public isCompleted(history: MessageHistory)
+  public isCompleted(history: MessageHistory) : boolean
   {
     return history.assignmentStatus.assignmentStatusName == AssignmentStatusConstants.COMPLETED;
+  }
+  public isDisabled(history: MessageHistory) : boolean
+  {
+    return this.disabled || (this.isAdmin && this.onProfile) || this.viewerClient.clientID == history.conversationClient.clientID
   }
 }

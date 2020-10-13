@@ -92,6 +92,10 @@ th
       margin-left: auto;
       margin-right: auto;
     }
+    .reactiveDataColumn
+    {
+      width: 75px;
+    }
     .chatDescription
     {
       display: block;

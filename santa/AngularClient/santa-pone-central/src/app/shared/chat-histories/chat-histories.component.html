@@ -52,9 +52,9 @@
         <!-- Disabled if disabled overall, is an admin and on profile, if the viewerClient is the same as the conversation client (implying it is the same person), or the conversation client does not have an account-->
         <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount"
           (click)="emitSelectedHistory(history);"
-          [disabled]="disabled || (isAdmin && onProfile) || viewerClient.clientID == history.conversationClient.clientID"
+          [disabled]="isDisabled(history)"
           [matBadge]="history.unreadCount"
-          [matBadgeHidden]="history.unreadCount == 0">Correspondence</button>
+          [matBadgeHidden]="history.unreadCount == 0">{{ isDisabled(history) && isRefreshingChats ? 'Refreshing...' : 'Correspondence' }}</button>
         <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
       </td>
     </ng-container>
