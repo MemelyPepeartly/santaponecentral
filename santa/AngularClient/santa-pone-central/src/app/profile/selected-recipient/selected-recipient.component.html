@@ -6,14 +6,16 @@
             <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s mailing address</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div>
-                <p>{{ selectedRecipient.address.addressLineOne }}</p>
-                <p>{{ selectedRecipient.address.addressLineTwo }}</p>
-                <p>{{ selectedRecipient.address.city }}</p>
-                <p>{{ selectedRecipient.address.state }}</p>
-                <p>{{ selectedRecipient.address.postalCode }}</p>
-                <p>{{ selectedRecipient.address.country }}</p>
-            </div>
+          <mat-divider [inset]="true"></mat-divider>
+          <div class="addressBlock">
+              <p>{{ selectedRecipient.address.addressLineOne }}</p>
+              <p>{{ selectedRecipient.address.addressLineTwo }}</p>
+              <p>{{ selectedRecipient.address.city }}</p>
+              <p>{{ selectedRecipient.address.state }}</p>
+              <p>{{ selectedRecipient.address.postalCode }}</p>
+              <p>{{ selectedRecipient.address.country }}</p>
+          </div>
+          <mat-divider [inset]="true"></mat-divider>
         </mat-card-content>
     </mat-card>
 
@@ -23,8 +25,15 @@
             <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <h3>{{selectedRecipient.recipientClient.clientName }}</h3>
+          <mat-divider [inset]="true"></mat-divider>
+          <h2>Nickname</h2>
+          <p>{{selectedRecipient.recipientClient.clientName }}</p>
+
+          <mat-divider [inset]="true"></mat-divider>
+
+          <h2>Real Name</h2>
           <p>{{selectedRecipient.recipientClient.clientNickname }}</p>
+          <mat-divider [inset]="true"></mat-divider>
         </mat-card-content>
     </mat-card>
 
