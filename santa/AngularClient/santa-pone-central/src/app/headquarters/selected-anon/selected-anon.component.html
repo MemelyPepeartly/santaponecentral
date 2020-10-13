@@ -293,6 +293,7 @@
                   (clickAwayAllowedEvent)="setClickAwayAllowed($event)"
                   (switchClickedEvent)="switchAnon($event)"
                   (removeClickedEvent)="removeRecipient($event)"
+                  (updatedStatusEvent)="emitActionTaken()"
                   [agent]="client"
                   [senders]="getEventSenders(event)"
                   [assignments]="getEventAssignments(event)"></app-assignments-panel>

@@ -629,4 +629,8 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.setClickAwayLockEvent.emit(status);
   }
+  public emitActionTaken()
+  {
+    this.actionTaken.emit(true);
+  }
 }
