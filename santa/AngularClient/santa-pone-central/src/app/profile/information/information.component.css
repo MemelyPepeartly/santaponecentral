@@ -1,56 +1,69 @@
-
-#info-div
-{
-    min-width: 350px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+#info-div {
+  min-width: 350px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
-#addressChangeForm
-{
-    display: block;
+#addressChangeForm {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
 }
-#relationshipEventHeader
+.changeFormField
 {
-    display: block;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-    margin-top: 10px;
+  width: 100%;
 }
-.infoCard
+.changeAddressButton
 {
-    width: 30%;
-    min-width: 300px;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: 10px;
-    margin-top: 10px !important;
-    text-align: left;
-    vertical-align: top;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
 }
-.left-margin
+.changeFormActionButtonDiv
 {
-  margin-left: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
-.action-button
+.changeFormActionButton
 {
-    margin: 5px !important;
+  margin-left: 5px;
 }
-.questionText
-{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
+#relationshipEventHeader {
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
-.error
-{
-    color: #F44336;
+.infoCard {
+  width: 30%;
+  min-width: 300px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 10px;
+  margin-top: 10px !important;
+  text-align: left;
+  vertical-align: top;
 }
-.responseListDiv
-{
+.addressBlock {
+  margin-top: 10px;
+}
+.action-button {
+  margin: 5px !important;
+}
+.questionText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.error {
+  color: #f44336;
+}
+.responseListDiv {
   width: 95%;
   margin-left: auto;
   margin-right: auto;
