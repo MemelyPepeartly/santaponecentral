@@ -763,7 +763,6 @@ namespace Santa.Api.Controllers
                     // Send approval steps for client that was denied, and was accepted after appeal
                     else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                     {
-                        await mailbag.sendUndeniedEmail(updatedClient);
                         await Auth0Steps(updatedClient, status.wantsAccount);
 
                         // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
@@ -773,6 +772,8 @@ namespace Santa.Api.Controllers
                             await repository.UpdateClientByIDAsync(updatedClient);
                             await repository.SaveAsync();
                         }
+                        // After setting if a client has an account or not, sends undenied email
+                        await mailbag.sendUndeniedEmail(updatedClient);
                     }
                     // Send congrats on completing the gift assignments
                     else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)

@@ -28,7 +28,7 @@ namespace Santa.Api.SendGrid
 
                 <body>
                     <div style='width: 100%; text-align: center;'>
-                        <img src='https://derpicdn.net/img/2020/6/10/2370933/large.png' alt='TotallyNotAShark' style='margin-left: auto; margin-right: auto; width: 200px;'>";
+                        <img src='https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/47316544-c98a-4954-adaf-0f3847d88a4b/de4x7vz-4c57d19e-fc3a-41cb-8f6e-1263a57f1b87.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvNDczMTY1NDQtYzk4YS00OTU0LWFkYWYtMGYzODQ3ZDg4YTRiXC9kZTR4N3Z6LTRjNTdkMTllLWZjM2EtNDFjYi04ZjZlLTEyNjNhNTdmMWI4Ny5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.lop-9l47EbixLniXlXc2snyoLxOqIXmZy4eqYi-0Ka4' alt='SecretSantaBadgeOfAuthenticity' style='margin-left: auto; margin-right: auto; width: 300px;'>";
         private const string emailEnd = @"
                     </div>
                 </body>
@@ -205,17 +205,39 @@ namespace Santa.Api.SendGrid
             EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
             string subject = "SantaPone Central Status";
             EmailAddress to = new EmailAddress(recipient.email, "Anon");
-            string plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in. " +
+
+            string plainTextContent = "";
+            string htmlContent =  "";
+
+            if(recipient.hasAccount)
+            {
+                plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in, and be sure to double check your spam folder if any are missed. " +
                 "If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!";
-            string htmlContent = emailStart +
-                @$"
-                    <p>After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in.</p>
+                htmlContent = emailStart +
+                    @$"
+                    <p>After consideration, you were approved to join the Secret Santa Event! Check your email, as you should have recieved a second email with instructions to log in, and be sure to double check your spam folder if any are missed.</p>
                     <br>
                     <p>If you have any questions, feel free to reach out to the admins under your profile's General Correspondence section!</p>
                     <br>
                     <p>Over and Out</p>
                     <p><strong>Pretty Online Notification Equines</strong></p>"
-                + emailEnd;
+                    + emailEnd;
+            }
+            else
+            {
+                plainTextContent = "After consideration, you were approved to join the Secret Santa Event! Check your email for any additional details, and be sure to double check your spam folder if any are missed! " +
+                "If you have any questions, feel free to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com.";
+                htmlContent = emailStart +
+                    @$"
+                    <p>After consideration, you were approved to join the Secret Santa Event! Check your email for any additional details, and be sure to double check your spam folder if any are missed! </p>
+                    <br>
+                    <p>If you have any questions, feel free to email Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com.</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                    + emailEnd;
+            }
+            
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
