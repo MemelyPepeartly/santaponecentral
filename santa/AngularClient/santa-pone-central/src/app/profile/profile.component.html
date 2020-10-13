@@ -30,8 +30,8 @@
         <app-information
           [profile]="profile"
           [loading] = "gettingProfile"
-          [surveys]="surveys"
-        ></app-information>
+          [surveys]="surveys">
+        </app-information>
         <app-control-panel
           (refreshClientEvent)="manualRefreshProfile($event)"
           (chatClickedEvent)="showSelectedChat($event)"

@@ -3,6 +3,7 @@
   display: block;
   text-align: center;
   min-width: 600px;
+  margin-bottom: 15px;
 }
 .subtleError
 {
