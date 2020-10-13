@@ -12,13 +12,13 @@
 }
 .fixedDiv
 {
-    position: absolute;
-    top:2%;
-    bottom: 2%;
-    right: 5%;
-    left: 5%;
-    border-radius: 8px;
-    background-color: white;
+  position: absolute;
+  top:2%;
+  bottom: 2%;
+  right: 5%;
+  left: 5%;
+  border-radius: 8px;
+  background-color: white;
 }
 .fixedDiv::-webkit-scrollbar {
     display: none;

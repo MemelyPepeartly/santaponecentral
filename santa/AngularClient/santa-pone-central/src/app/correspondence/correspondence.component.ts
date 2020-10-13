@@ -134,9 +134,10 @@ export class CorrespondenceComponent implements OnInit {
     this.postingMessage = true;
 
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
+
+    this.updateOnClickaway = true;
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
     this.inputComponent.clearForm();
-    this.updateOnClickaway = true;
 
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
@@ -152,16 +153,15 @@ export class CorrespondenceComponent implements OnInit {
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
 
     await this.SantaApiPut.putMessageReadAll(response).toPromise();
+    this.updateOnClickaway = true;
+
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, true);
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
-    //Updates all the chats to update the read messages on that particular chat against all the others for sorting
-    await this.ChatService.gatherAllChats(this.subject.clientID, true);
-
     this.puttingMessage = false;
 
-
-
+    //Updates all the chats to update the read messages on that particular chat against all the others for sorting
+    await this.ChatService.gatherAllChats(this.subject.clientID, true);
   }
   public async hideWindow()
   {
@@ -171,6 +171,13 @@ export class CorrespondenceComponent implements OnInit {
       {
         this.showClientCard = false;
         this.selectedAnon = new Client();
+
+        // If the updater variable is true, refresh on clicking away
+        if(this.updateOnClickaway)
+        {
+          await this.ChatService.gatherAllChats(this.subject.clientID, true);
+          this.updateOnClickaway = false;
+        }
       }
       // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
       else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
