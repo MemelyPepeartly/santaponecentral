@@ -4,7 +4,7 @@ import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
-import { Client } from 'src/classes/client';
+import { AssignmentStatus, Client } from 'src/classes/client';
 import { MapService } from '../services/mapper.service';
 import { FormGroup } from '@angular/forms';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
@@ -41,6 +41,7 @@ export class CorrespondenceComponent implements OnInit {
   public allChats: Array<MessageHistory> = []
   public eventChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
+  public assignmentStatuses: Array<AssignmentStatus> = [];
 
   public gettingAllChats: boolean = false;
   public softGettingAllChats: boolean = false;
@@ -97,13 +98,20 @@ export class CorrespondenceComponent implements OnInit {
       this.events = eventArray;
     });
 
+    // Assignment Statuses
+    this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
+      this.assignmentStatuses = assignmentStatusArray;
+    });
+
     // Selected history
     this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
       this.selectedHistory = history;
     });
+
     this.initializing = false;
 
     await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllAssignmentStatuses();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
 
   }
@@ -111,6 +119,12 @@ export class CorrespondenceComponent implements OnInit {
   {
     return this.allChats.filter((history: MessageHistory) => {
       return history.eventType.eventTypeID == eventType.eventTypeID;
+    });
+  }
+  public sortByAssignmentStatus(assignmentStatus: AssignmentStatus)
+  {
+    return this.allChats.filter((history: MessageHistory) => {
+      return history.assignmentStatus.assignmentStatusID == assignmentStatus.assignmentStatusID;
     });
   }
   public sortByUnread()
