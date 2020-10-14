@@ -420,7 +420,7 @@ namespace Santa.Api.Controllers
         /// Assigns a specific user a tag by ID
         /// </summary>
         /// <param name="clientID"></param>
-        /// <param name="tagID"></param>
+        /// <param name="tagsModel"></param>
         /// <returns></returns>
         [HttpPost("{clientID}/Tags")]
         [Authorize(Policy = "update:clients")]

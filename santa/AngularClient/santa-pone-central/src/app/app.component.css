@@ -42,13 +42,13 @@
   width: 700px;
   margin-top: 35px;
   text-align: center;
-  font-family: 'Impact';
+  font-family: 'The Led Display St';
   font-weight: normal;
   font-style: normal;
-  font-size: 78px;
+  font-size: 51px;
   color: #C84254;
   transform-style: preserve-3d;
-  transform: rotateX(-4deg);
+  transform: rotateX(-3deg);
 }
 .pipesContainer
 {
@@ -150,21 +150,156 @@
     width: 400px;
     margin-top: 18px;
     text-align: center;
-    font-family: 'Impact';
+    font-family: 'The Led Display St';
     font-weight: normal;
     font-style: normal;
-    font-size: 45px;
+    font-size: 30px;
     color: #ce4355;
     transform-style: preserve-3d;
-    transform: rotateX(-4deg);
+    transform: rotateX(-3deg);
   }
 }
+
 @font-face {
-  font-family: 'Impact';
-  src: url('../assets/font/Impact.ttf') format('truetype');
+  font-family: 'The Led Display St';
+  src: url('../assets/font/TheLedDisplaySt.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 
+/* ANIMATION */
+.flicker1 {
+	-webkit-animation: flicker 4s linear infinite both;
+	        animation: flicker 4s linear infinite both;
+}
+.flicker2 {
+	-webkit-animation: flicker 5s linear infinite both;
+	        animation: flicker 5s linear infinite both;
+}
+.flicker3 {
+	-webkit-animation: flicker 6s linear infinite both;
+	        animation: flicker 6s linear infinite both;
+}
+.flicker4 {
+	-webkit-animation: flicker 7s linear infinite both;
+	        animation: flicker 7s linear infinite both;
+}
+.flicker5 {
+	-webkit-animation: flicker 6.5s linear infinite both;
+	        animation: flicker 6.5s linear infinite both;
+}
+.flicker6 {
+	-webkit-animation: flicker 4.5s linear infinite both;
+	        animation: flicker 4.5s linear infinite both;
+}
+
+ @-webkit-keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  32.98% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+  34% {
+    opacity: 0;
+  }
+  34.02% {
+    opacity: 1;
+  }
+  34.98% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+  35.9% {
+    opacity: 0;
+  }
+  35.92% {
+    opacity: 1;
+  }
+  38.98% {
+    opacity: 1;
+  }
+  39% {
+    opacity: 0;
+  }
+  39.8% {
+    opacity: 0;
+  }
+  39.82% {
+    opacity: 1;
+  }
+  83.98% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 0;
+  }
+  84.9% {
+    opacity: 0;
+  }
+  84.92% {
+    opacity: 1;
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  32.98% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+  34% {
+    opacity: 0;
+  }
+  34.02% {
+    opacity: 1;
+  }
+  34.98% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+  35.9% {
+    opacity: 0;
+  }
+  35.92% {
+    opacity: 1;
+  }
+  38.98% {
+    opacity: 1;
+  }
+  39% {
+    opacity: 0;
+  }
+  39.8% {
+    opacity: 0;
+  }
+  39.82% {
+    opacity: 1;
+  }
+  83.98% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 0;
+  }
+  84.9% {
+    opacity: 0;
+  }
+  84.92% {
+    opacity: 1;
+  }
+}
