@@ -57,3 +57,8 @@ mat-card {
 {
   margin-left: 10px;
 }
+.countSubtitle
+{
+  display: inline-block;
+  margin-left: 10px;
+}

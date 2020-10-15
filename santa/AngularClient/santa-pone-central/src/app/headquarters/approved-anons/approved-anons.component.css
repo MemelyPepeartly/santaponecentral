@@ -61,3 +61,8 @@ mat-card {
 {
     color: #d07973;
 }
+.countSubtitle
+{
+  display: inline-block;
+  margin-left: 10px;
+}

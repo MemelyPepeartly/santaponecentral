@@ -10,6 +10,7 @@
             <button mat-raised-button class="controlButton" matTooltip="Manually add an anon without an Auth0 Account" [matTooltipPosition]="'above'" (click)="emitOpenManualSignupWindow()">
               <mat-icon class="icons">add_circle</mat-icon>
           </button>
+          <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total awaiting signups: {{ incomingClients.length }}</mat-card-subtitle>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>

@@ -7,6 +7,7 @@
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
+            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringAllClients">Total denied anons: {{ deniedClients.length }}</mat-card-subtitle>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
