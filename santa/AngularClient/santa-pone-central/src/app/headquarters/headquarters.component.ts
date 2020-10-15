@@ -10,6 +10,7 @@ import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';
 import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
+import { EventType } from 'src/classes/eventType';
 
 @Component({
   selector: 'app-headquarters',
@@ -42,9 +43,12 @@ export class HeadquartersComponent implements OnInit {
   public showClientCard: boolean = false;
   public showManualSignupCard: boolean = false;
   public currentClient: Client;
+
   public allClients: Array<Client> = [];
+  public allEvents: Array<EventType> = [];
 
   public gatheringAllClients: boolean;
+  public gatheringAllEvents: boolean;
   public clickAwayLocked: boolean;
 
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
@@ -63,11 +67,20 @@ export class HeadquartersComponent implements OnInit {
     this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status;
     });
+    this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
+      this.gatheringAllEvents = status;
+    });
+
     /* ALL CLIENTS SUBSCRIBE */
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
+    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
+      this.allEvents = events;
+    });
+
     await this.gatherer.gatherAllClients();
+    await this.gatherer.gatherAllEvents();
   }
   public async showClientWindow(client: Client)
   {

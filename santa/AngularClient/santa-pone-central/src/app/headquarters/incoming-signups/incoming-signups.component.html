@@ -13,7 +13,7 @@
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
-<div class="spinnerWrap" *ngIf="(gatheringAllClients || showSpinner) && !this.gatherer.onSelectedClient">
+<div class="spinnerWrap" *ngIf="(gatheringInfo || showSpinner) && !this.gatherer.onSelectedClient">
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
@@ -29,6 +29,15 @@
       </mat-card-title>
       <mat-card-subtitle>
         <span>Client Name: {{ client.clientName }}</span>
+      </mat-card-subtitle>
+      <mat-divider [inset]="true"></mat-divider>
+      <ng-container *ngFor="let event of allEvents">
+        <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForEvent(client, event)">
+          <span>Client signed up for the {{ event.eventDescription }} event</span>
+        </mat-card-subtitle>
+      </ng-container>
+      <mat-card-subtitle>
+        <span></span>
       </mat-card-subtitle>
     </mat-card>
 </mat-list>

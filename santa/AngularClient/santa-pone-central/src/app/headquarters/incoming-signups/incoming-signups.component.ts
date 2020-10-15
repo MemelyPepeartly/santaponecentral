@@ -6,6 +6,8 @@ import { MapService } from 'src/app/services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
+import { EventType } from 'src/classes/eventType';
+import { SurveyResponse } from 'src/classes/survey';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -38,7 +40,8 @@ export class IncomingSignupsComponent implements OnInit {
   @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
 
   @Input() incomingClients: Array<Client> = [];
-  @Input() gatheringAllClients: boolean;
+  @Input() gatheringInfo: boolean;
+  @Input() allEvents: Array<EventType> = [];
 
   showSpinner: boolean = false;
   actionTaken: boolean = false;
@@ -64,5 +67,11 @@ export class IncomingSignupsComponent implements OnInit {
     await this.gatherer.gatherAllClients();
     this.showSpinner = false;
     this.actionTaken = false;
+  }
+  answeredForEvent(client: Client, event: EventType) : boolean
+  {
+    return client.responses.some((response: SurveyResponse) => {
+      return response.responseEvent.eventTypeID == event.eventTypeID
+    });
   }
 }
