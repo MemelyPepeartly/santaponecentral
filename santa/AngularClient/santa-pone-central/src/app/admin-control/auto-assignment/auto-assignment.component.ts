@@ -6,6 +6,7 @@ import { GathererService } from 'src/app/services/gatherer.service';
 import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/mapper.service';
 import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
+import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 
 @Component({
   selector: 'app-auto-assignment',
@@ -41,11 +42,11 @@ export class AutoAssignmentComponent implements OnInit {
   }
   public sortMassMailers() : Array<Client>
   {
-    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAILER})})
+    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAILER}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
   }
   public sortMassMailRecipients() : Array<Client>
   {
-    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT})})
+    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
   }
   public async getAssignmentPairings()
   {
