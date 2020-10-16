@@ -7,6 +7,7 @@ import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
 import { MapService, MapResponse } from '../../services/mapper.service';
 import { StatusConstants } from '../../shared/constants/StatusConstants.enum';
+import { SurveyConstants } from '../../shared/constants/surveyConstants.enum';
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/countries.service';
@@ -35,6 +36,10 @@ export class SignupFormComponent implements OnInit {
   public statuses: Array<Status> = [];
   public surveys: Array<Survey> = [];
   public countries: Array<any>=[];
+  public get activeEvents() : Array<EventType>
+  {
+    return this.events.filter((event: EventType) => {return event.isActive});
+  }
 
   //Shows and hides the spinner
   public showSpinner: boolean = false;
@@ -160,7 +165,7 @@ export class SignupFormComponent implements OnInit {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
 
         response.surveyQuestionID = field;
-        response.surveyID = surveyForm.surveyID;
+        response.surveyID = surveyForm.survey.surveyID;
 
         if (control.value.surveyOptionID !== undefined) {
           response.surveyOptionID = control.value.surveyOptionID;
@@ -223,5 +228,9 @@ export class SignupFormComponent implements OnInit {
     });
 
     this.allQuestionsAnswered = validArray.every(v => v == true);
+  }
+  public isMassMailSurvey(survey: Survey) : boolean
+  {
+    return survey.surveyDescription == SurveyConstants.MASS_MAIL_SURVEY
   }
 }

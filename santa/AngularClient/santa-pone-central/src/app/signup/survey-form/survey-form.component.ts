@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Question, SurveyQA, SurveyFormOption } from 'src/classes/survey';
+import { Question, SurveyQA, SurveyFormOption, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 
 @Component({
   selector: 'app-survey-form',
@@ -11,11 +12,14 @@ export class SurveyFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { }
 
-  @Input() surveyID: string;
-  @Input() questions: Array<Question>;
+  @Input() survey: Survey;
   @Output() validity: EventEmitter<boolean>= new EventEmitter;
 
   public isValid: boolean = false;
+  public get isMassMailerSurvey() : boolean
+  {
+    return this.survey.surveyDescription == SurveyConstants.MASS_MAIL_SURVEY
+  }
 
   public formQuestionsFormatted: Array<SurveyQA>
 
@@ -28,7 +32,7 @@ export class SurveyFormComponent implements OnInit {
 
   ngOnInit() {
 
-    this.formQuestionsFormatted = this.setQuestions(this.questions)
+    this.formQuestionsFormatted = this.setQuestions(this.survey.surveyQuestions)
 
     this.surveyFormGroup = this.formBuilder.group({});
     this.addFields();
@@ -50,7 +54,7 @@ export class SurveyFormComponent implements OnInit {
     for(let i =0; i<questions.length; i++)
     {
       let QAObject = new SurveyQA();
-      QAObject.surveyID = this.surveyID;
+      QAObject.surveyID = this.survey.surveyID;
       QAObject.surveyQuestionID = questions[i].questionID;
       QAObject.questionText = questions[i].questionText;
       QAObject.senderCanView = questions[i].senderCanView;
@@ -84,7 +88,7 @@ export class SurveyFormComponent implements OnInit {
     let result: boolean = false;
     if(question != undefined)
     {
-      if(this.questions[0].questionID == question.surveyQuestionID)
+      if(this.survey.surveyQuestions[0].questionID == question.surveyQuestionID)
       {
         result = true;
       }
@@ -96,7 +100,7 @@ export class SurveyFormComponent implements OnInit {
     let result: boolean = false;
     if(question != undefined)
     {
-      if(this.questions[this.questions.length - 1].questionID == question.surveyQuestionID)
+      if(this.survey.surveyQuestions[this.survey.surveyQuestions.length - 1].questionID == question.surveyQuestionID)
       {
         result = true
       }
