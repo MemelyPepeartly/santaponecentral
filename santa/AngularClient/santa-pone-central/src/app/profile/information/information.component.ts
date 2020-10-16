@@ -7,6 +7,7 @@ import { SantaApiPutService } from 'src/app/services/santa-api.service';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CountriesService } from 'src/app/services/countries.service';
+import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 
 @Component({
   selector: 'app-information',
@@ -76,7 +77,7 @@ export class InformationComponent implements OnInit {
   public showSurvey(survey: Survey)
   {
     // If the responses from the client have any responses for the survey, return true to show that survey
-    if(this.profile.responses.some((response: SurveyResponse) => {return response.surveyID == survey.surveyID}))
+    if(this.profile.responses.some((response: SurveyResponse) => {return response.surveyID == survey.surveyID}) || survey.surveyDescription == SurveyConstants.MASS_MAIL_SURVEY)
     {
       return true;
     }
