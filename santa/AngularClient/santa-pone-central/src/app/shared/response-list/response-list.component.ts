@@ -46,6 +46,7 @@ export class ResponseListComponent implements OnInit {
   public selectedQuestion: Question = new Question();
 
   public puttingResponse: boolean = false;
+  public showAll: boolean = false;
 
   ngOnInit(): void {
     this.surveyFormGroup = this.formBuilder.group({});
@@ -61,10 +62,19 @@ export class ResponseListComponent implements OnInit {
   {
     this.selectedQuestion = question
   }
-  getResponseFromSelectedQuestion() : SurveyResponse
+  getResponseFromSelectedQuestion(question: Question = null) : SurveyResponse
   {
-    let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID && response.surveyID == this.survey.surveyID})
-    return  response == undefined ? new SurveyResponse() : response
+    if(question == null)
+    {
+      let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == this.selectedQuestion.questionID && response.surveyID == this.survey.surveyID})
+      return  response == undefined ? new SurveyResponse() : response
+    }
+    else
+    {
+      let response: SurveyResponse = this.responses.find((response: SurveyResponse) => {return response.surveyQuestion.questionID == question.questionID && response.surveyID == this.survey.surveyID})
+      return  response == undefined ? new SurveyResponse() : response
+    }
+
   }
   public submitNewResponse()
   {

@@ -3,19 +3,23 @@
     <mat-card-title>{{ survey.surveyDescription }}</mat-card-title>
     <mat-card-subtitle>Answers for the {{ survey.surveyDescription }}</mat-card-subtitle>
     <mat-card-subtitle class="subtitleWarning" *ngIf="showDidNotAnswerWarning">None of the questions here are answered. This Anon did not opt in for this event</mat-card-subtitle>
+    <mat-card-actions>
+      <button mat-raised-button (click)="showAll = !showAll" *ngIf="!showAll">Show All Responses (No Editing)</button>
+      <button mat-raised-button (click)="showAll = !showAll" *ngIf="showAll">Hide All Responses</button>
+    </mat-card-actions>
   </mat-card-header>
   <mat-card-content style="text-align: center;">
-    <mat-selection-list #questionsSelectionList *ngIf="!viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
+    <mat-selection-list #questionsSelectionList *ngIf="!viewingAssignment" class="questionSelection mat-elevation-z3" [disabled]="showAll" [multiple]="false">
       <mat-list-option class="questionListOption" *ngFor="let question of survey.surveyQuestions" [value]="question"
         (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
-    <mat-selection-list #questionsSelectionList *ngIf="viewingAssignment" class="questionSelection mat-elevation-z3" [multiple]="false">
+    <mat-selection-list #questionsSelectionList *ngIf="viewingAssignment" class="questionSelection mat-elevation-z3" [disabled]="showAll" [multiple]="false">
       <mat-list-option class="questionListOption" *ngFor="let question of getViewableQuestions()" [value]="question"
         (click)="setSelectedQuestion(question)">{{question.questionText}}</mat-list-option>
     </mat-selection-list>
 
-    <mat-card class="answerCard mat-elevation-z3">
+    <mat-card class="answerCard mat-elevation-z3" *ngIf="!showAll">
       <mat-card-header>
         <mat-card-title>
           {{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}
@@ -57,5 +61,23 @@
         </mat-card-actions>
       </mat-card-content>
     </mat-card>
+
+    <ng-container *ngIf="showAll">
+      <div class="showAllDiv">
+        <mat-card class="showAllAnswerCard showAllCardMargin mat-elevation-z3" *ngFor="let surveyQuestion of survey.surveyQuestions">
+          <mat-card-header>
+            <mat-card-title>{{surveyQuestion.questionText}}</mat-card-title>
+            <mat-card-subtitle>Answer for this question</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- Response shown here -->
+            <mat-divider [inset]="true"></mat-divider>
+            <span class="responseText" *ngIf="getResponseFromSelectedQuestion(surveyQuestion).responseText != undefined">{{ getResponseFromSelectedQuestion(surveyQuestion).responseText }}</span>
+            <span class="responseText error" *ngIf="getResponseFromSelectedQuestion(surveyQuestion).responseText == undefined" >An answer for this question does not exist</span>
+            <mat-divider [inset]="true"></mat-divider>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </ng-container>
   </mat-card-content>
 </mat-card>
