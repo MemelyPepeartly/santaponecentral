@@ -44,6 +44,24 @@
 -- VALUES
 --     (NEWID(), @giftExchangeSurveyQuestion2, @surveyOptionID7GUID, 2, 1);
 
+-- DECLARE @massMailSurveyID UNIQUEIDENTIFIER = 'a03218f5-24e2-47d7-9644-a7f5a019d32c';
+-- DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = 'a2c93535-157c-4d7a-b3e6-57023cfd9b35';
+
+-- INSERT INTO app.Survey (surveyID, eventTypeID, surveyDescription, isActive)
+-- VALUES
+--     (@massMailSurveyID, @cardExchangeEventGUID, 'Mass Mail Survey', 0);
+
+DECLARE @massMailQuestionID UNIQUEIDENTIFIER = NEWID();
+DECLARE @massMailSurveyID UNIQUEIDENTIFIER = 'a03218f5-24e2-47d7-9644-a7f5a019d32c';
+
+INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
+VALUES
+    (@massMailQuestionID, 'Do you wish to recieve Mass Mail?', 0, 0);
+
+INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
+VALUES
+    (NEWID(), @massMailSurveyID, @massMailQuestionID, 1, 1);
+
 
 --DELETE FROM app.ChatMessage
 --DELETE FROM app.ClientRelationXref
@@ -90,3 +108,5 @@
 -- SELECT * FROM app.SurveyQuestion;
 -- SELECT * FROM app.SurveyOption;
 -- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='96f938e5-dd90-44d1-8886-aec787bd7bca';
+-- SELECT * FROM app.Survey;
+-- SELECT * FROM app.EventType;
