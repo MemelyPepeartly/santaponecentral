@@ -12,7 +12,7 @@ export class SurveyFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { }
 
-  @Input() survey: Survey;
+  @Input() survey: Survey = new Survey();
   @Output() validity: EventEmitter<boolean>= new EventEmitter;
 
   public isValid: boolean = false;

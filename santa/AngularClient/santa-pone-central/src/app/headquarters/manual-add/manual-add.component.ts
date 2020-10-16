@@ -12,6 +12,7 @@ import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/responseTyp
 import { Address } from 'src/classes/address';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { Client } from 'src/classes/client';
+import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 
 @Component({
   selector: 'app-manual-add',
@@ -169,7 +170,7 @@ export class ManualAddComponent implements OnInit {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
 
         response.surveyQuestionID = field;
-        response.surveyID = surveyForm.surveyID;
+        response.surveyID = surveyForm.survey.surveyID;
 
         if (control.value.surveyOptionID !== undefined) {
           response.surveyOptionID = control.value.surveyOptionID;
@@ -205,5 +206,9 @@ export class ManualAddComponent implements OnInit {
     });
 
     this.allQuestionsAnswered = validArray.every(v => v == true);
+  }
+  public isMassMailSurvey(survey: Survey) : boolean
+  {
+    return survey.surveyDescription == SurveyConstants.MASS_MAIL_SURVEY;
   }
 }
