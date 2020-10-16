@@ -51,16 +51,27 @@
 -- VALUES
 --     (@massMailSurveyID, @cardExchangeEventGUID, 'Mass Mail Survey', 0);
 
-DECLARE @massMailQuestionID UNIQUEIDENTIFIER = NEWID();
-DECLARE @massMailSurveyID UNIQUEIDENTIFIER = 'a03218f5-24e2-47d7-9644-a7f5a019d32c';
+-- DECLARE @massMailQuestionID UNIQUEIDENTIFIER = NEWID();
+-- DECLARE @massMailSurveyID UNIQUEIDENTIFIER = 'a03218f5-24e2-47d7-9644-a7f5a019d32c';
 
-INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
-VALUES
-    (@massMailQuestionID, 'Do you wish to recieve Mass Mail?', 0, 0);
+-- INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
+-- VALUES
+--     (@massMailQuestionID, 'Do you wish to recieve Mass Mail?', 0, 0);
 
-INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
-VALUES
-    (NEWID(), @massMailSurveyID, @massMailQuestionID, 1, 1);
+-- INSERT INTO app.SurveyQuestionXref (surveyQuestionXrefID, surveyID, surveyQuestionID, sortOrder, isActive)
+-- VALUES
+--     (NEWID(), @massMailSurveyID, @massMailQuestionID, 1, 1);
+
+-- UPDATE app.SurveyQuestion SET isSurveyOptionList=1 WHERE questionText='Do you wish to recieve Mass Mail?';
+
+-- DECLARE @massMailerQuestionID UNIQUEIDENTIFIER = '0ff2d70a-6592-4549-84cf-6f78e197525f';
+-- DECLARE @prodYesID UNIQUEIDENTIFIER = '4a31cb82-4b69-4bee-9333-eb60a8c6500e';
+-- DECLARE @prodNoID UNIQUEIDENTIFIER = '43177455-0515-4acb-bc72-49cd93d706ec';
+
+-- INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
+-- VALUES
+--     (NEWID(), @massMailerQuestionID, @prodYesID, 1, 1),
+--     (NEWID(), @massMailerQuestionID, @prodNoID, 2, 1);
 
 
 --DELETE FROM app.ChatMessage
@@ -84,7 +95,7 @@ VALUES
 --UPDATE app.SurveyQuestion SET questionText='Do you acknowledge your info will be shared with others assigned to send to you?' WHERE questionText='Do you aknowledge your info will be shared with other assigned to send to you?';
 --UPDATE app.SurveyQuestion SET questionText='Are you okay with receiving extra assignments for things such as Grinch rescue?' WHERE questionText='Are you okay with receiving extra assignments?';
 --UPDATE app.SurveyQuestionOptionXref SET sortOrder=3 WHERE surveyQuestionOptionXrefID='3b5aabb9-948e-42f7-9fde-69e52df60aff';
-
+--UPDATE app.SurveyQuestion SET isSurveyOptionList=1 WHERE questionText='Do you wish to recieve Mass Mail?';
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
 
