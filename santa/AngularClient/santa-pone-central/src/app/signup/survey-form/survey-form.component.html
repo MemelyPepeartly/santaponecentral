@@ -1,3 +1,4 @@
+<h2 *ngIf="isMassMailerSurvey">Mass Mailer Questionnaire</h2>
 <mat-vertical-stepper>
   <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
     <form [formGroup]="surveyFormGroup">
