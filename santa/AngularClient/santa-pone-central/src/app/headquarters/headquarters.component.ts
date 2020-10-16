@@ -11,6 +11,7 @@ import { CompletedAnonsComponent } from './completed-anons/completed-anons.compo
 import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { EventType } from 'src/classes/eventType';
+import { Survey } from 'src/classes/survey';
 
 @Component({
   selector: 'app-headquarters',
@@ -45,10 +46,10 @@ export class HeadquartersComponent implements OnInit {
   public currentClient: Client;
 
   public allClients: Array<Client> = [];
-  public allEvents: Array<EventType> = [];
+  public allSurveys: Array<Survey> = [];
 
   public gatheringAllClients: boolean;
-  public gatheringAllEvents: boolean;
+  public gatheringAllSurveys: boolean;
   public clickAwayLocked: boolean;
 
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
@@ -67,20 +68,20 @@ export class HeadquartersComponent implements OnInit {
     this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status;
     });
-    this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
-      this.gatheringAllEvents = status;
+    this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
+      this.gatheringAllSurveys = status;
     });
 
     /* ALL CLIENTS SUBSCRIBE */
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
-    this.gatherer.allEvents.subscribe((events: Array<EventType>) => {
-      this.allEvents = events;
+    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
+      this.allSurveys = surveys;
     });
 
     await this.gatherer.gatherAllClients();
-    await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
   }
   public async showClientWindow(client: Client)
   {
