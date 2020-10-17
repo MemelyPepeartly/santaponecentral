@@ -6,14 +6,27 @@ mat-card-header
 {
   width: 100%;
 }
-.showAllDiv
+.cardHeader
+{
+  display: block;
+  margin-bottom: 10px;
+}
+.showAllButtonDiv
+{
+  display: block;
+}
+.headerInfoDiv
 {
   display: inline-block;
-  width: 65%;
 }
 .showAllCardMargin
 {
   margin-top: 10px;
+}
+.showAllDiv
+{
+  display: inline-block;
+  width: 65%;
 }
 .questionSelection
 {
