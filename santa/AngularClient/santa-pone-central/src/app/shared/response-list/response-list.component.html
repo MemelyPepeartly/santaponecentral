@@ -28,6 +28,7 @@
           {{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}
         </mat-card-title>
         <mat-card-subtitle>Answer for this question</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="!selectedQuestion.senderCanView">This answer is only shared with admins</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content *ngIf="selectedQuestion.questionText != undefined">
 
@@ -65,12 +66,14 @@
       </mat-card-content>
     </mat-card>
 
+    <!-- Show all container -->
     <ng-container *ngIf="showAll">
       <div class="showAllDiv">
         <mat-card class="showAllAnswerCard showAllCardMargin mat-elevation-z3" *ngFor="let surveyQuestion of survey.surveyQuestions">
           <mat-card-header>
             <mat-card-title>{{surveyQuestion.questionText}}</mat-card-title>
             <mat-card-subtitle>Answer for this question</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="!surveyQuestion.senderCanView">This answer is only shared with admins</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <!-- Response shown here -->
