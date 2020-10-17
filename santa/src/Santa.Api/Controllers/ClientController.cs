@@ -296,8 +296,10 @@ namespace Santa.Api.Controllers
                         });
                     }
                     await repository.SaveAsync();
+                    Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
+                    await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
 
-                    return Ok(await repository.GetClientByIDAsync(newClient.clientID));
+                    return Ok();
                 }
                 catch (Exception e)
                 {

@@ -12,11 +12,12 @@ namespace Santa.Api.SendGrid
     public interface IMailbag
     {
         MailbagKeyModel getKey();
+        Task sendSignedUpAndAwaitingEmail(Client emailRecipientClient);
         Task sendPasswordResetEmail(string recipientEmail, string recipientNickname, Auth0TicketResponse ticket, bool isNewUser);
         Task sendApprovedForEventWithNoAccountEmail(Client emailRecipientClient);
-        Task sendChatNotificationEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
-        Task sendDeniedEmail(Logic.Objects.Client recipient);
-        Task sendAssignedRecipientEmail(Logic.Objects.Client recipient, Logic.Objects.Event eventType);
+        Task sendChatNotificationEmail(Client recipient, Event eventType);
+        Task sendDeniedEmail(Client recipient);
+        Task sendAssignedRecipientEmail(Client recipient, Event eventType);
         Task sendCompletedEmail(Client recipient);
         Task sendReelistedEmail(Client recipient);
         Task sendUndeniedEmail(Client recipient);

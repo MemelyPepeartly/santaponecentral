@@ -47,7 +47,28 @@ namespace Santa.Api.SendGrid
                 key = ConfigRoot["SendgridAPI:SendgridAPIKey"]
             };
         }
+        public async Task sendSignedUpAndAwaitingEmail(Client recipient)
+        {
+            SendGridClient client = new SendGridClient(getKey().key);
+            EmailAddress from = new EmailAddress(appEmail, "SantaPone Central");
+            string subject = "SantaPone Central Signup In Progress";
+            EmailAddress to = new EmailAddress(recipient.email, recipient.nickname);
+            string plainTextContent = "Your application submission is in! All there is to do now is wait, and the organizers will go through your application from here. " +
+                "Keep an eye on your email for your confirmation, and be sure to check your spam folder in case any get caught up in there once it comes through!";
+            string htmlContent = emailStart +
+                @$"
+                    <p>Your application submission is in! All there is to do now is wait, and the organizers will go through your application from here.</p>
+                    <br>
+                    <p>Keep an eye on your email for your confirmation, and be sure to check your spam folder in case any get caught up in there once it comes through! If you have any urgent questions prior to being approved, as always, be sure to 
+                    reach out to Santapone at mlpsantapone@gmail.com, or Cardslut at thecardslut@gmail.com, or just ask on the thread.</p>
+                    <br>
+                    <p>Over and Out</p>
+                    <p><strong>Pretty Online Notification Equines</strong></p>"
+                + emailEnd;
 
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
         public async Task sendPasswordResetEmail(string recipientEmail, string recipientNickname, Auth0TicketResponse ticket, bool isNewUser)
         {
             SendGridClient client = new SendGridClient(getKey().key);
