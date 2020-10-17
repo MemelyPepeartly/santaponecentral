@@ -44,20 +44,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClients()
         {
-            try
+            List<Logic.Objects.Client> clients = await repository.GetAllClients();
+            if (clients == null)
             {
-                List <Logic.Objects.Client> clients = await repository.GetAllClients();
-                if (clients == null)
-                {
-                    return NoContent();
-                }
-                return Ok(clients.OrderBy(c => c.nickname));
+                return NoContent();
             }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException.Message);
-            }
-            
+            return Ok(clients.OrderBy(c => c.nickname));
         }
 
         // GET: api/Client/5
@@ -70,14 +62,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            try
-            {
-                return Ok(await repository.GetClientByIDAsync(clientID));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            return Ok(await repository.GetClientByIDAsync(clientID));
         }
 
         // GET: api/Client/Email/email@domain.com
@@ -90,15 +75,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(string clientEmail)
         {
-            try
-            {
-                Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-                return Ok(logicClient);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
+            return Ok(logicClient);
         }
 
 
@@ -112,15 +90,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
-            try
-            {
-                return Ok(await repository.GetAllSurveyResponsesByClientID(clientID));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-
+            return Ok(await repository.GetAllSurveyResponsesByClientID(clientID));
         }
 
         // GET: api/Client/5/AllowedAssignment/5
@@ -128,14 +98,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
-            try
-            {
-                return Ok(await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            return Ok(await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID));
         }
 
         // GET: api/Client/AutoAssignmentPairs
@@ -147,45 +110,38 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<PossiblePairing>>> GetAutoAssignmentsToMassMailerPairs()
         {
-            try
+            List<Client> allClients = await repository.GetAllClients();
+            List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
+            List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
+            AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+
+            List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
+
+            Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+
+            if (massMailers.Count > 0 && clientsToBeAssignedToMassMailers.Count > 0)
             {
-                List<Client> allClients = await repository.GetAllClients();
-                List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
-                List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
-                AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
-
-                List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
-
-                Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
-
-                if (massMailers.Count > 0 && clientsToBeAssignedToMassMailers.Count > 0)
+                // Foreach mailer
+                foreach (Client mailer in massMailers)
                 {
-                    // Foreach mailer
-                    foreach (Client mailer in massMailers)
+                    // Foreach clients to be assigned mass mail
+                    foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                     {
-                        // Foreach clients to be assigned mass mail
-                        foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
+                        // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
+                        if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                         {
-                            // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
-                            if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
+                            // Add the possible pairing to the list
+                            possiblePairings.Add(new PossiblePairing()
                             {
-                                // Add the possible pairing to the list
-                                possiblePairings.Add(new PossiblePairing()
-                                {
-                                    sendingAgent = mailer,
-                                    possibleAssignment = potentialAssignment
-                                });
-                            }
+                                sendingAgent = mailer,
+                                possibleAssignment = potentialAssignment
+                            });
                         }
                     }
                 }
+            }
 
-                return Ok(possiblePairings);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            return Ok(possiblePairings);
         }
 
         // POST: api/Client
@@ -198,51 +154,29 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "create:clients")]
         public async Task<ActionResult<Client>> PostClientAsync([FromBody] EditNewClientModel client)
         {
-            try
+            Logic.Objects.Client newClient = new Logic.Objects.Client()
             {
-                Logic.Objects.Client newClient = new Logic.Objects.Client()
+                clientID = Guid.NewGuid(),
+                clientName = client.clientName,
+                email = client.clientEmail,
+                nickname = client.clientNickname,
+                clientStatus = await repository.GetClientStatusByID(client.clientStatusID),
+                address = new Logic.Objects.Address()
                 {
-                    clientID = Guid.NewGuid(),
-                    clientName = client.clientName,
-                    email = client.clientEmail,
-                    nickname = client.clientNickname,
-                    clientStatus = await repository.GetClientStatusByID(client.clientStatusID),
-                    address = new Logic.Objects.Address()
-                    {
-                        addressLineOne = client.clientAddressLine1,
-                        addressLineTwo = client.clientAddressLine2,
-                        city = client.clientCity,
-                        state = client.clientState,
-                        postalCode = client.clientPostalCode,
-                        country = client.clientCountry
-                    },
-                    assignments = new List<RelationshipMeta>(),
-                    senders = new List<RelationshipMeta>()
-                };
-                
-                try
-                {
-                    await repository.CreateClient(newClient);
-                    await repository.SaveAsync();
-                    return Ok(await repository.GetClientByIDAsync(newClient.clientID));
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }          
-            }
-            catch (ArgumentException)
-            {
-                return NotFound();
-            }
-            catch (InvalidOperationException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+                    addressLineOne = client.clientAddressLine1,
+                    addressLineTwo = client.clientAddressLine2,
+                    city = client.clientCity,
+                    state = client.clientState,
+                    postalCode = client.clientPostalCode,
+                    country = client.clientCountry
+                },
+                assignments = new List<RelationshipMeta>(),
+                senders = new List<RelationshipMeta>()
+            };
+
+            await repository.CreateClient(newClient);
+            await repository.SaveAsync();
+            return Ok(await repository.GetClientByIDAsync(newClient.clientID));
 
         }
         // POST: api/Client
@@ -256,60 +190,46 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            try
+            Logic.Objects.Client newClient = new Logic.Objects.Client()
             {
-                Logic.Objects.Client newClient = new Logic.Objects.Client()
+                clientID = Guid.NewGuid(),
+                clientName = clientResponseModel.clientName,
+                email = clientResponseModel.clientEmail,
+                nickname = clientResponseModel.clientNickname,
+                clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
+                isAdmin = clientResponseModel.isAdmin,
+                hasAccount = clientResponseModel.hasAccount,
+                address = new Logic.Objects.Address()
                 {
-                    clientID = Guid.NewGuid(),
-                    clientName = clientResponseModel.clientName,
-                    email = clientResponseModel.clientEmail,
-                    nickname = clientResponseModel.clientNickname,
-                    clientStatus = await repository.GetClientStatusByID(clientResponseModel.clientStatusID),
-                    isAdmin = clientResponseModel.isAdmin,
-                    hasAccount = clientResponseModel.hasAccount,
-                    address = new Logic.Objects.Address()
-                    {
-                        addressLineOne = clientResponseModel.clientAddressLine1,
-                        addressLineTwo = clientResponseModel.clientAddressLine2,
-                        city = clientResponseModel.clientCity,
-                        state = clientResponseModel.clientState,
-                        postalCode = clientResponseModel.clientPostalCode,
-                        country = clientResponseModel.clientCountry
-                    },
-                    assignments = new List<RelationshipMeta>(),
-                    senders = new List<RelationshipMeta>()
-                };
+                    addressLineOne = clientResponseModel.clientAddressLine1,
+                    addressLineTwo = clientResponseModel.clientAddressLine2,
+                    city = clientResponseModel.clientCity,
+                    state = clientResponseModel.clientState,
+                    postalCode = clientResponseModel.clientPostalCode,
+                    country = clientResponseModel.clientCountry
+                },
+                assignments = new List<RelationshipMeta>(),
+                senders = new List<RelationshipMeta>()
+            };
 
-                try
-                {
-                    await repository.CreateClient(newClient);
-                    foreach(Models.Survey_Response_Models.ApiSurveyResponse response in clientResponseModel.responses)
-                    {
-                        await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
-                        {
-                            surveyResponseID = Guid.NewGuid(),
-                            surveyID = response.surveyID,
-                            clientID = newClient.clientID,
-                            surveyQuestion = new Question() { questionID = response.surveyQuestionID },
-                            surveyOptionID = response.surveyOptionID,
-                            responseText = response.responseText
-                        });
-                    }
-                    await repository.SaveAsync();
-                    Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
-                    await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
-
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-                }
-            }
-            catch (Exception e)
+            await repository.CreateClient(newClient);
+            foreach (Models.Survey_Response_Models.ApiSurveyResponse response in clientResponseModel.responses)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, e.Message);
+                await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
+                {
+                    surveyResponseID = Guid.NewGuid(),
+                    surveyID = response.surveyID,
+                    clientID = newClient.clientID,
+                    surveyQuestion = new Question() { questionID = response.surveyQuestionID },
+                    surveyOptionID = response.surveyOptionID,
+                    responseText = response.responseText
+                });
             }
+            await repository.SaveAsync();
+            Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
+            await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+
+            return Ok();
         }
 
         // POST: api/Client/5/Recipients
@@ -323,25 +243,18 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
-            try
+            foreach (Guid assignmentID in assignmentsModel.assignments)
             {
-                foreach(Guid assignmentID in assignmentsModel.assignments)
-                {
-                    await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
-                }
-                await repository.SaveAsync();
-
-                // Get new client with recipients, and send the client a notification they have new assignments for an event
-                Client updatedClient = await repository.GetClientByIDAsync(clientID);
-                Event assigneeEvent = await repository.GetEventByIDAsync(assignmentsModel.eventTypeID);
-                await mailbag.sendAssignedRecipientEmail(updatedClient, assigneeEvent);
-
-                return Ok(updatedClient);
+                await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
             }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            await repository.SaveAsync();
+
+            // Get new client with recipients, and send the client a notification they have new assignments for an event
+            Client updatedClient = await repository.GetClientByIDAsync(clientID);
+            Event assigneeEvent = await repository.GetEventByIDAsync(assignmentsModel.eventTypeID);
+            await mailbag.sendAssignedRecipientEmail(updatedClient, assigneeEvent);
+
+            return Ok(updatedClient);
         }
 
         // POST: api/Client/AutoAssignments
@@ -354,39 +267,32 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
-            try
+            Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
+            AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+
+            // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
+            List<Client> allClients = await repository.GetAllClients();
+            List<Client> clientsToEmail = new List<Client>();
+
+            foreach (Pairing pair in model.pairings)
             {
-                Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
-                AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
+                await repository.CreateClientRelationByID(pair.senderAgentID, pair.assignmentClientID, logicCardEvent.eventTypeID, logicAssignedStatus.assignmentStatusID);
 
-                // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
-                List<Client> allClients = await repository.GetAllClients();
-                List<Client> clientsToEmail = new List<Client>();
-
-                foreach(Pairing pair in model.pairings)
+                // If the clients to email doesnt contain the sending client already in the email list, add them to it
+                if (!clientsToEmail.Any<Client>(c => c.clientID == pair.senderAgentID))
                 {
-                    await repository.CreateClientRelationByID(pair.senderAgentID, pair.assignmentClientID, logicCardEvent.eventTypeID , logicAssignedStatus.assignmentStatusID);
-
-                    // If the clients to email doesnt contain the sending client already in the email list, add them to it
-                    if(!clientsToEmail.Any<Client>(c => c.clientID == pair.senderAgentID))
-                    {
-                        clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
-                    }
+                    clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
                 }
-
-                await repository.SaveAsync();
-
-                foreach(Client massMailer in clientsToEmail)
-                {
-                    await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
-                }
-
-                return Ok();
             }
-            catch (Exception e)
+
+            await repository.SaveAsync();
+
+            foreach (Client massMailer in clientsToEmail)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
             }
+
+            return Ok();
         }
 
 
@@ -400,21 +306,14 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostNewAuth0AccountForClientByID(Guid clientID)
         {
-            try
-            {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                await Auth0Steps(logicClient, true);
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            await Auth0Steps(logicClient, true);
 
-                logicClient.hasAccount = true;
-                await repository.UpdateClientByIDAsync(logicClient);
-                await repository.SaveAsync();
+            logicClient.hasAccount = true;
+            await repository.UpdateClientByIDAsync(logicClient);
+            await repository.SaveAsync();
 
-                return Ok(await repository.GetClientByIDAsync(clientID));
-            }
-            catch(Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            return Ok(await repository.GetClientByIDAsync(clientID));
         }
 
         // POST: api/Client/5/Tag
@@ -428,21 +327,14 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
-            try
+            foreach (Guid tagID in tagsModel.tags)
             {
-                foreach(Guid tagID in tagsModel.tags)
-                {
-                    await repository.CreateClientTagRelationByID(clientID, tagID);
-                }
-                await repository.SaveAsync();
+                await repository.CreateClientTagRelationByID(clientID, tagID);
+            }
+            await repository.SaveAsync();
 
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                return Ok(logicClient);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            return Ok(logicClient);
         }
 
         // POST: api/Client/5/Password
@@ -455,20 +347,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> sendResetPasswordInformation(Guid clientID)
         {
-            try
-            {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
 
-                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
-                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, false);
+            Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
+            await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, false);
 
-                return Ok();
-
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            return Ok();
         }
 
         // PUT: api/Client/5/Address
@@ -482,40 +366,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] EditClientAddressModel address)
         {
-            try
-            {
-                try
-                {
-                    Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
 
-                    targetClient.address.addressLineOne = address.clientAddressLine1;
-                    targetClient.address.addressLineTwo = address.clientAddressLine2;
-                    targetClient.address.city = address.clientCity;
-                    targetClient.address.country = address.clientCountry;
-                    targetClient.address.state = address.clientState;
-                    targetClient.address.postalCode = address.clientPostalCode;
+            targetClient.address.addressLineOne = address.clientAddressLine1;
+            targetClient.address.addressLineTwo = address.clientAddressLine2;
+            targetClient.address.city = address.clientCity;
+            targetClient.address.country = address.clientCountry;
+            targetClient.address.state = address.clientState;
+            targetClient.address.postalCode = address.clientPostalCode;
 
-                    try
-                    {
-                        await repository.UpdateClientByIDAsync(targetClient);
-                        await repository.SaveAsync();
-                        Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                        return Ok(updatedClient);
-                    }
-                    catch(Exception e)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                    }
-                }
-                catch(Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                }
-            }
-            catch(Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            await repository.UpdateClientByIDAsync(targetClient);
+            await repository.SaveAsync();
+            Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+            return Ok(updatedClient);
         }
         // PUT: api/Client/5/Email
         /// <summary>
@@ -528,72 +391,51 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] EditClientEmailModel email)
         {
-            try
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            string oldEmail = targetClient.email;
+            targetClient.email = email.clientEmail;
+
+            await repository.UpdateClientByIDAsync(targetClient);
+            await repository.SaveAsync();
+            Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+
+            // If the client isn't awaiting or denied (meaning they might have an auth account)
+            if (updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
             {
-                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                string oldEmail = targetClient.email;
-                targetClient.email = email.clientEmail;
+                Models.Auth0_Response_Models.Auth0UserInfoModel authClient = new Models.Auth0_Response_Models.Auth0UserInfoModel();
 
-                try
+                // Gets the original client ID by the old email if they have an account
+                if (updatedClient.hasAccount)
                 {
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-
-                    // If the client isn't awaiting or denied (meaning they might have an auth account)
-                    if(updatedClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && updatedClient.clientStatus.statusDescription != Constants.DENIED_STATUS)
-                    {
-                        try
-                        {
-                            Models.Auth0_Response_Models.Auth0UserInfoModel authClient = new Models.Auth0_Response_Models.Auth0UserInfoModel();
-
-                            // Gets the original client ID by the old email if they have an account
-                            if (updatedClient.hasAccount)
-                            {
-                                authClient = await authHelper.getAuthClientByEmail(oldEmail);
-                            }
-                            // If the user does not have an account, return the update
-                            else if(!updatedClient.hasAccount)
-                            {
-                                return Ok(updatedClient);
-                            }
-
-                            // If the response was null or empty, and the user is marked to have an account, something went wrong with updating their auth0 account. 
-                            // Returns a bad request, and sets the email back to the old email in question
-                            if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
-                            {
-                                targetClient.email = oldEmail;
-                                await repository.UpdateClientByIDAsync(targetClient);
-                                await repository.SaveAsync();
-                                return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
-                            }
-                            // Else if the authclient userId response is not null or empty, and the user is marked to have an account
-                            else if(!string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
-                            {
-                                // Updates a client's email in Auth0
-                                await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
-
-                                // Sends the client a password change ticket
-                                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
-                                await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                        }
-                    }
+                    authClient = await authHelper.getAuthClientByEmail(oldEmail);
+                }
+                // If the user does not have an account, return the update
+                else if (!updatedClient.hasAccount)
+                {
                     return Ok(updatedClient);
                 }
-                catch (Exception e)
+
+                // If the response was null or empty, and the user is marked to have an account, something went wrong with updating their auth0 account. 
+                // Returns a bad request, and sets the email back to the old email in question
+                if (string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                    targetClient.email = oldEmail;
+                    await repository.UpdateClientByIDAsync(targetClient);
+                    await repository.SaveAsync();
+                    return StatusCode(StatusCodes.Status400BadRequest, "Something went wrong. The user did not have an auth account to update");
+                }
+                // Else if the authclient userId response is not null or empty, and the user is marked to have an account
+                else if (!string.IsNullOrEmpty(authClient.user_id) && updatedClient.hasAccount)
+                {
+                    // Updates a client's email in Auth0
+                    await authHelper.updateAuthClientEmail(authClient.user_id, updatedClient.email);
+
+                    // Sends the client a password change ticket
+                    Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(updatedClient.email);
+                    await mailbag.sendPasswordResetEmail(oldEmail, updatedClient.nickname, ticket, false);
                 }
             }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            return Ok(updatedClient);
         }
         // PUT: api/Client/5/Nickname
         /// <summary>
@@ -606,41 +448,27 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] EditClientNicknameModel nickname)
         {
-            try
-            {
-                // Gets client and sets new nickname
-                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                targetClient.nickname = nickname.clientNickname;
+            // Gets client and sets new nickname
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            targetClient.nickname = nickname.clientNickname;
 
-                try
-                {
-                    // Update prep
-                    await repository.UpdateClientByIDAsync(targetClient);
+            // Update prep
+            await repository.UpdateClientByIDAsync(targetClient);
 
-                    // If the client does not have an account
-                    if (!targetClient.hasAccount)
-                    {
-                        // Save the changes
-                        await repository.SaveAsync();
-                    }
-                    else
-                    {
-                        // Set their Auth0 client name to the new nickname and save the repo
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(targetClient.email);
-                        await authHelper.updateAuthClientName(authClient.user_id, nickname.clientNickname);
-                        await repository.SaveAsync();
-                    }
-                    return Ok(await repository.GetClientByIDAsync(targetClient.clientID));
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                }
-            }
-            catch (Exception e)
+            // If the client does not have an account
+            if (!targetClient.hasAccount)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                // Save the changes
+                await repository.SaveAsync();
             }
+            else
+            {
+                // Set their Auth0 client name to the new nickname and save the repo
+                Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.getAuthClientByEmail(targetClient.email);
+                await authHelper.updateAuthClientName(authClient.user_id, nickname.clientNickname);
+                await repository.SaveAsync();
+            }
+            return Ok(await repository.GetClientByIDAsync(targetClient.clientID));
         }
 
         // PUT: api/Client/5/Name
@@ -654,27 +482,13 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutName(Guid clientID, [FromBody] EditClientNameModel name)
         {
-            try
-            {
-                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                targetClient.clientName = name.clientName;
-                try
-                {
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                    return Ok(updatedClient);
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                }
-                
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            targetClient.clientName = name.clientName;
+
+            await repository.UpdateClientByIDAsync(targetClient);
+            await repository.SaveAsync();
+            Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+            return Ok(updatedClient);
         }
 
         // PUT: api/Client/5/Admin
@@ -688,27 +502,13 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] EditClientIsAdminModel model)
         {
-            try
-            {
-                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                targetClient.isAdmin = model.isAdmin;
-                try
-                {
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
-                    Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                    return Ok(updatedClient);
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                }
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            targetClient.isAdmin = model.isAdmin;
 
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            await repository.UpdateClientByIDAsync(targetClient);
+            await repository.SaveAsync();
+            Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
+            return Ok(updatedClient);
         }
         // PUT: api/Client/5/Status
         /// <summary>
@@ -721,91 +521,76 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] EditClientStatusModel status)
         {
+            // If the status ID is empty on the request, return 400 bad request
+            if (status.clientStatusID.Equals(Guid.Empty))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+
+            // Grab original client and set the original stattus to its own object for later comparison
+            Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
+            Status originalStatus = targetClient.clientStatus;
+
+            // Updates client status and account status
+            targetClient.clientStatus.statusID = status.clientStatusID;
+            await repository.UpdateClientByIDAsync(targetClient);
+            await repository.SaveAsync();
+
+            // Get updated client
+            Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
             try
             {
-                // If the status ID is empty on the request, return 400 bad request
-                if(status.clientStatusID.Equals(Guid.Empty))
+                // Send approval steps for a client that was awaiting and approved for the event
+                if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
-                }
+                    await Auth0Steps(updatedClient, status.wantsAccount);
 
-                // Grab original client and set the original stattus to its own object for later comparison
-                Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
-                Status originalStatus = targetClient.clientStatus;
-                
-                try
+                    // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                    if (status.wantsAccount)
+                    {
+                        updatedClient.hasAccount = true;
+                        await repository.UpdateClientByIDAsync(updatedClient);
+                        await repository.SaveAsync();
+                    }
+                }
+                // Send approval steps for client that was denied, and was accepted after appeal
+                else if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                 {
-                    // Updates client status and account status
-                    targetClient.clientStatus.statusID = status.clientStatusID;
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
+                    await Auth0Steps(updatedClient, status.wantsAccount);
+
+                    // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
+                    if (status.wantsAccount)
+                    {
+                        updatedClient.hasAccount = true;
+                        await repository.UpdateClientByIDAsync(updatedClient);
+                        await repository.SaveAsync();
+                    }
+                    // After setting if a client has an account or not, sends undenied email
+                    await mailbag.sendUndeniedEmail(updatedClient);
                 }
-                catch (Exception e)
+                // Send congrats on completing the gift assignments
+                else if (updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                    await mailbag.sendCompletedEmail(updatedClient);
                 }
-
-                // Get updated client
-                Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
-                try
+                // Send re-enlisted email
+                else if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.COMPLETED_STATUS)
                 {
-                    // Send approval steps for a client that was awaiting and approved for the event
-                    if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
-                    {
-                        await Auth0Steps(updatedClient, status.wantsAccount);
-
-                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
-                        if(status.wantsAccount)
-                        {
-                            updatedClient.hasAccount = true;
-                            await repository.UpdateClientByIDAsync(updatedClient);
-                            await repository.SaveAsync();
-                        }
-                    }
-                    // Send approval steps for client that was denied, and was accepted after appeal
-                    else if(updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
-                    {
-                        await Auth0Steps(updatedClient, status.wantsAccount);
-
-                        // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
-                        if (status.wantsAccount)
-                        {
-                            updatedClient.hasAccount = true;
-                            await repository.UpdateClientByIDAsync(updatedClient);
-                            await repository.SaveAsync();
-                        }
-                        // After setting if a client has an account or not, sends undenied email
-                        await mailbag.sendUndeniedEmail(updatedClient);
-                    }
-                    // Send congrats on completing the gift assignments
-                    else if(updatedClient.clientStatus.statusDescription == Constants.COMPLETED_STATUS && originalStatus.statusDescription == Constants.APPROVED_STATUS)
-                    {
-                        await mailbag.sendCompletedEmail(updatedClient);
-                    }
-                    // Send re-enlisted email
-                    else if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.COMPLETED_STATUS)
-                    {
-                        await mailbag.sendReelistedEmail(updatedClient);
-                    }
-                    // Send denied email to client that was awaiting and was denied
-                    else if(updatedClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
-                    {
-                        await mailbag.sendDeniedEmail(updatedClient);
-                    }
-                    return Ok(updatedClient);
+                    await mailbag.sendReelistedEmail(updatedClient);
                 }
-                catch (Exception e)
+                // Send denied email to client that was awaiting and was denied
+                else if (updatedClient.clientStatus.statusDescription == Constants.DENIED_STATUS)
                 {
-                    targetClient.clientStatus = originalStatus;
-                    await repository.UpdateClientByIDAsync(targetClient);
-                    await repository.SaveAsync();
-                    return StatusCode(StatusCodes.Status417ExpectationFailed, "Something went wrong approving the anon, or sending them an email for the event. Status has been left unchanged.");
+                    await mailbag.sendDeniedEmail(updatedClient);
                 }
-
+                return Ok(updatedClient);
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                targetClient.clientStatus = originalStatus;
+                await repository.UpdateClientByIDAsync(targetClient);
+                await repository.SaveAsync();
+                return StatusCode(StatusCodes.Status417ExpectationFailed, "Something went wrong approving the anon, or sending them an email for the event. Status has been left unchanged.");
             }
         }
 
@@ -821,22 +606,15 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
-            try
-            {
-                await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
-                await repository.SaveAsync();
+            await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
+            await repository.SaveAsync();
 
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                List<RelationshipMeta> logicMetas = new List<RelationshipMeta>();
-                logicMetas.AddRange(logicClient.assignments);
-                logicMetas.AddRange(logicClient.senders);
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            List<RelationshipMeta> logicMetas = new List<RelationshipMeta>();
+            logicMetas.AddRange(logicClient.assignments);
+            logicMetas.AddRange(logicClient.senders);
 
-                return (logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            return (logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
         }
         // DELETE: api/Client/5
         /// <summary>
@@ -848,32 +626,17 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            try
-            {
-                try
-                {
-                    Client logicClient = await repository.GetClientByIDAsync(clientID);
-                    await repository.DeleteClientByIDAsync(clientID);
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            await repository.DeleteClientByIDAsync(clientID);
 
-                    if (logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && logicClient.hasAccount)
-                    {
-                        Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
-                        await authHelper.deleteAuthClient(authUser.user_id);
-                    }
-                    
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-                }
-
-                await repository.SaveAsync();
-                return NoContent();
-            }
-            catch (Exception e)
+            if (logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && logicClient.hasAccount)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
+                Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
+                await authHelper.deleteAuthClient(authUser.user_id);
             }
+
+            await repository.SaveAsync();
+            return NoContent();
         }
         // DELETE: api/Client/5/Recipient
         /// <summary>
@@ -887,16 +650,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
         {
-            try
-            {
-                await repository.DeleteRecieverXref(clientID, recipientID, eventID);
-                await repository.SaveAsync();
-                return (await repository.GetClientByIDAsync(clientID));
-            }
-            catch(Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            await repository.DeleteRecieverXref(clientID, recipientID, eventID);
+            await repository.SaveAsync();
+            return await repository.GetClientByIDAsync(clientID);
         }
         // DELETE: api/Client/5/Tag
         /// <summary>
@@ -909,16 +665,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
         {
-            try
-            {
-                await repository.DeleteClientTagRelationshipByID(clientID, tagID);
-                await repository.SaveAsync();
-                return (await repository.GetClientByIDAsync(clientID));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.InnerException);
-            }
+            await repository.DeleteClientTagRelationshipByID(clientID, tagID);
+            await repository.SaveAsync();
+            return await repository.GetClientByIDAsync(clientID);
         }
 
         /// <summary>
