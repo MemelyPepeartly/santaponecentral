@@ -35,10 +35,5 @@
         <span>Client Name: {{ client.clientName }}</span>
       </mat-card-subtitle>
       <mat-divider [inset]="true"></mat-divider>
-      <ng-container *ngFor="let survey of allSurveys">
-        <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
-          <span>Client answered for the {{ survey.surveyDescription }}</span>
-        </mat-card-subtitle>
-      </ng-container>
     </mat-card>
 </mat-list>

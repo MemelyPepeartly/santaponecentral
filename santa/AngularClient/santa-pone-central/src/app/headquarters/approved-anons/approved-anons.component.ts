@@ -6,6 +6,7 @@ import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
+import { Survey, SurveyResponse } from 'src/classes/survey';
 
 @Component({
   selector: 'app-approved-anons',
@@ -19,7 +20,8 @@ export class ApprovedAnonsComponent implements OnInit {
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
 
   @Input() approvedClients: Array<Client> = [];
-  @Input() gatheringAllClients: boolean;
+  @Input() gatheringInfo: boolean;
+  @Input() allSurveys: Array<Survey> = [];
 
   actionTaken: boolean = false;
   showSpinner: boolean = false;
@@ -41,5 +43,11 @@ export class ApprovedAnonsComponent implements OnInit {
     await this.gatherer.gatherAllClients();
     this.showSpinner = false;
     this.actionTaken = false;
+  }
+  answeredForSurvey(client: Client, survey: Survey) : boolean
+  {
+    return client.responses.some((response: SurveyResponse) => {
+      return response.surveyID == survey.surveyID;
+    });
   }
 }

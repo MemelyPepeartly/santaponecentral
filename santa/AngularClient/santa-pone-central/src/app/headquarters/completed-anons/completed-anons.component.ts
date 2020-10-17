@@ -14,7 +14,7 @@ export class CompletedAnonsComponent implements OnInit {
 
   @Input() completedClients: Array<Client> = [];
   @Input() gatheringAllClients: boolean;
-  @Input() allSurveys: Array<Survey> = [];
+
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   actionTaken: boolean = false;
@@ -36,11 +36,5 @@ export class CompletedAnonsComponent implements OnInit {
     await this.gatherer.gatherAllClients();
     this.showSpinner = false;
     this.actionTaken = false;
-  }
-  answeredForSurvey(client: Client, survey: Survey) : boolean
-  {
-    return client.responses.some((response: SurveyResponse) => {
-      return response.surveyID == survey.surveyID;
-    });
   }
 }
