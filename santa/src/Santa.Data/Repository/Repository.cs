@@ -634,51 +634,46 @@ namespace Santa.Data.Repository
             try
             {
                 List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-                List<Entities.Client> listContextClient = await santaContext.Client
-                    .Include(c => c.ClientStatus)
 
-                    /* Assignment Status */
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(x => x.AssignmentStatus)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(x => x.AssignmentStatus)
+                List<Entities.Client> contextClients = await santaContext.Client.ToListAsync();
 
-                    /* Event types */
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(x => x.EventType)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(x => x.EventType)
+                List<ClientRelationXref> contextRelationshipsWithChats = await santaContext.ClientRelationXref
+                    .Include(r => r.SenderClient.ClientStatus)
+                    .Include(r => r.RecipientClient.ClientStatus)
 
-                    /* Tags */
-                    .Include(c => c.ClientRelationXrefRecipientClient)
-                        .ThenInclude(x => x.SenderClient.ClientTagXref)
-                            .ThenInclude(txr => txr.Tag)
-                    .Include(c => c.ClientRelationXrefSenderClient)
-                        .ThenInclude(x => x.RecipientClient.ClientTagXref)
-                            .ThenInclude(txr => txr.Tag)
+                    .Include(r => r.EventType)
+                    .Include(r => r.EventType.Survey)
+
+                    .Include(r => r.AssignmentStatus)
+
+                    .Include(r => r.ChatMessage)
+                        .ThenInclude(cm => cm.MessageReceiverClient)
+                    .Include(r => r.ChatMessage)
+                        .ThenInclude(cm => cm.MessageSenderClient)
 
                     .AsNoTracking()
                     .ToListAsync();
 
-                foreach (Entities.Client client in listContextClient.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
+                List<ChatMessage> contextGeneralChatMessages = await santaContext.ChatMessage
+                    .Where(m => m.ClientRelationXrefId == null)
+                    .Include(s => s.MessageSenderClient)
+                    .Include(r => r.MessageReceiverClient)
+                    .AsNoTracking()
+                    .OrderBy(dt => dt.DateTimeSent)
+                    .ToListAsync();
+
+                // All the chats for assignments
+                foreach (ClientRelationXref contextRelationship in contextRelationshipsWithChats.Where(r => r.SenderClient.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
                 {
-                    if(client.ClientRelationXrefRecipientClient.Count() > 0)
-                    {
-                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryBySubjectIDAsync(Mapper.MapClient(client), subjectClient);
-                        listLogicMessageHistory.Add(logicGeneralHistory);
-                        foreach (ClientRelationXref relationship in client.ClientRelationXrefRecipientClient)
-                        {
-                            MessageHistory logicHistory = await GetChatHistoryByXrefIDAndSubjectIDAsync(relationship.ClientRelationXrefId, subjectClient);
-                            listLogicMessageHistory.Add(logicHistory);
-                        }
-                    }
-                    else
-                    {
-                        MessageHistory logicGeneralHistory = await GetGeneralChatHistoryBySubjectIDAsync(Mapper.MapClient(client), subjectClient);
-                        listLogicMessageHistory.Add(logicGeneralHistory);
-                    }
+                    listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, subjectClient));
                 }
-                return listLogicMessageHistory.OrderBy(h => h.eventType.eventDescription).ToList();
+                // All the general chats
+                foreach (Entities.Client contextClient in contextClients)
+                {
+                    listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextClient, contextGeneralChatMessages.Where(m => m.MessageSenderClientId == contextClient.ClientId || m.MessageReceiverClientId == contextClient.ClientId).ToList(), subjectClient));
+                }
+
+                return listLogicMessageHistory.OrderBy(h => h.assignmentSenderClient.clientNickname).ToList();
             }
             catch(Exception e)
             {
@@ -714,7 +709,6 @@ namespace Santa.Data.Repository
                 MessageHistory logicHistory = new MessageHistory();
                 ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
                     .Include(r => r.EventType)
-                    .Include(r => r.EventType.Survey)
                     .Include(r => r.SenderClient)
                     .Include(r => r.RecipientClient)
                     .Include(r => r.AssignmentStatus)
@@ -726,37 +720,7 @@ namespace Santa.Data.Repository
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
-                logicHistory.relationXrefID = clientRelationXrefID;
-                logicHistory.eventType = Mapper.MapEvent(contextRelationship.EventType);
-
-
-                logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);
-                logicHistory.subjectMessages = contextRelationship.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.senderClient.clientId == subjectClient.clientID)
-                    .ToList();
-                foreach(Message logicMessage in logicHistory.subjectMessages)
-                {
-                    logicMessage.subjectMessage = true;
-                }
-
-                logicHistory.recieverMessages = contextRelationship.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.senderClient.clientId != subjectClient.clientID)
-                    .ToList();
-
-                logicHistory.assignmentRecieverClient = Mapper.MapClientMeta(contextRelationship.RecipientClient);
-                logicHistory.assignmentSenderClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
-                logicHistory.conversationClient = Mapper.MapClientMeta(contextRelationship.SenderClient);
-
-                logicHistory.assignmentStatus = Mapper.MapAssignmentStatus(contextRelationship.AssignmentStatus);
-
-                logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
-
-
-                return logicHistory;
+                return Mapper.MapHistoryInformation(contextRelationship, subjectClient);
             }
             catch (Exception e)
             {
@@ -776,34 +740,7 @@ namespace Santa.Data.Repository
                     .OrderBy(dt => dt.DateTimeSent)
                     .ToListAsync();
 
-                // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
-                logicHistory.relationXrefID = null;
-                logicHistory.eventType = new Event();
-                logicHistory.assignmentRecieverClient = new ClientMeta();
-                logicHistory.assignmentSenderClient = new ClientMeta();
-                logicHistory.assignmentStatus = new Logic.Objects.AssignmentStatus();
-                logicHistory.conversationClient = Mapper.MapClientMeta(conversationClient);
-
-                logicHistory.subjectClient = Mapper.MapClientMeta(subjectClient);
-                logicHistory.subjectMessages = contextListMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.senderClient.clientId == subjectClient.clientID)
-                    .ToList();
-                foreach (Message logicMessage in logicHistory.subjectMessages)
-                {
-                    logicMessage.subjectMessage = true;
-                }
-
-                logicHistory.recieverMessages = contextListMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.senderClient.clientId != subjectClient.clientID)
-                    .ToList();
-
-                logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
-
-                return logicHistory;
+                return Mapper.MapHistoryInformation(conversationClient, contextListMessages, subjectClient);
             }
             catch (Exception e)
             {
@@ -1662,17 +1599,6 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
                     .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList();
             }
-            
-
-            /*
-            IEnumerable<Logic.Objects.Client> matchingClientsQuery = new List<Logic.Objects.Client>();
-
-            if (searchQuery.tags.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.tags.Any(t => searchQuery.tags.Contains(t.tagID)));
-            if (searchQuery.statuses.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => searchQuery.statuses.Contains(c.clientStatus.statusID));
-            if (searchQuery.events.Any()) matchingClientsQuery = matchingClientsQuery.Where(c => c.responses.Any(r => searchQuery.events.Contains(r.responseEvent.eventTypeID)));
-
-            List<Logic.Objects.Client> matchingClients = matchingClientsQuery.ToList();
-            */
 
             return matchingClients;
         }
