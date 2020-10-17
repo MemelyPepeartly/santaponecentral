@@ -28,7 +28,8 @@
           {{ selectedQuestion.questionText != undefined ? selectedQuestion.questionText : "Select a question" }}
         </mat-card-title>
         <mat-card-subtitle>Answer for this question</mat-card-subtitle>
-        <mat-card-subtitle *ngIf="!selectedQuestion.senderCanView">This answer is only shared with the organizers</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="selectedQuestion.questionText != undefined && !selectedQuestion.senderCanView">This answer is <u>only</u> shared with the organizers</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="selectedQuestion.questionText != undefined && selectedQuestion.senderCanView">This answer is shared with anons assigned to send to you</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content *ngIf="selectedQuestion.questionText != undefined">
 
@@ -74,6 +75,7 @@
             <mat-card-title>{{surveyQuestion.questionText}}</mat-card-title>
             <mat-card-subtitle>Answer for this question</mat-card-subtitle>
             <mat-card-subtitle *ngIf="!surveyQuestion.senderCanView">This answer is only shared with the organizers</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="surveyQuestion.senderCanView">This answer is shared with anons assigned to send to you</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <!-- Response shown here -->
