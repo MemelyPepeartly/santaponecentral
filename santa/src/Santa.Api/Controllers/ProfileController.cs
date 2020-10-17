@@ -41,36 +41,27 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
-            try
+            // Gets the claims from the token
+            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+
+            // Checks to make sure the token's email is only getting the email for its own profile. Takes one less call than using the IsAuthorized method here
+            if (claimEmail == email)
             {
+                Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
 
-                // Gets the claims from the token
-                string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-
-                // Checks to make sure the token's email is only getting the email for its own profile. Takes one less call than using the IsAuthorized method here
-                if (claimEmail == email)
+                if (logicProfile == null)
                 {
-                    Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-
-                    if (logicProfile == null)
-                    {
-                        return NoContent();
-                    }
-                    else
-                    {
-                        return Ok(logicProfile);
-                    }
+                    return NoContent();
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    return Ok(logicProfile);
                 }
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
-
         }
         // GET: api/Profile/email@domain.com/Address
         /// <summary>
@@ -84,42 +75,35 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressByEmailAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
         {
-            try
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            // Checks to make sure the token's email is only getting the email for its own profile
+            if (IsAuthorized(logicClient))
             {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                // Checks to make sure the token's email is only getting the email for its own profile
-                if (IsAuthorized(logicClient))
+                logicClient.address = new Address()
                 {
-                    logicClient.address = new Address()
-                    {
-                        addressLineOne = newAddress.clientAddressLine1,
-                        addressLineTwo = newAddress.clientAddressLine2,
-                        city = newAddress.clientCity,
-                        state = newAddress.clientState,
-                        country = newAddress.clientCountry,
-                        postalCode = newAddress.clientPostalCode
-                    };
-                    await repository.UpdateClientByIDAsync(logicClient);
-                    await repository.SaveAsync();
+                    addressLineOne = newAddress.clientAddressLine1,
+                    addressLineTwo = newAddress.clientAddressLine2,
+                    city = newAddress.clientCity,
+                    state = newAddress.clientState,
+                    country = newAddress.clientCountry,
+                    postalCode = newAddress.clientPostalCode
+                };
+                await repository.UpdateClientByIDAsync(logicClient);
+                await repository.SaveAsync();
 
-                    Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
-                    if (logicProfile == null)
-                    {
-                        return NoContent();
-                    }
-                    else
-                    {
-                        return Ok(logicProfile);
-                    }
+                Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
+                if (logicProfile == null)
+                {
+                    return NoContent();
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    return Ok(logicProfile);
                 }
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
 
         }
@@ -127,27 +111,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:profile")]
         public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
         {
-            try
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            if (IsAuthorized(logicClient))
             {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                if (IsAuthorized(logicClient))
-                {
-                    // Logic needed here for updating assignment status
-                    await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
-                    await repository.SaveAsync();
+                // Logic needed here for updating assignment status
+                await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
+                await repository.SaveAsync();
 
-                    // Update profile and send back the updated recipient
-                    Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
-                    return Ok(logicProfile.assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
+                // Update profile and send back the updated recipient
+                Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
+                return Ok(logicProfile.assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
             }
-            catch(Exception e)
+            else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
         }
         private bool IsAuthorized(Client logicClient)
