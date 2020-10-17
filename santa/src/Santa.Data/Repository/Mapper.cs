@@ -582,5 +582,138 @@ namespace Santa.Data.Repository
             return contextEntryType;
         }
         #endregion
+
+        #region Message History
+        /// <summary>
+        /// Maps the information of a message history with the contents of a relationship, and the viewer subject client information
+        /// </summary>
+        /// <param name="contextRelationshipXref"></param>
+        /// <param name="logicSubjectClient"></param>
+        /// <returns></returns>
+        public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, Logic.Objects.Client logicSubjectClient)
+        {
+            List<Message> logicListRecieverMessages = contextRelationshipXref.ChatMessage
+                .Select(Mapper.MapMessage)
+                .OrderBy(dt => dt.dateTimeSent)
+                .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
+                .ToList();
+
+            
+            MessageHistory logicHistory = new MessageHistory()
+            {
+                relationXrefID = contextRelationshipXref.ClientRelationXrefId,
+                eventType = MapEvent(contextRelationshipXref.EventType),
+                assignmentStatus = MapAssignmentStatus(contextRelationshipXref.AssignmentStatus),
+
+                subjectClient = MapClientMeta(logicSubjectClient),
+                conversationClient = MapClientMeta(contextRelationshipXref.SenderClient),
+                assignmentRecieverClient = MapClientMeta(contextRelationshipXref.RecipientClient),
+                assignmentSenderClient = MapClientMeta(contextRelationshipXref.SenderClient),
+
+                subjectMessages = contextRelationshipXref.ChatMessage
+                .Select(Mapper.MapMessage)
+                .OrderBy(dt => dt.dateTimeSent)
+                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
+                .ToList(),
+
+                recieverMessages = logicListRecieverMessages,
+
+                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
+            };
+
+            foreach (Message logicMessage in logicHistory.subjectMessages)
+            {
+                logicMessage.subjectMessage = true;
+            }
+
+            return logicHistory;
+        }
+        /// <summary>
+        /// Maps history information for general chats, which do not have a relationshipXrefID, EventType, or AssignmentClient using a list of contextChatMessages relating to the client's general conversation
+        /// </summary>
+        /// <param name="contextConversationClient"></param>
+        /// <param name="contextChatMessages"></param>
+        /// <param name="logicSubjectClient"></param>
+        /// <returns></returns>
+        public static Logic.Objects.MessageHistory MapHistoryInformation(Entities.Client contextConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
+        {
+            List<Message> logicListRecieverMessages = contextChatMessages
+            .Select(Mapper.MapMessage)
+            .OrderBy(dt => dt.dateTimeSent)
+            .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
+            .ToList();
+
+            // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
+            MessageHistory logicHistory = new MessageHistory()
+            {
+                relationXrefID = null,
+                eventType = new Event(),
+                assignmentStatus = new Logic.Objects.AssignmentStatus(),
+
+                subjectClient = MapClientMeta(logicSubjectClient),
+                conversationClient = MapClientMeta(contextConversationClient),
+                assignmentRecieverClient = new ClientMeta(),
+                assignmentSenderClient = new ClientMeta(),
+
+                subjectMessages = contextChatMessages
+                .Select(Mapper.MapMessage)
+                .OrderBy(dt => dt.dateTimeSent)
+                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
+                .ToList(),
+
+                recieverMessages = logicListRecieverMessages,
+
+                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
+            };
+
+            logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
+
+            return logicHistory;
+        }
+
+        /// <summary>
+        /// Maps history information for general chats, which do not have a relationshipXrefID, EventType, or AssignmentClient using a list of contextChatMessages relating to the client's general conversation. Uses a logic client object
+        /// rather than a context client object
+        /// </summary>
+        /// <param name="logicConversationClient"></param>
+        /// <param name="contextChatMessages"></param>
+        /// <param name="logicSubjectClient"></param>
+        /// <returns></returns>
+        public static Logic.Objects.MessageHistory MapHistoryInformation(Logic.Objects.Client logicConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
+        {
+            List<Message> logicListRecieverMessages = contextChatMessages
+            .Select(Mapper.MapMessage)
+            .OrderBy(dt => dt.dateTimeSent)
+            .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
+            .ToList();
+
+            // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
+            MessageHistory logicHistory = new MessageHistory()
+            {
+                relationXrefID = null,
+                eventType = new Event(),
+                assignmentStatus = new Logic.Objects.AssignmentStatus(),
+
+                subjectClient = MapClientMeta(logicSubjectClient),
+                conversationClient = MapClientMeta(logicConversationClient),
+                assignmentRecieverClient = new ClientMeta(),
+                assignmentSenderClient = new ClientMeta(),
+
+                subjectMessages = contextChatMessages
+                .Select(Mapper.MapMessage)
+                .OrderBy(dt => dt.dateTimeSent)
+                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
+                .ToList(),
+
+                recieverMessages = logicListRecieverMessages,
+
+                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
+            };
+
+            logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
+
+            return logicHistory;
+        }
+        #endregion
     }
 }
