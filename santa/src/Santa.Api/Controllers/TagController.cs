@@ -29,19 +29,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:tags")]
         public async Task<ActionResult<List<Logic.Objects.Tag>>> GetAllTags()
         {
-            try
+            List<Logic.Objects.Tag> logicTags = await repository.GetAllTags();
+            if (logicTags == null)
             {
-                List<Logic.Objects.Tag> logicTags = await repository.GetAllTags();
-                if (logicTags == null)
-                {
-                    return NotFound();
-                }
-                return Ok(logicTags);
+                return NotFound();
             }
-            catch (ArgumentNullException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            return Ok(logicTags);
         }
 
         // GET: api/Tag/5
@@ -49,14 +42,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> GetTagByID(Guid tagID)
         {
-            try
-            {
-                return Ok(await repository.GetTagByIDAsync(tagID));
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+            return Ok(await repository.GetTagByIDAsync(tagID));
         }
 
         // POST: api/Tag
@@ -64,22 +50,14 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "create:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> PostTag([FromBody, Bind("tagName")] ApiTag tag)
         {
-            try
+            Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
             {
-                Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
-                {
-                    tagID = Guid.NewGuid(),
-                    tagName = tag.tagName
-                };
-                await repository.CreateTag(newLogicTag);
-                await repository.SaveAsync();
-                return Ok(await repository.GetTagByIDAsync(newLogicTag.tagID));
-
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
+                tagID = Guid.NewGuid(),
+                tagName = tag.tagName
+            };
+            await repository.CreateTag(newLogicTag);
+            await repository.SaveAsync();
+            return Ok(await repository.GetTagByIDAsync(newLogicTag.tagID));
         }
 
         // PUT: api/Tag/5
@@ -87,42 +65,22 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> PutTagName(Guid tagID, [FromBody, Bind("tagName")] ApiTag tag)
         {
-            try
-            {
-                Logic.Objects.Tag logicTag = await repository.GetTagByIDAsync(tagID);
-                logicTag.tagName = tag.tagName;
-                try
-                {
-                    await repository.UpdateTagNameByIDAsync(logicTag);
-                    await repository.SaveAsync();
-                    return (await repository.GetTagByIDAsync(tagID));
-                }
-                catch (Exception e)
-                {
-                    throw e.InnerException;
-                }
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
+            Logic.Objects.Tag logicTag = await repository.GetTagByIDAsync(tagID);
+            logicTag.tagName = tag.tagName;
+
+            await repository.UpdateTagNameByIDAsync(logicTag);
+            await repository.SaveAsync();
+            return (await repository.GetTagByIDAsync(tagID));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Tag/5
         [HttpDelete("{tagID}")]
         [Authorize(Policy = "delete:tags")]
         public async Task<ActionResult> DeleteTag(Guid tagID)
         {
-            try
-            {
-                await repository.DeleteTagByIDAsync(tagID);
-                await repository.SaveAsync();
-                return NoContent();
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
+            await repository.DeleteTagByIDAsync(tagID);
+            await repository.SaveAsync();
+            return NoContent();
         }
     }
 }
