@@ -35,7 +35,7 @@ mat-chip-list
 .scrollDiv
 {
   height: fit-content;
-  max-height: 350px;
+  max-height: 600px;
   overflow: scroll;
   height: xyz;
   margin-top: 15px;
