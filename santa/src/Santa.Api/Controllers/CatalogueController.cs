@@ -28,16 +28,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Client>>> GetClientsByQuery([FromBody] SearchQueries model)
         {
-            try
-            {
-                List<Logic.Objects.Client> listLogicClient = await repository.SearchClientByQuery(model);
+            List<Logic.Objects.Client> listLogicClient = await repository.SearchClientByQuery(model);
 
-                return Ok(listLogicClient);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
+            return Ok(listLogicClient);
         }
     }
 }
