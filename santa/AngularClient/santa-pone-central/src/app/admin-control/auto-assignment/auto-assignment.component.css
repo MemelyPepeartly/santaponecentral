@@ -1,80 +1,50 @@
-mat-chip
-{
-    max-width: 200px;
+mat-chip {
+  max-width: 200px;
 }
-mat-chip-list
-{
-    margin: 5px;
+mat-chip-list {
+  margin: 5px;
 }
-.api-card
-{
-    width: 40%;
-    min-width: 500px;
-    margin: 15px;
-    display: inline-block;
-    vertical-align: top;
+.apiCard {
+  display: inline-block;
+  vertical-align: top;
+  width: 45%;
+  min-width: 425px;
+  margin-top: 15px;
+  margin-left: 15px;
+  text-align: left;
 }
-.chipText
-{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
+.chipText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
-.logEntry
-{
-    color: rgb(19, 141, 19);
-    margin-top: 5px;
+.logEntry {
+  color: rgb(19, 141, 19);
+  margin-top: 5px;
 }
-.spacingStyle
-{
+.spacingStyle {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-/* SCROLLBAR FOR LOG STYLES */
-.scrollDiv
+.pairingComponent
 {
-  height: fit-content;
-  max-height: 600px;
-  overflow: scroll;
-  height: xyz;
-  margin-top: 15px;
-}
-.scrollDiv::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar {
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-  background: #fff;
-}
-.scrollbar-primary::-webkit-scrollbar
-{
-    width: 12px;
-    background-color: #F5F5F5;
-}
-
-.scrollbar-primary::-webkit-scrollbar-thumb
-{
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-    background-color: #4285F4;
+  display: block;
+  margin-bottom: 10px;
 }
 /* SELECTED ANON COMPONENT STYLES */
-#overlay
-{
-    position: fixed; /* Sit on top of the page content */
-    display: block;
-    width: 100%; /* Full width (cover the whole page) */
-    height: 100%; /* Full height (cover the whole page) */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
 }
 .container {
   position: fixed;
@@ -84,87 +54,28 @@ mat-chip-list
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color:white;
+  background-color: white;
   z-index: 3;
   border-radius: 8px;
   text-align: left !important;
 }
-.fixedDiv
-{
-    position: absolute;
-    top:2%;
-    bottom: 2%;
-    right: 5%;
-    left: 5%;
-    border-radius: 8px;
-    background-color: white;
+.fixedDiv {
+  position: absolute;
+  top: 2%;
+  bottom: 2%;
+  right: 5%;
+  left: 5%;
+  border-radius: 8px;
+  background-color: white;
 }
 .fixedDiv::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
-/* Possible Pairing Styling */
-.headerContainer
+@media (max-width:600px)
 {
-  display: block;
-  text-align: left;
-  background-color: #f5f5f5;
-}
-.headerDiv
-{
-  display: inline-block;
-  margin-left: 3%;
-  width: 40.5%;
-}
-.headerText
-{
-  display: block;
-  margin-bottom: auto;
-  padding: 15px;
-}
-.pairingContainer
-{
-  display: block;
-  text-align: left;
-}
-.pairingDiv
-{
-  display: inline-block;
-  width: 50%;
-  vertical-align: top;
-}
-.listOption
-{
-  height: fit-content;
-  margin-top: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 8px;
-}
-.infoSubtitle
-{
-  margin-left: 20px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.tagDiv
-{
-  display: block;
-  margin-left: 15px;
-}
-.tag
-{
-  text-align: center;
-  font-size: 12px;
-  width: 70px;
-  min-height: 20px;
-  margin: 2px;
-}
-.tagText
-{
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px;
+  .api-card {
+    width: 80%;
+    margin-left: 0px;
+  }
 }
