@@ -25,7 +25,6 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
-
 @NgModule({
   imports: [
   CommonModule,

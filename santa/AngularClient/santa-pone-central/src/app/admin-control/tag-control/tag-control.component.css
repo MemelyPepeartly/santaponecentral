@@ -15,7 +15,7 @@ mat-chip-list
 }
 .api-card
 {
-    width: 325px;
+    width: 45%;
     margin: 15px;
     display: inline-block;
     vertical-align: top;
