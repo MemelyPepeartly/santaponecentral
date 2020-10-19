@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairing } from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices} from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -211,13 +211,16 @@ export class MapService {
 
     return mappedAssignmentStatus;
   }
-  mapPossiblePairing(possiblePairing) : PossiblePairing
+  mapPossiblePairing(possiblePairing) : PossiblePairingChoices
   {
-    let mappedPossiblePairing: PossiblePairing =
+    let mappedPossiblePairing: PossiblePairingChoices =
     {
       sendingAgent: this.mapClient(possiblePairing.sendingAgent),
-      possibleAssignment: this.mapClient(possiblePairing.possibleAssignment)
-    }
+      potentialAssignments: []
+    };
+    possiblePairing.potentialAssignments.forEach(assignment => {
+      mappedPossiblePairing.potentialAssignments.push(this.mapClient(assignment));
+    });
     return mappedPossiblePairing;
   }
   mapStatus(status) : Status
