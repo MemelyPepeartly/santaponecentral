@@ -1,18 +1,27 @@
-<mat-tab-group class="tabGroup" mat-align-tabs="center" dynamicHeight>
-  <mat-tab label="Tag Control">
-    <div class="componentDiv">
-      <app-tag-control [allTags]="allTags"></app-tag-control>
-    </div>
-  </mat-tab>
-  <mat-tab label="Mass-Assignment Control">
-    <app-auto-assignment [allClients]="allClients"></app-auto-assignment>
-  </mat-tab>
-  <mat-tab label="Event Type Control" *ngIf="isDev">
-    <app-event-control [allEvents]="allEvents"></app-event-control>
-  </mat-tab>
-  <mat-tab label="Survey Control" *ngIf="isDev">
-    <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions"></app-survey-control>
-    <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
-  </mat-tab>
-</mat-tab-group>
+<div class="adminControlContainer">
+  <mat-tab-group class="tabGroup" mat-align-tabs="center" dynamicHeight>
+    <mat-tab label="Tag Control">
+      <div class="componentDiv tagControlDiv">
+        <app-tag-control [allTags]="allTags"></app-tag-control>
+      </div>
+    </mat-tab>
+    <mat-tab label="Mass-Assignment Control">
+      <div class="componentDiv massControlDiv">
+        <app-auto-assignment [allClients]="allClients"></app-auto-assignment>
+      </div>
+    </mat-tab>
+    <mat-tab label="Event Type Control" *ngIf="isDev">
+      <div class="componentDiv eventControlDiv">
+        <app-event-control [allEvents]="allEvents"></app-event-control>
+      </div>
+    </mat-tab>
+    <mat-tab label="Survey Control" *ngIf="isDev">
+      <div class="componentDiv surveyControlDiv">
+        <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions"></app-survey-control>
+        <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
 

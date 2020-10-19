@@ -9,8 +9,7 @@ mat-chip-list {
   vertical-align: top;
   width: 45%;
   min-width: 425px;
-  margin-top: 15px;
-  margin-left: 15px;
+  margin: 15px;
   text-align: left;
 }
 .chipText {
@@ -75,7 +74,8 @@ mat-chip-list {
 @media (max-width:600px)
 {
   .api-card {
-    width: 80%;
-    margin-left: 0px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
