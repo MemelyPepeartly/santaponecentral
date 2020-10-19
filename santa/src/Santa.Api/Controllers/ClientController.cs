@@ -124,20 +124,19 @@ namespace Santa.Api.Controllers
                 // Foreach mailer
                 foreach (Client mailer in massMailers)
                 {
+                    PossiblePairing mailerRelationships = new PossiblePairing();
+                    mailerRelationships.sendingAgent = mailer;
                     // Foreach clients to be assigned mass mail
                     foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                     {
                         // If the mass mailer doesnt already have the potential assignment in their assignments list, and they aren't themselves
                         if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                         {
-                            // Add the possible pairing to the list
-                            possiblePairings.Add(new PossiblePairing()
-                            {
-                                sendingAgent = mailer,
-                                possibleAssignment = potentialAssignment
-                            });
+                            // Add the possible pairing to the list for that mailer
+                            mailerRelationships.possibleAssignments.Add(potentialAssignment);
                         }
                     }
+                    possiblePairings.Add(mailerRelationships);
                 }
             }
 
@@ -590,7 +589,7 @@ namespace Santa.Api.Controllers
                 targetClient.clientStatus = originalStatus;
                 await repository.UpdateClientByIDAsync(targetClient);
                 await repository.SaveAsync();
-                return StatusCode(StatusCodes.Status417ExpectationFailed, "Something went wrong approving the anon, or sending them an email for the event. Status has been left unchanged.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong approving the anon, or sending them an email for the event. Status has been left unchanged.");
             }
         }
 

@@ -10,6 +10,6 @@ namespace Santa.Logic.Objects.Information_Objects
     public class PossiblePairing
     {
         public Client sendingAgent { get; set; }
-        public Client possibleAssignment { get; set; }
+        public List<Client> possibleAssignments { get; set; }
     }
 }
