@@ -108,14 +108,14 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("AutoAssignmentPairs")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<PossiblePairing>>> GetAutoAssignmentsToMassMailerPairs()
+        public async Task<ActionResult<List<PossiblePairingChoices>>> GetAutoAssignmentsToMassMailerPairs()
         {
             List<Client> allClients = await repository.GetAllClients();
             List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
-            List<PossiblePairing> possiblePairings = new List<PossiblePairing>();
+            List<PossiblePairingChoices> possiblePairings = new List<PossiblePairingChoices>();
 
             Event logicCardExchangeEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
 
@@ -124,8 +124,11 @@ namespace Santa.Api.Controllers
                 // Foreach mailer
                 foreach (Client mailer in massMailers)
                 {
-                    PossiblePairing mailerRelationships = new PossiblePairing();
-                    mailerRelationships.sendingAgent = mailer;
+                    PossiblePairingChoices mailerRelationships = new PossiblePairingChoices()
+                    {
+                        sendingAgent = mailer,
+                        potentialAssignments = new List<Client>()
+                    };
                     // Foreach clients to be assigned mass mail
                     foreach (Client potentialAssignment in clientsToBeAssignedToMassMailers)
                     {
@@ -133,7 +136,7 @@ namespace Santa.Api.Controllers
                         if (!mailer.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID) && mailer.clientID != potentialAssignment.clientID)
                         {
                             // Add the possible pairing to the list for that mailer
-                            mailerRelationships.possibleAssignments.Add(potentialAssignment);
+                            mailerRelationships.potentialAssignments.Add(potentialAssignment);
                         }
                     }
                     possiblePairings.Add(mailerRelationships);
