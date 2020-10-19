@@ -3,11 +3,19 @@
         Approved Anons
     </mat-toolbar-row>
     <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
-        <div id="iconDiv">
+        <div style="margin-top: 15px;">
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
             <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved anons: {{ approvedClients.length }}</mat-card-subtitle>
+        </div>
+        <div class="paginatorDiv">
+          <mat-paginator
+          (page)="switchPage($event)"
+          [length]="approvedClients.length"
+          [pageSize]="paginatorPageSize"
+          [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -15,7 +23,7 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of approvedClients" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item *ngFor="let client of pagedClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
           <h1 class="inline">{{ client.clientNickname }}</h1>
           <mat-chip-list class="inline tagList" [selectable]="false" >

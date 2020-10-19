@@ -7,6 +7,7 @@ import { MapService } from '../../services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-approved-anons',
@@ -23,11 +24,18 @@ export class ApprovedAnonsComponent implements OnInit {
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
+  public pagedClients: Array<Client> = [];
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 
+  paginatorPageSize: number = 10;
 
   ngOnInit() {
+    let event: PageEvent = new PageEvent()
+    event.pageSize = this.paginatorPageSize;
+    event.pageIndex = 1;
+    this.switchPage(event);
   }
   showCardInfo(client)
   {
@@ -50,4 +58,9 @@ export class ApprovedAnonsComponent implements OnInit {
       return response.surveyID == survey.surveyID;
     });
   }
+  switchPage(event: PageEvent)
+  {
+    this.pagedClients = this.approvedClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
+  }
+
 }
