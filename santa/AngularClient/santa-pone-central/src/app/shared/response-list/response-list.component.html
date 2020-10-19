@@ -38,9 +38,8 @@
         <div *ngIf="puttingResponse" class="spinnerDiv">
           <app-small-loading-spin ></app-small-loading-spin>
         </div>
-        <span *ngIf="getResponseFromSelectedQuestion().responseText != undefined && !puttingResponse"
-          class="responseText">{{ getResponseFromSelectedQuestion().responseText }}</span>
-        <span *ngIf="getResponseFromSelectedQuestion().responseText == undefined && !puttingResponse" class="responseText error">An answer
+        <div class="responseText responseTextContent" *ngIf="getResponseFromSelectedQuestion().responseText != undefined && !puttingResponse">{{ getResponseFromSelectedQuestion().responseText }}</div>
+        <span class="responseText error" *ngIf="getResponseFromSelectedQuestion().responseText == undefined && !puttingResponse">An answer
           for this question does not exist</span>
         <mat-divider [inset]="true"></mat-divider>
 
@@ -80,7 +79,7 @@
           <mat-card-content>
             <!-- Response shown here -->
             <mat-divider [inset]="true"></mat-divider>
-            <span class="responseText" *ngIf="getResponseFromSelectedQuestion(surveyQuestion).responseText != undefined">{{ getResponseFromSelectedQuestion(surveyQuestion).responseText }}</span>
+            <div class="responseText responseTextContent" *ngIf="getResponseFromSelectedQuestion(surveyQuestion).responseText != undefined">{{ getResponseFromSelectedQuestion(surveyQuestion).responseText }}</div>
             <span class="responseText error" *ngIf="getResponseFromSelectedQuestion(surveyQuestion).responseText == undefined" >An answer for this question does not exist</span>
             <mat-divider [inset]="true"></mat-divider>
           </mat-card-content>

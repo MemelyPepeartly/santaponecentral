@@ -61,6 +61,11 @@ mat-card-header
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.responseTextContent
+{
+  white-space: pre-wrap;
+  text-align: left;
+}
 .spinnerDiv
 {
   width: 100%;
