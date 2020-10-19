@@ -1,37 +1,18 @@
-<div id="container">
-    <div class="mat-elevation-z5 sidenav-container">
-        <mat-toolbar>Tag Control</mat-toolbar>
-        <mat-nav-list>
-            <mat-list-item role="listitem" (click)="selectTagControl()">Tags</mat-list-item>
-        </mat-nav-list>
-        <mat-toolbar>Mass-Assignment</mat-toolbar>
-        <mat-nav-list>
-            <mat-list-item role="listitem" (click)="selectAutoAssignControl()">Mass Mail</mat-list-item>
-        </mat-nav-list>
-        <mat-toolbar>Event and Survey</mat-toolbar>
-        <mat-nav-list>
-            <mat-list-item role="listitem"
-            matTooltip="Not functional yet"
-            [matTooltipPosition]="'right'"
-            [disabled]="!isDev"
-            (click)="selectEventControl()">Events</mat-list-item>
-            <mat-list-item role="listitem"
-            matTooltip="Not functional yet"
-            [matTooltipPosition]="'right'"
-            [disabled]="!isDev"
-            (click)="selectSurveyControl()">Surveys</mat-list-item>
-            <mat-list-item role="listitem"
-            matTooltip="Not functional yet"
-            [matTooltipPosition]="'right'"
-            [disabled]="!isDev"
-            (click)="selectQuestionControl()">Questions</mat-list-item>
-        </mat-nav-list>
+<mat-tab-group class="tabGroup" mat-align-tabs="center" dynamicHeight>
+  <mat-tab label="Tag Control">
+    <div class="componentDiv">
+      <app-tag-control [allTags]="allTags"></app-tag-control>
     </div>
-    <div id="component-div">
-        <app-tag-control [allTags]="allTags" *ngIf="tagControlSelected"></app-tag-control>
-        <app-auto-assignment [allClients]="allClients" *ngIf="autoAssignControlSelected"></app-auto-assignment>
-        <app-event-control [allEvents]="allEvents" *ngIf="eventControlSelected"></app-event-control>
-        <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions" *ngIf="surveyControlSelected"></app-survey-control>
-        <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
-    </div>
-</div>
+  </mat-tab>
+  <mat-tab label="Mass-Assignment Control">
+    <app-auto-assignment [allClients]="allClients"></app-auto-assignment>
+  </mat-tab>
+  <mat-tab label="Event Type Control" *ngIf="isDev">
+    <app-event-control [allEvents]="allEvents"></app-event-control>
+  </mat-tab>
+  <mat-tab label="Survey Control" *ngIf="isDev">
+    <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions"></app-survey-control>
+    <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
+  </mat-tab>
+</mat-tab-group>
+

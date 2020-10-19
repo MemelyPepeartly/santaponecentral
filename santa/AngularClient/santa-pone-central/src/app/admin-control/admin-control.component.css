@@ -1,48 +1,13 @@
-mat-drawer
-{
-  background-color: transparent;
-  width: 200px;
-}
-mat-drawer-content
-{
-  align-content: center;
-}
-.sidenav-container
+.tabGroup
 {
   background-color: white;
 }
-#component-div
+.componentDiv
 {
-  display: inline-block;
-  width: fit-content;
-  min-width: 600px;
-  text-align: center;
-}
-#container
-{
+  display: block;
   width: 100%;
-  display: flex;
+  height: fit-content;
 }
 @media (max-width:600px)
 {
-  #component-div
-  {
-    display: block;
-    width: fit-content;
-    text-align: center;
-  }
-  .sidenav-container
-  {
-    height: fit-content;
-    width: 100%;
-    min-width: 600px;
-    text-align: center;
-    background-color: white;
-  }
-  #container
-  {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
 }
