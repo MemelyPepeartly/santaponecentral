@@ -12,7 +12,7 @@
 </div>
 
 <div class="functionalCardContainer">
-  <mat-card class="apiCard cardMargin mat-elevation-z5">
+  <mat-card class="apiCard mat-elevation-z5">
     <mat-card-header>
       <mat-card-title>Auto Assign</mat-card-title>
       <mat-card-subtitle>Assigns any Mass Mail Recipients that havn't been assigned to mass mailers</mat-card-subtitle>
@@ -49,7 +49,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="apiCard cardMargin mat-elevation-z5" *ngIf="buttonClicked">
+  <mat-card class="apiCard mat-elevation-z5" *ngIf="buttonClicked">
     <mat-card-header>
       <mat-card-title>Potential Autoassigns</mat-card-title>
       <mat-card-subtitle>List of queued assignments to be approved</mat-card-subtitle>
@@ -57,12 +57,14 @@
     <mat-card-content *ngIf="gettingAssignmentPairings">
       <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
     </mat-card-content>
-    <mat-card-content *ngIf="!gettingAssignmentPairings">
-      <app-agent-pairing-control class="pairingComponent" *ngFor="let possiblePairingsObject of possiblePairings"
+    <mat-card-content style="text-align: center;" *ngIf="!gettingAssignmentPairings">
+      <div class="pairingComponentDiv" *ngFor="let possiblePairingsObject of possiblePairings">
+        <app-agent-pairing-control
         [possiblePairingsObject]="possiblePairingsObject"
         (completedPostEvent)="true"
         (failedPostEvent)="true">
-      </app-agent-pairing-control>
+        </app-agent-pairing-control>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

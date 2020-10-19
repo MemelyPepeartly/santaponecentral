@@ -7,7 +7,7 @@ mat-chip-list {
 .apiCard {
   display: inline-block;
   vertical-align: top;
-  width: 45%;
+  width: 95%;
   min-width: 425px;
   margin: 15px;
   text-align: left;
@@ -26,10 +26,16 @@ mat-chip-list {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.pairingComponent
+.pairingComponentDiv
 {
-  display: block;
+  display: inline-block;
+  width: 45%;
+  min-width: 450px;
+  margin-left: 10px;
+  margin-right: 10px;
   margin-bottom: 10px;
+  vertical-align: top;
+  text-align: left;
 }
 /* SELECTED ANON COMPONENT STYLES */
 #overlay {
@@ -77,5 +83,9 @@ mat-chip-list {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+  }
+  .pairingComponentDiv
+  {
+    width: 90%;
   }
 }
