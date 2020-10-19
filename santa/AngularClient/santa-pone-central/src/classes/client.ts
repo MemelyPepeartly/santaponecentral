@@ -42,6 +42,6 @@ export class AssignmentStatus {
 }
 export class PossiblePairing {
   sendingAgent: Client;
-  possibleAssignment: Client;
+  possibleAssignments: Array<Client>;
 }
 
