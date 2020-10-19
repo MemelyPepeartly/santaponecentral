@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SantaApiPostService } from 'src/app/services/santa-api.service';
+import { Client, PossiblePairingChoices } from 'src/classes/client';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-agent-pairing-control',
@@ -7,9 +10,54 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AgentPairingControlComponent implements OnInit {
 
-  constructor() { }
+  constructor(public SantaApiPost: SantaApiPostService,) { }
+
+  @Input() possiblePairingsObject: PossiblePairingChoices = new PossiblePairingChoices();
+
+  @Output() completedPostEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() failedPostEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  public postingNewAssignments: boolean = false;
+
+  public selectedPotentialAssignments: Array<Client> = [];
+
 
   ngOnInit(): void {
   }
+  public async postAssignmentPairings()
+  {
+    this.postingNewAssignments = true;
 
+    let pairingModel: Array<Pairing> = [];
+    debugger;
+
+    this.selectedPotentialAssignments.forEach((client: Client) => {
+      let modelPair: Pairing =
+        {
+          senderAgentID: this.possiblePairingsObject.sendingAgent.clientID,
+          assignmentClientID: client.clientID
+        }
+        pairingModel.push(modelPair);
+    });
+
+    let responseModel: SelectedAutoAssignmentsResponse =
+    {
+      pairings: pairingModel
+    }
+
+    this.SantaApiPost.postSelectedAutoAssignments(responseModel).subscribe(async () => {
+      this.completedPostEvent.emit(true);
+      this.possiblePairingsObject.potentialAssignments = this.possiblePairingsObject.potentialAssignments.filter((client: Client) => {return !this.selectedPotentialAssignments.some((selection: Client) => {return selection.clientID == client.clientID})})
+      this.postingNewAssignments = false;
+    }, err =>
+    {
+      this.failedPostEvent.emit(true);
+      this.postingNewAssignments = false;
+      console.group()
+      console.log("Something went wrong posting selected auto assignments!")
+      console.log(err);
+      console.groupEnd();
+    });
+
+  }
 }
