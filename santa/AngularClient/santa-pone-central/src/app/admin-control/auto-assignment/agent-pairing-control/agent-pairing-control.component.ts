@@ -27,9 +27,7 @@ export class AgentPairingControlComponent implements OnInit {
   public async postAssignmentPairings()
   {
     this.postingNewAssignments = true;
-
     let pairingModel: Array<Pairing> = [];
-    debugger;
 
     this.selectedPotentialAssignments.forEach((client: Client) => {
       let modelPair: Pairing =
@@ -47,7 +45,12 @@ export class AgentPairingControlComponent implements OnInit {
 
     this.SantaApiPost.postSelectedAutoAssignments(responseModel).subscribe(async () => {
       this.completedPostEvent.emit(true);
-      this.possiblePairingsObject.potentialAssignments = this.possiblePairingsObject.potentialAssignments.filter((client: Client) => {return !this.selectedPotentialAssignments.some((selection: Client) => {return selection.clientID == client.clientID})})
+      // Set the potential assignments that were successfully posted equal to a list without the ones that were not posted
+      // Small local update to avoid having to gather everything again
+      this.possiblePairingsObject.potentialAssignments = this.possiblePairingsObject.potentialAssignments.filter((client: Client) => {
+        return !this.selectedPotentialAssignments.some((selection: Client) => {return selection.clientID == client.clientID
+        });
+      });
       this.postingNewAssignments = false;
     }, err =>
     {
