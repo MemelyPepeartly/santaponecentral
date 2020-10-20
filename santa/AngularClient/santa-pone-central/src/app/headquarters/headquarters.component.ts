@@ -12,6 +12,7 @@ import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.co
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-headquarters',
@@ -52,6 +53,8 @@ export class HeadquartersComponent implements OnInit {
   public gatheringAllSurveys: boolean;
   public clickAwayLocked: boolean;
 
+  public startingPageEvent: PageEvent = new PageEvent();
+
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
   @ViewChild(CompletedAnonsComponent) completedAnonsComponent: CompletedAnonsComponent;
   @ViewChild(DeniedAnonsComponent) deniedAnonsComponent: DeniedAnonsComponent;
@@ -82,6 +85,7 @@ export class HeadquartersComponent implements OnInit {
 
     await this.gatherer.gatherAllClients();
     await this.gatherer.gatherAllSurveys();
+    this.setPagination();
   }
   public async showClientWindow(client: Client)
   {
@@ -92,7 +96,8 @@ export class HeadquartersComponent implements OnInit {
     // If the list of all clients does not have the input client in it, refresh the list in the background (Used namely for manual refresh)
     if(!this.allClients.some((c: Client) => {return c.clientID == client.clientID}))
     {
-      await this.gatherer.gatherAllClients()
+      await this.gatherer.gatherAllClients();
+      this.triggerReslice();
     }
   }
   showManualSignupWindow()
@@ -110,6 +115,7 @@ export class HeadquartersComponent implements OnInit {
         if(forceRefresh)
         {
           await this.gatherer.gatherAllClients();
+          this.triggerReslice();
         }
       }
       else if(this.showManualSignupCard)
@@ -121,6 +127,7 @@ export class HeadquartersComponent implements OnInit {
       {
         await this.gatherer.gatherAllClients();
         this.setChildrenAction(false);
+        this.triggerReslice();
       }
     }
     else
@@ -138,6 +145,27 @@ export class HeadquartersComponent implements OnInit {
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
+  }
+  public setPagination()
+  {
+
+    this.startingPageEvent.pageSize = 10;
+    this.startingPageEvent.pageIndex = 1;
+
+    this.incomingSignupsComponent.switchPage(this.startingPageEvent);
+    this.approvedAnonsComponent.switchPage(this.startingPageEvent);
+    this.deniedAnonsComponent.switchPage(this.startingPageEvent);
+    this.completedAnonsComponent.switchPage(this.startingPageEvent);
+
+  }
+  public triggerReslice()
+  {
+    console.log("reslices triggered");
+
+    this.incomingSignupsComponent.resliceTable();
+    this.approvedAnonsComponent.resliceTable();
+    this.deniedAnonsComponent.resliceTable();
+    this.completedAnonsComponent.resliceTable();
   }
   sortApproved() : Array<Client>
   {
