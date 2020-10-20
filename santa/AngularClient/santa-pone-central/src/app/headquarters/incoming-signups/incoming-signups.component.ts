@@ -8,6 +8,7 @@ import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { Survey, SurveyResponse } from 'src/classes/survey';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -43,6 +44,10 @@ export class IncomingSignupsComponent implements OnInit {
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
+  public pagedClients: Array<Client> = [];
+  public paginatorPageSize: number = 25;
+  public paginatorPageIndex: number = 1;
+
   showSpinner: boolean = false;
   actionTaken: boolean = false;
 
@@ -72,6 +77,18 @@ export class IncomingSignupsComponent implements OnInit {
   {
     return client.responses.some((response: SurveyResponse) => {
       return response.surveyID == survey.surveyID;
+    });
+  }
+  switchPage(event: PageEvent)
+  {
+    this.pagedClients = this.incomingClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
+    this.paginatorPageSize = event.pageSize;
+    this.paginatorPageIndex = event.pageIndex;
+  }
+  resliceTable()
+  {
+    setTimeout(() => {
+      this.pagedClients = this.incomingClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
     });
   }
 }

@@ -12,13 +12,21 @@
           </button>
           <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total awaiting signups: {{ incomingClients.length }}</mat-card-subtitle>
         </div>
+        <div class="paginatorDiv">
+          <mat-paginator
+          (page)="switchPage($event)"
+          [length]="incomingClients.length"
+          [pageSize]="paginatorPageSize"
+          [pageSizeOptions]="[5, 10, 25, 50, 100]">
+          </mat-paginator>
+        </div>
     </mat-toolbar-row>
 </mat-toolbar>
 <div class="spinnerWrap" *ngIf="(gatheringInfo || showSpinner) && !this.gatherer.onSelectedClient">
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of incomingClients" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
+    <mat-card mat-list-item *ngFor="let client of pagedClients" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
       <mat-card-title>
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >
