@@ -4,15 +4,16 @@ mat-card {
 }
 #paginatorRow
 {
-    display: inline-block;
-    width: 100%;
-    background-color: white;
+  width: 100%;
+  height: auto;
+  background-color: white;
 }
-#paginatorDiv
+.paginatorDiv
 {
-    display: block;
-    width: 50%;
-    float: right;
+  display: block;
+  height: 100%;
+  margin-right: 0px;
+  margin-left: auto;
 }
 #iconDiv
 {
