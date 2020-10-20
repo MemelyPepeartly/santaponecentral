@@ -592,13 +592,40 @@ namespace Santa.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, Logic.Objects.Client logicSubjectClient)
         {
-            List<Message> logicListRecieverMessages = contextRelationshipXref.ChatMessage
-                .Select(Mapper.MapMessage)
-                .OrderBy(dt => dt.dateTimeSent)
-                .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
-                .ToList();
+            List<Message> logicListRecieverMessages = new List<Message>();
+            List<Message> logicListSubjectMessages = new List<Message>();
 
-            
+            if (logicSubjectClient.isAdmin)
+            {
+                logicListSubjectMessages = contextRelationshipXref.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+
+                logicListRecieverMessages = contextRelationshipXref.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin)
+                    .ToList();
+            }
+            else
+            {
+                logicListSubjectMessages = contextRelationshipXref.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
+                    .ToList();
+
+                logicListRecieverMessages = contextRelationshipXref.ChatMessage
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+            }
+
+
+
             MessageHistory logicHistory = new MessageHistory()
             {
                 relationXrefID = contextRelationshipXref.ClientRelationXrefId,
@@ -610,11 +637,7 @@ namespace Santa.Data.Repository
                 assignmentRecieverClient = MapClientMeta(contextRelationshipXref.RecipientClient),
                 assignmentSenderClient = MapClientMeta(contextRelationshipXref.SenderClient),
 
-                subjectMessages = contextRelationshipXref.ChatMessage
-                .Select(Mapper.MapMessage)
-                .OrderBy(dt => dt.dateTimeSent)
-                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
-                .ToList(),
+                subjectMessages = logicListSubjectMessages,
 
                 recieverMessages = logicListRecieverMessages,
 
@@ -637,11 +660,37 @@ namespace Santa.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.MessageHistory MapHistoryInformation(Entities.Client contextConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
         {
-            List<Message> logicListRecieverMessages = contextChatMessages
-            .Select(Mapper.MapMessage)
-            .OrderBy(dt => dt.dateTimeSent)
-            .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
-            .ToList();
+            List<Message> logicListRecieverMessages = new List<Message>();
+            List<Message> logicListSubjectMessages = new List<Message>();
+
+            if (logicSubjectClient.isAdmin)
+            {
+                logicListSubjectMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+
+                logicListRecieverMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin)
+                    .ToList();
+            }
+            else
+            {
+                logicListSubjectMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
+                    .ToList();
+
+                logicListRecieverMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+            }
 
             // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
             MessageHistory logicHistory = new MessageHistory()
@@ -655,11 +704,7 @@ namespace Santa.Data.Repository
                 assignmentRecieverClient = new ClientMeta(),
                 assignmentSenderClient = new ClientMeta(),
 
-                subjectMessages = contextChatMessages
-                .Select(Mapper.MapMessage)
-                .OrderBy(dt => dt.dateTimeSent)
-                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
-                .ToList(),
+                subjectMessages = logicListSubjectMessages,
 
                 recieverMessages = logicListRecieverMessages,
 
@@ -667,6 +712,11 @@ namespace Santa.Data.Repository
             };
 
             logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
+
+            foreach (Message logicMessage in logicHistory.subjectMessages)
+            {
+                logicMessage.subjectMessage = true;
+            }
 
             return logicHistory;
         }
@@ -681,11 +731,37 @@ namespace Santa.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.MessageHistory MapHistoryInformation(Logic.Objects.Client logicConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
         {
-            List<Message> logicListRecieverMessages = contextChatMessages
-            .Select(Mapper.MapMessage)
-            .OrderBy(dt => dt.dateTimeSent)
-            .Where(m => m.senderClient.clientId != logicSubjectClient.clientID)
-            .ToList();
+            List<Message> logicListRecieverMessages = new List<Message>();
+            List<Message> logicListSubjectMessages = new List<Message>();
+
+            if (logicSubjectClient.isAdmin)
+            {
+                logicListSubjectMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+
+                logicListRecieverMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin)
+                    .ToList();
+            }
+            else
+            {
+                logicListSubjectMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
+                    .ToList();
+
+                logicListRecieverMessages = contextChatMessages
+                    .Select(Mapper.MapMessage)
+                    .OrderBy(dt => dt.dateTimeSent)
+                    .Where(m => m.fromAdmin)
+                    .ToList();
+            }
 
             // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
             MessageHistory logicHistory = new MessageHistory()
@@ -699,11 +775,7 @@ namespace Santa.Data.Repository
                 assignmentRecieverClient = new ClientMeta(),
                 assignmentSenderClient = new ClientMeta(),
 
-                subjectMessages = contextChatMessages
-                .Select(Mapper.MapMessage)
-                .OrderBy(dt => dt.dateTimeSent)
-                .Where(m => m.senderClient.clientId == logicSubjectClient.clientID)
-                .ToList(),
+                subjectMessages = logicListSubjectMessages,
 
                 recieverMessages = logicListRecieverMessages,
 
@@ -711,6 +783,11 @@ namespace Santa.Data.Repository
             };
 
             logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
+
+            foreach (Message logicMessage in logicHistory.subjectMessages)
+            {
+                logicMessage.subjectMessage = true;
+            }
 
             return logicHistory;
         }
