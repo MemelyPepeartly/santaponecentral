@@ -9,13 +9,21 @@
             </button>
             <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringAllClients">Total denied anons: {{ deniedClients.length }}</mat-card-subtitle>
         </div>
+        <div class="paginatorDiv">
+          <mat-paginator
+          (page)="switchPage($event)"
+          [length]="deniedClients.length"
+          [pageSize]="paginatorPageSize"
+          [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </div>
     </mat-toolbar-row>
 </mat-toolbar>
 <div class="spinnerWrap" *ngIf="(gatheringAllClients || showSpinner) && !this.gatherer.onSelectedClient">
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of deniedClients" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item *ngFor="let client of pagedClients" appMaterialElevation (click)="showCardInfo(client)">
       <mat-card-title>
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >

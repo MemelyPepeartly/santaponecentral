@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Client } from 'src/classes/client';
 import { GathererService } from 'src/app/services/gatherer.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-denied-anons',
@@ -15,6 +16,11 @@ export class DeniedAnonsComponent implements OnInit {
   @Input() gatheringAllClients: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+
+  public pagedClients: Array<Client> = [];
+  public paginatorPageSize: number = 10;
+  public paginatorPageIndex: number = 1;
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 
@@ -35,5 +41,16 @@ export class DeniedAnonsComponent implements OnInit {
     this.showSpinner = false;
     this.actionTaken = false;
   }
-
+  switchPage(event: PageEvent)
+  {
+    this.pagedClients = this.deniedClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
+    this.paginatorPageSize = event.pageSize;
+    this.paginatorPageIndex = event.pageIndex;
+  }
+  resliceTable()
+  {
+    setTimeout(() => {
+      this.pagedClients = this.deniedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    });
+  }
 }
