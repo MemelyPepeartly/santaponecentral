@@ -30,8 +30,8 @@
                         <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Standard Time) </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage || (isAdmin && message.fromAdmin),
-                                     'recieved-message' : !message.subjectMessage || !message.fromAdmin}">
+                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage,
+                                     'recieved-message' : !message.subjectMessage}">
                         <div class="nick-div">
                             <span> {{ message.senderClient.clientNickname }} </span>
                             <mat-divider [inset]="true"></mat-divider>
