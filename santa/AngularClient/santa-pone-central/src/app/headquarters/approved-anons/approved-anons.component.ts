@@ -26,16 +26,13 @@ export class ApprovedAnonsComponent implements OnInit {
 
   public pagedClients: Array<Client> = [];
 
+  public paginatorPageSize: number = 25;
+  public paginatorPageIndex: number = 1;
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 
-  paginatorPageSize: number = 10;
-
   ngOnInit() {
-    let event: PageEvent = new PageEvent()
-    event.pageSize = this.paginatorPageSize;
-    event.pageIndex = 1;
-    this.switchPage(event);
   }
   showCardInfo(client)
   {
@@ -61,6 +58,17 @@ export class ApprovedAnonsComponent implements OnInit {
   switchPage(event: PageEvent)
   {
     this.pagedClients = this.approvedClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
+    this.paginatorPageSize = event.pageSize;
+    this.paginatorPageIndex = event.pageIndex;
   }
+  resliceTable()
+  {
+    console.log(this.approvedClients);
 
+    setTimeout(() => {
+      this.pagedClients = this.approvedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    });
+
+    console.log(this.pagedClients);
+  }
 }
