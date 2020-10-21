@@ -486,7 +486,7 @@ namespace Santa.Data.Repository
         {
             List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
 
-            List<Entities.Client> contextClients = await santaContext.Client.ToListAsync();
+            List<Entities.Client> contextClients = await santaContext.Client.Include(c => c.ClientStatus).Where(c => c.ClientStatus.StatusDescription != Constants.AWAITING_STATUS).ToListAsync();
 
             List<ClientRelationXref> contextRelationshipsWithChats = await santaContext.ClientRelationXref
                 .Include(r => r.SenderClient.ClientStatus)
@@ -524,7 +524,7 @@ namespace Santa.Data.Repository
                 listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextClient, contextGeneralChatMessages.Where(m => m.MessageSenderClientId == contextClient.ClientId || m.MessageReceiverClientId == contextClient.ClientId).ToList(), subjectClient));
             }
 
-            return listLogicMessageHistory.OrderBy(h => h.assignmentSenderClient.clientNickname).ToList();
+            return listLogicMessageHistory.OrderBy(h => h.conversationClient.clientNickname).ToList();
         }
         public async Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Logic.Objects.Client subjectClient)
         {
