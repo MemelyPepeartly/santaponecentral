@@ -7,9 +7,9 @@
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
-            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringAllClients">Total denied anons: {{ deniedClients.length }}</mat-card-subtitle>
+            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total denied anons: {{ deniedClients.length }}</mat-card-subtitle>
         </div>
-        <div class="paginatorDiv">
+        <div class="paginatorDiv" *ngIf="!gatheringInfo && !showSpinner">
           <mat-paginator
           (page)="switchPage($event)"
           [length]="deniedClients.length"
@@ -19,11 +19,11 @@
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
-<div class="spinnerWrap" *ngIf="(gatheringAllClients || showSpinner) && !this.gatherer.onSelectedClient">
+<div class="spinnerWrap" *ngIf="(gatheringInfo || showSpinner) && !this.gatherer.onSelectedClient">
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of pagedClients" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item *ngFor="let client of pagedClients()" appMaterialElevation (click)="showCardInfo(client)">
       <mat-card-title>
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >

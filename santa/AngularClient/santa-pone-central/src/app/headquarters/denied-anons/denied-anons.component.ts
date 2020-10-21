@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Client } from 'src/classes/client';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-denied-anons',
@@ -13,11 +13,12 @@ export class DeniedAnonsComponent implements OnInit {
   constructor(public gatherer: GathererService) { }
 
   @Input() deniedClients: Array<Client> = [];
-  @Input() gatheringAllClients: boolean;
+  @Input() gatheringInfo: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
 
-  public pagedClients: Array<Client> = [];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   public paginatorPageSize: number = 10;
   public paginatorPageIndex: number = 1;
 
@@ -43,14 +44,18 @@ export class DeniedAnonsComponent implements OnInit {
   }
   switchPage(event: PageEvent)
   {
-    this.pagedClients = this.deniedClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
     this.paginatorPageSize = event.pageSize;
     this.paginatorPageIndex = event.pageIndex;
   }
-  resliceTable()
+  pagedClients() : Array<Client>
   {
-    setTimeout(() => {
-      this.pagedClients = this.deniedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
-    });
+    if(this.paginator != undefined)
+    {
+      return this.deniedClients.slice(this.paginator.pageIndex * this.paginator.pageSize, (this.paginator.pageIndex * this.paginator.pageSize) + this.paginator.pageSize);
+    }
+    else
+    {
+      return this.deniedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    }
   }
 }
