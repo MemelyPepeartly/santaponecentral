@@ -75,7 +75,7 @@
 
 -- INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
 -- VALUES
---     (NEWID(), 'ab44ac50-60fe-4e3f-b9b8-eeb799d334b9', '4a31cb82-4b69-4bee-9333-eb60a8c6500e', 0, 1);
+--     (NEWID(), 'ab44ac50-60fe-4e3f-b9b8-eeb799d334b9', '24537330-8fb0-4bc0-a251-93336ca53b93', 0, 1);
 
 
 --DELETE FROM app.ChatMessage
@@ -102,7 +102,7 @@
 -- UPDATE app.SurveyQuestion SET isSurveyOptionList=1 WHERE questionText='Do you wish to recieve Mass Mail?';
 -- UPDATE app.SurveyOption SET displayText='Yes, go nuts' WHERE surveyOptionID='ec4faeca-5ee3-48df-9495-4b829b171e8e';
 -- UPDATE app.SurveyOption SET displayText='Yes, but be subtle' WHERE surveyOptionID='b3011251-3d67-4c58-b476-9706b10794e6';
--- UPDATE app.SurveyOption SET displayText='Yes, and lots of it!' WHERE surveyOptionID='24537330-8fb0-4bc0-a251-93336ca53b93';
+-- UPDATE app.SurveyOption SET displayText='Yes, but only a little' WHERE surveyOptionID='24537330-8fb0-4bc0-a251-93336ca53b93';
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
 
@@ -120,12 +120,14 @@
 -- DELETE FROM app.Survey;
 -- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='7c425125-7365-47c2-9028-9cd741b7a57e'
 -- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9'
+-- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionOptionXrefID='516bffd4-51ef-4863-a795-f6f0756910cc';
 
 -- ALTER TABLE app.ClientRelationXref DROP COLUMN completed
 
 -- SELECT * FROM app.SurveyQuestion;
 -- SELECT * FROM app.SurveyOption;
--- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='96f938e5-dd90-44d1-8886-aec787bd7bca';
+-- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';
 -- SELECT * FROM app.Survey;
 -- SELECT * FROM app.EventType;
 -- SELECT * FROM app.ChatMessage;
+-- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';
