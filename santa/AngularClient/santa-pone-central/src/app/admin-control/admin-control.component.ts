@@ -70,52 +70,8 @@ export class AdminControlComponent implements OnInit
     this.auth.isDev.subscribe((status: boolean) => {
       this.isDev = status;
     });
-
-    await this.gatherer.gatherAllClients();
-    await this.gatherer.gatherAllTags();
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllQuestions();
-  }
-  public selectTagControl()
-  {
-    this.tagControlSelected = true;
-    this.eventControlSelected = false;
-    this.surveyControlSelected = false;
-    this.questionControlSelected = false;
-    this.autoAssignControlSelected = false;
-  }
-  public selectEventControl()
-  {
-    this.tagControlSelected = false;
-    this.eventControlSelected = true;
-    this.surveyControlSelected = false;
-    this.questionControlSelected = false;
-    this.autoAssignControlSelected = false;
-  }
-  public selectSurveyControl()
-  {
-    this.tagControlSelected = false;
-    this.eventControlSelected = false;
-    this.surveyControlSelected = true;
-    this.questionControlSelected = false;
-    this.autoAssignControlSelected = false;
-
-  }
-  public selectQuestionControl()
-  {
-    this.tagControlSelected = false;
-    this.eventControlSelected = false;
-    this.surveyControlSelected = false;
-    this.questionControlSelected = true;
-    this.autoAssignControlSelected = false;
-  }
-  public selectAutoAssignControl()
-  {
-    this.tagControlSelected = false;
-    this.eventControlSelected = false;
-    this.surveyControlSelected = false;
-    this.questionControlSelected = false;
-    this.autoAssignControlSelected = true;
   }
 }

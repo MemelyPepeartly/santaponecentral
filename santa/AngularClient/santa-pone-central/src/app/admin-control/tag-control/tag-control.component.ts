@@ -47,11 +47,12 @@ export class TagControlComponent implements OnInit {
     return formControlObj.value
   }
 
-  ngOnInit() {
-    this.constructFormGroups();
+  async ngOnInit() {
     this.gatherer.gatheringAllTags.subscribe((status: boolean) => {
       this.gatheringAllTags = status;
-    })
+    });
+    this.constructFormGroups();
+    await this.gatherer.gatherAllTags();
   }
   private constructFormGroups() {
     this.addTagFormGroup = this.formBuilder.group({

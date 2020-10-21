@@ -31,11 +31,12 @@ export class AutoAssignmentComponent implements OnInit {
 
   public showClientCard: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.buttonClicked = false;
     this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status
     });
+    await this.gatherer.gatherAllClients();
   }
   public sortMassMailers() : Array<Client>
   {
@@ -79,6 +80,8 @@ export class AutoAssignmentComponent implements OnInit {
   }
   public setRefreshListAction(event: boolean)
   {
+    console.log("Seting refresh list to " + event);
+
     this.refreshList = event;
   }
 }
