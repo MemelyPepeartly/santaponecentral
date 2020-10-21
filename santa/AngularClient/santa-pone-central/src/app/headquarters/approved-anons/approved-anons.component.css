@@ -8,6 +8,14 @@ mat-card {
   height: auto;
   background-color: white;
 }
+#iconDiv
+{
+    display: block;
+    align-items: center;
+    width: fit-content;
+    height: 100%;
+    padding: 10px;
+}
 .paginatorDiv
 {
   display: block;
@@ -58,6 +66,7 @@ mat-card {
 {
   display: inline-block;
   margin-left: 10px;
+  margin-bottom: 0px;
 }
 @media (max-width:600px)
 {

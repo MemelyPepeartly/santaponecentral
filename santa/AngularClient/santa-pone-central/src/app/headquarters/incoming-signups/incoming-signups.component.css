@@ -21,7 +21,7 @@ mat-card {
     align-items: center;
     width: fit-content;
     height: 100%;
-    margin-top: 10px;
+    padding: 10px;
 }
 .controlButton
 {
@@ -62,4 +62,5 @@ mat-card {
 {
   display: inline-block;
   margin-left: 10px;
+  margin-bottom: 0px;
 }
