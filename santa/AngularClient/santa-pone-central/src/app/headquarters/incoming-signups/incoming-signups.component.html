@@ -10,12 +10,12 @@
             <button mat-raised-button class="controlButton" matTooltip="Manually add an anon without an Auth0 Account" [matTooltipPosition]="'above'" (click)="emitOpenManualSignupWindow()">
               <mat-icon class="icons">add_circle</mat-icon>
           </button>
-          <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total awaiting signups: {{ incomingClients.length }}</mat-card-subtitle>
+          <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total awaiting signups: {{ awaitingClients.length }}</mat-card-subtitle>
         </div>
-        <div class="paginatorDiv">
+        <div class="paginatorDiv" *ngIf="!gatheringInfo && !showSpinner">
           <mat-paginator
           (page)="switchPage($event)"
-          [length]="incomingClients.length"
+          [length]="awaitingClients.length"
           [pageSize]="paginatorPageSize"
           [pageSizeOptions]="[5, 10, 25, 50, 100]">
           </mat-paginator>
@@ -26,7 +26,7 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of pagedClients" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
+    <mat-card mat-list-item *ngFor="let client of pagedClients()" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
       <mat-card-title>
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >

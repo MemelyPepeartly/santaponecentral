@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
@@ -8,7 +8,7 @@ import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { Survey, SurveyResponse } from 'src/classes/survey';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -40,11 +40,12 @@ export class IncomingSignupsComponent implements OnInit {
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
   @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
 
-  @Input() incomingClients: Array<Client> = [];
+  @Input() awaitingClients: Array<Client> = [];
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
-  public pagedClients: Array<Client> = [];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   public paginatorPageSize: number = 25;
   public paginatorPageIndex: number = 1;
 
@@ -81,14 +82,18 @@ export class IncomingSignupsComponent implements OnInit {
   }
   switchPage(event: PageEvent)
   {
-    this.pagedClients = this.incomingClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
     this.paginatorPageSize = event.pageSize;
     this.paginatorPageIndex = event.pageIndex;
   }
-  resliceTable()
+  pagedClients() : Array<Client>
   {
-    setTimeout(() => {
-      this.pagedClients = this.incomingClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
-    });
+    if(this.paginator != undefined)
+    {
+      return this.awaitingClients.slice(this.paginator.pageIndex * this.paginator.pageSize, (this.paginator.pageIndex * this.paginator.pageSize) + this.paginator.pageSize);
+    }
+    else
+    {
+      return this.awaitingClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    }
   }
 }
