@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Client } from 'src/classes/client';
 import { Survey, SurveyResponse } from 'src/classes/survey';
@@ -13,10 +14,15 @@ export class CompletedAnonsComponent implements OnInit {
   constructor(public gatherer: GathererService) { }
 
   @Input() completedClients: Array<Client> = [];
-  @Input() gatheringAllClients: boolean;
-
+  @Input() gatheringInfo: boolean;
 
   @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  public paginatorPageSize: number = 10;
+  public paginatorPageIndex: number = 1;
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
 
@@ -36,5 +42,21 @@ export class CompletedAnonsComponent implements OnInit {
     await this.gatherer.gatherAllClients();
     this.showSpinner = false;
     this.actionTaken = false;
+  }
+  switchPage(event: PageEvent)
+  {
+    this.paginatorPageSize = event.pageSize;
+    this.paginatorPageIndex = event.pageIndex;
+  }
+  pagedClients() : Array<Client>
+  {
+    if(this.paginator != undefined)
+    {
+      return this.completedClients.slice(this.paginator.pageIndex * this.paginator.pageSize, (this.paginator.pageIndex * this.paginator.pageSize) + this.paginator.pageSize);
+    }
+    else
+    {
+      return this.completedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    }
   }
 }

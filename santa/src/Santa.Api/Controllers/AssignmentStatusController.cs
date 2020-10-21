@@ -64,26 +64,6 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
-        // GET: api/AssignmentStatus/GetAll/5
-        /// <summary>
-        /// Gets a list of current assignments with a specific status by assignment status ID
-        /// </summary>
-        /// <param name="assignmentStatusID"></param>
-        /// <returns></returns>
-        [HttpGet("GetAll/{assignmentStatusID}")]
-        [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Logic.Objects.AssignmentStatus>>> GetAllAssignmentsWithStatusByID(Guid assignmentStatusID)
-        {
-            try
-            {
-                List<object> listLogicAssignmentStatuses = await repository.GetAssignmentsByAssignmentStatusID(assignmentStatusID);
-                return Ok(listLogicAssignmentStatuses);
-            }
-            catch (ArgumentNullException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
 
         // POST: api/AssignmentStatus
         /// <summary>

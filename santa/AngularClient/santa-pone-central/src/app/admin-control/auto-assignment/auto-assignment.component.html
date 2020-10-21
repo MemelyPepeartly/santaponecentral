@@ -11,103 +11,61 @@
   </div>
 </div>
 
-<mat-card class="api-card mat-elevation-z5">
-  <mat-card-header>
+<div class="functionalCardContainer">
+  <mat-card class="apiCard mat-elevation-z5">
+    <mat-card-header>
       <mat-card-title>Auto Assign</mat-card-title>
       <mat-card-subtitle>Assigns any Mass Mail Recipients that havn't been assigned to mass mailers</mat-card-subtitle>
       <mat-card-subtitle>Any pairing suggestions will be between anons who have been approved</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
+    </mat-card-header>
+    <mat-card-content>
 
-      <!-- Mailer Chip list-->
-      <mat-toolbar>All Mass Mailers</mat-toolbar>
+        <!-- Mailer Chip list-->
+        <mat-toolbar>All Mass Mailers</mat-toolbar>
 
-      <div>
-          <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
+        <div>
+            <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
 
-          <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailers().length != 0">
-              <mat-chip *ngFor="let client of sortMassMailers()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
-          </mat-chip-list>
-          <span *ngIf="sortMassMailers().length == 0 && !gatheringAllClients">No mass mailers to display</span>
+            <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailers().length != 0">
+                <mat-chip *ngFor="let client of sortMassMailers()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+            </mat-chip-list>
+            <span *ngIf="sortMassMailers().length == 0 && !gatheringAllClients">No mass mailers to display</span>
+        </div>
+
+        <mat-toolbar>All Mass Mail Recipients</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailRecipients().length != 0">
+                <mat-chip *ngFor="let client of sortMassMailRecipients()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+            </mat-chip-list>
+            <span *ngIf="sortMassMailRecipients().length == 0 && !gatheringAllClients">No mass mail recipients to display</span>
+        </div>
+        <div class="spacingStyle">
+          <button mat-raised-button (click)="getAssignmentPairings()" [disabled]="gettingAssignmentPairings">Get auto-assignments</button>
+        </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="apiCard mat-elevation-z5" *ngIf="buttonClicked">
+    <mat-card-header>
+      <mat-card-title>Potential Autoassigns</mat-card-title>
+      <mat-card-subtitle>List of queued assignments to be approved</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="gettingAssignmentPairings">
+      <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
+    </mat-card-content>
+    <mat-card-content style="text-align: center;" *ngIf="!gettingAssignmentPairings">
+      <div class="pairingComponentDiv" *ngFor="let possiblePairingsObject of possiblePairings">
+        <app-agent-pairing-control
+        [possiblePairingsObject]="possiblePairingsObject"
+        (completedPostEvent)="true"
+        (failedPostEvent)="true">
+        </app-agent-pairing-control>
       </div>
+    </mat-card-content>
+  </mat-card>
+</div>
 
-      <mat-toolbar>All Mass Mail Recipients</mat-toolbar>
-
-      <div>
-          <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
-
-          <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailRecipients().length != 0">
-              <mat-chip *ngFor="let client of sortMassMailRecipients()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
-          </mat-chip-list>
-          <span *ngIf="sortMassMailRecipients().length == 0 && !gatheringAllClients">No mass mail recipients to display</span>
-      </div>
-      <div class="spacingStyle">
-        <button mat-raised-button (click)="getAssignmentPairings()" [disabled]="gettingAssignmentPairings">Get auto-assignments</button>
-      </div>
-
-  </mat-card-content>
-</mat-card>
-
-<mat-card class="api-card mat-elevation-z5" *ngIf="buttonClicked">
-  <mat-card-header>
-    <mat-card-title>Potential Autoassigns</mat-card-title>
-    <mat-card-subtitle>List of queued assignments to be approved</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content *ngIf="postingNewAssignments || gettingAssignmentPairings">
-    <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
-  </mat-card-content>
-  <mat-card-content *ngIf="!postingNewAssignments && !gettingAssignmentPairings">
-    <!-- Table headers -->
-    <div class="headerContainer">
-      <div class="headerDiv">
-        <h2 class="headerText">Mass Mailer</h2>
-      </div>
-      <div class="headerDiv">
-        <h2 class="headerText">Assignment</h2>
-      </div>
-    </div>
-
-    <!-- Potential Pairing -->
-    <div class="scrollDiv" *ngIf="possiblePairings.length != 0">
-      <mat-selection-list class="scrollbar scrollbar-primary" [(ngModel)]="selectedPairings">
-        <mat-list-option class="listOption mat-elevation-z3" *ngFor="let clientPairing of possiblePairings" [value]="clientPairing">
-          <div class="pairingContainer">
-            <div class="pairingDiv">
-              <span>{{ clientPairing.sendingAgent.clientNickname }}</span>
-              <mat-card-subtitle class="infoSubtitle">Assignments: {{ clientPairing.sendingAgent.assignments.length }}</mat-card-subtitle>
-              <mat-card-subtitle class="infoSubtitle">Senders: {{ clientPairing.sendingAgent.senders.length }}</mat-card-subtitle>
-              <div class="tagDiv">
-                <mat-chip class="tag" *ngFor="let tag of clientPairing.sendingAgent.tags"
-                  matTooltip="{{tag.tagName}}"
-                  [matTooltipPosition]="'below'"
-                  [disableRipple]="true">
-                  <span class="tagText">{{tag.tagName}}</span>
-                </mat-chip>
-              </div>
-            </div>
-            <div class="pairingDiv">
-              <span>{{ clientPairing.possibleAssignment.clientNickname }}</span>
-              <mat-card-subtitle class="infoSubtitle">Assignments: {{ clientPairing.possibleAssignment.assignments.length }}</mat-card-subtitle>
-              <mat-card-subtitle class="infoSubtitle">Senders: {{ clientPairing.possibleAssignment.senders.length }}</mat-card-subtitle>
-              <div class="tagDiv">
-                <mat-chip class="tag" *ngFor="let tag of clientPairing.possibleAssignment.tags"
-                  matTooltip="{{tag.tagName}}"
-                  [matTooltipPosition]="'below'"
-                  [disableRipple]="true">
-                  <span class="tagText">{{tag.tagName}}</span>
-                </mat-chip>
-              </div>
-            </div>
-          </div>
-        </mat-list-option>
-      </mat-selection-list>
-    </div>
-    <div class="scrollDiv" *ngIf="possiblePairings.length == 0">
-      <h2>No New Pairings</h2>
-    </div>
-
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button (click)="postAssignmentPairings()" [disabled]="postingNewAssignments || gettingAssignmentPairings || possiblePairings.length == 0">Confirm Selected Assignments</button>
-  </mat-card-actions>
-</mat-card>

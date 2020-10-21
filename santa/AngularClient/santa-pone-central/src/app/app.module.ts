@@ -57,6 +57,7 @@ import { ResponseListComponent } from './shared/response-list/response-list.comp
 import { AssignmentStatusControllerComponent } from './shared/assignment-status-controller/assignment-status-controller.component';
 import { AssignmentsPanelComponent } from './headquarters/selected-anon/assignments-panel/assignments-panel.component';
 import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
+import { AgentPairingControlComponent } from './admin-control/auto-assignment/agent-pairing-control/agent-pairing-control.component';
 
 
 @NgModule({
@@ -103,7 +104,8 @@ import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.compo
       ResponseListComponent,
       AssignmentStatusControllerComponent,
       AssignmentsPanelComponent,
-      AgentCatalogueComponent
+      AgentCatalogueComponent,
+      AgentPairingControlComponent
    ],
    entryComponents: [
       LoginComponent

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { Client } from '../../classes/client';
 import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
@@ -12,6 +12,7 @@ import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.co
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-headquarters',
@@ -52,6 +53,13 @@ export class HeadquartersComponent implements OnInit {
   public gatheringAllSurveys: boolean;
   public clickAwayLocked: boolean;
 
+  public awaitingClients: Array<Client> = [];
+  public approvedClients: Array<Client> = [];
+  public deniedClients: Array<Client> = [];
+  public completedClients: Array<Client> = [];
+
+  public initializing: boolean = true;
+
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
   @ViewChild(CompletedAnonsComponent) completedAnonsComponent: CompletedAnonsComponent;
   @ViewChild(DeniedAnonsComponent) deniedAnonsComponent: DeniedAnonsComponent;
@@ -64,6 +72,7 @@ export class HeadquartersComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.initializing = true;
     /* GET STATUS BOOLEAN SUBSCRIBE */
     this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status;
@@ -75,6 +84,7 @@ export class HeadquartersComponent implements OnInit {
     /* ALL CLIENTS SUBSCRIBE */
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
+      this.sortAll();
     });
     this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
       this.allSurveys = surveys;
@@ -82,6 +92,7 @@ export class HeadquartersComponent implements OnInit {
 
     await this.gatherer.gatherAllClients();
     await this.gatherer.gatherAllSurveys();
+    this.initializing = false;
   }
   public async showClientWindow(client: Client)
   {
@@ -92,7 +103,7 @@ export class HeadquartersComponent implements OnInit {
     // If the list of all clients does not have the input client in it, refresh the list in the background (Used namely for manual refresh)
     if(!this.allClients.some((c: Client) => {return c.clientID == client.clientID}))
     {
-      await this.gatherer.gatherAllClients()
+      await this.gatherer.gatherAllClients();
     }
   }
   showManualSignupWindow()
@@ -139,20 +150,27 @@ export class HeadquartersComponent implements OnInit {
   {
     this.clickAwayLocked = status;
   }
-  sortApproved() : Array<Client>
+  public sortAll()
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
+    this.sortApproved();
+    this.sortIncoming();
+    this.sortDenied();
+    this.sortCompleted();
   }
-  sortIncoming() : Array<Client>
+  public sortApproved()
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.AWAITING});
+    this.approvedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
   }
-  sortDenied() : Array<Client>
+  sortIncoming()
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
+    this.awaitingClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.AWAITING});
   }
-  sortCompleted() : Array<Client>
+  sortDenied()
   {
-    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.COMPLETED});
+    this.deniedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
+  }
+  sortCompleted()
+  {
+    this.completedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.COMPLETED});
   }
 }

@@ -73,6 +73,10 @@
 --     (NEWID(), @massMailerQuestionID, @prodYesID, 1, 1),
 --     (NEWID(), @massMailerQuestionID, @prodNoID, 2, 1);
 
+-- INSERT INTO app.SurveyQuestionOptionXref (surveyQuestionOptionXrefID, surveyQuestionID, surveyOptionID, sortOrder, isActive)
+-- VALUES
+--     (NEWID(), 'ab44ac50-60fe-4e3f-b9b8-eeb799d334b9', '24537330-8fb0-4bc0-a251-93336ca53b93', 0, 1);
+
 
 --DELETE FROM app.ChatMessage
 --DELETE FROM app.ClientRelationXref
@@ -89,13 +93,16 @@
 --ALTER TABLE app.SurveyQuestionOptionXref ADD sortOrder INT NOT NULL DEFAULT 0;
 --ALTER TABLE app.SurveyQuestion ALTER COLUMN questionText nvarchar(300) NOT NULL;
 
---UPDATE app.Client SET hasAccount=1
---UPDATE app.Client SET isAdmin=1 WHERE nickname='Kiwi';
---UPDATE app.SurveyQuestion SET isSurveyOptionList=0 WHERE questionText='Are you okay with food items? If so, do you have any allergies?';
---UPDATE app.SurveyQuestion SET questionText='Do you acknowledge your info will be shared with others assigned to send to you?' WHERE questionText='Do you aknowledge your info will be shared with other assigned to send to you?';
---UPDATE app.SurveyQuestion SET questionText='Are you okay with receiving extra assignments for things such as Grinch rescue?' WHERE questionText='Are you okay with receiving extra assignments?';
---UPDATE app.SurveyQuestionOptionXref SET sortOrder=3 WHERE surveyQuestionOptionXrefID='3b5aabb9-948e-42f7-9fde-69e52df60aff';
---UPDATE app.SurveyQuestion SET isSurveyOptionList=1 WHERE questionText='Do you wish to recieve Mass Mail?';
+-- UPDATE app.Client SET hasAccount=1
+-- UPDATE app.Client SET isAdmin=1 WHERE nickname='SlenderDuck';
+-- UPDATE app.SurveyQuestion SET isSurveyOptionList=0 WHERE questionText='Are you okay with food items? If so, do you have any allergies?';
+-- UPDATE app.SurveyQuestion SET questionText='Do you acknowledge your info will be shared with others assigned to send to you?' WHERE questionText='Do you aknowledge your info will be shared with other assigned to send to you?';
+-- UPDATE app.SurveyQuestion SET questionText='Are you okay with receiving extra assignments for things such as Grinch rescue?' WHERE questionText='Are you okay with receiving extra assignments?';
+-- UPDATE app.SurveyQuestionOptionXref SET sortOrder=3 WHERE surveyQuestionOptionXrefID='3b5aabb9-948e-42f7-9fde-69e52df60aff';
+-- UPDATE app.SurveyQuestion SET isSurveyOptionList=1 WHERE questionText='Do you wish to recieve Mass Mail?';
+-- UPDATE app.SurveyOption SET displayText='Yes, go nuts' WHERE surveyOptionID='ec4faeca-5ee3-48df-9495-4b829b171e8e';
+-- UPDATE app.SurveyOption SET displayText='Yes, but be subtle' WHERE surveyOptionID='b3011251-3d67-4c58-b476-9706b10794e6';
+-- UPDATE app.SurveyOption SET displayText='Yes, but only a little' WHERE surveyOptionID='24537330-8fb0-4bc0-a251-93336ca53b93';
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
 
@@ -113,11 +120,14 @@
 -- DELETE FROM app.Survey;
 -- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='7c425125-7365-47c2-9028-9cd741b7a57e'
 -- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9'
+-- DELETE FROM app.SurveyQuestionOptionXref WHERE surveyQuestionOptionXrefID='516bffd4-51ef-4863-a795-f6f0756910cc';
 
 -- ALTER TABLE app.ClientRelationXref DROP COLUMN completed
 
 -- SELECT * FROM app.SurveyQuestion;
 -- SELECT * FROM app.SurveyOption;
--- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='96f938e5-dd90-44d1-8886-aec787bd7bca';
+-- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';
 -- SELECT * FROM app.Survey;
 -- SELECT * FROM app.EventType;
+-- SELECT * FROM app.ChatMessage;
+-- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';

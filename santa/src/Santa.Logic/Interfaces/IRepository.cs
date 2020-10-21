@@ -88,12 +88,6 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<AssignmentStatus> GetAssignmentStatusByID(Guid assignmentStatusID);
         /// <summary>
-        /// Returns a list of assignments that match the assignment status type by assignment status ID
-        /// </summary>
-        /// <param name="assignmentStatusID"></param>
-        /// <returns></returns>
-        Task<List<object>> GetAssignmentsByAssignmentStatusID(Guid assignmentStatusID);
-        /// <summary>
         /// Updates a chosen assignment with the target values in a logic assignment status type
         /// </summary>
         /// <param name="targetAssignmentStatus"></param>

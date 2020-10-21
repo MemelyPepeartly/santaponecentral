@@ -4,15 +4,9 @@ mat-card {
 }
 #paginatorRow
 {
-    display: inline-block;
-    width: 100%;
-    background-color: white;
-}
-#paginatorDiv
-{
-    display: block;
-    width: 50%;
-    float: right;
+  width: 100%;
+  height: auto;
+  background-color: white;
 }
 #iconDiv
 {
@@ -20,7 +14,14 @@ mat-card {
     align-items: center;
     width: fit-content;
     height: 100%;
-    margin-top: 10px;
+    padding: 10px;
+}
+.paginatorDiv
+{
+  display: block;
+  height: 100%;
+  margin-right: 0px;
+  margin-left: auto;
 }
 .controlButton
 {
@@ -61,4 +62,5 @@ mat-card {
 {
   display: inline-block;
   margin-left: 10px;
+  margin-bottom: 0px;
 }

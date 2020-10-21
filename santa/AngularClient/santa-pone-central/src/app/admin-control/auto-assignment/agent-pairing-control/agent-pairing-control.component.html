@@ -1,0 +1,67 @@
+<mat-card class="mat-elevation-z4">
+  <mat-card-header>
+    <mat-card-title>Possible pairings for {{ possiblePairingsObject.sendingAgent.clientNickname }}</mat-card-title>
+    <mat-card-subtitle>Suggestions for this mass mailer to have as assignments</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+    <!-- Table headers -->
+    <div class="headerContainer">
+      <div class="headerDiv">
+        <h2 class="headerText">Mass Mailer</h2>
+      </div>
+      <div class="headerDiv">
+        <h2 class="headerText">Assignment</h2>
+      </div>
+    </div>
+
+    <mat-card-content *ngIf="postingNewAssignments">
+      <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
+    </mat-card-content>
+
+    <!-- Potential Pairing -->
+    <div class="scrollDiv" *ngIf="possiblePairingsObject.potentialAssignments.length != 0 && !postingNewAssignments">
+      <mat-selection-list class="scrollbar scrollbar-primary" [(ngModel)]="selectedPotentialAssignments">
+        <mat-list-option class="listOption mat-elevation-z3" *ngFor="let potentialAssignment of possiblePairingsObject.potentialAssignments" [value]="potentialAssignment">
+          <div class="pairingContainer">
+            <div class="pairingDiv">
+              <span>{{ possiblePairingsObject.sendingAgent.clientNickname }}</span>
+              <mat-card-subtitle class="infoSubtitle">Assignments: {{ possiblePairingsObject.sendingAgent.assignments.length }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Senders: {{ possiblePairingsObject.sendingAgent.senders.length }}</mat-card-subtitle>
+              <div class="tagDiv">
+                <mat-chip class="tag" *ngFor="let tag of potentialAssignment.tags"
+                  matTooltip="{{tag.tagName}}"
+                  [matTooltipPosition]="'below'"
+                  [disableRipple]="true">
+                  <span class="tagText">{{tag.tagName}}</span>
+                </mat-chip>
+              </div>
+            </div>
+            <div class="pairingDiv">
+              <span>{{ potentialAssignment.clientNickname }}</span>
+              <mat-card-subtitle class="infoSubtitle">Assignments: {{ potentialAssignment.assignments.length }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Senders: {{ potentialAssignment.senders.length }}</mat-card-subtitle>
+              <div class="tagDiv">
+                <mat-chip class="tag" *ngFor="let tag of potentialAssignment.tags"
+                  matTooltip="{{tag.tagName}}"
+                  [matTooltipPosition]="'below'"
+                  [disableRipple]="true">
+                  <span class="tagText">{{tag.tagName}}</span>
+                </mat-chip>
+              </div>
+            </div>
+          </div>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+    <div class="scrollDiv" *ngIf="possiblePairingsObject.potentialAssignments.length == 0">
+      <h2>No New Pairings</h2>
+    </div>
+
+  </mat-card-content>
+  <mat-card-actions *ngIf="possiblePairingsObject.potentialAssignments.length != 0">
+    <button mat-raised-button (click)="postAssignmentPairings()" [disabled]="postingNewAssignments || selectedPotentialAssignments.length == 0">Confirm Selected Assignments for {{ possiblePairingsObject.sendingAgent.clientNickname }}</button>
+  </mat-card-actions>
+</mat-card>
+
+

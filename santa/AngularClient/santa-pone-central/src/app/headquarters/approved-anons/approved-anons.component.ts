@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santa-api.service';
@@ -7,6 +7,8 @@ import { MapService } from '../../services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-approved-anons',
@@ -23,9 +25,13 @@ export class ApprovedAnonsComponent implements OnInit {
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  public paginatorPageSize: number = 25;
+  public paginatorPageIndex: number = 1;
+
   actionTaken: boolean = false;
   showSpinner: boolean = false;
-
 
   ngOnInit() {
   }
@@ -49,5 +55,21 @@ export class ApprovedAnonsComponent implements OnInit {
     return client.responses.some((response: SurveyResponse) => {
       return response.surveyID == survey.surveyID;
     });
+  }
+  switchPage(event: PageEvent)
+  {
+    this.paginatorPageSize = event.pageSize;
+    this.paginatorPageIndex = event.pageIndex;
+  }
+  pagedClients() : Array<Client>
+  {
+    if(this.paginator != undefined)
+    {
+      return this.approvedClients.slice(this.paginator.pageIndex * this.paginator.pageSize, (this.paginator.pageIndex * this.paginator.pageSize) + this.paginator.pageSize);
+    }
+    else
+    {
+      return this.approvedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    }
   }
 }

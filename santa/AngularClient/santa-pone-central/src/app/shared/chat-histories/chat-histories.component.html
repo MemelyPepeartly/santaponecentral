@@ -50,12 +50,13 @@
       <th mat-header-cell class="header" *matHeaderCellDef> Correspondence History </th>
       <td mat-cell *matCellDef="let history" class="reactiveDataColumn">
         <!-- Disabled if disabled overall, is an admin and on profile, if the viewerClient is the same as the conversation client (implying it is the same person), or the conversation client does not have an account-->
-        <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount"
+        <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount && !history.conversationClient.isAdmin"
           (click)="emitSelectedHistory(history);"
           [disabled]="isDisabled(history)"
           [matBadge]="history.unreadCount"
           [matBadgeHidden]="history.unreadCount == 0">{{ isDisabled(history) && isRefreshingChats ? 'Refreshing...' : 'Correspondence' }}</button>
-        <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
+          <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount && !history.conversationClient.isAdmin" [disabled]="true">No Account</button>
+          <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.isAdmin" [disabled]="true">Is Admin</button>
       </td>
     </ng-container>
 

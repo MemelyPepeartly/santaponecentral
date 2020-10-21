@@ -40,8 +40,8 @@ export class AssignmentStatus {
   assignmentStatusName: string;
   assignmentStatusDescription: string;
 }
-export class PossiblePairing {
+export class PossiblePairingChoices {
   sendingAgent: Client;
-  possibleAssignment: Client;
+  potentialAssignments: Array<Client> = [];
 }
 

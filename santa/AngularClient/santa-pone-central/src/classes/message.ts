@@ -43,5 +43,6 @@ export class ClientMeta {
     clientName?: string = null;
     clientNickname?: string = null;
     hasAccount: boolean;
+    isAdmin: boolean;
 }
 

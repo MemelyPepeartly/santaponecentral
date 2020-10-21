@@ -1,48 +1,39 @@
-mat-drawer
+.adminControlContainer
 {
-  background-color: transparent;
-  width: 200px;
+  display: block;
+  margin: 10px;
 }
-mat-drawer-content
+.tabGroup
 {
-  align-content: center;
-}
-.sidenav-container
-{
+  border-radius: 8px;
   background-color: white;
 }
-#component-div
+.componentDiv
 {
-  display: inline-block;
-  width: fit-content;
-  min-width: 600px;
+  display: block;
+  width: 100%;
+  height: fit-content;
+}
+.tagControlDiv
+{
   text-align: center;
 }
-#container
+.massControlDiv
 {
-  width: 100%;
-  display: flex;
+  text-align: center;
+}
+.eventControlDiv
+{
+
+}
+.surveyControlDiv
+{
+
 }
 @media (max-width:600px)
 {
-  #component-div
+  .massControlDiv
   {
-    display: block;
-    width: fit-content;
     text-align: center;
-  }
-  .sidenav-container
-  {
-    height: fit-content;
-    width: 100%;
-    min-width: 600px;
-    text-align: center;
-    background-color: white;
-  }
-  #container
-  {
-    width: 100%;
-    height: 100%;
-    display: block;
   }
 }

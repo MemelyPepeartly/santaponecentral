@@ -39,14 +39,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:messages")]
         public async Task<ActionResult<List<Logic.Objects.Message>>> GetAllMessages()
         {
-            try
-            {
-                return Ok(await repository.GetAllMessages());
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+            return Ok(await repository.GetAllMessages());
         }
 
         // GET: api/Message/5
@@ -59,14 +52,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> GetMessage(Guid chatMessageID)
         {
-            try
-            {
-                return Ok(await repository.GetMessageByIDAsync(chatMessageID));
-            }
-            catch(Exception e)
-            {
-                throw e.InnerException;
-            }
+            return Ok(await repository.GetMessageByIDAsync(chatMessageID));
         }
 
         // POST: api/Message
@@ -74,63 +60,56 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "create:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody] ApiMessageModel message)
         {
-            try
-            {
 #warning clients and admins can both use this. Ensure that the requesting client is only posting as a sender and that they are allowed to and such based on their token claims
-                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
-                Logic.Objects.Message logicMessage = new Logic.Objects.Message()
+            Logic.Objects.Message logicMessage = new Logic.Objects.Message()
+            {
+                chatMessageID = Guid.NewGuid(),
+                recieverClient = new Logic.Objects.ClientMeta()
                 {
-                    chatMessageID = Guid.NewGuid(),
-                    recieverClient = new Logic.Objects.ClientMeta()
-                    {
-                        clientId = message.messageRecieverClientID
-                    },
-                    senderClient = new Logic.Objects.ClientMeta()
-                    {
-                        clientId = message.messageSenderClientID
-                    },
-                    clientRelationXrefID = message.clientRelationXrefID,
-                    messageContent = message.messageContent,
-                    dateTimeSent = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
-                    isMessageRead = false,
-                    fromAdmin = message.fromAdmin
-                };
-                if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
+                    clientId = message.messageRecieverClientID
+                },
+                senderClient = new Logic.Objects.ClientMeta()
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    clientId = message.messageSenderClientID
+                },
+                clientRelationXrefID = message.clientRelationXrefID,
+                messageContent = message.messageContent,
+                dateTimeSent = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
+                isMessageRead = false,
+                fromAdmin = message.fromAdmin
+            };
+            if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            else
+            {
+                await repository.CreateMessage(logicMessage);
+                await repository.SaveAsync();
+
+                // If this message has an eventTypeID
+                if (message.eventTypeID.HasValue)
+                {
+                    // If the message is from an admin, get the event for the notification, and send the email
+                    if (message.fromAdmin)
+                    {
+                        Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
+                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
+                    }
                 }
+                // Else if it doesnt have an event (It is a general message)
                 else
                 {
-                    await repository.CreateMessage(logicMessage);
-                    await repository.SaveAsync();
-
-                    // If this message has an eventTypeID
-                    if(message.eventTypeID.HasValue)
+                    // If it's from an admin, make a new event object, and send the client a notification
+                    if (message.fromAdmin)
                     {
-                        // If the message is from an admin, get the event for the notification, and send the email
-                        if(message.fromAdmin)
-                        {
-                            Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
-                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
-                        }
+                        Logic.Objects.Event logicEvent = new Logic.Objects.Event();
+                        await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
                     }
-                    // Else if it doesnt have an event (It is a general message)
-                    else
-                    {
-                        // If it's from an admin, make a new event object, and send the client a notification
-                        if(message.fromAdmin)
-                        {
-                            Logic.Objects.Event logicEvent = new Logic.Objects.Event();
-                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
-                        }
-                    }
-                    return Ok();
                 }
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
+                return Ok();
             }
         }
 
@@ -139,27 +118,13 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PutReadStatus(Guid chatMessageID, [FromBody] ApiMessageReadModel message)
         {
-            try
-            {
 #warning clients and admins can use this controller. Ensure that if a client, then it is only changing a message they themselves have written
-                Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
-                targetMessage.isMessageRead = message.isMessageRead;
-                try
-                {
-                    await repository.UpdateMessageByIDAsync(targetMessage);
-                    await repository.SaveAsync();
-                    return Ok(await repository.GetMessageByIDAsync(chatMessageID));
-                }
-                catch (Exception e)
-                {
-                    throw e.InnerException;
-                }
-            }
+            Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
+            targetMessage.isMessageRead = message.isMessageRead;
 
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+            await repository.UpdateMessageByIDAsync(targetMessage);
+            await repository.SaveAsync();
+            return Ok(await repository.GetMessageByIDAsync(chatMessageID));
         }
 
         // PUT: api/Message/ReadAll
@@ -167,25 +132,17 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PutReadAll([FromBody] ApiReadAllMessageModel messages)
         {
-            try
-            {
 #warning clients and admins can use this controller. Ensure that if a client, then it is only changing a message they themselves have written
 
-                foreach(Guid messageID in messages.messages)
-                {
-                    Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(messageID);
-                    targetMessage.isMessageRead = true;
-                    await repository.UpdateMessageByIDAsync(targetMessage);
-                }
-
-                await repository.SaveAsync();
-                return Ok();
-            }
-
-            catch (Exception e)
+            foreach (Guid messageID in messages.messages)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(messageID);
+                targetMessage.isMessageRead = true;
+                await repository.UpdateMessageByIDAsync(targetMessage);
             }
+
+            await repository.SaveAsync();
+            return Ok();
         }
     }
 }

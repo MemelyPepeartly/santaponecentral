@@ -7,9 +7,9 @@ namespace Santa.Logic.Objects.Information_Objects
     /// <summary>
     /// Logic object for possible pairings an auto assignment call might return
     /// </summary>
-    public class PossiblePairing
+    public class PossiblePairingChoices
     {
         public Client sendingAgent { get; set; }
-        public Client possibleAssignment { get; set; }
+        public List<Client> potentialAssignments { get; set; }
     }
 }
