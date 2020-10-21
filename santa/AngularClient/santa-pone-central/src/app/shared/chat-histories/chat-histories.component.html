@@ -55,8 +55,8 @@
           [disabled]="isDisabled(history)"
           [matBadge]="history.unreadCount"
           [matBadgeHidden]="history.unreadCount == 0">{{ isDisabled(history) && isRefreshingChats ? 'Refreshing...' : 'Correspondence' }}</button>
-        <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount" [disabled]="true">No Account</button>
-        <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.hasAccount && history.conversationClient.isAdmin" [disabled]="true">Is Admin</button>
+          <button mat-raised-button class="historyButton" *ngIf="!history.conversationClient.hasAccount && !history.conversationClient.isAdmin" [disabled]="true">No Account</button>
+          <button mat-raised-button class="historyButton" *ngIf="history.conversationClient.isAdmin" [disabled]="true">Is Admin</button>
       </td>
     </ng-container>
 

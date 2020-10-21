@@ -10,5 +10,6 @@ namespace Santa.Logic.Objects
         public string clientName { get; set; }
         public string clientNickname { get; set; }
         public bool hasAccount { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

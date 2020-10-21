@@ -158,7 +158,8 @@ export class MapService {
       clientID: meta.clientId,
       clientName: meta.clientName,
       clientNickname: meta.clientNickname,
-      hasAccount: meta.hasAccount
+      hasAccount: meta.hasAccount,
+      isAdmin: meta.isAdmin
     }
 
     return mappedMeta;

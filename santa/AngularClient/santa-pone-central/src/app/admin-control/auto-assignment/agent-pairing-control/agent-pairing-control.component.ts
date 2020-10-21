@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatList, MatSelectionList } from '@angular/material/list';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
 import { Client, PossiblePairingChoices } from 'src/classes/client';
 import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';

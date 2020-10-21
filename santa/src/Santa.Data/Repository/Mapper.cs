@@ -124,7 +124,8 @@ namespace Santa.Data.Repository
                 clientId = contextClient.ClientId,
                 clientName = contextClient.ClientName,
                 clientNickname = contextClient.Nickname,
-                hasAccount = contextClient.HasAccount
+                hasAccount = contextClient.HasAccount,
+                isAdmin = contextClient.IsAdmin
             };
 
             return logicMeta;
@@ -136,7 +137,8 @@ namespace Santa.Data.Repository
                 clientId = logicClient.clientID,
                 clientName = logicClient.clientName,
                 clientNickname = logicClient.nickname,
-                hasAccount = logicClient.hasAccount
+                hasAccount = logicClient.hasAccount,
+                isAdmin = logicClient.isAdmin
             };
 
             return logicMeta;
