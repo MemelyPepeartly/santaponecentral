@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Client } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santa-api.service';
@@ -7,7 +7,8 @@ import { MapService } from '../../services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-approved-anons',
@@ -24,7 +25,7 @@ export class ApprovedAnonsComponent implements OnInit {
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
-  public pagedClients: Array<Client> = [];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public paginatorPageSize: number = 25;
   public paginatorPageIndex: number = 1;
@@ -57,18 +58,18 @@ export class ApprovedAnonsComponent implements OnInit {
   }
   switchPage(event: PageEvent)
   {
-    this.pagedClients = this.approvedClients.slice(event.pageIndex * event.pageSize, (event.pageIndex * event.pageSize) + event.pageSize)
     this.paginatorPageSize = event.pageSize;
     this.paginatorPageIndex = event.pageIndex;
   }
-  resliceTable()
+  pagedClients() : Array<Client>
   {
-    console.log(this.approvedClients);
-
-    setTimeout(() => {
-      this.pagedClients = this.approvedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
-    });
-
-    console.log(this.pagedClients);
+    if(this.paginator != undefined)
+    {
+      return this.approvedClients.slice(this.paginator.pageIndex * this.paginator.pageSize, (this.paginator.pageIndex * this.paginator.pageSize) + this.paginator.pageSize);
+    }
+    else
+    {
+      return this.approvedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
+    }
   }
 }
