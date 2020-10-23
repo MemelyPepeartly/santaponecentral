@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Santa.Logic.Objects.Base_Objects;
+using System;
 using System.Collections.Generic;
 
 namespace Santa.Logic.Objects
@@ -15,6 +16,7 @@ namespace Santa.Logic.Objects
         public List<RelationshipMeta> assignments { get; set; }
         public List<RelationshipMeta> senders { get; set; }
         public List<Tag> tags { get; set; }
+        public List<Note> notes { get; set; }
         public bool isAdmin { get; set; }
         /// <summary>
         /// Determines if they have an auth0 account. This is false if they are a manual signup by default
