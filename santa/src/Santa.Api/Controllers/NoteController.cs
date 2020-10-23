@@ -60,9 +60,13 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Note>> Put(Guid noteID, [FromBody] EditNoteContentsModel model)
         {
             Note logicNote = await repository.GetNoteByIDAsync(noteID);
+
+            logicNote.noteSubject = model.noteSubject;
             logicNote.noteContents = model.noteContents;
+
             await repository.UpdateNote(logicNote);
             await repository.SaveAsync();
+
             return Ok(await repository.GetNoteByIDAsync(noteID));
         }
 
