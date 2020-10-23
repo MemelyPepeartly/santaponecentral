@@ -1,1 +1,87 @@
-<p>note-control works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Notes</mat-card-title>
+    <mat-card-subtitle>Notes about this agent</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-selection-list #questionsSelectionList class="questionSelection mat-elevation-z3" [disabled]="showAll" [multiple]="false">
+      <mat-list-option class="questionListOption" *ngFor="let note of notes" [value]="note"
+        (click)="setSelectedNote(note)">{{note.noteSubject}}</mat-list-option>
+    </mat-selection-list>
+
+    <mat-card class="answerCard mat-elevation-z3" *ngIf="!showAll">
+      <mat-card-header>
+        <mat-card-title>
+          {{ selectedNote.noteSubject != undefined ? selectedNote.noteSubject : "Select a Note" }}
+        </mat-card-title>
+        <mat-card-subtitle>Note contents</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content *ngIf="selectedNote.noteContents != undefined">
+
+        <!-- Note shown here -->
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="spinnerDiv">
+          <app-small-loading-spin ></app-small-loading-spin>
+        </div>
+        <div class="noteText" *ngIf="selectedNote.noteContents != undefined">{{ selectedNote.noteContents }}</div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <!-- Form group field for editing reponse -->
+        <div class="editDiv" [formGroup]="noteFormGroup">
+          <ng-container *ngFor="let note of notes">
+            <mat-form-field *ngIf="note.noteID == selectedNote.noteID" class="inputForm">
+              <textarea matInput placeholder="Edit Answer" formControlName="{{getFormControlNameFromNote(note)}}"></textarea>
+            </mat-form-field>
+          </ng-container>
+          <div class="error" *ngIf="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).errors && noteFormGroup.get(getFormControlNameFromNote(selectedNote)).touched">
+            <div *ngIf="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).errors.maxlength">Note is too long. 2000 characters is the maximum</div>
+          </div>
+        </div>
+        <mat-card-actions style="text-align: center;">
+          <button mat-raised-button
+            [disabled]="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).invalid"
+            (click)="submitUpdatedNote()">Submit</button>
+        </mat-card-actions>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Create a new note tool card -->
+    <mat-card *ngIf="createNewNoteOpen">
+      <mat-card-header>
+        <mat-card-title>Create a New Note</mat-card-title>
+        <mat-card-subtitle>Creates a handy note about this agent</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="newNoteFormGroup">
+          <!-- Subject -->
+          <mat-form-field>
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="noteSubject" placeholder="Note Subject">
+          </mat-form-field>
+          <div class="error" *ngIf="newNoteControls.noteSubject.errors && newNoteControls.noteSubject.touched">
+              <div *ngIf="newNoteControls.noteSubject.errors.required">Subject is required to submit a note</div>
+              <div *ngIf="newNoteControls.noteSubject.errors.maxlength">Note subject is too long! 100 characters is the maximum amount of characters.</div>
+          </div>
+
+          <!-- Content -->
+          <mat-form-field>
+              <mat-label>Content</mat-label>
+              <textarea matInput formControlName="noteContents" placeholder="Write a note"></textarea>
+          </mat-form-field>
+          <div class="error" *ngIf="newNoteControls.noteContents.errors && newNoteControls.noteContents.touched">
+              <div *ngIf="newNoteControls.noteContents.errors.required">Content is required to submit a new note</div>
+              <div *ngIf="newNoteControls.noteContents.errors.maxlength">Note is too long! 2000 characters is the maximum amount of characters.</div>
+          </div>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button (click)="submitNewNote()">Submit</button>
+        <button mat-raised-button (click)="closeCreateNewNote()">Cancel</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="createNewNoteOpen = !createNewNoteOpen">Create New Note</button>
+  </mat-card-actions>
+</mat-card>
