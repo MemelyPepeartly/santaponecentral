@@ -9,6 +9,7 @@ import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
+import { Note } from 'src/classes/note'
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,7 @@ export class MapService {
       senders: [],
       assignments: [],
       tags: [],
+      notes: []
     };
 
     client.responses.forEach(response => {
@@ -49,6 +51,9 @@ export class MapService {
 
     client.tags.forEach(tag => {
       mappedClient.tags.push(this.mapTag(tag))
+    });
+    client.notes.forEach(note => {
+      mappedClient.notes.push(this.mapNote(note))
     });
 
     return mappedClient;
@@ -322,6 +327,16 @@ export class MapService {
     };
 
     return mappedTag;
+  }
+  mapNote(note) : Note
+  {
+    let mappedNote: Note =
+    {
+      noteID: note.noteID,
+      noteSubject: note.noteSubject,
+      noteContents: note.noteContents
+    }
+    return mappedNote;
   }
 }
 @Injectable({
