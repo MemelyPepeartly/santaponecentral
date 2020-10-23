@@ -1013,6 +1013,33 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Note
+        public async Task CreateNoteAsync(Logic.Objects.Base_Objects.Note newNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Logic.Objects.Base_Objects.Note>> GetAllNotesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Logic.Objects.Base_Objects.Note> GetNoteByIDAsync(Guid noteID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateNote(Logic.Objects.Base_Objects.Note updatedNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteNoteByID(Guid noteID)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {
