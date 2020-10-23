@@ -24,6 +24,7 @@ namespace Santa.Data.Entities
         public virtual DbSet<ClientTagXref> ClientTagXref { get; set; }
         public virtual DbSet<EntryType> EntryType { get; set; }
         public virtual DbSet<EventType> EventType { get; set; }
+        public virtual DbSet<Note> Note { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
         public virtual DbSet<SurveyOption> SurveyOption { get; set; }
         public virtual DbSet<SurveyQuestion> SurveyQuestion { get; set; }
@@ -404,6 +405,37 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("isActive");
             });
 
+            modelBuilder.Entity<Note>(entity =>
+            {
+                entity.ToTable("Note", "app");
+
+                entity.Property(e => e.NoteId)
+                    .HasColumnName("noteID")
+                    .HasViewColumnName("noteID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ClientId)
+                    .HasColumnName("clientID")
+                    .HasViewColumnName("clientID");
+
+                entity.Property(e => e.NoteContents)
+                    .HasColumnName("noteContents")
+                    .HasViewColumnName("noteContents")
+                    .HasMaxLength(2000);
+
+                entity.Property(e => e.NoteSubject)
+                    .IsRequired()
+                    .HasColumnName("noteSubject")
+                    .HasViewColumnName("noteSubject")
+                    .HasMaxLength(100);
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.Note)
+                    .HasForeignKey(x => x.ClientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Note__clientID__0453B85B");
+            });
+
             modelBuilder.Entity<Survey>(entity =>
             {
                 entity.ToTable("Survey", "app");
@@ -573,7 +605,7 @@ namespace Santa.Data.Entities
                     .IsRequired()
                     .HasColumnName("responseText")
                     .HasViewColumnName("responseText")
-                    .HasMaxLength(2000);
+                    .HasMaxLength(4000);
 
                 entity.Property(e => e.SurveyId)
                     .HasColumnName("surveyID")
