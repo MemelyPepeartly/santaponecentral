@@ -49,7 +49,7 @@ namespace Santa.Api.Controllers
                 noteSubject = model.noteSubject,
                 noteContents = model.noteContents
             };
-            await repository.CreateNoteAsync(newLogicNote);
+            await repository.CreateNoteAsync(newLogicNote, model.clientID);
             await repository.SaveAsync();
             return Ok(await repository.GetNoteByIDAsync(newLogicNote.noteID));
         }
