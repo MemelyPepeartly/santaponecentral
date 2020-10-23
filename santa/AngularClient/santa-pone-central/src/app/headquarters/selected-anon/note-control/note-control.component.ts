@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MapService } from 'src/app/services/mapper.service';
 import { SantaApiDeleteService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { Note } from 'src/classes/note';
 import { NewNoteResponse } from 'src/classes/responseTypes';
@@ -12,6 +13,7 @@ import { NewNoteResponse } from 'src/classes/responseTypes';
 export class NoteControlComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
+    public mapper: MapService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
@@ -80,6 +82,10 @@ export class NoteControlComponent implements OnInit {
     this.newNoteFormGroup.reset();
     this.createNewNoteOpen = false;
   }
+  public addNewNoteToFormGroup(note: Note)
+  {
+    this.noteFormGroup.addControl(note.noteID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+  }
   getFormControlNameFromNote(note: Note)
   {
     return note.noteID
@@ -98,10 +104,11 @@ export class NoteControlComponent implements OnInit {
       noteSubject: this.newNoteSubject,
       noteContents: this.newNoteContents
     };
-    console.log(response);
 
-    this.SantaApiPost.postNewClientNote(response).subscribe(() => {
+    this.SantaApiPost.postNewClientNote(response).subscribe((res) => {
       this.postingNewNote = false;
+      this.addNewNoteToFormGroup(this.mapper.mapNote(res));
+      this.newNoteFormGroup.reset();
       this.postedNewNoteSuccessEvent.emit(true);
     }, err => {
       this.postingNewNote = false;
