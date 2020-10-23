@@ -29,7 +29,7 @@ import { ClientResponse,
   NewEntryTypeResponse,
   EditEntryTypeName,
   EditEntryTypeDescription,
-  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse, SelectedAutoAssignmentsResponse} from '../../classes/responseTypes';
+  EditBoardEntryThreadNumberResponse, NewAssignmentStatusResponse, EditProfileAssignmentStatusResponse, SearchQueryModelResponse, SelectedAutoAssignmentsResponse, NewNoteResponse, EditNoteResponse} from '../../classes/responseTypes';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -157,6 +157,14 @@ export class SantaApiGetService {
     return this.http.get(endpoint + "History/Client/" + clientID + "/Relationship").pipe(
       map(this.extractData));
   }
+  getAllNotes(): Observable<any> {
+    return this.http.get(endpoint + "Note").pipe(
+      map(this.extractData));
+  }
+  getNoteByID(id: string): Observable<any> {
+    return this.http.get(endpoint + "Note/" + id).pipe(
+      map(this.extractData));
+  }
   getClientMessageHistoryBySubjectIDAndXrefID(clientID: string, subjectID: string, clientRelationXrefID?: string): Observable<any> {
     //Necessary for the correct call to be made where the clientRelationXrefID is null
     // ClientID is the conversationClient, subjectID is who is reading the messages
@@ -232,6 +240,10 @@ export class SantaApiPostService {
     return this.http.post(endpoint + 'Client/AutoAssignments', assignmentPairingResponse).pipe(
       map(this.extractData));
   }
+  postNewClientNote(newNoteResponse: NewNoteResponse): Observable<any> {
+    return this.http.post(endpoint + 'Note', newNoteResponse).pipe(
+      map(this.extractData));
+  }
   searchClients(body: SearchQueryModelResponse): Observable<any> {
     return this.http.post(endpoint + 'Catalogue/SearchClients', body).pipe(
       map(this.extractData));
@@ -286,6 +298,9 @@ export class SantaApiPutService {
   }
   putResponse(surveyResponseID: string, responseModel: ChangeSurveyResponseModel): Observable<any> {
     return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel).pipe(map(this.extractData));
+  }
+  putNote(noteID: string, responseModel: EditNoteResponse): Observable<any> {
+    return this.http.put(endpoint + 'Note/' + noteID, responseModel).pipe(map(this.extractData));
   }
   putProfileAddress(clientID: string, updatedAddress: ClientAddressResponse): Observable<any> {
     // Endpoints specifically has security checks to make sure data is secure in address change call
