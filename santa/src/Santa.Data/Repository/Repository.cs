@@ -81,6 +81,9 @@ namespace Santa.Data.Repository
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
 
+                /* Notes */
+                .Include(c => c.Note)
+
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
                 .AsNoTracking()
@@ -132,6 +135,9 @@ namespace Santa.Data.Repository
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
 
+                /* Notes */
+                .Include(c => c.Note)
+
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
                 .Where(c => c.ClientId == clientId)
@@ -182,6 +188,9 @@ namespace Santa.Data.Repository
                 /* Tags */
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
+
+                /* Notes */
+                .Include(c => c.Note)
 
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
