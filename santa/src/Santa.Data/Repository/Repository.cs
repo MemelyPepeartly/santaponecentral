@@ -1023,9 +1023,11 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Note
-        public async Task CreateNoteAsync(Logic.Objects.Base_Objects.Note newNote)
+        public async Task CreateNoteAsync(Logic.Objects.Base_Objects.Note newNote, Guid clientID)
         {
-            await santaContext.Note.AddAsync(Mapper.MapNote(newNote));
+            Note contextNote = Mapper.MapNote(newNote);
+            contextNote.ClientId = clientID;
+            await santaContext.Note.AddAsync(contextNote);
         }
 
         public async Task<List<Logic.Objects.Base_Objects.Note>> GetAllNotesAsync()

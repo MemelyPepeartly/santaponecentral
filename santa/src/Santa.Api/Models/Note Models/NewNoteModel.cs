@@ -7,6 +7,7 @@ namespace Santa.Api.Models.Note_Models
 {
     public class NewNoteModel
     {
+        public Guid clientID { get; set; }
         public string noteSubject { get; set; }
         public string noteContents { get; set; }
     }

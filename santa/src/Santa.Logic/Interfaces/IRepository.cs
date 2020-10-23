@@ -266,7 +266,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Note
-        Task CreateNoteAsync(Note newNote);
+        Task CreateNoteAsync(Note newNote, Guid clientID);
         Task<List<Note>> GetAllNotesAsync();
         Task<Note> GetNoteByIDAsync(Guid noteID);
         Task UpdateNote(Note updatedNote);
