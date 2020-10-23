@@ -59,6 +59,11 @@
                     </div>
                 </mat-card-content>
             </mat-card>
+            <app-note-control
+              [clientID]="client.clientID"
+              [notes]="client.notes"
+              (postedNewNoteSuccessEvent)="softRefreshClient()">
+            </app-note-control>
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
         <div class="error" *ngIf="showFail">Error approving Anon</div>
