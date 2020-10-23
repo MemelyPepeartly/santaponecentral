@@ -585,6 +585,29 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Note
+        public static Entities.Note MapNote(Logic.Objects.Base_Objects.Note logicNote)
+        {
+            Note contextNote = new Note()
+            {
+                NoteId = logicNote.noteID,
+                NoteSubject = logicNote.noteSubject,
+                NoteContents = logicNote.noteContents
+            };
+            return contextNote;
+        }
+        public static Logic.Objects.Base_Objects.Note MapNote(Entities.Note contextNote)
+        {
+            Logic.Objects.Base_Objects.Note logicNote = new Logic.Objects.Base_Objects.Note()
+            {
+                noteID = contextNote.NoteId,
+                noteSubject = contextNote.NoteSubject,
+                noteContents = contextNote.NoteContents
+            };
+            return logicNote;
+        }
+        #endregion
+
         #region Message History
         /// <summary>
         /// Maps the information of a message history with the contents of a relationship, and the viewer subject client information
