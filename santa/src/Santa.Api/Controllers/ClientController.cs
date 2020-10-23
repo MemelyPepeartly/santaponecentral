@@ -181,7 +181,7 @@ namespace Santa.Api.Controllers
             return Ok(await repository.GetClientByIDAsync(newClient.clientID));
 
         }
-        // POST: api/Client
+        // POST: api/Client/Signup
         /// <summary>
         /// Posts a new client signup with their responses
         /// </summary>
