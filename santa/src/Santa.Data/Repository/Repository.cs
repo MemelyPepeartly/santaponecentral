@@ -1016,27 +1016,36 @@ namespace Santa.Data.Repository
         #region Note
         public async Task CreateNoteAsync(Logic.Objects.Base_Objects.Note newNote)
         {
-            throw new NotImplementedException();
+            await santaContext.Note.AddAsync(Mapper.MapNote(newNote));
         }
 
         public async Task<List<Logic.Objects.Base_Objects.Note>> GetAllNotesAsync()
         {
-            throw new NotImplementedException();
+            return (await santaContext.Note.ToListAsync())
+                .Select(Mapper.MapNote)
+                .ToList();
         }
 
         public async Task<Logic.Objects.Base_Objects.Note> GetNoteByIDAsync(Guid noteID)
         {
-            throw new NotImplementedException();
+            return Mapper.MapNote(await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID));
         }
 
         public async Task UpdateNote(Logic.Objects.Base_Objects.Note updatedNote)
         {
-            throw new NotImplementedException();
+            Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == updatedNote.noteID);
+
+            contextNote.NoteSubject = updatedNote.noteSubject;
+            contextNote.NoteContents = updatedNote.noteContents;
+
+            santaContext.Note.Update(contextNote);
         }
 
         public async Task DeleteNoteByID(Guid noteID)
         {
-            throw new NotImplementedException();
+            Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID);
+
+            santaContext.Remove(contextNote);
         }
         #endregion
 
