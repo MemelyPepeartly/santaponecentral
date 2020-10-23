@@ -155,7 +155,6 @@ export class GathererService {
   {
     this._gatheringAllClients.next(true);
 
-    this.updateAllClient([]);
     let clientList: Array<Client> = []
 
     var res = await this.SantaApiGet.getAllClients().toPromise().catch(err => {
