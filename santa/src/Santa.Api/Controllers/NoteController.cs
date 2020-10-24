@@ -33,7 +33,7 @@ namespace Santa.Api.Controllers
         }
 
         // GET: api/Note/5
-        [HttpGet("{id}")]
+        [HttpGet("{noteID}")]
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Note>> Get(Guid noteID)
         {
@@ -57,7 +57,7 @@ namespace Santa.Api.Controllers
         }
 
         // PUT: api/Note/5
-        [HttpPut("{id}")]
+        [HttpPut("{noteID}")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Note>> Put(Guid noteID, [FromBody] EditNoteContentsModel model)
         {
@@ -73,7 +73,7 @@ namespace Santa.Api.Controllers
         }
 
         // DELETE: api/Note/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{noteID}")]
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult> Delete(Guid noteID)
         {

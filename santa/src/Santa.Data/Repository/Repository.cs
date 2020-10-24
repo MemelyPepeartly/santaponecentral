@@ -1056,7 +1056,7 @@ namespace Santa.Data.Repository
         {
             Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID);
 
-            santaContext.Remove(contextNote);
+            santaContext.Note.Remove(contextNote);
         }
         #endregion
 
