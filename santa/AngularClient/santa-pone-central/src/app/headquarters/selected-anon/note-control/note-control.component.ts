@@ -26,6 +26,8 @@ export class NoteControlComponent implements OnInit {
   @Output() postedNewNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() editedNoteSuccessEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() editedNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() deletedNoteSuccessEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() deletedNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public newNoteFormGroup: FormGroup;
   public get newNoteControls()
@@ -51,9 +53,12 @@ export class NoteControlComponent implements OnInit {
 
   public showAll: boolean = false;
   public createNewNoteOpen: boolean = false;
+  public showEditingTools: boolean = false;
+  public confirmDelete: boolean = false;
 
   public postingNewNote: boolean = false;
   public puttingEditedNote: boolean = false;
+  public deletingNote: boolean = false;
 
   public selectedNote: Note = new Note();
 
@@ -70,7 +75,7 @@ export class NoteControlComponent implements OnInit {
       noteContents: ['', [Validators.required, Validators.maxLength(2000)]]
     });
     this.notes.forEach((note: Note) => {
-      this.noteFormGroup.addControl(note.noteID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      this.noteFormGroup.addControl(note.noteID, new FormControl(note.noteContents, [Validators.required, Validators.maxLength(2000)]))
     });
   }
   public setSelectedNote(note: Note)
@@ -84,17 +89,39 @@ export class NoteControlComponent implements OnInit {
   }
   public addNewNoteToFormGroup(note: Note)
   {
-    this.noteFormGroup.addControl(note.noteID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+    this.noteFormGroup.addControl(note.noteID, new FormControl(note.noteContents, [Validators.required, Validators.maxLength(2000)]))
   }
   getFormControlNameFromNote(note: Note)
   {
     return note.noteID
   }
+  public deleteNote()
+  {
+    this.deletingNote = true;
+
+    this.SantaApiDelete.deleteNote(this.selectedNote.noteID).subscribe((res) => {
+      this.deletingNote = false;
+      this.confirmDelete = false;
+      this.showEditingTools = false;
+
+      var controlID = this.selectedNote.noteID
+      this.selectedNote = new Note();
+      this.noteFormGroup.removeControl(controlID);
+      this.deletedNoteSuccessEvent.emit(true);
+    },err => {
+      this.deletingNote = false;
+      this.confirmDelete = false;
+      this.showEditingTools = false;
+
+      this.selectedNote = new Note();
+      this.deletedNoteFailureEvent.emit(true);
+    });
+  }
   submitUpdatedNote()
   {
 
   }
-  submitNewNote()
+  public submitNewNote()
   {
     this.postingNewNote = true;
 
