@@ -328,6 +328,9 @@ export class SantaApiDeleteService {
   deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> {
     return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestion/" + surveyQuestionId);
   }
+  deleteNote(id: string): Observable<any> {
+    return this.http.delete(endpoint + 'Note/' + id);
+  }
 }
 @Injectable({
   providedIn: 'root'
