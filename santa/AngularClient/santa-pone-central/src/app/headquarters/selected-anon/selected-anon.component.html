@@ -62,6 +62,7 @@
             <app-note-control
               [clientID]="client.clientID"
               [notes]="client.notes"
+              (deletedNoteSuccessEvent)="softRefreshClient()"
               (postedNewNoteSuccessEvent)="softRefreshClient()">
             </app-note-control>
         </mat-card-content>
