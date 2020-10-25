@@ -4,6 +4,7 @@ import { EventType } from './eventType';
 import { Tag } from './tag';
 import { SurveyResponse } from './survey';
 import { ClientMeta } from './message';
+import { Note } from './note';
 
 export class Client {
   clientID: string;
@@ -18,6 +19,7 @@ export class Client {
   senders: Array<RelationshipMeta> = [];
   assignments: Array<RelationshipMeta> = [];
   tags: Array<Tag> = [];
+  notes: Array<Note>= [];
 }
 // Class used for holding sender and event ID information
 export class RelationshipMeta {

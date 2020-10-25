@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Base_Objects;
 
 namespace Santa.Logic.Interfaces
 {
@@ -262,6 +263,14 @@ namespace Santa.Logic.Interfaces
         Task UpdateEntryTypeName(EntryType updatedEntryType);
         Task UpdateEntryTypeDescription(EntryType updatedEntryType);
         Task DeleteEntryTypeByID(Guid entryTypeID);
+        #endregion
+
+        #region Note
+        Task CreateNoteAsync(Note newNote, Guid clientID);
+        Task<List<Note>> GetAllNotesAsync();
+        Task<Note> GetNoteByIDAsync(Guid noteID);
+        Task UpdateNote(Note updatedNote);
+        Task DeleteNoteByID(Guid noteID);
         #endregion
 
         #region Utility

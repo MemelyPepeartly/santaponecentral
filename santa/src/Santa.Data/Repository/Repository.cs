@@ -81,6 +81,9 @@ namespace Santa.Data.Repository
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
 
+                /* Notes */
+                .Include(c => c.Note)
+
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
                 .AsNoTracking()
@@ -132,6 +135,9 @@ namespace Santa.Data.Repository
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
 
+                /* Notes */
+                .Include(c => c.Note)
+
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
                 .Where(c => c.ClientId == clientId)
@@ -182,6 +188,9 @@ namespace Santa.Data.Repository
                 /* Tags */
                 .Include(c => c.ClientTagXref)
                     .ThenInclude(t => t.Tag)
+
+                /* Notes */
+                .Include(c => c.Note)
 
                 /* Client approval status */
                 .Include(c => c.ClientStatus)
@@ -1013,6 +1022,44 @@ namespace Santa.Data.Repository
         }
         #endregion
 
+        #region Note
+        public async Task CreateNoteAsync(Logic.Objects.Base_Objects.Note newNote, Guid clientID)
+        {
+            Note contextNote = Mapper.MapNote(newNote);
+            contextNote.ClientId = clientID;
+            await santaContext.Note.AddAsync(contextNote);
+        }
+
+        public async Task<List<Logic.Objects.Base_Objects.Note>> GetAllNotesAsync()
+        {
+            return (await santaContext.Note.ToListAsync())
+                .Select(Mapper.MapNote)
+                .ToList();
+        }
+
+        public async Task<Logic.Objects.Base_Objects.Note> GetNoteByIDAsync(Guid noteID)
+        {
+            return Mapper.MapNote(await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID));
+        }
+
+        public async Task UpdateNote(Logic.Objects.Base_Objects.Note updatedNote)
+        {
+            Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == updatedNote.noteID);
+
+            contextNote.NoteSubject = updatedNote.noteSubject;
+            contextNote.NoteContents = updatedNote.noteContents;
+
+            santaContext.Note.Update(contextNote);
+        }
+
+        public async Task DeleteNoteByID(Guid noteID)
+        {
+            Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID);
+
+            santaContext.Note.Remove(contextNote);
+        }
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {
@@ -1051,7 +1098,8 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.All(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.All(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList()
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail)).ToList();
             }
             else
             {
@@ -1060,7 +1108,8 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Any(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.Any(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList()
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail)).ToList();
             }
 
             return matchingClients;

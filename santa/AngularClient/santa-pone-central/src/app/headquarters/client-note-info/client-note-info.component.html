@@ -1,0 +1,13 @@
+<div *ngIf="true">
+  <app-note-control
+    (postedNewNoteSuccessEvent)="emitRefreshAction()"
+    (editedNoteSuccessEvent)="emitRefreshAction()"
+    (deletedNoteSuccessEvent)="emitRefreshAction()"
+    (clickawayLockedEvent)="emitLockEvent($event)"
+    [clientID]="client.clientID"
+    [notes]="client.notes"
+    [createNewNoteOpen]="true"
+    [hasMargin]="true"
+    [infoOnly]="true">
+  </app-note-control>
+</div>

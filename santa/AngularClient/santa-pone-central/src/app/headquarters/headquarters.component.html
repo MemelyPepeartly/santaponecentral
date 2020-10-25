@@ -24,9 +24,9 @@
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
                 <app-incoming-signups #signups
-                [gatheringInfo]="gatheringAllClients || gatheringAllSurveys"
+                [gatheringInfo]="gatheringAllClients || initializing"
                 [allSurveys]="allSurveys"
-                [awaitingClients]="awaitingClients"
+                [awaitingClients]="sortIncoming()"
                 (clickedClient)="showClientWindow($event)"
                 (manualSignUpClickedEvent)="showManualSignupWindow()"></app-incoming-signups>
             </div>
@@ -36,9 +36,9 @@
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
                 <app-approved-anons #approved
-                [gatheringInfo]="gatheringAllClients || gatheringAllSurveys"
+                [gatheringInfo]="gatheringAllClients || initializing"
                 [allSurveys]="allSurveys"
-                [approvedClients]="approvedClients"
+                [approvedClients]="sortApproved()"
                 (clickedClient)="showClientWindow($event)"></app-approved-anons>
             </div>
         </div>
@@ -47,8 +47,8 @@
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
                 <app-denied-anons #denied
-                [gatheringInfo]="gatheringAllClients"
-                [deniedClients]="deniedClients"
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [deniedClients]="sortDenied()"
                 (clickedClient)="showClientWindow($event)"></app-denied-anons>
             </div>
         </div>
@@ -57,8 +57,8 @@
         <div class="contentDiv mat-elevation-z2">
             <div class="small-box mat-elevation-z3">
                 <app-completed-anons #completed
-                [gatheringInfo]="gatheringAllClients"
-                [completedClients]="completedClients"
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [completedClients]="sortCompleted()"
                 (clickedClient)="showClientWindow($event)"></app-completed-anons>
             </div>
         </div>

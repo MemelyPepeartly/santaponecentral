@@ -30,8 +30,14 @@ export class ApprovedAnonsComponent implements OnInit {
   public paginatorPageSize: number = 25;
   public paginatorPageIndex: number = 1;
 
-  actionTaken: boolean = false;
-  showSpinner: boolean = false;
+  public actionTaken: boolean = false;
+  public showSpinner: boolean = false;
+  public showAssignmentQuickInfoCard: boolean = false;
+  public showNoteQuickInfoCard: boolean = false;
+  public clickawayLocked: boolean = false;
+
+  public selectedAssignmentClient: Client = new Client();
+  public selectedNoteClient: Client = new Client();
 
   ngOnInit() {
   }
@@ -71,5 +77,41 @@ export class ApprovedAnonsComponent implements OnInit {
     {
       return this.approvedClients.slice(this.paginatorPageIndex * this.paginatorPageSize, (this.paginatorPageIndex * this.paginatorPageSize) + this.paginatorPageSize);
     }
+  }
+  hideOpenWindow()
+  {
+    if(!this.clickawayLocked)
+    {
+      this.showAssignmentQuickInfoCard = false;
+      this.showNoteQuickInfoCard = false;
+      this.selectedAssignmentClient = new Client();
+      this.selectedNoteClient = new Client();
+    }
+  }
+  viewClientNotes(client: Client)
+  {
+    this.selectedNoteClient = client;
+    this.showNoteQuickInfoCard = true;
+  }
+  viewAssignments(client: Client)
+  {
+    this.selectedAssignmentClient = client;
+    this.showAssignmentQuickInfoCard = true;
+  }
+  async softRefreshClient()
+  {
+    let refreshedClient: Client = this.mapper.mapClient(await this.SantaApi.getClientByClientID(this.selectedNoteClient.clientID != undefined ? this.selectedNoteClient.clientID : this.selectedAssignmentClient.clientID).toPromise())
+    if(this.selectedNoteClient.clientID != undefined)
+    {
+      this.selectedNoteClient = refreshedClient;
+    }
+    else if(this.selectedAssignmentClient.clientID != undefined)
+    {
+      this.selectedAssignmentClient = refreshedClient;
+    }
+  }
+  setClickawayLock(clickawayLocked: boolean)
+  {
+    this.clickawayLocked = clickawayLocked;
   }
 }

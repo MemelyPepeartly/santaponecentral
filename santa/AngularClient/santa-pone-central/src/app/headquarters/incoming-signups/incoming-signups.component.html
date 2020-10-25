@@ -12,7 +12,7 @@
           </button>
           <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total awaiting signups: {{ awaitingClients.length }}</mat-card-subtitle>
         </div>
-        <div class="paginatorDiv" *ngIf="!gatheringInfo && !showSpinner">
+        <div class="paginatorDiv" *ngIf="false">
           <mat-paginator
           (page)="switchPage($event)"
           [length]="awaitingClients.length"
@@ -26,7 +26,7 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of pagedClients()" appMaterialElevation (click)="showCardInfo(client)" [@simpleFadeAnimation]="'in'">
+    <mat-card mat-list-item *ngFor="let client of awaitingClients" (click)="showCardInfo(client)">
       <mat-card-title>
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >
@@ -45,8 +45,5 @@
           <span>Client answered for the {{ survey.surveyDescription }}</span>
         </mat-card-subtitle>
       </ng-container>
-      <mat-card-subtitle>
-        <span></span>
-      </mat-card-subtitle>
     </mat-card>
 </mat-list>

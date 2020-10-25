@@ -157,6 +157,7 @@ export class SearchQueryModelResponse {
   events: Array<string> = [];
   names: Array<string> = [];
   nicknames: Array<string> = [];
+  emails: Array<string> = [];
   isHardSearch: boolean;
 }
 
@@ -168,4 +169,17 @@ export class Pairing {
 export class SelectedAutoAssignmentsResponse
 {
   pairings: Array<Pairing> = [];
+}
+
+/* Note response models */
+export class NewNoteResponse
+{
+  clientID: string;
+  noteSubject: string;
+  noteContents: string;
+}
+export class EditNoteResponse
+{
+  noteSubject: string;
+  noteContents: string;
 }

@@ -78,7 +78,7 @@
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
-        <div class="actionButtonsDiv">
+        <div class="actionButtonsDiv" *ngIf="!infoOnly">
           <button class="panelButton" mat-raised-button
           matTooltip="Switch to this Anon"
           [matTooltipPosition]="'right'"
@@ -97,9 +97,9 @@
           <mat-card-subtitle class="infoSubtitle">Remove this assignment from {{ agent.clientNickname }}'s assignment list</mat-card-subtitle>
         </div>
 
-        <mat-divider [inset]="true"></mat-divider>
+        <mat-divider [inset]="true" *ngIf="!infoOnly"></mat-divider>
 
-        <app-assignment-status-controller #assignmentControl class="statusController"
+        <app-assignment-status-controller #assignmentControl class="statusController" *ngIf="!infoOnly"
           (lockClickawayEvent)="setClickawayLock($event)"
           (newStatusRecipientMetaPutEvent)="setNewStatus($event)"
           [isAdmin]="true"
@@ -154,7 +154,7 @@
         </div>
         <mat-divider [inset]="true"></mat-divider>
 
-        <div class="actionButtonsDiv">
+        <div class="actionButtonsDiv" *ngIf="!infoOnly">
           <button class="panelButton" mat-raised-button
           matTooltip="Switch to this Anon"
           [matTooltipPosition]="'right'"
@@ -162,9 +162,9 @@
           <mat-card-subtitle class="infoSubtitle">Switch to this assignment</mat-card-subtitle>
         </div>
 
-        <mat-divider [inset]="true"></mat-divider>
+        <mat-divider [inset]="true" *ngIf="!infoOnly"></mat-divider>
 
-        <app-assignment-status-controller #senderControl class="statusController"
+        <app-assignment-status-controller #senderControl class="statusController" *ngIf="!infoOnly"
           (lockClickawayEvent)="setClickawayLock($event)"
           (newStatusRecipientMetaPutEvent)="setNewStatus($event, true)"
           [isAdmin]="true"

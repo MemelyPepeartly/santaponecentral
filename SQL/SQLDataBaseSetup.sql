@@ -21,6 +21,13 @@ CREATE TABLE app.Client
     isAdmin BIT NOT NULL,
     hasAccount BIT NOT NULL
 );
+CREATE TABLE app.Note
+(
+    noteID UNIQUEIDENTIFIER PRIMARY KEY,
+    clientID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.Client(clientID) NOT NULL,
+    noteSubject NVARCHAR(100) NOT NULL,
+    noteContents NVARCHAR(2000)
+)
 CREATE TABLE app.EventType
 (
     eventTypeID UNIQUEIDENTIFIER PRIMARY KEY,
@@ -70,7 +77,7 @@ CREATE TABLE app.SurveyResponse
     clientID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Client(clientID),
     surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
     surveyOptionID UNIQUEIDENTIFIER FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
-    responseText NVARCHAR(2000) NOT NULL
+    responseText NVARCHAR(4000) NOT NULL
 );
 CREATE TABLE app.SurveyQuestionXref
 (
