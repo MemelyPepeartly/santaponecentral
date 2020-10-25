@@ -59,6 +59,8 @@ import { AssignmentsPanelComponent } from './headquarters/selected-anon/assignme
 import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
 import { AgentPairingControlComponent } from './admin-control/auto-assignment/agent-pairing-control/agent-pairing-control.component';
 import { NoteControlComponent } from './headquarters/selected-anon/note-control/note-control.component';
+import { ClientNoteInfoComponent } from './headquarters/client-note-info/client-note-info.component';
+import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-info/client-assignment-info.component';
 
 
 @NgModule({
@@ -107,7 +109,9 @@ import { NoteControlComponent } from './headquarters/selected-anon/note-control/
       AssignmentsPanelComponent,
       AgentCatalogueComponent,
       AgentPairingControlComponent,
-      NoteControlComponent
+      NoteControlComponent,
+      ClientNoteInfoComponent,
+      ClientAssignmentInfoComponent
    ],
    entryComponents: [
       LoginComponent
