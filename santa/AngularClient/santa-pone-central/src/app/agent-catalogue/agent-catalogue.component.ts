@@ -18,6 +18,7 @@ export class SearchQueryObjectContainer
   statuses: Array<Status> = [];
   names: Array<string> = [];
   nicknames: Array<string> = [];
+  emails: Array<string> = [];
 
   get tagQueryIDs() : Array<string>
   {
@@ -109,6 +110,8 @@ export class AgentCatalogueComponent implements OnInit {
   public statusReg: RegExp = new RegExp(/"status:([^"]+)"/g);
   public nameReg: RegExp = new RegExp(/"name:([^"]+)"/g);
   public nicknamesReg: RegExp = new RegExp(/"nickname:([^"]+)"/g);
+  public emailReg: RegExp = new RegExp(/"email:([^"]+)"/g);
+
 
   public get allHelperTags() : Array<Tag>
   {
@@ -204,6 +207,7 @@ export class AgentCatalogueComponent implements OnInit {
     let statusMatches = Array.from(this.searchQueryString.matchAll(this.statusReg))
     let nameMatches = Array.from(this.searchQueryString.matchAll(this.nameReg))
     let nicknameMatches = Array.from(this.searchQueryString.matchAll(this.nicknamesReg))
+    let emailMatches = Array.from(this.searchQueryString.matchAll(this.emailReg))
 
 
     tagMatches.forEach((element: RegExpMatchArray) => {
@@ -243,6 +247,12 @@ export class AgentCatalogueComponent implements OnInit {
         this.searchQueryObjectHolder.names.push(element[1]);
       }
     });
+    emailMatches.forEach((element: RegExpMatchArray) => {
+      if(!this.searchQueryObjectHolder.emails.some((email: string) => {return email == element[1]}))
+      {
+        this.searchQueryObjectHolder.emails.push(element[1]);
+      }
+    });
   }
   public removeTagQuery(tag: Tag)
   {
@@ -266,6 +276,7 @@ export class AgentCatalogueComponent implements OnInit {
     this.searchQueryObjectHolder.statuses = [];
     this.searchQueryObjectHolder.names = [];
     this.searchQueryObjectHolder.nicknames = [];
+    this.searchQueryObjectHolder.emails = [];
   }
   public search()
   {
@@ -278,6 +289,7 @@ export class AgentCatalogueComponent implements OnInit {
       events: this.searchQueryObjectHolder.eventQueryIDs,
       names: this.searchQueryObjectHolder.names,
       nicknames: this.searchQueryObjectHolder.nicknames,
+      emails: this.searchQueryObjectHolder.emails,
       isHardSearch: this.selectedSearchType == 'hard' ? true : false
     }
     this.santaApiPost.searchClients(response).subscribe((res) => {
@@ -295,10 +307,6 @@ export class AgentCatalogueComponent implements OnInit {
       this.searchingClients = false;
     });
   }
-  public updateSelectedClient()
-  {
-
-  }
   public showCardInfo(client: Client)
   {
     this.selectedClient = client;
@@ -311,9 +319,5 @@ export class AgentCatalogueComponent implements OnInit {
       this.showClientCard = false;
       this.selectedClient = new Client();
     }
-  }
-  test()
-  {
-    console.log(this.selectedSearchType);
   }
 }
