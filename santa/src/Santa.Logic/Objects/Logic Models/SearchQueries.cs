@@ -11,6 +11,7 @@ namespace Santa.Logic.Objects
         public List<Guid> statuses { get; set; }
         public List<string> names { get; set; }
         public List<string> nicknames { get; set; }
+        public List<string> emails { get; set; }
         public bool isHardSearch { get; set; }
     }
 }

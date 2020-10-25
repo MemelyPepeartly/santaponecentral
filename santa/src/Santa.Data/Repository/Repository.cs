@@ -1098,7 +1098,8 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.All(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.All(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList()
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail)).ToList();
             }
             else
             {
@@ -1107,7 +1108,8 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Any(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.Any(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList()
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail)).ToList();
             }
 
             return matchingClients;
