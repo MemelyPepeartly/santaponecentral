@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MapService } from 'src/app/services/mapper.service';
 import { SantaApiDeleteService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { Note } from 'src/classes/note';
-import { NewNoteResponse } from 'src/classes/responseTypes';
+import { EditNoteResponse, NewNoteResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-note-control',
@@ -28,6 +28,7 @@ export class NoteControlComponent implements OnInit {
   @Output() editedNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() deletedNoteSuccessEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() deletedNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() clickawayLockedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public newNoteFormGroup: FormGroup;
   public get newNoteControls()
@@ -119,11 +120,32 @@ export class NoteControlComponent implements OnInit {
   }
   submitUpdatedNote()
   {
+    this.puttingEditedNote = true;
+    this.clickawayLockedEvent.emit(true);
 
+    let response: EditNoteResponse =
+    {
+      noteSubject: this.selectedNote.noteSubject,
+      noteContents: this.noteFormGroup.get(this.getFormControlNameFromNote(this.selectedNote)).value
+    };
+    this.SantaApiPut.putNote(this.selectedNote.noteID, response).subscribe((res) => {
+      this.puttingEditedNote = false;
+      this.selectedNote = this.mapper.mapNote(res);
+      this.clickawayLockedEvent.emit(false);
+      this.editedNoteSuccessEvent.emit(true);
+    },err => {
+      this.clickawayLockedEvent.emit(false);
+      this.editedNoteFailureEvent.emit(true);
+      console.group();
+      console.log("Something went wrong submitting an edited note");
+      console.log(err);
+      console.groupEnd();
+    });
   }
   public submitNewNote()
   {
     this.postingNewNote = true;
+    this.clickawayLockedEvent.emit(true);
 
     let response: NewNoteResponse =
     {
@@ -136,9 +158,11 @@ export class NoteControlComponent implements OnInit {
       this.postingNewNote = false;
       this.addNewNoteToFormGroup(this.mapper.mapNote(res));
       this.newNoteFormGroup.reset();
+      this.clickawayLockedEvent.emit(false);
       this.postedNewNoteSuccessEvent.emit(true);
     }, err => {
       this.postingNewNote = false;
+      this.clickawayLockedEvent.emit(false);
       this.postedNewNoteFailureEvent.emit(true);
       console.group();
       console.log("Something went wrong submitting a new note");
