@@ -1,3 +1,7 @@
+.mainCard
+{
+  margin: 10px;
+}
 .selectedNoteCard
 {
   display: inline-block;

@@ -21,6 +21,9 @@ export class NoteControlComponent implements OnInit {
 
   @Input() clientID: string;
   @Input() notes: Array<Note> = [];
+  @Input() infoOnly: boolean = false;
+  @Input() hasMargin: boolean = false;
+  @Input() createNewNoteOpen: boolean = false;
 
   @Output() postedNewNoteSuccessEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() postedNewNoteFailureEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -53,7 +56,6 @@ export class NoteControlComponent implements OnInit {
   }
 
   public showAll: boolean = false;
-  public createNewNoteOpen: boolean = false;
   public showEditingTools: boolean = false;
   public confirmDelete: boolean = false;
 
