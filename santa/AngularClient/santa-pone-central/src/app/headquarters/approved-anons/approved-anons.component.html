@@ -9,6 +9,7 @@
   <div class="fixedDiv mat-elevation-z6">
     <app-client-note-info
       (refreshEvent)="softRefreshClient()"
+      (clickawayLockedEvent)="setClickawayLock($event)"
       [client]="selectedNoteClient">
     </app-client-note-info>
   </div>

@@ -34,6 +34,7 @@ export class ApprovedAnonsComponent implements OnInit {
   public showSpinner: boolean = false;
   public showAssignmentQuickInfoCard: boolean = false;
   public showNoteQuickInfoCard: boolean = false;
+  public clickawayLocked: boolean = false;
 
   public selectedAssignmentClient: Client = new Client();
   public selectedNoteClient: Client = new Client();
@@ -79,10 +80,13 @@ export class ApprovedAnonsComponent implements OnInit {
   }
   hideOpenWindow()
   {
-    this.showAssignmentQuickInfoCard = false;
-    this.showNoteQuickInfoCard = false;
-    this.selectedAssignmentClient = new Client();
-    this.selectedNoteClient = new Client();
+    if(!this.clickawayLocked)
+    {
+      this.showAssignmentQuickInfoCard = false;
+      this.showNoteQuickInfoCard = false;
+      this.selectedAssignmentClient = new Client();
+      this.selectedNoteClient = new Client();
+    }
   }
   viewClientNotes(client: Client)
   {
@@ -105,5 +109,9 @@ export class ApprovedAnonsComponent implements OnInit {
     {
       this.selectedAssignmentClient = refreshedClient;
     }
+  }
+  setClickawayLock(clickawayLocked: boolean)
+  {
+    this.clickawayLocked = clickawayLocked;
   }
 }

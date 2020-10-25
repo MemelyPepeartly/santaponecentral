@@ -13,11 +13,16 @@ export class ClientNoteInfoComponent implements OnInit {
   @Input() client: Client = new Client();
 
   @Output() refreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() clickawayLockedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   ngOnInit(): void {
   }
   public emitRefreshAction()
   {
     this.refreshEvent.emit(true);
+  }
+  public emitLockEvent(clickawayLocked: boolean)
+  {
+    this.clickawayLockedEvent.emit(clickawayLocked);
   }
 }

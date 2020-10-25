@@ -3,6 +3,7 @@
     (postedNewNoteSuccessEvent)="emitRefreshAction()"
     (editedNoteSuccessEvent)="emitRefreshAction()"
     (deletedNoteSuccessEvent)="emitRefreshAction()"
+    (clickawayLockedEvent)="emitLockEvent($event)"
     [clientID]="client.clientID"
     [notes]="client.notes"
     [createNewNoteOpen]="true"
