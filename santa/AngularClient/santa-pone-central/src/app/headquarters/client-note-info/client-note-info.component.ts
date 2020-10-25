@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-client-note-info',
@@ -9,7 +10,14 @@ export class ClientNoteInfoComponent implements OnInit {
 
   constructor() { }
 
+  @Input() client: Client = new Client();
+
+  @Output() refreshEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   ngOnInit(): void {
   }
-
+  public emitRefreshAction()
+  {
+    this.refreshEvent.emit(true);
+  }
 }
