@@ -1,3 +1,19 @@
+<div id="overlay" *ngIf="showAssignmentQuickInfoCard || showNoteQuickInfoCard" (click)="hideOpenWindow();"></div>
+
+<div class="assignmentInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showAssignmentQuickInfoCard">
+  <div class="fixedDiv mat-elevation-z6">
+    <app-client-assignment-info [client]="selectedAssignmentClient"></app-client-assignment-info>
+  </div>
+</div>
+<div class="noteInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showNoteQuickInfoCard">
+  <div class="fixedDiv mat-elevation-z6">
+    <app-client-note-info
+      (refreshEvent)="softRefreshClient()"
+      [client]="selectedNoteClient">
+    </app-client-note-info>
+  </div>
+</div>
+
 <mat-toolbar>
     <mat-toolbar-row>
         Approved Anons
@@ -23,16 +39,17 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of approvedClients" (click)="showCardInfo(client)">
-        <mat-card-title>
-          <h1 class="inline">{{ client.clientNickname }}</h1>
-          <mat-chip-list class="inline tagList" [selectable]="false" >
-            <mat-chip *ngFor="let tag of client.tags"
-            matTooltip="{{tag.tagName}}"
-            [matTooltipPosition]="'below'"
-            [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
-          </mat-chip-list>
-        </mat-card-title>
+    <mat-card mat-list-item *ngFor="let client of approvedClients">
+      <mat-card-title>
+        <h1 class="inline">{{ client.clientNickname }}</h1>
+        <mat-chip-list class="inline tagList" [selectable]="false" >
+          <mat-chip *ngFor="let tag of client.tags"
+          matTooltip="{{tag.tagName}}"
+          [matTooltipPosition]="'below'"
+          [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+        </mat-chip-list>
+      </mat-card-title>
+      <mat-card-content (click)="showCardInfo(client)">
         <mat-card-subtitle>
           <span [ngClass]="{'notice' : client.assignments.length == 0}">Assignments: {{ client.assignments.length }}</span>
         </mat-card-subtitle>
@@ -43,6 +60,15 @@
           <span>Client Name: {{ client.clientName }}</span>
         </mat-card-subtitle>
         <mat-divider [inset]="true"></mat-divider>
-
+        <ng-container *ngFor="let survey of allSurveys">
+          <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
+            <span>Client answered for the {{ survey.surveyDescription }}</span>
+          </mat-card-subtitle>
+        </ng-container>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button (click)="viewClientNotes(client)">View Notes</button>
+        <button mat-raised-button (click)="viewAssignments(client)">View Assignments</button>
+      </mat-card-actions>
     </mat-card>
 </mat-list>
