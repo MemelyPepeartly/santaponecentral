@@ -62,8 +62,10 @@
             <app-note-control
               [clientID]="client.clientID"
               [notes]="client.notes"
-              (deletedNoteSuccessEvent)="softRefreshClient()"
-              (postedNewNoteSuccessEvent)="softRefreshClient()">
+              (clickawayLockedEvent)="setClickAwayAllowed($event)"
+              (deletedNoteSuccessEvent)="softRefreshClient(); emitActionTaken();"
+              (postedNewNoteSuccessEvent)="softRefreshClient(); emitActionTaken();"
+              (editedNoteSuccessEvent)="softRefreshClient(); emitActionTaken();">
             </app-note-control>
         </mat-card-content>
         <app-loading-spin *ngIf="showButtonSpinner"></app-loading-spin>
