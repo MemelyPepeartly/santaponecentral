@@ -15,6 +15,7 @@ export class AssignmentsPanelComponent implements OnInit {
   @Input() senders: Array<RelationshipMeta> = [];
   @Input() assignments: Array<RelationshipMeta> = [];
   @Input() agent: Client;
+  @Input() infoOnly: boolean = false;
 
   @Output() updatedStatusEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clickAwayAllowedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
