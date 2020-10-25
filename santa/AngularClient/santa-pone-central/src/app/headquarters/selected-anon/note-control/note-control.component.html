@@ -56,8 +56,8 @@
 
         <mat-card-actions style="text-align: center;" *ngIf="showEditingTools">
           <button mat-raised-button
-            [disabled]="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).invalid"
-            (click)="submitUpdatedNote()">Submit</button>
+            [disabled]="puttingEditedNote || noteFormGroup.get(getFormControlNameFromNote(selectedNote)).invalid"
+            (click)="submitUpdatedNote()">Submit Edited Note</button>
             <button mat-raised-button (click)="showEditingTools = !showEditingTools">Cancel</button>
         </mat-card-actions>
         <mat-card-actions style="text-align: center;" *ngIf="!showEditingTools">
