@@ -53,11 +53,6 @@ export class HeadquartersComponent implements OnInit {
   public gatheringAllSurveys: boolean;
   public clickAwayLocked: boolean;
 
-  public awaitingClients: Array<Client> = [];
-  public approvedClients: Array<Client> = [];
-  public deniedClients: Array<Client> = [];
-  public completedClients: Array<Client> = [];
-
   public initializing: boolean = true;
 
   @ViewChild(ApprovedAnonsComponent) approvedAnonsComponent: ApprovedAnonsComponent;
@@ -84,7 +79,6 @@ export class HeadquartersComponent implements OnInit {
     /* ALL CLIENTS SUBSCRIBE */
     this.gatherer.allClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
-      this.sortAll();
     });
     this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
       this.allSurveys = surveys;
@@ -150,27 +144,20 @@ export class HeadquartersComponent implements OnInit {
   {
     this.clickAwayLocked = status;
   }
-  public sortAll()
+  sortApproved()
   {
-    this.sortApproved();
-    this.sortIncoming();
-    this.sortDenied();
-    this.sortCompleted();
-  }
-  public sortApproved()
-  {
-    this.approvedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
   }
   sortIncoming()
   {
-    this.awaitingClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.AWAITING});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.AWAITING});
   }
   sortDenied()
   {
-    this.deniedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.DENIED});
   }
   sortCompleted()
   {
-    this.completedClients = this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.COMPLETED});
+    return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.COMPLETED});
   }
 }
