@@ -1,0 +1,21 @@
+.assignmentPanelsContainer
+{
+  display: block;
+  width: 100%;
+}
+.assignmentPanelDiv
+{
+  display: block;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.assignmentEventCard
+{
+  display: block;
+  margin-top: 15px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
