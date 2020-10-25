@@ -7,9 +7,9 @@
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
-            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total approved anons: {{ approvedClients.length }}</mat-card-subtitle>
+            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved anons: {{ approvedClients.length }}</mat-card-subtitle>
         </div>
-        <div class="paginatorDiv" *ngIf="!gatheringInfo && !showSpinner">
+        <div class="paginatorDiv" *ngIf="false">
           <mat-paginator
             (page)="switchPage($event)"
             [length]="approvedClients.length"
@@ -23,7 +23,7 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of pagedClients()" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item *ngFor="let client of approvedClients" (click)="showCardInfo(client)">
         <mat-card-title>
           <h1 class="inline">{{ client.clientNickname }}</h1>
           <mat-chip-list class="inline tagList" [selectable]="false" >
@@ -43,10 +43,6 @@
           <span>Client Name: {{ client.clientName }}</span>
         </mat-card-subtitle>
         <mat-divider [inset]="true"></mat-divider>
-        <ng-container *ngFor="let survey of allSurveys">
-          <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
-            <span>Client answered for the {{ survey.surveyDescription }}</span>
-          </mat-card-subtitle>
-        </ng-container>
+
     </mat-card>
 </mat-list>
