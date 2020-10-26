@@ -52,7 +52,7 @@
           </ng-container>
           <div class="error" *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors && surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).touched">
             <div *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors.required">Answer is required</div>
-            <div *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors.maxlength">Answer is too long. 2000
+            <div *ngIf="surveyFormGroup.get(getFormControlNameFromQuestion(selectedQuestion)).errors.maxlength">Answer is too long. 4000
               Characters is the maximum</div>
           </div>
         </div>

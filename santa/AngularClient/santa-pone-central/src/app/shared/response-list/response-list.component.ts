@@ -55,7 +55,7 @@ export class ResponseListComponent implements OnInit {
   addFields()
   {
     this.survey.surveyQuestions.forEach((question: Question) => {
-      this.surveyFormGroup.addControl(this.survey.surveyID + question.questionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      this.surveyFormGroup.addControl(this.survey.surveyID + question.questionID, new FormControl('', [Validators.required, Validators.maxLength(4000)]))
     });
   }
   setSelectedQuestion(question: Question)
