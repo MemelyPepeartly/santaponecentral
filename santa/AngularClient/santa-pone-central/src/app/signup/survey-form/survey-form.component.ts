@@ -45,7 +45,7 @@ export class SurveyFormComponent implements OnInit {
   addFields()
   {
     this.formQuestionsFormatted.forEach(question => {
-      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', [Validators.required, Validators.maxLength(2000)]))
+      this.surveyFormGroup.addControl(question.surveyQuestionID, new FormControl('', [Validators.required, Validators.maxLength(4000)]))
     });
   }
   public setQuestions(questions: Array<Question>)

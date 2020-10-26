@@ -13,7 +13,7 @@
           </mat-form-field>
           <div class="error" *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors && surveyFormGroup.get(question.surveyQuestionID).touched">
             <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>
-            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.maxlength">Answer is too long. 2000 Characters is the maximum</div>
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.maxlength">Answer is too long. 4000 Characters is the maximum</div>
           </div>
         </ng-container>
 
