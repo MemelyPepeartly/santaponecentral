@@ -14,6 +14,7 @@ import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { CountriesService } from 'src/app/services/countries.service';
 import { ClientMeta } from 'src/classes/message';
+import { MatSelectionList } from '@angular/material/list';
 
 @Component({
   selector: 'app-selected-anon',
@@ -123,6 +124,7 @@ export class SelectedAnonComponent implements OnInit {
   public sendingReset: boolean = false;
   public editingResponse: boolean = false;
   public creatingAuthAccount: boolean = false;
+  public deleteConfirmationOpen: boolean = false;
 
   /* COMPONENT GATHERING BOOLEANS */
   public gettingAnswers: boolean = true;
@@ -449,6 +451,7 @@ export class SelectedAnonComponent implements OnInit {
 
     this.addRecipientSuccess = true;
     this.showRecipientListPostingSpinner = false;
+    this.selectedRecipients = [];
   }
 
   public async getAllowedRecipientsByEvent(eventType: EventType)
