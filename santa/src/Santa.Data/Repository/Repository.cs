@@ -1079,7 +1079,17 @@ namespace Santa.Data.Repository
                 if (!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                 {
                     AllowedAssignmentMeta assignment = Mapper.MapAllowedAssignmentMeta(potentialAssignment);
-                    assignment.clientEvents = allEvents.Where(e => potentialAssignment.responses.Any(r => r.responseEvent.eventTypeID == e.eventTypeID)).ToList();
+                    assignment.answeredSurveys = new List<Logic.Objects.Information_Objects.SurveyMeta>();
+                    // For each response in the potential assignments response list
+                    foreach (Response response in potentialAssignment.responses)
+                    {
+                        // If the assignment object does not have any survey values where the surveyID and EventID are already in the list
+                        if(!assignment.answeredSurveys.Any(s => s.surveyID == response.surveyID && s.eventTypeID == response.responseEvent.eventTypeID))
+                        {
+                            // Add it to the list of answered surveys
+                            assignment.answeredSurveys.Add(Mapper.MapSurveyMeta(response));
+                        }
+                    }
                     allowedAssignments.Add(assignment);
                 }
             }
