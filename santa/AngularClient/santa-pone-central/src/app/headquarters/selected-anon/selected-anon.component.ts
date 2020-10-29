@@ -9,7 +9,7 @@ import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
-import { Survey, Question, SurveyResponse } from 'src/classes/survey';
+import { Survey, Question, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { CountriesService } from 'src/app/services/countries.service';
@@ -262,9 +262,9 @@ export class SelectedAnonComponent implements OnInit {
     //Tells card if client is approved to hide or show the recipient add profile controls
     return this.client.clientID != undefined ? this.client.clientStatus.statusDescription == StatusConstants.APPROVED : false
   }
-  isNotParticipatingInSelectedEvent(assignmentChoice: AllowedAssignmentMeta) : boolean
+  answeredToSurvey(assignmentChoice: AllowedAssignmentMeta, survey: Survey) : boolean
   {
-    return !assignmentChoice.clientEvents.some((event: EventType) => {return event.eventTypeID == this.selectedRecipientEvent.eventTypeID});
+    return assignmentChoice.answeredSurveys.some((surveyMeta: SurveyMeta) => {return surveyMeta.surveyID == survey.surveyID && surveyMeta.eventTypeID == survey.eventTypeID})
   }
   public approveAnon(wantsAccount: boolean)
   {
