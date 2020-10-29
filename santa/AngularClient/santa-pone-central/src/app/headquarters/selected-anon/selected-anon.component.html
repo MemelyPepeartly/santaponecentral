@@ -323,9 +323,9 @@
           <ng-container *ngIf="clientCanBeGivenAssignments">
             <mat-divider [inset]="true"></mat-divider>
 
-            <!--Add recipient option-->
+            <!--Add assignment option-->
             <div class="optionDiv" *ngIf="clientCanBeGivenAssignments">
-              <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+              <app-small-loading-spin *ngIf="showRecipientListPostingSpinner || initializing"></app-small-loading-spin>
 
               <p class="success" *ngIf="false"></p>
               <p class="error" *ngIf="false"></p>
@@ -342,7 +342,7 @@
                 <button mat-raised-button
                     matTooltip="Confirm the selected Anon's as recipients"
                     (click)="showRecipientListPostingSpinner = true;"
-                    (click)="addRecipientsToClient()"
+                    (click)="addRecipientsToClient();"
                     [matTooltipPosition]="'right'"
                     [disabled]="selectedRecipients?.length == 0 || selectedRecipientEvent.eventTypeID == undefined || showRecipientListPostingSpinner == true">Confirm Selection
                 </button>
@@ -394,90 +394,96 @@
             </div>
           </ng-container>
 
+          <mat-divider [inset]="true"></mat-divider>
 
-            <mat-divider [inset]="true"></mat-divider>
+          <div class="optionDiv">
+            <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
 
-            <!--Change Nickname Card-->
-            <div class="optionDiv">
-                <button mat-raised-button
-                    matTooltip="Change the nickname of the anon"
-                    [matTooltipPosition]="'right'"
-                    [disabled]="!clientNicknameFormGroup.valid"
-                    (click)="changeNickname()">Change Nickname</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Assign the Anon a proper or different Holiday Nickname</p>
-                </mat-card-subtitle>
+            <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
+            <p class="error" *ngIf="!client.hasAccount">You cannot send a password reset email to a client who does not have an account</p>
+            <button mat-raised-button
+            matTooltip="Send a password reset email to the agent to reset their password"
+            [matTooltipPosition]="'right'"
+            [disabled]="sendingReset || !client.hasAccount"
+            (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
+            <mat-card-subtitle class="optionSub">
+                <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
+            </mat-card-subtitle>
+          </div>
 
-                <app-small-loading-spin *ngIf="showNickSpinner"></app-small-loading-spin>
-                <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
-                <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
-                    *ngIf="!showNickSpinner">
-                    <mat-label>New Nickname</mat-label>
-                    <!-- MEMELYHERE make this reactive -->
-                    <input matInput #nicknameInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
-                        maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}" required>
-                </mat-form-field>
-            </div>
 
-            <mat-divider [inset]="true"></mat-divider>
-            <div class="optionDiv">
-              <app-small-loading-spin *ngIf="sendingReset"></app-small-loading-spin>
+          <mat-divider [inset]="true"></mat-divider>
 
-              <p class="success" *ngIf="showSentPasswordResetSuccess && !sendingReset">{{ client.clientName }} has been sent a password reset email!</p>
-              <p class="error" *ngIf="!client.hasAccount">You cannot send a password reset email to a client who does not have an account</p>
+          <!--Change Nickname Card-->
+          <div class="optionDiv">
               <button mat-raised-button
-              matTooltip="Send a password reset email to the agent to reset their password"
-              [matTooltipPosition]="'right'"
-              [disabled]="sendingReset || !client.hasAccount"
-              (click)="sendAnonPasswordReset()">Send Reset Password Email</button>
+                  matTooltip="Change the nickname of the anon"
+                  [matTooltipPosition]="'right'"
+                  [disabled]="!clientNicknameFormGroup.valid"
+                  (click)="changeNickname()">Change Nickname</button>
               <mat-card-subtitle class="optionSub">
-                  <p>Sends an email to the agent with a ticket to reset their Auth0 password</p>
+                  <p>Assign the Anon a proper or different Holiday Nickname</p>
+              </mat-card-subtitle>
+
+              <app-small-loading-spin *ngIf="showNickSpinner"></app-small-loading-spin>
+              <p class="success" *ngIf="showNicnameSuccess">The Nickname for {{ client.clientName }} has been successfully updated to {{ client.clientNickname }}!</p>
+              <mat-form-field [formGroup]="clientNicknameFormGroup" class="mat-elevation-z2" id="nickField"
+                  *ngIf="!showNickSpinner">
+                  <mat-label>New Nickname</mat-label>
+                  <!-- MEMELYHERE make this reactive -->
+                  <input matInput #nicknameInput formControlName="newNickname" placeholder="Ex. Happy Camper" value="Nickname"
+                      maxlength="50" minlength="2" pattern="[A-Za-z0-9 ]{2,50}" required>
+              </mat-form-field>
+          </div>
+
+          <!-- Create a new Auth0 account for users without one -->
+          <ng-container *ngIf="!client.hasAccount && client.clientStatus.statusDescription != 'Awaiting'">
+            <mat-divider [inset]="true"></mat-divider>
+            <div class="optionDiv">
+              <app-small-loading-spin *ngIf="creatingAuthAccount"></app-small-loading-spin>
+
+              <p class="success" *ngIf="creatingAuthAccountSuccess">{{ client.clientNickname }} now has a login!</p>
+              <button mat-raised-button
+              matTooltip="Create a login for this Anon to be able to log in with"
+              [matTooltipPosition]="'right'"
+              [disabled]="creatingAuthAccount || creatingAuthAccountSuccess"
+              (click)="createAnonAuth0Account()">Create Login</button>
+              <mat-card-subtitle class="optionSub">
+                  <p>Creates an Auth0 account for this client to log in with</p>
               </mat-card-subtitle>
             </div>
+          </ng-container>
 
-            <!-- Create a new Auth0 account for users without one -->
-            <ng-container *ngIf="!client.hasAccount && client.clientStatus.statusDescription != 'Awaiting'">
-              <mat-divider [inset]="true"></mat-divider>
-              <div class="optionDiv">
-                <app-small-loading-spin *ngIf="creatingAuthAccount"></app-small-loading-spin>
-
-                <p class="success" *ngIf="creatingAuthAccountSuccess">{{ client.clientNickname }} now has a login!</p>
-                <button mat-raised-button
-                matTooltip="Create a login for this Anon to be able to log in with"
-                [matTooltipPosition]="'right'"
-                [disabled]="creatingAuthAccount || creatingAuthAccountSuccess"
-                (click)="createAnonAuth0Account()">Create Login</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Creates an Auth0 account for this client to log in with</p>
-                </mat-card-subtitle>
-              </div>
-            </ng-container>
-
-            <ng-container *ngIf="creatingAuthAccountSuccess">
-              <mat-divider [inset]="true"></mat-divider>
-              <div class="optionDiv">
-                <p class="success">{{ client.clientNickname }} now has a login!</p>
-                <mat-card-subtitle class="optionSub">
-                    <p>Creates an Auth0 account for this client to log in with</p>
-                </mat-card-subtitle>
-              </div>
-            </ng-container>
-
+          <ng-container *ngIf="creatingAuthAccountSuccess">
             <mat-divider [inset]="true"></mat-divider>
-            <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>
+            <div class="optionDiv">
+              <p class="success">{{ client.clientNickname }} now has a login!</p>
+              <mat-card-subtitle class="optionSub">
+                  <p>Creates an Auth0 account for this client to log in with</p>
+              </mat-card-subtitle>
+            </div>
+          </ng-container>
 
-            <div class="optionDiv" *ngIf="!deletingClient">
-                <button mat-raised-button
-                matTooltip="Delete an anon's account entirely"
+          <mat-divider [inset]="true"></mat-divider>
+
+          <app-small-loading-spin *ngIf="deletingClient"></app-small-loading-spin>
+          <div class="optionDiv" *ngIf="!deletingClient">
+              <button mat-raised-button *ngIf="!deleteConfirmationOpen"
+              matTooltip="Delete an anon's account entirely"
+              [matTooltipPosition]="'right'"
+              [disabled]="gatheringAllStatuses || client.isAdmin"
+              (click)="deleteConfirmationOpen = true">Delete Agent <mat-icon>delete</mat-icon></button>
+              <button mat-raised-button *ngIf="deleteConfirmationOpen"
+                matTooltip="Confirm deletion of this agent and their account (Permenant)"
                 color="warn"
                 [matTooltipPosition]="'right'"
-                [disabled]="gatheringAllStatuses || client.isAdmin"
-                (click)="deleteAnon()">Delete Agent</button>
-                <mat-card-subtitle class="optionSub">
-                    <p>Delete a client and their Auth0 login account entirely, along with any chat involvement (No undo)</p>
-                    <span class="error" *ngIf="client.isAdmin">(An admin cannot be deleted)</span>
-                </mat-card-subtitle>
-            </div>
+                (click)="deleteAnon()">Confirm Delete? <mat-icon>delete_forever</mat-icon></button>
+              <button mat-raised-button (click)="deleteConfirmationOpen = false" *ngIf="deleteConfirmationOpen">Cancel</button>
+              <mat-card-subtitle class="optionSub">
+                  <p>Delete an agent and their Auth0 login account entirely, along with any chat involvement (No undo)</p>
+                  <span class="error" *ngIf="client.isAdmin">(An admin cannot be deleted)</span>
+              </mat-card-subtitle>
+          </div>
         </mat-card-actions>
     </mat-card>
 </div>
