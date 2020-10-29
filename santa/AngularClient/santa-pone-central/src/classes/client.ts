@@ -2,7 +2,7 @@ import { Address } from './address';
 import { Status } from './status';
 import { EventType } from './eventType';
 import { Tag } from './tag';
-import { SurveyResponse } from './survey';
+import { Survey, SurveyMeta, SurveyResponse } from './survey';
 import { ClientMeta } from './message';
 import { Note } from './note';
 
@@ -32,7 +32,7 @@ export class RelationshipMeta {
 }
 export class AllowedAssignmentMeta {
   clientMeta: ClientMeta;
-  clientEvents: Array<EventType> = [];
+  answeredSurveys: Array<SurveyMeta> = [];
   tags: Array<Tag> = [];
   totalSenders: number;
   totalAssignments: number;
