@@ -162,6 +162,8 @@ app-small-loading-spin {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  padding: 15px;
+  border-radius: 8px;
 }
 .recipientListCard
 {
