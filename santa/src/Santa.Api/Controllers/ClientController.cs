@@ -630,8 +630,9 @@ namespace Santa.Api.Controllers
         {
             Client logicClient = await repository.GetClientByIDAsync(clientID);
             await repository.DeleteClientByIDAsync(clientID);
+            bool accountExists = await authHelper.accountExists(logicClient.email);
 
-            if (logicClient.clientStatus.statusDescription != Constants.AWAITING_STATUS && logicClient.hasAccount)
+            if(accountExists)
             {
                 Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
                 await authHelper.deleteAuthClient(authUser.user_id);
