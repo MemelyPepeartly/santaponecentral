@@ -333,9 +333,9 @@
               matTooltip="Shows the list of assignable Anon's"
               [matTooltipPosition]="'right'"
               [disabled]="gatheringAllAssignmentsStatuses"
-              (click)="recipientOpen = !recipientOpen">Add recipients</button>
+              (click)="recipientOpen = !recipientOpen">Add Assignments</button>
               <mat-card-subtitle class="optionSub">
-                  <p>Adds people the Anon is sending to</p>
+                  <p>Adds assignments for the Anon to send to</p>
               </mat-card-subtitle>
 
               <div *ngIf="recipientOpen" id="confirmationButtonsDiv">
@@ -357,11 +357,11 @@
                 </mat-radio-group>
               </div>
               <p *ngIf="addRecipientSuccess" class="success">Added assignments to {{ client.clientNickname }} for the {{ selectedRecipientEvent.eventDescription }}!</p>
-              <div class="recipientListContainer" *ngIf="recipientOpen">
+              <div class="recipientListContainer mat-elevation-z3" *ngIf="recipientOpen">
                 <mat-divider [inset]="true"></mat-divider>
                 <mat-toolbar class="centeredToolbar">Add an Assignment</mat-toolbar>
-                <mat-card class="recipientListCard">
-                  <mat-card-content>
+                <mat-card class="recipientListCard scrollbar scrollbar-primary">
+                  <mat-card-content style="padding-left: 10px; padding-right: 10px;">
                     <div class="recipientListContentSelectEventDiv" *ngIf="selectedRecipientEvent.eventTypeID == undefined">
                       <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
                     </div>
@@ -373,7 +373,6 @@
                               <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
                               <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
                               <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
-                              <mat-card-subtitle *ngIf="isNotParticipatingInSelectedEvent(clientRecipientOption)" class="recipientInfoSubtitle subtleError">Client did not sign up for the {{ selectedRecipientEvent.eventDescription }}</mat-card-subtitle>
                               <div class="recipientTagDiv">
                                 <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
                                   matTooltip="{{tag.tagName}}"
@@ -382,6 +381,9 @@
                                   <span class="recipientTagText">{{tag.tagName}}</span>
                                 </mat-chip>
                               </div>
+                              <ng-container *ngFor="let survey of surveys">
+                                <mat-card-subtitle *ngIf="!answeredToSurvey(clientRecipientOption, survey)" class="recipientInfoSubtitle subtleError">Client did not answer for the {{ survey.surveyDescription }}</mat-card-subtitle>
+                              </ng-container>
                             </div>
                           </mat-list-option>
                       </mat-selection-list>
