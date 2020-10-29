@@ -1068,7 +1068,6 @@ namespace Santa.Data.Repository
         public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {
             List<Logic.Objects.Client> allClients = await GetAllClients();
-            List <Event> allEvents = await GetAllEvents();
             Logic.Objects.Client logicClient = allClients.FirstOrDefault(c => c.clientID == clientID);
             List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
 
