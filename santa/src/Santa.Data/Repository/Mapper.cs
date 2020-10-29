@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Data.Repository
 {
@@ -377,6 +378,15 @@ namespace Santa.Data.Repository
                 IsActive = logicSurvey.active
             };
             return contextSurvey;
+        }
+        public static SurveyMeta MapSurveyMeta(Response response)
+        {
+            SurveyMeta logicSurveyMeta = new SurveyMeta()
+            {
+                surveyID = response.surveyID,
+                eventTypeID = response.responseEvent.eventTypeID
+            };
+            return logicSurveyMeta;
         }
         #endregion
 
