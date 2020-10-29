@@ -41,7 +41,7 @@
 </div>
 <mat-list>
     <mat-card mat-list-item *ngFor="let client of approvedClients">
-      <mat-card-title>
+      <mat-card-title (click)="showCardInfo(client)">
         <h1 class="inline">{{ client.clientNickname }}</h1>
         <mat-chip-list class="inline tagList" [selectable]="false" >
           <mat-chip *ngFor="let tag of client.tags"
