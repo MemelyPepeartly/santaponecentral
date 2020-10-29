@@ -102,6 +102,14 @@
   height: 100%;
   max-width: 60%;
 }
+.allPipes
+{
+  height: 100%;
+  background-image: url(../assets/images/pipes/pipes.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+}
 
 @media (max-width:600px)
 {
