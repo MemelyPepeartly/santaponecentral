@@ -78,16 +78,14 @@
   .noteSelection
   {
     display: inline-block;
-    width: 35%;
+    width: 100%;
     min-width: 300px;
     height: fit-content;
-    vertical-align: top;
-    clear: both;
   }
   .selectedNoteCard
   {
     display: inline-block;
-    width: 63%;
+    width: 100%;
     min-width: 300px;
     margin-left: 0px;
     margin-top: 15px;
