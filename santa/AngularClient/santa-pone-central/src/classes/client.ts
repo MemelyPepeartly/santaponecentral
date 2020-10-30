@@ -21,6 +21,16 @@ export class Client {
   tags: Array<Tag> = [];
   notes: Array<Note>= [];
 }
+export class StrippedClient {
+  clientID: string;
+  clientName: string;
+  clientNickname: string;
+  email: string;
+  clientStatus = new Status();
+  responses: Array<SurveyResponse> = [];
+  tags: Array<Tag> = [];
+  isAdmin: boolean;
+}
 // Class used for holding sender and event ID information
 export class RelationshipMeta {
   relationshipClient: ClientMeta = new ClientMeta();
