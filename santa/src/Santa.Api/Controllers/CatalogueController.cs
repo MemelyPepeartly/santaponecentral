@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -26,11 +27,11 @@ namespace Santa.Api.Controllers
         // POST: api/Catalogue/SearchClients
         [HttpPost("SearchClients")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Client>>> GetClientsByQuery([FromBody] SearchQueries model)
+        public async Task<ActionResult<List<StrippedClient>>> GetClientsByQuery([FromBody] SearchQueries model)
         {
-            List<Logic.Objects.Client> listLogicClient = await repository.SearchClientByQuery(model);
+            List<StrippedClient> listLogicStrippedClients = await repository.SearchClientByQuery(model);
 
-            return Ok(listLogicClient);
+            return Ok(listLogicStrippedClients);
         }
     }
 }
