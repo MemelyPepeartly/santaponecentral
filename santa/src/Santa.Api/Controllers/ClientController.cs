@@ -52,6 +52,23 @@ namespace Santa.Api.Controllers
             return Ok(clients.OrderBy(c => c.nickname));
         }
 
+        // GET: api/Client/Truncated
+        /// <summary>
+        /// Gets all clients using the truncated getter for performance
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Truncated")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
+        {
+            List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
+            if (clients == null)
+            {
+                return NoContent();
+            }
+            return Ok(clients.OrderBy(c => c.nickname));
+        }
+
         // GET: api/Client/5
         /// <summary>
         /// Gets a client by an ID
