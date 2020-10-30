@@ -61,6 +61,8 @@ import { AgentPairingControlComponent } from './admin-control/auto-assignment/ag
 import { NoteControlComponent } from './headquarters/selected-anon/note-control/note-control.component';
 import { ClientNoteInfoComponent } from './headquarters/client-note-info/client-note-info.component';
 import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-info/client-assignment-info.component';
+import { UnauthorizedComponent } from './error-pages/unauthorized/unauthorized.component';
+import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 
 
 @NgModule({
@@ -111,7 +113,9 @@ import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-
       AgentPairingControlComponent,
       NoteControlComponent,
       ClientNoteInfoComponent,
-      ClientAssignmentInfoComponent
+      ClientAssignmentInfoComponent,
+      UnauthorizedComponent,
+      NotFoundComponent
    ],
    entryComponents: [
       LoginComponent
