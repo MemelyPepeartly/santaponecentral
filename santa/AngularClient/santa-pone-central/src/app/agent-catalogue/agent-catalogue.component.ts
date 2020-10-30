@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Client } from 'src/classes/client';
+import { Client, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from '../services/gatherer.service';
@@ -78,15 +78,15 @@ export class SearchQueryObjectContainer
 export class AgentCatalogueComponent implements OnInit {
 
   constructor(private gatherer: GathererService,
-    private formBuilder: FormBuilder,
     private santaApiPost: SantaApiPostService,
+    private santaApiGet: SantaApiGetService,
     private mapper: MapService) { }
 
   public allTags: Array<Tag> = [];
   public allEvents: Array<EventType> = [];
   public allClientStatuses: Array<Status> = [];
 
-  public foundClients: Array<Client> = [];
+  public foundClients: Array<StrippedClient> = [];
   public selectedClient: Client = new Client();
   public selectedSearchType: string = "soft";
 
@@ -95,6 +95,7 @@ export class AgentCatalogueComponent implements OnInit {
   public gatheringAllEvents: boolean;
   public searchingClients: boolean;
   public clickLocked: boolean;
+  public gettingClientProfile: boolean = false;
 
   public showHelper: boolean;
   public showClientCard: boolean;
@@ -295,7 +296,7 @@ export class AgentCatalogueComponent implements OnInit {
     this.santaApiPost.searchClients(response).subscribe((res) => {
 
       res.forEach(client => {
-        this.foundClients.push(this.mapper.mapClient(client));
+        this.foundClients.push(this.mapper.mapStrippedClient(client));
       });
       this.searchingClients = false;
     },err => {
@@ -307,10 +308,12 @@ export class AgentCatalogueComponent implements OnInit {
       this.searchingClients = false;
     });
   }
-  public showCardInfo(client: Client)
+  public async showCardInfo(client: Client)
   {
-    this.selectedClient = client;
+    this.gettingClientProfile = true;
     this.showClientCard = true;
+    this.selectedClient = this.mapper.mapClient(await this.santaApiGet.getClientByClientID(client.clientID).toPromise());
+    this.gettingClientProfile = false;
   }
   public hideOpenWindow()
   {
