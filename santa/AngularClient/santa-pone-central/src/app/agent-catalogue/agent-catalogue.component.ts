@@ -181,7 +181,9 @@ export class AgentCatalogueComponent implements OnInit {
       this.allEvents = objectArray;
     });
 
-    await this.gatherer.allGather();
+    await this.gatherer.gatherAllTags();
+    await this.gatherer.gatherAllStatuses();
+    await this.gatherer.gatherAllEvents();
   }
   addQuery(helper: any)
   {
