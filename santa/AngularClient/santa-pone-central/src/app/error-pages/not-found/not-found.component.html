@@ -1,1 +1,18 @@
-<p>not-found works!</p>
+<div class="container">
+  <div class="contentBox small-box mat-elevation-z8">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>This Page Does Not Exist! <mat-icon>warning</mat-icon></mat-card-title>
+        <mat-card-subtitle class="subtleError">
+          You've rogue, agent! Now look what you've done!
+        </mat-card-subtitle>
+        <mat-divider [inset]="true"></mat-divider>
+        <img style="width: 500px;" src="../../../assets/images/404_Shark_Down.png">
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button [routerLink]="'/home'">Take me back! TAKE ME BACK!</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
