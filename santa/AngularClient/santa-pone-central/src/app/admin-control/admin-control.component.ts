@@ -59,7 +59,7 @@ export class AdminControlComponent implements OnInit
     this.gatherer.allQuestions.subscribe((questionArray: Array<Question>) => {
       this.allQuestions = questionArray;
     });
-    this.gatherer.allClients.subscribe((clients: Array<Client>) => {
+    this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
 

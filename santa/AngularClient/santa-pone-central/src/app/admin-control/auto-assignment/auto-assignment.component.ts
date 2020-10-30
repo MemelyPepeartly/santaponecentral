@@ -33,10 +33,10 @@ export class AutoAssignmentComponent implements OnInit {
 
   async ngOnInit() {
     this.buttonClicked = false;
-    this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
+    this.gatherer.gatheringAllTruncatedClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status
     });
-    await this.gatherer.gatherAllClients();
+    await this.gatherer.gatherAllTruncatedClients();
   }
   public sortMassMailers() : Array<Client>
   {
