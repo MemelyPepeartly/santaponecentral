@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices} from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient} from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
-import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse } from 'src/classes/survey';
+import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
@@ -57,6 +57,29 @@ export class MapService {
     });
 
     return mappedClient;
+  }
+  mapStrippedClient(client) : StrippedClient
+  {
+    let mappedStrippedClient: StrippedClient =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      email: client.email,
+      clientNickname: client.nickname,
+      clientStatus: this.mapStatus(client.clientStatus),
+      isAdmin: client.isAdmin,
+      responses: [],
+      tags: [],
+    };
+
+    client.responses.forEach(response => {
+      mappedStrippedClient.responses.push(this.mapResponse(response))
+    });
+    client.tags.forEach(tag => {
+      mappedStrippedClient.tags.push(this.mapTag(tag))
+    });
+
+    return mappedStrippedClient;
   }
   mapProfile(profile) : Profile
   {
@@ -191,7 +214,7 @@ export class MapService {
     let mappedAllowedAssignmentMeta: AllowedAssignmentMeta =
     {
       clientMeta: this.mapMeta(allowedAssignmentMeta.clientMeta),
-      clientEvents: [],
+      answeredSurveys: [],
       tags: [],
       totalSenders: allowedAssignmentMeta.totalSenders,
       totalAssignments: allowedAssignmentMeta.totalAssignments
@@ -200,8 +223,8 @@ export class MapService {
     allowedAssignmentMeta.tags.forEach(tag => {
       mappedAllowedAssignmentMeta.tags.push(this.mapTag(tag))
     });
-    allowedAssignmentMeta.clientEvents.forEach(event => {
-      mappedAllowedAssignmentMeta.clientEvents.push(this.mapEvent(event));
+    allowedAssignmentMeta.answeredSurveys.forEach(surveyMeta => {
+      mappedAllowedAssignmentMeta.answeredSurveys.push(this.mapSurveyMeta(surveyMeta));
     });
 
     return mappedAllowedAssignmentMeta;
@@ -269,6 +292,15 @@ export class MapService {
     });
 
     return mappedSurvey;
+  }
+  mapSurveyMeta(surveyMeta) : SurveyMeta
+  {
+    let mappedSurveyMeta: SurveyMeta =
+    {
+      surveyID: surveyMeta.surveyID,
+      eventTypeID: surveyMeta.eventTypeID
+    };
+    return mappedSurveyMeta;
   }
   mapQuestion(question) : Question
   {

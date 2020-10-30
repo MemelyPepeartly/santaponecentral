@@ -7,6 +7,7 @@ using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Data.Repository
 {
@@ -37,6 +38,83 @@ namespace Santa.Data.Repository
                 AssignmentStatusId = assignmentStatusID
             };
             await santaContext.ClientRelationXref.AddAsync(contexRelation);
+        }
+        public async Task<List<StrippedClient>> GetAllStrippedClientData()
+        {
+            List<StrippedClient> clientList = (await santaContext.Client
+                /* Surveys and responses */
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                        .ThenInclude(sqox => sqox.SurveyOption)
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.Survey.EventType)
+
+                /* Assignment statuses */
+                .Include(c => c.ClientRelationXrefRecipientClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+                .Include(c => c.ClientRelationXrefSenderClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+
+                /* Tags */
+                .Include(c => c.ClientTagXref)
+                    .ThenInclude(t => t.Tag)
+
+                /* Client approval status */
+                .Include(c => c.ClientStatus)
+                .AsNoTracking()
+                .ToListAsync())
+                .Select(Mapper.MapStrippedClient).ToList();
+            return clientList;
+        }
+        public async Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats()
+        {
+            List<Logic.Objects.Client> clientList = (await santaContext.Client
+                /* Surveys and responses */
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                        .ThenInclude(sqox => sqox.SurveyOption)
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.Survey.EventType)
+
+                /* Sender/Assignment info and Tags */
+                .Include(c => c.ClientRelationXrefRecipientClient)
+                    .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
+                        .ThenInclude(txr => txr.Tag)
+                .Include(c => c.ClientRelationXrefSenderClient)
+                    .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
+                        .ThenInclude(txr => txr.Tag)
+
+                /* Relationship event */
+                .Include(c => c.ClientRelationXrefSenderClient)
+                    .ThenInclude(crxsc => crxsc.EventType)
+                .Include(c => c.ClientRelationXrefRecipientClient)
+                    .ThenInclude(crxrc => crxrc.EventType)
+
+                /* Assignment statuses */
+                .Include(c => c.ClientRelationXrefRecipientClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+                .Include(c => c.ClientRelationXrefSenderClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+
+                /* Tags */
+                .Include(c => c.ClientTagXref)
+                    .ThenInclude(t => t.Tag)
+
+                /* Notes */
+                .Include(c => c.Note)
+
+                /* Client approval status */
+                .Include(c => c.ClientStatus)
+                .AsNoTracking()
+                .ToListAsync())
+                .Select(Mapper.MapClient).ToList();
+            return clientList;
         }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
@@ -1067,9 +1145,8 @@ namespace Santa.Data.Repository
         }
         public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {
-            Logic.Objects.Client logicClient = await GetClientByIDAsync(clientID);
             List<Logic.Objects.Client> allClients = await GetAllClients();
-            List<Event> allEvents = await GetAllEvents();
+            Logic.Objects.Client logicClient = allClients.FirstOrDefault(c => c.clientID == clientID);
             List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
 
 
@@ -1079,17 +1156,27 @@ namespace Santa.Data.Repository
                 if (!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
                 {
                     AllowedAssignmentMeta assignment = Mapper.MapAllowedAssignmentMeta(potentialAssignment);
-                    assignment.clientEvents = allEvents.Where(e => potentialAssignment.responses.Any(r => r.responseEvent.eventTypeID == e.eventTypeID)).ToList();
+                    assignment.answeredSurveys = new List<Logic.Objects.Information_Objects.SurveyMeta>();
+                    // For each response in the potential assignments response list
+                    foreach (Response response in potentialAssignment.responses)
+                    {
+                        // If the assignment object does not have any survey values where the surveyID and EventID are already in the list
+                        if(!assignment.answeredSurveys.Any(s => s.surveyID == response.surveyID && s.eventTypeID == response.responseEvent.eventTypeID))
+                        {
+                            // Add it to the list of answered surveys
+                            assignment.answeredSurveys.Add(Mapper.MapSurveyMeta(response));
+                        }
+                    }
                     allowedAssignments.Add(assignment);
                 }
             }
             return allowedAssignments;
         }
 
-        public async Task<List<Logic.Objects.Client>> SearchClientByQuery(SearchQueries searchQuery)
+        public async Task<List<StrippedClient>> SearchClientByQuery(SearchQueries searchQuery)
         {
-            List<Logic.Objects.Client> allClientList = await GetAllClients();
-            List<Logic.Objects.Client> matchingClients = new List<Logic.Objects.Client>();
+            List<StrippedClient> allClientList = await GetAllStrippedClientData();
+            List<StrippedClient> matchingClients = new List<StrippedClient>();
 
             if (searchQuery.isHardSearch)
             {

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Data.Repository
 {
@@ -74,6 +75,23 @@ namespace Santa.Data.Repository
             };
 
             return logicClient;
+        }
+        public static StrippedClient MapStrippedClient(Entities.Client contextClient)
+        {
+            StrippedClient logicStrippedClient = new StrippedClient()
+            {
+                clientID = contextClient.ClientId,
+                email = contextClient.Email,
+                nickname = contextClient.Nickname,
+                clientName = contextClient.ClientName,
+                isAdmin = contextClient.IsAdmin,
+
+                clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
+                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
+            };
+
+            return logicStrippedClient;
         }
         /// <summary>
         /// Maps a context relationship to a relationship meta
@@ -377,6 +395,15 @@ namespace Santa.Data.Repository
                 IsActive = logicSurvey.active
             };
             return contextSurvey;
+        }
+        public static SurveyMeta MapSurveyMeta(Response response)
+        {
+            SurveyMeta logicSurveyMeta = new SurveyMeta()
+            {
+                surveyID = response.surveyID,
+                eventTypeID = response.responseEvent.eventTypeID
+            };
+            return logicSurveyMeta;
         }
         #endregion
 

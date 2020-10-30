@@ -1,4 +1,4 @@
-<mat-card class="mat-elevation-z4">
+<mat-card class="containingCard mat-elevation-z4">
   <mat-card-header>
     <mat-card-title>Possible pairings for {{ possiblePairingsObject.sendingAgent.clientNickname }}</mat-card-title>
     <mat-card-subtitle>Suggestions for this mass mailer to have as assignments</mat-card-subtitle>
@@ -20,8 +20,8 @@
     </mat-card-content>
 
     <!-- Potential Pairing -->
-    <div class="scrollDiv" *ngIf="possiblePairingsObject.potentialAssignments.length != 0 && !postingNewAssignments">
-      <mat-selection-list class="scrollbar scrollbar-primary" [(ngModel)]="selectedPotentialAssignments">
+    <div class="scrollDiv scrollbar scrollbar-primary mat-elevation-z3" *ngIf="possiblePairingsObject.potentialAssignments.length != 0 && !postingNewAssignments">
+      <mat-selection-list [(ngModel)]="selectedPotentialAssignments" [disableRipple]="true">
         <mat-list-option class="listOption mat-elevation-z3" *ngFor="let potentialAssignment of possiblePairingsObject.potentialAssignments" [value]="potentialAssignment">
           <div class="pairingContainer">
             <div class="pairingDiv">

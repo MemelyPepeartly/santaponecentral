@@ -30,6 +30,7 @@ namespace Santa.Api.AuthHelper
         #region Utility
         Task<Auth0TokenModel> getTokenModel();
         string generateTempPassword(int length);
+        Task<bool> accountExists(string authUserEmail);
         #endregion
     }
 }

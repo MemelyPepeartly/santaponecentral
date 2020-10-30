@@ -28,7 +28,6 @@ import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-a
 import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component';
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
-import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
 import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
@@ -61,6 +60,8 @@ import { AgentPairingControlComponent } from './admin-control/auto-assignment/ag
 import { NoteControlComponent } from './headquarters/selected-anon/note-control/note-control.component';
 import { ClientNoteInfoComponent } from './headquarters/client-note-info/client-note-info.component';
 import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-info/client-assignment-info.component';
+import { UnauthorizedComponent } from './error-pages/unauthorized/unauthorized.component';
+import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 
 
 @NgModule({
@@ -79,7 +80,6 @@ import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-
       IncomingSignupsComponent,
       MaterialElevationDirective,
       SignupFormComponent,
-      AdminHelpComponent,
       LoadingSpinComponent,
       SelectedAnonComponent,
       SmallLoadingSpinComponent,
@@ -111,7 +111,9 @@ import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-
       AgentPairingControlComponent,
       NoteControlComponent,
       ClientNoteInfoComponent,
-      ClientAssignmentInfoComponent
+      ClientAssignmentInfoComponent,
+      UnauthorizedComponent,
+      NotFoundComponent
    ],
    entryComponents: [
       LoginComponent

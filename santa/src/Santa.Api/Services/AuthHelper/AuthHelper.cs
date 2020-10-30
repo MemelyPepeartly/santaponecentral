@@ -243,6 +243,18 @@ namespace Santa.Api.AuthHelper
             }
             return new string(chars);
         }
+
+        public async Task<bool> accountExists(string authUserEmail)
+        {
+            RestClient userRestClient = new RestClient(endpoint + "users-by-email?email=" + authUserEmail);
+            RestRequest userRequest = new RestRequest(Method.GET);
+            Auth0TokenModel token = await getTokenModel();
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            List<Auth0UserInfoModel> users = JsonConvert.DeserializeObject<List<Auth0UserInfoModel>>(response.Content);
+
+            return users.Count > 0 && !string.IsNullOrEmpty(users.First(c => c.email == authUserEmail).user_id);
+        }
         #endregion
     }
 }

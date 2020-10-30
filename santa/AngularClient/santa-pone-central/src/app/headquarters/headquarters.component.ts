@@ -69,7 +69,7 @@ export class HeadquartersComponent implements OnInit {
   async ngOnInit() {
     this.initializing = true;
     /* GET STATUS BOOLEAN SUBSCRIBE */
-    this.gatherer.gatheringAllClients.subscribe((status: boolean) => {
+    this.gatherer.gatheringAllTruncatedClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status;
     });
     this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
@@ -77,14 +77,14 @@ export class HeadquartersComponent implements OnInit {
     });
 
     /* ALL CLIENTS SUBSCRIBE */
-    this.gatherer.allClients.subscribe((clients: Array<Client>) => {
+    this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
     this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
       this.allSurveys = surveys;
     });
 
-    await this.gatherer.gatherAllClients();
+    await this.gatherer.gatherAllTruncatedClients();
     await this.gatherer.gatherAllSurveys();
     this.initializing = false;
   }
@@ -97,7 +97,7 @@ export class HeadquartersComponent implements OnInit {
     // If the list of all clients does not have the input client in it, refresh the list in the background (Used namely for manual refresh)
     if(!this.allClients.some((c: Client) => {return c.clientID == client.clientID}))
     {
-      await this.gatherer.gatherAllClients();
+      await this.gatherer.gatherAllTruncatedClients();
     }
   }
   showManualSignupWindow()
@@ -114,7 +114,7 @@ export class HeadquartersComponent implements OnInit {
         this.gatherer.onSelectedClient = false;
         if(forceRefresh)
         {
-          await this.gatherer.gatherAllClients();
+          await this.gatherer.gatherAllTruncatedClients();
         }
       }
       else if(this.showManualSignupCard)
@@ -124,7 +124,7 @@ export class HeadquartersComponent implements OnInit {
       // If any of the viewchildren are set to refresh
       if(this.readyForRefresh)
       {
-        await this.gatherer.gatherAllClients();
+        await this.gatherer.gatherAllTruncatedClients();
         this.setChildrenAction(false);
       }
     }
