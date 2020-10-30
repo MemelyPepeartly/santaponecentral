@@ -28,7 +28,6 @@ import { ApprovedAnonsComponent } from './headquarters/approved-anons/approved-a
 import { IncomingSignupsComponent } from './headquarters/incoming-signups/incoming-signups.component';
 import { MaterialElevationDirective } from './headquarters/material-elevation.directive';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
-import { AdminHelpComponent } from './admin-help/admin-help.component';
 import { LoadingSpinComponent } from './shared/loading-spin/loading-spin.component';
 import { SmallLoadingSpinComponent } from './shared/small-loading-spin/small-loading-spin.component';
 import { SelectedAnonComponent } from './headquarters/selected-anon/selected-anon.component';
@@ -81,7 +80,6 @@ import { NotFoundComponent } from './error-pages/not-found/not-found.component';
       IncomingSignupsComponent,
       MaterialElevationDirective,
       SignupFormComponent,
-      AdminHelpComponent,
       LoadingSpinComponent,
       SelectedAnonComponent,
       SmallLoadingSpinComponent,
