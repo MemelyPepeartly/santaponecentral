@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices} from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient} from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -57,6 +57,29 @@ export class MapService {
     });
 
     return mappedClient;
+  }
+  mapStrippedClient(client) : StrippedClient
+  {
+    let mappedStrippedClient: StrippedClient =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      email: client.email,
+      clientNickname: client.nickname,
+      clientStatus: this.mapStatus(client.clientStatus),
+      isAdmin: client.isAdmin,
+      responses: [],
+      tags: [],
+    };
+
+    client.responses.forEach(response => {
+      mappedStrippedClient.responses.push(this.mapResponse(response))
+    });
+    client.tags.forEach(tag => {
+      mappedStrippedClient.tags.push(this.mapTag(tag))
+    });
+
+    return mappedStrippedClient;
   }
   mapProfile(profile) : Profile
   {
