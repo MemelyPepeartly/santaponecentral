@@ -42,6 +42,11 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClients();
         /// <summary>
+        /// Gets a list of all clients without also including their chat messages. This is used for performance reasons whne necessary
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats();
+        /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
         /// </summary>
         /// <param name="targetClient"></param>
