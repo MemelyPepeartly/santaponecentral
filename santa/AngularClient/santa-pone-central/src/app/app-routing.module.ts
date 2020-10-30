@@ -60,7 +60,7 @@ const appRoutes: Routes = [
   },
   {
 		path: "**",
-		redirectTo: "not-found"
+		redirectTo: "home"
   },
   {
     path: '',
