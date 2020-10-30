@@ -4,7 +4,7 @@
 <div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard">
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
-      [loadingClient]="false"
+      [loadingClient]="gettingClientProfile"
       [client]="selectedClient"
       (setClickAwayLockEvent)="clickLocked = $event"
       (actionTaken)="search()"
@@ -171,13 +171,17 @@
           </mat-chip-list>
         </mat-card-title>
         <mat-card-subtitle>
-          <span [ngClass]="{'notice' : client.assignments.length == 0}">Assignments: {{ client.assignments.length }}</span>
-        </mat-card-subtitle>
-        <mat-card-subtitle>
-          <span>Senders: {{ client.senders.length }}</span>
-        </mat-card-subtitle>
-        <mat-card-subtitle>
           <span>Client Name: {{ client.clientName }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Client Nickname: {{ client.clientNickname }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <span>Client Email: {{ client.email }}</span>
+        </mat-card-subtitle>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-card-subtitle style="margin-top: 10px;">
+          <span>Client Status: {{ client.clientStatus.statusDescription }}</span>
         </mat-card-subtitle>
     </mat-card>
   </mat-list>
