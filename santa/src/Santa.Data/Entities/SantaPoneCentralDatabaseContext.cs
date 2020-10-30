@@ -111,6 +111,15 @@ namespace Santa.Data.Entities
             {
                 entity.ToTable("ChatMessage", "app");
 
+                entity.HasIndex(x => x.ClientRelationXrefId)
+                    .HasName("ChatRelationIndex");
+
+                entity.HasIndex(x => x.MessageReceiverClientId)
+                    .HasName("ChatRecieverIndex");
+
+                entity.HasIndex(x => x.MessageSenderClientId)
+                    .HasName("ChatSenderIndex");
+
                 entity.Property(e => e.ChatMessageId)
                     .HasColumnName("chatMessageID")
                     .HasViewColumnName("chatMessageID")
@@ -166,6 +175,9 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable("Client", "app");
+
+                entity.HasIndex(x => x.ClientStatusId)
+                    .HasName("ClientStatusIndex");
 
                 entity.HasIndex(x => x.Email)
                     .HasName("UQ__Client__AB6E6164ED3C4937")
@@ -251,6 +263,18 @@ namespace Santa.Data.Entities
             {
                 entity.ToTable("ClientRelationXref", "app");
 
+                entity.HasIndex(x => x.AssignmentStatusId)
+                    .HasName("RelationAssignmentStatusIndex");
+
+                entity.HasIndex(x => x.EventTypeId)
+                    .HasName("RelationEventIndex");
+
+                entity.HasIndex(x => x.RecipientClientId)
+                    .HasName("RelationRecipientIndex");
+
+                entity.HasIndex(x => x.SenderClientId)
+                    .HasName("RelationSenderIndex");
+
                 entity.HasIndex(x => new { x.SenderClientId, x.RecipientClientId, x.EventTypeId })
                     .HasName("clientRelationXrefID")
                     .IsUnique();
@@ -320,6 +344,12 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<ClientTagXref>(entity =>
             {
                 entity.ToTable("ClientTagXref", "app");
+
+                entity.HasIndex(x => x.ClientId)
+                    .HasName("TagClientIndex");
+
+                entity.HasIndex(x => x.TagId)
+                    .HasName("TagIndex");
 
                 entity.HasIndex(x => new { x.ClientId, x.TagId })
                     .HasName("clientTagXrefID")
@@ -408,6 +438,9 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<Note>(entity =>
             {
                 entity.ToTable("Note", "app");
+
+                entity.HasIndex(x => x.ClientId)
+                    .HasName("NoteClientIndex");
 
                 entity.Property(e => e.NoteId)
                     .HasColumnName("noteID")
@@ -591,6 +624,15 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<SurveyResponse>(entity =>
             {
                 entity.ToTable("SurveyResponse", "app");
+
+                entity.HasIndex(x => x.ClientId)
+                    .HasName("ResponseClientIndex");
+
+                entity.HasIndex(x => x.SurveyId)
+                    .HasName("ResponseSurveyIndex");
+
+                entity.HasIndex(x => x.SurveyQuestionId)
+                    .HasName("ResponseQuestionIndex");
 
                 entity.Property(e => e.SurveyResponseId)
                     .HasColumnName("surveyResponseID")

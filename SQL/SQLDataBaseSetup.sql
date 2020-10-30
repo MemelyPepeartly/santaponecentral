@@ -167,6 +167,9 @@ AS BEGIN
     delete app.Client
     where clientID in(select clientID from deleted);
 
+    delete app.Note 
+    where clientID in(select clientID from deleted)
+
     commit tran;
     end try
     begin catch
@@ -176,6 +179,20 @@ AS BEGIN
     end catch;
 END
 
+CREATE INDEX ClientStatusIndex ON app.Client (clientStatusID);
 
--- SELECT * FROM app.Client
--- DELETE app.Client WHERE clientID = '45e7198c-4eed-4f4a-881a-93a23dea244d'
+CREATE INDEX ResponseSurveyIndex ON app.SurveyResponse (surveyID);
+CREATE INDEX ResponseClientIndex ON app.SurveyResponse (clientID);
+CREATE INDEX ResponseQuestionIndex ON app.SurveyResponse (surveyQuestionID);
+
+CREATE INDEX RelationSenderIndex ON app.ClientRelationXref (senderClientID);
+CREATE INDEX RelationRecipientIndex ON app.ClientRelationXref (recipientClientID);
+CREATE INDEX RelationEventIndex ON app.ClientRelationXref (eventTypeID);
+CREATE INDEX RelationAssignmentStatusIndex ON app.ClientRelationXref (assignmentStatusID);
+
+CREATE INDEX TagIndex ON app.ClientTagXref (tagID);
+CREATE INDEX TagClientIndex ON app.ClientTagXref (clientID);
+
+CREATE INDEX ChatSenderIndex ON app.ChatMessage (messageSenderClientID);
+CREATE INDEX ChatRecieverIndex ON app.ChatMessage (messageReceiverClientID);
+CREATE INDEX ChatRelationIndex ON app.ChatMessage (clientRelationXrefID);
