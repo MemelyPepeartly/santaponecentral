@@ -25,6 +25,12 @@ export class GathererService {
     return this._gatheringAllClients.asObservable();
   }
 
+  private _gatheringAllTruncatedClients: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllTruncatedClients()
+  {
+    return this._gatheringAllTruncatedClients.asObservable();
+  }
+
   private _gatheringAllTags: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gatheringAllTags()
   {
@@ -69,6 +75,7 @@ export class GathererService {
 
   /* BEHAVIOR SUBJECTS FOR DATA */
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
+  private _allTruncatedClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
   private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([])
   private _allSurveys: BehaviorSubject<Array<Survey>> = new BehaviorSubject([])
   private _allQuestions: BehaviorSubject<Array<Question>> = new BehaviorSubject([])
@@ -85,6 +92,14 @@ export class GathererService {
   private updateAllClient(clientArray: Array<Client>)
   {
     this._allClients.next(clientArray);
+  }
+  get allTruncatedClients()
+  {
+    return this._allTruncatedClients.asObservable();
+  }
+  private updateAllTruncatedClient(clientArray: Array<Client>)
+  {
+    this._allTruncatedClients.next(clientArray);
   }
 
   get allTags()
@@ -172,6 +187,29 @@ export class GathererService {
     this.updateAllClient(clientList);
     this._gatheringAllClients.next(false);
   }
+
+  public async gatherAllTruncatedClients()
+  {
+    this._gatheringAllTruncatedClients.next(true);
+
+    let clientList: Array<Client> = []
+
+    var res = await this.SantaApiGet.getAllTruncatedClients().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all clients in the gatherer");
+      console.log(err);
+      console.groupEnd();
+    });
+
+
+    for(let i = 0; i < res.length; i++)
+    {
+      clientList.push(this.ApiMapper.mapClient(res[i]));
+    }
+    this.updateAllTruncatedClient(clientList);
+    this._gatheringAllTruncatedClients.next(false);
+  }
+
   public async gatherAllTags()
   {
     this._gatheringAllTags.next(true);
