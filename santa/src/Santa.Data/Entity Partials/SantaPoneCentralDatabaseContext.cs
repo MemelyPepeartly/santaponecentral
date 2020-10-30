@@ -34,11 +34,6 @@ namespace Santa.Data.Entities
                 .HasOne(d => d.Client)
                 .WithMany(p => p.SurveyResponse)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Note>()
-                .HasOne(d => d.Client)
-                .WithMany(p => p.Note)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
