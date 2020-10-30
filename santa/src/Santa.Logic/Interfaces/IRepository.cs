@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Santa.Logic.Objects;
 using Santa.Logic.Objects.Base_Objects;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Logic.Interfaces
 {
@@ -46,6 +47,11 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats();
+        /// <summary>
+        /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
+        /// </summary>
+        /// <returns></returns>
+        Task<List<StrippedClient>> GetAllStrippedClientData();
         /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
         /// </summary>
@@ -296,7 +302,7 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <param name="searchQuery"></param>
         /// <returns></returns>
-        Task<List<Client>> SearchClientByQuery(SearchQueries searchQuery);
+        Task<List<StrippedClient>> SearchClientByQuery(SearchQueries searchQuery);
         #endregion
 
     }

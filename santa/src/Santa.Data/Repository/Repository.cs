@@ -7,6 +7,7 @@ using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Data.Repository
 {
@@ -37,6 +38,36 @@ namespace Santa.Data.Repository
                 AssignmentStatusId = assignmentStatusID
             };
             await santaContext.ClientRelationXref.AddAsync(contexRelation);
+        }
+        public async Task<List<StrippedClient>> GetAllStrippedClientData()
+        {
+            List<StrippedClient> clientList = (await santaContext.Client
+                /* Surveys and responses */
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                        .ThenInclude(sqox => sqox.SurveyOption)
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+
+                .Include(c => c.SurveyResponse)
+                    .ThenInclude(sr => sr.Survey.EventType)
+
+                /* Assignment statuses */
+                .Include(c => c.ClientRelationXrefRecipientClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+                .Include(c => c.ClientRelationXrefSenderClient)
+                    .ThenInclude(stat => stat.AssignmentStatus)
+
+                /* Tags */
+                .Include(c => c.ClientTagXref)
+                    .ThenInclude(t => t.Tag)
+
+                /* Client approval status */
+                .Include(c => c.ClientStatus)
+                .AsNoTracking()
+                .ToListAsync())
+                .Select(Mapper.MapStrippedClient).ToList();
+            return clientList;
         }
         public async Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats()
         {
@@ -1142,10 +1173,10 @@ namespace Santa.Data.Repository
             return allowedAssignments;
         }
 
-        public async Task<List<Logic.Objects.Client>> SearchClientByQuery(SearchQueries searchQuery)
+        public async Task<List<StrippedClient>> SearchClientByQuery(SearchQueries searchQuery)
         {
-            List<Logic.Objects.Client> allClientList = await GetAllClients();
-            List<Logic.Objects.Client> matchingClients = new List<Logic.Objects.Client>();
+            List<StrippedClient> allClientList = await GetAllStrippedClientData();
+            List<StrippedClient> matchingClients = new List<StrippedClient>();
 
             if (searchQuery.isHardSearch)
             {
