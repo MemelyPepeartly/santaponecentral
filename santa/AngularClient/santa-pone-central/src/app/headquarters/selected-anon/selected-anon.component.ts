@@ -159,10 +159,7 @@ export class SelectedAnonComponent implements OnInit {
 
   public async ngOnInit() {
     this.initializing = true;
-    if(this.loadingClient == false && this.client.clientID != undefined)
-    {
-      this.setup();
-    }
+    this.setup();
     this.initializing = false;
   }
   public async setup()
