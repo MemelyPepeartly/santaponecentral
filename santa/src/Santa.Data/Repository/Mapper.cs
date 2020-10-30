@@ -76,6 +76,23 @@ namespace Santa.Data.Repository
 
             return logicClient;
         }
+        public static StrippedClient MapStrippedClient(Entities.Client contextClient)
+        {
+            StrippedClient logicStrippedClient = new StrippedClient()
+            {
+                clientID = contextClient.ClientId,
+                email = contextClient.Email,
+                nickname = contextClient.Nickname,
+                clientName = contextClient.ClientName,
+                isAdmin = contextClient.IsAdmin,
+
+                clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
+                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
+                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
+            };
+
+            return logicStrippedClient;
+        }
         /// <summary>
         /// Maps a context relationship to a relationship meta
         /// </summary>
