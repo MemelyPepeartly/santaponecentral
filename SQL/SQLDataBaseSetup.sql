@@ -181,6 +181,8 @@ END
 
 CREATE INDEX ClientStatusIndex ON app.Client (clientStatusID);
 
+CREATE INDEX NoteClientIndex ON app.Note (clientID);
+
 CREATE INDEX ResponseSurveyIndex ON app.SurveyResponse (surveyID);
 CREATE INDEX ResponseClientIndex ON app.SurveyResponse (clientID);
 CREATE INDEX ResponseQuestionIndex ON app.SurveyResponse (surveyQuestionID);
