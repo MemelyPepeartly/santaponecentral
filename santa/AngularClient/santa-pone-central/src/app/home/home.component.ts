@@ -14,7 +14,8 @@ export class HomeComponent implements OnInit {
   public authprofile: any;
   public showMetadata: boolean = false;
   public showCovidWarning: boolean = true;
-  public showHorseMusic: boolean = true;
+  public showHorseMusic: boolean = false;
+  public showKofi: boolean = true;
 
   public async ngOnInit() {
     if(environment.production == false)
