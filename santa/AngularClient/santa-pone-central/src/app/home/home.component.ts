@@ -30,5 +30,10 @@ export class HomeComponent implements OnInit {
       this.showMetadata = false;
     }
   }
+  public goToKofiLink()
+  {
+    let url: string = "https://ko-fi.com/santaponecentraldev/"
+    window.open(url, "_blank");
+  }
 }
 
