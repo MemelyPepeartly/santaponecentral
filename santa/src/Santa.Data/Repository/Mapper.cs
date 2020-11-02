@@ -226,7 +226,7 @@ namespace Santa.Data.Repository
                     postalCode = contextClient.PostalCode
                 },
                 clientStatus = MapStatus(contextClient.ClientStatus),
-                assignments = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapProfileRecipient(s, s.RecipientClient)).ToList(),
+                assignments = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapProfileRecipient(s, s.RecipientClient)).OrderBy(pr => pr.recipientClient.clientNickname).ToList(),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 editable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
             };
