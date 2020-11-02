@@ -1,13 +1,13 @@
 <mat-toolbar>
     <mat-toolbar-row>
-        Completed Anons
+        Completed Agents
     </mat-toolbar-row>
     <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
         <div id="iconDiv">
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
-            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total completed anons: {{ completedClients.length }}</mat-card-subtitle>
+            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total completed agents: {{ completedClients.length }}</mat-card-subtitle>
         </div>
         <div class="paginatorDiv" *ngIf="false">
           <mat-paginator
@@ -40,7 +40,7 @@
         <span>Senders: {{ client.senders.length }}</span>
       </mat-card-subtitle>
       <mat-card-subtitle>
-        <span>Client Name: {{ client.clientName }}</span>
+        <span>Agent Name: {{ client.clientName }}</span>
       </mat-card-subtitle>
     </mat-card>
 </mat-list>
