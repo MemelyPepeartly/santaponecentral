@@ -313,8 +313,8 @@ export class AgentCatalogueComponent implements OnInit {
   public async showCardInfo(client: Client)
   {
     this.gettingClientProfile = true;
-    this.showClientCard = true;
     this.selectedClient = this.mapper.mapClient(await this.santaApiGet.getClientByClientID(client.clientID).toPromise());
+    this.showClientCard = true;
     this.gettingClientProfile = false;
   }
   public hideOpenWindow()
