@@ -2,6 +2,7 @@
   <mat-card-header>
     <mat-card-title>Assignment Status Control</mat-card-title>
     <mat-card-subtitle>Modify the status of this assignment</mat-card-subtitle>
+    <mat-card-subtitle class="subtitleWarning" *ngIf="!isAdmin">Modifying this status will send the organizers a message letting them know the change</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
 
