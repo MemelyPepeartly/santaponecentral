@@ -115,7 +115,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
-            return Ok(await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID));
+            return Ok((await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID)).OrderBy(aa => aa.clientMeta.clientNickname));
         }
 
         // GET: api/Client/AutoAssignmentPairs
@@ -645,7 +645,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
             await repository.DeleteClientByIDAsync(clientID);
             bool accountExists = await authHelper.accountExists(logicClient.email);
 
@@ -654,7 +654,13 @@ namespace Santa.Api.Controllers
                 Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
                 await authHelper.deleteAuthClient(authUser.user_id);
             }
-
+            if(logicClient.notes.Count > 0)
+            {
+                foreach(Logic.Objects.Base_Objects.Note note in logicClient.notes)
+                {
+                    await repository.DeleteNoteByID(note.noteID);
+                }
+            }
             await repository.SaveAsync();
             return NoContent();
         }
