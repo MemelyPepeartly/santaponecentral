@@ -76,7 +76,16 @@ mat-chip-list {
 .fixedDiv::-webkit-scrollbar {
   display: none;
 }
-
+.navigationButtonDiv
+{
+  display: block;
+  margin-bottom: 15px;
+}
+.switchButton
+{
+  margin-left: 5px;
+  margin-right: 5px;
+}
 @media (max-width:600px)
 {
   .api-card {

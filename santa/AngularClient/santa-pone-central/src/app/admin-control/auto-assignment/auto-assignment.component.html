@@ -58,9 +58,13 @@
       <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
     </mat-card-content>
     <mat-card-content style="text-align: center;" *ngIf="!gettingAssignmentPairings">
-      <div class="pairingComponentDiv" *ngFor="let possiblePairingsObject of possiblePairings">
+      <div class="navigationButtonDiv">
+        <button class="switchButton" mat-raised-button (click)="previousMailer()" [disabled]="pairingIndex == 0"><mat-icon>navigate_before</mat-icon> Previous Mass-Mailer</button>
+        <button class="switchButton" mat-raised-button (click)="nextMailer()" [disabled]="pairingIndex == possiblePairings.length -1">Next Mass-Mailer<mat-icon>navigate_next</mat-icon></button>
+      </div>
+      <div class="pairingComponentDiv">
         <app-agent-pairing-control
-        [possiblePairingsObject]="possiblePairingsObject"
+        [possiblePairingsObject]="possiblePairings[pairingIndex]"
         (completedPostEvent)="true"
         (failedPostEvent)="true">
         </app-agent-pairing-control>

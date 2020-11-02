@@ -30,6 +30,7 @@ export class AutoAssignmentComponent implements OnInit {
   public refreshList: boolean = false;
 
   public showClientCard: boolean = false;
+  public pairingIndex: number = 0;
 
   async ngOnInit() {
     this.buttonClicked = false;
@@ -80,8 +81,14 @@ export class AutoAssignmentComponent implements OnInit {
   }
   public setRefreshListAction(event: boolean)
   {
-    console.log("Seting refresh list to " + event);
-
     this.refreshList = event;
+  }
+  public previousMailer()
+  {
+    this.pairingIndex -= 1;
+  }
+  public nextMailer()
+  {
+    this.pairingIndex += 1;
   }
 }
