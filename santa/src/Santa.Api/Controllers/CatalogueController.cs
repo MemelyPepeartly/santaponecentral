@@ -31,7 +31,7 @@ namespace Santa.Api.Controllers
         {
             List<StrippedClient> listLogicStrippedClients = await repository.SearchClientByQuery(model);
 
-            return Ok(listLogicStrippedClients);
+            return Ok(listLogicStrippedClients.OrderBy(c => c.nickname));
         }
     }
 }
