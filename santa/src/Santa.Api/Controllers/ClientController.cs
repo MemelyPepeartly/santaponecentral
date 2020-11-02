@@ -156,11 +156,12 @@ namespace Santa.Api.Controllers
                             mailerRelationships.potentialAssignments.Add(potentialAssignment);
                         }
                     }
+                    mailerRelationships.potentialAssignments = mailerRelationships.potentialAssignments.OrderBy(pa => pa.nickname).ToList();
                     possiblePairings.Add(mailerRelationships);
                 }
             }
 
-            return Ok(possiblePairings);
+            return Ok(possiblePairings.OrderBy(pp => pp.sendingAgent.nickname));
         }
 
         // POST: api/Client
