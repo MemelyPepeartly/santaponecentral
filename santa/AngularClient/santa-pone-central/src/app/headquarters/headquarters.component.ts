@@ -39,7 +39,11 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class HeadquartersComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) {}
+  constructor(
+    public SantaApiGet: SantaApiGetService,
+    public mapper: MapService,
+    public gatherer: GathererService,
+    public ApiMapper: MapService) {}
 
 
   public showClientCard: boolean = false;
@@ -80,12 +84,9 @@ export class HeadquartersComponent implements OnInit {
     this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
-    this.gatherer.allSurveys.subscribe((surveys: Array<Survey>) => {
-      this.allSurveys = surveys;
-    });
 
     await this.gatherer.gatherAllTruncatedClients();
-    await this.gatherer.gatherAllSurveys();
+    await this.getSurveys();
     this.initializing = false;
   }
   public async showClientWindow(client: Client)
@@ -143,6 +144,24 @@ export class HeadquartersComponent implements OnInit {
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
+  }
+  public async getSurveys()
+  {
+    this.gatheringAllSurveys = true;
+
+    var res = await this.SantaApiGet.getAllSurveys().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering getting all the surveys in headquarters");
+      console.log(err);
+      console.groupEnd();
+    });
+
+    for(let i = 0; i < res.length; i++)
+    {
+      this.allSurveys.push(this.ApiMapper.mapSurvey(res[i]));
+    }
+
+    this.gatheringAllSurveys = false;
   }
   sortApproved()
   {
