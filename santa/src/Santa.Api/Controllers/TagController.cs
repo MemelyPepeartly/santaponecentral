@@ -34,7 +34,7 @@ namespace Santa.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok(logicTags);
+            return Ok(logicTags.OrderBy(t => t.tagName));
         }
 
         // GET: api/Tag/5
