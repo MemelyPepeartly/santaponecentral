@@ -5,6 +5,8 @@ import { Survey, SurveyResponse } from 'src/classes/survey';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
+import { MessageApiResponse } from 'src/classes/responseTypes';
+import { SantaApiPostService } from 'src/app/services/santa-api.service';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -14,7 +16,8 @@ import { AssignmentStatus } from 'src/classes/client';
 export class SelectedRecipientComponent implements OnInit {
 
   constructor(public profileService: ProfileService,
-    public gatherer: GathererService) { }
+    public gatherer: GathererService,
+    public SantaApiPost: SantaApiPostService) { }
 
   @Input() selectedRecipient: ProfileRecipient;
   @Input() surveys: Array<Survey>;
@@ -39,10 +42,20 @@ export class SelectedRecipientComponent implements OnInit {
       return false;
     }
   }
-  public setNewStatus(newAssignmentStatusEvent: AssignmentStatus)
+  public async setNewStatus(newAssignmentStatusEvent: AssignmentStatus)
   {
+    let newMessage: MessageApiResponse =
+    {
+      messageSenderClientID: this.profile.clientID,
+      messageRecieverClientID: null,
+      clientRelationXrefID: this.selectedRecipient.relationXrefID,
+      eventTypeID: this.selectedRecipient.recipientEvent.eventTypeID,
+      messageContent: this.profile.clientNickname + ' has set this assignment from "' + this.selectedRecipient.assignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
+      fromAdmin: false,
+    };
     this.selectedRecipient.assignmentStatus = newAssignmentStatusEvent
     this.actionTaken.emit(true);
+    await this.SantaApiPost.postMessage(newMessage).toPromise();
   }
   public setClickawayLock(event)
   {
