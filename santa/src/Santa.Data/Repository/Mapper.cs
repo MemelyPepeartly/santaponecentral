@@ -70,7 +70,7 @@ namespace Santa.Data.Repository
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 assignments = contextClient.ClientRelationXrefSenderClient.Count > 0 ? contextClient.ClientRelationXrefSenderClient.Select(x => Mapper.MapRelationshipMeta(x, x.RecipientClientId)).ToList() : new List<RelationshipMeta>(),
                 senders = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? contextClient.ClientRelationXrefRecipientClient.Select(x => Mapper.MapRelationshipMeta(x, x.SenderClientId)).ToList() : new List<RelationshipMeta>(),
-                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList(),
+                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).OrderBy(t => t.tagName).ToList(),
                 notes = contextClient.Note.Select(Mapper.MapNote).ToList()
             };
 
@@ -88,7 +88,7 @@ namespace Santa.Data.Repository
 
                 clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
-                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).ToList()
+                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).OrderBy(t => t.tagName).ToList()
             };
 
             return logicStrippedClient;
@@ -108,7 +108,7 @@ namespace Santa.Data.Repository
                 relationshipClient = logicMeta,
                 eventType = Mapper.MapEvent(contextXrefRelationship.EventType),
                 clientRelationXrefID = contextXrefRelationship.ClientRelationXrefId,
-                tags = tagXrefList.Select(Mapper.MapTagRelationXref).ToList(),
+                tags = tagXrefList.Select(Mapper.MapTagRelationXref).OrderBy(t => t.tagName).ToList(),
                 assignmentStatus = MapAssignmentStatus(contextXrefRelationship.AssignmentStatus),
                 removable = contextXrefRelationship.ChatMessage.Count > 0 ? false : true
             };
