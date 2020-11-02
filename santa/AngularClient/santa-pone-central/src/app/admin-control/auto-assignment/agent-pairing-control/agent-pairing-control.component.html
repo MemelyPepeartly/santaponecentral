@@ -21,7 +21,7 @@
 
     <!-- Potential Pairing -->
     <div class="scrollDiv scrollbar scrollbar-primary mat-elevation-z3" *ngIf="possiblePairingsObject.potentialAssignments.length != 0 && !postingNewAssignments">
-      <mat-selection-list [(ngModel)]="selectedPotentialAssignments" [disableRipple]="true">
+      <mat-selection-list [(ngModel)]="selectedPotentialAssignments">
         <mat-list-option class="listOption mat-elevation-z3" *ngFor="let potentialAssignment of possiblePairingsObject.potentialAssignments" [value]="potentialAssignment">
           <div class="pairingContainer">
             <div class="pairingDiv">

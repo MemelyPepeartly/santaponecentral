@@ -160,7 +160,7 @@
     <app-loading-spin></app-loading-spin>
   </div>
   <mat-list>
-    <mat-card mat-list-item class="foundClientCard" *ngFor="let client of foundClients" appMaterialElevation (click)="showCardInfo(client)">
+    <mat-card mat-list-item matRipple class="foundClientCard" *ngFor="let client of foundClients" appMaterialElevation (click)="showCardInfo(client)">
         <mat-card-title>
           <h1 class="inline">{{ client.clientNickname }}</h1>
           <mat-chip-list class="inline tagList" [selectable]="false" >
