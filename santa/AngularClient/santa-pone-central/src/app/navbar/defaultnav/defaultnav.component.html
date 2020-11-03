@@ -1,8 +1,6 @@
-<!--
-<button mat-button [routerLink]="'/signup'" class="navButton">
+<button mat-button [routerLink]="'/signup'" class="navButton" *ngIf="!inProduction">
     <mat-label>Sign Up</mat-label>
 </button>
--->
 <button mat-button [routerLink]="'/mission-boards'" class="navButton">
   <mat-label>Mission Boards</mat-label>
 </button>
