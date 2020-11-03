@@ -78,3 +78,9 @@
 .fixedDiv::-webkit-scrollbar {
     display: none;
 }
+.refreshButton
+{
+  display: block;
+  width: 19%;
+  height: 45px;
+}

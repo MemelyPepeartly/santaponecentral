@@ -35,6 +35,7 @@
     <mat-card-header>
       <mat-card-title>Correspondence</mat-card-title>
       <mat-card-subtitle>For keeping contact with anons organized and in line</mat-card-subtitle>
+      <button mat-raised-button class="refreshButton" (click)="manualRefresh()" [disabled]="gettingAllChats">Refresh Correspondence <mat-icon>refresh</mat-icon></button>
     </mat-card-header>
     <mat-card-content *ngIf="initializing">
       <app-loading-spin></app-loading-spin>

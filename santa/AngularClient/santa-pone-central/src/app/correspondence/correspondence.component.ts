@@ -244,4 +244,8 @@ export class CorrespondenceComponent implements OnInit {
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     this.refreshing = false;
   }
+  public async manualRefresh()
+  {
+    await this.ChatService.gatherAllChats(this.subject.clientID);
+  }
 }
