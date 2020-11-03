@@ -30,12 +30,10 @@ const appRoutes: Routes = [
     path: 'mission-boards',
     component: MissionBoardsComponent
   },
-  /*
   {
     path: 'signup',
     component: SignupComponent
   },
-  */
   {
     path: 'headquarters',
     component: HeadquartersComponent,
