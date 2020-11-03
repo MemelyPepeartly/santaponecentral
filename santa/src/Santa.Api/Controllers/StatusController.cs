@@ -57,20 +57,17 @@ namespace Santa.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Status>> GetClientStatusByEmail(string email)
         {
-            Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(email);
-            Status clientStatus = new Status();
-            if(logicClient != null)
+            try
             {
-                clientStatus = logicClient.clientStatus;
+                return Ok((await repository.GetClientByEmailAsync(email)).clientStatus);
             }
-            else
+            catch(Exception e)
             {
-                clientStatus = new Status()
+                return Ok(new Status()
                 {
-                    statusDescription = "Status not available: No data exists"
-                };
+                    statusDescription = "Not Found"
+                });
             }
-            return Ok(clientStatus);
         }
 
 
