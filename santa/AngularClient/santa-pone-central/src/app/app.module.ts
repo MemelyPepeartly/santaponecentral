@@ -62,6 +62,7 @@ import { ClientNoteInfoComponent } from './headquarters/client-note-info/client-
 import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-info/client-assignment-info.component';
 import { UnauthorizedComponent } from './error-pages/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
+import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
 
 @NgModule({
@@ -113,7 +114,8 @@ import { NotFoundComponent } from './error-pages/not-found/not-found.component';
       ClientNoteInfoComponent,
       ClientAssignmentInfoComponent,
       UnauthorizedComponent,
-      NotFoundComponent
+      NotFoundComponent,
+      StatusCheckerComponent
    ],
    entryComponents: [
       LoginComponent

@@ -95,6 +95,10 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Status/' + id).pipe(
       map(this.extractData));
   }
+  getClientStatusByEmail(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Status/Check/' + email).pipe(
+      map(this.extractData));
+  }
   getAllAssignmentStatuses(): Observable<any> {
     return this.http.get(endpoint + 'AssignmentStatus').pipe(
       map(this.extractData));

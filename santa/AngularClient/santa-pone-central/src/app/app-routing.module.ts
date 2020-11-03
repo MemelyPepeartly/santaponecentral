@@ -15,6 +15,8 @@ import { InterceptorService } from './auth/interceptor.service';
 import { MissionBoardsComponent } from './mission-boards/mission-boards.component';
 import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
+import { environment } from 'src/environments/environment';
+import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
 
 const appRoutes: Routes = [
@@ -30,12 +32,14 @@ const appRoutes: Routes = [
     path: 'mission-boards',
     component: MissionBoardsComponent
   },
-  /*
+  {
+    path: 'status-checker',
+    component: StatusCheckerComponent
+  },
   {
     path: 'signup',
-    component: SignupComponent
+    component: !environment.production ? SignupComponent : NotFoundComponent
   },
-  */
   {
     path: 'headquarters',
     component: HeadquartersComponent,

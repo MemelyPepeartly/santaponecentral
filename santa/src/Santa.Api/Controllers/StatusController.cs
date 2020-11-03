@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Santa.Api.Models;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -51,6 +52,24 @@ namespace Santa.Api.Controllers
                 throw e.InnerException;
             }
         }
+        // GET: api/Status/Check/email
+        [HttpGet("Check/{email}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Logic.Objects.Status>> GetClientStatusByEmail(string email)
+        {
+            try
+            {
+                return Ok((await repository.GetClientByEmailAsync(email)).clientStatus);
+            }
+            catch(Exception e)
+            {
+                return Ok(new Status()
+                {
+                    statusDescription = "Not Found"
+                });
+            }
+        }
+
 
         // POST: api/Status
         [HttpPost]
