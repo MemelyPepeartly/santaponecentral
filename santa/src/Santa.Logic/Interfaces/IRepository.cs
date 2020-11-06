@@ -115,6 +115,8 @@ namespace Santa.Logic.Interfaces
 
         #region Profile
         Task<Profile> GetProfileByEmailAsync(string email);
+        Task<Profile> GetProfileByIDAsync(Guid email);
+
 
         #endregion
 

@@ -41,14 +41,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
-            // Gets the claims from the token
-            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            // Checks to make sure the token's email is only getting the email for its own profile. Takes one less call than using the IsAuthorized method here
-            if (claimEmail == email)
+            if (logicProfile.clientID == checkerClient.clientID)
             {
-                Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-
                 if (logicProfile == null)
                 {
                     return NoContent();
@@ -60,10 +58,10 @@ namespace Santa.Api.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status403Forbidden);
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
-        // GET: api/Profile/email@domain.com/Address
+        // GET: api/Profile/5/Address
         /// <summary>
         /// Allows a client who owns the email and profile to update their address
         /// 
@@ -73,11 +71,14 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
         [Authorize(Policy = "update:profile")]
-        public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressByEmailAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
+        public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
         {
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            // Checks to make sure the token's email is only getting the email for its own profile
-            if (IsAuthorized(logicClient))
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            // Checks to make sure the token's client is only getting the info for its own profile
+            if (logicClient.clientID == checkerClient.clientID)
             {
                 logicClient.address = new Address()
                 {
@@ -91,7 +92,7 @@ namespace Santa.Api.Controllers
                 await repository.UpdateClientByIDAsync(logicClient);
                 await repository.SaveAsync();
 
-                Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
+                Profile logicProfile = await repository.GetProfileByIDAsync(checkerClient.clientID);
                 if (logicProfile == null)
                 {
                     return NoContent();
@@ -103,7 +104,7 @@ namespace Santa.Api.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status403Forbidden);
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
         }
@@ -111,8 +112,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:profile")]
         public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
         {
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            if (IsAuthorized(logicClient))
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            // If the checked client is allowed based on token claims, and the checker client has an assignment ID that match the one in the URI (To stop modifying of anyone elses assignments)
+            if (logicClient.clientID == checkerClient.clientID && checkerClient.assignments.Any(a => a.clientRelationXrefID == assignmentXrefID))
             {
                 // Logic needed here for updating assignment status
                 await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
@@ -124,15 +129,8 @@ namespace Santa.Api.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status403Forbidden);
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
-        }
-        private bool IsAuthorized(Client logicClient)
-        {
-            // Gets the claims from the token
-            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-
-            return claimEmail == logicClient.email;
         }
     }
 }
