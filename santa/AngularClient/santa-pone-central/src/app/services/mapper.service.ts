@@ -6,7 +6,7 @@ import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, Client
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileRecipient } from 'src/classes/profile';
-import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
+import { Message, ClientMeta, MessageHistory, ClientChatMeta } from 'src/classes/message';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
 import { Note } from 'src/classes/note'
@@ -140,8 +140,8 @@ export class MapService {
     let mappedMessage: Message =
     {
       chatMessageID: message.chatMessageID,
-      senderClient: this.mapMeta(message.senderClient),
-      recieverClient: this.mapMeta(message.recieverClient),
+      senderClient: this.mapClientChatMeta(message.senderClient),
+      recieverClient: this.mapClientChatMeta(message.recieverClient),
       clientRelationXrefID: message.clientRelationXrefID,
       messageContent: message.messageContent,
       dateTimeSent: new Date(message.dateTimeSent),
@@ -158,11 +158,11 @@ export class MapService {
     {
       relationXrefID: messageHistory.relationXrefID,
       eventType: this.mapEvent(messageHistory.eventType),
-      assignmentSenderClient: this.mapMeta(messageHistory.assignmentSenderClient),
-      assignmentRecieverClient: this.mapMeta(messageHistory.assignmentRecieverClient),
+      assignmentSenderClient: this.mapClientChatMeta(messageHistory.assignmentSenderClient),
+      assignmentRecieverClient: this.mapClientChatMeta(messageHistory.assignmentRecieverClient),
+      conversationClient: this.mapClientChatMeta(messageHistory.conversationClient),
+      subjectClient: this.mapClientChatMeta(messageHistory.subjectClient),
       assignmentStatus: this.mapAssignmentStatus(messageHistory.assignmentStatus),
-      conversationClient: this.mapMeta(messageHistory.conversationClient),
-      subjectClient: this.mapMeta(messageHistory.subjectClient),
       subjectMessages: [],
       recieverMessages: [],
       unreadCount: messageHistory.unreadCount
@@ -185,6 +185,18 @@ export class MapService {
     {
       clientID: meta.clientId,
       clientName: meta.clientName,
+      clientNickname: meta.clientNickname,
+      hasAccount: meta.hasAccount,
+      isAdmin: meta.isAdmin
+    }
+
+    return mappedMeta;
+  }
+  mapClientChatMeta(meta) : ClientChatMeta
+  {
+    let mappedMeta: ClientChatMeta =
+    {
+      clientID: meta.clientId,
       clientNickname: meta.clientNickname,
       hasAccount: meta.hasAccount,
       isAdmin: meta.isAdmin

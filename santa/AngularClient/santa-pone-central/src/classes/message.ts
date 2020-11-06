@@ -9,13 +9,13 @@ export class MessageHistory {
     assignmentStatus: AssignmentStatus;
 
     // Client event sender... (Relationship dependent)
-    assignmentSenderClient: ClientMeta = new ClientMeta();
+    assignmentSenderClient: ClientChatMeta = new ClientChatMeta();
     // Client event reciever... (Relationship dependent)
-    assignmentRecieverClient: ClientMeta = new ClientMeta();
+    assignmentRecieverClient: ClientChatMeta = new ClientChatMeta();
     // Client chat is with (Relationship Agnostic)
-    conversationClient: ClientMeta = new ClientMeta();
+    conversationClient: ClientChatMeta = new ClientChatMeta();
     // The client that should be the "viewer" of the messages. Their messages should be blue
-    subjectClient: ClientMeta = new ClientMeta();
+    subjectClient: ClientChatMeta = new ClientChatMeta();
 
 
     subjectMessages: Array<Message> = [];
@@ -27,8 +27,8 @@ export class MessageHistory {
 // Message class for correspondence
 export class Message {
     chatMessageID: string;
-    senderClient: ClientMeta = new ClientMeta();
-    recieverClient: ClientMeta = new ClientMeta();
+    senderClient: ClientChatMeta = new ClientChatMeta();
+    recieverClient: ClientChatMeta = new ClientChatMeta();
     clientRelationXrefID?: string;
     messageContent: string;
     dateTimeSent: Date;
@@ -41,6 +41,12 @@ export class Message {
 export class ClientMeta {
     clientID?: string = null;
     clientName?: string = null;
+    clientNickname?: string = null;
+    hasAccount: boolean;
+    isAdmin: boolean;
+}
+export class ClientChatMeta {
+    clientID?: string = null;
     clientNickname?: string = null;
     hasAccount: boolean;
     isAdmin: boolean;
