@@ -52,9 +52,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required]Guid subjectID)
         {
-            if(IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            if (IsAuthorized(subjectClient))
             {
-                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
                 MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
                 return Ok(logicHistory);
             }
@@ -76,10 +76,11 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid conversationClientID, Guid subjectID)
         {
-            if (IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
+            // If the client is authorized based on claims, is not an admin, and the conversationClientID is equal to the subject client, implying something
+            if (IsAuthorized(subjectClient))
             {
-                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-                Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
                 MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
                 return Ok(listLogicMessages);
             }
@@ -100,9 +101,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid subjectID)
         {
-            if (IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            if (IsAuthorized(subjectClient))
             {
-                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
                 List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
                 return Ok(listLogicMessageHistory);
             }
