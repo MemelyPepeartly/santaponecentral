@@ -96,7 +96,7 @@ namespace Santa.Api.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
 
