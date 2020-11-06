@@ -94,10 +94,7 @@ namespace Santa.Api.Controllers
                 MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
                 return Ok(listLogicMessages);
             }
-            else
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized);
-            }
+            return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
         // GET: api/History/Client/5/Relationship
