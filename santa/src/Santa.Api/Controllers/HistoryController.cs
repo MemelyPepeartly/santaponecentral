@@ -89,7 +89,7 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
             // If the client is an admin, or the conversationClientID and subjectID are equal (Implying that they are just looking at their own general chat on profile)
-            if(checkerClient.isAdmin || conversationClientID == subjectID)
+            if(checkerClient.isAdmin || (conversationClientID == subjectID && checkerClient.clientID == subjectID))
             {
                 MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
                 return Ok(listLogicMessages);
