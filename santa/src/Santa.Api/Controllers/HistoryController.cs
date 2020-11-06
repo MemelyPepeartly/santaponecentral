@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/History
         /// <summary>
-        /// Gets all histories
+        /// Gets all histories. Admin only
         /// </summary>
         /// <param name="subjectID"></param>
         /// <returns></returns>
@@ -42,7 +43,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/History/Relationship/5
         /// <summary>
-        /// Gets a specific history by xrefID with a subject to define who is the viewer
+        /// Gets a specific history by XrefID with a subject to define who is the viewer
         /// </summary>
         /// <param name="subjectID"></param>
         /// <param name="clientRelationXrefID"></param>
@@ -51,10 +52,16 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required]Guid subjectID)
         {
-#warning This controller can be used by clients. Need a check on the token claims that the requested clientID is the client selected, likely with a seperate task to get their profile and compare their email with the email on their token
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
-            return Ok(logicHistory);
+            if(IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            {
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
+                return Ok(logicHistory);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
         }
 
         // GET: api/History/Client/5/General
@@ -69,10 +76,18 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid conversationClientID, Guid subjectID)
         {
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
-            MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
-            return Ok(listLogicMessages);
+            if (IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            {
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
+                MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
+                return Ok(listLogicMessages);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
         }
 
         // GET: api/History/Client/5/Relationship
@@ -85,10 +100,24 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid subjectID)
         {
-#warning Clients and admins can both use this, and is used for profile generation. Ensure the requesting client is only getting chats from their own profile.
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
-            return Ok(listLogicMessageHistory);
+            if (IsAuthorized(await repository.GetClientByIDAsync(subjectID)))
+            {
+                Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+                List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
+                return Ok(listLogicMessageHistory);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+        }
+        private bool IsAuthorized(Client logicClient)
+        {
+            // Gets the claims from the token
+            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+
+            return claimEmail == logicClient.email;
         }
     }
 }
