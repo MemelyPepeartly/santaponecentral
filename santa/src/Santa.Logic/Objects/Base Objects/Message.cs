@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Santa.Logic.Objects.Information_Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,8 +8,8 @@ namespace Santa.Logic.Objects
     public class Message
     {
         public Guid chatMessageID { get; set; }
-        public ClientMeta senderClient { get; set; }
-        public ClientMeta recieverClient { get; set; }
+        public ClientChatMeta senderClient { get; set; }
+        public ClientChatMeta recieverClient { get; set; }
         public Guid? clientRelationXrefID { get; set; }
         public string messageContent { get; set; }
         public DateTime dateTimeSent { get; set; }
