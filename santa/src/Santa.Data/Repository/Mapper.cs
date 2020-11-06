@@ -163,6 +163,30 @@ namespace Santa.Data.Repository
 
             return logicMeta;
         }
+        public static ClientChatMeta MapClientChatMeta(Entities.Client contextClient)
+        {
+            ClientChatMeta logicMeta = new ClientChatMeta()
+            {
+                clientId = contextClient.ClientId,
+                clientNickname = contextClient.Nickname,
+                hasAccount = contextClient.HasAccount,
+                isAdmin = contextClient.IsAdmin
+            };
+
+            return logicMeta;
+        }
+        public static ClientChatMeta MapClientChatMeta(Logic.Objects.Client logicClient)
+        {
+            ClientChatMeta logicMeta = new ClientChatMeta()
+            {
+                clientId = logicClient.clientID,
+                clientNickname = logicClient.nickname,
+                hasAccount = logicClient.hasAccount,
+                isAdmin = logicClient.isAdmin
+            };
+
+            return logicMeta;
+        }
 
         #endregion
 
@@ -276,16 +300,14 @@ namespace Santa.Data.Repository
             {
                 chatMessageID = contextMessage.ChatMessageId,
                 clientRelationXrefID = contextMessage.ClientRelationXrefId != null ? contextMessage.ClientRelationXrefId : null,
-                recieverClient = new ClientMeta()
+                recieverClient = new ClientChatMeta()
                 {
                     clientId = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClientId : null,
-                    clientName = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClient.ClientName : String.Empty,
                     clientNickname = contextMessage.MessageReceiverClientId != null ? contextMessage.MessageReceiverClient.Nickname : String.Empty
                 },
-                senderClient = new ClientMeta()
+                senderClient = new ClientChatMeta()
                 {
                     clientId = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClientId : null,
-                    clientName = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClient.ClientName : String.Empty,
                     clientNickname = contextMessage.MessageSenderClientId != null ? contextMessage.MessageSenderClient.Nickname : String.Empty
                 },
                 messageContent = contextMessage.MessageContent,
@@ -686,10 +708,10 @@ namespace Santa.Data.Repository
                 eventType = MapEvent(contextRelationshipXref.EventType),
                 assignmentStatus = MapAssignmentStatus(contextRelationshipXref.AssignmentStatus),
 
-                subjectClient = MapClientMeta(logicSubjectClient),
-                conversationClient = MapClientMeta(contextRelationshipXref.SenderClient),
-                assignmentRecieverClient = MapClientMeta(contextRelationshipXref.RecipientClient),
-                assignmentSenderClient = MapClientMeta(contextRelationshipXref.SenderClient),
+                subjectClient = MapClientChatMeta(logicSubjectClient),
+                conversationClient = MapClientChatMeta(contextRelationshipXref.SenderClient),
+                assignmentRecieverClient = MapClientChatMeta(contextRelationshipXref.RecipientClient),
+                assignmentSenderClient = MapClientChatMeta(contextRelationshipXref.SenderClient),
 
                 subjectMessages = logicListSubjectMessages,
 
@@ -753,10 +775,10 @@ namespace Santa.Data.Repository
                 eventType = new Event(),
                 assignmentStatus = new Logic.Objects.AssignmentStatus(),
 
-                subjectClient = MapClientMeta(logicSubjectClient),
-                conversationClient = MapClientMeta(contextConversationClient),
-                assignmentRecieverClient = new ClientMeta(),
-                assignmentSenderClient = new ClientMeta(),
+                subjectClient = MapClientChatMeta(logicSubjectClient),
+                conversationClient = MapClientChatMeta(contextConversationClient),
+                assignmentRecieverClient = new ClientChatMeta(),
+                assignmentSenderClient = new ClientChatMeta(),
 
                 subjectMessages = logicListSubjectMessages,
 
@@ -824,10 +846,10 @@ namespace Santa.Data.Repository
                 eventType = new Event(),
                 assignmentStatus = new Logic.Objects.AssignmentStatus(),
 
-                subjectClient = MapClientMeta(logicSubjectClient),
-                conversationClient = MapClientMeta(logicConversationClient),
-                assignmentRecieverClient = new ClientMeta(),
-                assignmentSenderClient = new ClientMeta(),
+                subjectClient = MapClientChatMeta(logicSubjectClient),
+                conversationClient = MapClientChatMeta(logicConversationClient),
+                assignmentRecieverClient = new ClientChatMeta(),
+                assignmentSenderClient = new ClientChatMeta(),
 
                 subjectMessages = logicListSubjectMessages,
 
