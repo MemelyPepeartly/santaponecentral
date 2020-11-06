@@ -76,19 +76,28 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid conversationClientID, Guid subjectID)
         {
+            //Subject viewer client
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            //Conversation the chat is with (If on profiles, will be the same as subject)
             Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
-            // If the client is authorized based on claims, is not an admin, and the conversationClientID is equal to the subject client, implying something
-            if (IsAuthorized(subjectClient))
+            //Client profile based on token claim
+            Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            // If the client isn't authorized, they get a 401, and a prompt spritz from the security spray bottle 
+            if (!IsAuthorized(checkerClient))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+            // If the client is an admin, or the conversationClientID and subjectID are equal (Implying that they are just looking at their own general chat on profile)
+            if(checkerClient.isAdmin || conversationClientID == subjectID)
             {
                 MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
                 return Ok(listLogicMessages);
             }
             else
             {
-                return StatusCode(StatusCodes.Status401Unauthorized);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
         }
 
         // GET: api/History/Client/5/Relationship
