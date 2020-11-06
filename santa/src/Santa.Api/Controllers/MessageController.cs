@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 using Santa.Api.Models.Message_Models;
 using Santa.Api.SendGrid;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -66,11 +67,11 @@ namespace Santa.Api.Controllers
             Logic.Objects.Message logicMessage = new Logic.Objects.Message()
             {
                 chatMessageID = Guid.NewGuid(),
-                recieverClient = new Logic.Objects.ClientMeta()
+                recieverClient = new ClientChatMeta()
                 {
                     clientId = message.messageRecieverClientID
                 },
-                senderClient = new Logic.Objects.ClientMeta()
+                senderClient = new ClientChatMeta()
                 {
                     clientId = message.messageSenderClientID
                 },
