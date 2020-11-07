@@ -10,12 +10,13 @@ namespace Santa.Api.Services.YuleLog
     {
         #region POST logs
         /// <summary>
-        /// Logs new created assignments with a list of the nicknames of new assignments
+        /// Logs new created assignments with a list of the nicknames of new assignments for a sending client
         /// </summary>
         /// <param name="requestingClient"></param>
-        /// <param name="listNewAssignmentNames"></param>
+        /// <param name="sendingClient"></param>
+        /// <param name="listNewAssignmentNicknames"></param>
         /// <returns></returns>
-        Task logCreatedNewAssignments(Client requestingClient, List<string> listNewAssignmentNicknames);
+        Task logCreatedNewAssignments(Client requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames);
         #endregion
 
         #region GET logs
@@ -52,7 +53,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="requestedHistory"></param>
         /// <returns></returns>
         Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory);
-
+        
         #endregion
 
         #region PUT logs

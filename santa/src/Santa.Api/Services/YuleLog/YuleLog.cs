@@ -25,9 +25,9 @@ namespace Santa.Api.Services.YuleLog
         }
 
         #region POST logs
-        public async Task logCreatedNewAssignments(Client requestingClient, List<string> listNewAssignmentNicknames)
+        public async Task logCreatedNewAssignments(Client requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames)
         {
-            string logMessage = $"A request by {requestingClient.nickname} was made to add the following assignments: ";
+            string logMessage = $"{requestingClient.nickname} made a request to add the following assignments to {sendingClient.nickname}: ";
             foreach(string assignmentNickname in listNewAssignmentNicknames)
             {
                 logMessage += assignmentNickname;
@@ -65,7 +65,7 @@ namespace Santa.Api.Services.YuleLog
         }
         public async Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory)
         {
-            string logMessage = requestedHistory.relationXrefID != null ? $"{requestingClient.nickname} requested to get a history about an assignment for {requestedHistory.conversationClient.clientNickname}" : $"{requestingClient.nickname} requested to get a genearl history for {requestedHistory.conversationClient.clientNickname}";
+            string logMessage = requestedHistory.relationXrefID != null ? $"{requestingClient.nickname} requested to get a history between admins and {requestedHistory.conversationClient.clientNickname} about an assignment ({requestedHistory.assignmentRecieverClient.clientNickname}) " : $"{requestingClient.nickname} requested to get a general history between adminsd and {requestedHistory.conversationClient.clientNickname}";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY), logMessage));
             await saveLogs();
         }
