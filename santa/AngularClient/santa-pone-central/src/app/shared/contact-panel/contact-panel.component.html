@@ -35,7 +35,8 @@
                             <span> {{ message.senderClient.clientNickname }} </span>
                             <mat-divider [inset]="true"></mat-divider>
                         </div>
-                        <div id="content" [innerHTML]="spotURL(message.messageContent)"></div>
+                        <!--<div id="content" [innerHTML]="spotURL(message.messageContent)"></div>-->
+                        <div id="content">{{message.messageContent}}</div>
                         <div class="messageCheckDiv">
                             <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="showButton(message)"
                                 matTooltip="Mark as read"

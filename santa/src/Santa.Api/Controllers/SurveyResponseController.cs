@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
-
+using System.Security.Claims;
 
 namespace Santa.Api.Controllers
 {
@@ -57,8 +57,10 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:responses")]
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
-#warning clients and admins can do this. Needs check to ensure the response is coming from the right person
-            try
+            Logic.Objects.Response logicResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if(checkerClient.isAdmin || logicResponse.clientID == checkerClient.clientID)
             {
                 Logic.Objects.Response logicSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
                 logicSurveyResponse.responseText = responseText.responseText;
@@ -68,9 +70,9 @@ namespace Santa.Api.Controllers
 
                 return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
             }
-            catch (Exception e)
+            else
             {
-                throw e.InnerException;
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
 
