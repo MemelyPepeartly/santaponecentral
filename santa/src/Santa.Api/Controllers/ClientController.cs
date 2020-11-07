@@ -16,6 +16,8 @@ using Santa.Api.SendGrid;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Logging;
+using Santa.Api.Services.YuleLog;
+using System.Security.Claims;
 
 namespace Santa.Api.Controllers
 {
@@ -28,12 +30,14 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         private readonly IAuthHelper authHelper;
         private readonly IMailbag mailbag;
+        private readonly IYuleLog yuleLogger;
 
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag)
+        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
         // GET: api/Client
         /// <summary>
@@ -44,11 +48,24 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClients()
         {
+            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
             List<Logic.Objects.Client> clients = await repository.GetAllClients();
             if (clients == null)
             {
                 return NoContent();
             }
+
+            try
+            {
+                await yuleLogger.logGetAllClients(requestingClient);
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+            
             return Ok(clients.OrderBy(c => c.nickname));
         }
 
@@ -61,12 +78,24 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
         {
-            List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
-            if (clients == null)
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
             {
-                return NoContent();
+                List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
+                if (clients == null)
+                {
+                    return NoContent();
+                }
+                await yuleLogger.logGetAllClients(requestingClient);
+                return Ok(clients.OrderBy(c => c.nickname));
             }
-            return Ok(clients.OrderBy(c => c.nickname));
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+            
         }
 
         // GET: api/Client/5
@@ -79,7 +108,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            return Ok(await repository.GetClientByIDAsync(clientID));
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // GET: api/Client/Email/email@domain.com
@@ -92,8 +133,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(string clientEmail)
         {
-            Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-            return Ok(logicClient);
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
+            try
+            {
+                Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
 
