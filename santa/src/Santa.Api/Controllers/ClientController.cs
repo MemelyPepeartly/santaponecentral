@@ -316,11 +316,26 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            List<string> newAssignments = new List<string>();
+            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
+
             foreach (Guid assignmentID in assignmentsModel.assignments)
             {
                 await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
+                newAssignments.Add(logicClientList.First(c => c.clientID == assignmentID).nickname);
             }
-            await repository.SaveAsync();
+
+            try
+            {
+                await yuleLogger.logCreatedNewAssignments(requestingClient, (await repository.GetClientByIDAsync(clientID)), newAssignments);
+                await repository.SaveAsync();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
 
             // Get new client with recipients, and send the client a notification they have new assignments for an event
             Client updatedClient = await repository.GetClientByIDAsync(clientID);
@@ -340,6 +355,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
+
             Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
             AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
@@ -357,15 +375,33 @@ namespace Santa.Api.Controllers
                     clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
                 }
             }
-
-            await repository.SaveAsync();
-
-            foreach (Client massMailer in clientsToEmail)
+            try
             {
-                await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
-            }
+                // Foreach mass mailer being given assignments
+                foreach(Client massMailer in clientsToEmail)
+                {
+                    List<string> newAssignments = new List<string>();
+                    // Foreach pairing in the pairing model where the senderID equals the current mass mailer being given assignments
+                    foreach (Pairing pair in model.pairings.Where(p => p.senderAgentID == massMailer.clientID).ToList())
+                    {
+                        newAssignments.Add(allClients.First(c => c.clientID == pair.assignmentClientID).nickname);
+                    }
+                    await yuleLogger.logCreatedNewAssignments(requestingClient, massMailer, newAssignments);
+                }
 
-            return Ok();
+                await repository.SaveAsync();
+                foreach (Client massMailer in clientsToEmail)
+                {
+                    await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
+                }
+
+                return Ok();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
 
