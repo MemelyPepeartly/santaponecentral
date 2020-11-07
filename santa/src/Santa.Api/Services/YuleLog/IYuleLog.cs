@@ -8,6 +8,17 @@ namespace Santa.Api.Services.YuleLog
 {
     public interface IYuleLog
     {
+        #region POST logs
+        /// <summary>
+        /// Logs new created assignments with a list of the nicknames of new assignments
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="listNewAssignmentNames"></param>
+        /// <returns></returns>
+        Task logCreatedNewAssignments(Client requestingClient, List<string> listNewAssignmentNicknames);
+        #endregion
+
+        #region GET logs
         /// <summary>
         /// Logs when get all clients is called using a requesting client based on the user token
         /// </summary>
@@ -29,6 +40,23 @@ namespace Santa.Api.Services.YuleLog
         /// <returns></returns>
         Task logGetProfile(Client requestingClient, Profile returnedProfile);
         /// <summary>
+        /// Logs a request to gather all histories was made
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <returns></returns>
+        Task logGetAllHistories(Client requestingClient);
+        /// <summary>
+        /// Logs a request for a specific history was made
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="requestedHistory"></param>
+        /// <returns></returns>
+        Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory);
+
+        #endregion
+
+        #region PUT logs
+        /// <summary>
         /// Logs when an answer has been changed using the requestor client, question, and the change in answers
         /// </summary>
         /// <param name="requestingClient"></param>
@@ -47,6 +75,27 @@ namespace Santa.Api.Services.YuleLog
         /// <returns></returns>
         Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
         /// <summary>
+        /// Logs a change to a profile has been made
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="modifiedProfile"></param>
+        /// <returns></returns>
+        Task logChangedProfile(Client requestingClient, Profile modifiedProfile);
+        /// <summary>
+        /// Logs a client has been changed
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="modifiedClient"></param>
+        /// <returns></returns>
+        Task logChangedClient(Client requestingClient, Client modifiedClient);
+
+        #endregion
+
+        #region DELETE logs
+        #endregion
+
+        #region Utility
+        /// <summary>
         /// Error logger which takes in the requestor client, and the category the error occured in
         /// </summary>
         /// <param name="requestingClient"></param>
@@ -58,5 +107,12 @@ namespace Santa.Api.Services.YuleLog
         /// </summary>
         /// <returns></returns>
         Task saveLogs();
+        #endregion
+
+
+
+
+
+
     }
 }
