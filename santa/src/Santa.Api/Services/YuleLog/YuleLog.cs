@@ -78,7 +78,7 @@ namespace Santa.Api.Services.YuleLog
         }
         public async Task logGetProfile(Client requestingClient, Profile returnedProfile)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile for: " + returnedProfile.nickname));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile object for: " + returnedProfile.nickname));
             await saveLogs();
         }
         private Logic.Objects.Base_Objects.Logging.YuleLog makeLogTemplateObject(Category logicCategory, string logMessage)
