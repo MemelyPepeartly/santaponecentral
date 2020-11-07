@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 
 @Component({
   selector: 'app-yule-log',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class YuleLogComponent implements OnInit {
 
   constructor() { }
+
+  @Input() categories: Array<Category> = [];
 
   ngOnInit(): void {
   }

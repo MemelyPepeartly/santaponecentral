@@ -1,0 +1,10 @@
+.api-card {
+  width: 325px;
+  height: 100%;
+  margin: 15px;
+  display: inline-block;
+  vertical-align: top;
+  outline: 2px;
+  outline-color: rgb(170, 170, 170);
+  border-radius: 8px;
+}
