@@ -81,6 +81,6 @@
 .refreshButton
 {
   display: block;
-  width: 19%;
+  width: fit-content;
   height: 45px;
 }

@@ -32,9 +32,11 @@
 </div>
 <div id="info-div">
   <mat-card class="list-card mat-elevation-z5">
-    <mat-card-header>
-      <mat-card-title>Correspondence</mat-card-title>
-      <mat-card-subtitle>For keeping contact with anons organized and in line</mat-card-subtitle>
+    <mat-card-header style="display: block; margin-bottom: 10px;">
+      <div>
+        <mat-card-title>Correspondence</mat-card-title>
+        <mat-card-subtitle>For keeping contact with anons organized and in line</mat-card-subtitle>
+      </div>
       <button mat-raised-button class="refreshButton" (click)="manualRefresh()" [disabled]="gettingAllChats">Refresh Correspondence <mat-icon>refresh</mat-icon></button>
     </mat-card-header>
     <mat-card-content *ngIf="initializing">
