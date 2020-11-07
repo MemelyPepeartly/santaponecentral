@@ -18,6 +18,7 @@ using Santa.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Logging;
 using Santa.Api.Services.YuleLog;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Santa.Api.Controllers
 {
@@ -678,15 +679,29 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
-            await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
-            await repository.SaveAsync();
+            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client targetAgent = await repository.GetClientByIDAsync(clientID);
+            AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
+
+            try
+            {
+                RelationshipMeta assignment = targetAgent.assignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
+                await yuleLogger.logChangedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
+                await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
+                await repository.SaveAsync();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
 
             Client logicClient = await repository.GetClientByIDAsync(clientID);
             List<RelationshipMeta> logicMetas = new List<RelationshipMeta>();
             logicMetas.AddRange(logicClient.assignments);
             logicMetas.AddRange(logicClient.senders);
 
-            return (logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
+            return Ok(logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
         }
         // DELETE: api/Client/5
         /// <summary>
