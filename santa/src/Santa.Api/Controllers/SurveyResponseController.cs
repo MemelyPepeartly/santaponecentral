@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using System.Security.Claims;
+using Santa.Api.Services.YuleLog;
+using Santa.Logic.Constants;
 
 namespace Santa.Api.Controllers
 {
@@ -18,11 +20,14 @@ namespace Santa.Api.Controllers
     public class SurveyResponseController : ControllerBase
     {
         private readonly IRepository repository;
-        public SurveyResponseController(IRepository _repository)
+        private readonly IYuleLog yuleLogger;
+
+        public SurveyResponseController(IRepository _repository, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
-        
+
         // GET: api/SurveyResponses
         [HttpGet]
         [Authorize(Policy = "read:responses")]
@@ -57,18 +62,28 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:responses")]
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
         {
-            Logic.Objects.Response logicResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Response logicResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
+            Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             if(checkerClient.isAdmin || logicResponse.clientID == checkerClient.clientID)
             {
-                Logic.Objects.Response logicSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
-                logicSurveyResponse.responseText = responseText.responseText;
-
-                await repository.UpdateSurveyResponseByIDAsync(logicSurveyResponse);
-                await repository.SaveAsync();
-
-                return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
+                Response logicOldSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
+                Response logicNewSurveyResponse = logicOldSurveyResponse;
+                logicNewSurveyResponse.responseText = responseText.responseText;
+                await repository.UpdateSurveyResponseByIDAsync(logicNewSurveyResponse);
+                // Try to save the changes and log the outcome.
+                try
+                {
+                    await yuleLogger.logChangedAnswer(checkerClient, logicOldSurveyResponse.surveyQuestion, logicOldSurveyResponse, logicNewSurveyResponse);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
+                }
+                // If that fails, revert the answer, post the log, and save it to the DB context
+                catch(Exception)
+                {
+                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_ANSWER_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
             }
             else
             {
