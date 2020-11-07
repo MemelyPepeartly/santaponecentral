@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Services.YuleLog;
-using Santa.Logic.Objects.Base_Objects.Logging;
 
 namespace Santa.Api.Controllers
 {
@@ -16,10 +15,10 @@ namespace Santa.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LogController : ControllerBase
     {
-        private readonly IYuleLog yuleLog;
+        private readonly IYuleLog yuleLogger;
         public LogController(IYuleLog _yuleLog)
         {
-            yuleLog = _yuleLog ?? throw new ArgumentNullException(nameof(_yuleLog));
+            yuleLogger = _yuleLog ?? throw new ArgumentNullException(nameof(_yuleLog));
 
         }
 
