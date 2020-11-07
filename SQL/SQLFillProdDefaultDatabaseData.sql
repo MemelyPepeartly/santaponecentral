@@ -224,6 +224,7 @@ VALUES
     (NEWID(), 'Get All Clients', 'A list of all clients was requested'),
     (NEWID(), 'Get Client By ID', 'A request to get a client by their ID was made'),
     (NEWID(), 'Get Profile', 'A profile was requested'),
+    (NEWID(), 'Modified Assignment Status', 'A status was updated for an assignment'),
     (NEWID(), 'Modified Answer', 'A survey answer was modified');
 
 SELECT * FROM app.SurveyQuestion;
