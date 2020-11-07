@@ -219,6 +219,13 @@ VALUES
     (NEWID(), 'Shipping', 'Assignment is on its way! Cheer inbound!'),
     (NEWID(), 'Completed', 'Your delivery of cheer has made its mark! Mission accomplished!');
 
+INSERT INTO app.Category (categoryID, categoryName, categoryDescription)
+VALUES
+    (NEWID(), 'Get All Clients', 'A list of all clients was requested'),
+    (NEWID(), 'Get Client By ID', 'A request to get a client by their ID was made'),
+    (NEWID(), 'Get Profile', 'A profile was requested'),
+    (NEWID(), 'Modified Answer', 'A survey answer was modified');
+
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;
 SELECT * FROM app.SurveyOption;
