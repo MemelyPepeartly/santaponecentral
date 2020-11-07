@@ -1207,29 +1207,36 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Category
-        public Task CreateNewCategory(Category newCategory)
+        public async Task CreateNewCategory(Category newCategory)
         {
-            throw new NotImplementedException();
+            Data.Entities.Category contextCategory = Mapper.MapCategory(newCategory);
+            await santaContext.Category.AddAsync(contextCategory);
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public async Task<List<Category>> GetAllCategories()
         {
-            throw new NotImplementedException();
+            return (await santaContext.Category.ToListAsync()).Select(Mapper.MapCategory).ToList();
         }
 
-        public Task<Category> GetCategoryByID(Guid categoryID)
+        public async Task<Category> GetCategoryByID(Guid categoryID)
         {
-            throw new NotImplementedException();
+            Category logicCategory = Mapper.MapCategory(await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == categoryID));
+            return logicCategory;
         }
 
-        public Task UpdateCategory(Category targetCategory)
+        public async Task UpdateCategory(Category targetCategory)
         {
-            throw new NotImplementedException();
+            Entities.Category contextCategory = await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == targetCategory.categoryID);
+            contextCategory.CategoryName = targetCategory.categoryName;
+            contextCategory.CategoryDescription = targetCategory.categoryDescription;
+
+            santaContext.Category.Update(contextCategory);
         }
 
-        public Task DeleteCategoryByID(Guid categoryID)
+        public async Task DeleteCategoryByID(Guid categoryID)
         {
-            throw new NotImplementedException();
+            Entities.Category contextCategory = await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == categoryID);
+            santaContext.Category.Remove(contextCategory);
         }
         #endregion
 
