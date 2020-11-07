@@ -14,6 +14,7 @@ using System.Linq;
 using Santa.Api.AuthHelper;
 using Santa.Api.SendGrid;
 using Santa.Logic.Objects;
+using Santa.Api.Services.YuleLog;
 
 namespace Santa.Api
 {
@@ -37,7 +38,7 @@ namespace Santa.Api
             services.AddDbContext<Santa.Data.Entities.SantaPoneCentralDatabaseContext>(options =>
             {
                 options.UseSqlServer(connectionString);
-            });
+            }, ServiceLifetime.Transient);
 
             //Cors
             services.AddCors(options =>
@@ -56,6 +57,7 @@ namespace Santa.Api
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<IAuthHelper, AuthHelper.AuthHelper>();
             services.AddScoped<IMailbag, Mailbag>();
+            services.AddScoped<IYuleLog, YuleLog>();
 
 
             //Swagger
