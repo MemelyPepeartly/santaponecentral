@@ -342,7 +342,7 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <param name="categoryID"></param>
         /// <returns></returns>
-        Task<List<YuleLog>> GetLogByCategoryID(Guid categoryID);
+        Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID);
         #endregion
 
         #region Utility
