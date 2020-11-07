@@ -7,6 +7,7 @@ using Santa.Logic.Objects.Base_Objects.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AssignmentStatus = Santa.Logic.Objects.AssignmentStatus;
 using Category = Santa.Logic.Objects.Base_Objects.Logging.Category;
@@ -27,12 +28,14 @@ namespace Santa.Api.Services.YuleLog
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}' from '{oldAnswer.responseText}' to '{newAnswer.responseText}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY), logMessage));
+            await saveLogs();
         }
 
         public async Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change the assignment status for {assignmentNickname} from '{oldStatus.assignmentStatusName}' to '{newStatus.assignmentStatusName}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
+            await saveLogs();
         }
 
         public async Task logError(Client requestingClient, string category)
@@ -60,16 +63,23 @@ namespace Santa.Api.Services.YuleLog
                 logMessage = "There was an error modifying the assignment's status";
             }
             await repository.CreateNewLogEntry(makeLogTemplateObject(errorCategory, logMessage));
+            await saveLogs();
         }
 
         public async Task logGetAllClients(Client requestingClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve a list of all clients"));
+            await saveLogs();
         }
-
+        public async Task logGetSpecificClient(Client requestingClient, Client requestedClient)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve the client information for " + requestedClient.nickname));
+            await saveLogs();
+        }
         public async Task logGetProfile(Client requestingClient, Profile returnedProfile)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile for: " + returnedProfile.nickname));
+            await saveLogs();
         }
         private Logic.Objects.Base_Objects.Logging.YuleLog makeLogTemplateObject(Category logicCategory, string logMessage)
         {
@@ -82,6 +92,10 @@ namespace Santa.Api.Services.YuleLog
                 logtext = logMessage
             };
             return logicLog;
+        }
+        public async Task saveLogs()
+        {
+            await repository.SaveAsync();
         }
         private async Task<Category> getCategoryByName(string categoryName)
         {
