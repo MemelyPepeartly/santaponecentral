@@ -898,7 +898,7 @@ namespace Santa.Data.Repository
             Logic.Objects.Base_Objects.Logging.YuleLog logicLog = new Logic.Objects.Base_Objects.Logging.YuleLog()
             {
                 logID = contextLog.LogId,
-                category = MapCategory(contextLog.CategoryNavigation),
+                category = MapCategory(contextLog.Category),
                 logDate = contextLog.LogDate, 
                 logtext = contextLog.LogText
             };
@@ -909,7 +909,7 @@ namespace Santa.Data.Repository
             Entities.YuleLog contextLog = new Entities.YuleLog()
             {
                 LogId = logicLog.logID,
-                Category = logicLog.category.categoryID,
+                CategoryId = logicLog.category.categoryID,
                 LogDate = logicLog.logDate, 
                 LogText = logicLog.logtext
             };
