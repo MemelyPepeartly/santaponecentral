@@ -1,5 +1,7 @@
-﻿using Santa.Logic.Interfaces;
+﻿using Santa.Logic.Constants;
+using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Base_Objects.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,29 +18,45 @@ namespace Santa.Api.Services.YuleLog
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
 
-        public Task logChangedAnswer(Client requestingClient)
+        public async Task logChangedAnswer(Client requestingClient)
         {
             throw new NotImplementedException();
         }
 
-        public Task logChangedAssignmentStatus(Client requestingClient)
+        public async Task logChangedAssignmentStatus(Client requestingClient)
         {
             throw new NotImplementedException();
         }
 
-        public Task logError(Client requestingClient)
+        public async Task logError(Client requestingClient)
         {
             throw new NotImplementedException();
         }
 
-        public Task logGetAllClients(Client requestingClient)
+        public async Task logGetAllClients(Client requestingClient)
         {
             throw new NotImplementedException();
         }
 
-        public Task logGetProfile(Client requestingClient)
+        public async Task logGetProfile(Client requestingClient)
         {
             throw new NotImplementedException();
+        }
+        private Logic.Objects.Base_Objects.Logging.YuleLog makeLogTemplateObject(Category logicCategory, string logMessage)
+        {
+            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            Logic.Objects.Base_Objects.Logging.YuleLog logicLog = new Logic.Objects.Base_Objects.Logging.YuleLog()
+            {
+                logID = Guid.NewGuid(),
+                category = logicCategory,
+                logDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
+                logtext = logMessage
+            };
+            return logicLog;
+        }
+        private async Task<Category> getCategoryByName(string categoryName)
+        {
+            return (await repository.GetAllCategories()).First(c => c.categoryName == categoryName);
         }
     }
 }
