@@ -62,14 +62,7 @@ namespace Santa.Api.Controllers
 
             if (logicProfile.clientID == checkerClient.clientID)
             {
-                if (logicProfile == null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(logicProfile);
-                }
+                return Ok(logicProfile);
             }
             else
             {
@@ -96,12 +89,12 @@ namespace Santa.Api.Controllers
             // Log the profile request
             try
             {
-                await yuleLogger.logGetProfile(checkerClient, logicProfile);
+                await yuleLogger.logChangedProfile(checkerClient, logicProfile);
             }
             // If it fails, log the error instead and stop the transaction
             catch (Exception)
             {
-                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
 
@@ -127,13 +120,13 @@ namespace Santa.Api.Controllers
                 }
                 catch(Exception)
                 {
-                    await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
                     return StatusCode(StatusCodes.Status424FailedDependency);
                 }  
             }
             else
             {
-                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
