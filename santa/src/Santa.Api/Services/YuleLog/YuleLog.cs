@@ -24,9 +24,9 @@ namespace Santa.Api.Services.YuleLog
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
         }
 
-        public async Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, Response oldAnswer, Response newAnswer)
+        public async Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
         {
-            string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}' from '{oldAnswer.responseText}' to '{newAnswer.responseText}'";
+            string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}' from '{oldAnswer}' to '{newAnswer}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY), logMessage));
             await saveLogs();
         }

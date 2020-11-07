@@ -56,25 +56,25 @@ namespace Santa.Api.Controllers
         /// Updates a response by ID
         /// </summary>
         /// <param name="surveyResponseID"></param>
-        /// <param name="responseText"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{surveyResponseID}/ResponseText")]
         [Authorize(Policy = "update:responses")]
-        public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText responseText)
+        public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText model)
         {
             Response logicResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
             Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             if(checkerClient.isAdmin || logicResponse.clientID == checkerClient.clientID)
             {
-                Response logicOldSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
-                Response logicNewSurveyResponse = logicOldSurveyResponse;
-                logicNewSurveyResponse.responseText = responseText.responseText;
-                await repository.UpdateSurveyResponseByIDAsync(logicNewSurveyResponse);
+                Response logicSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
+                string oldResponse = logicResponse.responseText;
+                logicSurveyResponse.responseText = model.responseText;
+                await repository.UpdateSurveyResponseByIDAsync(logicSurveyResponse);
                 // Try to save the changes and log the outcome.
                 try
                 {
-                    await yuleLogger.logChangedAnswer(checkerClient, logicOldSurveyResponse.surveyQuestion, logicOldSurveyResponse, logicNewSurveyResponse);
+                    await yuleLogger.logChangedAnswer(checkerClient, logicSurveyResponse.surveyQuestion, oldResponse, model.responseText);
                     await repository.SaveAsync();
                     return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
                 }

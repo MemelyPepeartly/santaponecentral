@@ -11,7 +11,7 @@ namespace Santa.Api.Services.YuleLog
         Task logGetAllClients(Client requestingClient);
         Task logGetSpecificClient(Client requestingClient, Client requestedClient);
         Task logGetProfile(Client requestingClient, Profile returnedProfile);
-        Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, Response oldAnswer, Response newAnswer);
+        Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
         Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
         Task logError(Client requestingClient, string category);
         Task saveLogs();
