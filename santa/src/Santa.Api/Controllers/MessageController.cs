@@ -162,10 +162,13 @@ namespace Santa.Api.Controllers
                 Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(messageID);
                 if (checkerClient.isAdmin ||  targetMessage.recieverClient.clientId == checkerClient.clientID)
                 {
-
+                    targetMessage.isMessageRead = true;
+                    await repository.UpdateMessageByIDAsync(targetMessage);
                 }
-                targetMessage.isMessageRead = true;
-                await repository.UpdateMessageByIDAsync(targetMessage);
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
 
             await repository.SaveAsync();
