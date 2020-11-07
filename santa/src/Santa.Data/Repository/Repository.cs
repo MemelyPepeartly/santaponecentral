@@ -1241,24 +1241,37 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Yule Log
-        public Task CreateNewLogEntry(YuleLog newLog)
+        public async Task CreateNewLogEntry(YuleLog newLog)
         {
-            throw new NotImplementedException();
+            Data.Entities.YuleLog contextLog = Mapper.MapLog(newLog);
+            await santaContext.YuleLog.AddAsync(contextLog);
         }
 
-        public Task<List<YuleLog>> GetAllLogEntries()
+        public async Task<List<YuleLog>> GetAllLogEntries()
         {
-            throw new NotImplementedException();
+            List<YuleLog> logicLogList = (await santaContext.YuleLog
+                .Include(yl => yl.Category)
+                .ToListAsync())
+                .Select(Mapper.MapLog)
+                .ToList();
+            return logicLogList;
         }
 
-        public Task<YuleLog> GetLogByID(Guid logID)
+        public async Task<YuleLog> GetLogByID(Guid logID)
         {
-            throw new NotImplementedException();
+            YuleLog logicLog = Mapper.MapLog(await santaContext.YuleLog.FirstOrDefaultAsync(yl => yl.LogId == logID));
+            return logicLog;
         }
 
-        public Task<List<YuleLog>> GetLogByCategoryID(Guid categoryID)
+        public async Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID)
         {
-            throw new NotImplementedException();
+            List<YuleLog> logicLogList = (await santaContext.YuleLog
+                .Include(yl => yl.Category)
+                .Where(yl => yl.CategoryId == categoryID)
+                .ToListAsync())
+                .Select(Mapper.MapLog)
+                .ToList();
+            return logicLogList;
         }
         #endregion
 
