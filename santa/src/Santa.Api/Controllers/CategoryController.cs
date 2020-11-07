@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Logic.Interfaces;
@@ -22,6 +23,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Category
         [HttpGet]
+        [Authorize(Policy = "read:categories")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllCategories()
         {
             return Ok();
@@ -29,6 +31,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Category/5
         [HttpGet("{categoryID}")]
+        [Authorize(Policy = "read:categories")]
         public async Task<ActionResult<Category>> GetCategoryByID(Guid categoryID)
         {
             return Ok();
@@ -36,6 +39,7 @@ namespace Santa.Api.Controllers
 
         // POST: api/Category
         [HttpPost]
+        [Authorize(Policy = "create:categories")]
         public async Task<ActionResult<Category>> PostNewCategory([FromBody] object model)
         {
             return Ok();
@@ -43,6 +47,7 @@ namespace Santa.Api.Controllers
 
         // PUT: api/Category/5
         [HttpPut("{categoryID}")]
+        [Authorize(Policy = "update:categories")]
         public async Task<ActionResult<Category>> PutCategory(Guid categoryID, [FromBody] object model)
         {
             return Ok();
@@ -50,6 +55,7 @@ namespace Santa.Api.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{categoryID}")]
+        [Authorize(Policy = "delete:categories")]
         public async Task<ActionResult> DeleteByID(Guid categoryID)
         {
             return NoContent();
