@@ -7,9 +7,9 @@ namespace Santa.Data.Entities
     {
         public Guid LogId { get; set; }
         public DateTime LogDate { get; set; }
-        public Guid Category { get; set; }
+        public Guid CategoryId { get; set; }
         public string LogText { get; set; }
 
-        public virtual Category CategoryNavigation { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

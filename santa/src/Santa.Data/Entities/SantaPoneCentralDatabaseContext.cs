@@ -732,7 +732,7 @@ namespace Santa.Data.Entities
             modelBuilder.Entity<YuleLog>(entity =>
             {
                 entity.HasKey(x => x.LogId)
-                    .HasName("PK__YuleLog__7839F62DEC2E0EAE");
+                    .HasName("PK__YuleLog__7839F62DD7E28393");
 
                 entity.ToTable("YuleLog", "app");
 
@@ -741,9 +741,9 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("logID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Category)
-                    .HasColumnName("category")
-                    .HasViewColumnName("category");
+                entity.Property(e => e.CategoryId)
+                    .HasColumnName("categoryID")
+                    .HasViewColumnName("categoryID");
 
                 entity.Property(e => e.LogDate)
                     .HasColumnName("logDate")
@@ -756,11 +756,11 @@ namespace Santa.Data.Entities
                     .HasViewColumnName("logText")
                     .HasMaxLength(1000);
 
-                entity.HasOne(d => d.CategoryNavigation)
+                entity.HasOne(d => d.Category)
                     .WithMany(p => p.YuleLog)
-                    .HasForeignKey(x => x.Category)
+                    .HasForeignKey(x => x.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__YuleLog__categor__194ED541");
+                    .HasConstraintName("FK__YuleLog__categor__1C2B41EC");
             });
 
             OnModelCreatingPartial(modelBuilder);
