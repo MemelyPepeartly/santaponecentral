@@ -8,6 +8,9 @@ using Santa.Logic.Objects;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects.Information_Objects;
+using Santa.Logic.Objects.Base_Objects.Logging;
+using YuleLog = Santa.Logic.Objects.Base_Objects.Logging.YuleLog;
+using Category = Santa.Logic.Objects.Base_Objects.Logging.Category;
 
 namespace Santa.Data.Repository
 {
@@ -1200,6 +1203,55 @@ namespace Santa.Data.Repository
             Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID);
 
             santaContext.Note.Remove(contextNote);
+        }
+        #endregion
+
+        #region Category
+        public Task CreateNewCategory(Category newCategory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Category>> GetAllCategories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Category> GetCategoryByID(Guid categoryID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateCategory(Category targetCategory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteCategoryByID(Guid categoryID)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Yule Log
+        public Task CreateNewLogEntry(YuleLog newLog)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<YuleLog>> GetAllLogEntries()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<YuleLog> GetLogByID(Guid logID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<YuleLog>> GetLogByCategoryID(Guid categoryID)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

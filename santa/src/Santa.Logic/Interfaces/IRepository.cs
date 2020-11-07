@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Santa.Logic.Objects;
 using Santa.Logic.Objects.Base_Objects;
+using Santa.Logic.Objects.Base_Objects.Logging;
 using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Logic.Interfaces
@@ -284,6 +285,64 @@ namespace Santa.Logic.Interfaces
         Task<Note> GetNoteByIDAsync(Guid noteID);
         Task UpdateNote(Note updatedNote);
         Task DeleteNoteByID(Guid noteID);
+        #endregion
+
+        #region Category
+        /// <summary>
+        /// Creates a new log category with a filled category object
+        /// </summary>
+        /// <param name="newCategory"></param>
+        /// <returns></returns>
+        Task CreateNewCategory(Category newCategory);
+        /// <summary>
+        /// Gets a list of all the categories
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Category>> GetAllCategories();
+        /// <summary>
+        /// Gets a specific category by ID
+        /// </summary>
+        /// <param name="categoryID"></param>
+        /// <returns></returns>
+        Task<Category> GetCategoryByID(Guid categoryID);
+        /// <summary>
+        /// Updates a category with a filled target category. Searches for the category by ID in the target to update
+        /// </summary>
+        /// <param name="targetCategory"></param>
+        /// <returns></returns>
+        Task UpdateCategory(Category targetCategory);
+        /// <summary>
+        /// Deletes a category by ID
+        /// </summary>
+        /// <param name="categoryID"></param>
+        /// <returns></returns>
+        Task DeleteCategoryByID(Guid categoryID);
+        #endregion
+
+        #region Yule Log
+        /// <summary>
+        /// Creates a new log entry with a logic YuleLog object
+        /// </summary>
+        /// <param name="newLog"></param>
+        /// <returns></returns>
+        Task CreateNewLogEntry(YuleLog newLog);
+        /// <summary>
+        /// Gets a list of all current log entries
+        /// </summary>
+        /// <returns></returns>
+        Task<List<YuleLog>> GetAllLogEntries();
+        /// <summary>
+        /// Gets a specific log by ID
+        /// </summary>
+        /// <param name="logID"></param>
+        /// <returns></returns>
+        Task<YuleLog> GetLogByID(Guid logID);
+        /// <summary>
+        /// Gets a list of logs by a category
+        /// </summary>
+        /// <param name="categoryID"></param>
+        /// <returns></returns>
+        Task<List<YuleLog>> GetLogByCategoryID(Guid categoryID);
         #endregion
 
         #region Utility
