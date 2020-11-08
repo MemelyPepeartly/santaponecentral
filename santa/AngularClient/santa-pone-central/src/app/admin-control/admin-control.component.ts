@@ -8,6 +8,7 @@ import { GathererService } from '../services/gatherer.service';
 import { TagControlComponent } from './tag-control/tag-control.component';
 import { Client } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
+import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
 @Component({
   selector: 'app-admin-control',
@@ -33,12 +34,8 @@ export class AdminControlComponent implements OnInit
   public allSurveys: Array<Survey> = [];
   public allQuestions: Array<Question> = [];
   public allClients: Array<Client> = [];
-
-  public tagControlSelected: boolean = false;
-  public eventControlSelected: boolean = false;
-  public surveyControlSelected: boolean = false;
-  public questionControlSelected: boolean = false;
-  public autoAssignControlSelected: boolean = false;
+  public allCategories: Array<Category> = [];
+  public allYuleLogs: Array<YuleLog> = [];
 
   async ngOnInit() {
     this.allTags = [];
@@ -46,6 +43,8 @@ export class AdminControlComponent implements OnInit
     this.allEvents = [];
     this.allQuestions = [];
     this.allSurveys = [];
+    this.allCategories = [];
+    this.allYuleLogs = [];
 
     this.gatherer.allTags.subscribe((tagArray: Array<Tag>) => {
       this.allTags = tagArray;
@@ -62,6 +61,12 @@ export class AdminControlComponent implements OnInit
     this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
       this.allClients = clients;
     });
+    this.gatherer.allCategories.subscribe((categoryArray: Array<Category>) => {
+      this.allCategories = categoryArray;
+    });
+    this.gatherer.allYuleLogs.subscribe((logArray: Array<YuleLog>) => {
+      this.allYuleLogs = logArray;
+    });
 
     // Auth
     this.auth.userProfile$.subscribe(data => {
@@ -70,8 +75,5 @@ export class AdminControlComponent implements OnInit
     this.auth.isDev.subscribe((status: boolean) => {
       this.isDev = status;
     });
-    await this.gatherer.gatherAllEvents();
-    await this.gatherer.gatherAllSurveys();
-    await this.gatherer.gatherAllQuestions();
   }
 }
