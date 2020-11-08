@@ -15,8 +15,41 @@ export class YuleLogComponent implements OnInit {
   @Input() allCategories: Array<Category> = [];
   @Input() allYuleLogs: Array<YuleLog> = [];
 
+  gatheringAllCategories: boolean = false;
+  gatheringAllYuleLogs: boolean = false;
+
+  public selectedCategory: Category = new Category();
+
   async ngOnInit() {
+    this.gatherer.gatheringAllCategories.subscribe((status: boolean) => {
+      this.gatheringAllCategories = status;
+    });
+    this.gatherer.gatheringAllYuleLogs.subscribe((status: boolean) => {
+      this.gatheringAllYuleLogs = status;
+    });
+    await this.gatherer.gatherAllCategories();
     await this.gatherer.gatherAllYuleLogs();
   }
-
+  public setSelectedCategory(category: Category)
+  {
+    if(category != null)
+    {
+      this.selectedCategory = category;
+    }
+    else
+    {
+      this.selectedCategory = new Category();
+    }
+  }
+  public filterLogs() : Array<YuleLog>
+  {
+    if(this.selectedCategory.categoryID != undefined)
+    {
+      return this.allYuleLogs.filter((log: YuleLog) => {return log.category.categoryID == this.selectedCategory.categoryID})
+    }
+    else
+    {
+      return this.allYuleLogs
+    }
+  }
 }
