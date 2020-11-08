@@ -65,7 +65,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldAnswer"></param>
         /// <param name="newAnswer"></param>
         /// <returns></returns>
-        Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
+        Task logModifiedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
         /// <summary>
         /// Logs when an assignment status is changed with the requestor client, assignment's nickname, the old status, and the new status
         /// </summary>
@@ -74,21 +74,21 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldStatus"></param>
         /// <param name="newStatus"></param>
         /// <returns></returns>
-        Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
+        Task logModifiedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
         /// <summary>
         /// Logs a change to a profile has been made
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="modifiedProfile"></param>
         /// <returns></returns>
-        Task logChangedProfile(Client requestingClient, Profile modifiedProfile);
+        Task logModifiedProfile(Client requestingClient, Profile modifiedProfile);
         /// <summary>
         /// Logs a client has been changed
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="modifiedClient"></param>
         /// <returns></returns>
-        Task logChangedClient(Client requestingClient, Client modifiedClient);
+        Task logModifiedClient(Client requestingClient, Client modifiedClient);
 
         #endregion
 
@@ -110,10 +110,16 @@ namespace Santa.Api.Services.YuleLog
         Task saveLogs();
         #endregion
 
-
-
-
-
+        Task logCreatedNewMessage(Client requestingClient);
+        Task logCreatedNewClient(Client requestingClient);
+        Task logCreatedNewAuth0Client(Client requestingClient);
+        Task logCreatedNewTag(Client requestingClient);
+        Task logCreatedNewClientTagRelationship(Client requestingClient);
+        Task logDeletedClient(Client requestingClient);
+        Task logDeletedAssignment(Client requestingClient);
+        Task logDeletedTag(Client requestingClient);
+        Task logModifiedMessageReadStatus(Client requestingClient);
+        Task logModifiedClientStatus(Client requestingClient);
 
     }
 }

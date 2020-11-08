@@ -37,7 +37,7 @@ namespace Santa.Api.Services.YuleLog
                 }
             }
 
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.POSTED_ASSIGNMENT_CATEGORY), logMessage));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_ASSIGNMENT_CATEGORY), logMessage));
             await saveLogs();
         }
         #endregion
@@ -72,24 +72,24 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         #region PUT logs
-        public async Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
+        public async Task logModifiedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
+        public async Task logModifiedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change the assignment status for {assignmentNickname} from '{oldStatus.assignmentStatusName}' to '{newStatus.assignmentStatusName}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedProfile(Client requestingClient, Profile modifiedProfile)
+        public async Task logModifiedProfile(Client requestingClient, Profile modifiedProfile)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified data on a profile for {modifiedProfile.nickname}"));
             await saveLogs();
         }
-        public async Task logChangedClient(Client requestingClient, Client modifiedClient)
+        public async Task logModifiedClient(Client requestingClient, Client modifiedClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified a client's data for {modifiedClient.nickname}"));
             await saveLogs();
@@ -104,8 +104,9 @@ namespace Santa.Api.Services.YuleLog
         {
             Category errorCategory = await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY);
             string logMessage = "";
+
             #region post
-            if (errorCategory.categoryName == LoggingConstants.POSTED_ASSIGNMENT_CATEGORY)
+            if (errorCategory.categoryName == LoggingConstants.CREATED_ASSIGNMENT_CATEGORY)
             {
                 logMessage = "There was an error posting new assignments";
             }
@@ -156,6 +157,47 @@ namespace Santa.Api.Services.YuleLog
             #region delete
             #endregion
 
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.DELETED_CLIENT_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.DELETED_ASSIGNMENT_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_TAG_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.DELETED_TAG_CATEGORY)
+            {
+                logMessage = "";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY)
+            {
+                logMessage = "";
+            }
+
             await repository.CreateNewLogEntry(makeLogTemplateObject(errorCategory, logMessage));
             await saveLogs();
         }
@@ -180,5 +222,55 @@ namespace Santa.Api.Services.YuleLog
             return (await repository.GetAllCategories()).First(c => c.categoryName == categoryName);
         }
         #endregion
+
+        public Task logCreatedNewMessage(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logCreatedNewClient(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logCreatedNewAuth0Client(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logCreatedNewTag(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logCreatedNewClientTagRelationship(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logDeletedClient(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logDeletedAssignment(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logDeletedTag(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logModifiedMessageReadStatus(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task logModifiedClientStatus(Client requestingClient)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
