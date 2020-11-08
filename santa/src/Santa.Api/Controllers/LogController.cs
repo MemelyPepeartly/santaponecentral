@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Santa.Api.Services.YuleLog;
+using Santa.Logic.Interfaces;
 
 namespace Santa.Api.Controllers
 {
@@ -16,10 +17,11 @@ namespace Santa.Api.Controllers
     public class LogController : ControllerBase
     {
         private readonly IYuleLog yuleLogger;
-        public LogController(IYuleLog _yuleLog)
+        private readonly IRepository repository;
+        public LogController(IRepository _repository, IYuleLog _yuleLog)
         {
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             yuleLogger = _yuleLog ?? throw new ArgumentNullException(nameof(_yuleLog));
-
         }
 
         // GET: api/Log
@@ -31,7 +33,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:logs")]
         public async Task<ActionResult<List<Logic.Objects.Base_Objects.Logging.YuleLog>>> GetAllLogs()
         {
-            return Ok(new List<Logic.Objects.Base_Objects.Logging.YuleLog>());
+            return Ok((await repository.GetAllLogEntries()).OrderByDescending(l => l.logDate));
         }
 
         // GET: api/Log/Category/5
