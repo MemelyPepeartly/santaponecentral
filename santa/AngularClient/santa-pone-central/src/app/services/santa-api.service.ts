@@ -409,3 +409,27 @@ export class MissionBoardAPIService {
   }
 
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class YuleLogService {
+
+  constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
+  getAllCategories(): Observable<any> {
+    return this.http.get(endpoint + 'Category').pipe(
+      map(this.extractData));
+  }
+  getAllLogs(): Observable<any> {
+    return this.http.get(endpoint + 'Log').pipe(
+      map(this.extractData));
+  }
+  getAllLogsByCategoryID(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Log/Category/' + id).pipe(
+      map(this.extractData));
+  }
+}
