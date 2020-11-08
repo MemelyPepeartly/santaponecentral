@@ -22,3 +22,23 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+.categoryCardHeader
+{
+  display: block;
+  margin-left: 0px;
+}
+.subheaderText
+{
+  display: block;
+  padding-left: 3px !important;
+}
+@media (max-width:600px)
+{
+  .api-card
+  {
+    display: block;
+    width: 94%;
+    margin-left: 3%;
+    margin-right: 3%;
+  }
+}

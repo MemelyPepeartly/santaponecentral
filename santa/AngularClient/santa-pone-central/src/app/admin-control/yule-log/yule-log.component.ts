@@ -52,4 +52,8 @@ export class YuleLogComponent implements OnInit {
       return this.allYuleLogs
     }
   }
+  public async refreshLogs()
+  {
+    await this.gatherer.gatherAllYuleLogs();
+  }
 }
