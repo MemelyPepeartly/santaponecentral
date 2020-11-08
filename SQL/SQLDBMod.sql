@@ -105,6 +105,7 @@
 -- UPDATE app.SurveyOption SET displayText='Yes, but only a little' WHERE surveyOptionID='24537330-8fb0-4bc0-a251-93336ca53b93';
 
 -- ALTER TABLE app.ChatMessage ALTER COLUMN messageContent NVARCHAR(1000) NOT NULL;
+ALTER TABLE app.YuleLog ALTER COLUMN logText NVARCHAR(3000) NOT NULL;
 
 --TRUNCATE TABLE app.AssignmentStatus
 
@@ -131,4 +132,4 @@
 -- SELECT * FROM app.EventType;
 -- SELECT * FROM app.ChatMessage;
 -- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';
-SELECT * FROM app.YuleLog ORDER BY logDate
+-- SELECT * FROM app.YuleLog ORDER BY logDate;

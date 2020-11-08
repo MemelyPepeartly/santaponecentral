@@ -230,7 +230,19 @@ VALUES
     (NEWID(), 'Get Client By ID', 'A request to get a client by their ID was made'),
     (NEWID(), 'Get Profile', 'A profile was requested'),
     (NEWID(), 'Modified Assignment Status', 'A status was updated for an assignment'),
-    (NEWID(), 'Modified Answer', 'A survey answer was modified');
+    (NEWID(), 'Modified Answer', 'A survey answer was modified'),
+
+    (NEWID(), 'Created New Message', 'A new message was posted to a chat'),
+    (NEWID(), 'Modified Message Read Status', 'A message was marked as read'),
+    (NEWID(), 'New Client Created', 'A new client object has been created'),
+    (NEWID(), 'New Auth0 Account Created', 'A new Auth0 account was created for a client'),
+    (NEWID(), 'Deleted Client', 'A client has been deleted'),
+    (NEWID(), 'Deleted Assignment', 'An assignment has been removed from a client'),
+    (NEWID(), 'Modified Client Status', 'A client''s status was modified'),
+    (NEWID(), 'Added New Tag', 'A new tag was created'),
+    (NEWID(), 'Added New Tag To Client', 'A tag was assigned to a client');
+
+
 
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;
