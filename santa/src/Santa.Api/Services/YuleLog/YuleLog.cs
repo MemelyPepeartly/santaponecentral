@@ -167,7 +167,7 @@ namespace Santa.Api.Services.YuleLog
                 logID = Guid.NewGuid(),
                 category = logicCategory,
                 logDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
-                logtext = logMessage
+                logText = logMessage
             };
             return logicLog;
         }

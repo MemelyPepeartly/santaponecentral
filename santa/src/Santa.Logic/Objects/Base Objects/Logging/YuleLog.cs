@@ -9,6 +9,6 @@ namespace Santa.Logic.Objects.Base_Objects.Logging
         public Guid logID { get; set; }
         public Category category { get; set; }
         public DateTime logDate { get; set; }
-        public string logtext { get; set; }
+        public string logText { get; set; }
     }
 }

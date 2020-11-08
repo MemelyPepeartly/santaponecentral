@@ -900,7 +900,7 @@ namespace Santa.Data.Repository
                 logID = contextLog.LogId,
                 category = MapCategory(contextLog.Category),
                 logDate = contextLog.LogDate, 
-                logtext = contextLog.LogText
+                logText = contextLog.LogText
             };
             return logicLog;
         }
@@ -911,7 +911,7 @@ namespace Santa.Data.Repository
                 LogId = logicLog.logID,
                 CategoryId = logicLog.category.categoryID,
                 LogDate = logicLog.logDate, 
-                LogText = logicLog.logtext
+                LogText = logicLog.logText
             };
             return contextLog;
         }
