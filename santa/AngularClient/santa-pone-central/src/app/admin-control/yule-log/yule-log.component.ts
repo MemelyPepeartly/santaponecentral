@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { YuleLogService } from 'src/app/services/santa-api.service';
 import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 
 @Component({
@@ -8,11 +10,13 @@ import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 })
 export class YuleLogComponent implements OnInit {
 
-  constructor() { }
+  constructor(public YuleLogService: YuleLogService, public gatherer: GathererService) { }
 
-  @Input() categories: Array<Category> = [];
+  @Input() allCategories: Array<Category> = [];
+  @Input() allYuleLogs: Array<YuleLog> = [];
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.gatherer.gatherAllYuleLogs();
   }
 
 }

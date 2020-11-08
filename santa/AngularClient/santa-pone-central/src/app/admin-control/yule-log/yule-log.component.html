@@ -1,9 +1,8 @@
-<!-- Add global event card-->
 <mat-card mat-stroked class="api-card">
   <mat-card-content>
     <mat-list>
       <div mat-subheader>Categories</div>
-      <mat-list-item *ngFor="let category of categories">
+      <mat-list-item *ngFor="let category of allCategories">
         <mat-icon mat-list-icon>label_important</mat-icon>
         <div mat-line>{{category.categoryName}}</div>
         <div mat-line>{{category.categoryDescription}}</div>
