@@ -333,7 +333,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_ASSIGNMENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
 
@@ -399,7 +399,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_ASSIGNMENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -722,7 +722,7 @@ namespace Santa.Api.Controllers
             try
             {
                 RelationshipMeta assignment = targetAgent.assignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
-                await yuleLogger.logChangedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
+                await yuleLogger.logModifiedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
                 await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
                 await repository.SaveAsync();
             }

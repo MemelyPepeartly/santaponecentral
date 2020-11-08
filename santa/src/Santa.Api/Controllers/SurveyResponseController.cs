@@ -74,7 +74,7 @@ namespace Santa.Api.Controllers
                 // Try to save the changes and log the outcome.
                 try
                 {
-                    await yuleLogger.logChangedAnswer(checkerClient, logicSurveyResponse.surveyQuestion, oldResponse, model.responseText);
+                    await yuleLogger.logModifiedAnswer(checkerClient, logicSurveyResponse.surveyQuestion, oldResponse, model.responseText);
                     await repository.SaveAsync();
                     return Ok(await repository.GetSurveyResponseByIDAsync(surveyResponseID));
                 }
