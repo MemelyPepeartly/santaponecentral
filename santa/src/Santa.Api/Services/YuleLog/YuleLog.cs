@@ -65,7 +65,7 @@ namespace Santa.Api.Services.YuleLog
         }
         public async Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory)
         {
-            string logMessage = requestedHistory.relationXrefID != null ? $"{requestingClient.nickname} requested to get a history between admins and {requestedHistory.conversationClient.clientNickname} about an assignment ({requestedHistory.assignmentRecieverClient.clientNickname}) " : $"{requestingClient.nickname} requested to get a general history between adminsd and {requestedHistory.conversationClient.clientNickname}";
+            string logMessage = requestedHistory.relationXrefID != null ? $"{requestingClient.nickname} requested to get a history between admins and {requestedHistory.conversationClient.clientNickname} about an assignment ({requestedHistory.assignmentRecieverClient.clientNickname}) " : $"{requestingClient.nickname} requested to get a general history between admins and {requestedHistory.conversationClient.clientNickname}";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY), logMessage));
             await saveLogs();
         }
