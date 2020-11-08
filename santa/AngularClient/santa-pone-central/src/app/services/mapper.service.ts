@@ -10,6 +10,7 @@ import { Message, ClientMeta, MessageHistory, ClientChatMeta } from 'src/classes
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
 import { Note } from 'src/classes/note'
+import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -381,6 +382,27 @@ export class MapService {
       noteContents: note.noteContents
     }
     return mappedNote;
+  }
+  mapCategory(category) : Category
+  {
+    let mappedCategory: Category =
+    {
+      categoryID: category.categoryID,
+      categoryName: category.categoryName,
+      categoryDescription: category.categoryDescription
+    };
+    return mappedCategory;
+  }
+  mapYuleLog(log) : YuleLog
+  {
+    let mappedYuleLog: YuleLog =
+    {
+      logID: log.logID,
+      category: this.mapCategory(log.category),
+      logDate: new Date(log.logDate),
+      logText: log.logText
+    };
+    return mappedYuleLog;
   }
 }
 @Injectable({

@@ -31,11 +31,12 @@ export class EventControlComponent implements OnInit {
 
   public gatheringAllEvents: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.constructFormGroups();
     this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
       this.gatheringAllEvents = status;
-    })
+    });
+    await this.gatherer.gatherAllEvents();
   }
   private constructFormGroups() {
   }

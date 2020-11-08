@@ -63,6 +63,8 @@ import { ClientAssignmentInfoComponent } from './headquarters/client-assignment-
 import { UnauthorizedComponent } from './error-pages/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
+import { YuleLogComponent } from './admin-control/yule-log/yule-log.component';
+import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.component';
 
 
 @NgModule({
@@ -115,7 +117,9 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
       ClientAssignmentInfoComponent,
       UnauthorizedComponent,
       NotFoundComponent,
-      StatusCheckerComponent
+      StatusCheckerComponent,
+      YuleLogComponent,
+      LogTableComponent
    ],
    entryComponents: [
       LoginComponent

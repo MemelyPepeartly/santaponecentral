@@ -16,6 +16,9 @@ using Santa.Api.SendGrid;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Logging;
+using Santa.Api.Services.YuleLog;
+using System.Security.Claims;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Santa.Api.Controllers
 {
@@ -28,12 +31,14 @@ namespace Santa.Api.Controllers
         private readonly IRepository repository;
         private readonly IAuthHelper authHelper;
         private readonly IMailbag mailbag;
+        private readonly IYuleLog yuleLogger;
 
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag)
+        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
         // GET: api/Client
         /// <summary>
@@ -44,11 +49,24 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClients()
         {
+            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
             List<Logic.Objects.Client> clients = await repository.GetAllClients();
             if (clients == null)
             {
                 return NoContent();
             }
+
+            try
+            {
+                await yuleLogger.logGetAllClients(requestingClient);
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+            
             return Ok(clients.OrderBy(c => c.nickname));
         }
 
@@ -61,12 +79,24 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
         {
-            List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
-            if (clients == null)
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
             {
-                return NoContent();
+                List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
+                if (clients == null)
+                {
+                    return NoContent();
+                }
+                await yuleLogger.logGetAllClients(requestingClient);
+                return Ok(clients.OrderBy(c => c.nickname));
             }
-            return Ok(clients.OrderBy(c => c.nickname));
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+            
         }
 
         // GET: api/Client/5
@@ -79,7 +109,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            return Ok(await repository.GetClientByIDAsync(clientID));
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
+            try
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // GET: api/Client/Email/email@domain.com
@@ -92,8 +134,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(string clientEmail)
         {
-            Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-            return Ok(logicClient);
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
+            try
+            {
+                Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
 
@@ -263,11 +316,26 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            List<string> newAssignments = new List<string>();
+            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
+
             foreach (Guid assignmentID in assignmentsModel.assignments)
             {
                 await repository.CreateClientRelationByID(clientID, assignmentID, assignmentsModel.eventTypeID, assignmentsModel.assignmentStatusID);
+                newAssignments.Add(logicClientList.First(c => c.clientID == assignmentID).nickname);
             }
-            await repository.SaveAsync();
+
+            try
+            {
+                await yuleLogger.logCreatedNewAssignments(requestingClient, (await repository.GetClientByIDAsync(clientID)), newAssignments);
+                await repository.SaveAsync();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
 
             // Get new client with recipients, and send the client a notification they have new assignments for an event
             Client updatedClient = await repository.GetClientByIDAsync(clientID);
@@ -287,6 +355,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
+
             Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
             AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
@@ -304,15 +375,33 @@ namespace Santa.Api.Controllers
                     clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
                 }
             }
-
-            await repository.SaveAsync();
-
-            foreach (Client massMailer in clientsToEmail)
+            try
             {
-                await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
-            }
+                // Foreach mass mailer being given assignments
+                foreach(Client massMailer in clientsToEmail)
+                {
+                    List<string> newAssignments = new List<string>();
+                    // Foreach pairing in the pairing model where the senderID equals the current mass mailer being given assignments
+                    foreach (Pairing pair in model.pairings.Where(p => p.senderAgentID == massMailer.clientID).ToList())
+                    {
+                        newAssignments.Add(allClients.First(c => c.clientID == pair.assignmentClientID).nickname);
+                    }
+                    await yuleLogger.logCreatedNewAssignments(requestingClient, massMailer, newAssignments);
+                }
 
-            return Ok();
+                await repository.SaveAsync();
+                foreach (Client massMailer in clientsToEmail)
+                {
+                    await mailbag.sendAssignedRecipientEmail(massMailer, logicCardEvent);
+                }
+
+                return Ok();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
 
@@ -626,15 +715,29 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
-            await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
-            await repository.SaveAsync();
+            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client targetAgent = await repository.GetClientByIDAsync(clientID);
+            AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
+
+            try
+            {
+                RelationshipMeta assignment = targetAgent.assignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
+                await yuleLogger.logChangedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
+                await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
+                await repository.SaveAsync();
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
 
             Client logicClient = await repository.GetClientByIDAsync(clientID);
             List<RelationshipMeta> logicMetas = new List<RelationshipMeta>();
             logicMetas.AddRange(logicClient.assignments);
             logicMetas.AddRange(logicClient.senders);
 
-            return (logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
+            return Ok(logicMetas.First(r => r.clientRelationXrefID == assignmentRelationshipID));
         }
         // DELETE: api/Client/5
         /// <summary>

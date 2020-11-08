@@ -17,6 +17,7 @@ namespace Santa.Data.Entities
 
         public virtual DbSet<AssignmentStatus> AssignmentStatus { get; set; }
         public virtual DbSet<BoardEntry> BoardEntry { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<ChatMessage> ChatMessage { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientRelationXref> ClientRelationXref { get; set; }
@@ -32,6 +33,7 @@ namespace Santa.Data.Entities
         public virtual DbSet<SurveyQuestionXref> SurveyQuestionXref { get; set; }
         public virtual DbSet<SurveyResponse> SurveyResponse { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
+        public virtual DbSet<YuleLog> YuleLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -105,6 +107,28 @@ namespace Santa.Data.Entities
                     .WithMany(p => p.BoardEntry)
                     .HasForeignKey(x => x.EntryTypeId)
                     .HasConstraintName("FK__BoardEntr__entry__1983DF6B");
+            });
+
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.ToTable("Category", "app");
+
+                entity.Property(e => e.CategoryId)
+                    .HasColumnName("categoryID")
+                    .HasViewColumnName("categoryID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CategoryDescription)
+                    .IsRequired()
+                    .HasColumnName("categoryDescription")
+                    .HasViewColumnName("categoryDescription")
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.CategoryName)
+                    .IsRequired()
+                    .HasColumnName("categoryName")
+                    .HasViewColumnName("categoryName")
+                    .HasMaxLength(1000);
             });
 
             modelBuilder.Entity<ChatMessage>(entity =>
@@ -703,6 +727,40 @@ namespace Santa.Data.Entities
                     .HasColumnName("tagName")
                     .HasViewColumnName("tagName")
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<YuleLog>(entity =>
+            {
+                entity.HasKey(x => x.LogId)
+                    .HasName("PK__YuleLog__7839F62DD7E28393");
+
+                entity.ToTable("YuleLog", "app");
+
+                entity.Property(e => e.LogId)
+                    .HasColumnName("logID")
+                    .HasViewColumnName("logID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CategoryId)
+                    .HasColumnName("categoryID")
+                    .HasViewColumnName("categoryID");
+
+                entity.Property(e => e.LogDate)
+                    .HasColumnName("logDate")
+                    .HasViewColumnName("logDate")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.LogText)
+                    .IsRequired()
+                    .HasColumnName("logText")
+                    .HasViewColumnName("logText")
+                    .HasMaxLength(1000);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.YuleLog)
+                    .HasForeignKey(x => x.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__YuleLog__categor__1C2B41EC");
             });
 
             OnModelCreatingPartial(modelBuilder);

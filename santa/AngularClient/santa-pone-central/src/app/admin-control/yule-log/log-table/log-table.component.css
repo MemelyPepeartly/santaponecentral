@@ -1,0 +1,21 @@
+.data-table
+{
+  display: block;
+  width: 100%;
+}
+.logIDHeader
+{
+  width: 10%;
+}
+.logCategoryHeader
+{
+  width: 15%;
+}
+.logTextHeader
+{
+  width: 55%;
+}
+.logDateHeader
+{
+  width: 30%;
+}

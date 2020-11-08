@@ -8,6 +8,9 @@ using Santa.Logic.Objects;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Objects.Information_Objects;
+using Santa.Logic.Objects.Base_Objects.Logging;
+using YuleLog = Santa.Logic.Objects.Base_Objects.Logging.YuleLog;
+using Category = Santa.Logic.Objects.Base_Objects.Logging.Category;
 
 namespace Santa.Data.Repository
 {
@@ -1200,6 +1203,75 @@ namespace Santa.Data.Repository
             Note contextNote = await santaContext.Note.FirstOrDefaultAsync(n => n.NoteId == noteID);
 
             santaContext.Note.Remove(contextNote);
+        }
+        #endregion
+
+        #region Category
+        public async Task CreateNewCategory(Category newCategory)
+        {
+            Data.Entities.Category contextCategory = Mapper.MapCategory(newCategory);
+            await santaContext.Category.AddAsync(contextCategory);
+        }
+
+        public async Task<List<Category>> GetAllCategories()
+        {
+            return (await santaContext.Category.ToListAsync()).Select(Mapper.MapCategory).ToList();
+        }
+
+        public async Task<Category> GetCategoryByID(Guid categoryID)
+        {
+            Category logicCategory = Mapper.MapCategory(await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == categoryID));
+            return logicCategory;
+        }
+
+        public async Task UpdateCategory(Category targetCategory)
+        {
+            Entities.Category contextCategory = await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == targetCategory.categoryID);
+            contextCategory.CategoryName = targetCategory.categoryName;
+            contextCategory.CategoryDescription = targetCategory.categoryDescription;
+
+            santaContext.Category.Update(contextCategory);
+        }
+
+        public async Task DeleteCategoryByID(Guid categoryID)
+        {
+            Entities.Category contextCategory = await santaContext.Category.FirstOrDefaultAsync(c => c.CategoryId == categoryID);
+            santaContext.Category.Remove(contextCategory);
+        }
+        #endregion
+
+        #region Yule Log
+        public async Task CreateNewLogEntry(YuleLog newLog)
+        {
+            Data.Entities.YuleLog contextLog = Mapper.MapLog(newLog);
+            await santaContext.YuleLog.AddAsync(contextLog);
+        }
+
+        public async Task<List<YuleLog>> GetAllLogEntries()
+        {
+            List<YuleLog> logicLogList = (await santaContext.YuleLog
+                .Include(yl => yl.Category)
+                .ToListAsync())
+                .Select(Mapper.MapLog)
+                .ToList();
+            return logicLogList;
+        }
+
+        public async Task<YuleLog> GetLogByID(Guid logID)
+        {
+            YuleLog logicLog = Mapper.MapLog(await santaContext.YuleLog.FirstOrDefaultAsync(yl => yl.LogId == logID));
+            return logicLog;
+        }
+
+        public async Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID)
+        {
+            List<YuleLog> logicLogList = (await santaContext.YuleLog
+                .Include(yl => yl.Category)
+                .Where(yl => yl.CategoryId == categoryID)
+                .ToListAsync())
+                .Select(Mapper.MapLog)
+                .ToList();
+            return logicLogList;
         }
         #endregion
 

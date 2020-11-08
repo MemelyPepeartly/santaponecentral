@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Santa.Api.Services.YuleLog;
+using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 
@@ -20,10 +22,11 @@ namespace Santa.Api.Controllers
     public class HistoryController : ControllerBase
     {
         private readonly IRepository repository;
-        public HistoryController(IRepository _repository)
+        private readonly IYuleLog yuleLogger;
+        public HistoryController(IRepository _repository, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
         // GET: api/History
@@ -36,9 +39,28 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:histories")]
         public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync([Required]Guid subjectID)
         {
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            List<MessageHistory> listLogicHistory = await repository.GetAllChatHistories(subjectClient);
-            return Ok(listLogicHistory);
+            if(requestingClient.clientID == subjectID)
+            {
+                try
+                {
+                    await yuleLogger.logGetAllHistories(requestingClient);
+                    List<MessageHistory> listLogicHistory = await repository.GetAllChatHistories(subjectClient);
+                    return Ok(listLogicHistory);
+                }
+                catch(Exception)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
+            }
+            else
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
         }
 
         // GET: api/History/Relationship/5
@@ -53,13 +75,26 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required]Guid subjectID)
         {
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            if (IsAuthorized(subjectClient))
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if (requestingClient.email == subjectClient.email)
             {
-                MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
-                return Ok(logicHistory);
+                try
+                {
+                    MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
+                    await yuleLogger.logGetSpecificHistory(requestingClient, logicHistory);
+                    return Ok(logicHistory);
+                }
+                catch(Exception)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
+                
             }
             else
             {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
@@ -84,16 +119,28 @@ namespace Santa.Api.Controllers
             Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             // If the client isn't authorized, they get a 401, and a prompt spritz from the security spray bottle 
-            if (!IsAuthorized(checkerClient))
+            if (checkerClient.email != subjectClient.email)
             {
+                await yuleLogger.logError(checkerClient, LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
             // If the client is an admin, or the conversationClientID and subjectID are equal (Implying that they are just looking at their own general chat on profile)
             if(checkerClient.isAdmin || (conversationClientID == subjectID && checkerClient.clientID == subjectID))
             {
-                MessageHistory listLogicMessages = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
-                return Ok(listLogicMessages);
+                try
+                {
+                    MessageHistory logicHistory = await repository.GetGeneralChatHistoryBySubjectIDAsync(conversationClient, subjectClient);
+                    await yuleLogger.logGetSpecificHistory(checkerClient, logicHistory);
+                    return Ok(logicHistory);
+                }
+                catch(Exception)
+                {
+                    await yuleLogger.logError(checkerClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
+
             }
+            await yuleLogger.logError(checkerClient, LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY);
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
@@ -108,7 +155,9 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid subjectID)
         {
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            if (IsAuthorized(subjectClient))
+            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if (requestingClient.email == subjectClient.email)
             {
                 List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
                 return Ok(listLogicMessageHistory);
@@ -117,14 +166,6 @@ namespace Santa.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
-
-        }
-        private bool IsAuthorized(Client logicClient)
-        {
-            // Gets the claims from the token
-            string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-
-            return claimEmail == logicClient.email;
         }
     }
 }

@@ -13,6 +13,8 @@ using Santa.Logic.Objects;
 using System.Security.Claims;
 using Santa.Api.Models;
 using Santa.Api.Models.Profile_Models;
+using Santa.Api.Services.YuleLog;
+using Santa.Logic.Constants;
 
 namespace Santa.Api.Controllers
 {
@@ -23,10 +25,11 @@ namespace Santa.Api.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly IRepository repository;
-        public ProfileController(IRepository _repository)
+        private readonly IYuleLog yuleLogger;
+        public ProfileController(IRepository _repository, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
         // GET: api/Profile/email@domain.com
@@ -44,20 +47,26 @@ namespace Santa.Api.Controllers
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
             Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            
+            // Log the profile request
+            try
+            {
+                await yuleLogger.logGetProfile(checkerClient, logicProfile);
+            }
+            // If it fails, log the error instead and stop the transaction
+            catch(Exception)
+            {
+                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
 
             if (logicProfile.clientID == checkerClient.clientID)
             {
-                if (logicProfile == null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(logicProfile);
-                }
+                return Ok(logicProfile);
             }
             else
             {
+                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
@@ -74,12 +83,25 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
             Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            // Checks to make sure the token's client is only getting the info for its own profile
-            if (logicClient.clientID == checkerClient.clientID)
+            // Log the profile request
+            try
             {
+                await yuleLogger.logChangedProfile(checkerClient, logicProfile);
+            }
+            // If it fails, log the error instead and stop the transaction
+            catch (Exception)
+            {
+                await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
+            // Checks to make sure the token's client is only getting the info for its own profile
+            if (logicProfile.clientID == checkerClient.clientID)
+            {
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
                 logicClient.address = new Address()
                 {
                     addressLineOne = newAddress.clientAddressLine1,
@@ -89,21 +111,22 @@ namespace Santa.Api.Controllers
                     country = newAddress.clientCountry,
                     postalCode = newAddress.clientPostalCode
                 };
-                await repository.UpdateClientByIDAsync(logicClient);
-                await repository.SaveAsync();
-
-                Profile logicProfile = await repository.GetProfileByIDAsync(checkerClient.clientID);
-                if (logicProfile == null)
+                
+                try
                 {
-                    return NoContent();
+                    await repository.UpdateClientByIDAsync(logicClient);
+                    await repository.SaveAsync();
+                    return Ok(await repository.GetProfileByIDAsync(checkerClient.clientID));
                 }
-                else
+                catch(Exception)
                 {
-                    return Ok(logicProfile);
-                }
+                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }  
             }
             else
             {
+                await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_PROFILE_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
@@ -113,19 +136,29 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+            Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
             Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             // If the checked client is allowed based on token claims, and the checker client has an assignment ID that match the one in the URI (To stop modifying of anyone elses assignments)
-            if (logicClient.clientID == checkerClient.clientID && checkerClient.assignments.Any(a => a.clientRelationXrefID == assignmentXrefID))
+            if (logicProfile.clientID == checkerClient.clientID && checkerClient.assignments.Any(a => a.clientRelationXrefID == assignmentXrefID))
             {
-                // Logic needed here for updating assignment status
-                await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
-                await repository.SaveAsync();
+                RelationshipMeta assignment = checkerClient.assignments.First(a => a.clientRelationXrefID == assignmentXrefID);
+                AssignmentStatus newStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
 
-                // Update profile and send back the updated recipient
-                Profile logicProfile = await repository.GetProfileByEmailAsync(logicClient.email);
-                return Ok(logicProfile.assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
+                try
+                {
+                    // Update profile and send back the updated recipient
+                    await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
+                    await yuleLogger.logChangedAssignmentStatus(checkerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
+                    await repository.SaveAsync();
+                    
+                    return Ok((await repository.GetProfileByIDAsync(checkerClient.clientID)).assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
+                }
+                catch(Exception)
+                {
+                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
             }
             else
             {

@@ -135,6 +135,19 @@ CREATE TABLE app.BoardEntry
     dateTimeEntered DATETIME NOT NULL,
     CONSTRAINT boardEntryID UNIQUE (threadNumber, postNumber) 
 );
+CREATE TABLE app.Category
+(
+    categoryID UNIQUEIDENTIFIER PRIMARY KEY,
+    categoryName NVARCHAR(1000) NOT NULL,
+    categoryDescription NVARCHAR(1000) NOT NULL
+);
+CREATE TABLE app.YuleLog
+(
+    logID UNIQUEIDENTIFIER PRIMARY KEY,
+    logDate DATETIME NOT NULL,
+    categoryID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Category(categoryID),
+    logText NVARCHAR(1000) NOT NULL
+);
 
 GO
 CREATE TRIGGER app.cascadeTrigger ON app.Client INSTEAD OF DELETE

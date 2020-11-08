@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService } from './santa-api.service';
+import { SantaApiGetService, YuleLogService } from './santa-api.service';
 import { MapService } from './mapper.service';
 import { AssignmentStatus, Client } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
@@ -8,13 +8,14 @@ import { EventType } from 'src/classes/eventType';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Status } from 'src/classes/status';
 import { Message } from 'src/classes/message';
+import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GathererService {
 
-  constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
+  constructor(private SantaApiGet: SantaApiGetService, private YuleLogService: YuleLogService, private ApiMapper: MapService) { }
 
   public onSelectedClient: boolean = false;
 
@@ -73,6 +74,18 @@ export class GathererService {
     return this._gatheringAllAssignmentsStatuses.asObservable();
   }
 
+  private _gatheringAllCategories: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllCategories()
+  {
+    return this._gatheringAllCategories.asObservable();
+  }
+
+  private _gatheringAllYuleLogs: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllYuleLogs()
+  {
+    return this._gatheringAllYuleLogs.asObservable();
+  }
+
   /* BEHAVIOR SUBJECTS FOR DATA */
   private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
   private _allTruncatedClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
@@ -83,6 +96,9 @@ export class GathererService {
   private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([])
   private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([])
   private _allAssignmentStatuses: BehaviorSubject<Array<AssignmentStatus>> = new BehaviorSubject([])
+  private _allCategories: BehaviorSubject<Array<Category>> = new BehaviorSubject([])
+  private _allYuleLogs: BehaviorSubject<Array<YuleLog>> = new BehaviorSubject([])
+
 
 
   get allClients()
@@ -163,6 +179,24 @@ export class GathererService {
   private updateAllAssignmentStatuses(assignmentStatusArray: Array<AssignmentStatus>)
   {
     this._allAssignmentStatuses.next(assignmentStatusArray);
+  }
+
+  get allCategories()
+  {
+    return this._allCategories.asObservable();
+  }
+  private updateAllCategories(categoryArray: Array<Category>)
+  {
+    this._allCategories.next(categoryArray);
+  }
+
+  get allYuleLogs()
+  {
+    return this._allYuleLogs.asObservable();
+  }
+  private updateAllYuleLogs(logArray: Array<YuleLog>)
+  {
+    this._allYuleLogs.next(logArray);
   }
 
   /* GATHERING METHODS */
@@ -350,6 +384,46 @@ export class GathererService {
     this.updateAllAssignmentStatuses(assignmentStatusList);
     this._gatheringAllAssignmentsStatuses.next(false);
   }
+  public async gatherAllCategories()
+  {
+    this._gatheringAllCategories.next(true);
+    this.updateAllCategories([])
+    let categoryList: Array<Category> = []
+
+    var res = await this.YuleLogService.getAllCategories().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all categories in the gatherer");
+      console.log(err);
+      console.groupEnd();
+    });
+
+    for(let i = 0; i < res.length; i++)
+    {
+      categoryList.push(this.ApiMapper.mapCategory(res[i]));
+    }
+    this.updateAllCategories(categoryList);
+    this._gatheringAllCategories.next(false);
+  }
+  public async gatherAllYuleLogs()
+  {
+    this._gatheringAllYuleLogs.next(true);
+    this.updateAllYuleLogs([])
+    let yuleLogList: Array<YuleLog> = []
+
+    var res = await this.YuleLogService.getAllLogs().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all logs in the gatherer");
+      console.log(err);
+      console.groupEnd();
+    });
+
+    for(let i = 0; i < res.length; i++)
+    {
+      yuleLogList.push(this.ApiMapper.mapYuleLog(res[i]));
+    }
+    this.updateAllYuleLogs(yuleLogList);
+    this._gatheringAllYuleLogs.next(false);
+  }
 
   // Utility methods
   public async allGather()
@@ -361,7 +435,6 @@ export class GathererService {
     await this.gatherAllTags();
     await this.gatherAllStatuses();
     await this.gatherAllAssignmentStatuses();
-    //await this.gatherAllMessages();
   }
   public clearAll()
   {
@@ -372,6 +445,6 @@ export class GathererService {
     this.updateAllTags([]);
     this.updateAllStatuses([]);
     this.updateAllAssignmentStatuses([]);
-    //this.updateAllMessages([]);
+    this.updateAllMessages([]);
   }
 }

@@ -39,11 +39,12 @@ export class SurveyControlComponent implements OnInit {
 
   public gatheringAllSurveys: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
       this.gatheringAllSurveys = status;
     });
     this.constructFormGroups();
+    await this.gatherer.gatherAllSurveys();
   }
   private constructFormGroups() {
 

@@ -219,6 +219,19 @@ VALUES
     (NEWID(), 'Shipping', 'Assignment is on its way! Cheer inbound!'),
     (NEWID(), 'Completed', 'Your delivery of cheer has made its mark! Mission accomplished!');
 
+INSERT INTO app.Category (categoryID, categoryName, categoryDescription)
+VALUES
+    (NEWID(), 'Get All History', 'A list of all histories was requested'),
+    (NEWID(), 'Modified Profile', 'A modifcation of a profile was made'),
+    (NEWID(), 'Get History', 'A message history object was requested'),
+    (NEWID(), 'Assignments Given', 'An assignment or list of assignments was given to a client'),
+    (NEWID(), 'Modified Client', 'A client''s information was modified'),
+    (NEWID(), 'Get All Clients', 'A list of all clients was requested'),
+    (NEWID(), 'Get Client By ID', 'A request to get a client by their ID was made'),
+    (NEWID(), 'Get Profile', 'A profile was requested'),
+    (NEWID(), 'Modified Assignment Status', 'A status was updated for an assignment'),
+    (NEWID(), 'Modified Answer', 'A survey answer was modified');
+
 SELECT * FROM app.SurveyQuestion;
 SELECT * FROM app.Survey;
 SELECT * FROM app.SurveyOption;
