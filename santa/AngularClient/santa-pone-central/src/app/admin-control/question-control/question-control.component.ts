@@ -29,11 +29,12 @@ export class QuestionControlComponent implements OnInit {
 
   public gatheringAllQuestions: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.constructFormGroups();
     this.gatherer.gatheringAllQuestions.subscribe((status: boolean) => {
       this.gatheringAllQuestions = status;
-    })
+    });
+    await this.gatherer.gatherAllQuestions();
   }
   private constructFormGroups() {
   }
