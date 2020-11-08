@@ -1,10 +1,24 @@
 .api-card {
-  width: 325px;
+  width: 26%;
+  min-width: 200px;
   height: 100%;
-  margin: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 2%;
+  margin-right: 2%;
   display: inline-block;
   vertical-align: top;
   outline: 2px;
   outline-color: rgb(170, 170, 170);
   border-radius: 8px;
+}
+.logDisplayCard
+{
+  width: 68%;
+  margin-left: 0px;
+}
+.categoryListItem
+{
+  margin-top: 5px;
+  margin-bottom: 5px;
 }

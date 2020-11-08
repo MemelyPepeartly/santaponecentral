@@ -1,12 +1,39 @@
 <mat-card mat-stroked class="api-card">
-  <mat-card-content>
+  <mat-card-content *ngIf="!gatheringAllCategories && !gatheringAllYuleLogs">
     <mat-list>
       <div mat-subheader>Categories</div>
-      <mat-list-item *ngFor="let category of allCategories">
-        <mat-icon mat-list-icon>label_important</mat-icon>
-        <div mat-line>{{category.categoryName}}</div>
-        <div mat-line>{{category.categoryDescription}}</div>
-      </mat-list-item>
+      <mat-selection-list [multiple]="false">
+        <mat-list-option class="categoryListItem mat-elevation-z3" (click)="setSelectedCategory(null)">
+          <mat-icon mat-list-icon>label_important</mat-icon>
+          <div mat-line>All Yule Logs</div>
+          <div mat-line>Display all yule logs</div>
+        </mat-list-option>
+        <mat-list-option class="categoryListItem mat-elevation-z3" *ngFor="let category of allCategories" [value]="category" (click)="setSelectedCategory(category)">
+          <mat-icon mat-list-icon>rule</mat-icon>
+          <div mat-line>{{category.categoryName}}</div>
+          <div mat-line>{{category.categoryDescription}}</div>
+        </mat-list-option>
+      </mat-selection-list>
     </mat-list>
+  </mat-card-content>
+  <mat-card-content *ngIf="gatheringAllCategories || gatheringAllYuleLogs">
+    <app-small-loading-spin [spinnerType]="3"></app-small-loading-spin>
+  </mat-card-content>
+</mat-card>
+
+<mat-card mat-stroked class="api-card logDisplayCard mat-elevation-z3">
+  <mat-card-header *ngIf="selectedCategory.categoryID != undefined">
+    <mat-card-title>{{selectedCategory.categoryName}}</mat-card-title>
+    <mat-card-subtitle>{{selectedCategory.categoryDescription}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-header *ngIf="selectedCategory.categoryID == undefined">
+    <mat-card-title>All Yule Logs</mat-card-title>
+    <mat-card-subtitle>All yule log entries</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content *ngIf="!gatheringAllCategories && !gatheringAllYuleLogs">
+    <app-log-table style="width: 100%;" [yuleLogs]="filterLogs()"></app-log-table>
+  </mat-card-content>
+  <mat-card-content *ngIf="gatheringAllCategories || gatheringAllYuleLogs">
+    <app-small-loading-spin [spinnerType]="3"></app-small-loading-spin>
   </mat-card-content>
 </mat-card>
