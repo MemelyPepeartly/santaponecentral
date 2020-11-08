@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoryController : ControllerBase
     {
         private readonly IRepository repository;
@@ -24,9 +26,9 @@ namespace Santa.Api.Controllers
         // GET: api/Category
         [HttpGet]
         [Authorize(Policy = "read:categories")]
-        public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllCategories()
+        public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
-            return Ok();
+            return Ok((await repository.GetAllCategories()).OrderBy(c => c.categoryName));
         }
 
         // GET: api/Category/5
