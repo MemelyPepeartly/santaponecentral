@@ -18,12 +18,12 @@
     <mat-tab label="Survey Control" *ngIf="isDev">
       <div class="componentDiv surveyControlDiv">
         <app-survey-control [allSurveys]="allSurveys" [allQuestions]="allQuestions"></app-survey-control>
-        <app-question-control [allQuestions]="allQuestions" *ngIf="questionControlSelected"></app-question-control>
+        <app-question-control [allQuestions]="allQuestions"></app-question-control>
       </div>
     </mat-tab>
     <mat-tab label="Yule Log">
       <div class="componentDiv yuleLogControlDiv">
-        <app-yule-log></app-yule-log>
+        <app-yule-log [allCategories]="allCategories" [allYuleLogs]="allYuleLogs"></app-yule-log>
       </div>
     </mat-tab>
   </mat-tab-group>
