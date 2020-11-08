@@ -69,6 +69,11 @@
   text-overflow: ellipsis;
   max-width: 150px;
 }
+.selectAllButtonDiv
+{
+  display: block;
+  margin-bottom: 10px;
+}
 
 /* Scrollbar Styling */
 .scrollDiv

@@ -22,7 +22,6 @@ export class AgentPairingControlComponent implements OnInit {
 
   public selectedPotentialAssignments: Array<Client> = [];
 
-
   ngOnInit(): void {
   }
   public async postAssignmentPairings()

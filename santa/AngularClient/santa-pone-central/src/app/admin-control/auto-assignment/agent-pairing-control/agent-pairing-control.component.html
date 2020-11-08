@@ -4,7 +4,9 @@
     <mat-card-subtitle>Suggestions for this mass mailer to have as assignments</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-
+    <div class="selectAllButtonDiv">
+      <button mat-raised-button (click)="pairingList.selectAll()">Select All <mat-icon>select_all</mat-icon></button>
+    </div>
     <!-- Table headers -->
     <div class="headerContainer">
       <div class="headerDiv">
@@ -21,7 +23,7 @@
 
     <!-- Potential Pairing -->
     <div class="scrollDiv scrollbar scrollbar-primary mat-elevation-z3" *ngIf="possiblePairingsObject.potentialAssignments.length != 0 && !postingNewAssignments">
-      <mat-selection-list [(ngModel)]="selectedPotentialAssignments">
+      <mat-selection-list #pairingList [(ngModel)]="selectedPotentialAssignments">
         <mat-list-option class="listOption mat-elevation-z3" *ngFor="let potentialAssignment of possiblePairingsObject.potentialAssignments" [value]="potentialAssignment">
           <div class="pairingContainer">
             <div class="pairingDiv">
