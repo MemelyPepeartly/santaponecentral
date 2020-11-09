@@ -368,13 +368,12 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
             Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
 
             Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
             AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
             // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
-            List<Client> allClients = await repository.GetAllClients();
+            List<StrippedClient> allClients = await repository.GetAllStrippedClientData();
             List<Client> clientsToEmail = new List<Client>();
 
             foreach (Pairing pair in model.pairings)
@@ -384,7 +383,16 @@ namespace Santa.Api.Controllers
                 // If the clients to email doesnt contain the sending client already in the email list, add them to it
                 if (!clientsToEmail.Any<Client>(c => c.clientID == pair.senderAgentID))
                 {
-                    clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
+                    StrippedClient client = allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID);
+                    clientsToEmail.Add(new Client()
+                    {
+                        clientID = client.clientID,
+                        nickname = client.nickname,
+                        clientName = client.clientName,
+                        email = client.email,
+#warning Need to add the strippedclient value here for proper mapping later on has account
+                        hasAccount = true
+                    });
                 }
             }
             try
