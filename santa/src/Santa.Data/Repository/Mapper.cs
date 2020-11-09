@@ -16,6 +16,28 @@ namespace Santa.Data.Repository
     {
 
         #region Client
+        public static Logic.Objects.Client MapStaticClient(Entities.Client contextClient)
+        {
+            Logic.Objects.Client logicClient = new Logic.Objects.Client()
+            {
+                clientID = contextClient.ClientId,
+                email = contextClient.Email,
+                clientName = contextClient.ClientName,
+                nickname = contextClient.Nickname,
+                hasAccount = contextClient.HasAccount,
+                isAdmin = contextClient.IsAdmin,
+                address = new Address
+                {
+                    addressLineOne = contextClient.AddressLine1,
+                    addressLineTwo = contextClient.AddressLine2,
+                    city = contextClient.City,
+                    country = contextClient.Country,
+                    state = contextClient.State,
+                    postalCode = contextClient.PostalCode
+                }
+            };
+            return logicClient;
+        }
         /// <summary>
         /// maps a logic client to a context client
         /// </summary>
@@ -115,25 +137,25 @@ namespace Santa.Data.Repository
             };
             return logicRelationship;
         }
-        public static Logic.Objects.ProfileRecipient MapProfileRecipient(Data.Entities.ClientRelationXref contextSenderXref, Data.Entities.Client contextRecipientClientData)
+        public static Logic.Objects.ProfileAssignment MapProfileRecipient(ClientRelationXref contextClientRelationXref)
         {
-            Logic.Objects.ProfileRecipient logicProfileRecipient = new ProfileRecipient()
+            Logic.Objects.ProfileAssignment logicProfileRecipient = new ProfileAssignment()
             {
-                relationXrefID = contextSenderXref.ClientRelationXrefId,
-                recipientClient = Mapper.MapClientMeta(contextSenderXref.RecipientClient),
-                recipientEvent = Mapper.MapEvent(contextSenderXref.EventType),
-                assignmentStatus = MapAssignmentStatus(contextSenderXref.AssignmentStatus),
+                relationXrefID = contextClientRelationXref.ClientRelationXrefId,
+                recipientClient = Mapper.MapClientMeta(contextClientRelationXref.RecipientClient),
+                recipientEvent = Mapper.MapEvent(contextClientRelationXref.EventType),
+                assignmentStatus = MapAssignmentStatus(contextClientRelationXref.AssignmentStatus),
 
                 address = new Address
                 {
-                    addressLineOne = contextRecipientClientData.AddressLine1,
-                    addressLineTwo = contextRecipientClientData.AddressLine2,
-                    city = contextRecipientClientData.City,
-                    country = contextRecipientClientData.Country,
-                    state = contextRecipientClientData.State,
-                    postalCode = contextRecipientClientData.PostalCode
+                    addressLineOne = contextClientRelationXref.RecipientClient.AddressLine1,
+                    addressLineTwo = contextClientRelationXref.RecipientClient.AddressLine2,
+                    city = contextClientRelationXref.RecipientClient.City,
+                    country = contextClientRelationXref.RecipientClient.Country,
+                    state = contextClientRelationXref.RecipientClient.State,
+                    postalCode = contextClientRelationXref.RecipientClient.PostalCode
                 },
-                responses = contextRecipientClientData.SurveyResponse.Select(Mapper.MapResponse).ToList()
+                responses = contextClientRelationXref.RecipientClient.SurveyResponse.Select(Mapper.MapResponse).ToList()
             };
             return logicProfileRecipient;
         }
@@ -250,7 +272,7 @@ namespace Santa.Data.Repository
                     state = contextClient.State,
                     postalCode = contextClient.PostalCode
                 },
-                assignments = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapProfileRecipient(s, s.RecipientClient)).OrderBy(pr => pr.recipientClient.clientNickname).ToList(),
+                //assignments = contextClient.ClientRelationXrefSenderClient.Select(s => Mapper.MapProfileRecipient(s, s.RecipientClient)).OrderBy(pr => pr.recipientClient.clientNickname).ToList(),
                 responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
                 editable = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? false : true
             };
@@ -443,7 +465,7 @@ namespace Santa.Data.Repository
                 questionID = contextSurveyQuestion.SurveyQuestionId,
                 questionText = contextSurveyQuestion.QuestionText,
                 isSurveyOptionList = contextSurveyQuestion.IsSurveyOptionList,
-                sortOrder = contextSurveyQuestion.SurveyQuestionXref.FirstOrDefault(sqxr => sqxr.SurveyQuestionId == contextSurveyQuestion.SurveyQuestionId).SortOrder,
+                sortOrder = contextSurveyQuestion.SurveyQuestionXref.Count != 0 ? contextSurveyQuestion.SurveyQuestionXref.FirstOrDefault(sqxr => sqxr.SurveyQuestionId == contextSurveyQuestion.SurveyQuestionId).SortOrder : 0,
                 senderCanView = contextSurveyQuestion.SenderCanView,
                 surveyOptionList = contextSurveyQuestion.SurveyQuestionOptionXref.Select(Mapper.MapSurveyQuestionOption).OrderBy(o => o.sortOrder).ToList(),
                 removable = contextSurveyQuestion.SurveyResponse.Count == 0 && contextSurveyQuestion.SurveyQuestionOptionXref.Count == 0
@@ -666,39 +688,43 @@ namespace Santa.Data.Repository
         /// <param name="contextRelationshipXref"></param>
         /// <param name="logicSubjectClient"></param>
         /// <returns></returns>
-        public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, Logic.Objects.Client logicSubjectClient)
+        public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, Logic.Objects.Client logicSubjectClient, bool unloaded)
         {
             List<Message> logicListRecieverMessages = new List<Message>();
             List<Message> logicListSubjectMessages = new List<Message>();
 
-            if (logicSubjectClient.isAdmin)
+            if(!unloaded)
             {
-                logicListSubjectMessages = contextRelationshipXref.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
+                if (logicSubjectClient.isAdmin)
+                {
+                    logicListSubjectMessages = contextRelationshipXref.ChatMessage
+                        .Select(Mapper.MapMessage)
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => m.fromAdmin)
+                        .ToList();
 
-                logicListRecieverMessages = contextRelationshipXref.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin)
-                    .ToList();
-            }
-            else
-            {
-                logicListSubjectMessages = contextRelationshipXref.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
-                    .ToList();
+                    logicListRecieverMessages = contextRelationshipXref.ChatMessage
+                        .Select(Mapper.MapMessage)
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => !m.fromAdmin)
+                        .ToList();
+                }
+                else
+                {
+                    logicListSubjectMessages = contextRelationshipXref.ChatMessage
+                        .Select(Mapper.MapMessage)
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
+                        .ToList();
 
-                logicListRecieverMessages = contextRelationshipXref.ChatMessage
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
+                    logicListRecieverMessages = contextRelationshipXref.ChatMessage
+                        .Select(Mapper.MapMessage)
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => m.fromAdmin)
+                        .ToList();
+                }
             }
+
 
 
 
@@ -713,9 +739,9 @@ namespace Santa.Data.Repository
                 assignmentRecieverClient = MapClientChatMeta(contextRelationshipXref.RecipientClient),
                 assignmentSenderClient = MapClientChatMeta(contextRelationshipXref.SenderClient),
 
-                subjectMessages = logicListSubjectMessages,
+                subjectMessages = unloaded ? new List<Message>() : logicListSubjectMessages,
 
-                recieverMessages = logicListRecieverMessages,
+                recieverMessages = unloaded ? new List<Message>() : logicListRecieverMessages,
 
                 unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
             };
