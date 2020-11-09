@@ -403,6 +403,7 @@ namespace Santa.Data.Repository
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
                 .Where(c => c.Email == email)
+                .AsNoTracking()
                 .FirstOrDefaultAsync());
 
             List<Response> responsesToRemove = new List<Response>();
