@@ -12,11 +12,11 @@ export class Profile
     clientNickname: string;
     email: string;
     address: Address = new Address;
-    assignments: Array<ProfileRecipient> = [];
+    assignments: Array<ProfileAssignment> = [];
     responses: Array<SurveyResponse> = [];
     editable: boolean;
 }
-export class ProfileRecipient
+export class ProfileAssignment
 {
     recipientClient: ClientMeta;
     relationXrefID?: string = null;
