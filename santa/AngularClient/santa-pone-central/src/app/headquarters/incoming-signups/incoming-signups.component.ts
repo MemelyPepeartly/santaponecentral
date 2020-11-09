@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
-import { Client } from '../../../classes/client';
+import { Client, HQClient } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/mapper.service';
@@ -37,10 +37,10 @@ export class IncomingSignupsComponent implements OnInit {
 
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
-  @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  @Output() clickedClient: EventEmitter<HQClient> = new EventEmitter();
   @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
 
-  @Input() awaitingClients: Array<Client> = [];
+  @Input() awaitingClients: Array<HQClient> = [];
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
@@ -70,14 +70,14 @@ export class IncomingSignupsComponent implements OnInit {
   async manualRefresh()
   {
     this.showSpinner = true;
-    await this.gatherer.gatherAllTruncatedClients();
+    await this.gatherer.gatherAllHQClients();
     this.showSpinner = false;
     this.actionTaken = false;
   }
-  answeredForSurvey(client: Client, survey: Survey) : boolean
+  answeredForSurvey(client: HQClient, survey: Survey) : boolean
   {
-    return client.responses.some((response: SurveyResponse) => {
-      return response.surveyID == survey.surveyID;
+    return client.answeredSurveys.some((surveyID: string) => {
+      return surveyID == survey.surveyID;
     });
   }
   switchPage(event: PageEvent)
@@ -85,7 +85,7 @@ export class IncomingSignupsComponent implements OnInit {
     this.paginatorPageSize = event.pageSize;
     this.paginatorPageIndex = event.pageIndex;
   }
-  pagedClients() : Array<Client>
+  pagedClients() : Array<HQClient>
   {
     if(this.paginator != undefined)
     {

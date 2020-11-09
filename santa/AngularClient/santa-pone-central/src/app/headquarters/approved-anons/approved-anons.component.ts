@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
-import { Client } from '../../../classes/client';
+import { Client, HQClient } from '../../../classes/client';
 import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
@@ -19,9 +19,9 @@ export class ApprovedAnonsComponent implements OnInit {
 
   constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
-  @Output() clickedClient: EventEmitter<any> = new EventEmitter();
+  @Output() clickedClient: EventEmitter<HQClient> = new EventEmitter();
 
-  @Input() approvedClients: Array<Client> = [];
+  @Input() approvedClients: Array<HQClient> = [];
   @Input() gatheringInfo: boolean;
   @Input() allSurveys: Array<Survey> = [];
 
@@ -56,10 +56,10 @@ export class ApprovedAnonsComponent implements OnInit {
     this.showSpinner = false;
     this.actionTaken = false;
   }
-  answeredForSurvey(client: Client, survey: Survey) : boolean
+  answeredForSurvey(client: HQClient, survey: Survey) : boolean
   {
-    return client.responses.some((response: SurveyResponse) => {
-      return response.surveyID == survey.surveyID;
+    return client.answeredSurveys.some((surveyID: string) => {
+      return surveyID == survey.surveyID;
     });
   }
   switchPage(event: PageEvent)
@@ -67,7 +67,7 @@ export class ApprovedAnonsComponent implements OnInit {
     this.paginatorPageSize = event.pageSize;
     this.paginatorPageIndex = event.pageIndex;
   }
-  pagedClients() : Array<Client>
+  pagedClients() : Array<HQClient>
   {
     if(this.paginator != undefined)
     {
