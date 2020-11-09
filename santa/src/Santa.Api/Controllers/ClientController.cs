@@ -79,11 +79,11 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client requestingClient = await repository.GetStaticClientObjectByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
-                List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
+                List<Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
                     return NoContent();
@@ -148,6 +148,18 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
+        // GET: api/Client/5/Assignments
+        /// <summary>
+        /// Gets a list of the clients assignments by ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}/Assignments")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<RelationshipMeta>>> GetAllRelationshipMetasForClientByID(Guid clientID)
+        {
+            return Ok(await repository.getClientAssignmentsByIDAsync(clientID));
+        }
 
 
         // GET: api/Client/5/Response
@@ -180,7 +192,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<PossiblePairingChoices>>> GetAutoAssignmentsToMassMailerPairs()
         {
-            List<Client> allClients = await repository.GetAllClientsWithoutChats();
+            List<Client> allClients = await repository.GetAllClients();
             List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
@@ -356,13 +368,12 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
             Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
 
             Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
             AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
 
             // Gets a list of clients where the sender agents equal the client ID's. These are the people who will recieve status emails
-            List<Client> allClients = await repository.GetAllClients();
+            List<BaseClient> allClients = await repository.GetAllBasicClientInformation();
             List<Client> clientsToEmail = new List<Client>();
 
             foreach (Pairing pair in model.pairings)
@@ -372,7 +383,15 @@ namespace Santa.Api.Controllers
                 // If the clients to email doesnt contain the sending client already in the email list, add them to it
                 if (!clientsToEmail.Any<Client>(c => c.clientID == pair.senderAgentID))
                 {
-                    clientsToEmail.Add(allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID));
+                    BaseClient client = allClients.FirstOrDefault(c => c.clientID == pair.senderAgentID);
+                    clientsToEmail.Add(new Client()
+                    {
+                        clientID = client.clientID,
+                        nickname = client.nickname,
+                        clientName = client.clientName,
+                        email = client.email,
+                        hasAccount = client.hasAccount
+                    });
                 }
             }
             try

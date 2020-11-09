@@ -174,7 +174,7 @@ namespace Santa.Api.Controllers
 
             if (logicStaticClient.clientID == checkerClient.clientID)
             {
-                return Ok((await repository.GetUnloadedProfileChatHistoriesAsync(checkerClient.clientID)).OrderBy(h => h.conversationClient.clientNickname));
+                return Ok((await repository.GetUnloadedProfileChatHistoriesAsync(checkerClient.clientID)).OrderBy(h => h.eventType.eventDescription).ThenBy(h => h.assignmentRecieverClient.clientNickname));
             }
             else
             {

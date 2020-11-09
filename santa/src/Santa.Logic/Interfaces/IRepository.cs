@@ -56,15 +56,16 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClients();
         /// <summary>
-        /// Gets a list of all clients without also including their chat messages. This is used for performance reasons whne necessary
-        /// </summary>
-        /// <returns></returns>
-        Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats();
-        /// <summary>
         /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
         /// </summary>
         /// <returns></returns>
         Task<List<StrippedClient>> GetAllStrippedClientData();
+        /// <summary>
+        /// Gets a list of all client ID's quickly
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseClient>> GetAllBasicClientInformation();
+
         /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
         /// </summary>
@@ -358,12 +359,18 @@ namespace Santa.Logic.Interfaces
         Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID);
         #endregion
 
+        #region Informational
+        Task<List<RelationshipMeta>> getClientAssignmentsByIDAsync(Guid clientID);
+        Task<List<RelationshipMeta>> getClientSendersByIDAsync(Guid clientID);
+        #endregion
+
         #region Utility
         /// <summary>
         /// Saves changes of any CRUD operations in the queue
         /// </summary>
         /// <returns></returns>
         Task SaveAsync();
+
         /// <summary>
         /// Gets a list of all the allowed assignments for a client by their ID, and the event's ID
         /// </summary>
