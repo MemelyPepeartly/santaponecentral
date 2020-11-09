@@ -167,7 +167,9 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.gatherer.onSelectedClient = true;
 
+    this.loadingClient = true;
     this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID != undefined ? this.client.clientID : this.clientID).toPromise());
+    this.loadingClient = false;
 
     /* FORM BUILDERS */
     this.clientNicknameFormGroup = this.formBuilder.group({
