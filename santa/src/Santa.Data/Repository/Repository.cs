@@ -120,29 +120,6 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        tags = new List<Logic.Objects.Tag>(),
-
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() : 
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
-
-                    }).ToList(),
-                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
-                    {
-                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
-                        eventType = Mapper.MapEvent(xref.EventType),
-                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        clientRelationXrefID = xref.ClientRelationXrefId,
                         tags = new List<Logic.Objects.Tag>()
                         /*
                         tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
@@ -155,6 +132,29 @@ namespace Santa.Data.Repository
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
+                        
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                        */
+                    }).ToList(),
+                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>()
+                        /*
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        
                         removable = xref.ChatMessage.Count > 0 ? false : true
                         */
                     }).ToList()
@@ -210,6 +210,9 @@ namespace Santa.Data.Repository
                         relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>()
+                        /*
                         tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
@@ -220,14 +223,18 @@ namespace Santa.Data.Repository
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        
                         removable = xref.ChatMessage.Count > 0 ? false : true
+                        */
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
                     {
                         relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>()
+                        /*
                         tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
@@ -238,8 +245,9 @@ namespace Santa.Data.Repository
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        
                         removable = xref.ChatMessage.Count > 0 ? false : true
+                        */
                     }).ToList()
 
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientId);
@@ -293,6 +301,9 @@ namespace Santa.Data.Repository
                         relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>()
+                        /*
                         tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
@@ -303,14 +314,18 @@ namespace Santa.Data.Repository
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        
                         removable = xref.ChatMessage.Count > 0 ? false : true
+                        */
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
                     {
                         relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>()
+                        /*
                         tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
@@ -321,8 +336,9 @@ namespace Santa.Data.Repository
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        
                         removable = xref.ChatMessage.Count > 0 ? false : true
+                        */
                     }).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.email == clientEmail);
 
@@ -423,7 +439,8 @@ namespace Santa.Data.Repository
         public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
         {
             Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-                /* Profile survey responses aand event types */
+
+                /* Profile survey responses and event types */
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
                 .Include(c => c.SurveyResponse)
@@ -448,20 +465,34 @@ namespace Santa.Data.Repository
         }
         public async Task<List<ProfileAssignment>> GetProfileAssignments(Guid clientID)
         {
-            List<ProfileAssignment> listLogicProfileAssignment = (await santaContext.ClientRelationXref
-                .Include(xr => xr.AssignmentStatus)
+            List<ProfileAssignment> listLogicProfileAssignment = await santaContext.ClientRelationXref.Where(xr => xr.SenderClientId == clientID)
+                .Select(xref => new ProfileAssignment()
+                {
+                    relationXrefID = xref.ClientRelationXrefId,
+                    recipientClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    recipientEvent = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
 
-                .Include(xr => xr.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
-                    .ThenInclude(sr => sr.Survey.EventType)
-                .Include(xr => xr.RecipientClient.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqoxr => sqoxr.SurveyOption)
-
-                .Include(xr => xr.EventType)
-                .Where(xr => xr.SenderClientId == clientID)
-                .ToListAsync())
-                .Select(Mapper.MapProfileRecipient)
-                .ToList();
+                    address = new Address
+                    {
+                        addressLineOne = xref.RecipientClient.AddressLine1,
+                        addressLineTwo = xref.RecipientClient.AddressLine2,
+                        city = xref.RecipientClient.City,
+                        country = xref.RecipientClient.Country,
+                        state = xref.RecipientClient.State,
+                        postalCode = xref.RecipientClient.PostalCode
+                    },
+                    responses = xref.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true).Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList()
+                }).ToListAsync();
             return listLogicProfileAssignment;
         }
         #endregion
@@ -698,24 +729,24 @@ namespace Santa.Data.Repository
         }
         public async Task<List<MessageHistory>> GetUnloadedProfileChatHistoriesAsync(Guid profileOwnerClientID)
         {
-            List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-            List<ClientRelationXref> contextRelationshipsWithChats = await santaContext.ClientRelationXref
-                .Include(r => r.SenderClient.ClientStatus)
-                .Include(r => r.RecipientClient.ClientStatus)
+            Logic.Objects.Client logicSubject = await GetStaticClientObjectByID(profileOwnerClientID);
+            List<MessageHistory> listLogicMessageHistory = await santaContext.ClientRelationXref.Where(r => r.SenderClientId == profileOwnerClientID)
+                .Select(xref => new MessageHistory()
+                {
+                    relationXrefID = xref.ClientRelationXrefId,
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
 
-                .Include(r => r.EventType)
-                .Include(r => r.EventType.Survey)
+                    subjectClient = Mapper.MapClientChatMeta(logicSubject),
+                    conversationClient = Mapper.MapClientChatMeta(xref.SenderClient),
+                    assignmentRecieverClient = Mapper.MapClientChatMeta(xref.RecipientClient),
+                    assignmentSenderClient = Mapper.MapClientChatMeta(xref.SenderClient),
 
-                .Include(r => r.AssignmentStatus)
-                .Where(r => r.SenderClientId == profileOwnerClientID)
-                .AsNoTracking()
-                .ToListAsync();
+                    subjectMessages = new List<Message>(),
+                    recieverMessages = new List<Message>(),
 
-            // Parses through chats for the profile
-            foreach (ClientRelationXref contextRelationship in contextRelationshipsWithChats)
-            {
-                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, (await GetStaticClientObjectByID(profileOwnerClientID)), true));
-            }
+                    unreadCount = xref.ChatMessage.Where(m => m.FromAdmin && m.IsMessageRead == false).Count()
+                }).ToListAsync();
 
 
             return listLogicMessageHistory;
@@ -1265,6 +1296,18 @@ namespace Santa.Data.Repository
                 .Select(Mapper.MapLog)
                 .ToList();
             return logicLogList;
+        }
+        #endregion
+
+        #region Informational
+        public async Task<List<RelationshipMeta>> getClientAssignmentsByIDAsync(Guid clientID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<RelationshipMeta>> getClientSendersByIDAsync(Guid clientID)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
