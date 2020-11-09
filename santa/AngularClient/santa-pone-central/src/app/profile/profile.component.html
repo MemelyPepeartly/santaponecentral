@@ -29,7 +29,7 @@
     <div class="components mat-elevation-z3">
         <app-information
           [profile]="profile"
-          [loading] = "gettingProfile"
+          [loading] = "gettingProfile || gettingClientID"
           [surveys]="surveys">
         </app-information>
         <app-control-panel
@@ -40,8 +40,9 @@
           [gettingGeneralHistory]="gettingGeneralHistory"
           [gettingSelectedHistory]="gettingSelectedHistory"
           [gettingProfile]="gettingProfile"
-          [doneGettingInfo]="!initializing"
-          [loading] = "gettingAllHistories || gettingGeneralHistory || gettingSelectedHistory"
+          [doneGettingInfo]="!initializing && !gettingAssignments"
+          [refreshing]="refreshingHistories"
+          [loading] = "gettingAssignments || gettingAllHistories"
           [generalHistory]="generalHistory"
           [profile]="profile"
           [histories]="histories">

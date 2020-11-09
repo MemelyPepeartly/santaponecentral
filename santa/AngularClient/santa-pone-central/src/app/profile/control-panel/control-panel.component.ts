@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { ProfileRecipient, Profile } from 'src/classes/profile';
+import { ProfileAssignment, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -26,6 +26,7 @@ export class ControlPanelComponent implements OnInit {
   @Input() gettingGeneralHistory: boolean;
   @Input() gettingSelectedHistory: boolean;
   @Input() gettingProfile: boolean;
+  @Input() refreshing: boolean;
 
   @Input() loading: boolean;
   @Input() doneGettingInfo: boolean;
@@ -40,7 +41,7 @@ export class ControlPanelComponent implements OnInit {
   @ViewChild(SelectedRecipientComponent) selectedRecipientComponent: SelectedRecipientComponent;
 
 
-  public selectedRecipient: ProfileRecipient;
+  public selectedRecipient: ProfileAssignment;
 
   public isAdmin: boolean;
   public initializing: boolean;
@@ -59,7 +60,7 @@ export class ControlPanelComponent implements OnInit {
   // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
   public showRecipientCard(eventInformation)
   {
-    this.selectedRecipient = this.getProfileRecipientByMetaAndEventID(eventInformation.meta, eventInformation.event.eventTypeID);
+    this.selectedRecipient = this.getProfileAssignmentByMetaAndEventID(eventInformation.meta, eventInformation.event.eventTypeID);
     this.showRecipientData = true;
   }
   public hideRecipientCard()
@@ -76,12 +77,12 @@ export class ControlPanelComponent implements OnInit {
       this.actionTaken = false;
     }
   }
-  public getProfileRecipientByMetaAndEventID(meta: ClientMeta, eventID)
+  public getProfileAssignmentByMetaAndEventID(meta: ClientMeta, eventID)
   {
-    let profileRecipient = this.profile.assignments.find((recipient: ProfileRecipient) => {
+    let ProfileAssignment = this.profile.assignments.find((recipient: ProfileAssignment) => {
       return recipient.recipientClient.clientID == meta.clientID && recipient.recipientEvent.eventTypeID == eventID;
     });
-    return profileRecipient;
+    return ProfileAssignment;
   }
   public async historySelected(history: MessageHistory)
   {
@@ -102,7 +103,7 @@ export class ControlPanelComponent implements OnInit {
   public convertToAssignmentCSVModel() : Array<AssignmentCSVModel>
   {
     let dataArray: Array<AssignmentCSVModel> = []
-    this.profile.assignments.forEach((assignment: ProfileRecipient) => {
+    this.profile.assignments.forEach((assignment: ProfileAssignment) => {
       dataArray.push({
         Nickname: assignment.recipientClient.clientNickname,
         'Real Name': assignment.recipientClient.clientName,

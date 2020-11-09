@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { MapService } from 'src/app/services/mapper.service';
-import { SantaApiPutService } from 'src/app/services/santa-api.service';
+import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
-import { ProfileRecipient } from 'src/classes/profile';
+import { ProfileAssignment } from 'src/classes/profile';
 import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
 import { AssignmentStatusConstants } from '../constants/AssignmentStatusConstants.enum';
 
@@ -15,10 +15,11 @@ import { AssignmentStatusConstants } from '../constants/AssignmentStatusConstant
 export class AssignmentStatusControllerComponent implements OnInit {
 
   constructor(private gatherer: GathererService,
+    private ProfileApiService: ProfileApiService,
     private santaApiPut: SantaApiPutService,
     private mapper: MapService) { }
 
-  @Input() assignment: ProfileRecipient;
+  @Input() assignment: ProfileAssignment;
   @Input() clientID: string;
   @Input() isAdmin: boolean;
 
@@ -62,7 +63,7 @@ export class AssignmentStatusControllerComponent implements OnInit {
 
     if(!this.isAdmin)
     {
-      this.santaApiPut.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
+      this.ProfileApiService.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
         let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
         this.newStatusAssingmentStatusPutEvent.emit(newAssignmentStatus);
 
@@ -114,7 +115,7 @@ export class AssignmentStatusControllerComponent implements OnInit {
   {
     this.selectedAssignmentStatus = assignmentStatus;
   }
-  public isCompleted(assignment: ProfileRecipient)
+  public isCompleted(assignment: ProfileAssignment)
   {
     return assignment.assignmentStatus.assignmentStatusName == AssignmentStatusConstants.COMPLETED
   }

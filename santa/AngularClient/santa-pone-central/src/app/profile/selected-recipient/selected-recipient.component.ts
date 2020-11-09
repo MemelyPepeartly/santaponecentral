@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Profile, ProfileRecipient } from 'src/classes/profile';
+import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { ProfileService } from 'src/app/services/profile.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { GathererService } from 'src/app/services/gatherer.service';
@@ -19,7 +19,7 @@ export class SelectedRecipientComponent implements OnInit {
     public gatherer: GathererService,
     public SantaApiPost: SantaApiPostService) { }
 
-  @Input() selectedRecipient: ProfileRecipient;
+  @Input() selectedRecipient: ProfileAssignment;
   @Input() surveys: Array<Survey>;
   @Input() profile: Profile;
 

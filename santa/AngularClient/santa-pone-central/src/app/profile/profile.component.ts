@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
+import { ProfileApiService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { MapService } from '../services/mapper.service';
 import { AuthService } from '../auth/auth.service';
-import { Profile, ProfileRecipient } from 'src/classes/profile';
+import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { ProfileService } from '../services/profile.service';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     public profileService: ProfileService,
+    public ProfileApiService: ProfileApiService,
     public gatherer: GathererService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPost: SantaApiPostService,
@@ -32,11 +33,11 @@ export class ProfileComponent implements OnInit {
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
 
-
+  public clientID: string;
   public profile: Profile = new Profile();
   public authProfile: any;
 
-  public selectedRecipient: ProfileRecipient = new ProfileRecipient();
+  public selectedRecipient: ProfileAssignment = new ProfileAssignment();
   public selectedHistory: MessageHistory = new MessageHistory();
   public generalHistory: MessageHistory = new MessageHistory();
 
@@ -52,29 +53,53 @@ export class ProfileComponent implements OnInit {
   public puttingMessage: boolean = false;
   public softUpdating: boolean = false;
   public refreshing: boolean = false;
+  public refreshingHistories: boolean = false;
 
   public initializing: boolean = true;
   public gettingAllHistories: boolean = false;
   public gettingGeneralHistory: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public gettingProfile: boolean = false;
-
+  public gettingClientID: boolean = false;
+  public gettingAssignments: boolean = false;
 
   public async ngOnInit() {
     // Boolean subscribes
+    this.profileService.gettingClientID.subscribe((status: boolean) => {
+      this.gettingClientID = status;
+    });
     this.profileService.gettingProfile.subscribe((status: boolean) => {
       this.gettingProfile = status;
     });
     this.profileService.gettingGeneralHistory.subscribe((status: boolean) => {
       this.gettingGeneralHistory = status;
     });
-    this.profileService.gettingHistories.subscribe((status: boolean) => {
+    this.profileService.gettingUnloadedChatHistories.subscribe((status: boolean) => {
       this.gettingAllHistories = status;
     });
     this.profileService.gettingSelectedHistory.subscribe((status: boolean) => {
       this.gettingSelectedHistory = status;
     });
-    // Profile service subscribe
+    this.profileService.gettingAssignments.subscribe((status: boolean) => {
+      this.gettingAssignments = status;
+    });
+
+    // ClientID subscribe
+    this.profileService.clientID.subscribe((id: string) => {
+      this.clientID = id;
+    });
+
+    // Profile subscribe
+    this.profileService.profile.subscribe((profile: Profile) => {
+      this.profile = profile;
+    });
+
+    // Profile Assignment subscribe
+    this.profileService.profileAssignments.subscribe((assignments: Array<ProfileAssignment>) => {
+      this.profile.assignments = assignments;
+    });
+
+    // Assignment status subscribe
     this.profileService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
@@ -85,7 +110,7 @@ export class ProfileComponent implements OnInit {
     });
 
     // Chat histories subscribe
-    this.profileService.chatHistories.subscribe((histories: Array<MessageHistory>) => {
+    this.profileService.unloadedChatHistories.subscribe((histories: Array<MessageHistory>) => {
       this.histories = histories;
     });
 
@@ -107,12 +132,28 @@ export class ProfileComponent implements OnInit {
 
 
     this.initializing =  true;
-    await this.profileService.getProfile(this.authProfile.email).catch(err => {console.log(err)});
+    await this.profileService.getClientIDFromEmail(this.authProfile.email).catch(err => {console.log(err)});
+    await this.profileService.getProfileByID(this.clientID);
+
+    this.gettingAssignments = true;
+    this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
+      let assignmentArray: Array<ProfileAssignment> = [];
+      for(let i = 0; i < res.length; i++)
+      {
+        assignmentArray.push(this.ApiMapper.mapProfileAssignment(res[i]))
+      };
+      this.profile.assignments = assignmentArray;
+      await this.profileService.getUnloadedHistories(this.clientID);
+      this.gettingAssignments = false;
+    }, err => {
+      console.group();
+      console.log(err);
+      console.groupEnd();
+      this.gettingAssignments = false;
+    });
 
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllAssignmentStatuses();
-    await this.profileService.getHistories(this.profile.clientID);
-    await this.profileService.gatherGeneralHistory(this.profile.clientID, this.profile.clientID);
     this.initializing =  false;
   }
   public async showSelectedChat(history: MessageHistory)
@@ -133,12 +174,12 @@ export class ProfileComponent implements OnInit {
       setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     }
   }
-  public hideWindow()
+  public async hideWindow()
   {
     if(!this.chatComponent.markingRead && !this.postingMessage && !this.puttingMessage)
     {
       this.selectedHistory = new MessageHistory();
-      this.profileService.getHistories(this.profile.clientID, true);
+      this.manualRefreshProfile(true);
       this.showChat = false;
       this.showOverlay = false;
     }
@@ -188,7 +229,22 @@ export class ProfileComponent implements OnInit {
   }
   public async manualRefreshProfile(isSoftUpdate: boolean = false)
   {
-    await this.profileService.getProfile(this.profile.email, isSoftUpdate)
-    await this.profileService.getHistories(this.profile.clientID, false);
+    this.refreshingHistories = true;
+    this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
+
+      let assignmentArray: Array<ProfileAssignment> = [];
+      for(let i = 0; i < res.length; i++)
+      {
+        assignmentArray.push(this.ApiMapper.mapProfileAssignment(res[i]))
+      };
+      this.profile.assignments = assignmentArray;
+      await this.profileService.getUnloadedHistories(this.clientID, true);
+      this.refreshingHistories = false;
+    }, err => {
+      console.group();
+      console.log(err);
+      console.groupEnd();
+      this.gettingAssignments = false;
+    });
   }
 }

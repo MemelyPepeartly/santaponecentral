@@ -281,6 +281,14 @@ namespace Santa.Data.Repository
 
             return logicClient;
         }
+        public async Task<Logic.Objects.Client> GetStaticClientObjectByID(Guid clientID)
+        {
+            return Mapper.MapStaticClient((await santaContext.Client.AsNoTracking().FirstAsync(c => c.ClientId == clientID)));
+        }
+        public async Task<Logic.Objects.Client> GetStaticClientObjectByEmail(string email)
+        {
+            return Mapper.MapStaticClient((await santaContext.Client.AsNoTracking().FirstAsync(c => c.Email == email)));
+        }
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             Data.Entities.Client contextOldClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == targetLogicClient.clientID);
@@ -368,132 +376,46 @@ namespace Santa.Data.Repository
         public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
         {
             Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-                /* Assignment information and surveys */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
-                        .ThenInclude(sr => sr.Survey.EventType)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
-
-                /* Assignment event types */
-                .Include(r => r.ClientRelationXrefSenderClient)
-                    .ThenInclude(e => e.EventType)
-
-                /* Assignment Statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(xref => xref.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(xref => xref.AssignmentStatus)
-
-                /* Sender/Assignment Tags */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(xref => xref.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(xref => xref.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Profile approval status */
-                .Include(s => s.ClientStatus)
-
                 /* Profile survey responses aand event types */
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
-                .Where(c => c.Email == email)
-                .FirstOrDefaultAsync());
-
-            List<Response> responsesToRemove = new List<Response>();
-            // For each recipient in the profile
-            foreach (ProfileRecipient recipient in logicProfile.assignments)
-            {
-                // And for each response that recipient gave
-                foreach (Response response in recipient.responses)
-                {
-                    // If the recipients event does not match the responses event
-                    if (recipient.recipientEvent.eventTypeID != response.responseEvent.eventTypeID)
-                    {
-                        // Add it to the list of responses to remove from thsi assignment
-                        responsesToRemove.Add(response);
-                    }
-                }
-                // Then once that is done, remove all the responses from that recipient that were gathered, and reset the list for any others
-                foreach (Response response in responsesToRemove)
-                {
-                    recipient.responses.Remove(response);
-                }
-                responsesToRemove.Clear();
-            }
-
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Email == email));
 
             return logicProfile;
         }
         public async Task<Logic.Objects.Profile> GetProfileByIDAsync(Guid clientID)
         {
             Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-                /* Assignment information and surveys */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
-                        .ThenInclude(sr => sr.Survey.EventType)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(clXref => clXref.RecipientClient.SurveyResponse)
-                        .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
-
-                /* Assignment event types */
-                .Include(r => r.ClientRelationXrefSenderClient)
-                    .ThenInclude(e => e.EventType)
-
-                /* Assignment Statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(xref => xref.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(xref => xref.AssignmentStatus)
-
-                /* Sender/Assignment Tags */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(xref => xref.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(xref => xref.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Profile approval status */
-                .Include(s => s.ClientStatus)
-
                 /* Profile survey responses aand event types */
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
-                .Where(c => c.ClientId == clientID)
-                .FirstOrDefaultAsync());
-
-            List<Response> responsesToRemove = new List<Response>();
-            // For each recipient in the profile
-            foreach (ProfileRecipient recipient in logicProfile.assignments)
-            {
-                // And for each response that recipient gave
-                foreach (Response response in recipient.responses)
-                {
-                    // If the recipients event does not match the responses event
-                    if (recipient.recipientEvent.eventTypeID != response.responseEvent.eventTypeID)
-                    {
-                        // Add it to the list of responses to remove from thsi assignment
-                        responsesToRemove.Add(response);
-                    }
-                }
-                // Then once that is done, remove all the responses from that recipient that were gathered, and reset the list for any others
-                foreach (Response response in responsesToRemove)
-                {
-                    recipient.responses.Remove(response);
-                }
-                responsesToRemove.Clear();
-            }
-
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.ClientId == clientID));
 
             return logicProfile;
+        }
+        public async Task<List<ProfileAssignment>> GetProfileAssignments(Guid clientID)
+        {
+            List<ProfileAssignment> listLogicProfileAssignment = (await santaContext.ClientRelationXref
+                .Include(xr => xr.AssignmentStatus)
+
+                .Include(xr => xr.RecipientClient.SurveyResponse.Where(r => r.SurveyQuestion.SenderCanView == true))
+                    .ThenInclude(sr => sr.Survey.EventType)
+                .Include(xr => xr.RecipientClient.SurveyResponse)
+                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
+                        .ThenInclude(sqoxr => sqoxr.SurveyOption)
+
+                .Include(xr => xr.EventType)
+                .Where(xr => xr.SenderClientId == clientID)
+                .ToListAsync())
+                .Select(Mapper.MapProfileRecipient)
+                .ToList();
+            return listLogicProfileAssignment;
         }
         #endregion
 
@@ -671,7 +593,7 @@ namespace Santa.Data.Repository
             // All the chats for assignments
             foreach (ClientRelationXref contextRelationship in contextRelationshipsWithChats.Where(r => r.SenderClient.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
             {
-                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, subjectClient));
+                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, subjectClient, false));
             }
             // All the general chats
             foreach (Entities.Client contextClient in contextClients)
@@ -712,7 +634,7 @@ namespace Santa.Data.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
-            return Mapper.MapHistoryInformation(contextRelationship, subjectClient);
+            return Mapper.MapHistoryInformation(contextRelationship, subjectClient, false);
         }
         public async Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Logic.Objects.Client conversationClient, Logic.Objects.Client subjectClient)
         {
@@ -726,6 +648,30 @@ namespace Santa.Data.Repository
                 .ToListAsync();
 
             return Mapper.MapHistoryInformation(conversationClient, contextListMessages, subjectClient);
+        }
+        public async Task<List<MessageHistory>> GetUnloadedProfileChatHistoriesAsync(Guid profileOwnerClientID)
+        {
+            List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+            List<ClientRelationXref> contextRelationshipsWithChats = await santaContext.ClientRelationXref
+                .Include(r => r.SenderClient.ClientStatus)
+                .Include(r => r.RecipientClient.ClientStatus)
+
+                .Include(r => r.EventType)
+                .Include(r => r.EventType.Survey)
+
+                .Include(r => r.AssignmentStatus)
+                .Where(r => r.SenderClientId == profileOwnerClientID)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Parses through chats for the profile
+            foreach (ClientRelationXref contextRelationship in contextRelationshipsWithChats)
+            {
+                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, (await GetStaticClientObjectByID(profileOwnerClientID)), true));
+            }
+
+
+            return listLogicMessageHistory;
         }
         #endregion
 

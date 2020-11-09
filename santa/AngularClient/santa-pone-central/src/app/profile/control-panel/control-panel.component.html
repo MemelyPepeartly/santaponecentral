@@ -24,6 +24,9 @@
       <div *ngIf="loading">
         <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
       </div>
+      <div class="actionBarDiv" *ngIf="refreshing">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
       <div *ngIf="histories.length != 0 && !loading">
         <app-chat-histories
         [disabled]="gettingAllHistories || gettingProfile"
@@ -37,7 +40,7 @@
       <!-- Only show a general history if they are not an admin and the app is not initializing -->
       <button mat-raised-button *ngIf="!isAdmin && !initializing"
         (click)="historySelected(null)"
-        [disabled]="gettingProfile || gettingGeneralHistory || gettingAllHistories || gettingProfile"
+        [disabled]="gettingAllHistories || gettingProfile || profile.clientID == undefined"
         [matBadge]="generalHistory.unreadCount"
         [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence</button>
     </mat-card-actions>

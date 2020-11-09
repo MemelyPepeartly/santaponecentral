@@ -75,10 +75,6 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client/'+ id + '/Response').pipe(
       map(this.extractData));
   }
-  getProfile(email): Observable<any> {
-    return this.http.get(endpoint + 'Profile/' + email).pipe(
-      map(this.extractData));
-  }
   getAllEvents(): Observable<any> {
     return this.http.get(endpoint + 'Event').pipe(
       map(this.extractData));
@@ -289,9 +285,6 @@ export class SantaApiPutService {
   putClientStatus(id: string, updatedClient: ClientStatusResponse): Observable<any> {
     return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient).pipe(map(this.extractData));
   }
-  putProfileAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
-    return this.http.put(endpoint + 'Profile/' + clientID + '/Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
-  }
   putTagName(id: string, updatedTag: TagResponse): Observable<any> {
     return this.http.put(endpoint + 'Tag/' + id, updatedTag).pipe(map(this.extractData));
   }
@@ -309,10 +302,6 @@ export class SantaApiPutService {
   }
   putNote(noteID: string, responseModel: EditNoteResponse): Observable<any> {
     return this.http.put(endpoint + 'Note/' + noteID, responseModel).pipe(map(this.extractData));
-  }
-  putProfileAddress(clientID: string, updatedAddress: ClientAddressResponse): Observable<any> {
-    // Endpoints specifically has security checks to make sure data is secure in address change call
-    return this.http.put(endpoint + 'Profile/' + clientID + '/Address', updatedAddress).pipe(map(this.extractData));
   }
 }
 @Injectable({
@@ -431,5 +420,44 @@ export class YuleLogService {
   getAllLogsByCategoryID(id: string): Observable<any> {
     return this.http.get(endpoint + 'Log/Category/' + id).pipe(
       map(this.extractData));
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProfileApiService {
+
+  constructor(private http: HttpClient) { }
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
+  getClientIDForProfile(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Profile/' + email + "/GetID").pipe(
+      map(this.extractData));
+  }
+  getProfileByEmail(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Profile/Email/' + email).pipe(
+      map(this.extractData));
+  }
+  getProfileByID(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Profile/' + id).pipe(
+      map(this.extractData));
+  }
+  getProfileAssignments(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Profile/' + id + "/Assignments").pipe(
+      map(this.extractData));
+  }
+  getUnloadedChatHistories(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Profile/' + id + "/UnloadedHistories").pipe(
+      map(this.extractData));
+  }
+  putProfileAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> {
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Assignment/' + assignmentXrefID + '/AssignmentStatus', response).pipe(map(this.extractData));
+  }
+  putProfileAddress(clientID: string, updatedAddress: ClientAddressResponse): Observable<any> {
+    // Endpoints specifically has security checks to make sure data is secure in address change call
+    return this.http.put(endpoint + 'Profile/' + clientID + '/Address', updatedAddress).pipe(map(this.extractData));
   }
 }

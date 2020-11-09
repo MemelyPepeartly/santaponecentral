@@ -32,7 +32,7 @@ namespace Santa.Api.Controllers
             yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
-        // GET: api/Profile/email@domain.com
+        // GET: api/Profile/email@domain.com/GetID
         /// <summary>
         /// Gets a client's profile by their email
         /// 
@@ -40,7 +40,33 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <param email="email"></param>
         /// <returns></returns>
-        [HttpGet("{email}")]
+        [HttpGet("{email}/GetID")]
+        [Authorize(Policy = "read:profile")]
+        public async Task<ActionResult<Logic.Objects.Profile>> GetClientIDForProfile(string email)
+        {
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByEmail(email);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if (logicStaticClient.clientID == checkerClient.clientID)
+            {
+                return Ok(logicStaticClient.clientID);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+        }
+
+        // GET: api/Profile/Email/email@domain.com
+        /// <summary>
+        /// Gets a client's profile by their email
+        /// 
+        /// Conditions: Have an Auth0 account, implying you have been approved
+        /// </summary>
+        /// <param email="email"></param>
+        /// <returns></returns>
+        [HttpGet("Email/{email}")]
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
@@ -70,7 +96,93 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
-        // GET: api/Profile/5/Address
+
+        // GET: api/Profile/5
+        /// <summary>
+        /// Gets a client's profile by their ID
+        /// </summary>
+        /// <param clientID="clientID"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}")]
+        [Authorize(Policy = "read:profile")]
+        public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByIDAsync(Guid clientID)
+        {
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            // Log the profile request
+            try
+            {
+                await yuleLogger.logGetProfile(checkerClient, logicProfile);
+            }
+            // If it fails, log the error instead and stop the transaction
+            catch (Exception)
+            {
+                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
+            if (logicProfile.clientID == checkerClient.clientID)
+            {
+                return Ok(logicProfile);
+            }
+            else
+            {
+                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+        }
+
+        // GET: api/Profile/5/Assignments
+        /// <summary>
+        /// Gets a client's assignments
+        /// </summary>
+        /// <param email="email"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}/Assignments")]
+        [Authorize(Policy = "read:profile")]
+        public async Task<ActionResult<Logic.Objects.Profile>> GetAssignments(Guid clientID)
+        {
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if (logicStaticClient.clientID == checkerClient.clientID)
+            {
+                return Ok((await repository.GetProfileAssignments(clientID)).OrderBy(pr => pr.recipientClient.clientNickname));
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+        }
+
+        // GET: api/Profile/5/UnloadedHistories
+        /// <summary>
+        /// Gets a client's assignments
+        /// </summary>
+        /// <param email="email"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}/UnloadedHistories")]
+        [Authorize(Policy = "read:profile")]
+        public async Task<ActionResult<List<MessageHistory>>> GetUnloadedHistories(Guid clientID)
+        {
+            // Gets the claims from the URI and check against the client gotten based on auth claims token
+            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
+            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            if (logicStaticClient.clientID == checkerClient.clientID)
+            {
+                return Ok((await repository.GetUnloadedProfileChatHistoriesAsync(checkerClient.clientID)).OrderBy(h => h.conversationClient.clientNickname));
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+        }
+
+        // PUT: api/Profile/5/Address
         /// <summary>
         /// Allows a client who owns the email and profile to update their address
         /// 
@@ -131,6 +243,15 @@ namespace Santa.Api.Controllers
             }
 
         }
+
+        // PUT: api/Profile/5/Assignment/5/AssignmentStatus
+        /// <summary>
+        /// Updates an assignment status on a profile
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="assignmentXrefID"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{clientID}/Assignment/{assignmentXrefID}/AssignmentStatus")]
         [Authorize(Policy = "update:profile")]
         public async Task<ActionResult<AssignmentStatus>> UpdateProfileAssignmentStatus(Guid clientID, Guid assignmentXrefID, [FromBody] EditProfileAssignmentStatusModel model)
@@ -151,8 +272,8 @@ namespace Santa.Api.Controllers
                     await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
                     await yuleLogger.logModifiedAssignmentStatus(checkerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
                     await repository.SaveAsync();
-                    
-                    return Ok((await repository.GetProfileByIDAsync(checkerClient.clientID)).assignments.First(r => r.relationXrefID == assignmentXrefID).assignmentStatus);
+
+                    return Ok((await repository.GetClientByIDAsync(checkerClient.clientID)).assignments.First(r => r.clientRelationXrefID == assignmentXrefID).assignmentStatus);
                 }
                 catch(Exception)
                 {

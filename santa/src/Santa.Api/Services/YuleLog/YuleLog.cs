@@ -28,12 +28,16 @@ namespace Santa.Api.Services.YuleLog
         public async Task logCreatedNewAssignments(Client requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames)
         {
             string logMessage = $"{requestingClient.nickname} made a request to add the following assignments to {sendingClient.nickname}: ";
-            foreach(string assignmentNickname in listNewAssignmentNicknames)
+            foreach(string assignmentNickname in listNewAssignmentNicknames.Take(4))
             {
                 logMessage += assignmentNickname;
-                if (!listNewAssignmentNicknames.IndexOf(assignmentNickname).Equals(listNewAssignmentNicknames.Count -1))
+                if (!listNewAssignmentNicknames.Take(4).ToList().IndexOf(assignmentNickname).Equals(listNewAssignmentNicknames.Take(4).ToList().Count -1))
                 {
                     logMessage += ", ";
+                }
+                else if(listNewAssignmentNicknames.Count > 4)
+                {
+                    logMessage += ", and more";
                 }
             }
 

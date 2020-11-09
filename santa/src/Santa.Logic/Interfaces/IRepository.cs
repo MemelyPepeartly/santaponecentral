@@ -39,6 +39,18 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail);
         /// <summary>
+        /// Gets a very minimized version of the logic client object by ID. This is for quickly getting info such as the address or email.
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task<Client> GetStaticClientObjectByID(Guid clientID);
+        /// <summary>
+        /// Gets a very minimized version of the logic client object by email. This is for quickly getting info such as the clientID or just address from a client.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task<Client> GetStaticClientObjectByEmail(string email);
+        /// <summary>
         /// Gets a list of all clients
         /// </summary>
         /// <returns></returns>
@@ -117,7 +129,7 @@ namespace Santa.Logic.Interfaces
         #region Profile
         Task<Profile> GetProfileByEmailAsync(string email);
         Task<Profile> GetProfileByIDAsync(Guid email);
-
+        Task<List<ProfileAssignment>> GetProfileAssignments(Guid clientID);
 
         #endregion
 
@@ -154,6 +166,7 @@ namespace Santa.Logic.Interfaces
         Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Client subjectClient);
         Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Client subjectClient);
         Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Client conversationClient, Client subjectClient);
+        Task<List<MessageHistory>> GetUnloadedProfileChatHistoriesAsync(Guid profileOwnerClientID);
         #endregion
 
         #endregion

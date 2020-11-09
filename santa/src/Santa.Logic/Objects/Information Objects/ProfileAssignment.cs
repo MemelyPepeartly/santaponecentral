@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Santa.Logic.Objects
 {
-    public class ProfileRecipient
+    public class ProfileAssignment
     {
         //Xref ID needed for extra data for chat functionality
         public Guid? relationXrefID { get; set; }

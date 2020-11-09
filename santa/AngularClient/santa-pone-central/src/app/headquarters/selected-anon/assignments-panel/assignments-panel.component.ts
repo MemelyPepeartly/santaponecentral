@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AssignmentStatusControllerComponent } from 'src/app/shared/assignment-status-controller/assignment-status-controller.component';
 import { AssignmentStatus, Client, RelationshipMeta } from 'src/classes/client';
-import { ProfileRecipient } from 'src/classes/profile';
+import { ProfileAssignment } from 'src/classes/profile';
 
 @Component({
   selector: 'app-assignments-panel',
@@ -29,9 +29,9 @@ export class AssignmentsPanelComponent implements OnInit {
   public selectedAsssignment: RelationshipMeta = new RelationshipMeta();
   public selectedSender: RelationshipMeta = new RelationshipMeta();
 
-  public get mappedSelectedAssignment() : ProfileRecipient
+  public get mappedSelectedAssignment() : ProfileAssignment
   {
-    let mappedSelectedAssignment: ProfileRecipient =
+    let mappedSelectedAssignment: ProfileAssignment =
     {
       recipientClient: this.selectedAsssignment.relationshipClient,
       relationXrefID: this.selectedAsssignment.clientRelationXrefID,
@@ -43,9 +43,9 @@ export class AssignmentsPanelComponent implements OnInit {
     return mappedSelectedAssignment;
   }
 
-  public get mappedSelectedSender() : ProfileRecipient
+  public get mappedSelectedSender() : ProfileAssignment
   {
-    let mappedSelectedSender: ProfileRecipient =
+    let mappedSelectedSender: ProfileAssignment =
     {
       recipientClient: this.selectedSender.relationshipClient,
       relationXrefID: this.selectedSender.clientRelationXrefID,

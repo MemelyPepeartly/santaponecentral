@@ -5,7 +5,7 @@ import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
-import { Profile, ProfileRecipient } from 'src/classes/profile';
+import { Profile, ProfileAssignment as ProfileAssignment } from 'src/classes/profile';
 import { Message, ClientMeta, MessageHistory, ClientChatMeta } from 'src/classes/message';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
@@ -59,6 +59,27 @@ export class MapService {
 
     return mappedClient;
   }
+  mapStaticClient(client) : Client
+  {
+    let mappedClient: Client =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      email: client.email,
+      clientNickname: client.nickname,
+      clientStatus: new Status(),
+      isAdmin: client.isAdmin,
+      hasAccount: client.hasAccount,
+      address: this.mapAddress(client.address),
+      responses: [],
+      senders: [],
+      assignments: [],
+      tags: [],
+      notes: []
+    };
+
+    return mappedClient;
+  }
   mapStrippedClient(client) : StrippedClient
   {
     let mappedStrippedClient: StrippedClient =
@@ -87,7 +108,6 @@ export class MapService {
     let mappedProfile: Profile =
     {
       clientID: profile.clientID,
-      clientStatus: this.mapStatus(profile.clientStatus),
       clientName: profile.clientName,
       clientNickname: profile.nickname,
       email: profile.email,
@@ -97,17 +117,14 @@ export class MapService {
       editable: profile.editable
     };
 
-    profile.assignments.forEach(recipient => {
-      mappedProfile.assignments.push(this.mapProfileRecipient(recipient));
-    });
     profile.responses.forEach(response => {
       mappedProfile.responses.push(this.mapResponse(response));
     });
     return mappedProfile
   }
-  mapProfileRecipient(recipient) : ProfileRecipient
+  mapProfileAssignment(recipient) : ProfileAssignment
   {
-    let mappedProfileRecipient: ProfileRecipient =
+    let mappedProfileAssignment: ProfileAssignment =
     {
       recipientClient: this.mapMeta(recipient.recipientClient),
       relationXrefID: recipient.relationXrefID,
@@ -118,10 +135,10 @@ export class MapService {
     };
 
     recipient.responses.forEach(response => {
-      mappedProfileRecipient.responses.push(this.mapResponse(response));
+      mappedProfileAssignment.responses.push(this.mapResponse(response));
     });
 
-    return mappedProfileRecipient;
+    return mappedProfileAssignment;
   }
   mapAddress(address) : Address
   {
