@@ -148,6 +148,18 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
+        // GET: api/Client/5/Assignments
+        /// <summary>
+        /// Gets a list of the clients assignments by ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpGet("{clientID}/Assignments")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<RelationshipMeta>>> GetAllRelationshipMetasForClientByID(Guid clientID)
+        {
+            return Ok(await repository.getClientAssignmentsByIDAsync(clientID));
+        }
 
 
         // GET: api/Client/5/Response
