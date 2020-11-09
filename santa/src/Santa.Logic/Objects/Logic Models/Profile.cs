@@ -11,7 +11,6 @@ namespace Santa.Logic.Objects
         public string nickname { get; set; }
         public string email { get; set; }
         public Address address { get; set; }
-        public List<ProfileRecipient> assignments { get; set; }
         public List<Response> responses { get; set; }
         public bool editable { get; set; }
     }
