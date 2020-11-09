@@ -399,9 +399,7 @@ namespace Santa.Data.Repository
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
-                .Where(c => c.Email == email)
-                .AsNoTracking()
-                .FirstOrDefaultAsync());
+                .FirstOrDefaultAsync(c => c.Email == email));
 
             List<Response> responsesToRemove = new List<Response>();
             // For each recipient in the profile
@@ -462,9 +460,7 @@ namespace Santa.Data.Repository
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
-                .Where(c => c.ClientId == clientID)
-                .AsNoTracking()
-                .FirstOrDefaultAsync());
+                .FirstOrDefaultAsync(c => c.ClientId == clientID));
 
             List<Response> responsesToRemove = new List<Response>();
             // For each recipient in the profile
