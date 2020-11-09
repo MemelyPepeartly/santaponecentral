@@ -56,11 +56,6 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClients();
         /// <summary>
-        /// Gets a list of all clients without also including their chat messages. This is used for performance reasons whne necessary
-        /// </summary>
-        /// <returns></returns>
-        Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats();
-        /// <summary>
         /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
         /// </summary>
         /// <returns></returns>

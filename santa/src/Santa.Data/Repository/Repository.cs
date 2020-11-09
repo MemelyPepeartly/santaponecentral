@@ -44,240 +44,279 @@ namespace Santa.Data.Repository
         }
         public async Task<List<StrippedClient>> GetAllStrippedClientData()
         {
-            List<StrippedClient> clientList = (await santaContext.Client
-                /* Surveys and responses */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqox => sqox.SurveyOption)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+            List<StrippedClient> clientList = await santaContext.Client
+                .Select(client => new StrippedClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList()
 
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-
-                /* Assignment statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-
-                /* Tags */
-                .Include(c => c.ClientTagXref)
-                    .ThenInclude(t => t.Tag)
-
-                /* Client approval status */
-                .Include(c => c.ClientStatus)
-                .AsNoTracking()
-                .ToListAsync())
-                .Select(Mapper.MapStrippedClient).ToList();
-            return clientList;
-        }
-        public async Task<List<Logic.Objects.Client>> GetAllClientsWithoutChats()
-        {
-            List<Logic.Objects.Client> clientList = (await santaContext.Client
-                /* Surveys and responses */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqox => sqox.SurveyOption)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
-
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-
-                /* Sender/Assignment info and Tags */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Relationship event */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxsc => crxsc.EventType)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxrc => crxrc.EventType)
-
-                /* Assignment statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-
-                /* Tags */
-                .Include(c => c.ClientTagXref)
-                    .ThenInclude(t => t.Tag)
-
-                /* Notes */
-                .Include(c => c.Note)
-
-                /* Client approval status */
-                .Include(c => c.ClientStatus)
-                .AsNoTracking()
-                .ToListAsync())
-                .Select(Mapper.MapClient).ToList();
+                }).AsNoTracking().ToListAsync();
             return clientList;
         }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
-            List<Logic.Objects.Client> clientList = (await santaContext.Client
-                /* Surveys and responses */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqox => sqox.SurveyOption)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+            List<Logic.Objects.Client> clientList = await santaContext.Client
+                .Select(client => new Logic.Objects.Client()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    address = new Address
+                    {
+                        addressLineOne = client.AddressLine1,
+                        addressLineTwo = client.AddressLine2,
+                        city = client.City,
+                        country = client.Country,
+                        state = client.State,
+                        postalCode = client.PostalCode
+                    },
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
+                    {
+                        noteID = note.NoteId,
+                        noteSubject = note.NoteSubject,
+                        noteContents = note.NoteContents
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() : 
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList(),
+                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList()
 
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-
-                /* Sender/Assignment info and Tags */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Relationship event */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxsc => crxsc.EventType)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxrc => crxrc.EventType)
-
-                /* Chat messages */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-
-                /* Assignment statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-
-                /* Tags */
-                .Include(c => c.ClientTagXref)
-                    .ThenInclude(t => t.Tag)
-
-                /* Notes */
-                .Include(c => c.Note)
-
-                /* Client approval status */
-                .Include(c => c.ClientStatus)
-                .AsNoTracking()
-                .ToListAsync())
-                .Select(Mapper.MapClient).ToList();
+                }).AsNoTracking().ToListAsync();
 
             return clientList;
         }
         public async Task<Logic.Objects.Client> GetClientByIDAsync(Guid clientId)
         {
-            Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                /* Surveys and responses */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqox => sqox.SurveyOption)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
+            Logic.Objects.Client logicClient = await santaContext.Client
+                .Select(client => new Logic.Objects.Client()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    address = new Address
+                    {
+                        addressLineOne = client.AddressLine1,
+                        addressLineTwo = client.AddressLine2,
+                        city = client.City,
+                        country = client.Country,
+                        state = client.State,
+                        postalCode = client.PostalCode
+                    },
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
+                    {
+                        noteID = note.NoteId,
+                        noteSubject = note.NoteSubject,
+                        noteContents = note.NoteContents
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList(),
+                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList()
 
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-
-                /* Sender/Assignment info and Tags */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Relationship event */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxsc => crxsc.EventType)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxrc => crxrc.EventType)
-
-                /* Chat messages */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-
-                /* Assignment statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-
-                /* Tags */
-                .Include(c => c.ClientTagXref)
-                    .ThenInclude(t => t.Tag)
-
-                /* Notes */
-                .Include(c => c.Note)
-
-                /* Client approval status */
-                .Include(c => c.ClientStatus)
-                .Where(c => c.ClientId == clientId)
-                .AsNoTracking()
-                .FirstOrDefaultAsync());
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientId);
 
             return logicClient;
         }
         public async Task<Logic.Objects.Client> GetClientByEmailAsync(string clientEmail)
         {
-            Logic.Objects.Client logicClient = Mapper.MapClient(await santaContext.Client
-                /* Surveys and responses */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionOptionXref)
-                        .ThenInclude(sqox => sqox.SurveyOption)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.SurveyQuestion.SurveyQuestionXref)
-
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-
-                /* Sender/Assignment info and Tags */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxsc => crxsc.SenderClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxrc => crxrc.RecipientClient.ClientTagXref)
-                        .ThenInclude(txr => txr.Tag)
-
-                /* Relationship event */
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(crxsc => crxsc.EventType)
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(crxrc => crxrc.EventType)
-
-                /* Chat messages */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(cm => cm.ChatMessage)
-
-                /* Assignment statuses */
-                .Include(c => c.ClientRelationXrefRecipientClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-                .Include(c => c.ClientRelationXrefSenderClient)
-                    .ThenInclude(stat => stat.AssignmentStatus)
-
-                /* Tags */
-                .Include(c => c.ClientTagXref)
-                    .ThenInclude(t => t.Tag)
-
-                /* Notes */
-                .Include(c => c.Note)
-
-                /* Client approval status */
-                .Include(c => c.ClientStatus)
-                .Where(c => c.Email == clientEmail)
-                .AsNoTracking()
-                .FirstOrDefaultAsync());
+            Logic.Objects.Client logicClient = await santaContext.Client
+                .Select(client => new Logic.Objects.Client()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    address = new Address
+                    {
+                        addressLineOne = client.AddressLine1,
+                        addressLineTwo = client.AddressLine2,
+                        city = client.City,
+                        country = client.Country,
+                        state = client.State,
+                        postalCode = client.PostalCode
+                    },
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
+                    {
+                        noteID = note.NoteId,
+                        noteSubject = note.NoteSubject,
+                        noteContents = note.NoteContents
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList(),
+                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = xref.SenderClientId == client.ClientId ? Mapper.MapClientMeta(xref.RecipientClient) : Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList() :
+                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList()
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.email == clientEmail);
 
             return logicClient;
         }

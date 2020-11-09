@@ -65,58 +65,6 @@ namespace Santa.Data.Repository
         }
 
         /// <summary>
-        /// Maps a context client to a logic client
-        /// </summary>
-        /// <param name="contextClient"></param>
-        /// <returns></returns>
-        public static Logic.Objects.Client MapClient(Entities.Client contextClient)
-        {
-            Logic.Objects.Client logicClient = new Logic.Objects.Client()
-            {
-                clientID = contextClient.ClientId,
-                email = contextClient.Email,
-                nickname = contextClient.Nickname,
-                clientName = contextClient.ClientName,
-                isAdmin = contextClient.IsAdmin,
-                hasAccount = contextClient.HasAccount,
-                address = new Address
-                {
-                    addressLineOne = contextClient.AddressLine1,
-                    addressLineTwo = contextClient.AddressLine2,
-                    city = contextClient.City,
-                    country = contextClient.Country,
-                    state = contextClient.State,
-                    postalCode = contextClient.PostalCode
-                },
-
-                clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
-                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
-                assignments = contextClient.ClientRelationXrefSenderClient.Count > 0 ? contextClient.ClientRelationXrefSenderClient.Select(x => Mapper.MapRelationshipMeta(x, x.RecipientClientId)).ToList() : new List<RelationshipMeta>(),
-                senders = contextClient.ClientRelationXrefRecipientClient.Count > 0 ? contextClient.ClientRelationXrefRecipientClient.Select(x => Mapper.MapRelationshipMeta(x, x.SenderClientId)).ToList() : new List<RelationshipMeta>(),
-                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).OrderBy(t => t.tagName).ToList(),
-                notes = contextClient.Note.Select(Mapper.MapNote).ToList()
-            };
-
-            return logicClient;
-        }
-        public static StrippedClient MapStrippedClient(Entities.Client contextClient)
-        {
-            StrippedClient logicStrippedClient = new StrippedClient()
-            {
-                clientID = contextClient.ClientId,
-                email = contextClient.Email,
-                nickname = contextClient.Nickname,
-                clientName = contextClient.ClientName,
-                isAdmin = contextClient.IsAdmin,
-
-                clientStatus = Mapper.MapStatus(contextClient.ClientStatus),
-                responses = contextClient.SurveyResponse.Select(Mapper.MapResponse).ToList(),
-                tags = contextClient.ClientTagXref.Select(Mapper.MapTagRelationXref).OrderBy(t => t.tagName).ToList()
-            };
-
-            return logicStrippedClient;
-        }
-        /// <summary>
         /// Maps a context relationship to a relationship meta
         /// </summary>
         /// <param name="contextRecipientXref"></param>
