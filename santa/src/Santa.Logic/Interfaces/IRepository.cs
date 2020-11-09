@@ -353,12 +353,18 @@ namespace Santa.Logic.Interfaces
         Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID);
         #endregion
 
+        #region Informational
+        Task<List<RelationshipMeta>> getClientAssignmentsByIDAsync(Guid clientID);
+        Task<List<RelationshipMeta>> getClientSendersByIDAsync(Guid clientID);
+        #endregion
+
         #region Utility
         /// <summary>
         /// Saves changes of any CRUD operations in the queue
         /// </summary>
         /// <returns></returns>
         Task SaveAsync();
+
         /// <summary>
         /// Gets a list of all the allowed assignments for a client by their ID, and the event's ID
         /// </summary>
