@@ -87,6 +87,30 @@ namespace Santa.Data.Repository
             }).ToListAsync();
             return clientList;
         }
+        public async Task<List<HQClient>> GetAllHeadquarterClients()
+        {
+            List<HQClient> clientList = await santaContext.Client
+                .Select(client => new HQClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Count(),
+                    senders = client.ClientRelationXrefRecipientClient.Count(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+
+                }).AsNoTracking().ToListAsync();
+            return clientList;
+        }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
             List<Logic.Objects.Client> clientList = await santaContext.Client
@@ -1354,14 +1378,47 @@ namespace Santa.Data.Repository
         #endregion
 
         #region Informational
-        public async Task<List<RelationshipMeta>> getClientAssignmentsByIDAsync(Guid clientID)
+        public async Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID)
         {
-            throw new NotImplementedException();
-        }
+            InfoContainer logicRelationshipContainer = await santaContext.Client.Select(client => new InfoContainer()
+            {
+                agentID = client.ClientId,
+                notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
+                {
+                    noteID = note.NoteId,
+                    noteSubject = note.NoteSubject,
+                    noteContents = note.NoteContents
+                }).ToList(),
+                assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
+                {
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName
+                    }).OrderBy(t => t.tagName).ToList(),
 
-        public async Task<List<RelationshipMeta>> getClientSendersByIDAsync(Guid clientID)
-        {
-            throw new NotImplementedException();
+                    removable = xref.ChatMessage.Count > 0 ? false : true
+                }).ToList(),
+                senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                {
+                    relationshipClient = Mapper.MapClientMeta(xref.SenderClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName
+                    }).OrderBy(t => t.tagName).ToList(),
+
+                    removable = xref.ChatMessage.Count > 0 ? false : true
+                }).ToList()
+            }).FirstOrDefaultAsync(c => c.agentID == clientID);
+            return logicRelationshipContainer;
         }
         #endregion
 
