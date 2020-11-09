@@ -1,11 +1,14 @@
-<div class="noteControlContainer">
+<div class="spinnerDiv" *ngIf="gatheringInfoContainer">
+  <app-loading-spin [spinnerType]="1"></app-loading-spin>
+</div>
+<div class="noteControlContainer" *ngIf="!gatheringInfoContainer">
   <app-note-control
     (postedNewNoteSuccessEvent)="emitRefreshAction()"
     (editedNoteSuccessEvent)="emitRefreshAction()"
     (deletedNoteSuccessEvent)="emitRefreshAction()"
     (clickawayLockedEvent)="emitLockEvent($event)"
     [clientID]="client.clientID"
-    [notes]="client.notes"
+    [notes]="client.infoContainer.notes"
     [createNewNoteOpen]="true"
     [hasMargin]="true"
     [infoOnly]="true">
