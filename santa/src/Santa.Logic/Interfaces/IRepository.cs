@@ -61,6 +61,12 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<StrippedClient>> GetAllStrippedClientData();
         /// <summary>
+        /// Gets a list of all client ID's quickly
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Guid>> GetAllClientIDs();
+
+        /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
         /// </summary>
         /// <param name="targetClient"></param>

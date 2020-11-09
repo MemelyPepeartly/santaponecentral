@@ -11,6 +11,7 @@ using Santa.Logic.Objects.Information_Objects;
 using Santa.Logic.Objects.Base_Objects.Logging;
 using YuleLog = Santa.Logic.Objects.Base_Objects.Logging.YuleLog;
 using Category = Santa.Logic.Objects.Base_Objects.Logging.Category;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Santa.Data.Repository
 {
@@ -71,6 +72,11 @@ namespace Santa.Data.Repository
 
                 }).AsNoTracking().ToListAsync();
             return clientList;
+        }
+        public async Task<List<Guid>> GetAllClientIDs()
+        {
+            List<Guid> clientIDList = await santaContext.Client.Select(client => client.ClientId).Distinct().ToListAsync();
+            return clientIDList;
         }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
