@@ -79,11 +79,11 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client requestingClient = await repository.GetStaticClientObjectByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
-                List<Logic.Objects.Client> clients = await repository.GetAllClientsWithoutChats();
+                List<Logic.Objects.Client> clients = await repository.GetAllClients();
                 if (clients == null)
                 {
                     return NoContent();
@@ -180,7 +180,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<PossiblePairingChoices>>> GetAutoAssignmentsToMassMailerPairs()
         {
-            List<Client> allClients = await repository.GetAllClientsWithoutChats();
+            List<Client> allClients = await repository.GetAllClients();
             List<Client> massMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAILER_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             List<Client> clientsToBeAssignedToMassMailers = allClients.Where(c => c.tags.Any(t => t.tagName == Constants.MASS_MAIL_RECIPIENT_TAG) && c.clientStatus.statusDescription == Constants.APPROVED_STATUS).ToList();
             AssignmentStatus defaultNewAssignmentStatus = (await repository.GetAllAssignmentStatuses()).First(stat => stat.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
