@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { Client } from '../../classes/client';
+import { Client, HQClient } from '../../classes/client';
 import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santa-api.service';
@@ -48,9 +48,9 @@ export class HeadquartersComponent implements OnInit {
 
   public showClientCard: boolean = false;
   public showManualSignupCard: boolean = false;
-  public currentClient: Client;
+  public currentClientID: string;
 
-  public allClients: Array<Client> = [];
+  public allClients: Array<HQClient> = [];
   public allSurveys: Array<Survey> = [];
 
   public gatheringAllClients: boolean;
@@ -73,7 +73,7 @@ export class HeadquartersComponent implements OnInit {
   async ngOnInit() {
     this.initializing = true;
     /* GET STATUS BOOLEAN SUBSCRIBE */
-    this.gatherer.gatheringAllTruncatedClients.subscribe((status: boolean) => {
+    this.gatherer.gatheringAllHQClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status;
     });
     this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
@@ -81,24 +81,24 @@ export class HeadquartersComponent implements OnInit {
     });
 
     /* ALL CLIENTS SUBSCRIBE */
-    this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
+    this.gatherer.allHQClients.subscribe((clients: Array<HQClient>) => {
       this.allClients = clients;
     });
 
-    await this.gatherer.gatherAllTruncatedClients();
     await this.getSurveys();
+    await this.gatherer.gatherAllHQClients();
     this.initializing = false;
   }
-  public async showClientWindow(client: Client)
+  public async showClientWindow(client: HQClient)
   {
-    this.currentClient = client;
+    this.currentClientID = client.clientID;
     this.showManualSignupCard = false;
     this.showClientCard = true;
     this.gatherer.onSelectedClient = true;
     // If the list of all clients does not have the input client in it, refresh the list in the background (Used namely for manual refresh)
-    if(!this.allClients.some((c: Client) => {return c.clientID == client.clientID}))
+    if(!this.allClients.some((c: HQClient) => {return c.clientID == client.clientID}))
     {
-      await this.gatherer.gatherAllTruncatedClients();
+      await this.gatherer.gatherAllHQClients();
     }
   }
   showManualSignupWindow()

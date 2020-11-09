@@ -52,7 +52,7 @@ export class ApprovedAnonsComponent implements OnInit {
   async manualRefresh()
   {
     this.showSpinner = true;
-    await this.gatherer.gatherAllTruncatedClients();
+    await this.gatherer.gatherAllHQClients();
     this.showSpinner = false;
     this.actionTaken = false;
   }
