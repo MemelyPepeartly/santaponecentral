@@ -3,7 +3,7 @@ import { Profile } from 'src/classes/profile';
 import { ProfileService } from 'src/app/services/profile.service';
 import { EventType } from 'src/classes/eventType';
 import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/responseTypes';
-import { SantaApiPutService } from 'src/app/services/santa-api.service';
+import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CountriesService } from 'src/app/services/countries.service';
@@ -17,6 +17,7 @@ import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 export class InformationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
+    public ProfileApiService: ProfileApiService,
     public profileService: ProfileService,
     public SantaApiPut: SantaApiPutService,
     public countryService: CountriesService) { }
@@ -63,8 +64,8 @@ export class InformationComponent implements OnInit {
       clientCountry: this.addressFormControls.country.value
     }
 
-    await this.SantaApiPut.putProfileAddress(this.profile.clientID, newAddressResponse).toPromise();
-    await this.profileService.getProfile(this.profile.email);
+    await this.ProfileApiService.putProfileAddress(this.profile.clientID, newAddressResponse).toPromise();
+    await this.profileService.getProfileByID(this.profile.clientID);
 
     this.clientAddressFormGroup.reset();
     this.showAddressChangeForm = false;
@@ -72,7 +73,7 @@ export class InformationComponent implements OnInit {
   }
   public async softRefreshProfile()
   {
-    await this.profileService.getProfile(this.profile.email);
+    await this.profileService.getProfileByID(this.profile.clientID);
   }
   public showSurvey(survey: Survey)
   {
