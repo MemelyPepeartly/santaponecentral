@@ -77,6 +77,10 @@ export class ControlPanelComponent implements OnInit {
       this.actionTaken = false;
     }
   }
+  public emitRefresh()
+  {
+    this.refreshClientEvent.emit(true);
+  }
   public getProfileAssignmentByMetaAndEventID(meta: ClientMeta, eventID)
   {
     let ProfileAssignment = this.profile.assignments.find((recipient: ProfileAssignment) => {
