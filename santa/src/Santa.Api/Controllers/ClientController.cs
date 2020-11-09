@@ -96,7 +96,32 @@ namespace Santa.Api.Controllers
                 await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            
+
+        }
+
+        // GET: api/Client/Headquarters
+        /// <summary>
+        /// Gets all clients for HQ
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Headquarters")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllHQClients()
+        {
+            Client requestingClient = await repository.GetStaticClientObjectByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                List<HQClient> clients = await repository.GetAllHeadquarterClients();
+                await yuleLogger.logGetAllClients(requestingClient);
+                return Ok(clients.OrderBy(c => c.nickname));
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
 
         // GET: api/Client/5
@@ -148,17 +173,17 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
-        // GET: api/Client/5/Assignments
+        // GET: api/Client/5/RelationshipContainer
         /// <summary>
         /// Gets a list of the clients assignments by ID
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
-        [HttpGet("{clientID}/Assignments")]
+        [HttpGet("{clientID}/InfoContainer")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<RelationshipMeta>>> GetAllRelationshipMetasForClientByID(Guid clientID)
+        public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
-            return Ok(await repository.getClientAssignmentsByIDAsync(clientID));
+            return Ok(await repository.getClientInfoContainerByIDAsync(clientID));
         }
 
 
