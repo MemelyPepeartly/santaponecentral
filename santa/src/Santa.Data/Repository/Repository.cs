@@ -394,9 +394,6 @@ namespace Santa.Data.Repository
                     .ThenInclude(xref => xref.RecipientClient.ClientTagXref)
                         .ThenInclude(txr => txr.Tag)
 
-                /* Profile approval status */
-                .Include(s => s.ClientStatus)
-
                 /* Profile survey responses aand event types */
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
@@ -466,6 +463,7 @@ namespace Santa.Data.Repository
                 .Include(c => c.SurveyResponse)
                     .ThenInclude(sr => sr.Survey.EventType)
                 .Where(c => c.ClientId == clientID)
+                .AsNoTracking()
                 .FirstOrDefaultAsync());
 
             List<Response> responsesToRemove = new List<Response>();
