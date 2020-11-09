@@ -73,10 +73,19 @@ namespace Santa.Data.Repository
                 }).AsNoTracking().ToListAsync();
             return clientList;
         }
-        public async Task<List<Guid>> GetAllClientIDs()
+        public async Task<List<BaseClient>> GetAllBasicClientInformation()
         {
-            List<Guid> clientIDList = await santaContext.Client.Select(client => client.ClientId).Distinct().ToListAsync();
-            return clientIDList;
+            List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).ToListAsync();
+            return clientList;
         }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
