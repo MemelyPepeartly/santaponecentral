@@ -453,28 +453,67 @@ namespace Santa.Data.Repository
         #region Profile
         public async Task<Logic.Objects.Profile> GetProfileByEmailAsync(string email)
         {
-            Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-
-                /* Profile survey responses and event types */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Email == email));
+            Logic.Objects.Profile logicProfile = await santaContext.Client
+                .Select(client => new Profile()
+                {
+                    clientID = client.ClientId,
+                    clientName = client.ClientName,
+                    nickname = client.Nickname,
+                    email = client.Email,
+                    address = new Address
+                    {
+                        addressLineOne = client.AddressLine1,
+                        addressLineTwo = client.AddressLine2,
+                        city = client.City,
+                        country = client.Country,
+                        state = client.State,
+                        postalCode = client.PostalCode
+                    },
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    editable = client.ClientRelationXrefRecipientClient.Count > 0 ? false : true
+                }).FirstOrDefaultAsync(c => c.email == email);
 
             return logicProfile;
         }
         public async Task<Logic.Objects.Profile> GetProfileByIDAsync(Guid clientID)
         {
-            Logic.Objects.Profile logicProfile = Mapper.MapProfile(await santaContext.Client
-                /* Profile survey responses aand event types */
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(s => s.SurveyQuestion.SurveyQuestionXref)
-                .Include(c => c.SurveyResponse)
-                    .ThenInclude(sr => sr.Survey.EventType)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.ClientId == clientID));
+            Logic.Objects.Profile logicProfile = await santaContext.Client
+                .Select(client => new Profile()
+                {
+                    clientID = client.ClientId,
+                    clientName = client.ClientName,
+                    nickname = client.Nickname,
+                    email = client.Email,
+                    address = new Address
+                    {
+                        addressLineOne = client.AddressLine1,
+                        addressLineTwo = client.AddressLine2,
+                        city = client.City,
+                        country = client.Country,
+                        state = client.State,
+                        postalCode = client.PostalCode
+                    },
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    editable = client.ClientRelationXrefRecipientClient.Count > 0 ? false : true
+                }).FirstOrDefaultAsync(c => c.clientID == clientID);
 
             return logicProfile;
         }
