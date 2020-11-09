@@ -87,7 +87,6 @@ export class MapService {
     let mappedProfile: Profile =
     {
       clientID: profile.clientID,
-      clientStatus: this.mapStatus(profile.clientStatus),
       clientName: profile.clientName,
       clientNickname: profile.nickname,
       email: profile.email,

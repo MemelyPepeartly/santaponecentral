@@ -8,7 +8,6 @@ import { ClientMeta } from './message';
 export class Profile
 {
     clientID: string;
-    clientStatus: Status = new Status();
     clientName: string;
     clientNickname: string;
     email: string;
