@@ -1429,12 +1429,13 @@ namespace Santa.Data.Repository
         }
         public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {
-            List<Logic.Objects.Client> allClients = await GetAllClients();
-            Logic.Objects.Client logicClient = allClients.FirstOrDefault(c => c.clientID == clientID);
+            List<HQClient> allClients = await GetAllHeadquarterClients();
+            Logic.Objects.Client logicClient = await GetClientByIDAsync(clientID);
             List<AllowedAssignmentMeta> allowedAssignments = new List<AllowedAssignmentMeta>();
+            List<Logic.Objects.Survey> allSurveys = await GetAllSurveys();
 
 
-            foreach (Logic.Objects.Client potentialAssignment in allClients)
+            foreach (HQClient potentialAssignment in allClients)
             {
                 // If the client doesnt have any assignments that match the potential assignment and eventType, the potential assignment is approved, and the potential assignment is not the current client
                 if (!logicClient.assignments.Any<RelationshipMeta>(c => c.relationshipClient.clientId == potentialAssignment.clientID && c.eventType.eventTypeID == eventTypeID) && potentialAssignment.clientStatus.statusDescription == Constants.APPROVED_STATUS && potentialAssignment.clientID != clientID)
@@ -1442,14 +1443,14 @@ namespace Santa.Data.Repository
                     AllowedAssignmentMeta assignment = Mapper.MapAllowedAssignmentMeta(potentialAssignment);
                     assignment.answeredSurveys = new List<Logic.Objects.Information_Objects.SurveyMeta>();
                     // For each response in the potential assignments response list
-                    foreach (Response response in potentialAssignment.responses)
+                    foreach (Guid answeredSurvey in potentialAssignment.answeredSurveys)
                     {
-                        // If the assignment object does not have any survey values where the surveyID and EventID are already in the list
-                        if(!assignment.answeredSurveys.Any(s => s.surveyID == response.surveyID && s.eventTypeID == response.responseEvent.eventTypeID))
+                        Logic.Objects.Survey selectedAnsweredSurvey = allSurveys.FirstOrDefault(s => s.surveyID == answeredSurvey);
+                        assignment.answeredSurveys.Add(new SurveyMeta()
                         {
-                            // Add it to the list of answered surveys
-                            assignment.answeredSurveys.Add(Mapper.MapSurveyMeta(response));
-                        }
+                            surveyID = selectedAnsweredSurvey.surveyID,
+                            eventTypeID = selectedAnsweredSurvey.eventTypeID
+                        });
                     }
                     allowedAssignments.Add(assignment);
                 }
