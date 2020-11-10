@@ -59,6 +59,8 @@ export class RelationshipMeta {
   clientRelationXrefID: string;
   assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
+  /* For assignment panel component purposes. Not a return from the API*/
+  confirmDelete: boolean = false;
 }
 export class AllowedAssignmentMeta {
   clientMeta: ClientMeta;
