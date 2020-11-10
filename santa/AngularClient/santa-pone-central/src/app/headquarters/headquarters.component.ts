@@ -115,7 +115,7 @@ export class HeadquartersComponent implements OnInit {
         this.gatherer.onSelectedClient = false;
         if(forceRefresh)
         {
-          await this.gatherer.gatherAllTruncatedClients();
+          await this.gatherer.gatherAllHQClients();
         }
       }
       else if(this.showManualSignupCard)
@@ -125,7 +125,7 @@ export class HeadquartersComponent implements OnInit {
       // If any of the viewchildren are set to refresh
       if(this.readyForRefresh)
       {
-        await this.gatherer.gatherAllTruncatedClients();
+        await this.gatherer.gatherAllHQClients();
         this.setChildrenAction(false);
       }
     }
