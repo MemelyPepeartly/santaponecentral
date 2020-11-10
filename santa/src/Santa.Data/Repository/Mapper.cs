@@ -134,6 +134,19 @@ namespace Santa.Data.Repository
 
             return logicMeta;
         }
+        public static ClientMeta MapClientMeta(HQClient logicHQClient)
+        {
+            Logic.Objects.ClientMeta logicMeta = new ClientMeta()
+            {
+                clientId = logicHQClient.clientID,
+                clientName = logicHQClient.clientName,
+                clientNickname = logicHQClient.nickname,
+                hasAccount = logicHQClient.hasAccount,
+                isAdmin = logicHQClient.isAdmin
+            };
+
+            return logicMeta;
+        }
         public static ClientChatMeta MapClientChatMeta(Entities.Client contextClient)
         {
             ClientChatMeta logicMeta = new ClientChatMeta()
@@ -170,6 +183,18 @@ namespace Santa.Data.Repository
                 tags = logicClient.tags,
                 totalSenders = logicClient.senders.Count,
                 totalAssignments = logicClient.assignments.Count
+            };
+
+            return logicAllowedAssignmentMeta;
+        }
+        public static AllowedAssignmentMeta MapAllowedAssignmentMeta(HQClient logicHQClient)
+        {
+            AllowedAssignmentMeta logicAllowedAssignmentMeta = new AllowedAssignmentMeta()
+            {
+                clientMeta = Mapper.MapClientMeta(logicHQClient),
+                tags = logicHQClient.tags,
+                totalSenders = logicHQClient.senders,
+                totalAssignments = logicHQClient.assignments
             };
 
             return logicAllowedAssignmentMeta;
