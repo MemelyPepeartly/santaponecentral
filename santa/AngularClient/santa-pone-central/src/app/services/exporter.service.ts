@@ -12,6 +12,7 @@ export class AssignmentCSVModel
   State: string;
   Country: string;
   'Postal Code': string;
+  'Spaghetti Answer': string;
 }
 
 @Injectable({
@@ -20,7 +21,7 @@ export class AssignmentCSVModel
 export class ExporterService {
 
   downloadFile(data, filename = 'data') {
-    let csvData = this.ConvertToCSV(data, ['Nickname', 'Real Name', 'Event', 'Status', 'Address Line 1', 'Address Line 2', 'City', 'State', 'Country', 'Postal Code']);
+    let csvData = this.ConvertToCSV(data, ['Nickname', 'Real Name', 'Event', 'Status', 'Address Line 1', 'Address Line 2', 'City', 'State', 'Country', 'Postal Code', 'Spaghetti Answer']);
     let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
     let dwldLink = document.createElement("a");
     let url = URL.createObjectURL(blob);
