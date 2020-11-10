@@ -103,10 +103,14 @@ export class AssignmentsPanelComponent implements OnInit {
     this.removeClickedEvent.emit(relationship);
     if(this.assignments.some((relation: RelationshipMeta) => {return relation.clientRelationXrefID == relationship.clientRelationXrefID}))
     {
+      console.log("Got here");
+
       this.selectedAsssignment = new RelationshipMeta();
     }
     else if(this.senders.some((relation: RelationshipMeta) => {return relation.clientRelationXrefID == relationship.clientRelationXrefID}))
     {
+      console.log("Got here");
+
       this.selectedSender = new RelationshipMeta();
     }
   }

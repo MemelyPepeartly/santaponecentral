@@ -87,13 +87,15 @@
 
           <mat-divider [inset]="true"></mat-divider>
 
-          <p class="subtitleWarning" *ngIf="!this.selectedAsssignment.removable || true">Note: If a recipient has a chat history, they cannot be removed</p>
-          <button class="panelButton" mat-raised-button
-          matTooltip="Remove the anon as a recipient"
-          color="warn"
-          [disabled]="!this.selectedAsssignment.removable"
-          [matTooltipPosition]="'right'"
-          (click)="emitRemoveRecipient(this.selectedAsssignment)">Remove Assignment<mat-icon>delete_forever</mat-icon></button>
+          <p class="subtitleWarning" *ngIf="!this.selectedAsssignment.removable">Note: This assignment has a chat history which will also be deleted if the assignment is removed</p>
+          <button mat-raised-button class="panelButton" color="warn" *ngIf="this.selectedAsssignment.confirmDelete == false"
+            matTooltip="Remove the anon as a recipient"
+            [matTooltipPosition]="'right'"
+            (click)="this.selectedAsssignment.confirmDelete = true;">Remove Assignment<mat-icon>delete</mat-icon></button>
+          <button mat-raised-button class="panelButton" color="warn" *ngIf="this.selectedAsssignment.confirmDelete == true"
+            (click)="emitRemoveRecipient(this.selectedAsssignment); this.selectedAsssignment.confirmDelete = false;"
+            matTooltip="Force the removal of this assignment and related chat history"
+            [matTooltipPosition]="'right'">Are you sure?<mat-icon>delete_forever</mat-icon></button>
           <mat-card-subtitle class="infoSubtitle">Remove this assignment from {{ agent.clientNickname }}'s assignment list</mat-card-subtitle>
         </div>
 
