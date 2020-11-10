@@ -5,8 +5,8 @@
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
       [loadingClient]="false"
-      [client]="selectedClient"
-      (refreshSelectedClient)="updateSelectedClient($event)"
+      [clientID]="selectedClientID"
+      (refreshSelectedClient)="true"
       (actionTaken)="setRefreshListAction($event)"></app-selected-anon>
   </div>
 </div>
@@ -64,9 +64,9 @@
       </div>
       <div class="pairingComponentDiv">
         <app-agent-pairing-control
-        [possiblePairingsObject]="possiblePairings[pairingIndex]"
-        (completedPostEvent)="true"
-        (failedPostEvent)="true">
+          [possiblePairingsObject]="possiblePairings[pairingIndex]"
+          (completedPostEvent)="true"
+          (failedPostEvent)="true">
         </app-agent-pairing-control>
       </div>
     </mat-card-content>

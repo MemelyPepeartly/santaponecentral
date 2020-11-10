@@ -120,6 +120,9 @@ export class MapService {
       tags: [],
       infoContainer: new InfoContainer()
     };
+    client.tags.forEach(tag => {
+      mappedHQClient.tags.push(this.mapTag(tag))
+    });
     client.answeredSurveys.forEach(answeredSurvey => {
       mappedHQClient.answeredSurveys.push(answeredSurvey)
     });

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Client, PossiblePairingChoices,  } from 'src/classes/client';
+import { Client, HQClient, PossiblePairingChoices,  } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from '../../shared/constants/TagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
@@ -18,9 +18,9 @@ export class AutoAssignmentComponent implements OnInit {
     public SantaApiGet: SantaApiGetService,
     public mapper: MapService) { }
 
-  @Input() allClients: Array<Client> = []
+  @Input() allClients: Array<HQClient> = []
 
-  public selectedClient: Client = new Client();
+  public selectedClientID: string;
   public possiblePairings: Array<PossiblePairingChoices> = [];
 
   public gatheringAllClients: boolean = false;
@@ -34,18 +34,18 @@ export class AutoAssignmentComponent implements OnInit {
 
   async ngOnInit() {
     this.buttonClicked = false;
-    this.gatherer.gatheringAllTruncatedClients.subscribe((status: boolean) => {
+    this.gatherer.gatheringAllHQClients.subscribe((status: boolean) => {
       this.gatheringAllClients = status
     });
-    await this.gatherer.gatherAllTruncatedClients();
+    await this.gatherer.gatherAllHQClients();
   }
-  public sortMassMailers() : Array<Client>
+  public sortMassMailers() : Array<HQClient>
   {
-    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAILER}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
+    return this.allClients.filter((client: HQClient) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAILER}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
   }
-  public sortMassMailRecipients() : Array<Client>
+  public sortMassMailRecipients() : Array<HQClient>
   {
-    return this.allClients.filter((client: Client) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
+    return this.allClients.filter((client: HQClient) => {return client.tags.some((tag: Tag) => {return tag.tagName == TagConstants.MASS_MAIL_RECIPIENT}) && client.clientStatus.statusDescription == StatusConstants.APPROVED})
   }
   public async getAssignmentPairings()
   {
@@ -60,23 +60,18 @@ export class AutoAssignmentComponent implements OnInit {
 
     this.gettingAssignmentPairings = false;
   }
-
-  public async updateSelectedClient(clientID: string)
+  public selectClient(client: HQClient)
   {
-    this.selectedClient = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
-  }
-  public selectClient(client: Client)
-  {
-    this.selectedClient = client;
+    this.selectedClientID = client.clientID;
     this.showClientCard = true;
   }
   public async hideClientWindow()
   {
     this.showClientCard = false;
-    this.selectedClient = new Client();
+    this.selectedClientID = undefined;
     if(this.refreshList)
     {
-      await this.gatherer.gatherAllClients();
+      await this.gatherer.gatherAllHQClients();
     }
   }
   public setRefreshListAction(event: boolean)
