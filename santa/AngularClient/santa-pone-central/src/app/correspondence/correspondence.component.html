@@ -120,25 +120,6 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- All -->
-      <mat-card class="infoCard">
-        <mat-card-header>
-          <mat-card-title>All</mat-card-title>
-          <mat-card-subtitle>List of all contact histories for contacted anons</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
-          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
-          <app-chat-histories *ngIf="!gettingAllChats"
-            [viewerClient]="subject"
-            [disabled]="updateOnClickaway"
-            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
-            [histories]="allChats"
-            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
-            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
-        </mat-card-content>
-      </mat-card>
-
     </mat-card-content>
   </mat-card>
 </div>
