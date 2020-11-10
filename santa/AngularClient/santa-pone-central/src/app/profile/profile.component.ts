@@ -144,6 +144,7 @@ export class ProfileComponent implements OnInit {
       };
       this.profile.assignments = assignmentArray;
       await this.profileService.getUnloadedHistories(this.clientID);
+      await this.profileService.gatherGeneralHistory(this.clientID, this.profile.clientID);
       this.gettingAssignments = false;
     }, err => {
       console.group();
