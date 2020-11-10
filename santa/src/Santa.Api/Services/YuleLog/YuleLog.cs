@@ -1,9 +1,11 @@
 ﻿using Santa.Api.Models.Assignment_Status_Models;
+using Santa.Api.Models.Client_Models;
 using Santa.Data.Entities;
 using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Logic.Objects.Base_Objects.Logging;
+using Santa.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -227,29 +229,40 @@ namespace Santa.Api.Services.YuleLog
         }
         #endregion
 
-        public Task logCreatedNewMessage(Client requestingClient)
+        public async Task logCreatedNewMessage(Client requestingClient, ClientChatMeta sender, ClientChatMeta receiver)
         {
-            throw new NotImplementedException();
+            string receiverNickname = receiver.clientNickname;
+            if (receiver.clientId == null)
+            {
+                receiverNickname = "Event Organizers";
+            }
+            string logMessage = $"{requestingClient.nickname} requested to post a new message. Sender: {sender.clientNickname} | Reciever: {receiverNickname} ";
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY), logMessage));
+            await saveLogs();
         }
 
-        public Task logCreatedNewClient(Client requestingClient)
+        public async Task logCreatedNewClient(Client requestingClient)
         {
-            throw new NotImplementedException();
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a new client object"));
+            await saveLogs();
         }
 
-        public Task logCreatedNewAuth0Client(Client requestingClient)
+        public async Task logCreatedNewAuth0Client(Client requestingClient)
         {
-            throw new NotImplementedException();
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a client an Auth0 account"));
+            await saveLogs();
         }
 
-        public Task logCreatedNewTag(Client requestingClient)
+        public async Task logCreatedNewTag(Client requestingClient, Logic.Objects.Tag newTag)
         {
-            throw new NotImplementedException();
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_TAG_CATEGORY), $"{requestingClient.nickname} requested to make a new tag: {newTag.tagName}"));
+            await saveLogs();
         }
 
-        public Task logCreatedNewClientTagRelationship(Client requestingClient)
+        public async Task logCreatedNewClientTagRelationship(Client requestingClient)
         {
-            throw new NotImplementedException();
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY), $"{requestingClient.nickname} requested to make a new tag: {newTag.tagName}"));
+            await saveLogs();
         }
 
         public Task logDeletedClient(Client requestingClient)

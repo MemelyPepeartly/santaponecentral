@@ -1,4 +1,5 @@
 ﻿using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,10 +111,10 @@ namespace Santa.Api.Services.YuleLog
         Task saveLogs();
         #endregion
 
-        Task logCreatedNewMessage(Client requestingClient);
+        Task logCreatedNewMessage(Client requestingClient, ClientChatMeta sender, ClientChatMeta reciever);
         Task logCreatedNewClient(Client requestingClient);
         Task logCreatedNewAuth0Client(Client requestingClient);
-        Task logCreatedNewTag(Client requestingClient);
+        Task logCreatedNewTag(Client requestingClient, Tag newTag);
         Task logCreatedNewClientTagRelationship(Client requestingClient);
         Task logDeletedClient(Client requestingClient);
         Task logDeletedAssignment(Client requestingClient);
