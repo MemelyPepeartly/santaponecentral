@@ -51,7 +51,7 @@
           <mat-card-subtitle *ngIf="!gettingAllChats && sortByUnread().length == 0">(No unread messages to display)</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
             [viewerClient]="subject"
@@ -70,7 +70,7 @@
           <mat-card-subtitle>General correspondence histories are not attatched to specific assignments</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
@@ -89,7 +89,7 @@
           <mat-card-subtitle>List of all anon conversations for the {{ event.eventDescription }}</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
@@ -108,7 +108,7 @@
           <mat-card-subtitle>List of all anon conversations that have the "{{ assignmentStatus.assignmentStatusName }}" status</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
@@ -127,7 +127,7 @@
           <mat-card-subtitle>List of all contact histories for contacted anons</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats"
             [viewerClient]="subject"
