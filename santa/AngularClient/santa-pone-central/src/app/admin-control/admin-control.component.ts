@@ -60,8 +60,6 @@ export class AdminControlComponent implements OnInit
     });
     this.gatherer.allHQClients.subscribe((clients: Array<HQClient>) => {
       this.allClients = clients;
-      console.log(clients);
-
     });
     this.gatherer.allCategories.subscribe((categoryArray: Array<Category>) => {
       this.allCategories = categoryArray;
