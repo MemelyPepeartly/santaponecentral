@@ -322,7 +322,7 @@ export class SantaApiDeleteService {
     return this.http.delete(endpoint + 'Client/' + id);
   }
   deleteClientRecipient(id: string, relationship: ClientSenderRecipientRelationshipReponse): Observable<any> {
-    return this.http.delete(endpoint + 'Client/' + id + '/Recipient?recipientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
+    return this.http.delete(endpoint + 'Client/' + id + '/Recipient?assignmentClientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
   }
   deleteTagFromClient(clientTagRelationship: ClientTagRelationshipResponse): Observable<any> {
     return this.http.delete(endpoint + 'Client/' + clientTagRelationship.clientID + '/Tag?tagID=' + clientTagRelationship.tagID);

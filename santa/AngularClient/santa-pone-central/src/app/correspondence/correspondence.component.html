@@ -5,9 +5,8 @@
   <div class="fixedDiv mat-elevation-z6">
       <app-selected-anon
       [loadingClient]="loadingClient"
-      [client]="selectedAnon"
+      [clientID]="selectedAnonID"
       (actionTaken)="updateChats(true, true)"
-      (refreshSelectedClient)="updateSelectedClient($event)"
       (setClickAwayLockEvent)="setClickawayLock($event)"></app-selected-anon>
   </div>
 </div>

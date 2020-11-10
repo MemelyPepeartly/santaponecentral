@@ -817,16 +817,31 @@ namespace Santa.Api.Controllers
         /// Delets an assignment from a client
         /// </summary>
         /// <param name="clientID"></param>
-        /// <param name="recipientID"></param>
+        /// <param name="assignmentClientID"></param>
         /// <param name="eventID"></param>
         /// <returns></returns>
         [HttpDelete("{clientID}/Recipient")]
         [Authorize(Policy = "update:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid recipientID, Guid eventID)
+        public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid assignmentClientID, Guid eventID)
         {
-            await repository.DeleteRecieverXref(clientID, recipientID, eventID);
+            // Get client and assignment in question
+            Client logicClient = await repository.GetClientByIDAsync(clientID);
+            RelationshipMeta assignmentMeta = logicClient.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
+
+            // Get the history of that assignment, and queues all messages from it to delete as a cascade
+            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicClient);
+            foreach(Message message in chatHistory.subjectMessages)
+            {
+                await repository.DeleteMessageByID(message.chatMessageID);
+            }
+            foreach (Message message in chatHistory.recieverMessages)
+            {
+                await repository.DeleteMessageByID(message.chatMessageID);
+            }
+            await repository.DeleteRecieverXref(clientID, assignmentClientID, eventID);
+
             await repository.SaveAsync();
-            return await repository.GetClientByIDAsync(clientID);
+            return Ok(await repository.GetClientByIDAsync(clientID));
         }
         // DELETE: api/Client/5/Tag
         /// <summary>

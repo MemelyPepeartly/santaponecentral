@@ -163,6 +163,7 @@ namespace Santa.Logic.Interfaces
         Task<List<Message>> GetAllMessages();
         Task<Logic.Objects.Message> GetMessageByIDAsync(Guid chatMessageID);
         Task UpdateMessageByIDAsync(Message targetMessage);
+        Task DeleteMessageByID(Guid chatMessageID);
 
         #region Message Histories
         /* Subject ID's are needed to determine who was the client that made the call. For example, if a person with a profile wants their messages,
