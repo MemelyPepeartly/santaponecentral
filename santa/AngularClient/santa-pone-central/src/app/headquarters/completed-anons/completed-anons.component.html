@@ -34,10 +34,10 @@
         </mat-chip-list>
       </mat-card-title>
       <mat-card-subtitle>
-        <span [ngClass]="{'notice' : client.assignments.length == 0}">Assignments: {{ client.assignments.length }}</span>
+        <span [ngClass]="{'notice' : client.assignments == 0}">Assignments: {{ client.assignments }}</span>
       </mat-card-subtitle>
       <mat-card-subtitle>
-        <span>Senders: {{ client.senders.length }}</span>
+        <span>Senders: {{ client.senders }}</span>
       </mat-card-subtitle>
       <mat-card-subtitle>
         <span>Agent Name: {{ client.clientName }}</span>

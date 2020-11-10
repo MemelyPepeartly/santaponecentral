@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SantaApiGetService, YuleLogService } from './santa-api.service';
 import { MapService } from './mapper.service';
-import { AssignmentStatus, Client } from 'src/classes/client';
+import { AssignmentStatus, Client, HQClient } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
@@ -30,6 +30,12 @@ export class GathererService {
   get gatheringAllTruncatedClients()
   {
     return this._gatheringAllTruncatedClients.asObservable();
+  }
+
+  private _gatheringAllHQClients: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get gatheringAllHQClients()
+  {
+    return this._gatheringAllHQClients.asObservable();
   }
 
   private _gatheringAllTags: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -87,17 +93,18 @@ export class GathererService {
   }
 
   /* BEHAVIOR SUBJECTS FOR DATA */
-  private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
-  private _allTruncatedClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([])
-  private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([])
-  private _allSurveys: BehaviorSubject<Array<Survey>> = new BehaviorSubject([])
-  private _allQuestions: BehaviorSubject<Array<Question>> = new BehaviorSubject([])
-  private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([])
-  private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([])
-  private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([])
-  private _allAssignmentStatuses: BehaviorSubject<Array<AssignmentStatus>> = new BehaviorSubject([])
-  private _allCategories: BehaviorSubject<Array<Category>> = new BehaviorSubject([])
-  private _allYuleLogs: BehaviorSubject<Array<YuleLog>> = new BehaviorSubject([])
+  private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([]);
+  private _allTruncatedClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([]);
+  private _allHQClients: BehaviorSubject<Array<HQClient>>= new BehaviorSubject([]);
+  private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([]);
+  private _allSurveys: BehaviorSubject<Array<Survey>> = new BehaviorSubject([]);
+  private _allQuestions: BehaviorSubject<Array<Question>> = new BehaviorSubject([]);
+  private _allEvents: BehaviorSubject<Array<EventType>> = new BehaviorSubject([]);
+  private _allStatuses: BehaviorSubject<Array<Status>> = new BehaviorSubject([]);
+  private _allMessages: BehaviorSubject<Array<Message>> = new BehaviorSubject([]);
+  private _allAssignmentStatuses: BehaviorSubject<Array<AssignmentStatus>> = new BehaviorSubject([]);
+  private _allCategories: BehaviorSubject<Array<Category>> = new BehaviorSubject([]);
+  private _allYuleLogs: BehaviorSubject<Array<YuleLog>> = new BehaviorSubject([]);
 
 
 
@@ -109,6 +116,7 @@ export class GathererService {
   {
     this._allClients.next(clientArray);
   }
+
   get allTruncatedClients()
   {
     return this._allTruncatedClients.asObservable();
@@ -116,6 +124,15 @@ export class GathererService {
   private updateAllTruncatedClient(clientArray: Array<Client>)
   {
     this._allTruncatedClients.next(clientArray);
+  }
+
+  get allHQClients()
+  {
+    return this._allHQClients.asObservable();
+  }
+  private updateAllHQClient(clientArray: Array<HQClient>)
+  {
+    this._allHQClients.next(clientArray);
   }
 
   get allTags()
@@ -242,6 +259,28 @@ export class GathererService {
     }
     this.updateAllTruncatedClient(clientList);
     this._gatheringAllTruncatedClients.next(false);
+  }
+
+  public async gatherAllHQClients()
+  {
+    this._gatheringAllHQClients.next(true);
+
+    let clientList: Array<HQClient> = []
+
+    var res = await this.SantaApiGet.getAllHQClients().toPromise().catch(err => {
+      console.group()
+      console.log("Something went wrong gathering all clients in the gatherer");
+      console.log(err);
+      console.groupEnd();
+    });
+
+
+    for(let i = 0; i < res.length; i++)
+    {
+      clientList.push(this.ApiMapper.mapHQClient(res[i]));
+    }
+    this.updateAllHQClient(clientList);
+    this._gatheringAllHQClients.next(false);
   }
 
   public async gatherAllTags()

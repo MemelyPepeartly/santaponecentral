@@ -6,7 +6,7 @@ import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
 import { GathererService } from '../services/gatherer.service';
 import { TagControlComponent } from './tag-control/tag-control.component';
-import { Client } from 'src/classes/client';
+import { Client, HQClient } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
@@ -33,7 +33,7 @@ export class AdminControlComponent implements OnInit
   public allEvents: Array<EventType> = [];
   public allSurveys: Array<Survey> = [];
   public allQuestions: Array<Question> = [];
-  public allClients: Array<Client> = [];
+  public allClients: Array<HQClient> = [];
   public allCategories: Array<Category> = [];
   public allYuleLogs: Array<YuleLog> = [];
 
@@ -58,7 +58,7 @@ export class AdminControlComponent implements OnInit
     this.gatherer.allQuestions.subscribe((questionArray: Array<Question>) => {
       this.allQuestions = questionArray;
     });
-    this.gatherer.allTruncatedClients.subscribe((clients: Array<Client>) => {
+    this.gatherer.allHQClients.subscribe((clients: Array<HQClient>) => {
       this.allClients = clients;
     });
     this.gatherer.allCategories.subscribe((categoryArray: Array<Category>) => {

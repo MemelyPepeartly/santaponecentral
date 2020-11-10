@@ -11,7 +11,7 @@
     <div class="fixedDiv mat-elevation-z6">
         <app-selected-anon
         [loadingClient]="false"
-        [client]="currentClient"
+        [clientID]="currentClientID"
         (setClickAwayLockEvent)="setClickawayLock($event)"
         (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
         (deletedAnon)="hideOpenWindow(true)">

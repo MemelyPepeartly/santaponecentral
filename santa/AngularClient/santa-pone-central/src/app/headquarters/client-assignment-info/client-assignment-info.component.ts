@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { Client, RelationshipMeta } from 'src/classes/client';
+import { MapService } from 'src/app/services/mapper.service';
+import { SantaApiGetService } from 'src/app/services/santa-api.service';
+import { Client, HQClient, RelationshipMeta } from 'src/classes/client';
 import { EventType } from 'src/classes/eventType';
 
 @Component({
@@ -10,28 +12,37 @@ import { EventType } from 'src/classes/eventType';
 })
 export class ClientAssignmentInfoComponent implements OnInit {
 
-  constructor(public gatherer: GathererService) { }
+  constructor(public gatherer: GathererService, public SantaApiGet: SantaApiGetService, public mapper: MapService) { }
 
-  @Input() client: Client = new Client();
+  @Input() client: HQClient = new HQClient();
 
   public events: Array<EventType> = [];
 
+  public gatheringAllEvents: boolean = false;
+  public gatheringInfoContainer: boolean = false;
+
   async ngOnInit() {
     this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
-
+      this.gatheringAllEvents = status;
     });
     this.gatherer.allEvents.subscribe((eventArray: Array<EventType>) => {
       this.events = eventArray
     });
+    if(this.client.infoContainer.agentID == undefined)
+    {
+      this.gatheringInfoContainer = true;
+      this.client.infoContainer = this.mapper.mapInfoContainer(await this.SantaApiGet.getInfoContainerByClientID(this.client.clientID).toPromise());
+      this.gatheringInfoContainer = false;
+    }
     await this.gatherer.gatherAllEvents();
   }
 
   public getEventSenders(eventType: EventType) : Array<RelationshipMeta>
   {
-    return this.client.senders.filter((sender: RelationshipMeta) => {return sender.eventType.eventTypeID == eventType.eventTypeID});
+    return this.client.infoContainer.senders.filter((sender: RelationshipMeta) => {return sender.eventType.eventTypeID == eventType.eventTypeID});
   }
   public getEventAssignments(eventType: EventType) : Array<RelationshipMeta>
   {
-    return this.client.assignments.filter((assignment: RelationshipMeta) => {return assignment.eventType.eventTypeID == eventType.eventTypeID});
+    return this.client.infoContainer.assignments.filter((assignment: RelationshipMeta) => {return assignment.eventType.eventTypeID == eventType.eventTypeID});
   }
 }

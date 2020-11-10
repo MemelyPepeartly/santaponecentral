@@ -230,8 +230,8 @@ export class ProfileComponent implements OnInit {
   public async manualRefreshProfile(isSoftUpdate: boolean = false)
   {
     this.refreshingHistories = true;
+    this.gettingAllHistories = !isSoftUpdate;
     this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
-
       let assignmentArray: Array<ProfileAssignment> = [];
       for(let i = 0; i < res.length; i++)
       {
@@ -239,6 +239,7 @@ export class ProfileComponent implements OnInit {
       };
       this.profile.assignments = assignmentArray;
       await this.profileService.getUnloadedHistories(this.clientID, true);
+      this.gettingAllHistories = false;
       this.refreshingHistories = false;
     }, err => {
       console.group();

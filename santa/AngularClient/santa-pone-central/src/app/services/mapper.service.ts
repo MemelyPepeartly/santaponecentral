@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient} from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer} from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -102,6 +102,54 @@ export class MapService {
     });
 
     return mappedStrippedClient;
+  }
+  mapHQClient(client) : HQClient
+  {
+    let mappedHQClient: HQClient =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      email: client.email,
+      clientNickname: client.nickname,
+      clientStatus: this.mapStatus(client.clientStatus),
+      isAdmin: client.isAdmin,
+      hasAccount: client.hasAccount,
+      answeredSurveys: [],
+      senders: client.senders,
+      assignments: client.assignments,
+      tags: [],
+      infoContainer: new InfoContainer()
+    };
+    client.tags.forEach(tag => {
+      mappedHQClient.tags.push(this.mapTag(tag))
+    });
+    client.answeredSurveys.forEach(answeredSurvey => {
+      mappedHQClient.answeredSurveys.push(answeredSurvey)
+    });
+
+    return mappedHQClient;
+  }
+  mapInfoContainer(infoContainer) : InfoContainer
+  {
+    let mappedContainer: InfoContainer =
+    {
+      agentID: infoContainer.agentID,
+      notes: [],
+      senders: [],
+      assignments: []
+    };
+
+    infoContainer.assignments.forEach(assignment => {
+      mappedContainer.assignments.push(this.mapRelationshipMeta(assignment))
+    });
+    infoContainer.senders.forEach(sender => {
+      mappedContainer.senders.push(this.mapRelationshipMeta(sender))
+    });
+    infoContainer.notes.forEach(note => {
+      mappedContainer.notes.push(this.mapNote(note))
+    });
+
+    return mappedContainer;
   }
   mapProfile(profile) : Profile
   {

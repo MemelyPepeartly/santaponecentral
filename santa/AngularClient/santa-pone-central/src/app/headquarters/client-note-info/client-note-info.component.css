@@ -2,3 +2,9 @@
 {
   text-align: left;
 }
+.spinnerDiv
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

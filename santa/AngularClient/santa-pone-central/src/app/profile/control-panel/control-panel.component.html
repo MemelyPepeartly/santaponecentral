@@ -16,6 +16,14 @@
         <mat-card-subtitle>Anon's Assigned to you</mat-card-subtitle>
         <mat-card-subtitle *ngIf="isAdmin">(Admins cannot view their own histories with the admins)</mat-card-subtitle>
         <mat-card-subtitle><button mat-raised-button [disabled]="loading || gettingAllHistories || histories.length == 0" (click)="exportCSVOfAssignments()">Export CSV of Assignments</button></mat-card-subtitle>
+        <mat-card-subtitle>
+          <button mat-raised-button
+            [disabled]="loading || gettingAllHistories || refreshing"
+            matTooltip="Don't break your browser, anon"
+            [matTooltipPosition]="'right'"
+            (click)="emitRefresh()">Refresh Assignment List <mat-icon>refresh</mat-icon>
+          </button>
+      </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div *ngIf="(histories.length == 0) && doneGettingInfo">

@@ -53,6 +53,7 @@ export class SelectedAnonComponent implements OnInit {
     public countryService: CountriesService) { }
 
   @Input() client: Client = new Client();
+  @Input() clientID: string
   @Input() loadingClient: boolean = true;
 
   @Output() actionTaken: EventEmitter<any> = new EventEmitter();
@@ -166,6 +167,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.gatherer.onSelectedClient = true;
 
+    this.loadingClient = true;
+    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID != undefined ? this.client.clientID : this.clientID).toPromise());
+    this.loadingClient = false;
+
     /* FORM BUILDERS */
     this.clientNicknameFormGroup = this.formBuilder.group({
       newNickname: ['', Validators.required && Validators.pattern],
@@ -192,8 +197,6 @@ export class SelectedAnonComponent implements OnInit {
       this.statuses = statusArray;
     });
     await this.gatherer.gatherAllStatuses();
-
-    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
 
     /* ---- CLIENT SUBSCRIBES ---- */
     //Gathers all client surveys (Must come before gatherResponses)

@@ -65,6 +65,11 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<BaseClient>> GetAllBasicClientInformation();
+        /// <summary>
+        /// Gets a headquarter object for clients and faster parsing
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HQClient>> GetAllHeadquarterClients();
 
         /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
@@ -360,8 +365,7 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Informational
-        Task<List<RelationshipMeta>> getClientAssignmentsByIDAsync(Guid clientID);
-        Task<List<RelationshipMeta>> getClientSendersByIDAsync(Guid clientID);
+        Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID);
         #endregion
 
         #region Utility

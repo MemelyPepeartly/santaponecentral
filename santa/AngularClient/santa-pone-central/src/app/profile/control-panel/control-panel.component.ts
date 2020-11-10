@@ -5,7 +5,7 @@ import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/mapper.service';
 import { ProfileService } from 'src/app/services/profile.service';
-import { Survey } from 'src/classes/survey';
+import { Survey, SurveyResponse } from 'src/classes/survey';
 import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
 import { AssignmentCSVModel, ExporterService } from 'src/app/services/exporter.service';
 
@@ -77,6 +77,10 @@ export class ControlPanelComponent implements OnInit {
       this.actionTaken = false;
     }
   }
+  public emitRefresh()
+  {
+    this.refreshClientEvent.emit(true);
+  }
   public getProfileAssignmentByMetaAndEventID(meta: ClientMeta, eventID)
   {
     let ProfileAssignment = this.profile.assignments.find((recipient: ProfileAssignment) => {
@@ -115,6 +119,7 @@ export class ControlPanelComponent implements OnInit {
         State: assignment.address.state,
         Country: assignment.address.country,
         'Postal Code': assignment.address.postalCode,
+        'Spaghetti Answer': assignment.responses.find((response: SurveyResponse) => {return (response.surveyQuestion.questionID == "ab44ac50-60fe-4e3f-b9b8-eeb799d334b9" || response.surveyQuestion.questionID == "9d1cae7b-d8a6-4130-ae03-2a6fdb2902dd") && response.responseEvent.eventTypeID == assignment.recipientEvent.eventTypeID}).responseText
       });
     });
     return dataArray;
