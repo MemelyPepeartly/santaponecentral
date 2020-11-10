@@ -159,21 +159,8 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
+                        tags = new List<Logic.Objects.Tag>(),
                         removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
                     {
@@ -181,21 +168,8 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
+                        tags = new List<Logic.Objects.Tag>(),
                         removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList()
 
                 }).AsNoTracking().ToListAsync();
@@ -250,21 +224,8 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
+                        tags = new List<Logic.Objects.Tag>(),
                         removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
                     {
@@ -272,21 +233,8 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                        tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
+                        tags = new List<Logic.Objects.Tag>(),
                         removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList()
 
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientId);
@@ -342,20 +290,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
-                        removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
                     {
@@ -364,20 +298,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>()
-                        /*
-                        tags = xref.SenderClientId == client.ClientId ? xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList() :
-                        xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        
-                        removable = xref.ChatMessage.Count > 0 ? false : true
-                        */
                     }).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.email == clientEmail);
 
