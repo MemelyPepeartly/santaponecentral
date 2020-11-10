@@ -106,8 +106,10 @@ export class ControlPanelComponent implements OnInit {
   }
   public convertToAssignmentCSVModel() : Array<AssignmentCSVModel>
   {
-    let dataArray: Array<AssignmentCSVModel> = []
+    let dataArray: Array<AssignmentCSVModel> = [];
+
     this.profile.assignments.forEach((assignment: ProfileAssignment) => {
+      let spaghettiAnswer: SurveyResponse = assignment.responses.find((response: SurveyResponse) => {return (response.surveyQuestion.questionID == "ab44ac50-60fe-4e3f-b9b8-eeb799d334b9" || response.surveyQuestion.questionID == "9d1cae7b-d8a6-4130-ae03-2a6fdb2902dd") && response.responseEvent.eventTypeID == assignment.recipientEvent.eventTypeID})
       dataArray.push({
         Nickname: assignment.recipientClient.clientNickname,
         'Real Name': assignment.recipientClient.clientName,
@@ -119,7 +121,7 @@ export class ControlPanelComponent implements OnInit {
         State: assignment.address.state,
         Country: assignment.address.country,
         'Postal Code': assignment.address.postalCode,
-        'Spaghetti Answer': assignment.responses.find((response: SurveyResponse) => {return (response.surveyQuestion.questionID == "ab44ac50-60fe-4e3f-b9b8-eeb799d334b9" || response.surveyQuestion.questionID == "9d1cae7b-d8a6-4130-ae03-2a6fdb2902dd") && response.responseEvent.eventTypeID == assignment.recipientEvent.eventTypeID}).responseText
+        'Spaghetti Answer': spaghettiAnswer != undefined ? spaghettiAnswer.responseText : "No spaghetti answer for this agent exists"
       });
     });
     return dataArray;
