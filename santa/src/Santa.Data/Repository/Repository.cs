@@ -633,6 +633,11 @@ namespace Santa.Data.Repository
 
             santaContext.ChatMessage.Update(contextMessage);
         }
+        public async Task DeleteMessageByID(Guid chatMessageID)
+        {
+            ChatMessage contextMessage = await santaContext.ChatMessage.FirstOrDefaultAsync(m => m.ChatMessageId == chatMessageID);
+            santaContext.ChatMessage.Remove(contextMessage);
+        }
 
         #region Message Histories
         public async Task<List<MessageHistory>> GetAllChatHistories(Logic.Objects.Client subjectClient)
