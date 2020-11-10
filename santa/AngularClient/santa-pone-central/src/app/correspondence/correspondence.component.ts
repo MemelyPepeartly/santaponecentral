@@ -4,7 +4,7 @@ import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
-import { AssignmentStatus, Client } from 'src/classes/client';
+import { AssignmentStatus, Client, HQClient } from 'src/classes/client';
 import { MapService } from '../services/mapper.service';
 import { FormGroup } from '@angular/forms';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
@@ -57,7 +57,7 @@ export class CorrespondenceComponent implements OnInit {
   public updateOnClickaway: boolean = false;
   public clickAwayLocked: boolean = false;
 
-  public selectedAnon: Client = new Client();
+  public selectedAnonID: string;
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
   public selectedHistory: MessageHistory = new MessageHistory();
 
@@ -177,7 +177,7 @@ export class CorrespondenceComponent implements OnInit {
       if(this.chatComponent == undefined && this.showClientCard == true)
       {
         this.showClientCard = false;
-        this.selectedAnon = new Client();
+        this.selectedAnonID = undefined;
 
         // If the updater variable is true, refresh on clicking away
         if(this.updateOnClickaway)
@@ -209,11 +209,7 @@ export class CorrespondenceComponent implements OnInit {
     this.loadingClient = true;
     this.showClientCard = true;
 
-    var data = await this.SantaApiGet.getClientByClientID(meta.clientID).toPromise();
-    var clientThing = this.mapper.mapClient(data);
-
-    this.selectedAnon = clientThing
-    this.selectedAnonComponent.setup();
+    this.selectedAnonID = meta.clientID
 
     this.loadingClient = false;
   }
@@ -223,10 +219,6 @@ export class CorrespondenceComponent implements OnInit {
     this.selectedRecieverMeta = history.conversationClient;
     this.showChat = true;
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-  }
-  public async updateSelectedClient(clientID: string)
-  {
-    this.selectedAnon = this.mapper.mapClient(await this.SantaApiGet.getClientByClientID(clientID).toPromise());
   }
   public async updateChats(isSoftUpdate: boolean = false, skipSelected: boolean = false)
   {
