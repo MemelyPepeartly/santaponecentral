@@ -116,4 +116,10 @@ export class ChatService {
     this.updateSelectedHistory(messageHistory);
     this._gettingSelectedHistory.next(false);
   }
+  public clearAllChats()
+  {
+    this.updateAllChats([]);
+    this.updateSelectedHistory(undefined)
+    this.updateAllEventChats([]);
+  }
 }
