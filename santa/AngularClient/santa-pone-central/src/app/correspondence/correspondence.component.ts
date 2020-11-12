@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
@@ -20,7 +20,7 @@ import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-an
   templateUrl: './correspondence.component.html',
   styleUrls: ['./correspondence.component.css']
 })
-export class CorrespondenceComponent implements OnInit {
+export class CorrespondenceComponent implements OnInit, OnDestroy {
 
   constructor(public SantaApiGet: SantaApiGetService,
     public Auth: AuthService,
@@ -114,6 +114,9 @@ export class CorrespondenceComponent implements OnInit {
     await this.gatherer.gatherAllAssignmentStatuses();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
 
+  }
+  ngOnDestroy(): void {
+    this.ChatService.clearAllChats();
   }
   public sortByEvent(eventType: EventType)
   {
