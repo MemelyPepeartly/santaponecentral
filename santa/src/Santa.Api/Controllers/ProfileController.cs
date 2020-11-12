@@ -15,6 +15,7 @@ using Santa.Api.Models;
 using Santa.Api.Models.Profile_Models;
 using Santa.Api.Services.YuleLog;
 using Santa.Logic.Constants;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -71,8 +72,9 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Profile logicProfile = await repository.GetProfileByEmailAsync(email);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+            
             
             // Log the profile request
             try
@@ -108,8 +110,8 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByIDAsync(Guid clientID)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
 
             // Log the profile request
             try
@@ -145,8 +147,8 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> GetAssignments(Guid clientID)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
 
             if (logicStaticClient.clientID == checkerClient.clientID)
             {
@@ -169,12 +171,12 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<MessageHistory>>> GetUnloadedHistories(Guid clientID)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
 
             if (logicStaticClient.clientID == checkerClient.clientID)
             {
-                return Ok((await repository.GetUnloadedProfileChatHistoriesAsync(checkerClient.clientID)).OrderBy(h => h.eventType.eventDescription).ThenBy(h => h.assignmentRecieverClient.clientNickname));
+                return Ok((await repository.GetUnloadedProfileChatHistoriesAsync(checkerClient.clientID)).OrderByDescending(h => h.eventType.eventDescription).ThenBy(h => h.assignmentRecieverClient.clientNickname));
             }
             else
             {
@@ -195,8 +197,8 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> UpdateProfileAddressAsync(Guid clientID, [FromBody] EditClientAddressModel newAddress)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             // Log the profile request
             try
@@ -277,7 +279,16 @@ namespace Santa.Api.Controllers
                 }
                 catch(Exception)
                 {
-                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
+                    BaseClient checkerClientForErrorLog = new BaseClient()
+                    {
+                        clientID = checkerClient.clientID,
+                        clientName = checkerClient.clientName,
+                        nickname = checkerClient.nickname,
+                        email = checkerClient.email,
+                        hasAccount = checkerClient.hasAccount,
+                        isAdmin = checkerClient.isAdmin
+                    };
+                    await yuleLogger.logError(checkerClientForErrorLog, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
                     return StatusCode(StatusCodes.Status424FailedDependency);
                 }
             }

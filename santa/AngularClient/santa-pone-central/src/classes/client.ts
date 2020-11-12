@@ -21,6 +21,14 @@ export class Client {
   tags: Array<Tag> = [];
   notes: Array<Note>= [];
 }
+export class BaseClient {
+  clientID: string;
+  clientName: string;
+  nickname: string;
+  email: string;
+  isAdmin: boolean;
+  hasAccount: boolean;
+}
 export class StrippedClient {
   clientID: string;
   clientName: string;

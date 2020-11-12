@@ -13,6 +13,7 @@ using Santa.Api.Services.YuleLog;
 using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -39,7 +40,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:histories")]
         public async Task<ActionResult<List<MessageHistory>>> GetAllHistoriesAsync([Required]Guid subjectID)
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
             if(requestingClient.clientID == subjectID)
             {
@@ -74,9 +76,10 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required]Guid subjectID)
         {
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
+            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            
             if (requestingClient.email == subjectClient.email)
             {
                 try
@@ -115,8 +118,8 @@ namespace Santa.Api.Controllers
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
             //Conversation the chat is with (If on profiles, will be the same as subject)
             Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
-            //Client profile based on token claim
-            Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            //Client object based on token claim
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             // If the client isn't authorized, they get a 401, and a prompt spritz from the security spray bottle 
             if (checkerClient.email != subjectClient.email)
@@ -155,7 +158,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid subjectID)
         {
             Client subjectClient = await repository.GetClientByIDAsync(subjectID);
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             if (requestingClient.email == subjectClient.email)
             {

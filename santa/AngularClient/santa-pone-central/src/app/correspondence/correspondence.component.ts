@@ -4,7 +4,7 @@ import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
-import { AssignmentStatus, Client, HQClient } from 'src/classes/client';
+import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
 import { MapService } from '../services/mapper.service';
 import { FormGroup } from '@angular/forms';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
@@ -35,7 +35,7 @@ export class CorrespondenceComponent implements OnInit {
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
 
   public profile: any;
-  public subject: Client = new Client();
+  public subject: BaseClient = new BaseClient();
   public adminSenderMeta: ClientMeta = new ClientMeta();
 
   public allChats: Array<MessageHistory> = []
@@ -69,11 +69,11 @@ export class CorrespondenceComponent implements OnInit {
     this.Auth.userProfile$.subscribe((data: any) => {
       this.profile = data
     });
-    this.subject = this.mapper.mapClient(await this.SantaApiGet.getClientByEmail(this.profile.email).toPromise());
+    this.subject = this.mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
 
     this.adminSenderMeta.clientID = this.subject.clientID
     this.adminSenderMeta.clientName = this.subject.clientName
-    this.adminSenderMeta.clientNickname = this.subject.clientNickname
+    this.adminSenderMeta.clientNickname = this.subject.nickname
 
 
     // Boolean subscribes

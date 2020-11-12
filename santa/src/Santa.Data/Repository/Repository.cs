@@ -43,74 +43,7 @@ namespace Santa.Data.Repository
             };
             await santaContext.ClientRelationXref.AddAsync(contexRelation);
         }
-        public async Task<List<StrippedClient>> GetAllStrippedClientData()
-        {
-            List<StrippedClient> clientList = await santaContext.Client
-                .Select(client => new StrippedClient()
-                {
-                    clientID = client.ClientId,
-                    email = client.Email,
-                    nickname = client.Nickname,
-                    clientName = client.ClientName,
-                    isAdmin = client.IsAdmin,
-                    clientStatus = Mapper.MapStatus(client.ClientStatus),
-                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
-                    {
-                        surveyResponseID = surveyResponse.SurveyResponseId,
-                        clientID = surveyResponse.ClientId,
-                        surveyID = surveyResponse.SurveyId,
-                        surveyOptionID = surveyResponse.SurveyOptionId,
-                        responseText = surveyResponse.ResponseText,
-                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
-                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
-                    }).ToList(),
-                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName,
-                    }).ToList()
 
-                }).AsNoTracking().ToListAsync();
-            return clientList;
-        }
-        public async Task<List<BaseClient>> GetAllBasicClientInformation()
-        {
-            List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()
-            {
-                clientID = client.ClientId,
-                clientName = client.ClientName,
-                nickname = client.Nickname,
-                email = client.Email,
-                isAdmin = client.IsAdmin,
-                hasAccount = client.HasAccount,
-
-            }).ToListAsync();
-            return clientList;
-        }
-        public async Task<List<HQClient>> GetAllHeadquarterClients()
-        {
-            List<HQClient> clientList = await santaContext.Client
-                .Select(client => new HQClient()
-                {
-                    clientID = client.ClientId,
-                    email = client.Email,
-                    nickname = client.Nickname,
-                    clientName = client.ClientName,
-                    isAdmin = client.IsAdmin,
-                    hasAccount = client.HasAccount,
-                    clientStatus = Mapper.MapStatus(client.ClientStatus),
-                    answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
-                    assignments = client.ClientRelationXrefSenderClient.Count(),
-                    senders = client.ClientRelationXrefRecipientClient.Count(),
-                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName,
-                    }).ToList(),
-
-                }).AsNoTracking().ToListAsync();
-            return clientList;
-        }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
             List<Logic.Objects.Client> clientList = await santaContext.Client
@@ -311,6 +244,110 @@ namespace Santa.Data.Repository
         {
             return Mapper.MapStaticClient((await santaContext.Client.AsNoTracking().FirstAsync(c => c.Email == email)));
         }
+
+        #region Minimized Client Data Getters
+        public async Task<List<StrippedClient>> GetAllStrippedClientData()
+        {
+            List<StrippedClient> clientList = await santaContext.Client
+                .Select(client => new StrippedClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList()
+
+                }).AsNoTracking().ToListAsync();
+            return clientList;
+        }
+        public async Task<List<BaseClient>> GetAllBasicClientInformation()
+        {
+            List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).ToListAsync();
+            return clientList;
+        }
+        public async Task<List<HQClient>> GetAllHeadquarterClients()
+        {
+            List<HQClient> clientList = await santaContext.Client
+                .Select(client => new HQClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Count(),
+                    senders = client.ClientRelationXrefRecipientClient.Count(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+
+                }).AsNoTracking().ToListAsync();
+            return clientList;
+        }
+
+        public async Task<BaseClient> GetBasicClientInformationByID(Guid clientID)
+        {
+            BaseClient logicBaseClient = await santaContext.Client
+                .Select(client => new BaseClient()
+                {
+                    clientID = client.ClientId,
+                    clientName = client.ClientName,
+                    nickname = client.Nickname,
+                    email = client.Email,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+
+                }).FirstOrDefaultAsync(c => c.clientID == clientID);
+            return logicBaseClient;
+        }
+
+        public async Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail)
+        {
+            BaseClient logicBaseClient = await santaContext.Client
+            .Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).FirstOrDefaultAsync(c => c.email == clientEmail);
+            return logicBaseClient;
+        }
+
+        #endregion
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             Data.Entities.Client contextOldClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == targetLogicClient.clientID);
@@ -616,13 +653,26 @@ namespace Santa.Data.Repository
         }
         public async Task<Message> GetMessageByIDAsync(Guid chatMessageID)
         {
-            ChatMessage contextMessage = await santaContext.ChatMessage
-                .Include(r => r.MessageReceiverClient)
-                .Include(s => s.MessageSenderClient)
-                .Where(m => m.ChatMessageId == chatMessageID)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-            Logic.Objects.Message logicMessage = Mapper.MapMessage(contextMessage);
+            Message logicMessage = await santaContext.ChatMessage
+                .Select(message => new Message()
+                {
+                    chatMessageID = message.ChatMessageId,
+                    clientRelationXrefID = message.ClientRelationXrefId != null ? message.ClientRelationXrefId : null,
+                    recieverClient = new ClientChatMeta()
+                    {
+                        clientId = message.MessageReceiverClientId != null ? message.MessageReceiverClientId : null,
+                        clientNickname = message.MessageReceiverClientId != null ? message.MessageReceiverClient.Nickname : String.Empty
+                    },
+                    senderClient = new ClientChatMeta()
+                    {
+                        clientId = message.MessageSenderClientId != null ? message.MessageSenderClientId : null,
+                        clientNickname = message.MessageSenderClientId != null ? message.MessageSenderClient.Nickname : String.Empty
+                    },
+                    messageContent = message.MessageContent,
+                    dateTimeSent = message.DateTimeSent,
+                    isMessageRead = message.IsMessageRead,
+                    fromAdmin = message.FromAdmin
+                }).FirstOrDefaultAsync(m => m.chatMessageID == chatMessageID);
             return logicMessage;
         }
         public async Task UpdateMessageByIDAsync(Message targetMessage)
@@ -642,47 +692,181 @@ namespace Santa.Data.Repository
         #region Message Histories
         public async Task<List<MessageHistory>> GetAllChatHistories(Logic.Objects.Client subjectClient)
         {
-            List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
+            
 
             List<Entities.Client> contextClients = await santaContext.Client.Include(c => c.ClientStatus).Where(c => c.ClientStatus.StatusDescription != Constants.AWAITING_STATUS && c.ClientStatus.StatusDescription != Constants.DENIED_STATUS).ToListAsync();
 
-            List<ClientRelationXref> contextRelationshipsWithChats = await santaContext.ClientRelationXref
-                .Include(r => r.SenderClient.ClientStatus)
-                .Include(r => r.RecipientClient.ClientStatus)
+            /* Assignment history query */
+            /*
+             * Xref is not null
+             * Event type is the type of event attatched to the xref
+             * Assignment status is attached to xref
+             * Subject client is the meta passed in the method
+             * Conversation client is the sender client (The agent)
+             * Assignment sender is the sender client (The agent)
+             * Assignment reciever client is the reciever client (The actual assignment client)
+             * 
+             * Subject messages are the client messages sent by admins and that equal the xrefID
+             * 
+             * Reciever messages are the client messages not sent by admins and that equal the xrefID
+            */
+            List<MessageHistory> listLogicAssignmentMessageHistory = await santaContext.ClientRelationXref
+                .Select(xref => new MessageHistory() 
+                {
+                    relationXrefID = xref.ClientRelationXrefId,
+                    eventType = new Event()
+                    {
+                        eventTypeID = xref.EventType.EventTypeId,
+                        eventDescription = xref.EventType.EventDescription,
+                        active = xref.EventType.IsActive,
+                        removable = xref.EventType.ClientRelationXref.Count == 0 && xref.EventType.Survey.Count == 0,
+                        immutable = xref.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT || xref.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT
+                    },
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
 
-                .Include(r => r.EventType)
-                .Include(r => r.EventType.Survey)
+                    subjectClient = Mapper.MapClientChatMeta(subjectClient),
+                    conversationClient = Mapper.MapClientChatMeta(xref.SenderClient),
+                    assignmentRecieverClient = Mapper.MapClientChatMeta(xref.RecipientClient),
+                    assignmentSenderClient = Mapper.MapClientChatMeta(xref.SenderClient),
 
-                .Include(r => r.AssignmentStatus)
+                    subjectMessages = xref.ChatMessage.Where(m => m.ClientRelationXrefId == xref.ClientRelationXrefId && m.MessageSenderClient.IsAdmin)
+                        .Select(message => new Message()
+                        {
+                            chatMessageID = message.ChatMessageId,
+                            clientRelationXrefID = message.ClientRelationXrefId != null ? message.ClientRelationXrefId : null,
+                            recieverClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageReceiverClientId != null ? message.MessageReceiverClientId : null,
+                                clientNickname = message.MessageReceiverClientId != null ? message.MessageReceiverClient.Nickname : String.Empty
+                            },
+                            senderClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageSenderClientId != null ? message.MessageSenderClientId : null,
+                                clientNickname = message.MessageSenderClientId != null ? message.MessageSenderClient.Nickname : String.Empty
+                            },
+                            messageContent = message.MessageContent,
+                            dateTimeSent = message.DateTimeSent,
+                            isMessageRead = message.IsMessageRead,
+                            fromAdmin = message.FromAdmin,
+                            subjectMessage = true
+                        })
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => m.fromAdmin)
+                        .ToList(),
 
-                .Include(r => r.ChatMessage)
-                    .ThenInclude(cm => cm.MessageReceiverClient)
-                .Include(r => r.ChatMessage)
-                    .ThenInclude(cm => cm.MessageSenderClient)
+                    recieverMessages = xref.ChatMessage.Where(m => m.ClientRelationXrefId == xref.ClientRelationXrefId && !m.MessageSenderClient.IsAdmin)
+                        .Select(message => new Message()
+                        {
+                            chatMessageID = message.ChatMessageId,
+                            clientRelationXrefID = message.ClientRelationXrefId != null ? message.ClientRelationXrefId : null,
+                            recieverClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageReceiverClientId != null ? message.MessageReceiverClientId : null,
+                                clientNickname = message.MessageReceiverClientId != null ? message.MessageReceiverClient.Nickname : String.Empty
+                            },
+                            senderClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageSenderClientId != null ? message.MessageSenderClientId : null,
+                                clientNickname = message.MessageSenderClientId != null ? message.MessageSenderClient.Nickname : String.Empty
+                            },
+                            messageContent = message.MessageContent,
+                            dateTimeSent = message.DateTimeSent,
+                            isMessageRead = message.IsMessageRead,
+                            fromAdmin = message.FromAdmin,
+                            subjectMessage = false
+                        })
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => !m.fromAdmin)
+                        .ToList(),
 
-                .AsNoTracking()
-                .ToListAsync();
+                    unreadCount = xref.ChatMessage
+                        .Where(m => !m.FromAdmin && m.IsMessageRead == false)
+                        .Count()
+                }).ToListAsync();
 
-            List<ChatMessage> contextGeneralChatMessages = await santaContext.ChatMessage
-                .Where(m => m.ClientRelationXrefId == null)
-                .Include(s => s.MessageSenderClient)
-                .Include(r => r.MessageReceiverClient)
-                .AsNoTracking()
-                .OrderBy(dt => dt.DateTimeSent)
-                .ToListAsync();
+            /* General history query */
+            /*
+             * All clients where the status of the client is approved or completed (Awaiting and denied have no chat history)
+             * 
+             * Xref is null
+             * Event type does not exist
+             * Assignment status does not exist
+             * Subject client is the meta passed in the method
+             * Conversation client is the client object in the context
+             * Assingment sender/reciever clients do not exist
+             * 
+             * Subject messages are the client messages sent by admins
+             * 
+             * 
+             * Reciever messages are the client messages not sent by admins
+            */
+            List<MessageHistory> logicGeneralChatHistories = await santaContext.Client.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS || c.ClientStatus.StatusDescription == Constants.COMPLETED_STATUS)
+                .Select(client => new MessageHistory()
+                {
+                    relationXrefID = null,
+                    eventType = new Event(),
+                    assignmentStatus = new Logic.Objects.AssignmentStatus(),
 
-            // All the chats for assignments
-            foreach (ClientRelationXref contextRelationship in contextRelationshipsWithChats.Where(r => r.SenderClient.ClientStatus.StatusDescription == Constants.APPROVED_STATUS))
-            {
-                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextRelationship, subjectClient, false));
-            }
-            // All the general chats
-            foreach (Entities.Client contextClient in contextClients)
-            {
-                listLogicMessageHistory.Add(Mapper.MapHistoryInformation(contextClient, contextGeneralChatMessages.Where(m => m.MessageSenderClientId == contextClient.ClientId || m.MessageReceiverClientId == contextClient.ClientId).ToList(), subjectClient));
-            }
+                    subjectClient = Mapper.MapClientChatMeta(subjectClient),
+                    conversationClient = Mapper.MapClientChatMeta(client),
+                    assignmentRecieverClient = new ClientChatMeta(),
+                    assignmentSenderClient = new ClientChatMeta(),
 
-            return listLogicMessageHistory.OrderBy(h => h.conversationClient.clientNickname).ToList();
+                    subjectMessages = client.ChatMessageMessageReceiverClient.Where(m => m.ClientRelationXrefId == null && m.MessageSenderClient.IsAdmin)
+                        .Select(message => new Message()
+                        {
+                            chatMessageID = message.ChatMessageId,
+                            clientRelationXrefID = null,
+                            recieverClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageReceiverClientId,
+                                clientNickname = message.MessageReceiverClient.Nickname
+                            },
+                            senderClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageSenderClientId,
+                                clientNickname = message.MessageSenderClient.Nickname
+                            },
+                            messageContent = message.MessageContent,
+                            dateTimeSent = message.DateTimeSent,
+                            isMessageRead = message.IsMessageRead,
+                            fromAdmin = message.FromAdmin,
+                            subjectMessage = true
+                        })
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => m.fromAdmin)
+                        .ToList(),
+
+                    recieverMessages = client.ChatMessageMessageSenderClient.Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin)
+                        .Select(message => new Message()
+                        {
+                            chatMessageID = message.ChatMessageId,
+                            clientRelationXrefID = null,
+                            recieverClient = new ClientChatMeta(),
+                            senderClient = new ClientChatMeta()
+                            {
+                                clientId = message.MessageSenderClientId,
+                                clientNickname = message.MessageSenderClient.Nickname
+                            },
+                            messageContent = message.MessageContent,
+                            dateTimeSent = message.DateTimeSent,
+                            isMessageRead = message.IsMessageRead,
+                            fromAdmin = message.FromAdmin,
+                            subjectMessage = false
+                        })
+                        .OrderBy(dt => dt.dateTimeSent)
+                        .Where(m => !m.fromAdmin)
+                        .ToList(),
+
+                    unreadCount = client.ChatMessageMessageSenderClient
+                    .Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin && m.IsMessageRead == false)
+                    .Count()
+                }).ToListAsync();
+
+            List<MessageHistory> totalHistories = listLogicAssignmentMessageHistory.Concat(logicGeneralChatHistories).ToList();
+
+
+            return totalHistories.OrderByDescending(h => h.eventType.eventDescription).ThenBy(h => h.conversationClient.clientNickname).ToList();
         }
         public async Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Logic.Objects.Client subjectClient)
         {

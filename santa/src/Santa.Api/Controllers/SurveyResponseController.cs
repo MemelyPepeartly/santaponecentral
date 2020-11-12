@@ -11,6 +11,7 @@ using Santa.Logic.Objects;
 using System.Security.Claims;
 using Santa.Api.Services.YuleLog;
 using Santa.Logic.Constants;
+using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -63,9 +64,9 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Response>> PutSurveyResponse(Guid surveyResponseID, Models.Survey_Response_Models.ApiSurveyReponseText model)
         {
             Response logicResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
-            Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            if(checkerClient.isAdmin || logicResponse.clientID == checkerClient.clientID)
+            if (checkerClient.isAdmin || logicResponse.clientID == checkerClient.clientID)
             {
                 Response logicSurveyResponse = await repository.GetSurveyResponseByIDAsync(surveyResponseID);
                 string oldResponse = logicResponse.responseText;

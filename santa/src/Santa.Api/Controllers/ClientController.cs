@@ -49,8 +49,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClients()
         {
-            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             List<Logic.Objects.Client> clients = await repository.GetAllClients();
             if (clients == null)
             {
@@ -79,7 +79,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
         {
-            Client requestingClient = await repository.GetStaticClientObjectByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
@@ -108,7 +108,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllHQClients()
         {
-            Client requestingClient = await repository.GetStaticClientObjectByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
@@ -134,8 +134,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             try
             {
                 Client logicClient = await repository.GetClientByIDAsync(clientID);
@@ -151,16 +151,16 @@ namespace Santa.Api.Controllers
 
         // GET: api/Client/Email/email@domain.com
         /// <summary>
-        /// Gets a client by an email
+        /// Gets a full client by an email
         /// </summary>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
         [HttpGet("Email/{clientEmail}")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<Logic.Objects.Client>> GetClientByIDAsync(string clientEmail)
+        public async Task<ActionResult<Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             try
             {
                 Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
@@ -173,6 +173,57 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
+
+        // GET: api/Client/Basic/5
+        /// <summary>
+        /// Gets a basic client by an ID. Used for smaller transactions
+        /// </summary>
+        /// <param name="clientEmail"></param>
+        /// <returns></returns>
+        [HttpGet("Basic/{clientID}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
+        {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+        }
+
+        // GET: api/Client/Basic/Email/email@domain.com
+        /// <summary>
+        /// Gets a basic client by an email. Used for smaller transactions
+        /// </summary>
+        /// <param name="clientEmail"></param>
+        /// <returns></returns>
+        [HttpGet("Basic/Email/{clientEmail}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(string clientEmail)
+        {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
+                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+        }
+
         // GET: api/Client/5/RelationshipContainer
         /// <summary>
         /// Gets a list of the clients assignments by ID
@@ -353,7 +404,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             List<string> newAssignments = new List<string>();
             List<StrippedClient> logicClientList = await repository.GetAllStrippedClientData();
 
@@ -392,7 +444,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
-            Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             Event logicCardEvent = await repository.GetEventByNameAsync(Constants.CARD_EXCHANGE_EVENT);
             AssignmentStatus logicAssignedStatus = (await repository.GetAllAssignmentStatuses()).FirstOrDefault(s => s.assignmentStatusName == Constants.ASSIGNED_ASSIGNMENT_STATUS);
@@ -759,7 +811,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
-            Logic.Objects.Client requestingClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             Client targetAgent = await repository.GetClientByIDAsync(clientID);
             AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
 

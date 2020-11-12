@@ -75,6 +75,14 @@ export class SantaApiGetService {
     return this.http.get(endpoint + 'Client/Email/' + email).pipe(
       map(this.extractData));
   }
+  getBasicClientByClientID(id): Observable<any> {
+    return this.http.get(endpoint + 'Client/Basic/' + id).pipe(
+      map(this.extractData));
+  }
+  getBasicClientByEmail(email: string): Observable<any> {
+    return this.http.get(endpoint + 'Client/Basic/Email/' + email).pipe(
+      map(this.extractData));
+  }
   getAllowedAssignmentsByID(clientID: string, eventTypeID: string) : Observable<any> {
     return this.http.get(endpoint + 'Client/' + clientID + '/AllowedAssignment/' + eventTypeID).pipe(
       map(this.extractData));

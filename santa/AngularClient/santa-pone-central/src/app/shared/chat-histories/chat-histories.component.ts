@@ -3,7 +3,7 @@ import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
 import { ProfileService } from 'src/app/services/profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
-import { Client } from 'src/classes/client';
+import { BaseClient, Client } from 'src/classes/client';
 import { AssignmentStatusConstants } from '../constants/AssignmentStatusConstants.enum';
 
 @Component({
@@ -19,7 +19,7 @@ export class ChatHistoriesComponent implements OnInit {
   @Input() histories: Array<MessageHistory>
   @Input() disabled: boolean = false;
   @Input() isRefreshingChats: boolean = false;
-  @Input() viewerClient: Client = new Client();
+  @Input() viewerClient: BaseClient = new BaseClient();
 
   columns: string[] = ["sender", "assignment", "event", "status", "contact"];
 
