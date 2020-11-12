@@ -1,4 +1,6 @@
-﻿using Santa.Logic.Objects;
+﻿using Microsoft.CodeAnalysis.FlowAnalysis;
+using Santa.Logic.Objects;
+using Santa.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="sendingClient"></param>
         /// <param name="listNewAssignmentNicknames"></param>
         /// <returns></returns>
-        Task logCreatedNewAssignments(Client requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames);
+        Task logCreatedNewAssignments(BaseClient requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames);
         #endregion
 
         #region GET logs
@@ -25,34 +27,41 @@ namespace Santa.Api.Services.YuleLog
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <returns></returns>
-        Task logGetAllClients(Client requestingClient);
+        Task logGetAllClients(BaseClient requestingClient);
         /// <summary>
         /// Logs when a specific client is requested, requesting client as the token client, and the requested client being the client requested
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="requestedClient"></param>
         /// <returns></returns>
-        Task logGetSpecificClient(Client requestingClient, Client requestedClient);
+        Task logGetSpecificClient(BaseClient requestingClient, Client requestedClient);
+        /// <summary>
+        /// Logs when a specific client is requested, requesting client as the token client, and the requested client being the client requested. Overload for Base Client objects
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="requestedClient"></param>
+        /// <returns></returns>
+        Task logGetSpecificClient(BaseClient requestingClient, BaseClient requestedClient);
         /// <summary>
         /// Logs when a profile is gotten. Uses a requester client, and the profile requested
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="returnedProfile"></param>
         /// <returns></returns>
-        Task logGetProfile(Client requestingClient, Profile returnedProfile);
+        Task logGetProfile(BaseClient requestingClient, Profile returnedProfile);
         /// <summary>
         /// Logs a request to gather all histories was made
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <returns></returns>
-        Task logGetAllHistories(Client requestingClient);
+        Task logGetAllHistories(BaseClient requestingClient);
         /// <summary>
         /// Logs a request for a specific history was made
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="requestedHistory"></param>
         /// <returns></returns>
-        Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory);
+        Task logGetSpecificHistory(BaseClient requestingClient, MessageHistory requestedHistory);
         
         #endregion
 
@@ -65,9 +74,18 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldAnswer"></param>
         /// <param name="newAnswer"></param>
         /// <returns></returns>
-        Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
+        Task logChangedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
         /// <summary>
         /// Logs when an assignment status is changed with the requestor client, assignment's nickname, the old status, and the new status
+        /// </summary>
+        /// <param name="requestingClient"></param>
+        /// <param name="assignmentNickname"></param>
+        /// <param name="oldStatus"></param>
+        /// <param name="newStatus"></param>
+        /// <returns></returns>
+        Task logChangedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
+        /// <summary>
+        /// Overload for normal client object. Logs when an assignment status is changed with the requestor client, assignment's nickname, the old status, and the new status
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="assignmentNickname"></param>
@@ -81,14 +99,14 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="requestingClient"></param>
         /// <param name="modifiedProfile"></param>
         /// <returns></returns>
-        Task logChangedProfile(Client requestingClient, Profile modifiedProfile);
+        Task logChangedProfile(BaseClient requestingClient, Profile modifiedProfile);
         /// <summary>
         /// Logs a client has been changed
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="modifiedClient"></param>
         /// <returns></returns>
-        Task logChangedClient(Client requestingClient, Client modifiedClient);
+        Task logChangedClient(BaseClient requestingClient, Client modifiedClient);
 
         #endregion
 
@@ -102,7 +120,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="requestingClient"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        Task logError(Client requestingClient, string category);
+        Task logError(BaseClient requestingClient, string category);
         /// <summary>
         /// Saves logs with the transient DBContext of the API
         /// </summary>

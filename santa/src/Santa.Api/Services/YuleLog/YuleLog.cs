@@ -4,6 +4,7 @@ using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects;
 using Santa.Logic.Objects.Base_Objects.Logging;
+using Santa.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Santa.Api.Services.YuleLog
         }
 
         #region POST logs
-        public async Task logCreatedNewAssignments(Client requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames)
+        public async Task logCreatedNewAssignments(BaseClient requestingClient, Client sendingClient, List<string> listNewAssignmentNicknames)
         {
             string logMessage = $"{requestingClient.nickname} made a request to add the following assignments to {sendingClient.nickname}: ";
             foreach(string assignmentNickname in listNewAssignmentNicknames.Take(4))
@@ -47,27 +48,32 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         #region GET logs
-        public async Task logGetAllClients(Client requestingClient)
+        public async Task logGetAllClients(BaseClient requestingClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve a list of all clients"));
             await saveLogs();
         }
-        public async Task logGetSpecificClient(Client requestingClient, Client requestedClient)
+        public async Task logGetSpecificClient(BaseClient requestingClient, Client requestedClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve the client information for " + requestedClient.nickname));
             await saveLogs();
         }
-        public async Task logGetProfile(Client requestingClient, Profile returnedProfile)
+        public async Task logGetSpecificClient(BaseClient requestingClient, BaseClient requestedClient)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve the client information for " + requestedClient.nickname));
+            await saveLogs();
+        }
+        public async Task logGetProfile(BaseClient requestingClient, Profile returnedProfile)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile object for: " + returnedProfile.nickname));
             await saveLogs();
         }
-        public async Task logGetAllHistories(Client requestingClient)
+        public async Task logGetAllHistories(BaseClient requestingClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), requestingClient.nickname + " made a request to retrieve a list of all chat histories"));
             await saveLogs();
         }
-        public async Task logGetSpecificHistory(Client requestingClient, MessageHistory requestedHistory)
+        public async Task logGetSpecificHistory(BaseClient requestingClient, MessageHistory requestedHistory)
         {
             string logMessage = requestedHistory.relationXrefID != null ? $"{requestingClient.nickname} requested to get a history between admins and {requestedHistory.conversationClient.clientNickname} about an assignment ({requestedHistory.assignmentRecieverClient.clientNickname}) " : $"{requestingClient.nickname} requested to get a general history between admins and {requestedHistory.conversationClient.clientNickname}";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY), logMessage));
@@ -76,10 +82,16 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         #region PUT logs
-        public async Task logChangedAnswer(Client requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
+        public async Task logChangedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY), logMessage));
+            await saveLogs();
+        }
+        public async Task logChangedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
+        {
+            string logMessage = $@"{requestingClient.nickname} made a request to change the assignment status for {assignmentNickname} from '{oldStatus.assignmentStatusName}' to '{newStatus.assignmentStatusName}'";
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
             await saveLogs();
         }
         public async Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
@@ -88,12 +100,12 @@ namespace Santa.Api.Services.YuleLog
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedProfile(Client requestingClient, Profile modifiedProfile)
+        public async Task logChangedProfile(BaseClient requestingClient, Profile modifiedProfile)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified data on a profile for {modifiedProfile.nickname}"));
             await saveLogs();
         }
-        public async Task logChangedClient(Client requestingClient, Client modifiedClient)
+        public async Task logChangedClient(BaseClient requestingClient, Client modifiedClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified a client's data for {modifiedClient.nickname}"));
             await saveLogs();
@@ -104,7 +116,7 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         #region Utility
-        public async Task logError(Client requestingClient, string category)
+        public async Task logError(BaseClient requestingClient, string category)
         {
             Category errorCategory = await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY);
             string logMessage = "";
