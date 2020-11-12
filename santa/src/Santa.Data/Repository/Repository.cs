@@ -43,74 +43,7 @@ namespace Santa.Data.Repository
             };
             await santaContext.ClientRelationXref.AddAsync(contexRelation);
         }
-        public async Task<List<StrippedClient>> GetAllStrippedClientData()
-        {
-            List<StrippedClient> clientList = await santaContext.Client
-                .Select(client => new StrippedClient()
-                {
-                    clientID = client.ClientId,
-                    email = client.Email,
-                    nickname = client.Nickname,
-                    clientName = client.ClientName,
-                    isAdmin = client.IsAdmin,
-                    clientStatus = Mapper.MapStatus(client.ClientStatus),
-                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
-                    {
-                        surveyResponseID = surveyResponse.SurveyResponseId,
-                        clientID = surveyResponse.ClientId,
-                        surveyID = surveyResponse.SurveyId,
-                        surveyOptionID = surveyResponse.SurveyOptionId,
-                        responseText = surveyResponse.ResponseText,
-                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
-                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
-                    }).ToList(),
-                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName,
-                    }).ToList()
 
-                }).AsNoTracking().ToListAsync();
-            return clientList;
-        }
-        public async Task<List<BaseClient>> GetAllBasicClientInformation()
-        {
-            List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()
-            {
-                clientID = client.ClientId,
-                clientName = client.ClientName,
-                nickname = client.Nickname,
-                email = client.Email,
-                isAdmin = client.IsAdmin,
-                hasAccount = client.HasAccount,
-
-            }).ToListAsync();
-            return clientList;
-        }
-        public async Task<List<HQClient>> GetAllHeadquarterClients()
-        {
-            List<HQClient> clientList = await santaContext.Client
-                .Select(client => new HQClient()
-                {
-                    clientID = client.ClientId,
-                    email = client.Email,
-                    nickname = client.Nickname,
-                    clientName = client.ClientName,
-                    isAdmin = client.IsAdmin,
-                    hasAccount = client.HasAccount,
-                    clientStatus = Mapper.MapStatus(client.ClientStatus),
-                    answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
-                    assignments = client.ClientRelationXrefSenderClient.Count(),
-                    senders = client.ClientRelationXrefRecipientClient.Count(),
-                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName,
-                    }).ToList(),
-
-                }).AsNoTracking().ToListAsync();
-            return clientList;
-        }
         public async Task<List<Logic.Objects.Client>> GetAllClients()
         {
             List<Logic.Objects.Client> clientList = await santaContext.Client
@@ -311,6 +244,110 @@ namespace Santa.Data.Repository
         {
             return Mapper.MapStaticClient((await santaContext.Client.AsNoTracking().FirstAsync(c => c.Email == email)));
         }
+
+        #region Minimized Client Data Getters
+        public async Task<List<StrippedClient>> GetAllStrippedClientData()
+        {
+            List<StrippedClient> clientList = await santaContext.Client
+                .Select(client => new StrippedClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList()
+
+                }).AsNoTracking().ToListAsync();
+            return clientList;
+        }
+        public async Task<List<BaseClient>> GetAllBasicClientInformation()
+        {
+            List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).ToListAsync();
+            return clientList;
+        }
+        public async Task<List<HQClient>> GetAllHeadquarterClients()
+        {
+            List<HQClient> clientList = await santaContext.Client
+                .Select(client => new HQClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Count(),
+                    senders = client.ClientRelationXrefRecipientClient.Count(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList(),
+
+                }).AsNoTracking().ToListAsync();
+            return clientList;
+        }
+
+        public async Task<BaseClient> GetBasicClientInformationByID(Guid clientID)
+        {
+            BaseClient logicBaseClient = await santaContext.Client
+                .Select(client => new BaseClient()
+                {
+                    clientID = client.ClientId,
+                    clientName = client.ClientName,
+                    nickname = client.Nickname,
+                    email = client.Email,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+
+                }).FirstOrDefaultAsync(c => c.clientID == clientID);
+            return logicBaseClient;
+        }
+
+        public async Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail)
+        {
+            BaseClient logicBaseClient = await santaContext.Client
+            .Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).FirstOrDefaultAsync(c => c.email == clientEmail);
+            return logicBaseClient;
+        }
+
+        #endregion
         public async Task UpdateClientByIDAsync(Logic.Objects.Client targetLogicClient)
         {
             Data.Entities.Client contextOldClient = await santaContext.Client.FirstOrDefaultAsync(c => c.ClientId == targetLogicClient.clientID);

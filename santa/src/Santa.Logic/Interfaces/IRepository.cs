@@ -55,6 +55,13 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<Logic.Objects.Client>> GetAllClients();
+
+        #region Minimized Client Data Getters
+        /// <summary>
+        /// Gets a headquarter object for clients and faster parsing
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HQClient>> GetAllHeadquarterClients();
         /// <summary>
         /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
         /// </summary>
@@ -66,10 +73,16 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<BaseClient>> GetAllBasicClientInformation();
         /// <summary>
-        /// Gets a headquarter object for clients and faster parsing
+        /// Gets a basic client type by ID
         /// </summary>
         /// <returns></returns>
-        Task<List<HQClient>> GetAllHeadquarterClients();
+        Task<BaseClient> GetBasicClientInformationByID(Guid clientID);
+        /// <summary>
+        /// Gets a basic client type by email
+        /// </summary>
+        /// <returns></returns>
+        Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail);
+        #endregion
 
         /// <summary>
         /// Updates a client with a logic client object of the target object that reflects what the client should be updated to
