@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer} from '../../classes/client';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer, BaseClient} from '../../classes/client';
 import { Status } from '../../classes/status';
 import { EventType } from '../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
@@ -57,6 +57,19 @@ export class MapService {
       mappedClient.notes.push(this.mapNote(note))
     });
 
+    return mappedClient;
+  }
+  mapBaseClient(client) : BaseClient
+  {
+    let mappedClient: BaseClient =
+    {
+      clientID: client.clientID,
+      clientName: client.clientName,
+      nickname: client.nickname,
+      email: client.email,
+      hasAccount: client.hasAccount,
+      isAdmin: client.isAdmin
+    }
     return mappedClient;
   }
   mapStaticClient(client) : Client
