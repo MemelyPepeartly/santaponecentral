@@ -15,10 +15,22 @@ export class ClientItemComponent implements OnInit {
 
   @Input() client: HQClient = new HQClient();
   @Input() allSurveys: Array<Survey> = [];
+  @Input() showSenderAssignmentCount: boolean;
+  @Input() showAgentName: boolean;
+  @Input() showAgentNickname: boolean;
+  @Input() showCompletedSurveys: boolean;
 
   @Output() clientClickedEvent: EventEmitter<HQClient> = new EventEmitter<HQClient>();
 
   public infoContainer: InfoContainer = new InfoContainer();
+
+  public showAssignments: boolean;
+  public showNotes: boolean;
+  public showSurveyResponses: boolean;
+  public get infoSectionOpen() : boolean
+  {
+    return this.showAssignments || this.showNotes || this.showSurveyResponses
+  }
 
   ngOnInit(): void {
   }
@@ -28,17 +40,14 @@ export class ClientItemComponent implements OnInit {
       return surveyID == survey.surveyID;
     });
   }
-  public getInfoContainer()
+  public async getInfoContainer()
   {
-
-  }
-  public viewClientNotesClicked()
-  {
-
-  }
-  public viewAssignmentsClicked()
-  {
-
+    //If the info container isnt filled => Get the info container from the API
+    if(this.infoContainer.agentID == undefined)
+    {
+      this.infoContainer = this.mapper.mapInfoContainer(await this.SantaApiGet.getInfoContainerByClientID(this.client.clientID).toPromise())
+    }
+    //Else, just show the info container contents. No second API call needed
   }
   public emitClientClicked()
   {
