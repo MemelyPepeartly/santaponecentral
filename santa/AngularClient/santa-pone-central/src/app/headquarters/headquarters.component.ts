@@ -163,6 +163,17 @@ export class HeadquartersComponent implements OnInit {
 
     this.gatheringAllSurveys = false;
   }
+  async softRefreshClientObjectInList(client: HQClient)
+  {
+    var clientIndex = this.allClients.findIndex((c: HQClient) => {
+      return c.clientID == client.clientID
+    });
+
+    if(clientIndex != undefined)
+    {
+      this.allClients[clientIndex] = this.mapper.mapHQClient(await this.SantaApiGet.getHQClientByID(client.clientID).toPromise());
+    }
+  }
   sortApproved()
   {
     return this.allClients.filter((client) => { return client.clientStatus.statusDescription == StatusConstants.APPROVED});
