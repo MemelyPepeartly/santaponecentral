@@ -1,31 +1,14 @@
-<div id="overlay" *ngIf="showAssignmentQuickInfoCard || showNoteQuickInfoCard" (click)="hideOpenWindow();"></div>
-
-<div class="assignmentInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showAssignmentQuickInfoCard">
-  <div class="fixedDiv mat-elevation-z6">
-    <app-client-assignment-info [client]="selectedAssignmentClient"></app-client-assignment-info>
-  </div>
-</div>
-<div class="noteInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showNoteQuickInfoCard">
-  <div class="fixedDiv mat-elevation-z6">
-    <app-client-note-info
-      (refreshEvent)="softRefreshClient()"
-      (clickawayLockedEvent)="setClickawayLock($event)"
-      [client]="selectedNoteClient">
-    </app-client-note-info>
-  </div>
-</div>
-
 <mat-toolbar>
     <mat-toolbar-row>
         Approved Agents
     </mat-toolbar-row>
-    <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
-        <div id="iconDiv">
+    <mat-toolbar-row class="toolbarRow mat-elevation-z4">
+        <div class="refreshDiv">
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
-            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved agents: {{ approvedClients.length }}</mat-card-subtitle>
         </div>
+        <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved agents: {{ approvedClients.length }}</mat-card-subtitle>
         <div class="paginatorDiv" *ngIf="false">
           <mat-paginator
             (page)="switchPage($event)"
@@ -40,6 +23,13 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-  <app-client-item *ngFor="let client of approvedClients"
+  <app-client-item class="clientItem" *ngFor="let client of approvedClients"
+    (refreshClientObjectEvent)="emitClientUpdateEvent($event)"
+    (clientClickedEvent)="showCardInfo($event)"
+    [showAgentName]="true"
+    [showAgentNickname]="true"
+    [showCompletedSurveys]="true"
+    [showSenderAssignmentCount]="true"
+    [allSurveys]="allSurveys"
     [client]="client"></app-client-item>
 </mat-list>
