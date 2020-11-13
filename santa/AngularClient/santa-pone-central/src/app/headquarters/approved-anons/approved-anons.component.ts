@@ -56,12 +56,7 @@ export class ApprovedAnonsComponent implements OnInit {
     this.showSpinner = false;
     this.actionTaken = false;
   }
-  answeredForSurvey(client: HQClient, survey: Survey) : boolean
-  {
-    return client.answeredSurveys.some((surveyID: string) => {
-      return surveyID == survey.surveyID;
-    });
-  }
+
   switchPage(event: PageEvent)
   {
     this.paginatorPageSize = event.pageSize;
