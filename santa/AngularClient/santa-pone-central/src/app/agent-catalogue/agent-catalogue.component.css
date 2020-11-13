@@ -176,3 +176,7 @@
   background-color: white;
   border-radius: 8px;
 }
+.clientItem {
+  display: block;
+  margin-top: 10px;
+}
