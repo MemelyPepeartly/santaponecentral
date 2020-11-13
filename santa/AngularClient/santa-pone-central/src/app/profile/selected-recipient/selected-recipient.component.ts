@@ -7,6 +7,7 @@ import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
+import { AssignmentStatusConstants } from 'src/app/shared/constants/AssignmentStatusConstants.enum';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -44,18 +45,21 @@ export class SelectedRecipientComponent implements OnInit {
   }
   public async setNewStatus(newAssignmentStatusEvent: AssignmentStatus)
   {
-    let newMessage: MessageApiResponse =
-    {
-      messageSenderClientID: this.profile.clientID,
-      messageRecieverClientID: null,
-      clientRelationXrefID: this.selectedRecipient.relationXrefID,
-      eventTypeID: this.selectedRecipient.recipientEvent.eventTypeID,
-      messageContent: this.profile.clientNickname + ' has set this assignment from "' + this.selectedRecipient.assignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
-      fromAdmin: false,
-    };
     this.selectedRecipient.assignmentStatus = newAssignmentStatusEvent
     this.actionTaken.emit(true);
-    await this.SantaApiPost.postMessage(newMessage).toPromise();
+    if(newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.SHIPPING || newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.COMPLETED)
+    {
+      let newMessage: MessageApiResponse =
+      {
+        messageSenderClientID: this.profile.clientID,
+        messageRecieverClientID: null,
+        clientRelationXrefID: this.selectedRecipient.relationXrefID,
+        eventTypeID: this.selectedRecipient.recipientEvent.eventTypeID,
+        messageContent: this.profile.clientNickname + ' has set this assignment from "' + this.selectedRecipient.assignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
+        fromAdmin: false,
+      };
+      await this.SantaApiPost.postMessage(newMessage).toPromise();
+    }
   }
   public setClickawayLock(event)
   {
