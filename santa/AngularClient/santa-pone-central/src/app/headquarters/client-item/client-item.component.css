@@ -1,3 +1,7 @@
+mat-card
+{
+  text-align: left;
+}
 .tagText
 {
     white-space: nowrap;
@@ -22,6 +26,21 @@
   display: inline-block;
   margin-left: 10px;
   margin-bottom: 0px;
+}
+.objectSpacing
+{
+  display: block;
+  margin-top: 10px;
+}
+.actionButton
+{
+  margin-right: 15px !important;
+  margin-left: 0px !important;
+  margin-top: 10px !important;
+}
+.openClientButton
+{
+  font-size: large;
 }
 @media (max-width:600px)
 {
