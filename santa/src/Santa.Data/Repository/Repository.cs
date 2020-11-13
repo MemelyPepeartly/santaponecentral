@@ -305,6 +305,7 @@ namespace Santa.Data.Repository
                     answeredSurveys = client.SurveyResponse.Select(r => r.Survey.SurveyId).Distinct().ToList(),
                     assignments = client.ClientRelationXrefSenderClient.Count(),
                     senders = client.ClientRelationXrefRecipientClient.Count(),
+                    notes = client.Note.Count(),
                     tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
                     {
                         tagID = tagXref.TagId,
@@ -1525,6 +1526,17 @@ namespace Santa.Data.Repository
                     }).OrderBy(t => t.tagName).ToList(),
 
                     removable = xref.ChatMessage.Count > 0 ? false : true
+                }).ToList(),
+
+                responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                {
+                    surveyResponseID = surveyResponse.SurveyResponseId,
+                    clientID = surveyResponse.ClientId,
+                    surveyID = surveyResponse.SurveyId,
+                    surveyOptionID = surveyResponse.SurveyOptionId,
+                    responseText = surveyResponse.ResponseText,
+                    responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                    surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
                 }).ToList()
             }).FirstOrDefaultAsync(c => c.agentID == clientID);
             return logicRelationshipContainer;
