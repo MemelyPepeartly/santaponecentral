@@ -63,10 +63,21 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<HQClient>> GetAllHeadquarterClients();
         /// <summary>
-        /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
+        /// Gets a headquarter client object by ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task<HQClient> GetHeadquarterClientByID(Guid clientID);
+        /// <summary>
+        /// Gets a list of minimized client data for speed and parsing and data purposes
         /// </summary>
         /// <returns></returns>
         Task<List<StrippedClient>> GetAllStrippedClientData();
+        /// <summary>
+        /// Gets a minimized stripped client data object by client ID
+        /// </summary>
+        /// <returns></returns>
+        Task<StrippedClient> GetStrippedClientDataByID(Guid clientID);
         /// <summary>
         /// Gets a list of all client ID's quickly
         /// </summary>
@@ -380,6 +391,7 @@ namespace Santa.Logic.Interfaces
 
         #region Informational
         Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID);
+        Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID);
         #endregion
 
         #region Utility

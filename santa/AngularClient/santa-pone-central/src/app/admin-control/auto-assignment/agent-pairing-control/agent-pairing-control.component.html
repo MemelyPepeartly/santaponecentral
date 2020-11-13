@@ -28,8 +28,8 @@
           <div class="pairingContainer">
             <div class="pairingDiv">
               <span>{{ possiblePairingsObject.sendingAgent.clientNickname }}</span>
-              <mat-card-subtitle class="infoSubtitle">Assignments: {{ possiblePairingsObject.sendingAgent.assignments.length }}</mat-card-subtitle>
-              <mat-card-subtitle class="infoSubtitle">Senders: {{ possiblePairingsObject.sendingAgent.senders.length }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Assignments: {{ possiblePairingsObject.sendingAgent.assignments }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Senders: {{ possiblePairingsObject.sendingAgent.senders }}</mat-card-subtitle>
               <div class="tagDiv">
                 <mat-chip class="tag" *ngFor="let tag of possiblePairingsObject.sendingAgent.tags"
                   matTooltip="{{tag.tagName}}"
@@ -41,8 +41,8 @@
             </div>
             <div class="pairingDiv">
               <span>{{ potentialAssignment.clientNickname }}</span>
-              <mat-card-subtitle class="infoSubtitle">Assignments: {{ potentialAssignment.assignments.length }}</mat-card-subtitle>
-              <mat-card-subtitle class="infoSubtitle">Senders: {{ potentialAssignment.senders.length }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Assignments: {{ potentialAssignment.assignments }}</mat-card-subtitle>
+              <mat-card-subtitle class="infoSubtitle">Senders: {{ potentialAssignment.senders }}</mat-card-subtitle>
               <div class="tagDiv">
                 <mat-chip class="tag" *ngFor="let tag of potentialAssignment.tags"
                   matTooltip="{{tag.tagName}}"

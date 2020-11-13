@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Client, StrippedClient } from 'src/classes/client';
+import { Client, HQClient, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from '../services/gatherer.service';
@@ -10,6 +10,8 @@ import { SearchQueryModelResponse } from 'src/classes/responseTypes';
 import { SantaApiGetService, SantaApiPostService } from '../services/santa-api.service';
 import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Survey } from 'src/classes/survey';
+import { SummaryResolver } from '@angular/compiler';
 
 export class SearchQueryObjectContainer
 {
@@ -19,6 +21,7 @@ export class SearchQueryObjectContainer
   names: Array<string> = [];
   nicknames: Array<string> = [];
   emails: Array<string> = [];
+  responseQueries: Array<string> = [];
 
   get tagQueryIDs() : Array<string>
   {
@@ -85,6 +88,8 @@ export class AgentCatalogueComponent implements OnInit {
   public allTags: Array<Tag> = [];
   public allEvents: Array<EventType> = [];
   public allClientStatuses: Array<Status> = [];
+  public allSurveys: Array<Survey> = [];
+  public allHQClients: Array<HQClient> = [];
 
   public foundClients: Array<StrippedClient> = [];
   public selectedClient: Client = new Client();
@@ -93,6 +98,8 @@ export class AgentCatalogueComponent implements OnInit {
   public gatheringAllTags: boolean;
   public gatheringAllClientStatuses: boolean;
   public gatheringAllEvents: boolean;
+  public gatheringAllSurveys: boolean;
+  public gatheringAllHQClients: boolean;
   public searchingClients: boolean;
   public clickLocked: boolean;
   public gettingClientProfile: boolean = false;
@@ -112,6 +119,7 @@ export class AgentCatalogueComponent implements OnInit {
   public nameReg: RegExp = new RegExp(/"name:([^"]+)"/g);
   public nicknamesReg: RegExp = new RegExp(/"nickname:([^"]+)"/g);
   public emailReg: RegExp = new RegExp(/"email:([^"]+)"/g);
+  public responseReg: RegExp = new RegExp(/"response:([^"]+)"/g);
 
 
   public get allHelperTags() : Array<Tag>
@@ -164,6 +172,12 @@ export class AgentCatalogueComponent implements OnInit {
     this.gatherer.gatheringAllEvents.subscribe((status: boolean) => {
       this.gatheringAllEvents = status;
     });
+    this.gatherer.gatheringAllSurveys.subscribe((status: boolean) => {
+      this.gatheringAllSurveys = status;
+    });
+    this.gatherer.gatheringAllHQClients.subscribe((status: boolean) => {
+      this.gatheringAllHQClients = status;
+    });
 
     /* Default set so they all "load" at the same time */
     this.gatheringAllTags = true;
@@ -180,10 +194,18 @@ export class AgentCatalogueComponent implements OnInit {
     this.gatherer.allEvents.subscribe((objectArray: Array<EventType>) => {
       this.allEvents = objectArray;
     });
+    this.gatherer.allSurveys.subscribe((objectArray: Array<Survey>) => {
+      this.allSurveys = objectArray;
+    });
+    this.gatherer.allHQClients.subscribe((objectArray: Array<HQClient>) => {
+      this.allHQClients = objectArray;
+    });
 
     await this.gatherer.gatherAllTags();
     await this.gatherer.gatherAllStatuses();
     await this.gatherer.gatherAllEvents();
+    await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllHQClients();
   }
   addQuery(helper: any)
   {
@@ -211,6 +233,7 @@ export class AgentCatalogueComponent implements OnInit {
     let nameMatches = Array.from(this.searchQueryString.matchAll(this.nameReg))
     let nicknameMatches = Array.from(this.searchQueryString.matchAll(this.nicknamesReg))
     let emailMatches = Array.from(this.searchQueryString.matchAll(this.emailReg))
+    let responseMatches = Array.from(this.searchQueryString.matchAll(this.responseReg))
 
 
     tagMatches.forEach((element: RegExpMatchArray) => {
@@ -256,6 +279,12 @@ export class AgentCatalogueComponent implements OnInit {
         this.searchQueryObjectHolder.emails.push(element[1]);
       }
     });
+    responseMatches.forEach((element: RegExpMatchArray) => {
+      if(!this.searchQueryObjectHolder.responseQueries.some((response: string) => {return response == element[1]}))
+      {
+        this.searchQueryObjectHolder.responseQueries.push(element[1]);
+      }
+    });
   }
   public removeTagQuery(tag: Tag)
   {
@@ -280,6 +309,7 @@ export class AgentCatalogueComponent implements OnInit {
     this.searchQueryObjectHolder.names = [];
     this.searchQueryObjectHolder.nicknames = [];
     this.searchQueryObjectHolder.emails = [];
+    this.searchQueryObjectHolder.responseQueries = [];
   }
   public search()
   {
@@ -293,6 +323,7 @@ export class AgentCatalogueComponent implements OnInit {
       names: this.searchQueryObjectHolder.names,
       nicknames: this.searchQueryObjectHolder.nicknames,
       emails: this.searchQueryObjectHolder.emails,
+      responses: this.searchQueryObjectHolder.responseQueries,
       isHardSearch: this.selectedSearchType == 'hard' ? true : false
     }
     this.santaApiPost.searchClients(response).subscribe((res) => {
@@ -308,6 +339,23 @@ export class AgentCatalogueComponent implements OnInit {
       console.groupEnd();
 
       this.searchingClients = false;
+    });
+  }
+  async updateClientInList(client: HQClient)
+  {
+    var clientIndex = this.allHQClients.findIndex((c: HQClient) => {
+      return c.clientID == client.clientID
+    });
+
+    if(clientIndex != undefined)
+    {
+      this.allHQClients[clientIndex] = this.mapper.mapHQClient(await this.santaApiGet.getHQClientByID(client.clientID).toPromise());
+    }
+  }
+  public convertToHQClient(client: StrippedClient) : HQClient
+  {
+    return this.allHQClients.find((c: HQClient) => {
+      return c.clientID == client.clientID
     });
   }
   public async showCardInfo(client: Client)

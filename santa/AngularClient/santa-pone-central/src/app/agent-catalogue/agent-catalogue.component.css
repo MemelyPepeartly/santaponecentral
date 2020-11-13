@@ -159,9 +159,10 @@
   text-overflow: ellipsis;
   max-width: 150px;
 }
-.notice
-{
-    color: #d07973;
+.spinnerWrap {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
 }
 .foundClientContainer
 {
@@ -174,27 +175,4 @@
   margin-bottom: 15px;
   background-color: white;
   border-radius: 8px;
-}
-.foundClientCard
-{
-  display: block;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-.spinnerWrap {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-}
-.inline
-{
-  display: inline-block;
-}
-.notice
-{
-  color: #d07973;
-}
-.tagList
-{
-  margin-left: 10px;
 }

@@ -11,5 +11,6 @@ namespace Santa.Logic.Objects.Information_Objects
         public List<RelationshipMeta> senders { get; set; }
         public List<RelationshipMeta> assignments { get; set; }
         public List<Note> notes { get; set; }
+        public List<Response> responses { get; set; }
     }
 }

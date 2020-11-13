@@ -1,0 +1,52 @@
+mat-card
+{
+  text-align: left;
+}
+.tagText
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.inline
+{
+  display: inline-block;
+}
+.tagList
+{
+  margin-left: 10px;
+}
+.notice
+{
+    color: #d07973;
+}
+.countSubtitle
+{
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
+.objectSpacing
+{
+  display: block;
+  margin-top: 10px;
+}
+.actionButton
+{
+  margin-right: 15px !important;
+  margin-left: 0px !important;
+  margin-top: 10px !important;
+}
+.openClientButton
+{
+  font-size: large;
+  margin-bottom: 10px;
+}
+@media (max-width:600px)
+{
+  .countSubtitle
+  {
+    display: none;
+  }
+}

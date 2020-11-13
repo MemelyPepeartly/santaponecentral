@@ -9,7 +9,7 @@ namespace Santa.Logic.Objects.Information_Objects
     /// </summary>
     public class PossiblePairingChoices
     {
-        public Client sendingAgent { get; set; }
-        public List<Client> potentialAssignments { get; set; }
+        public HQClient sendingAgent { get; set; }
+        public List<HQClient> potentialAssignments { get; set; }
     }
 }

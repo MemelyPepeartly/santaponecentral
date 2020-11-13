@@ -1,31 +1,14 @@
-<div id="overlay" *ngIf="showAssignmentQuickInfoCard || showNoteQuickInfoCard" (click)="hideOpenWindow();"></div>
-
-<div class="assignmentInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showAssignmentQuickInfoCard">
-  <div class="fixedDiv mat-elevation-z6">
-    <app-client-assignment-info [client]="selectedAssignmentClient"></app-client-assignment-info>
-  </div>
-</div>
-<div class="noteInfoContainer scrollbar scrollbar-primary mat-elevation-z3" *ngIf="showNoteQuickInfoCard">
-  <div class="fixedDiv mat-elevation-z6">
-    <app-client-note-info
-      (refreshEvent)="softRefreshClient()"
-      (clickawayLockedEvent)="setClickawayLock($event)"
-      [client]="selectedNoteClient">
-    </app-client-note-info>
-  </div>
-</div>
-
 <mat-toolbar>
     <mat-toolbar-row>
         Approved Agents
     </mat-toolbar-row>
-    <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
-        <div id="iconDiv">
+    <mat-toolbar-row class="toolbarRow mat-elevation-z4">
+        <div class="refreshDiv">
             <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
                 <mat-icon class="icons">refresh</mat-icon>
             </button>
-            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved agents: {{ approvedClients.length }}</mat-card-subtitle>
         </div>
+        <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo">Total approved agents: {{ approvedClients.length }}</mat-card-subtitle>
         <div class="paginatorDiv" *ngIf="false">
           <mat-paginator
             (page)="switchPage($event)"
@@ -40,39 +23,13 @@
     <app-loading-spin></app-loading-spin>
 </div>
 <mat-list>
-    <mat-card mat-list-item *ngFor="let client of approvedClients">
-      <mat-card-title (click)="showCardInfo(client)">
-        <h1 class="inline">{{ client.clientNickname }}</h1>
-        <mat-chip-list class="inline tagList" [selectable]="false" >
-          <mat-chip *ngFor="let tag of client.tags"
-          matTooltip="{{tag.tagName}}"
-          [matTooltipPosition]="'below'"
-          [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
-        </mat-chip-list>
-      </mat-card-title>
-      <mat-card-content (click)="showCardInfo(client)">
-        <mat-card-subtitle>
-          <span [ngClass]="{'notice' : client.assignments == 0}">Assignments: {{ client.assignments }}</span>
-        </mat-card-subtitle>
-        <mat-card-subtitle>
-          <span>Senders: {{ client.senders }}</span>
-        </mat-card-subtitle>
-        <mat-card-subtitle>
-          <span>Agent Name: {{ client.clientName }}</span>
-        </mat-card-subtitle>
-        <mat-divider [inset]="true"></mat-divider>
-        <ng-container *ngFor="let survey of allSurveys">
-          <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
-            <span>Agent answered for the {{ survey.surveyDescription }}</span>
-          </mat-card-subtitle>
-          <mat-card-subtitle style="margin-top: 10px;" *ngIf="!answeredForSurvey(client, survey)">
-            <span class="notice">Agent did not answer for the {{ survey.surveyDescription }}</span>
-          </mat-card-subtitle>
-        </ng-container>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button (click)="viewClientNotes(client)">View Notes</button>
-        <button mat-raised-button (click)="viewAssignments(client)">View Assignments</button>
-      </mat-card-actions>
-    </mat-card>
+  <app-client-item class="clientItem" *ngFor="let client of approvedClients"
+    (refreshClientObjectEvent)="emitClientUpdateEvent($event)"
+    (clientClickedEvent)="showCardInfo($event)"
+    [showAgentName]="true"
+    [showAgentNickname]="true"
+    [showCompletedSurveys]="true"
+    [showSenderAssignmentCount]="true"
+    [allSurveys]="allSurveys"
+    [client]="client"></app-client-item>
 </mat-list>
