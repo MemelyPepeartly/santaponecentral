@@ -21,6 +21,7 @@ export class ClientItemComponent implements OnInit {
   @Input() showCompletedSurveys: boolean;
 
   @Output() clientClickedEvent: EventEmitter<HQClient> = new EventEmitter<HQClient>();
+  @Output() refreshClientObjectEvent: EventEmitter<HQClient> = new EventEmitter<HQClient>();
 
   public infoContainer: InfoContainer = new InfoContainer();
 
@@ -52,5 +53,9 @@ export class ClientItemComponent implements OnInit {
   public emitClientClicked()
   {
     this.clientClickedEvent.emit(this.client);
+  }
+  public softRefreshClient()
+  {
+    this.refreshClientObjectEvent.emit(this.client);
   }
 }

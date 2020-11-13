@@ -67,7 +67,7 @@
 
     <!-- Notes info section -->
     <ng-container *ngIf="showNotes">
-      <app-client-note-info class="objectSpacing" [client]="client"></app-client-note-info>
+      <app-client-note-info class="objectSpacing" (refreshEvent)="softRefreshClient()" [client]="client"></app-client-note-info>
     </ng-container>
 
     <!-- Responses info section -->
