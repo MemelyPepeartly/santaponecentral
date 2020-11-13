@@ -276,6 +276,37 @@ namespace Santa.Data.Repository
                 }).AsNoTracking().ToListAsync();
             return clientList;
         }
+        public async Task<StrippedClient> GetStrippedClientDataByID(Guid clientID)
+        {
+            StrippedClient logicStrippedClient = await santaContext.Client
+                .Select(client => new StrippedClient()
+                {
+                    clientID = client.ClientId,
+                    email = client.Email,
+                    nickname = client.Nickname,
+                    clientName = client.ClientName,
+                    isAdmin = client.IsAdmin,
+                    clientStatus = Mapper.MapStatus(client.ClientStatus),
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList(),
+                    tags = client.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName,
+                    }).ToList()
+
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientID);
+
+            return logicStrippedClient;
+        }
         public async Task<List<BaseClient>> GetAllBasicClientInformation()
         {
             List<BaseClient> clientList = await santaContext.Client.Select(client => new BaseClient()

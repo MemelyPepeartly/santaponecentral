@@ -77,17 +77,13 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("Truncated")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllClientsWithoutChats()
+        public async Task<ActionResult<List<StrippedClient>>> GetAllClientsWithoutChats()
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
-                List<Logic.Objects.Client> clients = await repository.GetAllClients();
-                if (clients == null)
-                {
-                    return NoContent();
-                }
+                List<StrippedClient> clients = await repository.GetAllStrippedClientData();
                 await yuleLogger.logGetAllClients(requestingClient);
                 return Ok(clients.OrderBy(c => c.nickname));
             }
@@ -96,7 +92,29 @@ namespace Santa.Api.Controllers
                 await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
+        }
 
+        // GET: api/Client/Truncated/5
+        /// <summary>
+        /// Gets a truncated client by ID
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Truncated/{clientID}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<StrippedClient>> GetTrucatedClientByID(Guid clientID)
+        {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
+                return Ok(logicStrippedClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // GET: api/Client/HQClient
