@@ -282,7 +282,7 @@ namespace Santa.Api.Controllers
                 // Foreach mailer
                 foreach (HQClient mailer in massMailers)
                 {
-                    List<RelationshipMeta> mailerInfo = await repository.getClientAssignmentInfoByIDAsync(mailer.clientID);
+                    List<RelationshipMeta> mailerInfo = (await repository.getClientAssignmentInfoByIDAsync(mailer.clientID)).Where(r => r.eventType.eventDescription == Constants.CARD_EXCHANGE_EVENT).ToList();
                     PossiblePairingChoices mailerRelationships = new PossiblePairingChoices()
                     {
                         sendingAgent = mailer,
