@@ -60,14 +60,14 @@
   </mat-card-actions>
   <mat-card-content *ngIf="infoSectionOpen">
     <mat-divider [inset]="true"></mat-divider>
-    <!-- Assignments info section -->
-    <ng-container *ngIf="showAssignments">
-      <app-client-assignment-info class="objectSpacing" [client]="client"></app-client-assignment-info>
-    </ng-container>
-
     <!-- Notes info section -->
     <ng-container *ngIf="showNotes">
       <app-client-note-info class="objectSpacing" (refreshEvent)="softRefreshClient()" [client]="client"></app-client-note-info>
+    </ng-container>
+
+    <!-- Assignments info section -->
+    <ng-container *ngIf="showAssignments">
+      <app-client-assignment-info class="objectSpacing" [client]="client"></app-client-assignment-info>
     </ng-container>
 
     <!-- Responses info section -->
