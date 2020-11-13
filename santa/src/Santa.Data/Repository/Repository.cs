@@ -336,7 +336,7 @@ namespace Santa.Data.Repository
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName,
                     }).ToList(),
-                }).FirstOrDefaultAsync(c => c.clientID == clientID);
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientID);
             return logicHQClient;
         }
         public async Task<BaseClient> GetBasicClientInformationByID(Guid clientID)
@@ -351,7 +351,7 @@ namespace Santa.Data.Repository
                     isAdmin = client.IsAdmin,
                     hasAccount = client.HasAccount,
 
-                }).FirstOrDefaultAsync(c => c.clientID == clientID);
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientID);
             return logicBaseClient;
         }
 
@@ -1513,55 +1513,56 @@ namespace Santa.Data.Repository
         #region Informational
         public async Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID)
         {
-            InfoContainer logicRelationshipContainer = await santaContext.Client.Select(client => new InfoContainer()
-            {
-                agentID = client.ClientId,
-                notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
+            InfoContainer logicRelationshipContainer = await santaContext.Client
+                .Select(client => new InfoContainer()
                 {
-                    noteID = note.NoteId,
-                    noteSubject = note.NoteSubject,
-                    noteContents = note.NoteContents
-                }).ToList(),
-                assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
-                {
-                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
-                    eventType = Mapper.MapEvent(xref.EventType),
-                    clientRelationXrefID = xref.ClientRelationXrefId,
-                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                    tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                    agentID = client.ClientId,
+                    notes = client.Note.Select(note => new Logic.Objects.Base_Objects.Note()
                     {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName
-                    }).OrderBy(t => t.tagName).ToList(),
-
-                    removable = xref.ChatMessage.Count > 0 ? false : true
-                }).ToList(),
-                senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
-                {
-                    relationshipClient = Mapper.MapClientMeta(xref.SenderClient),
-                    eventType = Mapper.MapEvent(xref.EventType),
-                    clientRelationXrefID = xref.ClientRelationXrefId,
-                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                    tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                        noteID = note.NoteId,
+                        noteSubject = note.NoteSubject,
+                        noteContents = note.NoteContents
+                    }).ToList(),
+                    assignments = client.ClientRelationXrefSenderClient.Select(xref => new RelationshipMeta()
                     {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName
-                    }).OrderBy(t => t.tagName).ToList(),
+                        relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
 
-                    removable = xref.ChatMessage.Count > 0 ? false : true
-                }).ToList(),
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList(),
+                    senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
+                    {
+                        relationshipClient = Mapper.MapClientMeta(xref.SenderClient),
+                        eventType = Mapper.MapEvent(xref.EventType),
+                        clientRelationXrefID = xref.ClientRelationXrefId,
+                        assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                        {
+                            tagID = tagXref.TagId,
+                            tagName = tagXref.Tag.TagName
+                        }).OrderBy(t => t.tagName).ToList(),
 
-                responses = client.SurveyResponse.Select(surveyResponse => new Response()
-                {
-                    surveyResponseID = surveyResponse.SurveyResponseId,
-                    clientID = surveyResponse.ClientId,
-                    surveyID = surveyResponse.SurveyId,
-                    surveyOptionID = surveyResponse.SurveyOptionId,
-                    responseText = surveyResponse.ResponseText,
-                    responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
-                    surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
-                }).ToList()
-            }).FirstOrDefaultAsync(c => c.agentID == clientID);
+                        removable = xref.ChatMessage.Count > 0 ? false : true
+                    }).ToList(),
+
+                    responses = client.SurveyResponse.Select(surveyResponse => new Response()
+                    {
+                        surveyResponseID = surveyResponse.SurveyResponseId,
+                        clientID = surveyResponse.ClientId,
+                        surveyID = surveyResponse.SurveyId,
+                        surveyOptionID = surveyResponse.SurveyOptionId,
+                        responseText = surveyResponse.ResponseText,
+                        responseEvent = Mapper.MapEvent(surveyResponse.Survey.EventType),
+                        surveyQuestion = Mapper.MapQuestion(surveyResponse.SurveyQuestion)
+                    }).ToList()
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.agentID == clientID);
             return logicRelationshipContainer;
         }
         public async Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID)
