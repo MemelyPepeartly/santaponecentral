@@ -380,6 +380,7 @@ namespace Santa.Logic.Interfaces
 
         #region Informational
         Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID);
+        Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID);
         #endregion
 
         #region Utility

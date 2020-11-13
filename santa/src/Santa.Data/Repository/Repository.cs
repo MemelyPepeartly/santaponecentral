@@ -1518,7 +1518,7 @@ namespace Santa.Data.Repository
                     eventType = Mapper.MapEvent(xref.EventType),
                     clientRelationXrefID = xref.ClientRelationXrefId,
                     assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-                    tags = xref.SenderClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
+                    tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
                     {
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName
@@ -1528,6 +1528,24 @@ namespace Santa.Data.Repository
                 }).ToList()
             }).FirstOrDefaultAsync(c => c.agentID == clientID);
             return logicRelationshipContainer;
+        }
+        public async Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID)
+        {
+            List<RelationshipMeta> listLogicRelationshipMeta = await santaContext.ClientRelationXref.Where(crxr => crxr.SenderClientId == clientID)
+                .Select(xref => new RelationshipMeta()
+                {
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = xref.RecipientClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
+                    {
+                        tagID = tagXref.TagId,
+                        tagName = tagXref.Tag.TagName
+                    }).OrderBy(t => t.tagName).ToList(),
+                    removable = xref.ChatMessage.Count > 0
+                }).ToListAsync();
+            return listLogicRelationshipMeta;
         }
         #endregion
 
@@ -1579,8 +1597,9 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.All(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.All(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname)).ToList()
-                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname))
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail))
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.All(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
             }
             else
             {
@@ -1589,8 +1608,9 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.statuses.Any() || searchQuery.statuses.Any(queryStatusID => c.clientStatus.statusID == queryStatusID))
                     .Where(c => !searchQuery.events.Any() || searchQuery.events.Any(queryEventID => c.responses.Any(r => r.responseEvent.eventTypeID == queryEventID)))
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
-                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname)).ToList()
-                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail)).ToList();
+                    .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname))
+                    .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail))
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.Any(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
             }
 
             return matchingClients;
