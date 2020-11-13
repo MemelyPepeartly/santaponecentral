@@ -99,14 +99,14 @@ namespace Santa.Api.Controllers
 
         }
 
-        // GET: api/Client/Headquarters
+        // GET: api/Client/HQClient
         /// <summary>
         /// Gets all clients for HQ
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Headquarters")]
+        [HttpGet("HQClient")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Logic.Objects.Client>>> GetAllHQClients()
+        public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
@@ -121,7 +121,29 @@ namespace Santa.Api.Controllers
                 await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
+        }
 
+        // GET: api/Client/HQClient/5
+        /// <summary>
+        /// Gets all clients for HQ
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("HQClient/{clientID}")]
+        [Authorize(Policy = "read:clients")]
+        public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
+        {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
+                return Ok(logicHQClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // GET: api/Client/5

@@ -60,7 +60,11 @@ export class SantaApiGetService {
       map(this.extractData));
   }
   getAllHQClients(): Observable<any> {
-    return this.http.get(endpoint + 'Client/Headquarters').pipe(
+    return this.http.get(endpoint + 'Client/HQClient').pipe(
+      map(this.extractData));
+  }
+  getHQClientByID(id: string): Observable<any> {
+    return this.http.get(endpoint + 'Client/HQClient/' + id).pipe(
       map(this.extractData));
   }
   getInfoContainerByClientID(id: string): Observable<any> {

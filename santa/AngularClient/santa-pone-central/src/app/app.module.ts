@@ -65,6 +65,7 @@ import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 import { YuleLogComponent } from './admin-control/yule-log/yule-log.component';
 import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.component';
+import { ClientItemComponent } from './headquarters/client-item/client-item.component';
 
 
 @NgModule({
@@ -119,7 +120,8 @@ import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.
       NotFoundComponent,
       StatusCheckerComponent,
       YuleLogComponent,
-      LogTableComponent
+      LogTableComponent,
+      ClientItemComponent
    ],
    entryComponents: [
       LoginComponent

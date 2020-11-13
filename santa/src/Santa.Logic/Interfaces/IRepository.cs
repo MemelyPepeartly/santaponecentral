@@ -63,6 +63,12 @@ namespace Santa.Logic.Interfaces
         /// <returns></returns>
         Task<List<HQClient>> GetAllHeadquarterClients();
         /// <summary>
+        /// Gets a headquarter client object by ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task<HQClient> GetHeadquarterClientByID(Guid clientID);
+        /// <summary>
         /// Gets a list of minimized client data for parsing and data purposes, less os than convenience and total data
         /// </summary>
         /// <returns></returns>

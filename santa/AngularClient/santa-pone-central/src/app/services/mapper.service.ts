@@ -130,6 +130,7 @@ export class MapService {
       answeredSurveys: [],
       senders: client.senders,
       assignments: client.assignments,
+      notes: client.notes,
       tags: [],
       infoContainer: new InfoContainer()
     };
@@ -149,7 +150,8 @@ export class MapService {
       agentID: infoContainer.agentID,
       notes: [],
       senders: [],
-      assignments: []
+      assignments: [],
+      responses: []
     };
 
     infoContainer.assignments.forEach(assignment => {
@@ -160,6 +162,9 @@ export class MapService {
     });
     infoContainer.notes.forEach(note => {
       mappedContainer.notes.push(this.mapNote(note))
+    });
+    infoContainer.responses.forEach(response => {
+      mappedContainer.responses.push(this.mapResponse(response))
     });
 
     return mappedContainer;
@@ -434,7 +439,6 @@ export class MapService {
       responseEvent: this.mapEvent(surveyResponse.responseEvent),
       surveyQuestion: this.mapQuestion(surveyResponse.surveyQuestion),
       surveyOptionID: surveyResponse.surveyOptionID,
-      questionText: surveyResponse.questionText,
       responseText: surveyResponse.responseText,
     };
 

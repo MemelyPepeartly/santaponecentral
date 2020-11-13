@@ -19,7 +19,6 @@ export class SurveyResponse {
   responseEvent: EventType;
   surveyQuestion: Question;
   surveyOptionID?: string;
-  questionText: string;
   responseText: string;
 }
 export class Question {

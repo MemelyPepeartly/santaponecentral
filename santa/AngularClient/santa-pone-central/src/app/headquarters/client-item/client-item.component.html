@@ -1,0 +1,82 @@
+<mat-card mat-list-item class="mat-elevation-z3">
+  <mat-card-title (click)="emitClientClicked()">
+    <button mat-raised-button color="primary" class="openClientButton" (click)="emitClientClicked()">{{ client.clientNickname }}</button>
+    <mat-chip-list class="inline tagList" [selectable]="false" >
+      <mat-chip *ngFor="let tag of client.tags"
+      matTooltip="{{tag.tagName}}"
+      [matTooltipPosition]="'below'"
+      [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+    </mat-chip-list>
+  </mat-card-title>
+  <mat-card-content (click)="emitClientClicked()">
+    <!-- Assingment and Sender count section -->
+    <ng-container *ngIf="showSenderAssignmentCount">
+      <mat-card-subtitle>
+        <span [ngClass]="{'notice' : client.assignments == 0}">Assignments: {{ client.assignments }}</span>
+      </mat-card-subtitle>
+      <mat-card-subtitle>
+        <span>Senders: {{ client.senders }}</span>
+      </mat-card-subtitle>
+    </ng-container>
+
+    <!-- Name section -->
+    <ng-container *ngIf="showAgentName">
+      <mat-card-subtitle>
+        <span>Agent Name: {{ client.clientName }}</span>
+      </mat-card-subtitle>
+    </ng-container>
+
+    <!-- Nickname section -->
+    <ng-container *ngIf="showAgentNickname">
+      <mat-card-subtitle>
+        <span>Agent Nickname: {{ client.clientNickname }}</span>
+      </mat-card-subtitle>
+    </ng-container>
+
+    <mat-divider [inset]="true"></mat-divider>
+
+    <!-- Completed survey section -->
+    <ng-container *ngIf="showCompletedSurveys">
+      <ng-container *ngFor="let survey of allSurveys">
+        <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(survey)">
+          <span>Agent answered for the {{ survey.surveyDescription }}</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle style="margin-top: 10px;" *ngIf="!answeredForSurvey(survey)">
+          <span class="notice">Agent did not answer for the {{ survey.surveyDescription }}</span>
+        </mat-card-subtitle>
+      </ng-container>
+    </ng-container>
+
+  </mat-card-content>
+
+  <!-- Action button section -->
+  <mat-card-actions>
+    <button mat-raised-button class="actionButton"
+      (click)="showNotes = !showNotes; getInfoContainer()"
+      [matBadge]="client.notes"
+      [matBadgeHidden]="client.notes == 0">View Notes</button>
+    <button mat-raised-button class="actionButton" (click)="showAssignments = !showAssignments; getInfoContainer()">View Assignments</button>
+    <button mat-raised-button class="actionButton" (click)="showSurveyResponses = !showSurveyResponses; getInfoContainer()">View Survey Answers</button>
+  </mat-card-actions>
+  <mat-card-content *ngIf="infoSectionOpen">
+    <mat-divider [inset]="true"></mat-divider>
+    <!-- Assignments info section -->
+    <ng-container *ngIf="showAssignments">
+      <app-client-assignment-info class="objectSpacing" [client]="client"></app-client-assignment-info>
+    </ng-container>
+
+    <!-- Notes info section -->
+    <ng-container *ngIf="showNotes">
+      <app-client-note-info class="objectSpacing" (refreshEvent)="softRefreshClient()" [client]="client"></app-client-note-info>
+    </ng-container>
+
+    <!-- Responses info section -->
+    <ng-container *ngIf="showSurveyResponses">
+        <app-response-list class="objectSpacing" *ngFor="let survey of allSurveys"
+        [clientID]="client.clientID"
+        [survey]="survey"
+        [responses]="infoContainer.responses"
+        [editable]="false"></app-response-list>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

@@ -50,6 +50,7 @@ export class HQClient {
   answeredSurveys: Array<string> = [];
   senders: number;
   assignments: number;
+  notes: number;
   tags: Array<Tag> = [];
   infoContainer: InfoContainer = new InfoContainer();
 }
@@ -58,6 +59,7 @@ export class InfoContainer {
   notes: Array<Note> = [];
   assignments: Array<RelationshipMeta> = [];
   senders: Array<RelationshipMeta> = [];
+  responses: Array<SurveyResponse>= [];
 }
 // Class used for holding sender and event ID information
 export class RelationshipMeta {
@@ -67,7 +69,7 @@ export class RelationshipMeta {
   clientRelationXrefID: string;
   assignmentStatus: AssignmentStatus = new AssignmentStatus();
   removable: boolean;
-  /* For assignment panel component purposes. Not a return from the API*/
+  /* For assignment panel component purposes. Not a return from the API */
   confirmDelete: boolean = false;
 }
 export class AllowedAssignmentMeta {

@@ -39,6 +39,7 @@
                 [gatheringInfo]="gatheringAllClients || initializing"
                 [allSurveys]="allSurveys"
                 [approvedClients]="sortApproved()"
+                (refreshClientObjectEvent)="softRefreshClientObjectInList($event)"
                 (clickedClient)="showClientWindow($event)"></app-approved-anons>
             </div>
         </div>
