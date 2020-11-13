@@ -232,6 +232,26 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
+  public async updateSpecificChat(historyEvent: MessageHistory)
+  {
+    var chatIndex = this.allChats.findIndex((history: MessageHistory) => {
+      return history.relationXrefID == historyEvent.relationXrefID &&
+      history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
+      history.assignmentRecieverClient.clientID == historyEvent.assignmentRecieverClient.clientID &&
+      history.assignmentSenderClient.clientID == historyEvent.assignmentSenderClient.clientID &&
+      history.eventType.eventTypeID == historyEvent.eventType.eventTypeID
+    });
+
+    if(chatIndex != undefined)
+    {
+      this.allChats[chatIndex] = historyEvent
+    }
+    else
+    {
+      console.log(chatIndex);
+      console.log("Could not find chat to update");
+    }
+  }
   public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
   {
     this.refreshing = true;

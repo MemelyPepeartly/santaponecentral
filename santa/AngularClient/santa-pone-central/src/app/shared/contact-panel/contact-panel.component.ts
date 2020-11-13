@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { MessageApiReadResponse } from 'src/classes/responseTypes';
 import { SantaApiPutService } from 'src/app/services/santa-api.service';
-import { MapResponse } from 'src/app/services/mapper.service';
+import { MapResponse, MapService } from 'src/app/services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -18,10 +18,12 @@ export class ContactPanelComponent implements OnInit{
     protected sanitizer: DomSanitizer,
     public SantaApiPut: SantaApiPutService,
     public responseMapper: MapResponse,
+    public ApiMapper: MapService,
     public auth: AuthService) { }
 
   // Boolean value for passing whether or not the emit is a soft update or not
-  @Output() messageUpdatedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() messageUpdatedEvent: EventEmitter<Message> = new EventEmitter<Message>();
+  @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
@@ -78,10 +80,25 @@ export class ContactPanelComponent implements OnInit{
     let putMessage = new MessageApiReadResponse();
 
     putMessage.isMessageRead = true;
-    await this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);});
+    let newMessage: Message = this.ApiMapper.mapMessage(await this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);}));
 
     this.markingRead = false;
-    this.messageUpdatedEvent.emit(true);
+
+    var messageIndex = undefined;
+    if(newMessage.subjectMessage)
+    {
+      messageIndex = this.selectedHistory.subjectMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
+      this.selectedHistory.subjectMessages[messageIndex] = newMessage
+    }
+    else
+    {
+      messageIndex = this.selectedHistory.recieverMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
+      this.selectedHistory.recieverMessages[messageIndex] = newMessage
+    }
+    this.selectedHistory.unreadCount -= 1;
+
+    this.historyUpdatedEvent.emit(this.selectedHistory);
+    this.messageUpdatedEvent.emit(newMessage);
   }
   public showRead(message: Message) : boolean
   {

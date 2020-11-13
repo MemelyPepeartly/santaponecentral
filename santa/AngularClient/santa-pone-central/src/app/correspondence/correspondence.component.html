@@ -12,7 +12,8 @@
 </div>
 <div class="contact-container mat-elevation-z3" *ngIf="showChat == true">
     <app-contact-panel #messages
-      (messageUpdatedEvent)="updateChats($event)"
+      (messageUpdatedEvent)="true"
+      (historyUpdatedEvent)="updateSpecificChat($event)"
       (manualRefreshClickedEvent)="manualRefreshSelectedChat($event, false)"
       [refreshing]="refreshing"
       [showActionProgressBar]="postingMessage || puttingMessage"
