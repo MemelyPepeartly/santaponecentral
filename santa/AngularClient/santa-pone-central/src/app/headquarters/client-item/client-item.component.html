@@ -38,10 +38,10 @@
     <!-- Completed survey section -->
     <ng-container *ngIf="showCompletedSurveys">
       <ng-container *ngFor="let survey of allSurveys">
-        <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
+        <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(survey)">
           <span>Agent answered for the {{ survey.surveyDescription }}</span>
         </mat-card-subtitle>
-        <mat-card-subtitle style="margin-top: 10px;" *ngIf="!answeredForSurvey(client, survey)">
+        <mat-card-subtitle style="margin-top: 10px;" *ngIf="!answeredForSurvey(survey)">
           <span class="notice">Agent did not answer for the {{ survey.surveyDescription }}</span>
         </mat-card-subtitle>
       </ng-container>

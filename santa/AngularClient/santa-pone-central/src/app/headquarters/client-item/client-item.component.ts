@@ -43,6 +43,7 @@ export class ClientItemComponent implements OnInit {
   }
   public async getInfoContainer()
   {
+
     //If the info container isnt filled => Get the info container from the API
     if(this.infoContainer.agentID == undefined)
     {
