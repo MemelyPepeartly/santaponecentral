@@ -343,13 +343,13 @@ export class AgentCatalogueComponent implements OnInit {
   }
   async updateClientInList(client: HQClient)
   {
-    var clientIndex = this.foundClients.findIndex((c: StrippedClient) => {
+    var clientIndex = this.allHQClients.findIndex((c: HQClient) => {
       return c.clientID == client.clientID
     });
 
     if(clientIndex != undefined)
     {
-      this.foundClients[clientIndex] = this.mapper.mapStrippedClient(await this.santaApiGet.getTruncatedClientByID(client.clientID).toPromise());
+      this.allHQClients[clientIndex] = this.mapper.mapHQClient(await this.santaApiGet.getHQClientByID(client.clientID).toPromise());
     }
   }
   public convertToHQClient(client: StrippedClient) : HQClient
