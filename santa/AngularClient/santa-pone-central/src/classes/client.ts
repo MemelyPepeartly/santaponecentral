@@ -83,7 +83,7 @@ export class AssignmentStatus {
   assignmentStatusDescription: string;
 }
 export class PossiblePairingChoices {
-  sendingAgent: Client;
-  potentialAssignments: Array<Client> = [];
+  sendingAgent: HQClient;
+  potentialAssignments: Array<HQClient> = [];
 }
 

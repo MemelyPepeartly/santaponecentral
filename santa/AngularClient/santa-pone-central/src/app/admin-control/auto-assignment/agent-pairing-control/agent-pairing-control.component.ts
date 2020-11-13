@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatList, MatSelectionList } from '@angular/material/list';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
-import { Client, PossiblePairingChoices } from 'src/classes/client';
+import { Client, HQClient, PossiblePairingChoices } from 'src/classes/client';
 import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 
 @Component({
@@ -20,7 +20,7 @@ export class AgentPairingControlComponent implements OnInit {
 
   public postingNewAssignments: boolean = false;
 
-  public selectedPotentialAssignments: Array<Client> = [];
+  public selectedPotentialAssignments: Array<HQClient> = [];
 
   @ViewChild("pairingList") public pairingList: MatSelectionList;
 
@@ -31,7 +31,7 @@ export class AgentPairingControlComponent implements OnInit {
     this.postingNewAssignments = true;
     let pairingModel: Array<Pairing> = [];
 
-    this.selectedPotentialAssignments.forEach((client: Client) => {
+    this.selectedPotentialAssignments.forEach((client: HQClient) => {
       let modelPair: Pairing =
         {
           senderAgentID: this.possiblePairingsObject.sendingAgent.clientID,
@@ -49,8 +49,8 @@ export class AgentPairingControlComponent implements OnInit {
       this.completedPostEvent.emit(true);
       // Set the potential assignments that were successfully posted equal to a list without the ones that were not posted
       // Small local update to avoid having to gather everything again
-      this.possiblePairingsObject.potentialAssignments = this.possiblePairingsObject.potentialAssignments.filter((client: Client) => {
-        return !this.selectedPotentialAssignments.some((selection: Client) => {return selection.clientID == client.clientID
+      this.possiblePairingsObject.potentialAssignments = this.possiblePairingsObject.potentialAssignments.filter((client: HQClient) => {
+        return !this.selectedPotentialAssignments.some((selection: HQClient) => {return selection.clientID == client.clientID
         });
       });
       this.postingNewAssignments = false;

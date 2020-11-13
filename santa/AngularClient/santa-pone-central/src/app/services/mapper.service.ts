@@ -336,11 +336,11 @@ export class MapService {
   {
     let mappedPossiblePairing: PossiblePairingChoices =
     {
-      sendingAgent: this.mapClient(possiblePairing.sendingAgent),
+      sendingAgent: this.mapHQClient(possiblePairing.sendingAgent),
       potentialAssignments: []
     };
     possiblePairing.potentialAssignments.forEach(assignment => {
-      mappedPossiblePairing.potentialAssignments.push(this.mapClient(assignment));
+      mappedPossiblePairing.potentialAssignments.push(this.mapHQClient(assignment));
     });
     return mappedPossiblePairing;
   }
