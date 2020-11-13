@@ -1,0 +1,35 @@
+<mat-card mat-list-item>
+  <mat-card-title (click)="emitClientClicked()">
+    <h1 class="inline">{{ client.clientNickname }}</h1>
+    <mat-chip-list class="inline tagList" [selectable]="false" >
+      <mat-chip *ngFor="let tag of client.tags"
+      matTooltip="{{tag.tagName}}"
+      [matTooltipPosition]="'below'"
+      [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+    </mat-chip-list>
+  </mat-card-title>
+  <mat-card-content (click)="emitClientClicked()">
+    <mat-card-subtitle>
+      <span [ngClass]="{'notice' : client.assignments == 0}">Assignments: {{ client.assignments }}</span>
+    </mat-card-subtitle>
+    <mat-card-subtitle>
+      <span>Senders: {{ client.senders }}</span>
+    </mat-card-subtitle>
+    <mat-card-subtitle>
+      <span>Agent Name: {{ client.clientName }}</span>
+    </mat-card-subtitle>
+    <mat-divider [inset]="true"></mat-divider>
+    <ng-container *ngFor="let survey of allSurveys">
+      <mat-card-subtitle style="margin-top: 10px;" *ngIf="answeredForSurvey(client, survey)">
+        <span>Agent answered for the {{ survey.surveyDescription }}</span>
+      </mat-card-subtitle>
+      <mat-card-subtitle style="margin-top: 10px;" *ngIf="!answeredForSurvey(client, survey)">
+        <span class="notice">Agent did not answer for the {{ survey.surveyDescription }}</span>
+      </mat-card-subtitle>
+    </ng-container>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="viewClientNotesClicked()">View Notes</button>
+    <button mat-raised-button (click)="viewAssignmentsClicked()">View Assignments</button>
+  </mat-card-actions>
+</mat-card>
