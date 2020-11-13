@@ -41,6 +41,7 @@ mat-card
 .openClientButton
 {
   font-size: large;
+  margin-bottom: 10px;
 }
 @media (max-width:600px)
 {
