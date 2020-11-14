@@ -13,6 +13,8 @@ namespace Santa.Logic.Objects
         public List<string> nicknames { get; set; }
         public List<string> emails { get; set; }
         public List<string> responses { get; set; }
+        public List<int> cardAssignments { get; set; }
+        public List<int> giftAssignments { get; set; }
         public bool isHardSearch { get; set; }
     }
 }

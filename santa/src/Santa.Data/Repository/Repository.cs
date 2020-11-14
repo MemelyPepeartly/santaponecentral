@@ -271,7 +271,11 @@ namespace Santa.Data.Repository
                     {
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName,
-                    }).ToList()
+                    }).ToList(),
+                    giftAssignments = client.ClientRelationXrefSenderClient.Where(x => x.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT).Count(),
+                    giftSenders = client.ClientRelationXrefRecipientClient.Where(x => x.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT).Count(),
+                    cardAssignments = client.ClientRelationXrefSenderClient.Where(x => x.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT).Count(),
+                    cardSenders = client.ClientRelationXrefRecipientClient.Where(x => x.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT).Count()
 
                 }).AsNoTracking().ToListAsync();
             return clientList;
@@ -1673,7 +1677,10 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
                     .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname))
                     .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail))
-                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.All(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.All(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse))))
+                    .Where(c => !searchQuery.cardAssignments.Any() || searchQuery.cardAssignments.All(queryAssignmentAmount => c.cardAssignments == queryAssignmentAmount))
+                    .Where(c => !searchQuery.giftAssignments.Any() || searchQuery.giftAssignments.All(queryAssignmentAmount => c.giftAssignments == queryAssignmentAmount)).ToList();
+
             }
             else
             {
@@ -1684,7 +1691,9 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
                     .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname))
                     .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail))
-                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.Any(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.Any(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse))))
+                    .Where(c => !searchQuery.cardAssignments.Any() || searchQuery.cardAssignments.Any(queryAssignmentAmount => c.cardAssignments == queryAssignmentAmount))
+                    .Where(c => !searchQuery.giftAssignments.Any() || searchQuery.giftAssignments.Any(queryAssignmentAmount => c.giftAssignments == queryAssignmentAmount)).ToList();
             }
 
             return matchingClients;
