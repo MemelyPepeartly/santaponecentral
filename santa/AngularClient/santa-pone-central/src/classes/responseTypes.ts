@@ -159,6 +159,8 @@ export class SearchQueryModelResponse {
   nicknames: Array<string> = [];
   emails: Array<string> = [];
   responses: Array<string>= [];
+  cardAssignments: Array<number>= [];
+  giftAssignments: Array<number>= [];
   isHardSearch: boolean;
 }
 
