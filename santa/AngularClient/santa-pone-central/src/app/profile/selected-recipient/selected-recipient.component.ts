@@ -45,7 +45,8 @@ export class SelectedRecipientComponent implements OnInit {
   }
   public async setNewStatus(newAssignmentStatusEvent: AssignmentStatus)
   {
-    this.selectedRecipient.assignmentStatus = newAssignmentStatusEvent
+    var oldAssignmentStatus: AssignmentStatus = this.selectedRecipient.assignmentStatus;
+    this.selectedRecipient.assignmentStatus = newAssignmentStatusEvent;
     this.actionTaken.emit(true);
     if(newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.SHIPPING || newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.COMPLETED)
     {
@@ -55,7 +56,7 @@ export class SelectedRecipientComponent implements OnInit {
         messageRecieverClientID: null,
         clientRelationXrefID: this.selectedRecipient.relationXrefID,
         eventTypeID: this.selectedRecipient.recipientEvent.eventTypeID,
-        messageContent: this.profile.clientNickname + ' has set this assignment from "' + this.selectedRecipient.assignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
+        messageContent: this.profile.clientNickname + ' has set this assignment from "' + oldAssignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
         fromAdmin: false,
       };
       await this.SantaApiPost.postMessage(newMessage).toPromise();
