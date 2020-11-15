@@ -271,7 +271,11 @@ namespace Santa.Data.Repository
                     {
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName,
-                    }).ToList()
+                    }).ToList(),
+                    giftAssignments = client.ClientRelationXrefSenderClient.Where(x => x.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT).Count(),
+                    giftSenders = client.ClientRelationXrefRecipientClient.Where(x => x.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT).Count(),
+                    cardAssignments = client.ClientRelationXrefSenderClient.Where(x => x.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT).Count(),
+                    cardSenders = client.ClientRelationXrefRecipientClient.Where(x => x.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT).Count()
 
                 }).AsNoTracking().ToListAsync();
             return clientList;
@@ -1560,12 +1564,14 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>(),
+                        /*
                         tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-
+                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
@@ -1574,12 +1580,14 @@ namespace Santa.Data.Repository
                         eventType = Mapper.MapEvent(xref.EventType),
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                        tags = new List<Logic.Objects.Tag>(),
+                        /*
                         tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
                         {
                             tagID = tagXref.TagId,
                             tagName = tagXref.Tag.TagName
                         }).OrderBy(t => t.tagName).ToList(),
-
+                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
 
@@ -1605,11 +1613,14 @@ namespace Santa.Data.Repository
                     relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
                     eventType = Mapper.MapEvent(xref.EventType),
                     assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = new List<Logic.Objects.Tag>(),
+                    /*
                     tags = xref.RecipientClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
                     {
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName
                     }).OrderBy(t => t.tagName).ToList(),
+                    */
                     removable = xref.ChatMessage.Count > 0
                 }).ToListAsync();
             return listLogicRelationshipMeta;
@@ -1666,7 +1677,10 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.All(queryName => c.clientName == queryName))
                     .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.All(queryNickname => c.nickname == queryNickname))
                     .Where(c => !searchQuery.emails.Any() || searchQuery.emails.All(queryEmail => c.email == queryEmail))
-                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.All(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.All(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse))))
+                    .Where(c => !searchQuery.cardAssignments.Any() || searchQuery.cardAssignments.All(queryAssignmentAmount => c.cardAssignments == queryAssignmentAmount))
+                    .Where(c => !searchQuery.giftAssignments.Any() || searchQuery.giftAssignments.All(queryAssignmentAmount => c.giftAssignments == queryAssignmentAmount)).ToList();
+
             }
             else
             {
@@ -1677,7 +1691,9 @@ namespace Santa.Data.Repository
                     .Where(c => !searchQuery.names.Any() || searchQuery.names.Any(queryName => c.clientName == queryName))
                     .Where(c => !searchQuery.nicknames.Any() || searchQuery.nicknames.Any(queryNickname => c.nickname == queryNickname))
                     .Where(c => !searchQuery.emails.Any() || searchQuery.emails.Any(queryEmail => c.email == queryEmail))
-                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.Any(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse)))).ToList();
+                    .Where(c => !searchQuery.responses.Any() || searchQuery.responses.Any(queryResponse => c.responses.Any(r => r.responseText.Contains(queryResponse))))
+                    .Where(c => !searchQuery.cardAssignments.Any() || searchQuery.cardAssignments.Any(queryAssignmentAmount => c.cardAssignments == queryAssignmentAmount))
+                    .Where(c => !searchQuery.giftAssignments.Any() || searchQuery.giftAssignments.Any(queryAssignmentAmount => c.giftAssignments == queryAssignmentAmount)).ToList();
             }
 
             return matchingClients;

@@ -22,6 +22,8 @@ export class SearchQueryObjectContainer
   nicknames: Array<string> = [];
   emails: Array<string> = [];
   responseQueries: Array<string> = [];
+  gAssignments: Array<number> = [];
+  cAssignments: Array<number> = [];
 
   get tagQueryIDs() : Array<string>
   {
@@ -120,6 +122,8 @@ export class AgentCatalogueComponent implements OnInit {
   public nicknamesReg: RegExp = new RegExp(/"nickname:([^"]+)"/g);
   public emailReg: RegExp = new RegExp(/"email:([^"]+)"/g);
   public responseReg: RegExp = new RegExp(/"response:([^"]+)"/g);
+  public giftAssignmentReg: RegExp = new RegExp(/"giftAssignments:([^"]+)"/g);
+  public cardAssignmentReg: RegExp = new RegExp(/"cardAssignments:([^"]+)"/g);
 
 
   public get allHelperTags() : Array<Tag>
@@ -234,6 +238,10 @@ export class AgentCatalogueComponent implements OnInit {
     let nicknameMatches = Array.from(this.searchQueryString.matchAll(this.nicknamesReg))
     let emailMatches = Array.from(this.searchQueryString.matchAll(this.emailReg))
     let responseMatches = Array.from(this.searchQueryString.matchAll(this.responseReg))
+    let gAssignmentMatches = Array.from(this.searchQueryString.matchAll(this.giftAssignmentReg))
+    let cAssignmentMatches = Array.from(this.searchQueryString.matchAll(this.cardAssignmentReg))
+
+
 
 
     tagMatches.forEach((element: RegExpMatchArray) => {
@@ -285,6 +293,19 @@ export class AgentCatalogueComponent implements OnInit {
         this.searchQueryObjectHolder.responseQueries.push(element[1]);
       }
     });
+
+    gAssignmentMatches.forEach((element: RegExpMatchArray) => {
+      if(Number(element[1]) != NaN)
+      {
+        this.searchQueryObjectHolder.gAssignments.push(Number(element[1]));
+      }
+    });
+    cAssignmentMatches.forEach((element: RegExpMatchArray) => {
+      if(Number(element[1]) != NaN)
+      {
+        this.searchQueryObjectHolder.cAssignments.push(Number(element[1]));
+      }
+    });
   }
   public removeTagQuery(tag: Tag)
   {
@@ -310,6 +331,9 @@ export class AgentCatalogueComponent implements OnInit {
     this.searchQueryObjectHolder.nicknames = [];
     this.searchQueryObjectHolder.emails = [];
     this.searchQueryObjectHolder.responseQueries = [];
+    this.searchQueryObjectHolder.gAssignments = [];
+    this.searchQueryObjectHolder.cAssignments = [];
+
   }
   public search()
   {
@@ -324,10 +348,11 @@ export class AgentCatalogueComponent implements OnInit {
       nicknames: this.searchQueryObjectHolder.nicknames,
       emails: this.searchQueryObjectHolder.emails,
       responses: this.searchQueryObjectHolder.responseQueries,
+      cardAssignments: this.searchQueryObjectHolder.cAssignments,
+      giftAssignments: this.searchQueryObjectHolder.gAssignments,
       isHardSearch: this.selectedSearchType == 'hard' ? true : false
     }
     this.santaApiPost.searchClients(response).subscribe((res) => {
-
       res.forEach(client => {
         this.foundClients.push(this.mapper.mapStrippedClient(client));
       });

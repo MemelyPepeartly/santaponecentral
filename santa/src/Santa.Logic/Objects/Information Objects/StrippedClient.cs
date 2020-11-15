@@ -16,6 +16,10 @@ namespace Santa.Logic.Objects.Information_Objects
         public string email { get; set; }
         public List<Response> responses { get; set; }
         public List<Tag> tags { get; set; }
+        public int giftAssignments { get; set; }
+        public int giftSenders { get; set; }
+        public int cardAssignments { get; set; }
+        public int cardSenders { get; set; }
         public bool isAdmin { get; set; }
     }
 }
