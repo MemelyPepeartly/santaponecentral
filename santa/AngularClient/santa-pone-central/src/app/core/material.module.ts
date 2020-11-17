@@ -25,6 +25,8 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatRippleModule} from '@angular/material/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {TableVirtualScrollModule} from 'ng-table-virtual-scroll';
 
 @NgModule({
   imports: [
@@ -54,7 +56,9 @@ import {MatRippleModule} from '@angular/material/core';
   MatBadgeModule,
   MatProgressBarModule,
   MatAutocompleteModule,
-  MatRippleModule
+  MatRippleModule,
+  ScrollingModule,
+  TableVirtualScrollModule
   ],
   exports: [
   CommonModule,
@@ -83,7 +87,9 @@ import {MatRippleModule} from '@angular/material/core';
    MatBadgeModule,
    MatProgressBarModule,
    MatAutocompleteModule,
-   MatRippleModule
+   MatRippleModule,
+   ScrollingModule,
+   TableVirtualScrollModule
    ],
 })
 export class CustomMaterialModule { }
