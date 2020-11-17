@@ -132,7 +132,7 @@ namespace Santa.Api.Services.YuleLog
         Task logCreatedNewClient(BaseClient requestingClient);
         Task logCreatedNewAuth0Client(BaseClient requestingClient);
         Task logCreatedNewTag(BaseClient requestingClient, Tag newTag);
-        Task logCreatedNewClientTagRelationship(BaseClient requestingClient);
+        Task logCreatedNewClientTagRelationship(BaseClient requestingClient, BaseClient targetClient, Tag assignedTag);
         Task logDeletedClient(BaseClient requestingClient);
         Task logDeletedAssignment(BaseClient requestingClient);
         Task logDeletedTag(BaseClient requestingClient);

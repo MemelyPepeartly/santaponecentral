@@ -203,7 +203,7 @@ namespace Santa.Api.Controllers
             // Log the profile request
             try
             {
-                await yuleLogger.logModifiedProfile(checkerClient, logicProfile);
+                await yuleLogger.logChangedProfile(checkerClient, logicProfile);
             }
             // If it fails, log the error instead and stop the transaction
             catch (Exception)
@@ -272,7 +272,7 @@ namespace Santa.Api.Controllers
                 {
                     // Update profile and send back the updated recipient
                     await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
-                    await yuleLogger.logModifiedAssignmentStatus(checkerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
+                    await yuleLogger.logChangedAssignmentStatus(checkerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
                     await repository.SaveAsync();
 
                     return Ok((await repository.GetClientByIDAsync(checkerClient.clientID)).assignments.First(r => r.clientRelationXrefID == assignmentXrefID).assignmentStatus);
