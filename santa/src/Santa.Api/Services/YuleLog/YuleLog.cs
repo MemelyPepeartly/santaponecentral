@@ -46,6 +46,40 @@ namespace Santa.Api.Services.YuleLog
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_ASSIGNMENT_CATEGORY), logMessage));
             await saveLogs();
         }
+        public async Task logCreatedNewMessage(BaseClient requestingClient, ClientChatMeta sender, ClientChatMeta receiver)
+        {
+            string receiverNickname = receiver.clientNickname;
+            if (receiver.clientId == null)
+            {
+                receiverNickname = "Event Organizers";
+            }
+            string logMessage = $"{requestingClient.nickname} requested to post a new message. Sender: {sender.clientNickname} | Reciever: {receiverNickname} ";
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY), logMessage));
+            await saveLogs();
+        }
+        public async Task logCreatedNewClient(BaseClient requestingClient, Client newClient)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a new client object with email: {newClient.email}"));
+            await saveLogs();
+        }
+
+        public async Task logCreatedNewAuth0Client(BaseClient requestingClient, string createdAuth0AccountEmail)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a client an Auth0 account for the email: {createdAuth0AccountEmail}"));
+            await saveLogs();
+        }
+
+        public async Task logCreatedNewTag(BaseClient requestingClient, Logic.Objects.Tag newTag)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_TAG_CATEGORY), $"{requestingClient.nickname} requested to make a new tag: {newTag.tagName}"));
+            await saveLogs();
+        }
+
+        public async Task logCreatedNewClientTagRelationship(BaseClient requestingClient, BaseClient targetClient, Logic.Objects.Tag assignedTag)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY), $"{requestingClient.nickname} requested to add {assignedTag.tagName} to {targetClient.nickname}"));
+            await saveLogs();
+        }
         #endregion
 
         #region GET logs
@@ -83,37 +117,66 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         #region PUT logs
-        public async Task logChangedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
+        public async Task logModifiedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change their answer for question '{questionBeingAnsweredFor.questionText}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
+        public async Task logModifiedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change the assignment status for {assignmentNickname} from '{oldStatus.assignmentStatusName}' to '{newStatus.assignmentStatusName}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
+        public async Task logModifiedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus)
         {
             string logMessage = $@"{requestingClient.nickname} made a request to change the assignment status for {assignmentNickname} from '{oldStatus.assignmentStatusName}' to '{newStatus.assignmentStatusName}'";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY), logMessage));
             await saveLogs();
         }
-        public async Task logChangedProfile(BaseClient requestingClient, Profile modifiedProfile)
+        public async Task logModifiedProfile(BaseClient requestingClient, Profile modifiedProfile)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified data on a profile for {modifiedProfile.nickname}"));
             await saveLogs();
         }
-        public async Task logChangedClient(BaseClient requestingClient, Client modifiedClient)
+        public async Task logModifiedClient(BaseClient requestingClient, Client modifiedClient)
         {
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.GET_ALL_HISTORY_CATEGORY), $"{requestingClient.nickname} modified a client's data for {modifiedClient.nickname}"));
+            await saveLogs();
+        }
+        public async Task logModifiedMessageReadStatus(BaseClient requestingClient, Message markedMessage)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY), $"{requestingClient.nickname} requested to mark a message as read. Sender Client: {markedMessage.senderClient.clientNickname} - Reciever Client: {markedMessage.recieverClient.clientNickname}"));
+            await saveLogs();
+        }
+
+        public async Task logModifiedClientStatus(BaseClient requestingClient, Client affectedClientWithNewStatus, Status oldStatus)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY), $"{requestingClient.nickname} requested to modify {affectedClientWithNewStatus.nickname}'s status from {oldStatus.statusDescription} to '{affectedClientWithNewStatus.clientStatus.statusDescription}'"));
             await saveLogs();
         }
         #endregion
 
         #region DELETE logs
+        public async Task logDeletedClient(BaseClient requestingClient, BaseClient deletedClient)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.DELETED_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to delete {deletedClient.nickname} and all related entities"));
+            await saveLogs();
+        }
+
+        public async Task logDeletedAssignment(BaseClient requestingClient, BaseClient affectedClient, BaseClient deletedAssignment)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.DELETED_ASSIGNMENT_CATEGORY), $"{requestingClient.nickname} requested to remove {deletedAssignment.nickname} from {affectedClient.nickname}'s assignment list"));
+            await saveLogs();
+
+        }
+
+        public async Task logDeletedTag(BaseClient requestingClient, Logic.Objects.Tag deletedTag)
+        {
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.DELETED_TAG_CATEGORY), $"{requestingClient.nickname} requested to delete the {deletedTag.tagName} tag"));
+            await saveLogs();
+        }
         #endregion
 
         #region Utility
@@ -239,66 +302,5 @@ namespace Santa.Api.Services.YuleLog
             return (await repository.GetAllCategories()).First(c => c.categoryName == categoryName);
         }
         #endregion
-
-        public async Task logCreatedNewMessage(BaseClient requestingClient, ClientChatMeta sender, ClientChatMeta receiver)
-        {
-            string receiverNickname = receiver.clientNickname;
-            if (receiver.clientId == null)
-            {
-                receiverNickname = "Event Organizers";
-            }
-            string logMessage = $"{requestingClient.nickname} requested to post a new message. Sender: {sender.clientNickname} | Reciever: {receiverNickname} ";
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY), logMessage));
-            await saveLogs();
-        }
-
-        public async Task logCreatedNewClient(BaseClient requestingClient)
-        {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a new client object"));
-            await saveLogs();
-        }
-
-        public async Task logCreatedNewAuth0Client(BaseClient requestingClient)
-        {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY), $"{requestingClient.nickname} requested to make a client an Auth0 account"));
-            await saveLogs();
-        }
-
-        public async Task logCreatedNewTag(BaseClient requestingClient, Logic.Objects.Tag newTag)
-        {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_TAG_CATEGORY), $"{requestingClient.nickname} requested to make a new tag: {newTag.tagName}"));
-            await saveLogs();
-        }
-
-        public async Task logCreatedNewClientTagRelationship(BaseClient requestingClient, BaseClient targetClient, Logic.Objects.Tag assignedTag)
-        {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY), $"{requestingClient.nickname} requested to add {assignedTag.tagName} to {targetClient.nickname}"));
-            await saveLogs();
-        }
-
-        public Task logDeletedClient(BaseClient requestingClient)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task logDeletedAssignment(BaseClient requestingClient)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task logDeletedTag(BaseClient requestingClient)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task logModifiedMessageReadStatus(BaseClient requestingClient)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task logModifiedClientStatus(BaseClient requestingClient)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

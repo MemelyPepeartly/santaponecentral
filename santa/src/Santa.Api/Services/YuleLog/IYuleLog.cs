@@ -74,7 +74,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldAnswer"></param>
         /// <param name="newAnswer"></param>
         /// <returns></returns>
-        Task logChangedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
+        Task logModifiedAnswer(BaseClient requestingClient, Question questionBeingAnsweredFor, string oldAnswer, string newAnswer);
         /// <summary>
         /// Logs when an assignment status is changed with the requestor client, assignment's nickname, the old status, and the new status
         /// </summary>
@@ -83,7 +83,7 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldStatus"></param>
         /// <param name="newStatus"></param>
         /// <returns></returns>
-        Task logChangedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
+        Task logModifiedAssignmentStatus(BaseClient requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
         /// <summary>
         /// Overload for normal client object. Logs when an assignment status is changed with the requestor client, assignment's nickname, the old status, and the new status
         /// </summary>
@@ -92,21 +92,21 @@ namespace Santa.Api.Services.YuleLog
         /// <param name="oldStatus"></param>
         /// <param name="newStatus"></param>
         /// <returns></returns>
-        Task logChangedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
+        Task logModifiedAssignmentStatus(Client requestingClient, string assignmentNickname, AssignmentStatus oldStatus, AssignmentStatus newStatus);
         /// <summary>
         /// Logs a change to a profile has been made
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="modifiedProfile"></param>
         /// <returns></returns>
-        Task logChangedProfile(BaseClient requestingClient, Profile modifiedProfile);
+        Task logModifiedProfile(BaseClient requestingClient, Profile modifiedProfile);
         /// <summary>
         /// Logs a client has been changed
         /// </summary>
         /// <param name="requestingClient"></param>
         /// <param name="modifiedClient"></param>
         /// <returns></returns>
-        Task logChangedClient(BaseClient requestingClient, Client modifiedClient);
+        Task logModifiedClient(BaseClient requestingClient, Client modifiedClient);
 
         #endregion
 
@@ -129,15 +129,15 @@ namespace Santa.Api.Services.YuleLog
         #endregion
 
         Task logCreatedNewMessage(BaseClient requestingClient, ClientChatMeta sender, ClientChatMeta reciever);
-        Task logCreatedNewClient(BaseClient requestingClient);
-        Task logCreatedNewAuth0Client(BaseClient requestingClient);
+        Task logCreatedNewClient(BaseClient requestingClient, Client newClient);
+        Task logCreatedNewAuth0Client(BaseClient requestingClient, string createdAuth0AccountEmail);
         Task logCreatedNewTag(BaseClient requestingClient, Tag newTag);
         Task logCreatedNewClientTagRelationship(BaseClient requestingClient, BaseClient targetClient, Tag assignedTag);
-        Task logDeletedClient(BaseClient requestingClient);
-        Task logDeletedAssignment(BaseClient requestingClient);
-        Task logDeletedTag(BaseClient requestingClient);
-        Task logModifiedMessageReadStatus(BaseClient requestingClient);
-        Task logModifiedClientStatus(BaseClient requestingClient);
+        Task logDeletedClient(BaseClient requestingClient, BaseClient deletedClient);
+        Task logDeletedAssignment(BaseClient requestingClient, BaseClient affectedClient, BaseClient deletedAssignment);
+        Task logDeletedTag(BaseClient requestingClient, Tag deletedTag);
+        Task logModifiedMessageReadStatus(BaseClient requestingClient, Message markedMessage);
+        Task logModifiedClientStatus(BaseClient requestingClient, Client affectedClientWithNewStatus, Status oldStatus);
 
     }
 }
