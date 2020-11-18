@@ -241,7 +241,7 @@ VALUES
     (NEWID(), 'Deleted Assignment', 'An assignment has been removed from a client'),
     (NEWID(), 'Modified Client Status', 'A client''s status was modified'),
     (NEWID(), 'Added New Tag', 'A new tag was created'),
-    (NEWID(), 'Added New Tag To Client', 'A tag was assigned to a client');
+    (NEWID(), 'Added New Tags To Client', 'A tag was assigned to a client');
 
 
 
