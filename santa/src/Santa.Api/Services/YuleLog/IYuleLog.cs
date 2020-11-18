@@ -127,15 +127,18 @@ namespace Santa.Api.Services.YuleLog
         /// <returns></returns>
         Task saveLogs();
         #endregion
-
+        //
         Task logCreatedNewMessage(BaseClient requestingClient, ClientChatMeta sender, ClientChatMeta reciever);
+        //
         Task logCreatedNewClient(BaseClient requestingClient, Client newClient);
+        //
         Task logCreatedNewAuth0Client(BaseClient requestingClient, string createdAuth0AccountEmail);
         Task logCreatedNewTag(BaseClient requestingClient, Tag newTag);
         Task logCreatedNewClientTagRelationship(BaseClient requestingClient, BaseClient targetClient, Tag assignedTag);
         Task logDeletedClient(BaseClient requestingClient, BaseClient deletedClient);
         Task logDeletedAssignment(BaseClient requestingClient, BaseClient affectedClient, BaseClient deletedAssignment);
         Task logDeletedTag(BaseClient requestingClient, Tag deletedTag);
+        //
         Task logModifiedMessageReadStatus(BaseClient requestingClient, Message markedMessage);
         Task logModifiedClientStatus(BaseClient requestingClient, Client affectedClientWithNewStatus, Status oldStatus);
 

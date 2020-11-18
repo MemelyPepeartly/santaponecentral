@@ -804,10 +804,26 @@ namespace Santa.Api.Controllers
             Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
             Status originalStatus = targetClient.clientStatus;
 
-            // Updates client status and account status
-            targetClient.clientStatus.statusID = status.clientStatusID;
-            await repository.UpdateClientByIDAsync(targetClient);
-            await repository.SaveAsync();
+            try
+            {
+                // Updates client status and account status
+                targetClient.clientStatus.statusID = status.clientStatusID;
+
+                await repository.UpdateClientByIDAsync(targetClient);
+
+                // Sets the client status to the correct object for logging purposes
+                targetClient.clientStatus = await repository.GetClientStatusByID(status.clientStatusID);
+
+                await repository.SaveAsync();
+                await yuleLogger.logModifiedClientStatus(requestingClient, targetClient, originalStatus);
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
+
 
             // Get updated client
             Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
@@ -914,24 +930,37 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
-            await repository.DeleteClientByIDAsync(clientID);
-            bool accountExists = await authHelper.accountExists(logicClient.email);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
+            InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
 
-            if(accountExists)
+            try
             {
-                Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
-                await authHelper.deleteAuthClient(authUser.user_id);
-            }
-            if(logicClient.notes.Count > 0)
-            {
-                foreach(Logic.Objects.Base_Objects.Note note in logicClient.notes)
+                await repository.DeleteClientByIDAsync(clientID);
+                bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+
+                if (accountExists)
                 {
-                    await repository.DeleteNoteByID(note.noteID);
+                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(baseLogicClient.email);
+                    await authHelper.deleteAuthClient(authUser.user_id);
                 }
+                if (infoContainer.notes.Count > 0)
+                {
+                    foreach (Logic.Objects.Base_Objects.Note note in infoContainer.notes)
+                    {
+                        await repository.DeleteNoteByID(note.noteID);
+                    }
+                }
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
+                return NoContent();
             }
-            await repository.SaveAsync();
-            return NoContent();
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
         // DELETE: api/Client/5/Recipient
         /// <summary>
