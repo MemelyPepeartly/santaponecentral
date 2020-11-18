@@ -159,6 +159,18 @@ namespace Santa.Data.Repository
 
             return logicMeta;
         }
+        public static ClientChatMeta MapClientChatMeta(BaseClient baseLogicClient)
+        {
+            ClientChatMeta logicMeta = new ClientChatMeta()
+            {
+                clientId = baseLogicClient.clientID,
+                clientNickname = baseLogicClient.nickname,
+                hasAccount = baseLogicClient.hasAccount,
+                isAdmin = baseLogicClient.isAdmin
+            };
+
+            return logicMeta;
+        }
         public static ClientChatMeta MapClientChatMeta(Logic.Objects.Client logicClient)
         {
             ClientChatMeta logicMeta = new ClientChatMeta()
@@ -661,7 +673,7 @@ namespace Santa.Data.Repository
         /// <param name="contextRelationshipXref"></param>
         /// <param name="logicSubjectClient"></param>
         /// <returns></returns>
-        public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, Logic.Objects.Client logicSubjectClient, bool unloaded)
+        public static Logic.Objects.MessageHistory MapHistoryInformation(ClientRelationXref contextRelationshipXref, BaseClient logicSubjectClient, bool unloaded)
         {
             List<Message> logicListRecieverMessages = new List<Message>();
             List<Message> logicListSubjectMessages = new List<Message>();
@@ -733,7 +745,7 @@ namespace Santa.Data.Repository
         /// <param name="contextChatMessages"></param>
         /// <param name="logicSubjectClient"></param>
         /// <returns></returns>
-        public static Logic.Objects.MessageHistory MapHistoryInformation(Entities.Client contextConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
+        public static MessageHistory MapHistoryInformation(Entities.Client contextConversationClient, List<Entities.ChatMessage> contextChatMessages, BaseClient logicSubjectClient)
         {
             List<Message> logicListRecieverMessages = new List<Message>();
             List<Message> logicListSubjectMessages = new List<Message>();
@@ -804,7 +816,7 @@ namespace Santa.Data.Repository
         /// <param name="contextChatMessages"></param>
         /// <param name="logicSubjectClient"></param>
         /// <returns></returns>
-        public static Logic.Objects.MessageHistory MapHistoryInformation(Logic.Objects.Client logicConversationClient, List<Entities.ChatMessage> contextChatMessages, Logic.Objects.Client logicSubjectClient)
+        public static Logic.Objects.MessageHistory MapHistoryInformation(Logic.Objects.Client logicConversationClient, List<Entities.ChatMessage> contextChatMessages, BaseClient logicSubjectClient)
         {
             List<Message> logicListRecieverMessages = new List<Message>();
             List<Message> logicListSubjectMessages = new List<Message>();

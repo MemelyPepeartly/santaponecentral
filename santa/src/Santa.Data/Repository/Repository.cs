@@ -749,7 +749,7 @@ namespace Santa.Data.Repository
         }
 
         #region Message Histories
-        public async Task<List<MessageHistory>> GetAllChatHistories(Logic.Objects.Client subjectClient)
+        public async Task<List<MessageHistory>> GetAllChatHistories(BaseClient subjectClient)
         {
             
 
@@ -927,7 +927,7 @@ namespace Santa.Data.Repository
 
             return totalHistories.OrderByDescending(h => h.eventType.eventDescription).ThenBy(h => h.conversationClient.clientNickname).ToList();
         }
-        public async Task<List<MessageHistory>> GetAllChatHistoriesBySubjectIDAsync(Logic.Objects.Client subjectClient)
+        public async Task<List<MessageHistory>> GetAllAssignmentChatsByClientID(BaseClient subjectClient)
         {
             List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
             List<ClientRelationXref> XrefList = await santaContext.ClientRelationXref.Where(x => x.SenderClientId == subjectClient.clientID).ToListAsync();
@@ -942,7 +942,7 @@ namespace Santa.Data.Repository
 
             return listLogicMessageHistory;
         }
-        public async Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, Logic.Objects.Client subjectClient)
+        public async Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, BaseClient subjectClient)
         {
             MessageHistory logicHistory = new MessageHistory();
             ClientRelationXref contextRelationship = await santaContext.ClientRelationXref
@@ -960,7 +960,7 @@ namespace Santa.Data.Repository
 
             return Mapper.MapHistoryInformation(contextRelationship, subjectClient, false);
         }
-        public async Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Logic.Objects.Client conversationClient, Logic.Objects.Client subjectClient)
+        public async Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Logic.Objects.Client conversationClient, BaseClient subjectClient)
         {
             MessageHistory logicHistory = new MessageHistory();
             List<Entities.ChatMessage> contextListMessages = await santaContext.ChatMessage

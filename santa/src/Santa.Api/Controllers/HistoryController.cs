@@ -42,7 +42,7 @@ namespace Santa.Api.Controllers
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
             if(requestingClient.clientID == subjectID)
             {
                 try
@@ -78,7 +78,7 @@ namespace Santa.Api.Controllers
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
             
             if (requestingClient.email == subjectClient.email)
             {
@@ -115,7 +115,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<MessageHistory>> GetClientGeneralMessageHistoryByClientIDAsync(Guid conversationClientID, Guid subjectID)
         {
             //Subject viewer client
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
             //Conversation the chat is with (If on profiles, will be the same as subject)
             Client conversationClient = await repository.GetClientByIDAsync(conversationClientID);
             //Client object based on token claim
@@ -157,12 +157,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<List<Logic.Objects.MessageHistory>>> GetAllClientChatHistoriesAsync(Guid subjectID)
         {
-            Client subjectClient = await repository.GetClientByIDAsync(subjectID);
+            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             if (requestingClient.email == subjectClient.email)
             {
-                List<MessageHistory> listLogicMessageHistory = await repository.GetAllChatHistoriesBySubjectIDAsync(subjectClient);
+                List<MessageHistory> listLogicMessageHistory = await repository.GetAllAssignmentChatsByClientID(subjectClient);
                 return Ok(listLogicMessageHistory);
             }
             else

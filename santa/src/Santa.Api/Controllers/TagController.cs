@@ -68,6 +68,7 @@ namespace Santa.Api.Controllers
                 };
                 await repository.CreateTag(newLogicTag);
                 await repository.SaveAsync();
+
                 Logic.Objects.Tag createdLogicTag = await repository.GetTagByIDAsync(newLogicTag.tagID);
                 await yuleLogger.logCreatedNewTag(requestingClient, createdLogicTag);
                 return Ok(createdLogicTag);
