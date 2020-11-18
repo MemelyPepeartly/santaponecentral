@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Santa.Api.Models.Tag_Models;
 using Santa.Logic.Interfaces;
+using Santa.Api.Services.YuleLog;
+using Santa.Logic.Objects.Information_Objects;
+using Santa.Logic.Constants;
+using System.Security.Claims;
 
 namespace Santa.Api.Controllers
 {
@@ -19,9 +23,12 @@ namespace Santa.Api.Controllers
     public class TagController : ControllerBase
     {
         private readonly IRepository repository;
-        public TagController(IRepository _repository)
+        private readonly IYuleLog yuleLogger;
+
+        public TagController(IRepository _repository, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
         // GET: api/Tag
@@ -50,14 +57,27 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "create:tags")]
         public async Task<ActionResult<Logic.Objects.Tag>> PostTag([FromBody, Bind("tagName")] ApiTag tag)
         {
-            Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
             {
-                tagID = Guid.NewGuid(),
-                tagName = tag.tagName
-            };
-            await repository.CreateTag(newLogicTag);
-            await repository.SaveAsync();
-            return Ok(await repository.GetTagByIDAsync(newLogicTag.tagID));
+                Logic.Objects.Tag newLogicTag = new Logic.Objects.Tag()
+                {
+                    tagID = Guid.NewGuid(),
+                    tagName = tag.tagName
+                };
+                await repository.CreateTag(newLogicTag);
+                await repository.SaveAsync();
+                Logic.Objects.Tag createdLogicTag = await repository.GetTagByIDAsync(newLogicTag.tagID);
+                await yuleLogger.logCreatedNewTag(requestingClient, createdLogicTag);
+                return Ok(createdLogicTag);
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_TAG_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
 
         // PUT: api/Tag/5
