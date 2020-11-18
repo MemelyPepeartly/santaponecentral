@@ -975,11 +975,13 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid assignmentClientID, Guid eventID)
         {
             // Get client and assignment in question
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            RelationshipMeta assignmentMeta = logicClient.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(clientID);
+            InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
+            RelationshipMeta assignmentMeta = infoContainer.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
 
             // Get the history of that assignment, and queues all messages from it to delete as a cascade
-            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicClient);
+            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicBaseClient);
             foreach(Message message in chatHistory.subjectMessages)
             {
                 await repository.DeleteMessageByID(message.chatMessageID);
@@ -990,8 +992,17 @@ namespace Santa.Api.Controllers
             }
             await repository.DeleteRecieverXref(clientID, assignmentClientID, eventID);
 
-            await repository.SaveAsync();
-            return Ok(await repository.GetClientByIDAsync(clientID));
+            try
+            {
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedAssignment(requestingClient, logicBaseClient, assignmentMeta);
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
         // DELETE: api/Client/5/Tag
         /// <summary>

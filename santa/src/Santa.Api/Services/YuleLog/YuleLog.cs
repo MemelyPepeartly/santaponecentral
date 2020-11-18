@@ -165,9 +165,9 @@ namespace Santa.Api.Services.YuleLog
             await saveLogs();
         }
 
-        public async Task logDeletedAssignment(BaseClient requestingClient, BaseClient affectedClient, BaseClient deletedAssignment)
+        public async Task logDeletedAssignment(BaseClient requestingClient, BaseClient affectedClient, RelationshipMeta deletedAssignment)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.DELETED_ASSIGNMENT_CATEGORY), $"{requestingClient.nickname} requested to remove {deletedAssignment.nickname} from {affectedClient.nickname}'s assignment list"));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.DELETED_ASSIGNMENT_CATEGORY), $"{requestingClient.nickname} requested to remove {deletedAssignment.relationshipClient.clientNickname} from {affectedClient.nickname}'s assignment list"));
             await saveLogs();
 
         }
