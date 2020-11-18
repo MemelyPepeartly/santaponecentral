@@ -75,9 +75,9 @@ namespace Santa.Api.Services.YuleLog
             await saveLogs();
         }
 
-        public async Task logCreatedNewClientTagRelationships(BaseClient requestingClient, BaseClient targetClient, Logic.Objects.Tag assignedTag)
+        public async Task logCreatedNewClientTagRelationships(BaseClient requestingClient, BaseClient targetClient)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY), $"{requestingClient.nickname} requested to add {assignedTag.tagName} to {targetClient.nickname}"));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY), $"{requestingClient.nickname} requested to add tags to {targetClient.nickname}"));
             await saveLogs();
         }
         #endregion
@@ -273,7 +273,7 @@ namespace Santa.Api.Services.YuleLog
             {
                 logMessage = "";
             }
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY)
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY)
             {
                 logMessage = "";
             }

@@ -34,6 +34,6 @@ namespace Santa.Logic.Constants
         public const string MODIFIED_CLIENT_STATUS_CATEGORY = "Modified Client Status";
         public const string CREATED_NEW_TAG_CATEGORY = "Added New Tag";
         public const string DELETED_TAG_CATEGORY = "Deleted Tag";
-        public const string CREATED_NEW_CLIENT_TAG_RELATIONSHIP_CATEGORY = "Added New Tag To Client";
+        public const string CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY = "Added New Tag To Client";
     }
 }

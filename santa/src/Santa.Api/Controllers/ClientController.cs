@@ -598,14 +598,36 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             foreach (Guid tagID in tagsModel.tags)
             {
                 await repository.CreateClientTagRelationByID(clientID, tagID);
             }
-            await repository.SaveAsync();
 
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            return Ok(logicClient);
+            try
+            {
+                await repository.SaveAsync();
+                // Full logic profile is needed on return, so a base client mapping is used here to cut back on the need for a second data call
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                BaseClient logicBaseClient = new BaseClient()
+                {
+                    clientID = logicClient.clientID,
+                    clientName = logicClient.clientName,
+                    nickname = logicClient.nickname,
+                    email = logicClient.email,
+                    hasAccount = logicClient.hasAccount,
+                    isAdmin = logicClient.isAdmin
+                };
+
+                await yuleLogger.logCreatedNewClientTagRelationships(requestingClient, logicBaseClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // POST: api/Client/5/Password
