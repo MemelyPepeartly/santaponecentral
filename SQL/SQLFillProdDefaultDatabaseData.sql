@@ -231,7 +231,6 @@ VALUES
     (NEWID(), 'Get Profile', 'A profile was requested'),
     (NEWID(), 'Modified Assignment Status', 'A status was updated for an assignment'),
     (NEWID(), 'Modified Answer', 'A survey answer was modified'),
-
     (NEWID(), 'Deleted Tag', 'A tag was deleted from the database'),
     (NEWID(), 'Created New Message', 'A new message was posted to a chat'),
     (NEWID(), 'Modified Message Read Status', 'A message was marked as read'),
@@ -241,7 +240,7 @@ VALUES
     (NEWID(), 'Deleted Assignment', 'An assignment has been removed from a client'),
     (NEWID(), 'Modified Client Status', 'A client''s status was modified'),
     (NEWID(), 'Added New Tag', 'A new tag was created'),
-    (NEWID(), 'Added New Tag To Client', 'A tag was assigned to a client');
+    (NEWID(), 'Added New Tags To Client', 'A tag was assigned to a client');
 
 
 

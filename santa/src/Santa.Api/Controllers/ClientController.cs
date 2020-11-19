@@ -391,7 +391,14 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
+            BaseClient requestingClient = new BaseClient();
+            if (loggingEnabled)
+            {
+                requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+                loggingEnabled = true;
+            }
+            
 
             Logic.Objects.Client newClient = new Logic.Objects.Client()
             {
@@ -434,13 +441,18 @@ namespace Santa.Api.Controllers
                 Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
                 await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
 
-                await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
-
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
+                }
                 return Ok(createdClient);
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
+                }
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
 
@@ -598,14 +610,36 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             foreach (Guid tagID in tagsModel.tags)
             {
                 await repository.CreateClientTagRelationByID(clientID, tagID);
             }
-            await repository.SaveAsync();
 
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            return Ok(logicClient);
+            try
+            {
+                await repository.SaveAsync();
+                // Full logic profile is needed on return, so a base client mapping is used here to cut back on the need for a second data call
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                BaseClient logicBaseClient = new BaseClient()
+                {
+                    clientID = logicClient.clientID,
+                    clientName = logicClient.clientName,
+                    nickname = logicClient.nickname,
+                    email = logicClient.email,
+                    hasAccount = logicClient.hasAccount,
+                    isAdmin = logicClient.isAdmin
+                };
+
+                await yuleLogger.logCreatedNewClientTagRelationships(requestingClient, logicBaseClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // POST: api/Client/5/Password
@@ -975,11 +1009,13 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid assignmentClientID, Guid eventID)
         {
             // Get client and assignment in question
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            RelationshipMeta assignmentMeta = logicClient.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(clientID);
+            InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
+            RelationshipMeta assignmentMeta = infoContainer.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
 
             // Get the history of that assignment, and queues all messages from it to delete as a cascade
-            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicClient);
+            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicBaseClient);
             foreach(Message message in chatHistory.subjectMessages)
             {
                 await repository.DeleteMessageByID(message.chatMessageID);
@@ -990,8 +1026,17 @@ namespace Santa.Api.Controllers
             }
             await repository.DeleteRecieverXref(clientID, assignmentClientID, eventID);
 
-            await repository.SaveAsync();
-            return Ok(await repository.GetClientByIDAsync(clientID));
+            try
+            {
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedAssignment(requestingClient, logicBaseClient, assignmentMeta);
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
         // DELETE: api/Client/5/Tag
         /// <summary>

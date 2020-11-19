@@ -68,6 +68,7 @@ namespace Santa.Api.Controllers
                 };
                 await repository.CreateTag(newLogicTag);
                 await repository.SaveAsync();
+
                 Logic.Objects.Tag createdLogicTag = await repository.GetTagByIDAsync(newLogicTag.tagID);
                 await yuleLogger.logCreatedNewTag(requestingClient, createdLogicTag);
                 return Ok(createdLogicTag);
@@ -98,9 +99,22 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:tags")]
         public async Task<ActionResult> DeleteTag(Guid tagID)
         {
-            await repository.DeleteTagByIDAsync(tagID);
-            await repository.SaveAsync();
-            return NoContent();
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
+            try
+            {
+                Logic.Objects.Tag deletedTag = await repository.GetTagByIDAsync(tagID);
+                await repository.DeleteTagByIDAsync(tagID);
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedTag(requestingClient, deletedTag);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_TAG_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
     }
 }
