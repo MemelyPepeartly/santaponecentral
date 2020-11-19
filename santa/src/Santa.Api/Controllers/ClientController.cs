@@ -391,7 +391,14 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
+            BaseClient requestingClient = new BaseClient();
+            if (loggingEnabled)
+            {
+                requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+                loggingEnabled = true;
+            }
+            
 
             Logic.Objects.Client newClient = new Logic.Objects.Client()
             {
@@ -434,13 +441,18 @@ namespace Santa.Api.Controllers
                 Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
                 await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
 
-                await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
-
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
+                }
                 return Ok(createdClient);
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
+                }
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
 
