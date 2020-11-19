@@ -1,32 +1,35 @@
-<table mat-table *ngIf="yuleLogs.length > 0" [dataSource]="yuleLogs" class="data-table scrollbarDiv scrollbar scrollbar-primary mat-elevation-z8">
+<cdk-virtual-scroll-viewport tvsItemSize class="data-table scrollbarDiv scrollbar scrollbar-primary mat-elevation-z8">
+  <table mat-table *ngIf="yuleLogs.length > 0" [dataSource]="dataSource">
 
-  <!-- logID Column -->
-  <ng-container matColumnDef="logID">
-    <th mat-header-cell class="logIDHeader" *matHeaderCellDef> Log ID </th>
-    <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.logID }}</td>
-  </ng-container>
+    <!-- logID Column -->
+    <ng-container matColumnDef="logID">
+      <th mat-header-cell class="logIDHeader" *matHeaderCellDef> Log ID </th>
+      <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.logID }}</td>
+    </ng-container>
 
-  <!-- logCategory Column -->
-  <ng-container matColumnDef="logCategory">
-    <th mat-header-cell class="logCategoryHeader" *matHeaderCellDef> Log Category </th>
-    <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.category.categoryName }}</td>
-  </ng-container>
+    <!-- logCategory Column -->
+    <ng-container matColumnDef="logCategory">
+      <th mat-header-cell class="logCategoryHeader" *matHeaderCellDef> Log Category </th>
+      <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.category.categoryName }}</td>
+    </ng-container>
 
-  <!-- logText Column -->
-  <ng-container matColumnDef="logText">
-    <th mat-header-cell class="logTextHeader" *matHeaderCellDef> Log Information </th>
-    <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.logText }}</td>
-  </ng-container>
+    <!-- logText Column -->
+    <ng-container matColumnDef="logText">
+      <th mat-header-cell class="logTextHeader" *matHeaderCellDef> Log Information </th>
+      <td mat-cell *matCellDef="let yuleLog">{{ yuleLog.logText }}</td>
+    </ng-container>
 
-  <!-- logDate Column -->
-  <ng-container matColumnDef="logDate">
-    <th mat-header-cell class="logDateHeader" *matHeaderCellDef> Log Date </th>
-    <td mat-cell *matCellDef="let yuleLog">{{yuleLog.logDate.toLocaleDateString()}} {{ yuleLog.logDate.toLocaleTimeString() }} (Eastern Standard Time)</td>
-  </ng-container>
+    <!-- logDate Column -->
+    <ng-container matColumnDef="logDate">
+      <th mat-header-cell class="logDateHeader" *matHeaderCellDef> Log Date </th>
+      <td mat-cell *matCellDef="let yuleLog">{{yuleLog.logDate.toLocaleDateString()}} {{ yuleLog.logDate.toLocaleTimeString() }} (Eastern Standard Time)</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+  </table>
+</cdk-virtual-scroll-viewport>
+
 <mat-card *ngIf="yuleLogs.length == 0">
   <mat-card-content>
     <mat-toolbar>No Logs for this Action Category</mat-toolbar>
