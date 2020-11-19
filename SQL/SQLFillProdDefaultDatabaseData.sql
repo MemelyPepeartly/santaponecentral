@@ -231,7 +231,6 @@ VALUES
     (NEWID(), 'Get Profile', 'A profile was requested'),
     (NEWID(), 'Modified Assignment Status', 'A status was updated for an assignment'),
     (NEWID(), 'Modified Answer', 'A survey answer was modified'),
-
     (NEWID(), 'Deleted Tag', 'A tag was deleted from the database'),
     (NEWID(), 'Created New Message', 'A new message was posted to a chat'),
     (NEWID(), 'Modified Message Read Status', 'A message was marked as read'),

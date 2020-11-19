@@ -188,100 +188,100 @@ namespace Santa.Api.Services.YuleLog
         public async Task logError(BaseClient requestingClient, string category)
         {
             Category errorCategory = await getCategoryByName(LoggingConstants.MODIFIED_ANSWER_CATEGORY);
-            string logMessage = "";
+            string logMessage = $"{requestingClient.nickname}'s request failed. ";
 
             #region post
             if (errorCategory.categoryName == LoggingConstants.CREATED_ASSIGNMENT_CATEGORY)
             {
-                logMessage = "There was an error posting new assignments";
+                logMessage += "There was an error posting new assignments";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY)
+            {
+                logMessage += "There was an error creating a new message";
+            }
+
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_CATEGORY)
+            {
+                logMessage += "There was an error creating a new client object";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY)
+            {
+                logMessage += "There was an error creating a new Auth0 account for a client";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_TAG_CATEGORY)
+            {
+                logMessage += "There was an error creating a new tag";
+            }
+            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY)
+            {
+                logMessage += "There was an error adding a tag to a client";
             }
             #endregion
 
             #region get
             if (errorCategory.categoryName == LoggingConstants.GET_ALL_CLIENT_CATEGORY)
             {
-                logMessage = "There was an error getting all clients";
+                logMessage += "There was an error getting all clients";
             }
             if (errorCategory.categoryName == LoggingConstants.GET_PROFILE_CATEGORY)
             {
-                logMessage = "There was an error retrieving a profile";
+                logMessage += "There was an error retrieving a profile";
             }
             if (errorCategory.categoryName == LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY)
             {
-                logMessage = "There was an error getting the client data";
+                logMessage += "There was an error getting the client data";
             }
             if (errorCategory.categoryName == LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY)
             {
-                logMessage = "There was an error getting the history object";
+                logMessage += "There was an error getting the history object";
             }
             if (errorCategory.categoryName == LoggingConstants.GET_ALL_HISTORY_CATEGORY)
             {
-                logMessage = "There was an error getting all of the history objects";
+                logMessage += "There was an error getting all of the history objects";
             }
             #endregion
 
             #region put
             if (errorCategory.categoryName == LoggingConstants.MODIFIED_ANSWER_CATEGORY)
             {
-                logMessage = "There was an error changing the answer";
+                logMessage += "There was an error changing the answer";
             }
             if (errorCategory.categoryName == LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY)
             {
-                logMessage = "There was an error modifying the assignment's status";
+                logMessage += "There was an error modifying the assignment's status";
             }
             if (errorCategory.categoryName == LoggingConstants.MODIFIED_CLIENT_CATEGORY)
             {
-                logMessage = "There was an error modifying a client";
+                logMessage += "There was an error modifying a client";
             }
             if (errorCategory.categoryName == LoggingConstants.MODIFIED_PROFILE_CATEGORY)
             {
-                logMessage = "There was an error modifying the profile";
+                logMessage += "There was an error modifying the profile";
+            }
+            if (errorCategory.categoryName == LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY)
+            {
+                logMessage += "There was an error modifying the read status of a message";
+            }
+            if (errorCategory.categoryName == LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY)
+            {
+                logMessage += "There was an error modifying a client's status";
             }
             #endregion
 
             #region delete
-            #endregion
-
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY)
-            {
-                logMessage = "";
-            }
-            if (errorCategory.categoryName == LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY)
-            {
-                logMessage = "";
-            }
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_CATEGORY)
-            {
-                logMessage = "";
-            }
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY)
-            {
-                logMessage = "";
-            }
             if (errorCategory.categoryName == LoggingConstants.DELETED_CLIENT_CATEGORY)
             {
-                logMessage = "";
+                logMessage += "There was an error deleting a client and all the related entities";
             }
             if (errorCategory.categoryName == LoggingConstants.DELETED_ASSIGNMENT_CATEGORY)
             {
-                logMessage = "";
-            }
-            if (errorCategory.categoryName == LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY)
-            {
-                logMessage = "";
-            }
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_TAG_CATEGORY)
-            {
-                logMessage = "";
+                logMessage += "There was an error deleting an assignment from a client's list";
             }
             if (errorCategory.categoryName == LoggingConstants.DELETED_TAG_CATEGORY)
             {
-                logMessage = "";
+                logMessage += "There was an error deleting a tag";
             }
-            if (errorCategory.categoryName == LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY)
-            {
-                logMessage = "";
-            }
+            #endregion
 
             await repository.CreateNewLogEntry(makeLogTemplateObject(errorCategory, logMessage));
             await saveLogs();
