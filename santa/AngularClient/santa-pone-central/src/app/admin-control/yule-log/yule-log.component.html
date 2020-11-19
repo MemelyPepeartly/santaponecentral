@@ -5,6 +5,7 @@
   <mat-card-content *ngIf="!gatheringAllCategories && !gatheringAllYuleLogs">
     <mat-list>
       <div mat-subheader class="subheaderText">Log Type Categories</div>
+      <!-- Selection list for type -->
       <mat-selection-list [multiple]="false">
         <mat-list-option class="categoryListItem mat-elevation-z3" (click)="setSelectedCategory(null)">
           <mat-icon mat-list-icon>label_important</mat-icon>
@@ -25,6 +26,7 @@
 </mat-card>
 
 <mat-card mat-stroked class="api-card logDisplayCard mat-elevation-z3">
+  <!-- Log table titles -->
   <mat-card-header *ngIf="selectedCategory.categoryID != undefined">
     <mat-card-title>{{selectedCategory.categoryName}}</mat-card-title>
     <mat-card-subtitle>{{selectedCategory.categoryDescription}}</mat-card-subtitle>
@@ -33,9 +35,12 @@
     <mat-card-title>All Yule Logs</mat-card-title>
     <mat-card-subtitle>All yule log entries</mat-card-subtitle>
   </mat-card-header>
+
+  <!-- Log table component -->
   <mat-card-content *ngIf="!gatheringAllYuleLogs">
     <app-log-table style="width: 100%;" [yuleLogs]="filterLogs()"></app-log-table>
   </mat-card-content>
+
   <mat-card-content *ngIf="gatheringAllYuleLogs">
     <app-small-loading-spin [spinnerType]="3"></app-small-loading-spin>
   </mat-card-content>

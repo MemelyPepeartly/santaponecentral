@@ -1565,13 +1565,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>(),
-                        /*
-                        tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
@@ -1581,13 +1574,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>(),
-                        /*
-                        tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
 
@@ -1614,13 +1600,6 @@ namespace Santa.Data.Repository
                     eventType = Mapper.MapEvent(xref.EventType),
                     assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                     tags = new List<Logic.Objects.Tag>(),
-                    /*
-                    tags = xref.RecipientClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName
-                    }).OrderBy(t => t.tagName).ToList(),
-                    */
                     removable = xref.ChatMessage.Count > 0
                 }).ToListAsync();
             return listLogicRelationshipMeta;
