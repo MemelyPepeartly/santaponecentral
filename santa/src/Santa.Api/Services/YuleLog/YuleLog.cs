@@ -153,7 +153,7 @@ namespace Santa.Api.Services.YuleLog
 
         public async Task logModifiedClientStatus(BaseClient requestingClient, Client affectedClientWithNewStatus, Status oldStatus)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY), $"{requestingClient.nickname} requested to modify {affectedClientWithNewStatus.nickname}'s status from {oldStatus.statusDescription} to '{affectedClientWithNewStatus.clientStatus.statusDescription}'"));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY), $"{requestingClient.nickname} requested to modify {affectedClientWithNewStatus.nickname}'s status from '{oldStatus.statusDescription}' to '{affectedClientWithNewStatus.clientStatus.statusDescription}'"));
             await saveLogs();
         }
         #endregion
