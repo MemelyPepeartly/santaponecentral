@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Santa.Api.Models.Message_Models;
 using Santa.Api.SendGrid;
+using Santa.Api.Services.YuleLog;
+using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
 using Santa.Logic.Objects.Information_Objects;
 
@@ -26,12 +28,13 @@ namespace Santa.Api.Controllers
     {
         private readonly IRepository repository;
         private readonly IMailbag mailbag;
+        private readonly IYuleLog yuleLogger;
 
-        public MessageController(IRepository _repository, IMailbag _mailbag)
+        public MessageController(IRepository _repository, IMailbag _mailbag, IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
-
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
         // GET: api/Message
         /// <summary>
@@ -65,6 +68,15 @@ namespace Santa.Api.Controllers
         {
             Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
             Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient baseCheckerClient = new BaseClient()
+            {
+                clientID = checkerClient.clientID,
+                clientName = checkerClient.clientName,
+                nickname = checkerClient.nickname,
+                email = checkerClient.email,
+                hasAccount = checkerClient.hasAccount,
+                isAdmin = checkerClient.isAdmin
+            };
 
             // If the logic client and checker client have the same Id and the relationxref is either null or part of of the checked clients assingments list (Or the checker is just an admin overall)
             if ((logicClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null ? checkerClient.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) : true) || checkerClient.isAdmin)
@@ -94,30 +106,42 @@ namespace Santa.Api.Controllers
                 }
                 else
                 {
-                    await repository.CreateMessage(logicMessage);
-                    await repository.SaveAsync();
+                    try
+                    {
+                        await repository.CreateMessage(logicMessage);
+                        await repository.SaveAsync();
 
-                    // If this message has an eventTypeID
-                    if (message.eventTypeID.HasValue)
-                    {
-                        // If the message is from an admin, get the event for the notification, and send the email
-                        if (message.fromAdmin)
+                        Logic.Objects.Message postedLogicMessage = await repository.GetMessageByIDAsync(logicMessage.chatMessageID);
+                        await yuleLogger.logCreatedNewMessage(baseCheckerClient, postedLogicMessage.senderClient, postedLogicMessage.recieverClient);
+
+                        // If this message has an eventTypeID
+                        if (message.eventTypeID.HasValue)
                         {
-                            Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
-                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
+                            // If the message is from an admin, get the event for the notification, and send the email
+                            if (message.fromAdmin)
+                            {
+                                Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
+                                await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
+                            }
                         }
-                    }
-                    // Else if it doesnt have an event (It is a general message)
-                    else
-                    {
-                        // If it's from an admin, make a new event object, and send the client a notification
-                        if (message.fromAdmin)
+                        // Else if it doesnt have an event (It is a general message)
+                        else
                         {
-                            Logic.Objects.Event logicEvent = new Logic.Objects.Event();
-                            await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                            // If it's from an admin, make a new event object, and send the client a notification
+                            if (message.fromAdmin)
+                            {
+                                Logic.Objects.Event logicEvent = new Logic.Objects.Event();
+                                await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                            }
                         }
+                        return Ok();
                     }
-                    return Ok();
+                    catch(Exception)
+                    {
+                        await yuleLogger.logError(baseCheckerClient, LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY);
+                        return StatusCode(StatusCodes.Status424FailedDependency);
+                    }
+                    
                 }
             }
             else
@@ -133,16 +157,26 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Message>> PutReadStatus(Guid chatMessageID, [FromBody] ApiMessageReadModel message)
         {
             Logic.Objects.Message logicMessage = await repository.GetMessageByIDAsync(chatMessageID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             if(checkerClient.isAdmin || logicMessage.recieverClient.clientId == checkerClient.clientID)
             {
-                Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
-                targetMessage.isMessageRead = message.isMessageRead;
+                try
+                {
+                    Logic.Objects.Message targetMessage = await repository.GetMessageByIDAsync(chatMessageID);
+                    targetMessage.isMessageRead = message.isMessageRead;
 
-                await repository.UpdateMessageByIDAsync(targetMessage);
-                await repository.SaveAsync();
-                return Ok(await repository.GetMessageByIDAsync(chatMessageID));
+                    await repository.UpdateMessageByIDAsync(targetMessage);
+                    await repository.SaveAsync();
+                    Logic.Objects.Message modifiedLogicMessage = await repository.GetMessageByIDAsync(chatMessageID);
+                    await yuleLogger.logModifiedMessageReadStatus(checkerClient, modifiedLogicMessage);
+                    return Ok(modifiedLogicMessage);
+                }
+                catch (Exception)
+                {
+                    await yuleLogger.logError(checkerClient, LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY);
+                    return StatusCode(StatusCodes.Status424FailedDependency);
+                }
             }
             else
             {

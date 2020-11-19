@@ -391,6 +391,15 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
+            bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
+            BaseClient requestingClient = new BaseClient();
+            if (loggingEnabled)
+            {
+                requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+                loggingEnabled = true;
+            }
+            
+
             Logic.Objects.Client newClient = new Logic.Objects.Client()
             {
                 clientID = Guid.NewGuid(),
@@ -413,24 +422,40 @@ namespace Santa.Api.Controllers
                 senders = new List<RelationshipMeta>()
             };
 
-            await repository.CreateClient(newClient);
-            foreach (Models.Survey_Response_Models.ApiSurveyResponse response in clientResponseModel.responses)
+            try
             {
-                await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
+                await repository.CreateClient(newClient);
+                foreach (Models.Survey_Response_Models.ApiSurveyResponse response in clientResponseModel.responses)
                 {
-                    surveyResponseID = Guid.NewGuid(),
-                    surveyID = response.surveyID,
-                    clientID = newClient.clientID,
-                    surveyQuestion = new Question() { questionID = response.surveyQuestionID },
-                    surveyOptionID = response.surveyOptionID,
-                    responseText = response.responseText
-                });
-            }
-            await repository.SaveAsync();
-            Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
-            await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+                    await repository.CreateSurveyResponseAsync(new Logic.Objects.Response()
+                    {
+                        surveyResponseID = Guid.NewGuid(),
+                        surveyID = response.surveyID,
+                        clientID = newClient.clientID,
+                        surveyQuestion = new Question() { questionID = response.surveyQuestionID },
+                        surveyOptionID = response.surveyOptionID,
+                        responseText = response.responseText
+                    });
+                }
+                await repository.SaveAsync();
+                Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
+                await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
 
-            return Ok();
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
+                }
+                return Ok(createdClient);
+            }
+            catch(Exception)
+            {
+                if(loggingEnabled)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
+                }
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
 
         // POST: api/Client/5/Recipients
@@ -462,7 +487,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_ASSIGNMENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
 
@@ -535,7 +560,7 @@ namespace Santa.Api.Controllers
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.POSTED_ASSIGNMENT_CATEGORY);
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_ASSIGNMENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -551,14 +576,27 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostNewAuth0AccountForClientByID(Guid clientID)
         {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             Client logicClient = await repository.GetClientByIDAsync(clientID);
-            await Auth0Steps(logicClient, true);
 
-            logicClient.hasAccount = true;
-            await repository.UpdateClientByIDAsync(logicClient);
-            await repository.SaveAsync();
+            try
+            {
+                await Auth0Steps(requestingClient, logicClient, true);
 
-            return Ok(await repository.GetClientByIDAsync(clientID));
+                logicClient.hasAccount = true;
+                await repository.UpdateClientByIDAsync(logicClient);
+                await repository.SaveAsync();
+
+                await yuleLogger.logCreatedNewAuth0Client(requestingClient, logicClient.email);
+
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
 
         // POST: api/Client/5/Tag
@@ -572,14 +610,36 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             foreach (Guid tagID in tagsModel.tags)
             {
                 await repository.CreateClientTagRelationByID(clientID, tagID);
             }
-            await repository.SaveAsync();
 
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            return Ok(logicClient);
+            try
+            {
+                await repository.SaveAsync();
+                // Full logic profile is needed on return, so a base client mapping is used here to cut back on the need for a second data call
+                Client logicClient = await repository.GetClientByIDAsync(clientID);
+                BaseClient logicBaseClient = new BaseClient()
+                {
+                    clientID = logicClient.clientID,
+                    clientName = logicClient.clientName,
+                    nickname = logicClient.nickname,
+                    email = logicClient.email,
+                    hasAccount = logicClient.hasAccount,
+                    isAdmin = logicClient.isAdmin
+                };
+
+                await yuleLogger.logCreatedNewClientTagRelationships(requestingClient, logicBaseClient);
+                return Ok(logicClient);
+            }
+            catch (Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_TAG_RELATIONSHIPS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
 
         // POST: api/Client/5/Password
@@ -766,6 +826,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "update:clients")]
         public async Task<ActionResult<Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] EditClientStatusModel status)
         {
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             // If the status ID is empty on the request, return 400 bad request
             if (status.clientStatusID.Equals(Guid.Empty))
             {
@@ -776,10 +838,26 @@ namespace Santa.Api.Controllers
             Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
             Status originalStatus = targetClient.clientStatus;
 
-            // Updates client status and account status
-            targetClient.clientStatus.statusID = status.clientStatusID;
-            await repository.UpdateClientByIDAsync(targetClient);
-            await repository.SaveAsync();
+            try
+            {
+                // Updates client status and account status
+                targetClient.clientStatus.statusID = status.clientStatusID;
+
+                await repository.UpdateClientByIDAsync(targetClient);
+
+                // Sets the client status to the correct object for logging purposes
+                targetClient.clientStatus = await repository.GetClientStatusByID(status.clientStatusID);
+
+                await repository.SaveAsync();
+                await yuleLogger.logModifiedClientStatus(requestingClient, targetClient, originalStatus);
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.MODIFIED_CLIENT_STATUS_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
+
 
             // Get updated client
             Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
@@ -788,7 +866,7 @@ namespace Santa.Api.Controllers
                 // Send approval steps for a client that was awaiting and approved for the event
                 if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.AWAITING_STATUS)
                 {
-                    await Auth0Steps(updatedClient, status.wantsAccount);
+                    await Auth0Steps(requestingClient, updatedClient, status.wantsAccount);
 
                     // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
                     if (status.wantsAccount)
@@ -801,7 +879,7 @@ namespace Santa.Api.Controllers
                 // Send approval steps for client that was denied, and was accepted after appeal
                 else if (updatedClient.clientStatus.statusDescription == Constants.APPROVED_STATUS && originalStatus.statusDescription == Constants.DENIED_STATUS)
                 {
-                    await Auth0Steps(updatedClient, status.wantsAccount);
+                    await Auth0Steps(requestingClient, updatedClient, status.wantsAccount);
 
                     // If approval goes well, and the client wanted an auth0 account, update the hasAccount status to true
                     if (status.wantsAccount)
@@ -859,7 +937,7 @@ namespace Santa.Api.Controllers
             try
             {
                 RelationshipMeta assignment = targetAgent.assignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
-                await yuleLogger.logChangedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
+                await yuleLogger.logModifiedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
                 await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
                 await repository.SaveAsync();
             }
@@ -886,24 +964,37 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
-            await repository.DeleteClientByIDAsync(clientID);
-            bool accountExists = await authHelper.accountExists(logicClient.email);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
+            InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
 
-            if(accountExists)
+            try
             {
-                Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(logicClient.email);
-                await authHelper.deleteAuthClient(authUser.user_id);
-            }
-            if(logicClient.notes.Count > 0)
-            {
-                foreach(Logic.Objects.Base_Objects.Note note in logicClient.notes)
+                await repository.DeleteClientByIDAsync(clientID);
+                bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+
+                if (accountExists)
                 {
-                    await repository.DeleteNoteByID(note.noteID);
+                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(baseLogicClient.email);
+                    await authHelper.deleteAuthClient(authUser.user_id);
                 }
+                if (infoContainer.notes.Count > 0)
+                {
+                    foreach (Logic.Objects.Base_Objects.Note note in infoContainer.notes)
+                    {
+                        await repository.DeleteNoteByID(note.noteID);
+                    }
+                }
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
+                return NoContent();
             }
-            await repository.SaveAsync();
-            return NoContent();
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+
         }
         // DELETE: api/Client/5/Recipient
         /// <summary>
@@ -918,11 +1009,13 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid assignmentClientID, Guid eventID)
         {
             // Get client and assignment in question
-            Client logicClient = await repository.GetClientByIDAsync(clientID);
-            RelationshipMeta assignmentMeta = logicClient.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(clientID);
+            InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
+            RelationshipMeta assignmentMeta = infoContainer.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
 
             // Get the history of that assignment, and queues all messages from it to delete as a cascade
-            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicClient);
+            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicBaseClient);
             foreach(Message message in chatHistory.subjectMessages)
             {
                 await repository.DeleteMessageByID(message.chatMessageID);
@@ -933,8 +1026,17 @@ namespace Santa.Api.Controllers
             }
             await repository.DeleteRecieverXref(clientID, assignmentClientID, eventID);
 
-            await repository.SaveAsync();
-            return Ok(await repository.GetClientByIDAsync(clientID));
+            try
+            {
+                await repository.SaveAsync();
+                await yuleLogger.logDeletedAssignment(requestingClient, logicBaseClient, assignmentMeta);
+                return Ok(await repository.GetClientByIDAsync(clientID));
+            }
+            catch(Exception)
+            {
+                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_ASSIGNMENT_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
         }
         // DELETE: api/Client/5/Tag
         /// <summary>
@@ -955,29 +1057,39 @@ namespace Santa.Api.Controllers
         /// <summary>
         /// Method for approval steps
         /// </summary>
-        /// <param name="logicClient"></param>
+        /// <param name="logicAuthClient"></param>
         /// <returns></returns>
-        private async Task Auth0Steps(Client logicClient, bool wantsAccount)
+        private async Task Auth0Steps(BaseClient requestingClient, Client logicAuthClient, bool wantsAccount)
         {
             if(wantsAccount)
             {
-                // Creates auth client
-                Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicClient.email, logicClient.nickname);
+                try
+                {
+                    // Creates auth client
+                    Models.Auth0_Response_Models.Auth0UserInfoModel authClient = await authHelper.createAuthClient(logicAuthClient.email, logicAuthClient.nickname);
 
-                // Gets all the roles, and grabs the role for participants
-                List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
-                Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
+                    // Gets all the roles, and grabs the role for participants
+                    List<Models.Auth0_Response_Models.Auth0RoleModel> roles = await authHelper.getAllAuthRoles();
+                    Models.Auth0_Response_Models.Auth0RoleModel approvedRole = roles.First(r => r.name == Constants.PARTICIPANT);
 
-                // Updates client with the participant role
-                await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
+                    // Updates client with the participant role
+                    await authHelper.updateAuthClientRole(authClient.user_id, approvedRole.id);
 
-                // Sends the client a password change ticket
-                Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicClient.email);
-                await mailbag.sendPasswordResetEmail(logicClient.email, logicClient.nickname, ticket, true);
+                    // Sends the client a password change ticket
+                    Models.Auth0_Response_Models.Auth0TicketResponse ticket = await authHelper.getPasswordChangeTicketByAuthClientEmail(logicAuthClient.email);
+                    await mailbag.sendPasswordResetEmail(logicAuthClient.email, logicAuthClient.nickname, ticket, true);
+
+                    await yuleLogger.logCreatedNewAuth0Client(requestingClient, logicAuthClient.email);
+                }
+                catch(Exception)
+                {
+                    await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_AUTH0_CLIENT_CATEGORY);
+                    throw new Exception("Something went wrong making a new auth0 client account");
+                }
             }
             else
             {
-                await mailbag.sendApprovedForEventWithNoAccountEmail(logicClient);
+                await mailbag.sendApprovedForEventWithNoAccountEmail(logicAuthClient);
             }
         }
     }

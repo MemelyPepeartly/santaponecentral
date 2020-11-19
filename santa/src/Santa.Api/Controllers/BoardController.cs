@@ -37,7 +37,7 @@ namespace Santa.Api.Controllers
             try
             {
                 List<BoardEntry> logicBoardEntries = await repository.GetAllBoardEntriesAsync();
-                return Ok(logicBoardEntries);
+                return Ok(logicBoardEntries.OrderBy(e => e.threadNumber).ThenBy(e => e.postNumber));
             }
             catch (Exception e)
             {
