@@ -19,10 +19,12 @@ export class LogTableComponent implements OnInit, OnChanges {
   columns: string[] = ["logID", "logCategory", "logText", "logDate"];
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges(): void {
     this.dataSource = new TableVirtualScrollDataSource(this.yuleLogs);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.yuleLogs) {
+      this.dataSource = new TableVirtualScrollDataSource(this.yuleLogs);
+    }
+  }
 }
