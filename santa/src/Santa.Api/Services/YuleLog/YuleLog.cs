@@ -147,7 +147,12 @@ namespace Santa.Api.Services.YuleLog
         }
         public async Task logModifiedMessageReadStatus(BaseClient requestingClient, Message markedMessage)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY), $"{requestingClient.nickname} requested to mark a message as read. Sender Client: {markedMessage.senderClient.clientNickname} - Reciever Client: {markedMessage.recieverClient.clientNickname}"));
+            string receiverNickname = markedMessage.recieverClient.clientNickname;
+            if (markedMessage.recieverClient.clientId == null)
+            {
+                receiverNickname = "the Event Organizers";
+            }
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(LoggingConstants.MODIFIED_MESSAGE_READ_STATUS_CATEGORY), $"{requestingClient.nickname} requested to mark a past message as read where the sender Client was {markedMessage.senderClient.clientNickname} and reciever was {receiverNickname}"));
             await saveLogs();
         }
 
