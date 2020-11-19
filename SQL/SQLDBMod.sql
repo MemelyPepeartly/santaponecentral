@@ -132,4 +132,3 @@
 -- SELECT * FROM app.ChatMessage;
 -- SELECT * FROM app.SurveyQuestionOptionXref WHERE surveyQuestionID='ab44ac50-60fe-4e3f-b9b8-eeb799d334b9';
 -- SELECT * FROM app.YuleLog ORDER BY logDate
-
