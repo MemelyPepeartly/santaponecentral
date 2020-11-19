@@ -1,5 +1,5 @@
-<cdk-virtual-scroll-viewport [tvsItemSize]="50" class="data-table scrollbarDiv scrollbar scrollbar-primary mat-elevation-z8">
-  <table mat-table *ngIf="yuleLogs.length > 0" [dataSource]="dataSource">
+<cdk-virtual-scroll-viewport *ngIf="yuleLogs.length > 0" [tvsItemSize]="50" class="data-table scrollbarDiv scrollbar scrollbar-primary mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
 
     <!-- logID Column -->
     <ng-container matColumnDef="logID">
