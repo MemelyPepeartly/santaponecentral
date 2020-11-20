@@ -66,6 +66,7 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
 import { YuleLogComponent } from './admin-control/yule-log/yule-log.component';
 import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.component';
 import { ClientItemComponent } from './headquarters/client-item/client-item.component';
+import { RelatedIntelligenceComponent } from './correspondence/related-intelligence/related-intelligence.component';
 
 
 @NgModule({
@@ -121,7 +122,8 @@ import { ClientItemComponent } from './headquarters/client-item/client-item.comp
       StatusCheckerComponent,
       YuleLogComponent,
       LogTableComponent,
-      ClientItemComponent
+      ClientItemComponent,
+      RelatedIntelligenceComponent
    ],
    entryComponents: [
       LoginComponent
