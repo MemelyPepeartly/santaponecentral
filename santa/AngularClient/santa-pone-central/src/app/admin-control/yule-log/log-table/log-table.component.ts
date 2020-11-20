@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
-import { Observable } from 'rxjs';
 import { YuleLog } from 'src/classes/yuleLogTypes';
 
 @Component({
