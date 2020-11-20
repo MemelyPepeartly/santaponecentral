@@ -1,1 +1,52 @@
-<p>related-intelligence works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Related Histories</mat-card-title>
+    <mat-card-subtitle>Related Histories for {{selectedClientMeta.clientNickname}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-selection-list class="historySelection mat-elevation-z3" [multiple]="false" *ngIf="clientHistories.length > 0">
+      <mat-list-option
+        (click)="setSelectedHistory(null)"
+        [matBadge]="getGeneralHistory().unreadCount"
+        [matBadgeHidden]="getGeneralHistory().unreadCount == 0">General Intelligence</mat-list-option>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-toolbar>Assignment Chats</mat-toolbar>
+      <ng-container *ngFor="let history of clientHistories">
+        <mat-list-option class="historyListOption" *ngIf="history.relationXrefID != undefined"
+          [matBadge]="history.unreadCount"
+          [matBadgeHidden]="history.unreadCount == 0"
+          [value]="history"
+          (click)="setSelectedHistory(history)">
+          <h1>{{history.assignmentRecieverClient.clientNickname}}</h1>
+          <mat-card-subtitle>{{history.eventType.eventDescription}}</mat-card-subtitle>
+        </mat-list-option>
+      </ng-container>
+    </mat-selection-list>
+
+    <!-- Selected history chat -->
+    <mat-card class="chatCard">
+      <mat-card-content>
+        <app-contact-panel #messages
+          (messageUpdatedEvent)="true"
+          (historyUpdatedEvent)="updateSpecificChat($event)"
+          (manualRefreshClickedEvent)="manualRefreshSelectedChat(false)"
+          [refreshing]="false"
+          [showActionProgressBar]="false"
+          [showLoading]="false"
+          [selectedHistory]="selectedHistory"
+          [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
+        <app-input-control
+          (sendClicked)="send($event); messages.scrollToBottom();"
+          (readAllAction)="readAll()"
+          [relationshipID]="selectedHistory.relationXrefID"
+          [eventType]="selectedHistory.eventType"
+          [sender]="adminSenderMeta"
+          [reciever]="null"
+          [disabled]="false">
+        </app-input-control>
+      </mat-card-content>
+    </mat-card>
+
+
+  </mat-card-content>
+</mat-card>
