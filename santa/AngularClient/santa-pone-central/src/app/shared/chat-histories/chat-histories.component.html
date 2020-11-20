@@ -1,4 +1,5 @@
-<table mat-table [dataSource]="histories" id="data-table" class="mat-elevation-z3">
+<cdk-virtual-scroll-viewport *ngIf="histories.length > 0" [tvsItemSize]="50" class="vScroller scrollbarDiv scrollbar scrollbar-primary mat-elevation-z3">
+  <table mat-table [dataSource]="dataSource" id="data-table">
 
     <!-- Sender Column -->
     <ng-container matColumnDef="sender">
@@ -60,6 +61,13 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-</table>
+  </table>
+</cdk-virtual-scroll-viewport>
+
+<mat-card *ngIf="histories.length == 0">
+  <mat-card-content>
+    <mat-toolbar>No Histories Exist For This Category</mat-toolbar>
+  </mat-card-content>
+</mat-card>

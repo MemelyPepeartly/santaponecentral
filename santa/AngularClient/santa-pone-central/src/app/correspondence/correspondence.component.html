@@ -51,7 +51,7 @@
           <mat-card-subtitle *ngIf="!gettingAllChats && sortByUnread().length == 0">(No unread messages to display)</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
+        <mat-card-content>
           <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
           <app-chat-histories *ngIf="!gettingAllChats && sortByUnread().length > 0"
             [viewerClient]="subject"
