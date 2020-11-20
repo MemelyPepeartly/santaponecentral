@@ -53,9 +53,14 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
 
   public showClientCard: boolean = false;
   public showChat: boolean = false;
+  public showRelatedIntelligenceCard: boolean = false;
   public postingMessage: boolean = false;
   public updateOnClickaway: boolean = false;
   public clickAwayLocked: boolean = false;
+  public get showOverlay() : boolean
+  {
+    return this.showClientCard || this.showChat || this.showRelatedIntelligenceCard
+  }
 
   public selectedAnonID: string;
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
@@ -70,11 +75,14 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       this.profile = data
     });
     this.subject = this.mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
-
-    this.adminSenderMeta.clientID = this.subject.clientID
-    this.adminSenderMeta.clientName = this.subject.clientName
-    this.adminSenderMeta.clientNickname = this.subject.nickname
-
+    this.adminSenderMeta =
+    {
+      clientID: this.subject.clientID,
+      clientName: this.subject.clientName,
+      clientNickname: this.subject.nickname,
+      hasAccount: this.subject.hasAccount,
+      isAdmin: this.subject.isAdmin
+    };
 
     // Boolean subscribes
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
@@ -177,6 +185,12 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   {
     if(!this.clickAwayLocked)
     {
+      if(this.showRelatedIntelligenceCard)
+      {
+        this.showRelatedIntelligenceCard = false;
+      }
+      /*
+      // If the chat component isn't the one thats up, and the client card is, close the client card
       if(this.chatComponent == undefined && this.showClientCard == true)
       {
         this.showClientCard = false;
@@ -201,20 +215,20 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
           this.updateOnClickaway = false;
         }
       }
+      */
     }
   }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
   }
-  public async populateSelectAnonCard(meta: ClientMeta)
+  public async openRelatedIntelligenceCard(meta: ClientMeta)
   {
-    this.loadingClient = true;
+    /* SANTAHERE depreciated
     this.showClientCard = true;
-
-    this.selectedAnonID = meta.clientID
-
-    this.loadingClient = false;
+    */
+   this.showRelatedIntelligenceCard = true;
+   this.selectedAnonID = meta.clientID;
   }
   public async openSelectedChat(history: MessageHistory)
   {
@@ -262,5 +276,11 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public async manualRefresh()
   {
     await this.ChatService.gatherAllChats(this.subject.clientID);
+  }
+  public filterRelatedChats() : Array<MessageHistory>
+  {
+    return this.allChats.filter((history: MessageHistory) => {
+      return history.conversationClient.clientID == this.selectedAnonID;
+    });
   }
 }

@@ -32,7 +32,7 @@
   z-index: 3;
   border-radius: 8px;
 }
-.contact-container
+.overlay-container
 {
   position: fixed;
   width: 85%;
