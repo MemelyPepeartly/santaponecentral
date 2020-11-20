@@ -1,4 +1,6 @@
-<cdk-virtual-scroll-viewport *ngIf="histories.length > 0" [tvsItemSize]="50" class="vScroller scrollbarDiv scrollbar scrollbar-primary mat-elevation-z3">
+<cdk-virtual-scroll-viewport class="vScroller scrollbarDiv scrollbar scrollbar-primary mat-elevation-z3" *ngIf="histories.length > 0"
+  [tvsItemSize]="48"
+  [style.height.px]="(histories.length * 61) + 57">
   <table mat-table [dataSource]="dataSource" id="data-table">
 
     <!-- Sender Column -->
