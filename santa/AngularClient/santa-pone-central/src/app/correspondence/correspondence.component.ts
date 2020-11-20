@@ -12,6 +12,8 @@ import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.com
 import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
+import { OrganizerEmailConstants } from '../shared/constants/organizerEmailConstants.enum';
+import { EventConstants } from '../shared/constants/eventConstants.enum';
 
 
 
@@ -98,7 +100,19 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     /* -- Data subscribes -- */
     // All chats
     this.ChatService.allChats.subscribe((historyArray: Array<MessageHistory>) => {
-      this.allChats = historyArray;
+      // If the auth profile email is Santapone's
+      if(this.profile.email == OrganizerEmailConstants.SANTAPONE)
+      {
+        // All chats is equal to all the chats that are general chats, or for the gift exchange
+        this.allChats = historyArray.filter((history: MessageHistory) => {
+          return history.relationXrefID == null || history.eventType.eventDescription == EventConstants.GIFT_EXCHANGE_EVENT
+        });
+      }
+      // Else just set it equal to the whole history response
+      else
+      {
+        this.allChats = historyArray;
+      }
     });
 
     // All events
