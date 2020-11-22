@@ -65,6 +65,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
 
   public selectedAnonID: string;
+  public selectedAnonMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
   public selectedHistory: MessageHistory = new MessageHistory();
 
@@ -203,6 +204,40 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       {
         this.showRelatedIntelligenceCard = false;
       }
+      if(this.chatComponent)
+      {
+        // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
+        if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
+        {
+          this.showChat = false;
+          this.selectedHistory = new MessageHistory();
+          // If the updater variable is true, refresh on clicking away
+          if(this.updateOnClickaway)
+          {
+            await this.ChatService.gatherAllChats(this.subject.clientID, true);
+            this.updateOnClickaway = false;
+          }
+        }
+      }
+      // If the selectedAnonComponent is up
+      if(this.selectedAnonComponent)
+      {
+        // Close it out
+        if(this.showClientCard == true)
+        {
+          this.showClientCard = false;
+
+          // If the updater variable is true, refresh on clicking away
+          if(this.updateOnClickaway)
+          {
+            await this.ChatService.gatherAllChats(this.subject.clientID, true);
+            this.updateOnClickaway = false;
+          }
+        }
+      }
+      this.selectedAnonID = undefined;
+      this.selectedAnonMeta = new ClientMeta();
+
       /*
       // If the chat component isn't the one thats up, and the client card is, close the client card
       if(this.chatComponent == undefined && this.showClientCard == true)
@@ -243,6 +278,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     */
    this.showRelatedIntelligenceCard = true;
    this.selectedAnonID = meta.clientID;
+   this.selectedAnonMeta = meta;
   }
   public async openSelectedChat(history: MessageHistory)
   {
