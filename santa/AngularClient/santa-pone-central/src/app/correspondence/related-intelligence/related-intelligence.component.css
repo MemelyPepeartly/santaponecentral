@@ -1,22 +1,27 @@
-.historySelection
-{
+.historySelection {
   display: inline-block;
   width: 35%;
   height: fit-content;
   vertical-align: top;
   clear: both;
 }
-.historyListOption
-{
+.historyListOption {
   display: block !important;
   height: fit-content !important;
   padding-top: 10px !important;
   padding-bottom: 10px !important;
 }
-.chatCard
-{
+.chatCard {
   display: inline-block;
   margin-left: 1%;
   margin-right: 1%;
   width: 63%;
+}
+.containerCard {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  height: fit-content;
+  max-height: 800px;
+  border-radius: 8px !important;
 }
