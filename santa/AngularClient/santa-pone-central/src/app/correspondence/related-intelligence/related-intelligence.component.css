@@ -18,10 +18,13 @@
   width: 63%;
 }
 .containerCard {
-  width: 95%;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 8px !important;
+}
+.scrollbar
+{
+  width: 95%;
   height: fit-content;
   max-height: 800px;
-  border-radius: 8px !important;
 }
