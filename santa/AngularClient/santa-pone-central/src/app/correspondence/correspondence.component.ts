@@ -65,6 +65,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
 
   public selectedAnonID: string;
+  public agentControlID: string;
   public selectedAnonMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
   public selectedHistory: MessageHistory = new MessageHistory();
@@ -237,55 +238,11 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       }
       this.selectedAnonID = undefined;
       this.selectedAnonMeta = new ClientMeta();
-
-      /*
-      // If the chat component isn't the one thats up, and the client card is, close the client card
-      if(this.chatComponent == undefined && this.showClientCard == true)
-      {
-        this.showClientCard = false;
-        this.selectedAnonID = undefined;
-
-        // If the updater variable is true, refresh on clicking away
-        if(this.updateOnClickaway)
-        {
-          await this.ChatService.gatherAllChats(this.subject.clientID, true);
-          this.updateOnClickaway = false;
-        }
-      }
-      // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
-      else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
-      {
-        this.showChat = false;
-        this.selectedHistory = new MessageHistory();
-        // If the updater variable is true, refresh on clicking away
-        if(this.updateOnClickaway)
-        {
-          await this.ChatService.gatherAllChats(this.subject.clientID, true);
-          this.updateOnClickaway = false;
-        }
-      }
-      */
     }
   }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
-  }
-  public async openRelatedIntelligenceCard(meta: ClientMeta)
-  {
-    /* SANTAHERE depreciated
-    this.showClientCard = true;
-    */
-   this.showRelatedIntelligenceCard = true;
-   this.selectedAnonID = meta.clientID;
-   this.selectedAnonMeta = meta;
-  }
-  public async openSelectedChat(history: MessageHistory)
-  {
-    this.selectedHistory = history;
-    this.selectedRecieverMeta = history.conversationClient;
-    this.showChat = true;
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
   public async updateChats(isSoftUpdate: boolean = false, skipSelected: boolean = false)
   {
@@ -332,5 +289,33 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     return this.allChats.filter((history: MessageHistory) => {
       return history.conversationClient.clientID == this.selectedAnonID;
     });
+  }
+  public async openRelatedIntelligenceCard(meta: ClientMeta)
+  {
+    /* SANTAHERE depreciated
+    this.showClientCard = true;
+    */
+   this.showRelatedIntelligenceCard = true;
+   this.selectedAnonID = meta.clientID;
+   this.selectedAnonMeta = meta;
+  }
+  public async openSelectedChat(history: MessageHistory)
+  {
+    this.selectedHistory = history;
+    this.selectedRecieverMeta = history.conversationClient;
+    this.showChat = true;
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+  }
+  public openClientCard(clientMeta: ClientMeta)
+  {
+    this.agentControlID = clientMeta.clientID;
+    this.showRelatedIntelligenceCard = false;
+    this.showClientCard = true;
+  }
+  public backToRelatedIntelligence()
+  {
+    this.showClientCard = false;
+    this.agentControlID = undefined;
+    this.showRelatedIntelligenceCard = true;
   }
 }

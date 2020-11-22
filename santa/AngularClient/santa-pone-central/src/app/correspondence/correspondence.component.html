@@ -3,6 +3,7 @@
 
 <div class="overlay-container" *ngIf="showRelatedIntelligenceCard == true">
   <app-related-intelligence
+    (openAgentControlEvent)="openClientCard($event)"
     [selectedAnonMeta]="selectedAnonMeta"
     [clientHistories]="filterRelatedChats()"
     [subject]="subject"></app-related-intelligence>
@@ -10,8 +11,11 @@
 
 <div class="overlay-container" *ngIf="showClientCard">
   <app-selected-anon
+    (backClickedEvent)="backToRelatedIntelligence()"
+    (closeClickedEvent)="hideWindow()"
+    [showBackCloseButtons]="true"
     [loadingClient]="loadingClient"
-    [clientID]="selectedAnonID"
+    [clientID]="agentControlID"
     (actionTaken)="updateChats(true, true)"
     (setClickAwayLockEvent)="setClickawayLock($event)">
   </app-selected-anon>
