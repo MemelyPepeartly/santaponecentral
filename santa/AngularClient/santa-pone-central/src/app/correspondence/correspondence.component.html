@@ -3,21 +3,20 @@
 
 <div class="overlay-container" *ngIf="showRelatedIntelligenceCard == true">
   <app-related-intelligence
-    [selectedAnonID]="selectedAnonID"
+    [selectedAnonMeta]="selectedAnonMeta"
     [clientHistories]="filterRelatedChats()"
     [subject]="subject"></app-related-intelligence>
 </div>
 
-<div class="selected-anon-container mat-elevation-z3" *ngIf="showClientCard == true">
-  <div class="fixedDiv mat-elevation-z6">
-      <app-selected-anon
-      [loadingClient]="loadingClient"
-      [clientID]="selectedAnonID"
-      (actionTaken)="updateChats(true, true)"
-      (setClickAwayLockEvent)="setClickawayLock($event)"></app-selected-anon>
-  </div>
+<div class="overlay-container" *ngIf="showClientCard">
+  <app-selected-anon
+    [loadingClient]="loadingClient"
+    [clientID]="selectedAnonID"
+    (actionTaken)="updateChats(true, true)"
+    (setClickAwayLockEvent)="setClickawayLock($event)">
+  </app-selected-anon>
 </div>
-<div class="overlay-container mat-elevation-z3" *ngIf="showChat == true">
+<div class="overlay-container" *ngIf="showChat">
     <app-contact-panel #messages
       (messageUpdatedEvent)="true"
       (historyUpdatedEvent)="updateSpecificChat($event)"
@@ -66,7 +65,7 @@
             [disabled]="updateOnClickaway"
             [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByUnread()"
-            (recipientSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
@@ -85,7 +84,7 @@
             [disabled]="updateOnClickaway"
             [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByGeneral()"
-            (recipientSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
@@ -106,7 +105,7 @@
             [disabled]="updateOnClickaway"
             [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByEvent(event)"
-            (recipientSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (agentSelectedEvent)="populateSelectAnonCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>
@@ -126,7 +125,7 @@
             [disabled]="updateOnClickaway"
             [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
             [histories]="sortByAssignmentStatus(assignmentStatus)"
-            (recipientSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
             (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
         </mat-card-content>
       </mat-card>

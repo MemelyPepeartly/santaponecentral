@@ -10,9 +10,9 @@
         <div class="senderContainer">
           <div class="senderInfoDiv">
             <button mat-raised-button class="reactive senderAssignmentButton smallFont" *ngIf="!onProfile && history.assignmentRecieverClient.clientID != null && history.assignmentSenderClient.clientID != null"
-              (click)="emitSelectedRecipientInformation(history.assignmentSenderClient, history.eventType)">{{ history.assignmentSenderClient.clientNickname }}</button>
+              (click)="emitAgentSelected(history.assignmentSenderClient, history.eventType)">{{ history.assignmentSenderClient.clientNickname }}</button>
               <button mat-raised-button class="reactive senderAssignmentButton smallFont" *ngIf="!onProfile && history.relationXrefID == null"
-              (click)="emitSelectedRecipientInformation(history.conversationClient, null)">{{ history.conversationClient.clientNickname }}</button>
+              (click)="emitAgentSelected(history.conversationClient, null)">{{ history.conversationClient.clientNickname }}</button>
             <span *ngIf="onProfile">{{history.assignmentSenderClient.clientNickname}}</span>
           </div>
           <img class="senderImage" [ngClass]="{'cardExchangeIcon' : history.eventType.eventDescription == 'Card Exchange','giftExchangeIcon' : history.eventType.eventDescription == 'Gift Exchange'}">
@@ -26,7 +26,7 @@
       <td mat-cell *matCellDef="let history" class="reactiveDataColumn">
         <span class="reactive" *ngIf="history.assignmentRecieverClient.clientNickname == undefined || history.assignmentRecieverClient.clientNickname == ''">------------</span>
         <button class="reactive senderAssignmentButton smallFont" *ngIf="history.assignmentRecieverClient.clientNickname != undefined && history.assignmentRecieverClient.clientNickname != ''"
-          (click)="emitSelectedRecipientInformation(history.assignmentRecieverClient, history.eventType)" mat-raised-button>{{ history.assignmentRecieverClient.clientNickname }}</button>
+          (click)="emitAgentSelected(history.assignmentRecieverClient, history.eventType)" mat-raised-button>{{ history.assignmentRecieverClient.clientNickname }}</button>
       </td>
     </ng-container>
 

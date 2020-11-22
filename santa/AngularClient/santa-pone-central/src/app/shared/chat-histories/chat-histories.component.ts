@@ -28,7 +28,7 @@ export class ChatHistoriesComponent implements OnInit, OnChanges {
   dataSource = new TableVirtualScrollDataSource();
 
   @Output() chatSelectedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
-  @Output() recipientSelectedEvent: EventEmitter<{meta: ClientMeta, event: EventType}> = new EventEmitter<{meta: ClientMeta, event: EventType}>();
+  @Output() agentSelectedEvent: EventEmitter<{meta: ClientMeta, event: EventType}> = new EventEmitter<{meta: ClientMeta, event: EventType}>();
 
 
   public ngOnInit(): void {
@@ -46,9 +46,9 @@ export class ChatHistoriesComponent implements OnInit, OnChanges {
   {
     this.chatSelectedEvent.emit(history);
   }
-  public emitSelectedRecipientInformation(historyMeta: ClientMeta, historyEvent: EventType)
+  public emitAgentSelected(historyMeta: ClientMeta, historyEvent: EventType)
   {
-    this.recipientSelectedEvent.emit({meta: historyMeta, event: historyEvent});
+    this.agentSelectedEvent.emit({meta: historyMeta, event: historyEvent});
   }
   public isCompleted(history: MessageHistory) : boolean
   {
