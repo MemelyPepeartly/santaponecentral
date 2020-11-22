@@ -26,35 +26,37 @@
             <div class="actionBarDiv" *ngIf="showActionProgressBar">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
-            <div #chatFrame *ngIf="selectedHistory != undefined && !showLoading" id="chat-window" class="mat-elevation-z5">
+            <ng-scrollbar #scroller class="scrollbar chatFrameScroller mat-elevation-z5" *ngIf="selectedHistory != undefined && !showLoading" [disabled]="false" >
+              <div #chatFrame  class="chatFrameDiv">
                 <ng-container *ngFor="let message of totalHistory()">
-                    <div class="date-div">
-                        <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Standard Time) </span>
+                  <div class="date-div">
+                    <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Standard Time) </span>
+                    <mat-divider [inset]="true"></mat-divider>
+                  </div>
+                  <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage,
+                                  'recieved-message' : !message.subjectMessage}">
+                    <div class="nick-div">
+                        <span> {{ message.senderClient.clientNickname }} </span>
                         <mat-divider [inset]="true"></mat-divider>
                     </div>
-                    <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage,
-                                     'recieved-message' : !message.subjectMessage}">
-                        <div class="nick-div">
-                            <span> {{ message.senderClient.clientNickname }} </span>
-                            <mat-divider [inset]="true"></mat-divider>
-                        </div>
-                        <!--<div id="content" [innerHTML]="spotURL(message.messageContent)"></div>-->
-                        <div id="content">{{message.messageContent}}</div>
-                        <div class="messageCheckDiv">
-                            <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="showButton(message)"
-                                matTooltip="Mark as read"
-                                [disabled]="markingRead"
-                                (click)="markRead(message)">
-                                <mat-icon mat-icon-button>check</mat-icon>
-                            </button>
-                        </div>
+                    <!--<div id="content" [innerHTML]="spotURL(message.messageContent)"></div>-->
+                    <div id="content">{{message.messageContent}}</div>
+                    <div class="messageCheckDiv">
+                        <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="showButton(message)"
+                            matTooltip="Mark as read"
+                            [disabled]="markingRead"
+                            (click)="markRead(message)">
+                            <mat-icon mat-icon-button>check</mat-icon>
+                        </button>
                     </div>
-                    <span class="readSpan" *ngIf="showRead(message)"
-                    [ngClass]="{'sent-read' : message.subjectMessage,
-                    'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span>
-
+                  </div>
+                  <span class="readSpan" *ngIf="showRead(message)"
+                  [ngClass]="{'sent-read' : message.subjectMessage,
+                  'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span>
                 </ng-container>
-            </div>
+              </div>
+            </ng-scrollbar>
+
         </mat-card-content>
     </mat-card>
 </div>

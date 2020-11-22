@@ -6,6 +6,8 @@ import { MessageApiReadResponse } from 'src/classes/responseTypes';
 import { SantaApiPutService } from 'src/app/services/santa-api.service';
 import { MapResponse, MapService } from 'src/app/services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { SmoothScroll, SMOOTH_SCROLL_OPTIONS } from 'ngx-scrollbar/smooth-scroll';
 
 @Component({
   selector: 'app-contact-panel',
@@ -36,6 +38,7 @@ export class ContactPanelComponent implements OnInit{
   @Input() showControlButton: boolean = false;
 
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
+  @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
   public isAdmin: boolean;
   public markingRead: boolean = false;
@@ -66,9 +69,7 @@ export class ContactPanelComponent implements OnInit{
     }))
   }
   public scrollToBottom(): void {
-    try {
-        this.chatFrame.nativeElement.scrollTop = this.chatFrame.nativeElement.scrollHeight;
-    } catch(err) { }
+    this.scrollbarRef.scrollTo({ bottom: 0, duration: 500 });
   }
   public async manualRefreshChat()
   {
