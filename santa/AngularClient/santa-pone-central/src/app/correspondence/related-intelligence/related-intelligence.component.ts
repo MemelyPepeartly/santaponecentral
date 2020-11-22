@@ -44,6 +44,7 @@ export class RelatedIntelligenceComponent implements OnInit {
     {
       this.selectedHistory = this.getGeneralHistory();
     }
+    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
   public async readAll()
   {
