@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 // Services
 
@@ -136,7 +137,8 @@ import { RelatedIntelligenceComponent } from './correspondence/related-intellige
       ReactiveFormsModule,
       AppRoutingModule,
       RouterModule,
-      HttpClientModule
+      HttpClientModule,
+      NgScrollbarModule
    ],
    providers: [],
    bootstrap: [
