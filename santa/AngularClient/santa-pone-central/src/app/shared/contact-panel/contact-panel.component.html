@@ -7,7 +7,7 @@
             <mat-card-subtitle *ngIf="selectedHistory.relationXrefID != undefined">Assignment: {{selectedHistory.assignmentRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
             <mat-card-subtitle *ngIf="selectedHistory.relationXrefID == undefined">General Correspondence History</mat-card-subtitle>
             <mat-card-subtitle *ngIf="showControlButton && selectedHistory.relationXrefID != undefined">
-              <button mat-raised-button>Open {{selectedHistory.assignmentRecieverClient.clientNickname}}'s Profile Control</button>
+              <button mat-raised-button (click)="emitAgentControlClicked()">Open {{selectedHistory.assignmentRecieverClient.clientNickname}}'s Agent Control</button>
             </mat-card-subtitle>
             <mat-card-subtitle>
               <button mat-raised-button (click)="manualRefreshChat()" [disabled]="refreshing">

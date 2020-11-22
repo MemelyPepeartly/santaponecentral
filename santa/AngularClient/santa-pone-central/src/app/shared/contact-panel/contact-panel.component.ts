@@ -25,6 +25,7 @@ export class ContactPanelComponent implements OnInit{
   @Output() messageUpdatedEvent: EventEmitter<Message> = new EventEmitter<Message>();
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
 
   @Input() selectedHistory: MessageHistory = new MessageHistory();
   @Input() sendingClientMeta: ClientMeta = new ClientMeta();
@@ -110,5 +111,9 @@ export class ContactPanelComponent implements OnInit{
   {
     return (!message.isMessageRead && !message.subjectMessage && this.isAdmin && !message.fromAdmin) ||
     (!this.isAdmin && message.fromAdmin && this.onProfile && !message.isMessageRead)
+  }
+  public emitAgentControlClicked()
+  {
+    this.openAgentControlEvent.emit(this.selectedHistory.assignmentRecieverClient)
   }
 }
