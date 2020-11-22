@@ -1,8 +1,13 @@
 <div class="centerSpin">
     <app-loading-spin *ngIf="beingSwitched || deletingClient || loadingClient"></app-loading-spin>
 </div>
-
-<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient && !loadingClient">
+<ng-scrollbar class="shell scrollbar mat-elevation-z2" #scrollable *ngIf="!beingSwitched && !deletingClient && !loadingClient" [disabled]="false">
+    <mat-card class="closeBackButtonCard mat-elevation-z5">
+      <mat-card-content class="closeBackButtonCardContent" *ngIf="showBackCloseButtons">
+        <button mat-raised-button class="navigationButton navigationButtonBack" (click)="emitBackClicked()"><mat-icon>arrow_back_ios</mat-icon> Back to previous window</button>
+        <button mat-raised-button class="navigationButton navigationButtonClose" (click)="emitCloseClicked()">Close <mat-icon>close</mat-icon></button>
+      </mat-card-content>
+    </mat-card>
     <mat-card class="infoCard mat-elevation-z5">
 
         <mat-card-header>
@@ -486,4 +491,4 @@
           </div>
         </mat-card-actions>
     </mat-card>
-</div>
+</ng-scrollbar>

@@ -220,21 +220,35 @@ app-small-loading-spin {
   text-overflow: ellipsis;
   max-width: 150px;
 }
-/* Scrollbar Styling */
-.scrollbar {
+.closeBackButtonCard
+{
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+.closeBackButtonCardContent
+{
   width: 100%;
-  height: 100%;
-  background: #fff;
-  overflow-y: scroll;
 }
-
-.scrollbar-primary::-webkit-scrollbar {
-  width: 12px;
-  background-color: #f5f5f5;
+.navigationButton
+{
+  display: inline-block;
+  width: fit-content;
 }
+.navigationButtonBack
+{
 
-.scrollbar-primary::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  background-color: #4285f4;
+}
+.navigationButtonClose
+{
+  float: right;
+}
+/* Scrollbar Styling */
+.scrollbar
+{
+  width: 95%;
+  height: fit-content;
+  max-height: 800px;
 }
