@@ -32,6 +32,7 @@ export class ContactPanelComponent implements OnInit{
   @Input() showLoading: boolean = false;
   @Input() showActionProgressBar: boolean = false;
   @Input() refreshing: boolean = false;
+  @Input() showControlButton: boolean = false;
 
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
 

@@ -4,8 +4,11 @@
         <mat-card-header>
             <mat-card-title>Contact History</mat-card-title>
             <mat-card-subtitle>Private chat between {{ selectedHistory.conversationClient.clientNickname }} and the event organizers</mat-card-subtitle>
-            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription != undefined">Assignment: {{selectedHistory.assignmentRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
-            <mat-card-subtitle *ngIf="selectedHistory.eventType.eventDescription == undefined">General Correspondence History</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.relationXrefID != undefined">Assignment: {{selectedHistory.assignmentRecieverClient.clientNickname}} for the {{selectedHistory.eventType.eventDescription}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="selectedHistory.relationXrefID == undefined">General Correspondence History</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="showControlButton && selectedHistory.relationXrefID != undefined">
+              <button mat-raised-button>Open {{selectedHistory.assignmentRecieverClient.clientNickname}}'s Profile Control</button>
+            </mat-card-subtitle>
             <mat-card-subtitle>
               <button mat-raised-button (click)="manualRefreshChat()" [disabled]="refreshing">
                 <mat-icon>refresh</mat-icon>
