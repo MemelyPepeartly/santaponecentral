@@ -1,10 +1,10 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from 'src/app/shared/input-control/input-control.component';
-import { BaseClient } from 'src/classes/client';
+import { BaseClient, Client } from 'src/classes/client';
 import { ClientMeta, MessageHistory } from 'src/classes/message';
 
 @Component({
@@ -22,6 +22,8 @@ export class RelatedIntelligenceComponent implements OnInit {
   @Input() adminSenderMeta: ClientMeta = new ClientMeta();
   @Input() subject: BaseClient = new BaseClient();
   @Input() selectedAnonMeta: ClientMeta = new ClientMeta();
+
+  @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
@@ -67,5 +69,9 @@ export class RelatedIntelligenceComponent implements OnInit {
     return this.clientHistories.find((history: MessageHistory) => {
       return history.relationXrefID == undefined;
     });
+  }
+  public emitAgentControlSelected(clientMeta: ClientMeta)
+  {
+    this.openAgentControlEvent.emit(clientMeta);
   }
 }
