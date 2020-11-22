@@ -19,37 +19,22 @@
     margin-top: 10px;
 }
 
-.selected-anon-container
-{
-  position: fixed;
-  width: 85%;
-  min-width: 600px;
-  height: 85%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  z-index: 3;
-  border-radius: 8px;
-}
 .overlay-container
 {
   position: fixed;
-  width: 85%;
   min-width: 600px;
+  max-height: 90%;
+  width: 90%;
   height: fit-content;
-  max-height: 90vh;
   padding: 15px;
-  background-color: white;
-  z-index: 2;
-  border-radius: 8px;
-  top: 50%;
+
   left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  overflow-y: scroll;
-}
-.contact-container::-webkit-scrollbar {
-  display: none;
+
+  z-index: 3;
+  background-color: white;
+  border-radius: 8px;
 }
 #overlay
 {
@@ -64,19 +49,6 @@
     background-color: rgba(0,0,0,0.5); /* Black background with opacity */
     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
     cursor: pointer; /* Add a pointer on hover */
-}
-.fixedDiv
-{
-  position: absolute;
-  top:2%;
-  bottom: 2%;
-  right: 5%;
-  left: 5%;
-  border-radius: 8px;
-  background-color: white;
-}
-.fixedDiv::-webkit-scrollbar {
-    display: none;
 }
 .refreshButton
 {
