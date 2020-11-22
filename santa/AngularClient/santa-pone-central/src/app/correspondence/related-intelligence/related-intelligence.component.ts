@@ -18,11 +18,10 @@ export class RelatedIntelligenceComponent implements OnInit {
     public SantaApiPut: SantaApiPutService,
     public ChatService: ChatService) { }
 
-  @Input() selectedAnonID: string;
   @Input() clientHistories: Array<MessageHistory> = [];
   @Input() adminSenderMeta: ClientMeta = new ClientMeta();
   @Input() subject: BaseClient = new BaseClient();
-  @Input() selectedClientMeta: ClientMeta = new ClientMeta();
+  @Input() selectedAnonMeta: ClientMeta = new ClientMeta();
 
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
