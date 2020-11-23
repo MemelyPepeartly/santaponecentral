@@ -70,7 +70,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
   public selectedHistory: MessageHistory = new MessageHistory();
 
-
   public async ngOnInit() {
     this.initializing = true;
 
@@ -176,6 +175,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
     this.inputComponent.clearForm();
 
+    this.updateSpecificChat(this.selectedHistory);
+
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
@@ -194,6 +195,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
 
     await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, true);
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+
+    this.updateSpecificChat(this.selectedHistory);
 
     this.puttingMessage = false;
   }
@@ -253,7 +256,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
-  public async updateSpecificChat(historyEvent: MessageHistory)
+  public updateSpecificChat(historyEvent: MessageHistory)
   {
     var chatIndex = this.allChats.findIndex((history: MessageHistory) => {
       return history.relationXrefID == historyEvent.relationXrefID &&

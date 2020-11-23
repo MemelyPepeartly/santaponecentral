@@ -3,6 +3,7 @@
 
 <div class="overlay-container" *ngIf="showRelatedIntelligenceCard == true">
   <app-related-intelligence
+    (messageSentEvent)="updateSpecificChat($event)"
     (openAgentControlEvent)="openClientCard($event)"
     [selectedAnonMeta]="selectedAnonMeta"
     [clientHistories]="filterRelatedChats()"
