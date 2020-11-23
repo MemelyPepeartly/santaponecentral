@@ -22,6 +22,17 @@
   margin-right: auto;
   border-radius: 8px !important;
 }
+.centeredToolbar
+{
+  display: block;
+  text-align: center;
+  padding-top: 16px;
+}
+.infoSubtitle
+{
+  text-align: center;
+  margin-top: 15px;
+}
 .scrollbar
 {
   width: 95%;

@@ -28,8 +28,19 @@
         </ng-container>
       </mat-selection-list>
 
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="selectedHistory == undefined">
+        <mat-card-content>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-toolbar class="centeredToolbar">Select a chat</mat-toolbar>
+          <mat-card-subtitle class="infoSubtitle">Chats include all the chats between admins and {{selectedAnonMeta.clientNickname}}</mat-card-subtitle>
+
+          <mat-divider [inset]="true"></mat-divider>
+        </mat-card-content>
+      </mat-card>
+
       <!-- Selected history chat -->
-      <mat-card class="chatCard mat-elevation-z3">
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="selectedHistory != undefined">
         <mat-card-content>
           <app-contact-panel #messages
             (openAgentControlEvent)="emitAgentControlSelected($event)"
@@ -38,18 +49,18 @@
             (manualRefreshClickedEvent)="manualRefreshSelectedChat(false)"
             [showControlButton]="true"
             [refreshing]="false"
-            [showActionProgressBar]="false"
+            [showActionProgressBar]="postingMessage"
             [showLoading]="false"
             [selectedHistory]="selectedHistory"
             [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
           <app-input-control
-            (sendClicked)="send($event); messages.scrollToBottom();"
+            (sendClicked)="send($event)"
             (readAllAction)="readAll()"
             [relationshipID]="selectedHistory.relationXrefID"
             [eventType]="selectedHistory.eventType"
             [sender]="adminSenderMeta"
-            [reciever]="null"
-            [disabled]="false">
+            [reciever]="selectedHistory.conversationClient"
+            [disabled]="postingMessage">
           </app-input-control>
         </mat-card-content>
       </mat-card>
