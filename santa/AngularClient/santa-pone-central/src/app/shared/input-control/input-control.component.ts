@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
-import { Client } from 'src/classes/client';
+import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
@@ -34,7 +34,7 @@ export class InputControlComponent implements OnInit {
 
   private isAdmin: boolean;
   private profile: any;
-  private adminClient: Client;
+  private adminClient: BaseClient;
 
   public messageFormControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
 
@@ -46,7 +46,7 @@ export class InputControlComponent implements OnInit {
       this.isAdmin = admin;
       if(this.isAdmin)
       {
-        this.adminClient = this.Mapper.mapClient(await this.SantaApiGet.getClientByEmail(this.profile.email).toPromise());
+        this.adminClient = this.Mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
       }
     });
   }
