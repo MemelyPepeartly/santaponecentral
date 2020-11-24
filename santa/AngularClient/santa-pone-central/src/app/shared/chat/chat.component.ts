@@ -31,17 +31,29 @@ export class ChatComponent implements OnInit {
   }
   emitHistoryUpdatedEvent(messageHistoryEvent: MessageHistory)
   {
-
+    this.historyUpdatedEvent.emit(messageHistoryEvent);
   }
   emitManualRefresh(event: boolean)
   {
-
+    this.manualRefreshClickedEvent.emit(event);
   }
   emitSend(messageApiResponseEvent: MessageApiResponse)
   {
-
+    this.sendClickedEvent.emit(messageApiResponseEvent);
   }
   emitReadAllClicked()
+  {
+    this.readAllClickedEvent.emit(true);
+  }
+  manualRefresh(isSoftUpdate: boolean = false)
+  {
+
+  }
+  send(messageApiResponseEvent: MessageApiResponse)
+  {
+
+  }
+  readAll()
   {
 
   }
