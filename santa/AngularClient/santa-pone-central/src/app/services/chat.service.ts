@@ -29,15 +29,8 @@ export class ChatService {
     return this._gettingAllEventChats.asObservable();
   }
 
-  private _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  get gettingSelectedHistory()
-  {
-    return this._gettingSelectedHistory.asObservable();
-  }
-
   private _allChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
   private _allEventChats: BehaviorSubject<Array<MessageHistory>>= new BehaviorSubject([]);
-  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory);
 
   // All Chats
   get allChats()
@@ -58,17 +51,6 @@ export class ChatService {
   {
     this._allEventChats.next(messageHistories);
   }
-
-  // Selected History
-  get selectedHistory()
-  {
-    return this._selectedHistory.asObservable();
-  }
-  private updateSelectedHistory(history: MessageHistory)
-  {
-    this._selectedHistory.next(history);
-  }
-
 
   // * GATHERING METHODS * //
   public async gatherAllChats(subjectID: string, isSoftGather?: boolean)
@@ -98,28 +80,9 @@ export class ChatService {
     this._gettingAllChats.next(false);
     this._softGettingAllChats.next(false);
   }
-
-  public async getSelectedHistory(conversationClientID, subjectID, relationXrefID, isSoftGather?: boolean)
-  {
-    if(!isSoftGather)
-    {
-      this._gettingSelectedHistory.next(true);
-    }
-
-    let messageHistory = new MessageHistory;
-    var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID ,subjectID, relationXrefID).toPromise().catch(err => {
-      console.log(err);
-      this._gettingSelectedHistory.next(false);
-    });
-
-    messageHistory = this.ApiMapper.mapMessageHistory(data);
-    this.updateSelectedHistory(messageHistory);
-    this._gettingSelectedHistory.next(false);
-  }
   public clearAllChats()
   {
     this.updateAllChats([]);
-    this.updateSelectedHistory(undefined)
     this.updateAllEventChats([]);
   }
 }
