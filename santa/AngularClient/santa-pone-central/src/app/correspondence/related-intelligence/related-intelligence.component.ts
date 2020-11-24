@@ -53,40 +53,6 @@ export class RelatedIntelligenceComponent implements OnInit {
     }
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
   }
-  public async readAll()
-  {
-
-  }
-  public async send(event: MessageApiResponse)
-  {
-    this.postingMessage = true;
-
-    await this.SantaApiPost.postMessage(event).toPromise();
-    let newHistory: MessageHistory = this.mapper.mapMessageHistory(await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID).toPromise());
-    this.updateSpecificChat(newHistory);
-    if(event.clientRelationXrefID == undefined || event.clientRelationXrefID == null)
-    {
-      this.setSelectedHistory(null);
-    }
-    else
-    {
-      this.setSelectedHistory(newHistory);
-    }
-    this.messageSentEvent.emit(newHistory);
-
-    this.inputComponent.clearForm();
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.postingMessage = false;
-  }
-  public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
-  {
-    this.refreshing = true;
-    // SANTAHERE needs updating
-    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    this.refreshing = false;
-  }
   public getGeneralHistory() : MessageHistory
   {
     return this.clientHistories.find((history: MessageHistory) => {

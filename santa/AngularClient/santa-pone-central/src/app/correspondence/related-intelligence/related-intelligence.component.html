@@ -44,13 +44,13 @@
         <mat-card-content>
           <app-chat
             (historyUpdatedEvent)="updateSpecificChat($event)",
-            (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)",
-            (sendClickedEvent)="send($event);",
-            (readAllClickedEvent)="readAll()",
+            (manualRefreshClickedEvent)="false",
+            (sendClickedEvent)="false",
+            (readAllClickedEvent)="false",
             [chatInfoContainer]="chatInfoContainer"
-            [inputDisabled]="postingMessage"
+            [inputDisabled]="false"
             [showChatLoading]="false"
-            [showChatActionProgressBar]="postingMessage"
+            [showChatActionProgressBar]="false"
             [chatRefreshing]="false">
           </app-chat>
         </mat-card-content>
