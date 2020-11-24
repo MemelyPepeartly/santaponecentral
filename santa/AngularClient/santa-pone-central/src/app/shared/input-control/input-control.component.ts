@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
+import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
@@ -25,12 +25,8 @@ export class InputControlComponent implements OnInit {
   @Output() timeZoneAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() colorAction: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Input() relationshipID: string;
-  @Input() sender: ClientMeta;
-  @Input() reciever: ClientMeta;
+  @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() disabled: boolean = false;
-  @Input() onProfile: boolean;
-  @Input() eventType: EventType = new EventType()
 
   private isAdmin: boolean;
   private profile: any;
@@ -55,12 +51,12 @@ export class InputControlComponent implements OnInit {
 
     let newMessage: MessageApiResponse =
     {
-      messageSenderClientID: this.isAdmin ? this.adminClient.clientID : this.sender.clientID,
-      messageRecieverClientID: this.reciever.clientID,
-      clientRelationXrefID: this.relationshipID,
-      eventTypeID: this.relationshipID == null || undefined ? null : this.eventType.eventTypeID,
+      messageSenderClientID: this.chatInfoContainer.messageSenderID,
+      messageRecieverClientID: this.chatInfoContainer.messageRecieverID,
+      clientRelationXrefID: this.chatInfoContainer.relationshipXrefID,
+      eventTypeID: this.chatInfoContainer.relationshipXrefID == null || this.chatInfoContainer.relationshipXrefID == undefined ? null : this.chatInfoContainer.eventTypeID,
       messageContent: message,
-      fromAdmin: this.onProfile ? false : this.isAdmin,
+      fromAdmin: this.chatInfoContainer.senderIsAdmin,
     };
 
     this.sendClicked.emit(newMessage);

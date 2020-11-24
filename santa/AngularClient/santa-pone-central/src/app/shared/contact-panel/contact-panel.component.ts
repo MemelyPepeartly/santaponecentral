@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
-import { Message, MessageHistory, ClientMeta } from 'src/classes/message';
+import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { MessageApiReadResponse } from 'src/classes/responseTypes';
-import { SantaApiPutService } from 'src/app/services/santa-api.service';
+import { SantaApiGetService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { MapResponse, MapService } from 'src/app/services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -18,44 +18,58 @@ export class ContactPanelComponent implements OnInit{
 
   constructor(
     protected sanitizer: DomSanitizer,
+    public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public responseMapper: MapResponse,
     public ApiMapper: MapService,
     public auth: AuthService) { }
 
-  // Boolean value for passing whether or not the emit is a soft update or not
+  /** Dictates if the chat window is on the profile component */
+  @Input() onProfile: boolean
+  /**  Dictates if the loading shark is present and other elements are not shown yet */
+  @Input() showLoading: boolean = false;
+  /** Dictates if other elements are shown, but the action in progress bar along the top is on or off */
+  @Input() showActionProgressBar: boolean = false;
+  /** Dictates if the chat is being refreshed. This activates the action progress bar, but also disables the refresh button */
+  @Input() refreshing: boolean = false;
+  /** Dictates if the button to switch to a client profile is viewable */
+  @Input() showControlButton: boolean = false;
+  /** Informational container of the chat. This contains the ID's to show what is sending to where */
+  @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
+
   @Output() messageUpdatedEvent: EventEmitter<Message> = new EventEmitter<Message>();
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
 
-  @Input() selectedHistory: MessageHistory = new MessageHistory();
-  @Input() sendingClientMeta: ClientMeta = new ClientMeta();
-  @Input() onProfile: boolean
-  @Input() showLoading: boolean = false;
-  @Input() showActionProgressBar: boolean = false;
-  @Input() refreshing: boolean = false;
-  @Input() showControlButton: boolean = false;
-
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
   @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
+  public initializingHistoryInfo: boolean;
   public isAdmin: boolean;
   public markingRead: boolean = false;
 
-  ngOnInit(): void {
-    this.auth.isAdmin.subscribe((admin: boolean) => {
-      this.isAdmin = admin;
-    });
+  public messageHistory: MessageHistory = new MessageHistory();
 
+  ngOnInit(): void {
+    this.initializingHistoryInfo = true;
+    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((historyRes) => {
+      this.initializingHistoryInfo = false;
+    }, err => {
+      this.initializingHistoryInfo = false;
+      console.group();
+      console.log("An error has occured getting the history for the chat window!");
+      console.log(err);
+      console.groupEnd();
+    });
   }
   public totalHistory() : Array<Message>
   {
     let allMessages: Array<Message> = []
-    this.selectedHistory.recieverMessages.forEach((message: Message) => {
+    this.messageHistory.recieverMessages.forEach((message: Message) => {
       allMessages.push(message);
     });
-    this.selectedHistory.subjectMessages.forEach((message: Message) => {
+    this.messageHistory.subjectMessages.forEach((message: Message) => {
       allMessages.push(message);
     });
     return allMessages.sort((a: Message, b: Message) => {
@@ -90,22 +104,22 @@ export class ContactPanelComponent implements OnInit{
     var messageIndex = undefined;
     if(newMessage.subjectMessage)
     {
-      messageIndex = this.selectedHistory.subjectMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
-      this.selectedHistory.subjectMessages[messageIndex] = newMessage
+      messageIndex = this.messageHistory.subjectMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
+      this.messageHistory.subjectMessages[messageIndex] = newMessage
     }
     else
     {
-      messageIndex = this.selectedHistory.recieverMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
-      this.selectedHistory.recieverMessages[messageIndex] = newMessage
+      messageIndex = this.messageHistory.recieverMessages.findIndex((message: Message) => {return message.chatMessageID == newMessage.chatMessageID});
+      this.messageHistory.recieverMessages[messageIndex] = newMessage
     }
-    this.selectedHistory.unreadCount -= 1;
+    this.messageHistory.unreadCount -= 1;
 
-    this.historyUpdatedEvent.emit(this.selectedHistory);
+    this.historyUpdatedEvent.emit(this.messageHistory);
     this.messageUpdatedEvent.emit(newMessage);
   }
   public showRead(message: Message) : boolean
   {
-    return (message.isMessageRead && message.senderClient.clientID != this.selectedHistory.subjectClient.clientID && this.isAdmin && !message.fromAdmin) ||
+    return (message.isMessageRead && message.senderClient.clientID != this.messageHistory.subjectClient.clientID && this.isAdmin && !message.fromAdmin) ||
     (!this.isAdmin && message.fromAdmin && this.onProfile && message.isMessageRead)
   }
   public showButton(message: Message) : boolean
@@ -115,6 +129,6 @@ export class ContactPanelComponent implements OnInit{
   }
   public emitAgentControlClicked()
   {
-    this.openAgentControlEvent.emit(this.selectedHistory.assignmentRecieverClient)
+    this.openAgentControlEvent.emit(this.messageHistory.assignmentRecieverClient)
   }
 }
