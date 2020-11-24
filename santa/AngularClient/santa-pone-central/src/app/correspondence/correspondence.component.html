@@ -22,24 +22,17 @@
   </app-selected-anon>
 </div>
 <div class="overlay-container" *ngIf="showChat">
-    <app-contact-panel #messages
-      (messageUpdatedEvent)="true"
-      (historyUpdatedEvent)="updateSpecificChat($event)"
-      (manualRefreshClickedEvent)="manualRefreshSelectedChat($event, false)"
-      [refreshing]="refreshing"
-      [showActionProgressBar]="postingMessage || puttingMessage"
-      [showLoading]="gettingAllChats || gettingSelectedHistory && selectedHistory.subjectMessages.length + selectedHistory.recieverMessages.length == 0"
-      [selectedHistory]="selectedHistory"
-      [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
-    <app-input-control
-      (sendClicked)="send($event); messages.scrollToBottom();"
-      (readAllAction)="readAll()"
-      [relationshipID]="selectedHistory.relationXrefID"
-      [eventType]="selectedHistory.eventType"
-      [sender]="adminSenderMeta"
-      [reciever]="selectedRecieverMeta"
-      [disabled]="postingMessage">
-    </app-input-control>
+  <app-chat
+    (historyUpdatedEvent)="updateSpecificChat($event)",
+    (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)",
+    (sendClickedEvent)="send($event);",
+    (readAllClickedEvent)="readAll()",
+    [chatInfoContainer]="chatInfoContainer"
+    [inputDisabled]="postingMessage"
+    [showChatLoading]="gettingAllChats || gettingSelectedHistory"
+    [showChatActionProgressBar]="postingMessage || puttingMessage"
+    [chatRefreshing]="refreshing">
+  </app-chat>
 </div>
 
 <div id="info-div">

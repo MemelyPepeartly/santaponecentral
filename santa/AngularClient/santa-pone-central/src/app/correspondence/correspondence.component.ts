@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
@@ -14,6 +14,7 @@ import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from '../shared/constants/organizerEmailConstants.enum';
 import { EventConstants } from '../shared/constants/eventConstants.enum';
+import { ChatComponent } from '../shared/chat/chat.component';
 
 
 
@@ -32,9 +33,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     public gatherer: GathererService,
     public mapper: MapService) { }
 
-  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
-  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
   public profile: any;
   public subject: BaseClient = new BaseClient();
@@ -68,7 +68,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public agentControlID: string;
   public selectedAnonMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
-  public selectedHistory: MessageHistory = new MessageHistory();
+  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   public async ngOnInit() {
     this.initializing = true;
@@ -93,9 +93,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     });
     this.ChatService.softGettingAllChats.subscribe((status: boolean) => {
       this.softGettingAllChats = status;
-    });
-    this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
-      this.gettingSelectedHistory = status;
     });
 
     /* -- Data subscribes -- */
@@ -124,11 +121,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     // Assignment Statuses
     this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
       this.assignmentStatuses = assignmentStatusArray;
-    });
-
-    // Selected history
-    this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
-      this.selectedHistory = history;
     });
 
     this.initializing = false;
@@ -172,20 +164,22 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     await this.SantaApiPost.postMessage(messageResponse).toPromise();
 
     this.updateOnClickaway = true;
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
-    this.inputComponent.clearForm();
+    // SANTAHERE needs updating
+    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
+    //this.inputComponent.clearForm();
 
-    this.updateSpecificChat(this.selectedHistory);
+    //this.updateSpecificChat(this.selectedHistory);
 
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.postingMessage = false;
 
   }
+  // SANTAHERE needs updating
   public async readAll()
   {
     this.puttingMessage = true;
-
+    /*
     let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
     let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
     unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
@@ -197,7 +191,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
 
     this.updateSpecificChat(this.selectedHistory);
-
+    */
     this.puttingMessage = false;
   }
   public async hideWindow()
@@ -211,10 +205,12 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       if(this.chatComponent)
       {
         // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
-        if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
+        if(!this.chatComponent.chatWindowComponent.markingRead && !this.chatComponent.inputComponent.disabled && this.showChat == true)
         {
           this.showChat = false;
-          this.selectedHistory = new MessageHistory();
+          // SANTAHERE needs updating
+          //this.selectedHistory = new MessageHistory();
+
           // If the updater variable is true, refresh on clicking away
           if(this.updateOnClickaway)
           {
@@ -252,7 +248,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     this.updateOnClickaway = true;
     if(!skipSelected)
     {
-      await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+      // SANTAHERE needs updating
+      //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
     }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
@@ -279,8 +276,9 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
   {
     this.refreshing = true;
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    // SANTAHERE needs updating
+    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     this.refreshing = false;
   }
   public async manualRefresh(isSoftUpdate: boolean = false)
@@ -304,10 +302,13 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
   public async openSelectedChat(history: MessageHistory)
   {
+    // SANTAHERE needs updating
+    /*
     this.selectedHistory = history;
     this.selectedRecieverMeta = history.conversationClient;
     this.showChat = true;
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    */
   }
   public openClientCard(clientMeta: ClientMeta)
   {

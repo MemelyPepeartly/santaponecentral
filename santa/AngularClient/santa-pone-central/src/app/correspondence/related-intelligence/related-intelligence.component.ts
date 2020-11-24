@@ -6,7 +6,7 @@ import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src
 import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from 'src/app/shared/input-control/input-control.component';
 import { BaseClient, Client } from 'src/classes/client';
-import { ClientMeta, MessageHistory } from 'src/classes/message';
+import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 
 @Component({
@@ -34,6 +34,7 @@ export class RelatedIntelligenceComponent implements OnInit {
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
 
   public selectedHistory: MessageHistory;
+  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   public refreshing: boolean = false;
   public postingMessage: boolean = false;
@@ -81,8 +82,9 @@ export class RelatedIntelligenceComponent implements OnInit {
   public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
   {
     this.refreshing = true;
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    // SANTAHERE needs updating
+    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
+    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     this.refreshing = false;
   }
   public getGeneralHistory() : MessageHistory
