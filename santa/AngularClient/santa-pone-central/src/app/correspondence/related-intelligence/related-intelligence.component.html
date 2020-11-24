@@ -42,26 +42,17 @@
       <!-- Selected history chat -->
       <mat-card class="chatCard mat-elevation-z3" *ngIf="selectedHistory != undefined">
         <mat-card-content>
-          <app-contact-panel #messages
-            (openAgentControlEvent)="emitAgentControlSelected($event)"
-            (messageUpdatedEvent)="true"
-            (historyUpdatedEvent)="updateSpecificChat($event)"
-            (manualRefreshClickedEvent)="manualRefreshSelectedChat(false)"
-            [showControlButton]="true"
-            [refreshing]="false"
-            [showActionProgressBar]="postingMessage"
-            [showLoading]="false"
-            [selectedHistory]="selectedHistory"
-            [sendingClientMeta]="adminSenderMeta"></app-contact-panel>
-          <app-input-control
-            (sendClicked)="send($event)"
-            (readAllAction)="readAll()"
-            [relationshipID]="selectedHistory.relationXrefID"
-            [eventType]="selectedHistory.eventType"
-            [sender]="adminSenderMeta"
-            [reciever]="selectedHistory.conversationClient"
-            [disabled]="postingMessage">
-          </app-input-control>
+          <app-chat
+            (historyUpdatedEvent)="updateSpecificChat($event)",
+            (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)",
+            (sendClickedEvent)="send($event);",
+            (readAllClickedEvent)="readAll()",
+            [chatInfoContainer]="chatInfoContainer"
+            [inputDisabled]="postingMessage"
+            [showChatLoading]="false"
+            [showChatActionProgressBar]="postingMessage"
+            [chatRefreshing]="false">
+          </app-chat>
         </mat-card-content>
       </mat-card>
     </mat-card-content>
