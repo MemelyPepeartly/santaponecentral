@@ -1,0 +1,15 @@
+<app-contact-panel #messages
+  (messageUpdatedEvent)="true"
+  (historyUpdatedEvent)="emitHistoryUpdatedEvent($event)"
+  (manualRefreshClickedEvent)="emitManualRefresh($event)"
+  [refreshing]="chatRefreshing"
+  [showActionProgressBar]="showChatActionProgressBar"
+  [showLoading]="showChatLoading"
+  [chatInfoContainer]="chatInfoContainer">
+</app-contact-panel>
+<app-input-control
+  (sendClicked)="emitSend($event);"
+  (readAllAction)="emitReadAllClicked()"
+  [chatInfoContainer]="chatInfoContainer"
+  [disabled]="inputDisabled">
+</app-input-control>

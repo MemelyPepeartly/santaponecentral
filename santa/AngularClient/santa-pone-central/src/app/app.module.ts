@@ -68,6 +68,7 @@ import { YuleLogComponent } from './admin-control/yule-log/yule-log.component';
 import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.component';
 import { ClientItemComponent } from './headquarters/client-item/client-item.component';
 import { RelatedIntelligenceComponent } from './correspondence/related-intelligence/related-intelligence.component';
+import { ChatComponent } from './shared/chat/chat.component';
 
 
 @NgModule({
@@ -124,7 +125,8 @@ import { RelatedIntelligenceComponent } from './correspondence/related-intellige
       YuleLogComponent,
       LogTableComponent,
       ClientItemComponent,
-      RelatedIntelligenceComponent
+      RelatedIntelligenceComponent,
+      ChatComponent
    ],
    entryComponents: [
       LoginComponent
