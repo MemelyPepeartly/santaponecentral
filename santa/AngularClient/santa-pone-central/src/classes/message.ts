@@ -51,4 +51,22 @@ export class ClientChatMeta {
     hasAccount: boolean;
     isAdmin: boolean;
 }
-
+/**
+ * This is the container of information to help minimize confusion on ID's needed to parse histories for the chat window. It contains a number of different
+ *
+ * @param messageSenderID This is the ID of the person sending
+ * @param messageRecieverID This is the ID of the person recieving the messages
+ * @param senderIsAdmin This is a boolean that dictates if the sender is or is not an admin. This is false by default.
+ * @param conversationClientID This is the ID of the owner of the chat history. That is to say, the ID of the agent who holds the general chat or assignment
+ * @param relationshipXrefID This is the ID of the assignment relationship if one exists
+ * @param eventTypeID This is the ID of the event of the assignment relationship if one exists
+ *
+ */
+export class ChatInfoContainer {
+  messageSenderID: string;
+  messageRecieverID: string;
+  senderIsAdmin: boolean = false;
+  conversationClientID: string;
+  relationshipXrefID?: string;
+  eventTypeID?: string;
+}
