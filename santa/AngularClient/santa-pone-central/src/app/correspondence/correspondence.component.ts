@@ -49,14 +49,11 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public softGettingAllChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
-  public puttingMessage: boolean = false;
-  public refreshing: boolean = false;
   public initializing: boolean;
 
   public showClientCard: boolean = false;
   public showChat: boolean = false;
   public showRelatedIntelligenceCard: boolean = false;
-  public postingMessage: boolean = false;
   public updateOnClickaway: boolean = false;
   public clickAwayLocked: boolean = false;
   public get showOverlay() : boolean
@@ -86,6 +83,16 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       hasAccount: this.subject.hasAccount,
       isAdmin: this.subject.isAdmin
     };
+    this.chatInfoContainer =
+    {
+      senderIsAdmin: this.adminSenderMeta.isAdmin,
+      messageSenderID: this.adminSenderMeta.clientID,
+      // Values here are null and undefined until a chat is selected
+      messageRecieverID: undefined,
+      conversationClientID: undefined,
+      eventTypeID: null,
+      relationshipXrefID: null,
+    }
 
     // Boolean subscribes
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
@@ -156,43 +163,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     return this.allChats.filter((history: MessageHistory) => {
       return history.relationXrefID == null;
     });
-  }
-  public async send(messageResponse: MessageApiResponse)
-  {
-    this.postingMessage = true;
-
-    await this.SantaApiPost.postMessage(messageResponse).toPromise();
-
-    this.updateOnClickaway = true;
-    // SANTAHERE needs updating
-    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
-    //this.inputComponent.clearForm();
-
-    //this.updateSpecificChat(this.selectedHistory);
-
-    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.postingMessage = false;
-
-  }
-  // SANTAHERE needs updating
-  public async readAll()
-  {
-    this.puttingMessage = true;
-    /*
-    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
-    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
-    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
-
-    await this.SantaApiPut.putMessageReadAll(response).toPromise();
-    this.updateOnClickaway = true;
-
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, true);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.updateSpecificChat(this.selectedHistory);
-    */
-    this.puttingMessage = false;
   }
   public async hideWindow()
   {
@@ -273,14 +243,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       console.log("Could not find chat to update");
     }
   }
-  public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
-  {
-    this.refreshing = true;
-    // SANTAHERE needs updating
-    //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    //setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    this.refreshing = false;
-  }
   public async manualRefresh(isSoftUpdate: boolean = false)
   {
     await this.ChatService.gatherAllChats(this.subject.clientID, isSoftUpdate);
@@ -293,22 +255,20 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
   public async openRelatedIntelligenceCard(meta: ClientMeta)
   {
-    /* SANTAHERE depreciated
-    this.showClientCard = true;
-    */
    this.showRelatedIntelligenceCard = true;
    this.selectedAnonID = meta.clientID;
    this.selectedAnonMeta = meta;
   }
   public async openSelectedChat(history: MessageHistory)
   {
-    // SANTAHERE needs updating
-    /*
-    this.selectedHistory = history;
-    this.selectedRecieverMeta = history.conversationClient;
+    this.chatInfoContainer.conversationClientID = history.conversationClient.clientID;
+    this.chatInfoContainer.messageRecieverID = history.conversationClient.clientID;
+    this.chatInfoContainer.relationshipXrefID = history.relationXrefID;
+    if(history.relationXrefID != null && history.relationXrefID != undefined)
+    {
+      this.chatInfoContainer.eventTypeID = history.eventType.eventTypeID
+    }
     this.showChat = true;
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    */
   }
   public openClientCard(clientMeta: ClientMeta)
   {

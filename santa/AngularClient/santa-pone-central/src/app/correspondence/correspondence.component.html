@@ -24,14 +24,14 @@
 <div class="overlay-container" *ngIf="showChat">
   <app-chat
     (historyUpdatedEvent)="updateSpecificChat($event)",
-    (manualRefreshClickedEvent)="manualRefreshSelectedChat($event)",
-    (sendClickedEvent)="send($event);",
-    (readAllClickedEvent)="readAll()",
+    (manualRefreshClickedEvent)="false",
+    (sendClickedEvent)="false",
+    (readAllClickedEvent)="false",
     [chatInfoContainer]="chatInfoContainer"
-    [inputDisabled]="postingMessage"
+    [inputDisabled]="false"
     [showChatLoading]="gettingAllChats || gettingSelectedHistory"
-    [showChatActionProgressBar]="postingMessage || puttingMessage"
-    [chatRefreshing]="refreshing">
+    [showChatActionProgressBar]="false"
+    [chatRefreshing]="false">
   </app-chat>
 </div>
 
