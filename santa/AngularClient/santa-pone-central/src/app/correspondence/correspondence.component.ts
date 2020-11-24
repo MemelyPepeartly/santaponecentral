@@ -283,9 +283,9 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
     this.refreshing = false;
   }
-  public async manualRefresh()
+  public async manualRefresh(isSoftUpdate: boolean = false)
   {
-    await this.ChatService.gatherAllChats(this.subject.clientID);
+    await this.ChatService.gatherAllChats(this.subject.clientID, isSoftUpdate);
   }
   public filterRelatedChats() : Array<MessageHistory>
   {

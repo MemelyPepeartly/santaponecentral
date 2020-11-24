@@ -71,6 +71,7 @@ export class RelatedIntelligenceComponent implements OnInit {
     {
       this.setSelectedHistory(newHistory);
     }
+    this.messageSentEvent.emit(newHistory);
 
     this.inputComponent.clearForm();
     setTimeout(() => this.chatComponent.scrollToBottom(), 0);
