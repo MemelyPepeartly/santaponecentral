@@ -36,12 +36,14 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
   @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
+  /** Auth profile for the person accessing the component */
   public profile: any;
+  /** Base client object of the subject. This will be the same as the sender meta, just a different type for input reasons on other components */
   public subject: BaseClient = new BaseClient();
+  /** Meta of the sending admin */
   public adminSenderMeta: ClientMeta = new ClientMeta();
 
   public allChats: Array<MessageHistory> = []
-  public eventChats: Array<MessageHistory> = []
   public events: Array<EventType> = []
   public assignmentStatuses: Array<AssignmentStatus> = [];
 
@@ -61,10 +63,10 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     return this.showClientCard || this.showChat || this.showRelatedIntelligenceCard
   }
 
-  public selectedAnonID: string;
   public agentControlID: string;
   public selectedAnonMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
+  public selectedFilteredChats: Array<MessageHistory> = [];
   public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   public async ngOnInit() {
@@ -83,6 +85,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       hasAccount: this.subject.hasAccount,
       isAdmin: this.subject.isAdmin
     };
+
     this.chatInfoContainer =
     {
       senderIsAdmin: this.adminSenderMeta.isAdmin,
@@ -92,7 +95,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       conversationClientID: undefined,
       eventTypeID: null,
       relationshipXrefID: null,
-    }
+    };
+
 
     // Boolean subscribes
     this.ChatService.gettingAllChats.subscribe((status: boolean) => {
@@ -129,12 +133,11 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
       this.assignmentStatuses = assignmentStatusArray;
     });
-
-    this.initializing = false;
-
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllAssignmentStatuses();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
+
+    this.initializing = false;
 
   }
   ngOnDestroy(): void {
@@ -205,7 +208,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.selectedAnonID = undefined;
       this.selectedAnonMeta = new ClientMeta();
     }
   }
@@ -250,14 +252,13 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public filterRelatedChats() : Array<MessageHistory>
   {
     return this.allChats.filter((history: MessageHistory) => {
-      return history.conversationClient.clientID == this.selectedAnonID;
+      return history.conversationClient.clientID == this.selectedAnonMeta.clientID;
     });
   }
   public async openRelatedIntelligenceCard(meta: ClientMeta)
   {
-   this.showRelatedIntelligenceCard = true;
-   this.selectedAnonID = meta.clientID;
    this.selectedAnonMeta = meta;
+   this.showRelatedIntelligenceCard = true;
   }
   public async openSelectedChat(history: MessageHistory)
   {
