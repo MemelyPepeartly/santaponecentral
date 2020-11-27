@@ -89,6 +89,15 @@ export class ContactPanelComponent implements OnInit{
   {
     // Lets any parent components know that the user clicked manual refresh
     this.manualRefreshClickedEvent.emit(true);
+    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((history) => {
+      this.messageHistory = this.ApiMapper.mapMessageHistory(history);
+      this.historyUpdatedEvent.emit(this.messageHistory);
+    }, err => {
+      console.group();
+      console.log("An error has occured getting the history for the chat window!");
+      console.log(err);
+      console.groupEnd();
+    })
   }
   public async markRead(message: Message)
   {
