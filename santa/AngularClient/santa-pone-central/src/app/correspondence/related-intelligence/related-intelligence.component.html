@@ -11,7 +11,7 @@
     <mat-card-content>
       <mat-selection-list class="historySelection mat-elevation-z3" [multiple]="false" *ngIf="clientHistories.length > 0">
         <mat-list-option
-          (click)="setSelectedHistory(null)"
+          (click)="setInfoContainerValues(getGeneralHistory())"
           [matBadge]="getGeneralHistory().unreadCount"
           [matBadgeHidden]="getGeneralHistory().unreadCount == 0"><span>General Intelligence</span></mat-list-option>
         <mat-divider [inset]="true"></mat-divider>
@@ -21,14 +21,14 @@
             [matBadge]="history.unreadCount"
             [matBadgeHidden]="history.unreadCount == 0"
             [value]="history"
-            (click)="setSelectedHistory(history)">
+            (click)="setInfoContainerValues(history)">
             <span>{{history.assignmentRecieverClient.clientNickname}}</span>
             <mat-card-subtitle>{{history.eventType.eventDescription}}</mat-card-subtitle>
           </mat-list-option>
         </ng-container>
       </mat-selection-list>
 
-      <mat-card class="chatCard mat-elevation-z3" *ngIf="selectedHistory == undefined">
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="!showSelectedChat">
         <mat-card-content>
           <mat-divider [inset]="true"></mat-divider>
 
@@ -39,22 +39,35 @@
         </mat-card-content>
       </mat-card>
 
+      <p>Conv {{ chatInfoContainer.conversationClientID }}</p>
+      <p>Sender {{ chatInfoContainer.messageSenderID }}</p>
+      <p>Reciever {{ chatInfoContainer.messageRecieverID }}</p>
+      <p>Event {{ chatInfoContainer.eventTypeID }}</p>
+      <p>Relationship {{ chatInfoContainer.relationshipXrefID }}</p>
+
+    <app-chat *ngIf="showSelectedChat && !this.initializing"
+      (historyUpdatedEvent)="updateSpecificChat($event)",
+      [inputDisabled]="false"
+      [showChatLoading]="false"
+      [showChatActionProgressBar]="false"
+      [chatRefreshing]="false">
+    </app-chat>
+
       <!-- Selected history chat -->
-      <mat-card class="chatCard mat-elevation-z3" *ngIf="selectedHistory != undefined">
-        <mat-card-content>
-          <app-chat
-            (historyUpdatedEvent)="updateSpecificChat($event)",
-            (manualRefreshClickedEvent)="false",
-            (sendClickedEvent)="false",
-            (readAllClickedEvent)="false",
-            [chatInfoContainer]="chatInfoContainer"
-            [inputDisabled]="false"
-            [showChatLoading]="false"
-            [showChatActionProgressBar]="false"
-            [chatRefreshing]="false">
-          </app-chat>
-        </mat-card-content>
-      </mat-card>
+      <!-- <ng-container *ngIf="showSelectedChat">
+        <mat-card class="chatCard mat-elevation-z3" >
+          <mat-card-content>
+            <app-chat
+              (historyUpdatedEvent)="updateSpecificChat($event)",
+              [chatInfoContainer]="chatInfoContainer"
+              [inputDisabled]="false"
+              [showChatLoading]="false"
+              [showChatActionProgressBar]="false"
+              [chatRefreshing]="false">
+            </app-chat>
+          </mat-card-content>
+        </mat-card>
+      </ng-container> -->
     </mat-card-content>
   </mat-card>
 </ng-scrollbar>

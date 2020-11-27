@@ -26,6 +26,7 @@ export class RelatedIntelligenceComponent implements OnInit {
   @Input() adminSenderMeta: ClientMeta = new ClientMeta();
   @Input() subject: BaseClient = new BaseClient();
   @Input() selectedAnonMeta: ClientMeta = new ClientMeta();
+  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
   @Output() messageSentEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
@@ -33,25 +34,34 @@ export class RelatedIntelligenceComponent implements OnInit {
   @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
 
-  public selectedHistory: MessageHistory;
-  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
-
   public refreshing: boolean = false;
   public postingMessage: boolean = false;
+  public showSelectedChat: boolean = false;
+  public initializing: boolean = false;
 
   ngOnInit(): void {
+    this.initializing = true;
+    this.chatInfoContainer =
+    {
+      conversationClientID: this.selectedAnonMeta.clientID,
+      messageRecieverID: this.selectedAnonMeta.clientID,
+      messageSenderID: this.adminSenderMeta.clientID,
+      relationshipXrefID: null,
+      eventTypeID: null,
+      senderIsAdmin: this.adminSenderMeta.isAdmin
+    }
+    this.chatComponent.chatInfoContainer = this.chatInfoContainer
+    this.initializing = false;
   }
-  setSelectedHistory(history: MessageHistory)
+  public setInfoContainerValues(history: MessageHistory)
   {
-    if(history != null)
-    {
-      this.selectedHistory = history;
-    }
-    else
-    {
-      this.selectedHistory = this.getGeneralHistory();
-    }
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
+    this.chatInfoContainer.conversationClientID = history.conversationClient.clientID;
+    this.chatInfoContainer.messageRecieverID = history.conversationClient.clientID;
+    this.chatInfoContainer.relationshipXrefID = history.relationXrefID;
+    this.chatInfoContainer.eventTypeID = history.eventType.eventTypeID;
+    console.log(this.chatInfoContainer);
+
+    this.showSelectedChat = true;
   }
   public getGeneralHistory() : MessageHistory
   {
