@@ -46,12 +46,12 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> GetClientIDForProfile(string email)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            Logic.Objects.Client logicStaticClient = await repository.GetStaticClientObjectByEmail(email);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient logicBaseClient = await repository.GetBasicClientInformationByEmail(email);
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            if (logicStaticClient.clientID == checkerClient.clientID)
+            if (logicBaseClient.clientID == checkerClient.clientID)
             {
-                return Ok(logicStaticClient.clientID);
+                return Ok(logicBaseClient.clientID);
             }
             else
             {
