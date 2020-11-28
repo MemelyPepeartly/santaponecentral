@@ -39,35 +39,15 @@
         </mat-card-content>
       </mat-card>
 
-      <p>Conv {{ chatInfoContainer.conversationClientID }}</p>
-      <p>Sender {{ chatInfoContainer.messageSenderID }}</p>
-      <p>Reciever {{ chatInfoContainer.messageRecieverID }}</p>
-      <p>Event {{ chatInfoContainer.eventTypeID }}</p>
-      <p>Relationship {{ chatInfoContainer.relationshipXrefID }}</p>
-
-    <app-chat *ngIf="showSelectedChat && !this.initializing"
-      (historyUpdatedEvent)="updateSpecificChat($event)",
-      [inputDisabled]="false"
-      [showChatLoading]="false"
-      [showChatActionProgressBar]="false"
-      [chatRefreshing]="false">
-    </app-chat>
-
       <!-- Selected history chat -->
-      <!-- <ng-container *ngIf="showSelectedChat">
-        <mat-card class="chatCard mat-elevation-z3" >
-          <mat-card-content>
-            <app-chat
-              (historyUpdatedEvent)="updateSpecificChat($event)",
-              [chatInfoContainer]="chatInfoContainer"
-              [inputDisabled]="false"
-              [showChatLoading]="false"
-              [showChatActionProgressBar]="false"
-              [chatRefreshing]="false">
-            </app-chat>
-          </mat-card-content>
-        </mat-card>
-      </ng-container> -->
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="showSelectedChat">
+        <mat-card-content>
+          <app-chat
+            (historyUpdatedEvent)="updateSpecificChat($event)"
+            [chatInfoContainer]="chatInfoContainer">
+          </app-chat>
+        </mat-card-content>
+      </mat-card>
     </mat-card-content>
   </mat-card>
 </ng-scrollbar>
