@@ -1,6 +1,6 @@
 
 <div id="contact-div">
-    <mat-card class="list-card mat-elevation-z5">
+    <mat-card class="list-card mat-elevation-z5" *ngIf="!showLoading">
         <mat-card-header>
             <mat-card-title>Contact History</mat-card-title>
             <mat-card-subtitle>Private chat between {{ messageHistory.conversationClient.clientNickname }} and the event organizers</mat-card-subtitle>
@@ -58,5 +58,14 @@
             </ng-scrollbar>
 
         </mat-card-content>
+    </mat-card>
+    <mat-card class="list-card mat-elevation-z5" *ngIf="showLoading">
+      <mat-card-header>
+        <mat-card-title>Loading Chat History</mat-card-title>
+        <mat-card-subtitle>Our ponies are very hard at work getting this chat for you</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <app-loading-spin [spinnerType]="1"></app-loading-spin>
+      </mat-card-content>
     </mat-card>
 </div>
