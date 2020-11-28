@@ -3,7 +3,7 @@ import { ProfileApiService, SantaApiGetService, SantaApiPostService, SantaApiPut
 import { MapService } from '../services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
-import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { ProfileService } from '../services/profile.service';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
@@ -12,6 +12,7 @@ import { EventType } from 'src/classes/eventType';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { ChatComponent } from '../shared/chat/chat.component';
 
 @Component({
   selector: 'app-profile',
@@ -30,8 +31,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
-  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
-  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
   public clientID: string;
   public profile: Profile = new Profile();
@@ -45,6 +45,7 @@ export class ProfileComponent implements OnInit {
   public events: Array<EventType> = [];
   public surveys: Array<Survey> = [];
   public adminRecieverMeta: ClientMeta = new ClientMeta;
+  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   public showOverlay: boolean = false;
   public showChat: boolean = false;
@@ -76,9 +77,6 @@ export class ProfileComponent implements OnInit {
     });
     this.profileService.gettingUnloadedChatHistories.subscribe((status: boolean) => {
       this.gettingAllHistories = status;
-    });
-    this.profileService.gettingSelectedHistory.subscribe((status: boolean) => {
-      this.gettingSelectedHistory = status;
     });
     this.profileService.gettingAssignments.subscribe((status: boolean) => {
       this.gettingAssignments = status;
@@ -112,11 +110,6 @@ export class ProfileComponent implements OnInit {
     // Chat histories subscribe
     this.profileService.unloadedChatHistories.subscribe((histories: Array<MessageHistory>) => {
       this.histories = histories;
-    });
-
-    // Selected history subscribe
-    this.profileService.selectedHistory.subscribe((selectedHistory: MessageHistory) => {
-      this.selectedHistory = selectedHistory;
     });
 
     // General history subscribe
@@ -160,75 +153,29 @@ export class ProfileComponent implements OnInit {
   public async showSelectedChat(history: MessageHistory)
   {
     this.showOverlay = true;
+    this.chatInfoContainer =
+    {
+      conversationClientID: this.profile.clientID,
+      messageSenderID: this.profile.clientID,
+      messageRecieverID: null,
+      eventTypeID: history == null ? null : history.eventType.eventTypeID,
+      relationshipXrefID: history == null ? null : history.relationXrefID,
+      senderIsAdmin: false,
+    }
     this.showChat = true;
-
-    // If the history object from the event is null, get the general history
-    if(history == null)
-    {
-      await this.profileService.getSelectedHistory(this.profile.clientID, this.profile.clientID, null);
-      setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    }
-    else
-    {
-      await this.profileService.getSelectedHistory(history.conversationClient.clientID, this.profile.clientID, history.relationXrefID);
-      setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    }
   }
   public async hideWindow()
   {
-    if(!this.chatComponent.markingRead && !this.postingMessage && !this.puttingMessage)
+    // SANTAHERE need checker for locking hide when marking message as read
+    if(!this.postingMessage && !this.puttingMessage)
     {
       this.selectedHistory = new MessageHistory();
-      this.manualRefreshProfile(true);
+      this.manualRefreshProfileAssignments(true);
       this.showChat = false;
       this.showOverlay = false;
     }
   }
-  public async send(messageResponse: MessageApiResponse)
-  {
-    this.postingMessage = true;
-
-    await this.SantaApiPost.postMessage(messageResponse).toPromise();
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, true);
-    this.inputComponent.clearForm();
-
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.postingMessage = false;
-  }
-  public async readAll()
-  {
-    this.puttingMessage = true;
-
-    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
-
-    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
-    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
-
-    await this.SantaApiPut.putMessageReadAll(response).toPromise().catch((err) => {console.log(err)});
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, true);
-
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.puttingMessage = false;
-
-
-  }
-  public async softRefreshSelectedChat(isSoftUpdate: boolean)
-  {
-    this.softUpdating = true;
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate)
-    this.softUpdating = false;
-  }
-  public async manualRefreshSelectedChat(isSoftUpdate: boolean)
-  {
-    this.refreshing = true;
-    await this.profileService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.profile.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    this.refreshing = false;
-  }
-  public async manualRefreshProfile(isSoftUpdate: boolean = false)
+  public async manualRefreshProfileAssignments(isSoftUpdate: boolean = false)
   {
     this.refreshingHistories = true;
     this.gettingAllHistories = !isSoftUpdate;
