@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MapService } from 'src/app/services/mapper.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ChatInfoContainer, MessageHistory } from 'src/classes/message';
@@ -11,18 +11,18 @@ import { InputControlComponent } from '../input-control/input-control.component'
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnChanges {
 
   constructor(public mapper: MapService,
     public SantaApiGet: SantaApiGetService,
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService) { }
 
-  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
+  @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() inputDisabled: boolean;
-  @Input() showChatLoading: boolean;
+  @Input() showChatLoading: boolean = false;
   @Input() showChatActionProgressBar: boolean;
-  @Input() chatRefreshing: boolean;
+  @Input() chatRefreshing: boolean = false;
 
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -33,6 +33,15 @@ export class ChatComponent implements OnInit {
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
 
   ngOnInit(): void {
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("Changes");
+
+    if(changes.chatInfoContainer && !changes.chatInfoContainer.isFirstChange())
+    {
+      setTimeout(()=> this.manualRefreshChat(false) ,0);
+
+    }
   }
   emitHistoryUpdatedEvent(messageHistoryEvent: MessageHistory)
   {
@@ -51,6 +60,20 @@ export class ChatComponent implements OnInit {
   {
     this.readAllClickedEvent.emit(true);
     this.readAll();
+  }
+  manualRefreshChat(isSoftRefresh: boolean = false)
+  {
+    this.chatWindowComponent.manualRefreshChat(isSoftRefresh);
+  }
+  refreshStatusAction(refreshEvent: boolean)
+  {
+    setTimeout(()=> this.chatRefreshing = refreshEvent ,0);
+  }
+  loadStatusAction(loadEvent: boolean)
+  {
+    console.log(loadEvent);
+
+    setTimeout(()=> this.showChatLoading = loadEvent ,0);
   }
   send(messageApiResponseEvent: MessageApiResponse)
   {
