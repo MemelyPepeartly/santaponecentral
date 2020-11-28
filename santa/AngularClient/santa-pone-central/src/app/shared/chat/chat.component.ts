@@ -35,12 +35,9 @@ export class ChatComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
   ngOnChanges(changes: SimpleChanges) {
-    console.log("Changes");
-
     if(changes.chatInfoContainer && !changes.chatInfoContainer.isFirstChange())
     {
       setTimeout(()=> this.manualRefreshChat(false) ,0);
-
     }
   }
   emitHistoryUpdatedEvent(messageHistoryEvent: MessageHistory)
@@ -68,17 +65,21 @@ export class ChatComponent implements OnInit, OnChanges {
   refreshStatusAction(refreshEvent: boolean)
   {
     setTimeout(()=> this.chatRefreshing = refreshEvent ,0);
+    if(this.showChatActionProgressBar && refreshEvent == false)
+    {
+      this.showChatActionProgressBar = false;
+    }
   }
   loadStatusAction(loadEvent: boolean)
   {
-    console.log(loadEvent);
-
     setTimeout(()=> this.showChatLoading = loadEvent ,0);
   }
   send(messageApiResponseEvent: MessageApiResponse)
   {
+    this.showChatActionProgressBar = true;
+
     this.SantaApiPost.postMessage(messageApiResponseEvent).subscribe((res) => {
-      // Some action
+      this.chatWindowComponent.manualRefreshChat(true);
     }, err => {
       console.group();
       console.log("An error has occured sending the message");
