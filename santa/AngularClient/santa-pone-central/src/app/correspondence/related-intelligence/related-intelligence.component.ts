@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { ChatService } from 'src/app/services/chat.service';
 import { MapService } from 'src/app/services/mapper.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
+import { ChatComponent } from 'src/app/shared/chat/chat.component';
 import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-panel.component';
 import { InputControlComponent } from 'src/app/shared/input-control/input-control.component';
 import { BaseClient, Client } from 'src/classes/client';
@@ -26,13 +27,12 @@ export class RelatedIntelligenceComponent implements OnInit {
   @Input() adminSenderMeta: ClientMeta = new ClientMeta();
   @Input() subject: BaseClient = new BaseClient();
   @Input() selectedAnonMeta: ClientMeta = new ClientMeta();
-  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
+  @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
   @Output() messageSentEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
 
-  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
-  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
   public refreshing: boolean = false;
   public postingMessage: boolean = false;
@@ -41,24 +41,19 @@ export class RelatedIntelligenceComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializing = true;
-    this.chatInfoContainer =
-    {
-      conversationClientID: this.selectedAnonMeta.clientID,
-      messageRecieverID: this.selectedAnonMeta.clientID,
-      messageSenderID: this.adminSenderMeta.clientID,
-      relationshipXrefID: null,
-      eventTypeID: null,
-      senderIsAdmin: this.adminSenderMeta.isAdmin
-    }
-    this.chatComponent.chatInfoContainer = this.chatInfoContainer
     this.initializing = false;
   }
   public setInfoContainerValues(history: MessageHistory)
   {
-    this.chatInfoContainer.conversationClientID = history.conversationClient.clientID;
-    this.chatInfoContainer.messageRecieverID = history.conversationClient.clientID;
-    this.chatInfoContainer.relationshipXrefID = history.relationXrefID;
-    this.chatInfoContainer.eventTypeID = history.eventType.eventTypeID;
+    this.chatInfoContainer =
+    {
+      messageSenderID: this.chatInfoContainer.messageSenderID,
+      senderIsAdmin: this.chatInfoContainer.senderIsAdmin,
+      conversationClientID: history.conversationClient.clientID,
+      messageRecieverID: history.conversationClient.clientID,
+      relationshipXrefID: history.relationXrefID,
+      eventTypeID: history.eventType.eventTypeID
+    }
     console.log(this.chatInfoContainer);
 
     this.showSelectedChat = true;
