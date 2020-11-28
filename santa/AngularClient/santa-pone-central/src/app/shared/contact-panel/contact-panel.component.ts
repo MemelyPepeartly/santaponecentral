@@ -37,26 +37,40 @@ export class ContactPanelComponent implements OnInit{
   /** Informational container of the chat. This contains the ID's to show what is sending to where */
   @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
+  /** A message was updated */
   @Output() messageUpdatedEvent: EventEmitter<Message> = new EventEmitter<Message>();
+  /** A history was updated */
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
+  /** Manual refresh was clicked */
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** The agent control button was clicked */
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
+  /** The chat is refreshing */
+  @Output() refreshingStatusEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** The chat is loading */
+  @Output() loadingStatusEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @ViewChild('chatFrame', {static: false}) chatFrame: ElementRef;
   @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
-  public initializingHistoryInfo: boolean;
   public isAdmin: boolean;
   public markingRead: boolean = false;
 
   public messageHistory: MessageHistory = new MessageHistory();
 
   ngOnInit(): void {
-    this.initializingHistoryInfo = true;
+    // Emits both for the sake of being in OnInit
+    this.refreshingStatusEvent.emit(true);
+    this.loadingStatusEvent.emit(true);
+
     this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((historyRes) => {
-      this.initializingHistoryInfo = false;
+      this.messageHistory = this.ApiMapper.mapMessageHistory(historyRes);
+      this.refreshingStatusEvent.emit(false);
+      this.loadingStatusEvent.emit(false);
+      setTimeout(()=> this.scrollToBottom() ,0);
     }, err => {
-      this.initializingHistoryInfo = false;
+      this.refreshingStatusEvent.emit(false);
+      this.loadingStatusEvent.emit(false);
       console.group();
       console.log("An error has occured getting the history for the chat window!");
       console.log(err);
@@ -85,14 +99,28 @@ export class ContactPanelComponent implements OnInit{
   public scrollToBottom(): void {
     this.scrollbarRef.scrollTo({ bottom: 0, duration: 500 });
   }
-  public async manualRefreshChat()
+  public manualRefreshChat(isSoftRefresh: boolean = false)
   {
-    // Lets any parent components know that the user clicked manual refresh
+    // Lets any parent components know that the user clicked manual refresh and emits the loading status
     this.manualRefreshClickedEvent.emit(true);
+    this.refreshingStatusEvent.emit(!isSoftRefresh);
+    if(!isSoftRefresh)
+    {
+      this.loadingStatusEvent.emit(true);
+    }
+
+
     this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((history) => {
       this.messageHistory = this.ApiMapper.mapMessageHistory(history);
+
       this.historyUpdatedEvent.emit(this.messageHistory);
+      this.refreshingStatusEvent.emit(false);
+      this.loadingStatusEvent.emit(false);
+      setTimeout(()=> this.scrollToBottom() ,0);
     }, err => {
+      this.refreshingStatusEvent.emit(false);
+      this.loadingStatusEvent.emit(false);
+
       console.group();
       console.log("An error has occured getting the history for the chat window!");
       console.log(err);
