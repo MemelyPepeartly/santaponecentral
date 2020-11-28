@@ -2,6 +2,8 @@
   (messageUpdatedEvent)="true"
   (historyUpdatedEvent)="emitHistoryUpdatedEvent($event)"
   (manualRefreshClickedEvent)="emitManualRefresh($event)"
+  (refreshingStatusEvent)="refreshStatusAction($event)"
+  (loadingStatusEvent)="loadStatusAction($event)"
   [refreshing]="chatRefreshing"
   [showActionProgressBar]="showChatActionProgressBar"
   [showLoading]="showChatLoading"
