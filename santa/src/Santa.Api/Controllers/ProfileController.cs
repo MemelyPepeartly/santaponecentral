@@ -148,7 +148,7 @@ namespace Santa.Api.Controllers
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
+            BaseClient logicStaticClient = await repository.GetBasicClientInformationByID(clientID);
 
             if (logicStaticClient.clientID == checkerClient.clientID)
             {
@@ -172,7 +172,7 @@ namespace Santa.Api.Controllers
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            Client logicStaticClient = await repository.GetStaticClientObjectByID(clientID);
+            BaseClient logicStaticClient = await repository.GetBasicClientInformationByID(clientID);
 
             if (logicStaticClient.clientID == checkerClient.clientID)
             {
