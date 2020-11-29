@@ -31,6 +31,7 @@ export class RelatedIntelligenceComponent implements OnInit {
 
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
   @Output() messageSentEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
+  @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
 
   @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
@@ -54,7 +55,6 @@ export class RelatedIntelligenceComponent implements OnInit {
       relationshipXrefID: history.relationXrefID,
       eventTypeID: history.eventType.eventTypeID
     }
-    console.log(this.chatInfoContainer);
 
     this.showSelectedChat = true;
   }
@@ -70,22 +70,6 @@ export class RelatedIntelligenceComponent implements OnInit {
   }
   public async updateSpecificChat(historyEvent: MessageHistory)
   {
-    var chatIndex = this.clientHistories.findIndex((history: MessageHistory) => {
-      return history.relationXrefID == historyEvent.relationXrefID &&
-      history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
-      history.assignmentRecieverClient.clientID == historyEvent.assignmentRecieverClient.clientID &&
-      history.assignmentSenderClient.clientID == historyEvent.assignmentSenderClient.clientID &&
-      history.eventType.eventTypeID == historyEvent.eventType.eventTypeID
-    });
-
-    if(chatIndex != undefined)
-    {
-      this.clientHistories[chatIndex] = historyEvent;
-    }
-    else
-    {
-      console.log(chatIndex);
-      console.log("Could not find chat to update");
-    }
+    this.historyUpdatedEvent.emit(historyEvent);
   }
 }
