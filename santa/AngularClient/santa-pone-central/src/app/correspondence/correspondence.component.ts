@@ -43,8 +43,8 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   /** Meta of the sending admin */
   public adminSenderMeta: ClientMeta = new ClientMeta();
 
-  public allChats: Array<MessageHistory> = []
-  public events: Array<EventType> = []
+  public allChats: Array<MessageHistory> = [];
+  public events: Array<EventType> = [];
   public assignmentStatuses: Array<AssignmentStatus> = [];
 
   public gettingAllChats: boolean = false;
@@ -143,25 +143,25 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ChatService.clearAllChats();
   }
-  public sortByEvent(eventType: EventType)
+  public sortByEvent(eventType: EventType) : Array<MessageHistory>
   {
     return this.allChats.filter((history: MessageHistory) => {
       return history.eventType.eventTypeID == eventType.eventTypeID;
     });
   }
-  public sortByAssignmentStatus(assignmentStatus: AssignmentStatus)
+  public sortByAssignmentStatus(assignmentStatus: AssignmentStatus) : Array<MessageHistory>
   {
     return this.allChats.filter((history: MessageHistory) => {
       return history.assignmentStatus.assignmentStatusID == assignmentStatus.assignmentStatusID;
     });
   }
-  public sortByUnread()
+  public sortByUnread() : Array<MessageHistory>
   {
     return this.allChats.filter((history: MessageHistory) => {
       return history.unreadCount > 0;
     });
   }
-  public sortByGeneral()
+  public sortByGeneral() : Array<MessageHistory>
   {
     return this.allChats.filter((history: MessageHistory) => {
       return history.relationXrefID == null;
@@ -178,18 +178,9 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       if(this.chatComponent)
       {
         // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
-        if(!this.chatComponent.chatWindowComponent.markingRead && !this.chatComponent.inputComponent.disabled && this.showChat == true)
+        if(this.showChat)
         {
           this.showChat = false;
-          // SANTAHERE needs updating
-          //this.selectedHistory = new MessageHistory();
-
-          // If the updater variable is true, refresh on clicking away
-          if(this.updateOnClickaway)
-          {
-            await this.ChatService.gatherAllChats(this.subject.clientID, true);
-            this.updateOnClickaway = false;
-          }
         }
       }
       // If the selectedAnonComponent is up
@@ -199,45 +190,51 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
         if(this.showClientCard == true)
         {
           this.showClientCard = false;
-
-          // If the updater variable is true, refresh on clicking away
-          if(this.updateOnClickaway)
-          {
-            await this.ChatService.gatherAllChats(this.subject.clientID, true);
-            this.updateOnClickaway = false;
-          }
         }
       }
       this.selectedAnonMeta = new ClientMeta();
     }
+
+    // If the updater variable is true, refresh on clicking away
+    if(this.updateOnClickaway)
+    {
+      await this.ChatService.gatherAllChats(this.subject.clientID, true)
+      this.updateOnClickaway = false;
+    }
+
   }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
   }
-  public async updateChats(isSoftUpdate: boolean = false, skipSelected: boolean = false)
+  public async updateChats(isSoftUpdate: boolean = false)
   {
     this.updateOnClickaway = true;
-    if(!skipSelected)
-    {
-      // SANTAHERE needs updating
-      //await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
-  public updateSpecificChat(historyEvent: MessageHistory)
+  public async updateSpecificChat(historyEvent: MessageHistory)
   {
-    var chatIndex = this.allChats.findIndex((history: MessageHistory) => {
-      return history.relationXrefID == historyEvent.relationXrefID &&
-      history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
-      history.assignmentRecieverClient.clientID == historyEvent.assignmentRecieverClient.clientID &&
-      history.assignmentSenderClient.clientID == historyEvent.assignmentSenderClient.clientID &&
-      history.eventType.eventTypeID == historyEvent.eventType.eventTypeID
-    });
-
-    if(chatIndex != undefined)
+    var chatIndex = undefined
+    // If is an assignment history
+    if(historyEvent.relationXrefID != null && historyEvent.relationXrefID != undefined)
     {
-      this.allChats[chatIndex] = historyEvent
+      chatIndex = this.allChats.findIndex((history: MessageHistory) => {
+        return history.relationXrefID == historyEvent.relationXrefID
+      });
+    }
+    // Is a general history
+    else
+    {
+      chatIndex = this.allChats.findIndex((history: MessageHistory) => {
+        return history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
+        history.assignmentRecieverClient.clientID == null && history.assignmentSenderClient.clientID == null
+      });
+    }
+
+    // If it found the
+    if(chatIndex != undefined && chatIndex != 0)
+    {
+      this.updateOnClickaway = true;
     }
     else
     {
@@ -262,13 +259,16 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
   public async openSelectedChat(history: MessageHistory)
   {
-    this.chatInfoContainer.conversationClientID = history.conversationClient.clientID;
-    this.chatInfoContainer.messageRecieverID = history.conversationClient.clientID;
-    this.chatInfoContainer.relationshipXrefID = history.relationXrefID;
-    if(history.relationXrefID != null && history.relationXrefID != undefined)
+    this.chatInfoContainer =
     {
-      this.chatInfoContainer.eventTypeID = history.eventType.eventTypeID
-    }
+      senderIsAdmin: this.chatInfoContainer.senderIsAdmin,
+      messageSenderID: this.chatInfoContainer.messageSenderID,
+      messageRecieverID: history.conversationClient.clientID,
+      conversationClientID: history.conversationClient.clientID,
+      eventTypeID: history.relationXrefID == null ? null : history.eventType.eventTypeID,
+      relationshipXrefID: history.relationXrefID,
+    };
+
     this.showChat = true;
   }
   public openClientCard(clientMeta: ClientMeta)
