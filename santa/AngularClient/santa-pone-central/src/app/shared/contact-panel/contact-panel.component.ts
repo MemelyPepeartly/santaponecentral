@@ -156,13 +156,11 @@ export class ContactPanelComponent implements OnInit{
   }
   public showRead(message: Message) : boolean
   {
-    return (message.isMessageRead && message.senderClient.clientID != this.messageHistory.subjectClient.clientID && this.isAdmin && !message.fromAdmin) ||
-    (!this.isAdmin && message.fromAdmin && this.onProfile && message.isMessageRead)
+    return message.isMessageRead && !message.subjectMessage
   }
   public showButton(message: Message) : boolean
   {
-    return (!message.isMessageRead && !message.subjectMessage && this.isAdmin && !message.fromAdmin) ||
-    (!this.isAdmin && message.fromAdmin && this.onProfile && !message.isMessageRead)
+    return !message.isMessageRead && !message.subjectMessage
   }
   public emitAgentControlClicked()
   {
