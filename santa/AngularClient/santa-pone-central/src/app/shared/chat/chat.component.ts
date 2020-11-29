@@ -77,10 +77,14 @@ export class ChatComponent implements OnInit, OnChanges {
   send(messageApiResponseEvent: MessageApiResponse)
   {
     this.showChatActionProgressBar = true;
+    this.inputDisabled = true;
 
     this.SantaApiPost.postMessage(messageApiResponseEvent).subscribe((res) => {
       this.chatWindowComponent.manualRefreshChat(true);
+      this.inputComponent.clearForm();
+      this.inputDisabled = false;
     }, err => {
+      this.inputDisabled = false;
       console.group();
       console.log("An error has occured sending the message");
       console.log(err);
