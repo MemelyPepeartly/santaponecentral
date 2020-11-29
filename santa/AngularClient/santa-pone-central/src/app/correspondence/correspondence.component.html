@@ -3,7 +3,8 @@
 
 <div class="overlay-container" *ngIf="showRelatedIntelligenceCard == true">
   <app-related-intelligence
-    (messageSentEvent)="updateSpecificChat($event); manualRefresh(true);"
+    (historyUpdatedEvent)="updateSpecificChat($event)"
+    (messageSentEvent)="updateSpecificChat($event);"
     (openAgentControlEvent)="openClientCard($event)"
     [selectedAnonMeta]="selectedAnonMeta"
     [clientHistories]="filterRelatedChats()"
@@ -18,7 +19,7 @@
     [showBackCloseButtons]="true"
     [loadingClient]="loadingClient"
     [clientID]="agentControlID"
-    (actionTaken)="updateChats(true, true)"
+    (actionTaken)="updateChats(true)"
     (setClickAwayLockEvent)="setClickawayLock($event)">
   </app-selected-anon>
 </div>
