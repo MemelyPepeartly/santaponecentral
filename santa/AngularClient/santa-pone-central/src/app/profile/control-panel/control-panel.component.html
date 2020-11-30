@@ -37,11 +37,12 @@
       </div>
       <div *ngIf="histories.length != 0 && !loading">
         <app-chat-histories
-        [disabled]="gettingAllHistories || gettingProfile"
-        [onProfile]="true"
-        [histories]="histories"
-        (chatSelectedEvent)="historySelected($event)"
-        (agentSelectedEvent)="showRecipientCard($event)"></app-chat-histories>
+          [disabled]="gettingAllHistories || gettingProfile"
+          [onProfile]="true"
+          [histories]="histories"
+          (chatSelectedEvent)="historySelected($event)"
+          (agentSelectedEvent)="showRecipientCard($event)">
+        </app-chat-histories>
       </div>
     </mat-card-content>
     <mat-card-actions>
