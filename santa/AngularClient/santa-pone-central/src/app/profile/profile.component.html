@@ -4,13 +4,11 @@
 
 <!-- Chat Window -->
 <div class="contact-container mat-elevation-z3" *ngIf="showChat">
-    <app-chat
-    (historyUpdatedEvent)="false"
-    (manualRefreshClickedEvent)="false"
-    (sendClickedEvent)="false"
-    (readAllClickedEvent)="false"
-    [chatInfoContainer]="chatInfoContainer"
-    [showChatLoading]="false">
+  <app-chat
+    (historyUpdatedEvent)="undefined"
+    (manualRefreshClickedEvent)="undefined"
+    (readAllClickedEvent)="undefined"
+    [chatInfoContainer]="chatInfoContainer">
   </app-chat>
 </div>
 
