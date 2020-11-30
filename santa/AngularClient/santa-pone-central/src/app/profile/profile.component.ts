@@ -50,8 +50,6 @@ export class ProfileComponent implements OnInit {
   public showOverlay: boolean = false;
   public showChat: boolean = false;
 
-  public postingMessage: boolean = false;
-  public puttingMessage: boolean = false;
   public softUpdating: boolean = false;
   public refreshing: boolean = false;
   public refreshingHistories: boolean = false;
@@ -166,19 +164,18 @@ export class ProfileComponent implements OnInit {
   }
   public async hideWindow()
   {
-    // SANTAHERE need checker for locking hide when marking message as read
-    if(!this.postingMessage && !this.puttingMessage)
-    {
-      this.selectedHistory = new MessageHistory();
-      this.manualRefreshProfileAssignments(true);
-      this.showChat = false;
-      this.showOverlay = false;
-    }
+    console.log("Doing the thing in hide");
+    this.selectedHistory = new MessageHistory();
+    this.manualRefreshProfileAssignments(true);
+    this.showChat = false;
+    this.showOverlay = false;
   }
   public async manualRefreshProfileAssignments(isSoftUpdate: boolean = false)
   {
     this.refreshingHistories = true;
     this.gettingAllHistories = !isSoftUpdate;
+
+    // Gets all the profile assignments
     this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
       let assignmentArray: Array<ProfileAssignment> = [];
       for(let i = 0; i < res.length; i++)
@@ -195,5 +192,7 @@ export class ProfileComponent implements OnInit {
       console.groupEnd();
       this.gettingAssignments = false;
     });
+
+    await this.profileService.gatherGeneralHistory(this.clientID, this.profile.clientID, true);
   }
 }
