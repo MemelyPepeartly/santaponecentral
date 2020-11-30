@@ -17,7 +17,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <app-message-control-panel #panel (readAllClicked)="emitAction($event)" [disabled]="disabled">
+      <app-message-control-panel #panel (readAllClicked)="emitAction($event)" [disabled]="disabled || menuDisabled">
       </app-message-control-panel>
     </mat-menu>
   </div>

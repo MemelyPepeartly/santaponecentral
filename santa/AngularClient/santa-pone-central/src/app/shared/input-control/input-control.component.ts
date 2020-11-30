@@ -27,6 +27,7 @@ export class InputControlComponent implements OnInit {
 
   @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() disabled: boolean = false;
+  @Input() menuDisabled: boolean = false;
 
   private isAdmin: boolean;
   private profile: any;
