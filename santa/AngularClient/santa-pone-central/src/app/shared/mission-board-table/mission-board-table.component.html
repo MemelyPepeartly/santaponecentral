@@ -4,7 +4,7 @@
     <ng-container matColumnDef="threadNumber">
       <th mat-header-cell *matHeaderCellDef>Thread Number</th>
       <td mat-cell *matCellDef="let entry">
-        <button class="info" *ngIf="!entry.editing" mat-raised-button (auxclick)="goToThreadLink(entry.threadNumber)" (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
+        <button class="info" *ngIf="!entry.editing" mat-raised-button (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
         <div *ngIf="entry.editing">
           <mat-form-field class="editField" appearance="outline">
             <input matInput formControlName="{{getThreadNumberFormGroupSignature(entry)}}" placeholder="Thread Number" value="{{ entry.threadNumber }}">
@@ -18,7 +18,7 @@
     <ng-container matColumnDef="postNumber">
       <th mat-header-cell *matHeaderCellDef>Post Number</th>
       <td mat-cell *matCellDef="let entry">
-        <button class="info" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (auxclick)="goToPostLink(entry.threadNumber, entry.postNumber)" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
+        <button class="info" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
         <span class="info" *ngIf="entry.threadNumber == entry.postNumber && !entry.editing">{{ entry.postNumber }}</span>
         <div *ngIf="entry.editing">
           <mat-form-field class="editField" appearance="outline">
