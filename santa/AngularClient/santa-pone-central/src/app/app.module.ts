@@ -69,6 +69,9 @@ import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.
 import { ClientItemComponent } from './headquarters/client-item/client-item.component';
 import { RelatedIntelligenceComponent } from './correspondence/related-intelligence/related-intelligence.component';
 import { ChatComponent } from './shared/chat/chat.component';
+import { SortByAssignmentStatusPipe } from './correspondence/sort-by-assignment-status.pipe';
+import { SortByUnreadPipePipe } from './correspondence/sort-by-unread-pipe.pipe';
+import { SortByGeneralPipePipe } from './correspondence/sort-by-general-pipe.pipe';
 
 
 @NgModule({
@@ -126,7 +129,10 @@ import { ChatComponent } from './shared/chat/chat.component';
       LogTableComponent,
       ClientItemComponent,
       RelatedIntelligenceComponent,
-      ChatComponent
+      ChatComponent,
+      SortByAssignmentStatusPipe,
+      SortByUnreadPipePipe,
+      SortByGeneralPipePipe
    ],
    entryComponents: [
       LoginComponent
