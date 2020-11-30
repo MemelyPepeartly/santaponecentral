@@ -38,7 +38,7 @@ export class ChatHistoriesComponent implements OnInit, OnChanges {
     this.dataSource = new TableVirtualScrollDataSource(this.histories);
   }
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.yuleLogs) {
+    if (changes?.histories) {
       this.dataSource = new TableVirtualScrollDataSource(this.histories);
     }
   }
