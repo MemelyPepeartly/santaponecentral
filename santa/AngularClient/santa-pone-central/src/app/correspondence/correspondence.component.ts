@@ -6,10 +6,6 @@ import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../
 import { GathererService } from '../services/gatherer.service';
 import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
 import { MapService } from '../services/mapper.service';
-import { FormGroup } from '@angular/forms';
-import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
-import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
-import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from '../shared/constants/organizerEmailConstants.enum';
@@ -143,30 +139,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ChatService.clearAllChats();
   }
-  public sortByEvent(eventType: EventType) : Array<MessageHistory>
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.eventType.eventTypeID == eventType.eventTypeID;
-    });
-  }
-  public sortByAssignmentStatus(assignmentStatus: AssignmentStatus) : Array<MessageHistory>
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.assignmentStatus.assignmentStatusID == assignmentStatus.assignmentStatusID;
-    });
-  }
-  public sortByUnread() : Array<MessageHistory>
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.unreadCount > 0;
-    });
-  }
-  public sortByGeneral() : Array<MessageHistory>
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.relationXrefID == null;
-    });
-  }
   public async hideWindow()
   {
     if(!this.clickAwayLocked)
@@ -234,6 +206,9 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     // If it found the
     if(chatIndex != undefined && chatIndex != 0)
     {
+      console.log(chatIndex);
+
+      this.allChats[chatIndex] = historyEvent
       this.updateOnClickaway = true;
     }
     else
