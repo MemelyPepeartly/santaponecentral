@@ -206,8 +206,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     // If it found the
     if(chatIndex != undefined && chatIndex != 0)
     {
-      console.log(chatIndex);
-
       this.allChats[chatIndex] = historyEvent
       this.updateOnClickaway = true;
     }
