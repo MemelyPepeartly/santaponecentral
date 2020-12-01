@@ -160,6 +160,7 @@ app-small-loading-spin {
 {
   display: block;
   width: 70%;
+  height: fit-content;
   margin-left: auto;
   margin-right: auto;
   padding: 15px;
@@ -167,8 +168,9 @@ app-small-loading-spin {
 }
 .recipientListCard
 {
+  display: block;
+  height: 100%;
   width: 100%;
-  max-height: 600px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -251,4 +253,9 @@ app-small-loading-spin {
   width: 95%;
   height: fit-content;
   max-height: 800px;
+}
+.recipientListScrollbar
+{
+  max-height: 600px;
+  border-radius: 8px;
 }
