@@ -39,3 +39,20 @@
   height: fit-content;
   max-height: 800px;
 }
+@media (max-width:600px)
+{
+  .historySelection {
+    display: block;
+    width: 90%;
+    height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .chatCard {
+    display: block;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+  }
+}
