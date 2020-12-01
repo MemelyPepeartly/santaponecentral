@@ -111,8 +111,12 @@ app-small-loading-spin {
     color: #d07973;
 }
 .shell {
+  display: block;
+  width: 95%;
+  height: fit-content;
+  margin-left: auto;
+  margin-right: auto;
   border-radius: 8px;
-  display: inline-block;
 }
 .optionDiv {
   display: block;
@@ -250,12 +254,12 @@ app-small-loading-spin {
 /* Scrollbar Styling */
 .scrollbar
 {
-  width: 95%;
-  height: fit-content;
-  max-height: 800px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 730px;
 }
 .recipientListScrollbar
 {
   max-height: 600px;
-  border-radius: 8px;
 }
