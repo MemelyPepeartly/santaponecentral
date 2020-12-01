@@ -4,9 +4,11 @@
   (manualRefreshClickedEvent)="emitManualRefresh($event)"
   (refreshingStatusEvent)="refreshStatusAction($event)"
   (loadingStatusEvent)="loadStatusAction($event)"
+  (openAgentControlEvent)="emitAgentControlEvent($event)"
   [refreshing]="chatRefreshing"
   [showActionProgressBar]="showChatActionProgressBar"
   [showLoading]="showChatLoading"
+  [showControlButton]="showControlButton"
   [chatInfoContainer]="chatInfoContainer">
 </app-contact-panel>
 <app-input-control

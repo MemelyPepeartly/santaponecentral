@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MapService } from 'src/app/services/mapper.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
-import { ChatInfoContainer, MessageHistory } from 'src/classes/message';
+import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../contact-panel/contact-panel.component';
 import { InputControlComponent } from '../input-control/input-control.component';
@@ -23,11 +23,13 @@ export class ChatComponent implements OnInit, OnChanges {
   @Input() showChatLoading: boolean = false;
   @Input() showChatActionProgressBar: boolean;
   @Input() chatRefreshing: boolean = false;
+  @Input() showControlButton: boolean = false;
 
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() sendClickedEvent: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
   @Output() readAllClickedEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
 
   @ViewChild(ContactPanelComponent) chatWindowComponent: ContactPanelComponent;
   @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
@@ -57,6 +59,10 @@ export class ChatComponent implements OnInit, OnChanges {
   {
     this.readAllClickedEvent.emit(true);
     this.readAll();
+  }
+  emitAgentControlEvent(meta: ClientMeta)
+  {
+    this.openAgentControlEvent.emit(meta);
   }
   manualRefreshChat(isSoftRefresh: boolean = false)
   {

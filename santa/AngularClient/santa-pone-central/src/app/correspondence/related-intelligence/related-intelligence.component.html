@@ -44,6 +44,8 @@
         <mat-card-content>
           <app-chat
             (historyUpdatedEvent)="updateSpecificChat($event)"
+            (openAgentControlEvent)="emitAgentControlSelected($event)"
+            [showControlButton]="true"
             [chatInfoContainer]="chatInfoContainer">
           </app-chat>
         </mat-card-content>
