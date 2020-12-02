@@ -66,20 +66,12 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "create:messages")]
         public async Task<ActionResult<Logic.Objects.Message>> PostMessage([FromBody] ApiMessageModel message)
         {
-            Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            BaseClient baseCheckerClient = new BaseClient()
-            {
-                clientID = checkerClient.clientID,
-                clientName = checkerClient.clientName,
-                nickname = checkerClient.nickname,
-                email = checkerClient.email,
-                hasAccount = checkerClient.hasAccount,
-                isAdmin = checkerClient.isAdmin
-            };
+            BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
+            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            InfoContainer checkerInfoContainer = await repository.getClientInfoContainerByIDAsync(checkerClient.clientID);
 
             // If the logic client and checker client have the same Id and the relationxref is either null or part of of the checked clients assingments list (Or the checker is just an admin overall)
-            if ((logicClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null ? checkerClient.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) : true) || checkerClient.isAdmin)
+            if ((logicBaseClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null ? checkerInfoContainer.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) : true) || checkerClient.isAdmin)
             {
                 TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
@@ -112,7 +104,7 @@ namespace Santa.Api.Controllers
                         await repository.SaveAsync();
 
                         Logic.Objects.Message postedLogicMessage = await repository.GetMessageByIDAsync(logicMessage.chatMessageID);
-                        await yuleLogger.logCreatedNewMessage(baseCheckerClient, postedLogicMessage.senderClient, postedLogicMessage.recieverClient);
+                        await yuleLogger.logCreatedNewMessage(checkerClient, postedLogicMessage.senderClient, postedLogicMessage.recieverClient);
 
                         // If this message has an eventTypeID
                         if (message.eventTypeID.HasValue)
@@ -138,7 +130,7 @@ namespace Santa.Api.Controllers
                     }
                     catch(Exception)
                     {
-                        await yuleLogger.logError(baseCheckerClient, LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY);
+                        await yuleLogger.logError(checkerClient, LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY);
                         return StatusCode(StatusCodes.Status424FailedDependency);
                     }
                     
