@@ -68,72 +68,85 @@ namespace Santa.Api.Controllers
         {
             BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
             BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            InfoContainer checkerInfoContainer = await repository.getClientInfoContainerByIDAsync(checkerClient.clientID);
+            InfoContainer checkerInfoContainer = new InfoContainer() { assignments = new List<Logic.Objects.RelationshipMeta>() };
+            // If the checker is an admin, no need to get the info container for the checker
+            if (!checkerClient.isAdmin)
+            {
+                checkerInfoContainer = await repository.getClientInfoContainerByIDAsync(checkerClient.clientID);
+            }
+            
 
             // If the logic client and checker client have the same Id and the relationxref is either null or part of of the checked clients assingments list (Or the checker is just an admin overall)
-            if ((logicBaseClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null ? checkerInfoContainer.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) : true) || checkerClient.isAdmin)
+            if (logicBaseClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null)
             {
-                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                if (checkerInfoContainer.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) || checkerClient.isAdmin)
+                {
+                    TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
-                Logic.Objects.Message logicMessage = new Logic.Objects.Message()
-                {
-                    chatMessageID = Guid.NewGuid(),
-                    recieverClient = new ClientChatMeta()
+                    Logic.Objects.Message logicMessage = new Logic.Objects.Message()
                     {
-                        clientId = message.messageRecieverClientID
-                    },
-                    senderClient = new ClientChatMeta()
+                        chatMessageID = Guid.NewGuid(),
+                        recieverClient = new ClientChatMeta()
+                        {
+                            clientId = message.messageRecieverClientID
+                        },
+                        senderClient = new ClientChatMeta()
+                        {
+                            clientId = message.messageSenderClientID
+                        },
+                        clientRelationXrefID = message.clientRelationXrefID,
+                        messageContent = message.messageContent,
+                        dateTimeSent = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
+                        isMessageRead = false,
+                        fromAdmin = message.fromAdmin
+                    };
+                    if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
                     {
-                        clientId = message.messageSenderClientID
-                    },
-                    clientRelationXrefID = message.clientRelationXrefID,
-                    messageContent = message.messageContent,
-                    dateTimeSent = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone),
-                    isMessageRead = false,
-                    fromAdmin = message.fromAdmin
-                };
-                if (logicMessage.recieverClient.clientId == null && logicMessage.senderClient.clientId == null)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                        return StatusCode(StatusCodes.Status400BadRequest);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            await repository.CreateMessage(logicMessage);
+                            await repository.SaveAsync();
+
+                            Logic.Objects.Message postedLogicMessage = await repository.GetMessageByIDAsync(logicMessage.chatMessageID);
+                            await yuleLogger.logCreatedNewMessage(checkerClient, postedLogicMessage.senderClient, postedLogicMessage.recieverClient);
+
+                            // If this message has an eventTypeID
+                            if (message.eventTypeID.HasValue)
+                            {
+                                // If the message is from an admin, get the event for the notification, and send the email
+                                if (message.fromAdmin)
+                                {
+                                    Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
+                                    await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
+                                }
+                            }
+                            // Else if it doesnt have an event (It is a general message)
+                            else
+                            {
+                                // If it's from an admin, make a new event object, and send the client a notification
+                                if (message.fromAdmin)
+                                {
+                                    Logic.Objects.Event logicEvent = new Logic.Objects.Event();
+                                    await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
+                                }
+                            }
+                            return Ok();
+                        }
+                        catch (Exception)
+                        {
+                            await yuleLogger.logError(checkerClient, LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY);
+                            return StatusCode(StatusCodes.Status424FailedDependency);
+                        }
+
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        await repository.CreateMessage(logicMessage);
-                        await repository.SaveAsync();
-
-                        Logic.Objects.Message postedLogicMessage = await repository.GetMessageByIDAsync(logicMessage.chatMessageID);
-                        await yuleLogger.logCreatedNewMessage(checkerClient, postedLogicMessage.senderClient, postedLogicMessage.recieverClient);
-
-                        // If this message has an eventTypeID
-                        if (message.eventTypeID.HasValue)
-                        {
-                            // If the message is from an admin, get the event for the notification, and send the email
-                            if (message.fromAdmin)
-                            {
-                                Logic.Objects.Event logicEvent = await repository.GetEventByIDAsync(message.eventTypeID.Value);
-                                await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), logicEvent);
-                            }
-                        }
-                        // Else if it doesnt have an event (It is a general message)
-                        else
-                        {
-                            // If it's from an admin, make a new event object, and send the client a notification
-                            if (message.fromAdmin)
-                            {
-                                Logic.Objects.Event logicEvent = new Logic.Objects.Event();
-                                await mailbag.sendChatNotificationEmail(await repository.GetClientByIDAsync(logicMessage.recieverClient.clientId.Value), new Logic.Objects.Event());
-                            }
-                        }
-                        return Ok();
-                    }
-                    catch(Exception)
-                    {
-                        await yuleLogger.logError(checkerClient, LoggingConstants.CREATED_NEW_MESSAGE_CATEGORY);
-                        return StatusCode(StatusCodes.Status424FailedDependency);
-                    }
-                    
+                    return StatusCode(StatusCodes.Status401Unauthorized);
                 }
             }
             else
