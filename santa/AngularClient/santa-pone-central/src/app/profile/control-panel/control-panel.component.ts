@@ -36,7 +36,7 @@ export class ControlPanelComponent implements OnInit {
   @Input() surveys: Array<Survey>;
 
   @Output() chatClickedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
-  @Output() refreshClientEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() refreshClientAssignmentsEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @ViewChild(SelectedRecipientComponent) selectedRecipientComponent: SelectedRecipientComponent;
 
@@ -73,13 +73,13 @@ export class ControlPanelComponent implements OnInit {
 
     if(this.actionTaken)
     {
-      this.refreshClientEvent.emit(this.actionTaken);
+      this.refreshClientAssignmentsEvent.emit(this.actionTaken);
       this.actionTaken = false;
     }
   }
   public emitRefresh()
   {
-    this.refreshClientEvent.emit(true);
+    this.refreshClientAssignmentsEvent.emit(true);
   }
   public getProfileAssignmentByMetaAndEventID(meta: ClientMeta, eventID)
   {

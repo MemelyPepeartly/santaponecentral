@@ -51,12 +51,23 @@
 
   <!-- Action button section -->
   <mat-card-actions>
-    <button mat-raised-button class="actionButton"
+    <button mat-raised-button class="actionButton" *ngIf="!showNotes"
       (click)="showNotes = !showNotes; getInfoContainer()"
       [matBadge]="client.notes"
       [matBadgeHidden]="client.notes == 0">View Notes</button>
-    <button mat-raised-button class="actionButton" (click)="showAssignments = !showAssignments; getInfoContainer()">View Assignments</button>
-    <button mat-raised-button class="actionButton" (click)="showSurveyResponses = !showSurveyResponses; getInfoContainer()">View Survey Answers</button>
+    <button mat-raised-button class="actionButton" *ngIf="showNotes"
+      (click)="showNotes = !showNotes">Hide Notes</button>
+
+    <button mat-raised-button class="actionButton" *ngIf="!showAssignments"
+      (click)="showAssignments = !showAssignments; getInfoContainer()" >View Assignments</button>
+    <button mat-raised-button class="actionButton" *ngIf="showAssignments"
+      (click)="showAssignments = !showAssignments">Hide Assignments</button>
+
+    <button mat-raised-button class="actionButton" *ngIf="!showSurveyResponses"
+      (click)="showSurveyResponses = !showSurveyResponses; getInfoContainer()">View Survey Answers</button>
+    <button mat-raised-button class="actionButton" *ngIf="showSurveyResponses"
+      (click)="showSurveyResponses = !showSurveyResponses">Hide Survey Answers</button>
+
   </mat-card-actions>
   <mat-card-content *ngIf="infoSectionOpen">
     <mat-divider [inset]="true"></mat-divider>

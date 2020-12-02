@@ -1,22 +1,18 @@
 <div id="overlay" *ngIf="showClientCard || showManualSignupCard" (click)="hideOpenWindow();" [@simpleFadeAnimation]="'in'">
 </div>
-<div class="container mat-elevation-z3" *ngIf="showManualSignupCard">
-  <div class="fixedDiv mat-elevation-z6">
-      <app-manual-add
-      (clientPostedEvent)="showClientWindow($event)">
-      </app-manual-add>
-  </div>
+<div class="overlay-container mat-elevation-z3" *ngIf="showManualSignupCard">
+  <app-manual-add
+    (clientPostedEvent)="showClientWindow($event)">
+  </app-manual-add>
 </div>
-<div class="container mat-elevation-z3" *ngIf="showClientCard">
-    <div class="fixedDiv mat-elevation-z6">
-        <app-selected-anon
-        [loadingClient]="false"
-        [clientID]="currentClientID"
-        (setClickAwayLockEvent)="setClickawayLock($event)"
-        (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
-        (deletedAnon)="hideOpenWindow(true)">
-        </app-selected-anon>
-    </div>
+<div class="overlay-container mat-elevation-z3" *ngIf="showClientCard">
+  <app-selected-anon
+    [loadingClient]="false"
+    [clientID]="currentClientID"
+    (setClickAwayLockEvent)="setClickawayLock($event)"
+    (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
+    (deletedAnon)="hideOpenWindow(true)">
+  </app-selected-anon>
 </div>
 
 <mat-tab-group id="tabGroupContainer" class="mat-elevation-z3" mat-align-tabs="center" dynamicHeight>

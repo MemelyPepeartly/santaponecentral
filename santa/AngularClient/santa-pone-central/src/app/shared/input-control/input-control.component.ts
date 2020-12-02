@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Message, ClientMeta, MessageHistory } from 'src/classes/message';
+import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
-import { Client } from 'src/classes/client';
+import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
@@ -25,16 +25,13 @@ export class InputControlComponent implements OnInit {
   @Output() timeZoneAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() colorAction: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Input() relationshipID: string;
-  @Input() sender: ClientMeta;
-  @Input() reciever: ClientMeta;
+  @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() disabled: boolean = false;
-  @Input() onProfile: boolean;
-  @Input() eventType: EventType = new EventType()
+  @Input() menuDisabled: boolean = false;
 
   private isAdmin: boolean;
   private profile: any;
-  private adminClient: Client;
+  private adminClient: BaseClient;
 
   public messageFormControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
 
@@ -46,7 +43,7 @@ export class InputControlComponent implements OnInit {
       this.isAdmin = admin;
       if(this.isAdmin)
       {
-        this.adminClient = this.Mapper.mapClient(await this.SantaApiGet.getClientByEmail(this.profile.email).toPromise());
+        this.adminClient = this.Mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
       }
     });
   }
@@ -55,12 +52,12 @@ export class InputControlComponent implements OnInit {
 
     let newMessage: MessageApiResponse =
     {
-      messageSenderClientID: this.isAdmin ? this.adminClient.clientID : this.sender.clientID,
-      messageRecieverClientID: this.reciever.clientID,
-      clientRelationXrefID: this.relationshipID,
-      eventTypeID: this.relationshipID == null || undefined ? null : this.eventType.eventTypeID,
+      messageSenderClientID: this.chatInfoContainer.messageSenderID,
+      messageRecieverClientID: this.chatInfoContainer.messageRecieverID,
+      clientRelationXrefID: this.chatInfoContainer.relationshipXrefID,
+      eventTypeID: this.chatInfoContainer.relationshipXrefID == null || this.chatInfoContainer.relationshipXrefID == undefined ? null : this.chatInfoContainer.eventTypeID,
       messageContent: message,
-      fromAdmin: this.onProfile ? false : this.isAdmin,
+      fromAdmin: this.chatInfoContainer.senderIsAdmin,
     };
 
     this.sendClicked.emit(newMessage);

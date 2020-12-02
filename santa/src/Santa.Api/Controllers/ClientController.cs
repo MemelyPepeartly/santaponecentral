@@ -1014,16 +1014,6 @@ namespace Santa.Api.Controllers
             InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
             RelationshipMeta assignmentMeta = infoContainer.assignments.FirstOrDefault(a => a.relationshipClient.clientId == assignmentClientID);
 
-            // Get the history of that assignment, and queues all messages from it to delete as a cascade
-            MessageHistory chatHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(assignmentMeta.clientRelationXrefID, logicBaseClient);
-            foreach(Message message in chatHistory.subjectMessages)
-            {
-                await repository.DeleteMessageByID(message.chatMessageID);
-            }
-            foreach (Message message in chatHistory.recieverMessages)
-            {
-                await repository.DeleteMessageByID(message.chatMessageID);
-            }
             await repository.DeleteRecieverXref(clientID, assignmentClientID, eventID);
 
             try

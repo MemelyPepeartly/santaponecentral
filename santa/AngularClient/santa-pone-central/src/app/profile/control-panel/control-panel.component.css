@@ -3,7 +3,7 @@ mat-card {
   vertical-align: top;
 }
 .list-card {
-  width: 80%;
+  width: 95%;
   min-width: fit-content;
   display: inline-block;
 }

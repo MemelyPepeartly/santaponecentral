@@ -1,19 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
+import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { ChatService } from '../services/chat.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
 import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
 import { MapService } from '../services/mapper.service';
-import { FormGroup } from '@angular/forms';
-import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
-import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
-import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from '../shared/constants/organizerEmailConstants.enum';
 import { EventConstants } from '../shared/constants/eventConstants.enum';
+import { ChatComponent } from '../shared/chat/chat.component';
 
 
 
@@ -32,37 +29,41 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     public gatherer: GathererService,
     public mapper: MapService) { }
 
-  @ViewChild(ContactPanelComponent) chatComponent: ContactPanelComponent;
-  @ViewChild(InputControlComponent) inputComponent: InputControlComponent;
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent;
 
+  /** Auth profile for the person accessing the component */
   public profile: any;
+  /** Base client object of the subject. This will be the same as the sender meta, just a different type for input reasons on other components */
   public subject: BaseClient = new BaseClient();
+  /** Meta of the sending admin */
   public adminSenderMeta: ClientMeta = new ClientMeta();
 
-  public allChats: Array<MessageHistory> = []
-  public eventChats: Array<MessageHistory> = []
-  public events: Array<EventType> = []
+  public allChats: Array<MessageHistory> = [];
+  public events: Array<EventType> = [];
   public assignmentStatuses: Array<AssignmentStatus> = [];
 
   public gettingAllChats: boolean = false;
   public softGettingAllChats: boolean = false;
   public gettingSelectedHistory: boolean = false;
   public loadingClient: boolean = false;
-  public puttingMessage: boolean = false;
-  public refreshing: boolean = false;
   public initializing: boolean;
 
   public showClientCard: boolean = false;
   public showChat: boolean = false;
-  public postingMessage: boolean = false;
+  public showRelatedIntelligenceCard: boolean = false;
   public updateOnClickaway: boolean = false;
   public clickAwayLocked: boolean = false;
+  public get showOverlay() : boolean
+  {
+    return this.showClientCard || this.showChat || this.showRelatedIntelligenceCard
+  }
 
-  public selectedAnonID: string;
+  public agentControlID: string;
+  public selectedAnonMeta: ClientMeta = new ClientMeta();
   public selectedRecieverMeta: ClientMeta = new ClientMeta();
-  public selectedHistory: MessageHistory = new MessageHistory();
-
+  public selectedFilteredChats: Array<MessageHistory> = [];
+  public chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
 
   public async ngOnInit() {
     this.initializing = true;
@@ -72,10 +73,25 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       this.profile = data
     });
     this.subject = this.mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
+    this.adminSenderMeta =
+    {
+      clientID: this.subject.clientID,
+      clientName: this.subject.clientName,
+      clientNickname: this.subject.nickname,
+      hasAccount: this.subject.hasAccount,
+      isAdmin: this.subject.isAdmin
+    };
 
-    this.adminSenderMeta.clientID = this.subject.clientID
-    this.adminSenderMeta.clientName = this.subject.clientName
-    this.adminSenderMeta.clientNickname = this.subject.nickname
+    this.chatInfoContainer =
+    {
+      senderIsAdmin: this.adminSenderMeta.isAdmin,
+      messageSenderID: this.adminSenderMeta.clientID,
+      // Values here are null and undefined until a chat is selected
+      messageRecieverID: undefined,
+      conversationClientID: undefined,
+      eventTypeID: null,
+      relationshipXrefID: null,
+    };
 
 
     // Boolean subscribes
@@ -84,9 +100,6 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     });
     this.ChatService.softGettingAllChats.subscribe((status: boolean) => {
       this.softGettingAllChats = status;
-    });
-    this.ChatService.gettingSelectedHistory.subscribe((status: boolean) => {
-      this.gettingSelectedHistory = status;
     });
 
     /* -- Data subscribes -- */
@@ -116,149 +129,85 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     this.gatherer.allAssignmentStatuses.subscribe((assignmentStatusArray: Array<AssignmentStatus>) => {
       this.assignmentStatuses = assignmentStatusArray;
     });
-
-    // Selected history
-    this.ChatService.selectedHistory.subscribe((history: MessageHistory) => {
-      this.selectedHistory = history;
-    });
-
-    this.initializing = false;
-
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllAssignmentStatuses();
     await this.ChatService.gatherAllChats(this.subject.clientID, false);
+
+    this.initializing = false;
 
   }
   ngOnDestroy(): void {
     this.ChatService.clearAllChats();
   }
-  public sortByEvent(eventType: EventType)
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.eventType.eventTypeID == eventType.eventTypeID;
-    });
-  }
-  public sortByAssignmentStatus(assignmentStatus: AssignmentStatus)
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.assignmentStatus.assignmentStatusID == assignmentStatus.assignmentStatusID;
-    });
-  }
-  public sortByUnread()
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.unreadCount > 0;
-    });
-  }
-  public sortByGeneral()
-  {
-    return this.allChats.filter((history: MessageHistory) => {
-      return history.relationXrefID == null;
-    });
-  }
-  public async send(messageResponse: MessageApiResponse)
-  {
-    this.postingMessage = true;
-
-    await this.SantaApiPost.postMessage(messageResponse).toPromise();
-
-    this.updateOnClickaway = true;
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID);
-    this.inputComponent.clearForm();
-
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.postingMessage = false;
-
-  }
-  public async readAll()
-  {
-    this.puttingMessage = true;
-
-    let unreadMessages: Array<Message> = this.selectedHistory.recieverMessages.filter((message: Message) => { return message.isMessageRead == false });
-    let response: MessageApiReadAllResponse = new MessageApiReadAllResponse();
-    unreadMessages.forEach((message: Message) => { response.messages.push(message.chatMessageID)});
-
-    await this.SantaApiPut.putMessageReadAll(response).toPromise();
-    this.updateOnClickaway = true;
-
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, true);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-
-    this.puttingMessage = false;
-  }
   public async hideWindow()
   {
     if(!this.clickAwayLocked)
     {
-      if(this.chatComponent == undefined && this.showClientCard == true)
+      if(this.showRelatedIntelligenceCard)
       {
-        this.showClientCard = false;
-        this.selectedAnonID = undefined;
-
-        // If the updater variable is true, refresh on clicking away
-        if(this.updateOnClickaway)
+        this.showRelatedIntelligenceCard = false;
+      }
+      if(this.chatComponent)
+      {
+        // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
+        if(this.showChat)
         {
-          await this.ChatService.gatherAllChats(this.subject.clientID, true);
-          this.updateOnClickaway = false;
+          this.showChat = false;
         }
       }
-      // If the chat component isn't marking read, and the button for sending isnt disabled (implying sending) and showChat is true
-      else if(!this.chatComponent.markingRead && !this.inputComponent.disabled && this.showChat == true)
+      // If the selectedAnonComponent is up
+      if(this.selectedAnonComponent)
       {
-        this.showChat = false;
-        this.selectedHistory = new MessageHistory();
-        // If the updater variable is true, refresh on clicking away
-        if(this.updateOnClickaway)
+        // Close it out
+        if(this.showClientCard == true)
         {
-          await this.ChatService.gatherAllChats(this.subject.clientID, true);
-          this.updateOnClickaway = false;
+          this.showClientCard = false;
         }
       }
+      this.selectedAnonMeta = new ClientMeta();
     }
+
+    // If the updater variable is true, refresh on clicking away
+    if(this.updateOnClickaway)
+    {
+      await this.ChatService.gatherAllChats(this.subject.clientID, true)
+      this.updateOnClickaway = false;
+    }
+
   }
   public setClickawayLock(status: boolean)
   {
     this.clickAwayLocked = status;
   }
-  public async populateSelectAnonCard(meta: ClientMeta)
-  {
-    this.loadingClient = true;
-    this.showClientCard = true;
-
-    this.selectedAnonID = meta.clientID
-
-    this.loadingClient = false;
-  }
-  public async openSelectedChat(history: MessageHistory)
-  {
-    this.selectedHistory = history;
-    this.selectedRecieverMeta = history.conversationClient;
-    this.showChat = true;
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-  }
-  public async updateChats(isSoftUpdate: boolean = false, skipSelected: boolean = false)
+  public async updateChats(isSoftUpdate: boolean = false)
   {
     this.updateOnClickaway = true;
-    if(!skipSelected)
-    {
-      await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    }
     await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
   public async updateSpecificChat(historyEvent: MessageHistory)
   {
-    var chatIndex = this.allChats.findIndex((history: MessageHistory) => {
-      return history.relationXrefID == historyEvent.relationXrefID &&
-      history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
-      history.assignmentRecieverClient.clientID == historyEvent.assignmentRecieverClient.clientID &&
-      history.assignmentSenderClient.clientID == historyEvent.assignmentSenderClient.clientID &&
-      history.eventType.eventTypeID == historyEvent.eventType.eventTypeID
-    });
+    var chatIndex = undefined
+    // If is an assignment history
+    if(historyEvent.relationXrefID != null && historyEvent.relationXrefID != undefined)
+    {
+      chatIndex = this.allChats.findIndex((history: MessageHistory) => {
+        return history.relationXrefID == historyEvent.relationXrefID
+      });
+    }
+    // Is a general history
+    else
+    {
+      chatIndex = this.allChats.findIndex((history: MessageHistory) => {
+        return history.conversationClient.clientID == historyEvent.conversationClient.clientID &&
+        history.assignmentRecieverClient.clientID == null && history.assignmentSenderClient.clientID == null
+      });
+    }
 
-    if(chatIndex != undefined)
+    // If it found the
+    if(chatIndex != undefined && chatIndex != 0)
     {
       this.allChats[chatIndex] = historyEvent
+      this.updateOnClickaway = true;
     }
     else
     {
@@ -266,15 +215,45 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
       console.log("Could not find chat to update");
     }
   }
-  public async manualRefreshSelectedChat(isSoftUpdate: boolean = false)
+  public async manualRefresh(isSoftUpdate: boolean = false)
   {
-    this.refreshing = true;
-    await this.ChatService.getSelectedHistory(this.selectedHistory.conversationClient.clientID, this.subject.clientID, this.selectedHistory.relationXrefID, isSoftUpdate);
-    setTimeout(() => this.chatComponent.scrollToBottom(), 0);
-    this.refreshing = false;
+    await this.ChatService.gatherAllChats(this.subject.clientID, isSoftUpdate);
   }
-  public async manualRefresh()
+  public filterRelatedChats() : Array<MessageHistory>
   {
-    await this.ChatService.gatherAllChats(this.subject.clientID);
+    return this.allChats.filter((history: MessageHistory) => {
+      return history.conversationClient.clientID == this.selectedAnonMeta.clientID;
+    });
+  }
+  public async openRelatedIntelligenceCard(meta: ClientMeta)
+  {
+   this.selectedAnonMeta = meta;
+   this.showRelatedIntelligenceCard = true;
+  }
+  public async openSelectedChat(history: MessageHistory)
+  {
+    this.chatInfoContainer =
+    {
+      senderIsAdmin: this.chatInfoContainer.senderIsAdmin,
+      messageSenderID: this.chatInfoContainer.messageSenderID,
+      messageRecieverID: history.conversationClient.clientID,
+      conversationClientID: history.conversationClient.clientID,
+      eventTypeID: history.relationXrefID == null ? null : history.eventType.eventTypeID,
+      relationshipXrefID: history.relationXrefID,
+    };
+
+    this.showChat = true;
+  }
+  public openClientCard(clientMeta: ClientMeta)
+  {
+    this.agentControlID = clientMeta.clientID;
+    this.showRelatedIntelligenceCard = false;
+    this.showClientCard = true;
+  }
+  public backToRelatedIntelligence()
+  {
+    this.showClientCard = false;
+    this.agentControlID = undefined;
+    this.showRelatedIntelligenceCard = true;
   }
 }

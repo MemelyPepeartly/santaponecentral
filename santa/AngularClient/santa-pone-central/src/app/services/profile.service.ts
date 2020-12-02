@@ -30,12 +30,6 @@ export class ProfileService {
     return this._gettingHistories.asObservable();
   }
 
-  private _gettingSelectedHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  get gettingSelectedHistory()
-  {
-    return this._gettingSelectedHistory.asObservable();
-  }
-
   private _gettingGeneralHistory: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingGeneralHistory()
   {
@@ -58,7 +52,6 @@ export class ProfileService {
   private _clientID: BehaviorSubject<string>= new BehaviorSubject(undefined);
   private _chatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([]);
   private _unloadedChatHistories: BehaviorSubject<Array<MessageHistory>> = new BehaviorSubject([]);
-  private _selectedHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
   private _generalHistory: BehaviorSubject<MessageHistory>= new BehaviorSubject(new MessageHistory());
   private _profileAssignments: BehaviorSubject<Array<ProfileAssignment>>= new BehaviorSubject([]);
 
@@ -91,16 +84,6 @@ export class ProfileService {
   private updateChatHistories(histories: Array<MessageHistory>)
   {
     this._chatHistories.next(histories);
-  }
-
-  // Selected History
-  get selectedHistory()
-  {
-    return this._selectedHistory.asObservable();
-  }
-  private updateSelectedHistory(messageHistory: MessageHistory)
-  {
-    this._selectedHistory.next(messageHistory)
   }
 
   // General History
@@ -219,31 +202,6 @@ export class ProfileService {
 
     this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
     this._gettingGeneralHistory.next(false);
-  }
-  public async getSelectedHistory(conversationClientID: string, subjectID: string, relationXrefID: string, isSoftUpdate: boolean = false)
-  {
-    if(!isSoftUpdate)
-    {
-      this._gettingSelectedHistory.next(true);
-    }
-
-    // If the relationship is not null, update the selected history, else, update the general one as well, since that is the one that is being requested
-    if(relationXrefID != null && relationXrefID != undefined)
-    {
-      var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID, subjectID, relationXrefID).toPromise().catch((err) => {console.log(err); this._gettingSelectedHistory.next(false);});
-
-      this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
-    }
-    else
-    {
-      var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID, subjectID, null).toPromise().catch((err) => {console.log(err); this._gettingSelectedHistory.next(false);});
-
-      this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
-      this.updateSelectedHistory(this.ApiMapper.mapMessageHistory(data));
-    }
-
-
-    this._gettingSelectedHistory.next(false);
   }
   public async gatherAssignments(clientID: string, isSoftUpdate: boolean = false)
   {

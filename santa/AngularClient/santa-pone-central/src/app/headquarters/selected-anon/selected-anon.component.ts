@@ -55,10 +55,13 @@ export class SelectedAnonComponent implements OnInit {
   @Input() client: Client = new Client();
   @Input() clientID: string
   @Input() loadingClient: boolean = true;
+  @Input() showBackCloseButtons: boolean = false;
 
   @Output() actionTaken: EventEmitter<any> = new EventEmitter();
   @Output() deletedAnon: EventEmitter<any> = new EventEmitter();
   @Output() setClickAwayLockEvent: EventEmitter<any> = new EventEmitter();
+  @Output() backClickedEvent: EventEmitter<any> = new EventEmitter();
+  @Output() closeClickedEvent: EventEmitter<any> = new EventEmitter();
 
   public senders: Array<RelationshipMeta> = new Array<RelationshipMeta>();
   public recipients: Array<RelationshipMeta> = new Array<RelationshipMeta>();
@@ -635,5 +638,13 @@ export class SelectedAnonComponent implements OnInit {
   public emitActionTaken()
   {
     this.actionTaken.emit(true);
+  }
+  public emitBackClicked()
+  {
+    this.backClickedEvent.emit(true);
+  }
+  public emitCloseClicked()
+  {
+    this.closeClickedEvent.emit(true);
   }
 }

@@ -1,8 +1,14 @@
 <div class="centerSpin">
     <app-loading-spin *ngIf="beingSwitched || deletingClient || loadingClient"></app-loading-spin>
 </div>
-
-<div class="shell scrollbar scrollbar-primary mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient && !loadingClient">
+<div class="shell mat-elevation-z2" *ngIf="!beingSwitched && !deletingClient && !loadingClient">
+  <ng-scrollbar class="scrollbar">
+    <mat-card class="closeBackButtonCard mat-elevation-z5" *ngIf="showBackCloseButtons">
+      <mat-card-content class="closeBackButtonCardContent">
+        <button mat-raised-button class="navigationButton navigationButtonBack" (click)="emitBackClicked()"><mat-icon>arrow_back_ios</mat-icon> Back to previous window</button>
+        <button mat-raised-button class="navigationButton navigationButtonClose" (click)="emitCloseClicked()">Close <mat-icon>close</mat-icon></button>
+      </mat-card-content>
+    </mat-card>
     <mat-card class="infoCard mat-elevation-z5">
 
         <mat-card-header>
@@ -357,39 +363,43 @@
                 </mat-radio-group>
               </div>
               <p *ngIf="addRecipientSuccess" class="success">Added assignments to {{ client.clientNickname }} for the {{ selectedRecipientEvent.eventDescription }}!</p>
-              <div class="recipientListContainer mat-elevation-z3" *ngIf="recipientOpen">
+              <div class="recipientListContainer mat-elevation-z4" *ngIf="recipientOpen">
                 <mat-divider [inset]="true"></mat-divider>
                 <mat-toolbar class="centeredToolbar">Add an Assignment</mat-toolbar>
-                <mat-card class="recipientListCard scrollbar scrollbar-primary">
-                  <mat-card-content>
-                    <div class="recipientListContentSelectEventDiv" *ngIf="selectedRecipientEvent.eventTypeID == undefined">
-                      <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
-                    </div>
-                    <div class="recipientListContentDiv">
-                      <app-small-loading-spin class="recipientListSpinner" *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
-                      <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
-                          <mat-list-option class="recipientListOption" *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">
-                            <div class="recipientListOptionInfoDiv">
-                              <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
-                              <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
-                              <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
-                              <div class="recipientTagDiv">
-                                <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
-                                  matTooltip="{{tag.tagName}}"
-                                  [matTooltipPosition]="'below'"
-                                  [disableRipple]="true">
-                                  <span class="recipientTagText">{{tag.tagName}}</span>
-                                </mat-chip>
+                <!-- Inner card -->
+                  <mat-card class="recipientListCard mat-elevation-z4">
+                    <ng-scrollbar class="recipientListScrollbar">
+                      <mat-card-content>
+                      <div class="recipientListContentSelectEventDiv" *ngIf="selectedRecipientEvent.eventTypeID == undefined">
+                        <mat-card-subtitle style="margin-bottom: 0px;">Select an event to see available assignments</mat-card-subtitle>
+                      </div>
+                      <div class="recipientListContentDiv">
+                        <app-small-loading-spin class="recipientListSpinner" *ngIf="showRecipientListPostingSpinner || (recipientOpen && !recipientsAreLoaded)"></app-small-loading-spin>
+                          <mat-selection-list #recipientList  *ngIf="!showRecipientListPostingSpinner && recipientsAreLoaded && selectedRecipientEvent.eventTypeID != undefined" [(ngModel)]="selectedRecipients">
+                            <mat-list-option class="recipientListOption" *ngFor="let clientRecipientOption of allowedAssignmentOptions" [value]="clientRecipientOption">
+                              <div class="recipientListOptionInfoDiv">
+                                <span>{{ clientRecipientOption.clientMeta.clientNickname }}</span>
+                                <mat-card-subtitle class="recipientInfoSubtitle">Assignments: {{ clientRecipientOption.totalAssignments }}</mat-card-subtitle>
+                                <mat-card-subtitle class="recipientInfoSubtitle">Senders: {{ clientRecipientOption.totalSenders }}</mat-card-subtitle>
+                                <div class="recipientTagDiv">
+                                  <mat-chip class="recipientTag" *ngFor="let tag of clientRecipientOption.tags"
+                                    matTooltip="{{tag.tagName}}"
+                                    [matTooltipPosition]="'below'"
+                                    [disableRipple]="true">
+                                    <span class="recipientTagText">{{tag.tagName}}</span>
+                                  </mat-chip>
+                                </div>
+                                <ng-container *ngFor="let survey of surveys">
+                                  <mat-card-subtitle *ngIf="!answeredToSurvey(clientRecipientOption, survey)" class="recipientInfoSubtitle subtleError">Client did not answer for the {{ survey.surveyDescription }}</mat-card-subtitle>
+                                </ng-container>
                               </div>
-                              <ng-container *ngFor="let survey of surveys">
-                                <mat-card-subtitle *ngIf="!answeredToSurvey(clientRecipientOption, survey)" class="recipientInfoSubtitle subtleError">Client did not answer for the {{ survey.surveyDescription }}</mat-card-subtitle>
-                              </ng-container>
-                            </div>
-                          </mat-list-option>
-                      </mat-selection-list>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
+                            </mat-list-option>
+                          </mat-selection-list>
+                        </div>
+                      </mat-card-content>
+                    </ng-scrollbar>
+
+                  </mat-card>
               </div>
             </div>
           </ng-container>
@@ -486,4 +496,6 @@
           </div>
         </mat-card-actions>
     </mat-card>
+  </ng-scrollbar>
 </div>
+

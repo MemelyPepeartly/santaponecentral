@@ -446,6 +446,8 @@ namespace Santa.Data.Repository
         public async Task DeleteRecieverXref(Guid clientID, Guid recipientID, Guid eventID)
         {
             Data.Entities.ClientRelationXref contextRelation = await santaContext.ClientRelationXref.FirstOrDefaultAsync(r => r.SenderClientId == clientID && r.RecipientClientId == recipientID && r.EventTypeId == eventID);
+            List<ChatMessage> contextRelatedMessages = await santaContext.ChatMessage.Where(cm => cm.ClientRelationXrefId == contextRelation.ClientRelationXrefId).ToListAsync();
+            santaContext.ChatMessage.RemoveRange(contextRelatedMessages);
             santaContext.ClientRelationXref.Remove(contextRelation);
         }
         #endregion
@@ -765,9 +767,8 @@ namespace Santa.Data.Repository
              * Assignment sender is the sender client (The agent)
              * Assignment reciever client is the reciever client (The actual assignment client)
              * 
-             * Subject messages are the client messages sent by admins and that equal the xrefID
+             * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
              * 
-             * Reciever messages are the client messages not sent by admins and that equal the xrefID
             */
             List<MessageHistory> listLogicAssignmentMessageHistory = await santaContext.ClientRelationXref
                 .Select(xref => new MessageHistory() 
@@ -788,55 +789,8 @@ namespace Santa.Data.Repository
                     assignmentRecieverClient = Mapper.MapClientChatMeta(xref.RecipientClient),
                     assignmentSenderClient = Mapper.MapClientChatMeta(xref.SenderClient),
 
-                    subjectMessages = xref.ChatMessage.Where(m => m.ClientRelationXrefId == xref.ClientRelationXrefId && m.MessageSenderClient.IsAdmin)
-                        .Select(message => new Message()
-                        {
-                            chatMessageID = message.ChatMessageId,
-                            clientRelationXrefID = message.ClientRelationXrefId != null ? message.ClientRelationXrefId : null,
-                            recieverClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageReceiverClientId != null ? message.MessageReceiverClientId : null,
-                                clientNickname = message.MessageReceiverClientId != null ? message.MessageReceiverClient.Nickname : String.Empty
-                            },
-                            senderClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageSenderClientId != null ? message.MessageSenderClientId : null,
-                                clientNickname = message.MessageSenderClientId != null ? message.MessageSenderClient.Nickname : String.Empty
-                            },
-                            messageContent = message.MessageContent,
-                            dateTimeSent = message.DateTimeSent,
-                            isMessageRead = message.IsMessageRead,
-                            fromAdmin = message.FromAdmin,
-                            subjectMessage = true
-                        })
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => m.fromAdmin)
-                        .ToList(),
-
-                    recieverMessages = xref.ChatMessage.Where(m => m.ClientRelationXrefId == xref.ClientRelationXrefId && !m.MessageSenderClient.IsAdmin)
-                        .Select(message => new Message()
-                        {
-                            chatMessageID = message.ChatMessageId,
-                            clientRelationXrefID = message.ClientRelationXrefId != null ? message.ClientRelationXrefId : null,
-                            recieverClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageReceiverClientId != null ? message.MessageReceiverClientId : null,
-                                clientNickname = message.MessageReceiverClientId != null ? message.MessageReceiverClient.Nickname : String.Empty
-                            },
-                            senderClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageSenderClientId != null ? message.MessageSenderClientId : null,
-                                clientNickname = message.MessageSenderClientId != null ? message.MessageSenderClient.Nickname : String.Empty
-                            },
-                            messageContent = message.MessageContent,
-                            dateTimeSent = message.DateTimeSent,
-                            isMessageRead = message.IsMessageRead,
-                            fromAdmin = message.FromAdmin,
-                            subjectMessage = false
-                        })
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => !m.fromAdmin)
-                        .ToList(),
+                    subjectMessages = new List<Message>(),
+                    recieverMessages = new List<Message>(),
 
                     unreadCount = xref.ChatMessage
                         .Where(m => !m.FromAdmin && m.IsMessageRead == false)
@@ -854,10 +808,7 @@ namespace Santa.Data.Repository
              * Conversation client is the client object in the context
              * Assingment sender/reciever clients do not exist
              * 
-             * Subject messages are the client messages sent by admins
-             * 
-             * 
-             * Reciever messages are the client messages not sent by admins
+             * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
             */
             List<MessageHistory> logicGeneralChatHistories = await santaContext.Client.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS || c.ClientStatus.StatusDescription == Constants.COMPLETED_STATUS)
                 .Select(client => new MessageHistory()
@@ -871,51 +822,8 @@ namespace Santa.Data.Repository
                     assignmentRecieverClient = new ClientChatMeta(),
                     assignmentSenderClient = new ClientChatMeta(),
 
-                    subjectMessages = client.ChatMessageMessageReceiverClient.Where(m => m.ClientRelationXrefId == null && m.MessageSenderClient.IsAdmin)
-                        .Select(message => new Message()
-                        {
-                            chatMessageID = message.ChatMessageId,
-                            clientRelationXrefID = null,
-                            recieverClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageReceiverClientId,
-                                clientNickname = message.MessageReceiverClient.Nickname
-                            },
-                            senderClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageSenderClientId,
-                                clientNickname = message.MessageSenderClient.Nickname
-                            },
-                            messageContent = message.MessageContent,
-                            dateTimeSent = message.DateTimeSent,
-                            isMessageRead = message.IsMessageRead,
-                            fromAdmin = message.FromAdmin,
-                            subjectMessage = true
-                        })
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => m.fromAdmin)
-                        .ToList(),
-
-                    recieverMessages = client.ChatMessageMessageSenderClient.Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin)
-                        .Select(message => new Message()
-                        {
-                            chatMessageID = message.ChatMessageId,
-                            clientRelationXrefID = null,
-                            recieverClient = new ClientChatMeta(),
-                            senderClient = new ClientChatMeta()
-                            {
-                                clientId = message.MessageSenderClientId,
-                                clientNickname = message.MessageSenderClient.Nickname
-                            },
-                            messageContent = message.MessageContent,
-                            dateTimeSent = message.DateTimeSent,
-                            isMessageRead = message.IsMessageRead,
-                            fromAdmin = message.FromAdmin,
-                            subjectMessage = false
-                        })
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => !m.fromAdmin)
-                        .ToList(),
+                    subjectMessages = new List<Message>(),
+                    recieverMessages = new List<Message>(),
 
                     unreadCount = client.ChatMessageMessageSenderClient
                     .Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin && m.IsMessageRead == false)
@@ -1565,13 +1473,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>(),
-                        /*
-                        tags = xref.RecipientClient.ClientTagXref.ToList().Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
                     senders = client.ClientRelationXrefRecipientClient.Select(xref => new RelationshipMeta()
@@ -1581,13 +1482,6 @@ namespace Santa.Data.Repository
                         clientRelationXrefID = xref.ClientRelationXrefId,
                         assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                         tags = new List<Logic.Objects.Tag>(),
-                        /*
-                        tags = xref.SenderClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                        {
-                            tagID = tagXref.TagId,
-                            tagName = tagXref.Tag.TagName
-                        }).OrderBy(t => t.tagName).ToList(),
-                        */
                         removable = xref.ChatMessage.Count > 0 ? false : true
                     }).ToList(),
 
@@ -1614,13 +1508,6 @@ namespace Santa.Data.Repository
                     eventType = Mapper.MapEvent(xref.EventType),
                     assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
                     tags = new List<Logic.Objects.Tag>(),
-                    /*
-                    tags = xref.RecipientClient.ClientTagXref.Select(tagXref => new Logic.Objects.Tag()
-                    {
-                        tagID = tagXref.TagId,
-                        tagName = tagXref.Tag.TagName
-                    }).OrderBy(t => t.tagName).ToList(),
-                    */
                     removable = xref.ChatMessage.Count > 0
                 }).ToListAsync();
             return listLogicRelationshipMeta;

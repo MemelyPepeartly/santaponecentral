@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 // Services
 
@@ -66,6 +67,11 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
 import { YuleLogComponent } from './admin-control/yule-log/yule-log.component';
 import { LogTableComponent } from './admin-control/yule-log/log-table/log-table.component';
 import { ClientItemComponent } from './headquarters/client-item/client-item.component';
+import { RelatedIntelligenceComponent } from './correspondence/related-intelligence/related-intelligence.component';
+import { ChatComponent } from './shared/chat/chat.component';
+import { SortByAssignmentStatusPipe } from './correspondence/sort-by-assignment-status.pipe';
+import { SortByUnreadPipePipe } from './correspondence/sort-by-unread-pipe.pipe';
+import { SortByGeneralPipePipe } from './correspondence/sort-by-general-pipe.pipe';
 
 
 @NgModule({
@@ -121,7 +127,12 @@ import { ClientItemComponent } from './headquarters/client-item/client-item.comp
       StatusCheckerComponent,
       YuleLogComponent,
       LogTableComponent,
-      ClientItemComponent
+      ClientItemComponent,
+      RelatedIntelligenceComponent,
+      ChatComponent,
+      SortByAssignmentStatusPipe,
+      SortByUnreadPipePipe,
+      SortByGeneralPipePipe
    ],
    entryComponents: [
       LoginComponent
@@ -134,7 +145,8 @@ import { ClientItemComponent } from './headquarters/client-item/client-item.comp
       ReactiveFormsModule,
       AppRoutingModule,
       RouterModule,
-      HttpClientModule
+      HttpClientModule,
+      NgScrollbarModule
    ],
    providers: [],
    bootstrap: [
