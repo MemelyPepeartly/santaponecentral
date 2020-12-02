@@ -17,6 +17,7 @@ using Santa.Api.SendGrid;
 using Santa.Api.Services.YuleLog;
 using Santa.Logic.Constants;
 using Santa.Logic.Interfaces;
+using Santa.Logic.Objects;
 using Santa.Logic.Objects.Information_Objects;
 
 namespace Santa.Api.Controllers
@@ -68,18 +69,20 @@ namespace Santa.Api.Controllers
         {
             BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
             BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            InfoContainer checkerInfoContainer = new InfoContainer() { assignments = new List<Logic.Objects.RelationshipMeta>() };
+            List<RelationshipMeta> checkerAssignmentInfo = new List<RelationshipMeta>();
             // If the checker is an admin, no need to get the info container for the checker
             if (!checkerClient.isAdmin)
             {
-                checkerInfoContainer = await repository.getClientInfoContainerByIDAsync(checkerClient.clientID);
+                checkerAssignmentInfo = await repository.getClientAssignmentInfoByIDAsync(checkerClient.clientID);
             }
             
 
-            // If the logic client and checker client have the same Id and the relationxref is either null or part of of the checked clients assingments list (Or the checker is just an admin overall)
-            if (logicBaseClient.clientID == checkerClient.clientID && message.clientRelationXrefID != null)
+            // If the logic client and checker client have the same Id
+            if (logicBaseClient.clientID == checkerClient.clientID)
             {
-                if (checkerInfoContainer.assignments.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) || checkerClient.isAdmin)
+                // If the message xref is not null, check to make sure the checkerAssignmentInfo has an assignment that matches (Or pass true if null, which implies posting to a general chat
+                // Or bypass if they are an admin
+                if ((message.clientRelationXrefID != null ? checkerAssignmentInfo.Any(a => a.clientRelationXrefID == message.clientRelationXrefID) : true) || checkerClient.isAdmin)
                 {
                     TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
