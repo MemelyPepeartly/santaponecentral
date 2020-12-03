@@ -70,7 +70,8 @@ namespace Santa.Api.Controllers
             BaseClient logicBaseClient = await repository.GetBasicClientInformationByID(message.messageSenderClientID.GetValueOrDefault() != Guid.Empty ? message.messageSenderClientID.GetValueOrDefault() : message.messageRecieverClientID.GetValueOrDefault());
             BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             List<RelationshipMeta> checkerAssignmentInfo = new List<RelationshipMeta>();
-            // If the checker is an admin, no need to get the info container for the checker
+            // If the checker is an admin, there is no need to get the checker's info container as that is
+            // only used to authorize the caller
             if (!checkerClient.isAdmin)
             {
                 checkerAssignmentInfo = await repository.getClientAssignmentInfoByIDAsync(checkerClient.clientID);
@@ -147,16 +148,8 @@ namespace Santa.Api.Controllers
 
                     }
                 }
-                else
-                {
-                    return StatusCode(StatusCodes.Status401Unauthorized);
-                }
             }
-            else
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized);
-            }
-
+            return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
         // PUT: api/Message/5
