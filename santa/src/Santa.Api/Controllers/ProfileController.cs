@@ -276,7 +276,9 @@ namespace Santa.Api.Controllers
                     await yuleLogger.logModifiedAssignmentStatus(baseCheckerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
                     await repository.SaveAsync();
 
-                    return Ok((await repository.GetClientByIDAsync(baseCheckerClient.clientID)).assignments.First(r => r.clientRelationXrefID == assignmentXrefID).assignmentStatus);
+                    RelationshipMeta newAssignmentMeta = await repository.getAssignmentRelationshipMetaByIDAsync(assignmentXrefID);
+
+                    return Ok(newAssignmentMeta.assignmentStatus);
                 }
                 catch(Exception)
                 {
