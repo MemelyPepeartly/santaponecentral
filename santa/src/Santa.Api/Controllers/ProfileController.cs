@@ -260,35 +260,27 @@ namespace Santa.Api.Controllers
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
-            Logic.Objects.Client checkerClient = await repository.GetClientByEmailAsync(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient baseCheckerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            List<RelationshipMeta> assignmentInfo = await repository.getClientAssignmentInfoByIDAsync(baseCheckerClient.clientID);
 
             // If the checked client is allowed based on token claims, and the checker client has an assignment ID that match the one in the URI (To stop modifying of anyone elses assignments)
-            if (logicProfile.clientID == checkerClient.clientID && checkerClient.assignments.Any(a => a.clientRelationXrefID == assignmentXrefID))
+            if (logicProfile.clientID == baseCheckerClient.clientID && assignmentInfo.Any(a => a.clientRelationXrefID == assignmentXrefID))
             {
-                RelationshipMeta assignment = checkerClient.assignments.First(a => a.clientRelationXrefID == assignmentXrefID);
+                RelationshipMeta assignment = assignmentInfo.First(a => a.clientRelationXrefID == assignmentXrefID);
                 AssignmentStatus newStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
 
                 try
                 {
                     // Update profile and send back the updated recipient
                     await repository.UpdateAssignmentProgressStatusByID(assignmentXrefID, model.assignmentStatusID);
-                    await yuleLogger.logModifiedAssignmentStatus(checkerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
+                    await yuleLogger.logModifiedAssignmentStatus(baseCheckerClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newStatus);
                     await repository.SaveAsync();
 
-                    return Ok((await repository.GetClientByIDAsync(checkerClient.clientID)).assignments.First(r => r.clientRelationXrefID == assignmentXrefID).assignmentStatus);
+                    return Ok((await repository.GetClientByIDAsync(baseCheckerClient.clientID)).assignments.First(r => r.clientRelationXrefID == assignmentXrefID).assignmentStatus);
                 }
                 catch(Exception)
                 {
-                    BaseClient checkerClientForErrorLog = new BaseClient()
-                    {
-                        clientID = checkerClient.clientID,
-                        clientName = checkerClient.clientName,
-                        nickname = checkerClient.nickname,
-                        email = checkerClient.email,
-                        hasAccount = checkerClient.hasAccount,
-                        isAdmin = checkerClient.isAdmin
-                    };
-                    await yuleLogger.logError(checkerClientForErrorLog, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
+                    await yuleLogger.logError(baseCheckerClient, LoggingConstants.MODIFIED_ASSIGNMENT_STATUS_CATEGORY);
                     return StatusCode(StatusCodes.Status424FailedDependency);
                 }
             }

@@ -461,7 +461,13 @@ namespace Santa.Data.Repository
 
         public async Task<List<Logic.Objects.AssignmentStatus>> GetAllAssignmentStatuses()
         {
-            List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = (await santaContext.AssignmentStatus.ToListAsync()).Select(Mapper.MapAssignmentStatus).ToList();
+            List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = await santaContext.AssignmentStatus
+                .Select(assignmentStatus => new Logic.Objects.AssignmentStatus()
+                {
+                    assignmentStatusID = assignmentStatus.AssignmentStatusId,
+                    assignmentStatusName = assignmentStatus.AssignmentStatusName,
+                    assignmentStatusDescription = assignmentStatus.AssignmentStatusDescription
+                }).ToListAsync();
 
             return listLogicAssigmentStatus;
         }

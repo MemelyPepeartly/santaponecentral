@@ -97,7 +97,7 @@ export class ContactPanelComponent implements OnInit{
     }))
   }
   public scrollToBottom(): void {
-    this.scrollbarRef.scrollTo({ bottom: 0, duration: 500 });
+    this.scrollbarRef.scrollTo({ bottom: 0, duration: 0 });
   }
   public manualRefreshChat(isSoftRefresh: boolean = false)
   {
