@@ -400,8 +400,24 @@ namespace Santa.Logic.Interfaces
         #endregion
 
         #region Informational
+        /// <summary>
+        /// Gets a client informational container that contains notes, responses, senders, and recievers
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
         Task<InfoContainer> getClientInfoContainerByIDAsync(Guid clientID);
+        /// <summary>
+        /// Gets a list of assignments for a client by their ID with additional information that a RelationshipMeta provides
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
         Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID);
+        /// <summary>
+        /// Gets a list of assignment xref ID's for a client by ID. This is a minimized data call for speed purposes
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task<List<Guid>> getClientAssignmentXrefIDsByIDAsync(Guid clientID);
         #endregion
 
         #region Utility
@@ -410,7 +426,13 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <returns></returns>
         Task SaveAsync();
-
+        /// <summary>
+        /// Returns true or false for if a client has a particular assignment by their ID, and the xref ID of the assignment in question. 
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="xrefID"></param>
+        /// <returns></returns>
+        Task<bool> clientHasAssignmentCheck(Guid clientID, Guid xrefID);
         /// <summary>
         /// Gets a list of all the allowed assignments for a client by their ID, and the event's ID
         /// </summary>

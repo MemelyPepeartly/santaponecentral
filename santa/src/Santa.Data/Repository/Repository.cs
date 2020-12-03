@@ -1518,12 +1518,25 @@ namespace Santa.Data.Repository
                 }).ToListAsync();
             return listLogicRelationshipMeta;
         }
+        public async Task<List<Guid>> getClientAssignmentXrefIDsByIDAsync(Guid clientID)
+        {
+            List<Guid> assignmentIDList = await santaContext.ClientRelationXref
+                .Where(crxr => crxr.SenderClientId == clientID)
+                .Select(crxr => crxr.ClientRelationXrefId)
+                .Distinct()
+                .ToListAsync();
+            return assignmentIDList;
+        }
         #endregion
 
         #region Utility
         public async Task SaveAsync()
         {
             await santaContext.SaveChangesAsync();
+        }
+        public async Task<bool> clientHasAssignmentCheck(Guid clientID, Guid xrefID)
+        {
+            return (await santaContext.ClientRelationXref.AnyAsync(crxr => crxr.ClientRelationXrefId == xrefID && crxr.SenderClientId == clientID));
         }
         public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {
