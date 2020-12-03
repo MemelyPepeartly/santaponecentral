@@ -125,6 +125,8 @@ export class ProfileComponent implements OnInit {
     this.initializing =  true;
     await this.profileService.getClientIDFromEmail(this.authProfile.email).catch(err => {console.log(err)});
     await this.profileService.getProfileByID(this.clientID);
+    await this.gatherer.gatherAllSurveys();
+    await this.gatherer.gatherAllAssignmentStatuses();
 
     this.gettingAssignments = true;
     this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
@@ -135,7 +137,6 @@ export class ProfileComponent implements OnInit {
       };
       this.profile.assignments = assignmentArray;
       await this.profileService.getUnloadedHistories(this.clientID);
-      await this.profileService.gatherGeneralHistory(this.clientID, this.profile.clientID);
       this.gettingAssignments = false;
     }, err => {
       console.group();
@@ -143,9 +144,16 @@ export class ProfileComponent implements OnInit {
       console.groupEnd();
       this.gettingAssignments = false;
     });
-
-    await this.gatherer.gatherAllSurveys();
-    await this.gatherer.gatherAllAssignmentStatuses();
+    this.gettingGeneralHistory = true;
+    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.clientID ,this.profile.clientID, null).subscribe((res) => {
+      this.generalHistory = this.ApiMapper.mapMessageHistory(res);
+      this.gettingGeneralHistory = false;
+    }, err => {
+      this.gettingGeneralHistory = false;
+      console.group();
+      console.log(err);
+      console.groupEnd();
+    });
     this.initializing =  false;
   }
   public async showSelectedChat(history: MessageHistory)

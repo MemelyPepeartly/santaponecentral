@@ -461,7 +461,13 @@ namespace Santa.Data.Repository
 
         public async Task<List<Logic.Objects.AssignmentStatus>> GetAllAssignmentStatuses()
         {
-            List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = (await santaContext.AssignmentStatus.ToListAsync()).Select(Mapper.MapAssignmentStatus).ToList();
+            List<Logic.Objects.AssignmentStatus> listLogicAssigmentStatus = await santaContext.AssignmentStatus
+                .Select(assignmentStatus => new Logic.Objects.AssignmentStatus()
+                {
+                    assignmentStatusID = assignmentStatus.AssignmentStatusId,
+                    assignmentStatusName = assignmentStatus.AssignmentStatusName,
+                    assignmentStatusDescription = assignmentStatus.AssignmentStatusDescription
+                }).ToListAsync();
 
             return listLogicAssigmentStatus;
         }
@@ -1498,7 +1504,7 @@ namespace Santa.Data.Repository
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.agentID == clientID);
             return logicRelationshipContainer;
         }
-        public async Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID)
+        public async Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID)
         {
             List<RelationshipMeta> listLogicRelationshipMeta = await santaContext.ClientRelationXref.Where(crxr => crxr.SenderClientId == clientID)
                 .Select(xref => new RelationshipMeta()
@@ -1512,12 +1518,40 @@ namespace Santa.Data.Repository
                 }).ToListAsync();
             return listLogicRelationshipMeta;
         }
+        public async Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID)
+        {
+            RelationshipMeta logicRelationshipMeta = await santaContext.ClientRelationXref
+                .Select(xref => new RelationshipMeta()
+                {
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = new List<Logic.Objects.Tag>(),
+                    removable = xref.ChatMessage.Count > 0
+                })
+                .FirstOrDefaultAsync(crxr => crxr.clientRelationXrefID == xrefID);
+            return logicRelationshipMeta;
+        }
+        public async Task<List<Guid>> getClientAssignmentXrefIDsByIDAsync(Guid clientID)
+        {
+            List<Guid> assignmentIDList = await santaContext.ClientRelationXref
+                .Where(crxr => crxr.SenderClientId == clientID)
+                .Select(crxr => crxr.ClientRelationXrefId)
+                .Distinct()
+                .ToListAsync();
+            return assignmentIDList;
+        }
         #endregion
 
         #region Utility
         public async Task SaveAsync()
         {
             await santaContext.SaveChangesAsync();
+        }
+        public async Task<bool> clientHasAssignmentCheck(Guid clientID, Guid xrefID)
+        {
+            return (await santaContext.ClientRelationXref.AnyAsync(crxr => crxr.ClientRelationXrefId == xrefID && crxr.SenderClientId == clientID));
         }
         public async Task<List<AllowedAssignmentMeta>> GetAllAllowedAssignmentsByID(Guid clientID, Guid eventTypeID)
         {

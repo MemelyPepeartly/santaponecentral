@@ -322,7 +322,7 @@ namespace Santa.Api.Controllers
                 // Foreach mailer
                 foreach (HQClient mailer in massMailers)
                 {
-                    List<RelationshipMeta> mailerInfo = (await repository.getClientAssignmentInfoByIDAsync(mailer.clientID)).Where(r => r.eventType.eventDescription == Constants.CARD_EXCHANGE_EVENT).ToList();
+                    List<RelationshipMeta> mailerInfo = (await repository.getClientAssignmentsInfoByIDAsync(mailer.clientID)).Where(r => r.eventType.eventDescription == Constants.CARD_EXCHANGE_EVENT).ToList();
                     PossiblePairingChoices mailerRelationships = new PossiblePairingChoices()
                     {
                         sendingAgent = mailer,
@@ -930,13 +930,14 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient baseTargetAgent = await repository.GetBasicClientInformationByID(clientID);
+            List<RelationshipMeta> baseTargetAssignments = await repository.getClientAssignmentsInfoByIDAsync(baseTargetAgent.clientID);
 
-            Client targetAgent = await repository.GetClientByIDAsync(clientID);
             AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
 
             try
             {
-                RelationshipMeta assignment = targetAgent.assignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
+                RelationshipMeta assignment = baseTargetAssignments.First(a => a.clientRelationXrefID == assignmentRelationshipID);
                 await yuleLogger.logModifiedAssignmentStatus(requestingClient, assignment.relationshipClient.clientNickname, assignment.assignmentStatus, newAssignmentStatus);
                 await repository.UpdateAssignmentProgressStatusByID(assignmentRelationshipID, model.assignmentStatusID);
                 await repository.SaveAsync();
