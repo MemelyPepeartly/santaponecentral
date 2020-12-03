@@ -74,7 +74,7 @@ namespace Santa.Api.Controllers
             // only used to authorize the caller
             if (!checkerClient.isAdmin)
             {
-                checkerAssignmentInfo = await repository.getClientAssignmentInfoByIDAsync(checkerClient.clientID);
+                checkerAssignmentInfo = await repository.getClientAssignmentsInfoByIDAsync(checkerClient.clientID);
             }
             
 

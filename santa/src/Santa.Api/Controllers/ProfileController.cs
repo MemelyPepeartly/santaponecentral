@@ -261,7 +261,7 @@ namespace Santa.Api.Controllers
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             Profile logicProfile = await repository.GetProfileByIDAsync(clientID);
             BaseClient baseCheckerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            List<RelationshipMeta> assignmentInfo = await repository.getClientAssignmentInfoByIDAsync(baseCheckerClient.clientID);
+            List<RelationshipMeta> assignmentInfo = await repository.getClientAssignmentsInfoByIDAsync(baseCheckerClient.clientID);
 
             // If the checked client is allowed based on token claims, and the checker client has an assignment ID that match the one in the URI (To stop modifying of anyone elses assignments)
             if (logicProfile.clientID == baseCheckerClient.clientID && assignmentInfo.Any(a => a.clientRelationXrefID == assignmentXrefID))

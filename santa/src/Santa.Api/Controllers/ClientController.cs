@@ -322,7 +322,7 @@ namespace Santa.Api.Controllers
                 // Foreach mailer
                 foreach (HQClient mailer in massMailers)
                 {
-                    List<RelationshipMeta> mailerInfo = (await repository.getClientAssignmentInfoByIDAsync(mailer.clientID)).Where(r => r.eventType.eventDescription == Constants.CARD_EXCHANGE_EVENT).ToList();
+                    List<RelationshipMeta> mailerInfo = (await repository.getClientAssignmentsInfoByIDAsync(mailer.clientID)).Where(r => r.eventType.eventDescription == Constants.CARD_EXCHANGE_EVENT).ToList();
                     PossiblePairingChoices mailerRelationships = new PossiblePairingChoices()
                     {
                         sendingAgent = mailer,
@@ -931,7 +931,7 @@ namespace Santa.Api.Controllers
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             BaseClient baseTargetAgent = await repository.GetBasicClientInformationByID(clientID);
-            List<RelationshipMeta> baseTargetAssignments = await repository.getClientAssignmentInfoByIDAsync(baseTargetAgent.clientID);
+            List<RelationshipMeta> baseTargetAssignments = await repository.getClientAssignmentsInfoByIDAsync(baseTargetAgent.clientID);
 
             AssignmentStatus newAssignmentStatus = await repository.GetAssignmentStatusByID(model.assignmentStatusID);
 
