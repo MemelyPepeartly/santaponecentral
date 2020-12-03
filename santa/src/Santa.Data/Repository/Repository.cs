@@ -1504,7 +1504,7 @@ namespace Santa.Data.Repository
                 }).AsNoTracking().FirstOrDefaultAsync(c => c.agentID == clientID);
             return logicRelationshipContainer;
         }
-        public async Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID)
+        public async Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID)
         {
             List<RelationshipMeta> listLogicRelationshipMeta = await santaContext.ClientRelationXref.Where(crxr => crxr.SenderClientId == clientID)
                 .Select(xref => new RelationshipMeta()
@@ -1517,6 +1517,21 @@ namespace Santa.Data.Repository
                     removable = xref.ChatMessage.Count > 0
                 }).ToListAsync();
             return listLogicRelationshipMeta;
+        }
+        public async Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID)
+        {
+            RelationshipMeta logicRelationshipMeta = await santaContext.ClientRelationXref
+                .Select(xref => new RelationshipMeta()
+                {
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = new List<Logic.Objects.Tag>(),
+                    removable = xref.ChatMessage.Count > 0
+                })
+                .FirstOrDefaultAsync(crxr => crxr.clientRelationXrefID == xrefID);
+            return logicRelationshipMeta;
         }
         public async Task<List<Guid>> getClientAssignmentXrefIDsByIDAsync(Guid clientID)
         {

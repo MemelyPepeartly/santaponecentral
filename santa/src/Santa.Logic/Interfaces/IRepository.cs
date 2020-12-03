@@ -411,7 +411,13 @@ namespace Santa.Logic.Interfaces
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
-        Task<List<RelationshipMeta>> getClientAssignmentInfoByIDAsync(Guid clientID);
+        Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID);
+        /// <summary>
+        /// Gets a specific relationship for a client by xrefID
+        /// </summary>
+        /// <param name="xrefID"></param>
+        /// <returns></returns>
+        Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID);
         /// <summary>
         /// Gets a list of assignment xref ID's for a client by ID. This is a minimized data call for speed purposes
         /// </summary>
