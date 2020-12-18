@@ -26,6 +26,14 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+      <mat-card-actions>
+        <!-- Only show a general history if they are not an admin and the app is not initializing -->
+        <button mat-raised-button *ngIf="!isAdmin"
+          (click)="historySelected(null)"
+          [disabled]="gettingAllHistories || gettingProfile || profile.clientID == undefined"
+          [matBadge]="generalHistory.unreadCount"
+          [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence</button>
+      </mat-card-actions>
       <div *ngIf="(histories.length == 0) && doneGettingInfo">
         <h1>No assignments to display!</h1>
       </div>
@@ -45,12 +53,4 @@
         </app-chat-histories>
       </div>
     </mat-card-content>
-    <mat-card-actions>
-      <!-- Only show a general history if they are not an admin and the app is not initializing -->
-      <button mat-raised-button *ngIf="!isAdmin && !initializing"
-        (click)="historySelected(null)"
-        [disabled]="gettingAllHistories || gettingProfile || profile.clientID == undefined"
-        [matBadge]="generalHistory.unreadCount"
-        [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence</button>
-    </mat-card-actions>
 </mat-card>
