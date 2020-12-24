@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { CountriesService } from 'src/app/services/countries.service';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { MessageHistory } from 'src/classes/message';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-information',
@@ -21,6 +22,7 @@ export class InformationComponent implements OnInit {
     public ProfileApiService: ProfileApiService,
     public profileService: ProfileService,
     public SantaApiPut: SantaApiPutService,
+    public auth: AuthService,
     public countryService: CountriesService) { }
 
   @Input() loading: boolean;
@@ -34,7 +36,7 @@ export class InformationComponent implements OnInit {
   public changingAddress: boolean;
 
   public showAddressChangeForm: boolean = false;
-  public showNotice: boolean = true;
+  public isAdmin: boolean;
 
   public countries: Array<any> = [];
   public clientAddressFormGroup: FormGroup;
@@ -53,6 +55,10 @@ export class InformationComponent implements OnInit {
       state: ['', [Validators.required, Validators.pattern("[A-Za-z0-9 ]{1,50}"), Validators.maxLength(50)]],
       postalCode: ['', [Validators.required, Validators.maxLength(25)]],
       country: ['', Validators.required]
+    });
+
+    this.auth.isAdmin.subscribe((admin: boolean) => {
+      this.isAdmin = admin;
     });
   }
   public async submitNewAddress()
