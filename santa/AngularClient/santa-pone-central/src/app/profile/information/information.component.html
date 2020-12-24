@@ -1,5 +1,25 @@
 <div id="info-div">
     <mat-card class="mat-elevation-z5">
+        <div class="contentBox small-box mat-elevation-z4" *ngIf="showNotice">
+            <mat-card>
+                <mat-card-content>
+                    <mat-card-title>Time to get your shipping numbers out! <mat-icon>local_shipping</mat-icon></mat-card-title>
+                    <mat-card-subtitle>
+                        Have gifts being shipped? Get them sent to Cardslut and Santapone so they can inform your assignments!
+                    </mat-card-subtitle>
+                    <span>
+                        If you havn't already, be sure to give Santapone and Cardslut your shipping info to pass along to your assignment below, or shoot them a message here in your general correspondence!
+                    </span>
+                    <button class="noticeCardButton mat-elevation-z5" mat-raised-button *ngIf="!isAdmin"
+                        (click)="emitGeneralHistorySelected()"
+                        [disabled]="loading || profile.clientID == undefined"
+                        [matBadge]="generalHistory.unreadCount"
+                        [matBadgeHidden]="generalHistory.unreadCount == 0">General Correspondence
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        
         <!-- Personal Information Card-->
         <mat-card-header style="text-align: left;">
             <mat-card-title>Profile Information</mat-card-title>

@@ -71,3 +71,25 @@
   margin-top: 15px;
   margin-bottom: 15px;
 }
+.small-box {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  height: auto;
+  width: auto;
+}
+.contentBox{
+  padding: 25px;
+  background-color:white;
+}
+.noticeCardButton
+{
+  display: block;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}

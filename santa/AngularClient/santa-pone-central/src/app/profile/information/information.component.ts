@@ -8,6 +8,7 @@ import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CountriesService } from 'src/app/services/countries.service';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
+import { MessageHistory } from 'src/classes/message';
 
 @Component({
   selector: 'app-information',
@@ -25,11 +26,15 @@ export class InformationComponent implements OnInit {
   @Input() loading: boolean;
   @Input() profile: Profile;
   @Input() surveys: Array<Survey>;
+  @Input() generalHistory: MessageHistory = new MessageHistory();
+
+  @Output() generalHistoryButtonSelectedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
 
   public editingResponse: boolean;
   public changingAddress: boolean;
 
-  public showAddressChangeForm: boolean;
+  public showAddressChangeForm: boolean = false;
+  public showNotice: boolean = true;
 
   public countries: Array<any> = [];
   public clientAddressFormGroup: FormGroup;
@@ -87,5 +92,9 @@ export class InformationComponent implements OnInit {
     {
       return false;
     }
+  }
+  public emitGeneralHistorySelected()
+  {
+    this.generalHistoryButtonSelectedEvent.emit(null);
   }
 }
