@@ -1,0 +1,12 @@
+## docker ignores
+dockerup*
+!dockerup.yaml
+
+## dotnet specific ignores
+.vscode/
+.vs/
+bin/
+obj/
+
+appsettings.*
+!appsettings.json
