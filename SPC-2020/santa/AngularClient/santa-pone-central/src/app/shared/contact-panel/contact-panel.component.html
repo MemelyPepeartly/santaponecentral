@@ -1,0 +1,71 @@
+
+<div id="contact-div">
+    <mat-card class="list-card mat-elevation-z5" *ngIf="!showLoading">
+        <mat-card-header>
+            <mat-card-title>Contact History</mat-card-title>
+            <mat-card-subtitle>Private chat between {{ messageHistory.conversationClient.clientNickname }} and the event organizers</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="messageHistory.relationXrefID != undefined">Assignment: {{messageHistory.assignmentRecieverClient.clientNickname}} for the {{messageHistory.eventType.eventDescription}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="messageHistory.relationXrefID == undefined">General Correspondence History</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="showControlButton && messageHistory.relationXrefID != undefined">
+              <button mat-raised-button (click)="emitAgentControlClicked()">Open {{messageHistory.assignmentRecieverClient.clientNickname}}'s Agent Control</button>
+            </mat-card-subtitle>
+            <mat-card-subtitle>
+              <button mat-raised-button (click)="manualRefreshChat()" [disabled]="refreshing">
+                <mat-icon>refresh</mat-icon>
+                Refresh Chat
+              </button>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="messageHistory == undefined" id="chat-window" class="spinner-container mat-elevation-z5">
+                <span>No chat selected! Select a chat history to see messages</span>
+            </div>
+            <div *ngIf="showLoading" id="loader-window" class="mat-elevation-z5">
+              <app-loading-spin [spinnerType]="1"></app-loading-spin>
+            </div>
+            <div class="actionBarDiv" *ngIf="showActionProgressBar">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <ng-scrollbar #scroller class="scrollbar chatFrameScroller mat-elevation-z5" *ngIf="messageHistory != undefined && !showLoading" [disabled]="false" >
+              <div #chatFrame  class="chatFrameDiv">
+                <ng-container *ngFor="let message of totalHistory()">
+                  <div class="date-div">
+                    <span>{{ message.dateTimeSent.toDateString() }} - {{ message.dateTimeSent.toLocaleTimeString() }}</span> <span id="timeZone"> (Eastern Standard Time) </span>
+                    <mat-divider [inset]="true"></mat-divider>
+                  </div>
+                  <div class="message mat-elevation-z3" [ngClass]="{'sent-message' : message.subjectMessage,
+                                  'recieved-message' : !message.subjectMessage}">
+                    <div class="nick-div">
+                        <span> {{ message.senderClient.clientNickname }} </span>
+                        <mat-divider [inset]="true"></mat-divider>
+                    </div>
+                    <!--<div id="content" [innerHTML]="spotURL(message.messageContent)"></div>-->
+                    <div id="content">{{message.messageContent}}</div>
+                    <div class="messageCheckDiv">
+                        <button mat-raised-button class="messageCheckButton mat-elevation-z5" *ngIf="showButton(message)"
+                            matTooltip="Mark as read"
+                            [disabled]="markingRead"
+                            (click)="markRead(message)">
+                            <mat-icon mat-icon-button>check</mat-icon>
+                        </button>
+                    </div>
+                  </div>
+                  <span class="readSpan" *ngIf="showRead(message)"
+                  [ngClass]="{'sent-read' : message.subjectMessage,
+                  'recieved-read' : !message.subjectMessage}"><mat-icon>check</mat-icon>Read</span>
+                </ng-container>
+              </div>
+            </ng-scrollbar>
+
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="list-card mat-elevation-z5" *ngIf="showLoading">
+      <mat-card-header>
+        <mat-card-title>Loading Chat History</mat-card-title>
+        <mat-card-subtitle>Our ponies are very hard at work getting this chat for you</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <app-loading-spin [spinnerType]="1"></app-loading-spin>
+      </mat-card-content>
+    </mat-card>
+</div>

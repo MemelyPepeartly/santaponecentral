@@ -1,0 +1,119 @@
+mat-card-header
+{
+  text-align: left;
+}
+.containingCard
+{
+  width: 100%;
+}
+.cardHeader
+{
+  display: block;
+  margin-bottom: 10px;
+}
+.showAllButtonDiv
+{
+  display: block;
+}
+.headerInfoDiv
+{
+  display: inline-block;
+}
+.showAllCardMargin
+{
+  margin-top: 10px;
+}
+.showAllDiv
+{
+  display: inline-block;
+  width: 65%;
+}
+.questionSelection
+{
+  display: inline-block;
+  width: 35%;
+  height: fit-content;
+  vertical-align: top;
+  clear: both;
+}
+.questionListOption
+{
+  display: block !important;
+  height: fit-content !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+.answerCard
+{
+  display: inline-block;
+  width: 63%;
+  margin-left: 2%;
+}
+.showAllAnswerCard
+{
+  display: inline-block;
+  width: 90%;
+  margin-left: 2%;
+}
+.responseText
+{
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.responseTextContent
+{
+  white-space: pre-wrap;
+  text-align: left;
+}
+.spinnerDiv
+{
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.editDiv
+{
+  display: block;
+  width: 100%;
+}
+.inputForm
+{
+  width: 100%;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
+.subtitleWarning
+{
+  color: #d07973;
+}
+@media (max-width:600px)
+{
+  .questionSelection
+  {
+    display: inline-block;
+    width: 35%;
+    min-width: 300px;
+    height: fit-content;
+    vertical-align: top;
+    clear: both;
+  }
+  .answerCard
+  {
+    display: inline-block;
+    width: 63%;
+    min-width: 300px;
+    margin-left: 0px;
+    margin-top: 15px;
+  }
+  .showAllDiv
+  {
+    display: inline-block;
+    width: 100%;
+  }
+}
