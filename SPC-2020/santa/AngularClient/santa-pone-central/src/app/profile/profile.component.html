@@ -1,0 +1,40 @@
+
+<div id="overlay" *ngIf="showOverlay == true" (click)="hideWindow()">
+</div>
+
+<!-- Chat Window -->
+<div class="contact-container mat-elevation-z3" *ngIf="showChat">
+  <app-chat
+    (historyUpdatedEvent)="undefined"
+    (manualRefreshClickedEvent)="undefined"
+    (readAllClickedEvent)="undefined"
+    [chatInfoContainer]="chatInfoContainer">
+  </app-chat>
+</div>
+
+<div class = "component-container">
+    <div class="components mat-elevation-z3">
+        <app-information
+          (generalHistoryButtonSelectedEvent)="showSelectedChat($event)"
+          [generalHistory]="generalHistory"
+          [profile]="profile"
+          [loading] = "gettingProfile || gettingClientID"
+          [surveys]="surveys">
+        </app-information>
+        <app-control-panel
+          (refreshClientAssignmentsEvent)="manualRefreshProfileAssignments($event)"
+          (chatClickedEvent)="showSelectedChat($event)"
+          [surveys]="surveys"
+          [gettingAllHistories]="gettingAllHistories"
+          [gettingGeneralHistory]="gettingGeneralHistory"
+          [gettingSelectedHistory]="gettingSelectedHistory"
+          [gettingProfile]="gettingProfile"
+          [doneGettingInfo]="!initializing && !gettingAssignments"
+          [refreshing]="refreshingHistories"
+          [loading] = "gettingAssignments || gettingAllHistories"
+          [generalHistory]="generalHistory"
+          [profile]="profile"
+          [histories]="histories">
+        </app-control-panel>
+    </div>
+</div>

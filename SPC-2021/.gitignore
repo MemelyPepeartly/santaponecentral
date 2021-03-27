@@ -1,0 +1,28 @@
+## angular
+coverage/
+dist/
+
+## docker
+dockerup*
+!dockerup.yaml
+
+## dotnet
+.vscode/
+.vs/
+bin/
+obj/
+
+appsettings.*
+!appsettings.json
+
+## jekyll
+.jekyll-cache/
+.sass-cache/
+
+.jekyll-metadata
+
+## macos
+.DS_Store
+
+## nodejs
+node_modules/
