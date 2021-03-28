@@ -9,7 +9,13 @@ namespace Survey.Data.Entities
     {
         public Client()
         {
+            ChatMessageMessageReceiverClients = new HashSet<ChatMessage>();
+            ChatMessageMessageSenderClients = new HashSet<ChatMessage>();
+            ClientRelationXrefRecipientClients = new HashSet<ClientRelationXref>();
+            ClientRelationXrefSenderClients = new HashSet<ClientRelationXref>();
+            ClientTagXrefs = new HashSet<ClientTagXref>();
             Notes = new HashSet<Note>();
+            SurveyResponses = new HashSet<SurveyResponse>();
         }
 
         public Guid ClientId { get; set; }
@@ -27,6 +33,12 @@ namespace Survey.Data.Entities
         public bool HasAccount { get; set; }
 
         public virtual ClientStatus ClientStatus { get; set; }
+        public virtual ICollection<ChatMessage> ChatMessageMessageReceiverClients { get; set; }
+        public virtual ICollection<ChatMessage> ChatMessageMessageSenderClients { get; set; }
+        public virtual ICollection<ClientRelationXref> ClientRelationXrefRecipientClients { get; set; }
+        public virtual ICollection<ClientRelationXref> ClientRelationXrefSenderClients { get; set; }
+        public virtual ICollection<ClientTagXref> ClientTagXrefs { get; set; }
         public virtual ICollection<Note> Notes { get; set; }
+        public virtual ICollection<SurveyResponse> SurveyResponses { get; set; }
     }
 }
