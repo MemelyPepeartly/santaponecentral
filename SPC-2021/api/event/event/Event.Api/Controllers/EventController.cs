@@ -1,5 +1,6 @@
 ﻿using Event.Api.Models.Event_Models;
 using Event.Logic.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Event.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EventController : Controller
     {
 
