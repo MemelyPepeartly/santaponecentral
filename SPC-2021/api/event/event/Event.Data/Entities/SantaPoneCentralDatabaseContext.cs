@@ -453,10 +453,7 @@ namespace Event.Data.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
-                entity.Property(e => e.SortOrder)
-                    .IsRequired()
-                    .HasMaxLength(5)
-                    .HasColumnName("sortOrder");
+                entity.Property(e => e.SortOrder).HasColumnName("sortOrder");
 
                 entity.Property(e => e.SurveyOptionId).HasColumnName("surveyOptionID");
 
@@ -485,10 +482,7 @@ namespace Event.Data.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
-                entity.Property(e => e.SortOrder)
-                    .IsRequired()
-                    .HasMaxLength(5)
-                    .HasColumnName("sortOrder");
+                entity.Property(e => e.SortOrder).HasColumnName("sortOrder");
 
                 entity.Property(e => e.SurveyId).HasColumnName("surveyID");
 
