@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace survey.Controllers
+namespace Survey.Controllers
 {
     [ApiController]
     [Route("[controller]")]

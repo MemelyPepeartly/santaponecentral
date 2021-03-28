@@ -1,6 +1,6 @@
 using System;
 
-namespace survey
+namespace Survey
 {
     public class WeatherForecast
     {
