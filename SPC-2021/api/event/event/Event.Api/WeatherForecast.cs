@@ -1,6 +1,6 @@
 using System;
 
-namespace Event
+namespace Event.Api
 {
     public class WeatherForecast
     {
