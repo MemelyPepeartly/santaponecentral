@@ -15,7 +15,7 @@ namespace Survey.Api
 {
     public class Startup
     {
-        private const string version = "v8";
+        private const string version = "v1";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
