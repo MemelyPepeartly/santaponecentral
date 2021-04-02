@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace profile
+namespace Profile.Api
 {
     public class Program
     {
