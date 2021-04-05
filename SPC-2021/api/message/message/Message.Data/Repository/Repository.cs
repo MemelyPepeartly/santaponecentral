@@ -11,7 +11,7 @@ using Message.Data.Repository;
 using Santa.Logic.Constants;
 using Message.Logic.Interfaces;
 
-namespace Profile.Data.Repository
+namespace Message.Data.Repository
 {
     public class Repository : IRepository
     {
