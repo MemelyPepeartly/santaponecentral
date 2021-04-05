@@ -64,9 +64,6 @@ namespace Search.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //SignalR
-            services.AddSignalR();
-
             //Auth
             string domain = $"https://{Configuration["Auth0API:domain"]}/";
             services.AddAuthentication(options =>
