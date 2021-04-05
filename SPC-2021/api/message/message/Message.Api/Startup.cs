@@ -1,4 +1,5 @@
 using Message.Data.Entities;
+using Message.Data.Repository;
 using Message.Logic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Profile.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
