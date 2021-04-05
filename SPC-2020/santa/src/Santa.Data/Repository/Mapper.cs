@@ -902,6 +902,7 @@ namespace Santa.Data.Repository
             return contextCategory;
         }
         #endregion
+
         #region Yule log
         public static Logic.Objects.Base_Objects.Logging.YuleLog MapLog(Entities.YuleLog contextLog)
         {
