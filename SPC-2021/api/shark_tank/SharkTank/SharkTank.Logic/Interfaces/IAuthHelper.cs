@@ -13,6 +13,7 @@ namespace SharkTank.Logic.Interfaces
         Task<Auth0UserInfoModel> createAuthClient(string authEmail, string authName);
         Task<Auth0UserInfoModel> getAuthClientByID(string authUserID);
         Task<Auth0UserInfoModel> getAuthClientByEmail(string authUserEmail);
+
         Task updateAuthClientRole(string authUserID, string authRoleID);
         Task updateAuthClientEmail(string authUserID, string newEmail);
         Task updateAuthClientName(string authUserID, string newName);
