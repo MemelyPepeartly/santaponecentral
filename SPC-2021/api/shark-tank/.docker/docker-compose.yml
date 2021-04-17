@@ -1,5 +1,5 @@
 networks:
-  sharktank_localhost:
+  shark-tank_localhost:
 services:
   api:
     build:
@@ -11,13 +11,13 @@ services:
     ports:
       - 8000:80
     networks:
-      - sharktank_localhost
+      - shark-tank_localhost
     environment:
       ConnectionStrings__SharkTankDb: 'Server=db,1433;Database=master;User Id=sa;Password=Pass@word;'
   db:
     image: mcr.microsoft.com/mssql/server
     networks:
-      - sharktank_localhost
+      - shark-tank_localhost
     environment:
       SA_PASSWORD: 'Pass@word'
       ACCEPT_EULA: "Y"
