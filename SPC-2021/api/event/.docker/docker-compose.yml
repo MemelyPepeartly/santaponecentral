@@ -1,0 +1,24 @@
+networks:
+  event_localhost:
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    image: santaponeapi
+    depends_on:
+      - data
+    ports:
+      - 11080:80
+    networks:
+      - event_localhost
+    environment:
+      ConnectionStrings__EventDb: 'Host=data;Database=event;Username=mssql;Password=Pass@word'
+  data:
+    image: mcr.microsoft.com/mssql/server
+    networks:
+      - event_localhost
+    environment:
+      SA_PASSWORD: 'Pass@word'
+      ACCEPT_EULA: "Y"
+version: '3.9'
