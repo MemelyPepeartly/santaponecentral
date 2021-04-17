@@ -1,23 +1,23 @@
 networks:
-  event_localhost:
+  client_localhost:
 services:
   api:
     build:
       context: ..
       dockerfile: .docker/Dockerfile
-    image: spc-eventapi
+    image: spc-clientapi
     depends_on:
       - db
     ports:
       - 8000:80
     networks:
-      - event_localhost
+      - client_localhost
     environment:
-      ConnectionStrings__EventDb: 'Server=db,1433;Database=master;User Id=sa;Password=Pass@word;'
+      ConnectionStrings__ClientDb: 'Server=db,1433;Database=master;User Id=sa;Password=Pass@word;'
   db:
     image: mcr.microsoft.com/mssql/server
     networks:
-      - event_localhost
+      - client_localhost
     environment:
       SA_PASSWORD: 'Pass@word'
       ACCEPT_EULA: "Y"
