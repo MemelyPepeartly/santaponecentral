@@ -17,7 +17,8 @@ namespace SharkTank.Api
 {
     public class Startup
     {
-        private const string version = "v1";
+        private const string version = "v2";
+        private const string ConnectionStringName = "SharkTankDb";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,14 +29,9 @@ namespace SharkTank.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Connection string
-            string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
-
-            //DBContext
+            //DB Connection
             services.AddDbContext<SantaPoneCentralDatabaseContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            }, ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringName)));
 
             //Cors
             services.AddCors(options =>
@@ -132,6 +128,12 @@ namespace SharkTank.Api
             {
                 endpoints.MapControllers();
             });
+
+            // Ensures DB is created against container
+            IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using IServiceScope serviceScope = serviceScopeFactory.CreateScope();
+            SantaPoneCentralDatabaseContext dbContext = serviceScope.ServiceProvider.GetService<SantaPoneCentralDatabaseContext>();
+            dbContext.Database.EnsureCreated();
         }
     }
 }
