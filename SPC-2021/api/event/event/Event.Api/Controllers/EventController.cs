@@ -62,7 +62,9 @@ namespace Event.Api.Controllers
 
         // POST: api/Event
         [HttpPost]
-        [Authorize(Policy = "create:events")]
+#warning Need to uncomment this come the time for auth testing
+        //[Authorize(Policy = "create:events")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody] ApiEvent newEvent)
         {
             try
