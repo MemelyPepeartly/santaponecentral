@@ -29,7 +29,7 @@ namespace Event.Api
         public void ConfigureServices(IServiceCollection services)
         {
             //Connection string
-            string connectionString = Configuration.GetConnectionString("SantaBaseAppDb");
+            string connectionString = Configuration.GetConnectionString("EventDb");
 
             //DBContext
             services.AddDbContext<SantaPoneCentralDatabaseContext>(options =>

@@ -1,20 +1,20 @@
 networks:
   event_localhost:
 services:
-  web:
+  api:
     build:
       context: ..
       dockerfile: .docker/Dockerfile
     image: santaponeapi
     depends_on:
-      - data
+      - db
     ports:
       - 11080:80
     networks:
       - event_localhost
     environment:
-      ConnectionStrings__EventDb: 'Host=data;Database=event;Username=mssql;Password=Pass@word'
-  data:
+      ConnectionStrings__EventDb: 'Host=data;Database=eventDb;Username=mssql;Password=Pass@word'
+  db:
     image: mcr.microsoft.com/mssql/server
     networks:
       - event_localhost
