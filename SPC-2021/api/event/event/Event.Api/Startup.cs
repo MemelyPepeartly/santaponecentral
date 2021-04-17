@@ -12,12 +12,15 @@ using System.Linq;
 using Event.Data.Entities;
 using Event.Logic.Interfaces;
 using Event.Data.Repository;
+using Event.Data.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Event.Api
 {
     public class Startup
     {
-        private const string version = "v8";
+        private const string version = "v2";
+        private const string ConnectionStringName = "EventDb";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,14 +31,8 @@ namespace Event.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Connection string
-            string connectionString = Configuration.GetConnectionString("EventDb");
-
-            //DBContext
             services.AddDbContext<SantaPoneCentralDatabaseContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            }, ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringName)));
 
             //Cors
             services.AddCors(options =>
@@ -66,9 +63,6 @@ namespace Event.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //SignalR
-            services.AddSignalR();
-
             //Auth
             string domain = $"https://{Configuration["Auth0API:domain"]}/";
             services.AddAuthentication(options =>
@@ -97,7 +91,6 @@ namespace Event.Api
             });
 
             services.AddMvc();
-             
             services.AddControllers();
             services.AddHttpClient();
         }

@@ -5,15 +5,15 @@ services:
     build:
       context: ..
       dockerfile: .docker/Dockerfile
-    image: santaponeapi
+    image: spc-eventapi
     depends_on:
       - db
     ports:
-      - 11080:80
+      - 8000:80
     networks:
       - event_localhost
     environment:
-      ConnectionStrings__EventDb: 'Host=data;Database=eventDb;Username=mssql;Password=Pass@word'
+      ConnectionStrings__EventDb: 'Server=localhost,1433;Database=master;User Id=myUsername;Password=Pass@word;'
   db:
     image: mcr.microsoft.com/mssql/server
     networks:
@@ -21,4 +21,6 @@ services:
     environment:
       SA_PASSWORD: 'Pass@word'
       ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
 version: '3.9'
