@@ -12,8 +12,6 @@ using System.Linq;
 using Event.Data.Entities;
 using Event.Logic.Interfaces;
 using Event.Data.Repository;
-using Event.Data.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace Event.Api
 {
@@ -123,6 +121,12 @@ namespace Event.Api
             {
                 endpoints.MapControllers();
             });
+
+            // Ensures DB is created against container
+            IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using IServiceScope serviceScope = serviceScopeFactory.CreateScope();
+            SantaPoneCentralDatabaseContext dbContext = serviceScope.ServiceProvider.GetService<SantaPoneCentralDatabaseContext>();
+            dbContext.Database.EnsureCreated();
         }
     }
 }
