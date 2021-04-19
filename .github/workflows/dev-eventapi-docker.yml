@@ -23,5 +23,8 @@ jobs:
     - name: Build the Docker image
       run: cd ${{ env.API_PATH }} && docker build . --file .docker/Dockerfile --tag spc-${{ env.API_IMAGE_NAME }}:dev
     #Step 2
+    - name: Tag image
+      run: docker tag spc-${{ env.API_IMAGE_NAME }}:dev ${{ secrets.DH_USERNAME }}/${{ env.API_IMAGE_NAME }}:dev
+    #Step 3
     - name: Push image to Docker Hub
-      run: docker push "${{ secrets.DH_USERNAME }}"/spc-${{ env.API_IMAGE_NAME }}:dev
+      run: docker push ${{ secrets.DH_USERNAME }}/spc-${{ env.API_IMAGE_NAME }}:dev
