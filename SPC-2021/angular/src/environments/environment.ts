@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: "https://dev-santaponecentral-api.azurewebsites.net/api/",
+  auth0Domain: "",
+  auth0Client_id: "",
+  auth0Redirect_uri: `${window.location.origin}`,
+  auth0Audience: ""
 };
 
 /*
