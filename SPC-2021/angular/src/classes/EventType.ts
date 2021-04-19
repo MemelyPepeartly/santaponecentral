@@ -1,4 +1,4 @@
-export class EventType {
+export class eventType {
     eventTypeID!: string;
     eventDescription!: string;
     isActive!: boolean;
