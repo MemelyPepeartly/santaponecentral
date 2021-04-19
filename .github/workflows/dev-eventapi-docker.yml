@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    #test
     #Step 0
     - name: Set Credentials
       run: docker login -u "${{ secrets.DH_USERNAME }}" -p "${{ secrets.DH_PASSWORD }}"
