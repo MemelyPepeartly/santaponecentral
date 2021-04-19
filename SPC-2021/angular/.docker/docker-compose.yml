@@ -1,0 +1,13 @@
+networks:
+  spc_localhost:
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    image: santaponcentraldev/spc-2021:dev
+    networks:
+      - spc_localhost
+    ports:
+      - 10080:80
+version: '3.7'
