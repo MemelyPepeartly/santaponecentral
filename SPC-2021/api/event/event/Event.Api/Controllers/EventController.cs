@@ -91,7 +91,6 @@ namespace Event.Api.Controllers
                 throw e.InnerException;
             }
         }
-        // test
 
         // PUT: api/Event/5
         [HttpPut("{eventID}/Description")]
