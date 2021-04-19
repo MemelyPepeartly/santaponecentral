@@ -5,7 +5,7 @@ on:
     branches: 
     - feature
     paths:
-    - '../../SPC-2021/api/event/**'
+    - 'SPC-2021/api/event/**'
     
 env:
   API_PATH: 'SPC-2021/api/event'
