@@ -16,4 +16,4 @@ RUN npm run build
 ## stage - deploy
 FROM nginx:${NGINX_VERSION} as deploy
 COPY .docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /angular/dist/angular /usr/share/nginx/html/
+COPY --from=build /angular/dist/spc /usr/share/nginx/html/
