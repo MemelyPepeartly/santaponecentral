@@ -6,6 +6,7 @@ on:
     - feature
     paths:
     - 'SPC-2021/api/message/**'
+    - '.github/workflows/dev-messageapi-docker.yml'
     
 env:
   API_PATH: 'SPC-2021/api/message'

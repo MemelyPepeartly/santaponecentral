@@ -6,6 +6,7 @@ on:
     - feature
     paths:
     - 'SPC-2021/api/event/**'
+    - '.github/workflows/dev-eventapi-docker.yml'
     
 env:
   API_PATH: 'SPC-2021/api/event'
