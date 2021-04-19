@@ -1,9 +1,9 @@
 # https://hub.docker.com/_/microsoft-dotnet
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /message
+WORKDIR /shark-tank
 
 # copy csproj and restore as distinct layers
-COPY /message/. /message/
+COPY /shark-tank/. /shark-tank/
 RUN dotnet restore
 
 # copy everything else and build app
@@ -13,4 +13,4 @@ RUN dotnet publish *.Api -c release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app /app
-ENTRYPOINT ["/app/Message.Api"]
+ENTRYPOINT ["/app/SharkTank.Api"]

@@ -1,0 +1,26 @@
+networks:
+  client_localhost:
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    image: spc-clientapi
+    depends_on:
+      - db
+    ports:
+      - 8000:80
+    networks:
+      - client_localhost
+    environment:
+      ConnectionStrings__ClientDb: 'Server=db,1433;Database=master;User Id=sa;Password=Pass@word;'
+  db:
+    image: mcr.microsoft.com/mssql/server
+    networks:
+      - client_localhost
+    environment:
+      SA_PASSWORD: 'Pass@word'
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+version: '3.9'

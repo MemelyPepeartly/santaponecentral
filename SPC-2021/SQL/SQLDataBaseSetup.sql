@@ -84,7 +84,7 @@ CREATE TABLE app.SurveyQuestionXref
     surveyQuestionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     surveyID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.Survey(surveyID),
     surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
-    sortOrder NVARCHAR(5) NOT NULL,
+    sortOrder INT NOT NULL,
     isActive BIT NOT NULL
 );
 CREATE TABLE app.SurveyQuestionOptionXref
@@ -92,7 +92,7 @@ CREATE TABLE app.SurveyQuestionOptionXref
     surveyQuestionOptionXrefID UNIQUEIDENTIFIER PRIMARY KEY,
     surveyQuestionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyQuestion(surveyQuestionID),
     surveyOptionID UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES app.SurveyOption(surveyOptionID),
-    sortOrder NVARCHAR(5) NOT NULL,
+    sortOrder INT NOT NULL,
     isActive BIT NOT NULL
 );
 CREATE TABLE app.Tag

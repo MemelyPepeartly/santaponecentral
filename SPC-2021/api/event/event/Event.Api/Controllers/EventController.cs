@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Event.Api.Controllers
@@ -38,7 +36,7 @@ namespace Event.Api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return BadRequest(e.Message);
             }
         }
 
@@ -58,13 +56,15 @@ namespace Event.Api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return BadRequest(e.Message);
             }
         }
 
         // POST: api/Event
         [HttpPost]
-        [Authorize(Policy = "create:events")]
+#warning Need to uncomment this come the time for auth testing
+        //[Authorize(Policy = "create:events")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody] ApiEvent newEvent)
         {
             try
