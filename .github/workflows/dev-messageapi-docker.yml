@@ -1,4 +1,4 @@
-name: Message API Docker Image Build and Push to Hub
+name: Dev - Message API Docker Image Build and Push to Hub
 
 on:
   push:

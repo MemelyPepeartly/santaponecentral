@@ -1,4 +1,4 @@
-name: Profile API Docker Image Build and Push to Hub
+name: Dev - Profile API Docker Image Build and Push to Hub
 
 on:
   push:

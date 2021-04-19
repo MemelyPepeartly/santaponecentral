@@ -1,4 +1,4 @@
-name: Shark Tank API Docker Image Build and Push to Hub
+name: Dev - Shark Tank API Docker Image Build and Push to Hub
 
 on:
   push:

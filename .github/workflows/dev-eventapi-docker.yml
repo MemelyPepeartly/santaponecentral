@@ -1,4 +1,4 @@
-name: Event API Docker Image Build and Push to Hub
+name: Dev - Event API Docker Image Build and Push to Hub
 
 on:
   push:
