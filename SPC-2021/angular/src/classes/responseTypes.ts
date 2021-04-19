@@ -1,112 +1,112 @@
 export class ClientResponse {
-    clientStatusID: string;
-    clientName: string;
-    clientEmail: string;
-    clientNickname: string;
-    clientAddressLine1: string;
-    clientAddressLine2: string;
-    clientCity: string;
-    clientState: string;
-    clientPostalCode: string;
-    clientCountry: string;
+    clientStatusID!: string;
+    clientName!: string;
+    clientEmail!: string;
+    clientNickname!: string;
+    clientAddressLine1!: string;
+    clientAddressLine2!: string;
+    clientCity!: string;
+    clientState!: string;
+    clientPostalCode!: string;
+    clientCountry!: string;
 }
 export class ClientSignupResponse {
-    clientStatusID: string;
-    clientName: string;
-    clientEmail: string;
-    clientNickname: string;
-    clientAddressLine1: string;
-    clientAddressLine2: string;
-    clientCity: string;
-    clientState: string;
-    clientPostalCode: string;
-    clientCountry: string;
+    clientStatusID!: string;
+    clientName!: string;
+    clientEmail!: string;
+    clientNickname!: string;
+    clientAddressLine1!: string;
+    clientAddressLine2!: string;
+    clientCity!: string;
+    clientState!: string;
+    clientPostalCode!: string;
+    clientCountry!: string;
     isAdmin: boolean = false;
     hasAccount: boolean = false;
     responses: Array<SurveySignupApiResponse> = []
 }
 export class ClientAddressResponse {
-    clientAddressLine1: string;
-    clientAddressLine2: string;
-    clientCity: string;
-    clientState: string;
-    clientPostalCode: string;
-    clientCountry: string;
+    clientAddressLine1!: string;
+    clientAddressLine2!: string;
+    clientCity!: string;
+    clientState!: string;
+    clientPostalCode!: string;
+    clientCountry!: string;
 }
 export class ClientEmailResponse {
-    clientEmail: string;
+    clientEmail!: string;
 }
 export class ClientNicknameResponse {
-    clientNickname: string;
+    clientNickname!: string;
 }
 export class ClientNameResponse {
-    clientName: string;
+    clientName!: string;
 }
 export class ClientStatusResponse {
-    clientStatusID: string;
-    wantsAccount: boolean;
+    clientStatusID!: string;
+    wantsAccount!: boolean;
 }
 export class ClientIsAdminResponse {
-    isAdmin: boolean;
+    isAdmin!: boolean;
 }
 
 export class ClientRelationshipsResponse {
-    eventTypeID: string;
-    assignmentStatusID: string;
+    eventTypeID!: string;
+    assignmentStatusID!: string;
     assignments: Array<string> = []
 }
 export class SurveyApiResponse {
-    surveyID: string;
-    clientID: string;
-    surveyQuestionID: string;
-    surveyOptionID?: string = null;
-    responseText: string;
+    surveyID!: string;
+    clientID!: string;
+    surveyQuestionID!: string;
+    surveyOptionID?: string;
+    responseText!: string;
 }
 // Used for posting multiple questions to a survey relationship to add questions to a survey
 export class SurveyQuestionXrefsResponseModel {
   questions: Array<string> = [];
 }
 export class ChangeSurveyResponseModel {
-  responseText: string;
+  responseText!: string;
 }
 
 export class SurveySignupApiResponse {
-    surveyID: string;
-    surveyQuestionID: string;
-    surveyOptionID?: string = null;
-    responseText: string;
+    surveyID!: string;
+    surveyQuestionID!: string;
+    surveyOptionID?: string;
+    responseText!: string;
 }
 export class TagResponse {
-    tagName: string;
+    tagName!: string;
 }
 export class ClientTagRelationshipResponse {
-    clientID: string;
-    tagID: string;
+    clientID!: string;
+    tagID!: string;
 }
 export class ClientTagRelationshipsResponse {
     tags: Array<string> = [];
 }
 export class ClientSenderRecipientRelationshipReponse {
-    clientID: string;
-    clientEventTypeID: string;
+    clientID!: string;
+    clientEventTypeID!: string;
 }
 // Response model for marking if a question is viewable by the person(s) sending to them
 export class QuestionReadabilityResponse
 {
-    senderCanView: boolean;
+    senderCanView!: boolean;
 }
 // Response for making new messages
 export class MessageApiResponse {
-    messageSenderClientID?: string = null;
-    messageRecieverClientID?: string = null;
-    clientRelationXrefID?: string = null;
+    messageSenderClientID?: string;
+    messageRecieverClientID?: string;
+    clientRelationXrefID?: string;
     eventTypeID?: string;
-    messageContent: string;
-    fromAdmin: boolean;
+    messageContent!: string;
+    fromAdmin!: boolean;
 }
 //Response for marking messages as read
 export class MessageApiReadResponse {
-    isMessageRead: boolean;
+    isMessageRead!: boolean;
 }
 //Response for marking a list of messages as read
 export class MessageApiReadAllResponse {
@@ -114,41 +114,41 @@ export class MessageApiReadAllResponse {
 }
 /* MISSION BOARD RESPONSE TYPES */
 export class NewBoardEntryResponse {
-  entryTypeID: string;
-  threadNumber: number;
-  postNumber: number;
-  postDescription: string;
+  entryTypeID!: string;
+  threadNumber!: number;
+  postNumber!: number;
+  postDescription!: string;
 }
 export class EditBoardEntryPostNumberResponse {
-  postNumber: number;
+  postNumber!: number;
 }
 export class EditBoardEntryThreadNumberResponse {
-  threadNumber: number;
+  threadNumber!: number;
 }
 export class EditBoardEntryPostDescriptionResponse {
-  postDescription: string;
+  postDescription!: string;
 }
 export class EditBoardEntryTypeResponse {
-  entryTypeID: string;
+  entryTypeID!: string;
 }
 export class NewEntryTypeResponse {
-  entryTypeName: string;
-  entryTypeDescription: string;
-  adminOnly: boolean;
+  entryTypeName!: string;
+  entryTypeDescription!: string;
+  adminOnly!: boolean;
 }
 export class EditEntryTypeName {
-  entryTypeName: string;
+  entryTypeName!: string;
 }
 export class EditEntryTypeDescription {
-  entryTypeDescription: string;
+  entryTypeDescription!: string;
 }
 /* RESPONSE TYPES FOR ASSIGNMENT STATUSES */
 export class NewAssignmentStatusResponse {
-  assignmentStatusName: string;
-  assignmentStatusDescription: string;
+  assignmentStatusName!: string;
+  assignmentStatusDescription!: string;
 }
 export class EditProfileAssignmentStatusResponse {
-  assignmentStatusID: string;
+  assignmentStatusID!: string;
 }
 /* CATALOGUE */
 export class SearchQueryModelResponse {
@@ -161,13 +161,13 @@ export class SearchQueryModelResponse {
   responses: Array<string>= [];
   cardAssignments: Array<number>= [];
   giftAssignments: Array<number>= [];
-  isHardSearch: boolean;
+  isHardSearch!: boolean;
 }
 
 /* AutoAssignment response models */
 export class Pairing {
-  senderAgentID: string;
-  assignmentClientID: string
+  senderAgentID!: string;
+  assignmentClientID!: string;
 }
 export class SelectedAutoAssignmentsResponse
 {
@@ -177,12 +177,12 @@ export class SelectedAutoAssignmentsResponse
 /* Note response models */
 export class NewNoteResponse
 {
-  clientID: string;
-  noteSubject: string;
-  noteContents: string;
+  clientID!: string;
+  noteSubject!: string;
+  noteContents!: string;
 }
 export class EditNoteResponse
 {
-  noteSubject: string;
-  noteContents: string;
+  noteSubject!: string;
+  noteContents!: string;
 }
