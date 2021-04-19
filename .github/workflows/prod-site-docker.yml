@@ -1,0 +1,28 @@
+name: Prod Site - Angular Docker Image Build and Push to Hub
+
+on:
+  push:
+    branches: 
+    - master
+    paths:
+    - 'SPC-2021/angular/**'
+    - '.github/workflows/prod-site-docker.yml'
+    
+env:
+  ANGULAR_PATH: 'SPC-2021/angular'
+  ANGULAR_IMAGE_NAME: 'spc-2021'
+
+jobs:
+  build-and-push-prod-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    #Step 0
+    - name: Set Credentials
+      run: docker login -u "${{ secrets.DH_USERNAME }}" -p "${{ secrets.DH_PASSWORD }}"
+    #Step 1
+    - name: Build the Docker image
+      run: cd ${{ env.ANGULAR_PATH }} && docker build . --file .docker/Dockerfile --tag ${{ secrets.DH_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:prod
+    #Step 3
+    - name: Push image to Docker Hub
+      run: docker push ${{ secrets.DH_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:prod
