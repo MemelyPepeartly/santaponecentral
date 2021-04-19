@@ -4,7 +4,7 @@ on:
   push:
     branches: [ feature ]
     paths:
-    - 'SPC-2021/api/sharktank'
+    - 'SPC-2021/api/shark-tank'
     
 env:
   API_PATH: 'SPC-2021/api/sharktank'
