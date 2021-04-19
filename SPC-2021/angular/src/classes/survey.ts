@@ -1,4 +1,4 @@
-import { EventType } from './eventType';
+import { EventType } from "./eventType";
 
 export class Survey {
   surveyID!: string;
