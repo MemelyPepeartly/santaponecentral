@@ -4,14 +4,14 @@ on:
   push:
     branches: [ feature ]
     paths:
-    - 'SPC-2021/api/survey'
+    - 'SPC-2021/api/survey/**'
     
 env:
   API_PATH: 'SPC-2021/api/survey'
   API_IMAGE_NAME: 'surveyapi'
 
 jobs:
-  build:
+  build-and-push-dev-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

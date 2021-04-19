@@ -2,8 +2,7 @@ name: Event API Docker Image Build and Push to Hub
 
 on:
   push:
-    branches: 
-    - feature
+    branches: [ feature ]
     paths:
     - 'SPC-2021/api/event/**'
     

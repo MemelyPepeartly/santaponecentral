@@ -4,14 +4,14 @@ on:
   push:
     branches: [ feature ]
     paths:
-    - 'SPC-2021/api/shark-tank'
+    - 'SPC-2021/api/shark-tank/**'
     
 env:
   API_PATH: 'SPC-2021/api/sharktank'
   API_IMAGE_NAME: 'sharktankapi'
 
 jobs:
-  build:
+  build-and-push-dev-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

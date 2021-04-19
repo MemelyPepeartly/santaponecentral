@@ -4,14 +4,14 @@ on:
   push:
     branches: [ feature ]
     paths:
-    - 'SPC-2021/api/message'
+    - 'SPC-2021/api/message/**'
     
 env:
   API_PATH: 'SPC-2021/api/message'
   API_IMAGE_NAME: 'messageapi'
 
 jobs:
-  build:
+  build-and-push-dev-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
