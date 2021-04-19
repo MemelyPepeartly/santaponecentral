@@ -1,7 +1,7 @@
 import { Status } from './status';
 import { Address } from './address';
 import { SurveyResponse } from './survey';
-import { EventType } from './EventType';
+import { EventType } from './eventType';
 import { AssignmentStatus } from './client';
 import { ClientMeta } from './message';
 
