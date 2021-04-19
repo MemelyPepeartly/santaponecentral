@@ -1,0 +1,26 @@
+networks:
+  search_localhost:
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    image: spc-searchapi
+    depends_on:
+      - db
+    ports:
+      - 8000:80
+    networks:
+      - search_localhost
+    environment:
+      ConnectionStrings__SearchDb: 'Server=db,1433;Database=master;User Id=sa;Password=Pass@word;'
+  db:
+    image: mcr.microsoft.com/mssql/server
+    networks:
+      - search_localhost
+    environment:
+      SA_PASSWORD: 'Pass@word'
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+version: '3.9'
