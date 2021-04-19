@@ -2,7 +2,8 @@ name: Search API Docker Image Build and Push to Hub
 
 on:
   push:
-    branches: [ feature ]
+    branches: 
+    - feature
     paths:
     - 'SPC-2021/api/search/**'
     
@@ -15,13 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
     #Step 0
     - name: Set Credentials
       run: docker login -u "${{ secrets.DH_USERNAME }}" -p "${{ secrets.DH_PASSWORD }}"
     #Step 1
     - name: Build the Docker image
-      run: docker build . --file ${{ env.API_PATH }}/.docker/Dockerfile --tag spc-${{ env.API_IMAGE_NAME }}:dev
-    #Step 2
+      run: cd ${{ env.API_PATH }} && docker build . --file .docker/Dockerfile --tag ${{ secrets.DH_USERNAME }}/spc-${{ env.API_IMAGE_NAME }}:dev
+    #Step 3
     - name: Push image to Docker Hub
-      run: docker push "${{ secrets.DH_USERNAME }}"/spc-${{ env.API_IMAGE_NAME }}:dev
+      run: docker push ${{ secrets.DH_USERNAME }}/spc-${{ env.API_IMAGE_NAME }}:dev
