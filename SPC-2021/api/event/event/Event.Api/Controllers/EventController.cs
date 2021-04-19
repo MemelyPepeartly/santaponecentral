@@ -94,7 +94,9 @@ namespace Event.Api.Controllers
 
         // PUT: api/Event/5
         [HttpPut("{eventID}/Description")]
-        [Authorize(Policy = "update:events")]
+#warning Need to uncomment this come the time for auth testing
+        //[Authorize(Policy = "update:events")]
+        [AllowAnonymous]
         public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody] ApiEventDescription description)
         {
             try
