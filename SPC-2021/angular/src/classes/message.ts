@@ -1,6 +1,6 @@
 import { ModuleWithComponentFactories } from '@angular/core';
-import { EventType } from './eventType';
 import { AssignmentStatus, Client } from './client';
+import { EventType } from './eventType';
 
 //Message History class
 export class MessageHistory {
