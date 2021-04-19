@@ -2,16 +2,17 @@ name: Event API Docker Image Build and Push to Hub
 
 on:
   push:
-    branches: [ feature ]
+    branches: 
+    - feature
     paths:
-    - 'SPC-2021/api/event'
+    - 'SPC-2021/api/event/**'
     
 env:
   API_PATH: 'SPC-2021/api/event'
   API_IMAGE_NAME: 'eventapi'
 
 jobs:
-  build:
+  build-and-push-dev-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
