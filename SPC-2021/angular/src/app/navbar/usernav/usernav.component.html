@@ -1,0 +1,9 @@
+<button mat-button [routerLink]="'/profile'" class="navButton">
+    <mat-label>Profile</mat-label>
+</button>
+<button mat-button [routerLink]="'/mission-boards'" class="navButton">
+  <mat-label>Mission Boards</mat-label>
+</button>
+<button mat-button (click)="auth.logout()" class="navButton">
+    <mat-label>Logout</mat-label>
+</button>

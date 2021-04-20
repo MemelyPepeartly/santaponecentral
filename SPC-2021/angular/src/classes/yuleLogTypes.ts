@@ -1,11 +1,11 @@
 export class YuleLog {
-  logID!: string;
+  logID: string;
   category: Category = new Category();
-  logDate!: Date;
-  logText!: string;
+  logDate: Date;
+  logText: string;
 }
 export class Category {
-  categoryID!: string;
-  categoryName!: string;
-  categoryDescription!: string;
+  categoryID: string;
+  categoryName: string;
+  categoryDescription: string;
 }

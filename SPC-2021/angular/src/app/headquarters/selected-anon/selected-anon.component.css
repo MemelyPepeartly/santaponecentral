@@ -1,0 +1,265 @@
+mat-card {
+  display: inline-block;
+  margin: 10px;
+}
+mat-divider {
+  width: 80%;
+}
+mat-drawer-container {
+  height: fit-content;
+}
+mat-radio-button {
+  padding: 10px;
+}
+mat-panel-description {
+  display: inline-block;
+  text-align: right;
+}
+app-small-loading-spin {
+  display: block;
+}
+#addressChangeForm {
+  display: block;
+}
+#headerContentContainer {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+#tagCard {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+}
+.tagButton {
+  margin-top: 10px;
+  margin-right: 5px;
+}
+#tagButtonContainer {
+  display: block;
+}
+#tagSelectionList {
+  display: block;
+  margin-bottom: 5px;
+}
+#tagChipList {
+  display: block;
+  margin-bottom: 5px;
+}
+/* Classes */
+.changeFormField {
+  display: block;
+}
+.infoContainer {
+  width: 100%;
+  text-align: center;
+}
+.cardExchangeIcon {
+  content: url(../../../assets/images/cardAndClawWithoutSparkle.png);
+}
+.giftExchangeIcon {
+  content: url(../../../assets/images/presentWithOneFin.png);
+}
+#relationshipEventHeader {
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+.assignmentEventCard
+{
+  display: block;
+  margin-top: 15px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.assignmentPanelsContainer
+{
+  display: block;
+  width: 100%;
+}
+.assignmentPanelDiv
+{
+  display: block;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#nickField {
+  display: inline-block;
+  border-radius: 8px;
+  height: fit-content;
+  min-height: 80px;
+  width: 50%;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.centerSpin {
+  width: 100%;
+  text-align: center;
+}
+.success {
+  color: rgb(19, 141, 19);
+}
+.error {
+  color: #f44336;
+}
+.subtleError
+{
+    color: #d07973;
+}
+.shell {
+  display: block;
+  width: 95%;
+  height: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+}
+.optionDiv {
+  display: block;
+  padding: 10px;
+  overflow: auto;
+  text-align: center;
+  overflow: hidden;
+}
+.optionSub {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  padding-bottom: 0px;
+  margin-top: 5px;
+}
+.infoCard {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80%;
+  height: auto;
+  clear: both;
+}
+/*Buttons at top of component*/
+.mainActionButton {
+  margin-right: 5px !important;
+  margin-top: 5px !important;
+  margin-left: 0 !important;
+}
+.responseCard
+{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.centeredToolbar
+{
+  display: block;
+  text-align: center;
+  padding-top: 16px;
+}
+.recipientListContainer
+{
+  display: block;
+  width: 70%;
+  height: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+  border-radius: 8px;
+}
+.recipientListCard
+{
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.recipientListContentSelectEventDiv
+{
+  text-align: center;
+}
+.recipientListContentDiv
+{
+  text-align: left;
+}
+.recipientListSpinner
+{
+  display: block;
+  text-align: center;
+}
+.recipientListOption
+{
+  height: fit-content;
+}
+.recipientListOptionInfoDiv
+{
+  display: block;
+}
+.recipientInfoSubtitle
+{
+  margin-left: 20px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.recipientTagDiv
+{
+  display: block;
+  margin-left: 15px;
+}
+.recipientTag
+{
+  text-align: center;
+  font-size: 12px;
+  width: 70px;
+  min-height: 20px;
+  margin: 2px;
+}
+.recipientTagText
+{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.closeBackButtonCard
+{
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+.closeBackButtonCardContent
+{
+  width: 100%;
+}
+.navigationButton
+{
+  display: inline-block;
+  width: fit-content;
+}
+.navigationButtonBack
+{
+
+}
+.navigationButtonClose
+{
+  float: right;
+}
+/* Scrollbar Styling */
+.scrollbar
+{
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 730px;
+}
+.recipientListScrollbar
+{
+  max-height: 600px;
+}

@@ -1,0 +1,95 @@
+#info-div {
+  min-width: 350px;
+  width: 95%;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#addressChangeForm {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+.changeFormField
+{
+  width: 100%;
+}
+.changeAddressButton
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+.changeFormActionButtonDiv
+{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.changeFormActionButton
+{
+  margin-left: 5px;
+}
+#relationshipEventHeader {
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.infoCard {
+  width: 30%;
+  min-width: 300px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 10px;
+  margin-top: 10px !important;
+  text-align: left;
+  vertical-align: top;
+}
+.addressBlock {
+  margin-top: 10px;
+}
+.action-button {
+  margin: 5px !important;
+}
+.questionText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.error {
+  color: #f44336;
+}
+.responseListDiv {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.small-box {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  height: auto;
+  width: auto;
+}
+.contentBox{
+  padding: 25px;
+  background-color:white;
+}
+.noticeCardButton
+{
+  display: block;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}

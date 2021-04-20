@@ -1,0 +1,46 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        Completed Agents
+    </mat-toolbar-row>
+    <mat-toolbar-row id="paginatorRow" class="mat-elevation-z4">
+        <div id="iconDiv">
+            <button mat-raised-button class="controlButton" title="Refresh Clients" (click)="manualRefresh()">
+                <mat-icon class="icons">refresh</mat-icon>
+            </button>
+            <mat-card-subtitle class="countSubtitle" *ngIf="!gatheringInfo && !showSpinner">Total completed agents: {{ completedClients.length }}</mat-card-subtitle>
+        </div>
+        <div class="paginatorDiv" *ngIf="false">
+          <mat-paginator
+          (page)="switchPage($event)"
+          [length]="completedClients.length"
+          [pageSize]="paginatorPageSize"
+          [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="spinnerWrap" *ngIf="(gatheringInfo || showSpinner) && !this.gatherer.onSelectedClient">
+    <app-loading-spin></app-loading-spin>
+</div>
+<mat-list>
+    <mat-card mat-list-item matRipple *ngFor="let client of completedClients" (click)="showCardInfo(client)">
+      <mat-card-title>
+        <h1 class="inline">{{ client.clientNickname }}</h1>
+        <mat-chip-list class="inline tagList" [selectable]="false" >
+          <mat-chip *ngFor="let tag of client.tags"
+          matTooltip="{{tag.tagName}}"
+          [matTooltipPosition]="'below'"
+          [disableRipple]="true"><span class="tagText">{{tag.tagName}}</span></mat-chip>
+        </mat-chip-list>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <span [ngClass]="{'notice' : client.assignments == 0}">Assignments: {{ client.assignments }}</span>
+      </mat-card-subtitle>
+      <mat-card-subtitle>
+        <span>Senders: {{ client.senders }}</span>
+      </mat-card-subtitle>
+      <mat-card-subtitle>
+        <span>Agent Name: {{ client.clientName }}</span>
+      </mat-card-subtitle>
+    </mat-card>
+</mat-list>

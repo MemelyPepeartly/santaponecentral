@@ -1,0 +1,23 @@
+<!-- Add global event card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Add Event</mat-card-title>
+        <mat-card-subtitle>Add events to the api</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Event list-->
+        <mat-toolbar>All currently available events</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="gatheringAllEvents"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!gatheringAllEvents">
+                <mat-chip *ngFor="let event of allEvents"><span class="eventText">{{event.eventDescription}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+    </mat-card-content>
+</mat-card>
+
+<!-- Add/Delete events -->

@@ -1,0 +1,43 @@
+.adminControlContainer
+{
+  display: block;
+  margin: 10px;
+}
+.tabGroup
+{
+  border-radius: 8px;
+  background-color: white;
+}
+.componentDiv
+{
+  display: block;
+  width: 100%;
+  height: fit-content;
+}
+.tagControlDiv
+{
+  text-align: center;
+}
+.massControlDiv
+{
+  text-align: center;
+}
+.eventControlDiv
+{
+
+}
+.surveyControlDiv
+{
+
+}
+.yuleLogControlDiv
+{
+
+}
+@media (max-width:600px)
+{
+  .massControlDiv
+  {
+    text-align: center;
+  }
+}

@@ -1,0 +1,143 @@
+<table mat-table [dataSource]="boardEntries" id="data-table" class="mat-elevation-z3">
+  <form [formGroup]="editPostFormGroup">
+    <!-- Thread Number Column -->
+    <ng-container matColumnDef="threadNumber">
+      <th mat-header-cell *matHeaderCellDef>Thread Number</th>
+      <td mat-cell *matCellDef="let entry">
+        <button class="info" *ngIf="!entry.editing" mat-raised-button (click)="goToThreadLink(entry.threadNumber)">{{ entry.threadNumber }}</button>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="editField" appearance="outline">
+            <input matInput formControlName="{{getThreadNumberFormGroupSignature(entry)}}" placeholder="Thread Number" value="{{ entry.threadNumber }}">
+            <mat-hint>Original Number: {{ entry.threadNumber }}</mat-hint>
+          </mat-form-field>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Post Number Column -->
+    <ng-container matColumnDef="postNumber">
+      <th mat-header-cell *matHeaderCellDef>Post Number</th>
+      <td mat-cell *matCellDef="let entry">
+        <button class="info" mat-raised-button *ngIf="entry.threadNumber != entry.postNumber && !entry.editing" (click)="goToPostLink(entry.threadNumber, entry.postNumber)">{{ entry.postNumber }}</button>
+        <span class="info" *ngIf="entry.threadNumber == entry.postNumber && !entry.editing">{{ entry.postNumber }}</span>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="editField" appearance="outline">
+            <input matInput formControlName="{{getPostNumberFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postNumber }}">
+            <mat-hint>Original Number: {{ entry.postNumber }}</mat-hint>
+          </mat-form-field>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Post Description Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Post Description</th>
+      <td mat-cell *matCellDef="let entry">
+        <span class="info" class="descriptionSpan" *ngIf="!entry.editing">{{ entry.postDescription }}</span>
+        <div *ngIf="entry.editing">
+          <mat-form-field class="descriptionEditField" appearance="outline">
+            <textarea matInput formControlName="{{getDescriptionFormGroupSignature(entry)}}" placeholder="Post Number" value="{{ entry.postDescription }}"
+              [matAutosizeMinRows]="3"
+              [matAutosizeMaxRows]="10"
+              [matTextareaAutosize]="true"></textarea>
+          </mat-form-field>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container *ngIf="allowForm" matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let entry">
+        <div class="actionContainer">
+          <button *ngIf="!entry.editing" mat-mini-fab class="actionButton mat-elevation-z2" color="default" (click)="entry.editing = true">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button *ngIf="entry.editing" mat-mini-fab class="actionButton mat-elevation-z2" color="default"
+            [disabled]="editingEntry"
+            (click)="entry.editing = false">
+            <mat-icon>cancel</mat-icon>
+          </button>
+          <button mat-mini-fab *ngIf="!entry.editing" class="actionButton mat-elevation-z2" color="warn"
+            [disabled]="deletingEntry"
+            (click)="deleteEntry(entry)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-mini-fab *ngIf="entry.editing" class="actionButton mat-elevation-z2" color="primary"
+            [disabled]="editingEntry"
+            (click)="submitEntryEdits(entry)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <app-small-loading-spin *ngIf="editingEntry || deletingEntry"></app-small-loading-spin>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="allowForm ? helperColumns : viewerColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: allowForm ? helperColumns : viewerColumns;"></tr>
+  </form>
+</table>
+
+
+<div id="addPostButtonDiv">
+  <button mat-raised-button *ngIf="allowForm && !showFormFields" (click)="showFormFields = true;">Add a post</button>
+</div>
+<!-- Board entry form group -->
+<mat-card class="infoCard mat-elevation-z3" *ngIf="allowForm && showFormFields">
+  <mat-card-header>
+      <mat-card-title>Add board entry</mat-card-title>
+      <mat-card-subtitle>Add a board entry to the {{ entryType.entryTypeName }} category</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content *ngIf="postingEntry">
+      <app-loading-spin></app-loading-spin>
+  </mat-card-content>
+  <mat-card-content *ngIf="showFormFields && !postingEntry">
+      <form [formGroup]="boardEntryFormGroup">
+
+        <!-- Thread Number -->
+        <mat-form-field class="changeFormField">
+          <mat-label>Thread Number</mat-label>
+          <input matInput formControlName="threadNumber" placeholder="12345">
+        </mat-form-field>
+        <div class="error" *ngIf="boardEntryFormControls.threadNumber.errors && boardEntryFormControls.threadNumber.touched">
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.required">A thread number is required</div>
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.maxlength">Thread Number is too long</div>
+          <div *ngIf="boardEntryFormControls.threadNumber.errors.pattern">Thread number must be only numbers, and no decimals</div>
+        </div>
+        <div class="error" *ngIf="boardEntryFormControls.threadNumber.touched && !areNumbersValid()">
+          <div *ngIf="threadNumberExists">thread and post number pairing already exists!</div>
+        </div>
+
+        <!-- Post Number -->
+        <mat-form-field class="changeFormField">
+            <mat-label>Post Number</mat-label>
+            <input matInput formControlName="postNumber" placeholder="12345">
+        </mat-form-field>
+        <div class="error" *ngIf="boardEntryFormControls.postNumber.errors && boardEntryFormControls.postNumber.touched">
+            <div *ngIf="boardEntryFormControls.postNumber.errors.required">A post number is required</div>
+            <div *ngIf="boardEntryFormControls.postNumber.errors.maxlength">Post Number is too long</div>
+            <div *ngIf="boardEntryFormControls.postNumber.errors.pattern">Post number must be only numbers, and no decimals</div>
+        </div>
+        <div class="error" *ngIf="boardEntryFormControls.postNumber.touched && !areNumbersValid()">
+          <div *ngIf="postNumberExists">thread and post number pairing already exists!</div>
+        </div>
+
+        <!-- Post Description -->
+        <mat-form-field class="changeFormField">
+          <mat-label>Post Description</mat-label>
+          <input matInput formControlName="postDescription" placeholder="What is this about?">
+        </mat-form-field>
+        <div class="error" *ngIf="boardEntryFormControls.postDescription.errors && boardEntryFormControls.postDescription.touched">
+            <div *ngIf="boardEntryFormControls.postDescription.errors.required">A post description is required</div>
+            <div *ngIf="boardEntryFormControls.postDescription.errors.maxlength">Post descriptoin is too long</div>
+        </div>
+      </form>
+  </mat-card-content>
+  <mat-card-actions>
+      <div>
+          <button mat-raised-button (click)="submitBoardEntry()" [disabled]="boardEntryFormGroup.invalid || areNumbersValid() == false">Submit</button>
+          <button mat-raised-button (click)="showFormFields = false">Cancel</button>
+      </div>
+  </mat-card-actions>
+</mat-card>
+

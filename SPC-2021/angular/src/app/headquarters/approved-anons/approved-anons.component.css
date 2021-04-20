@@ -1,0 +1,42 @@
+mat-card {
+  text-align: left;
+  margin-top: 5px;
+}
+.toolbarRow
+{
+  background-color: white;
+}
+.refreshDiv {
+  margin-right: 10px;
+}
+.countSubtitle
+{
+  display: contents;
+}
+.paginatorDiv {
+  display: block;
+  height: 100%;
+  margin-right: 0px;
+  margin-left: auto;
+}
+.controlButton {
+  display: inline-block;
+  margin-left: 10px;
+}
+.controlButton:hover {
+  cursor: pointer;
+  background-color: #e1e1e1;
+}
+.icons {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+.spinnerWrap {
+  display: inline-block;
+  padding: 30px;
+}
+.clientItem {
+  display: block;
+  margin-top: 10px;
+}

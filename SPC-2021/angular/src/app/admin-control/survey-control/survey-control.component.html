@@ -1,0 +1,84 @@
+<!-- Add global survey card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Surveys</mat-card-title>
+        <mat-card-subtitle>Surveys that exist that are available on signup</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Survey list-->
+        <mat-toolbar>All currently available surveys</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="gatheringAllSurveys || postingNewSurvey"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!postingNewSurvey && !gatheringAllSurveys">
+                <mat-chip *ngFor="let survey of allSurveys" [value]="survey" (click)="setSelectedSurvey(survey)"><span class="chipSpanText">{{survey.surveyDescription}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- Questions on selected survey -->
+<mat-card class="api-card mat-elevation-z5" *ngIf="selectedSurvey.surveyID != undefined">
+  <mat-card-header>
+      <mat-card-title>Questions for the {{selectedSurvey.surveyDescription}}</mat-card-title>
+      <mat-card-subtitle>Questions asked on the selected survey</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+      <mat-toolbar>Questions</mat-toolbar>
+
+      <div>
+          <mat-chip-list>
+              <mat-chip *ngFor="let question of sortRemovableQuestions()" [value]="question" (click)="setSelectedQuestion(question)"><span class="chipSpanText">{{question.questionText}}</span></mat-chip>
+          </mat-chip-list>
+      </div>
+
+      <mat-divider [inset]="true"></mat-divider>
+      <ng-container *ngIf="selectedQuestion.questionID != undefined">
+        <mat-divider [inset]="true"></mat-divider>
+        <div id="selectedEditChipDiv">
+            <mat-chip id="selectedEditChip"><span id="selectedEditChipSpan">{{ selectedQuestion.questionText }}</span></mat-chip>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <app-small-loading-spin *ngIf="removingQuestion"></app-small-loading-spin>
+        <div>
+            <button class="surveyButton"
+            mat-raised-button
+            matTooltip="Remove this question from the {{ selectedSurvey.surveyDescription }}"
+            (click)="removeQuestion(selectedQuestion)"
+            [disabled]="selectedSurvey.surveyID == undefined || selectedQuestion.questionID == undefined"
+            [matTooltipPosition]="'left'">Remove Question from survey</button>
+        </div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+
+<!-- Selectable question list for questions that can be added to this survey (Needs API multiple response update) -->
+<mat-card class="api-card mat-elevation-z5" *ngIf="selectedSurvey.surveyID != undefined">
+  <mat-card-header>
+      <mat-card-title>Questions able to be added to the {{selectedSurvey.surveyDescription}}</mat-card-title>
+      <mat-card-subtitle>List of available questions</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+      <mat-toolbar>Questions</mat-toolbar>
+
+      <div>
+        <mat-selection-list [(ngModel)]="selectedQuestions">
+          <mat-list-option *ngFor="let question of sortAddableQuestions()" [value]="question">{{ question.questionText }}</mat-list-option>
+        </mat-selection-list>
+      </div>
+      <mat-divider [inset]="true"></mat-divider>
+
+      <app-small-loading-spin *ngIf="addingQuestions"></app-small-loading-spin>
+      <div>
+          <button class="surveyButton"
+          mat-raised-button
+          matTooltip="Adds the selected questions to the {{ selectedSurvey.surveyDescription }}"
+          (click)="addQuestions()"
+          [disabled]="selectedQuestions.length == 0"
+          [matTooltipPosition]="'left'">Add questions to the {{ selectedSurvey.surveyDescription }}</button>
+      </div>
+  </mat-card-content>
+</mat-card>

@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 
 export class AssignmentCSVModel
 {
-  Nickname: string;
+  Nickname!: string;
   'Real Name': string;
-  Event: string;
-  Status: string;
+  Event!: string;
+  Status!: string;
   'Address Line 1': string;
   'Address Line 2': string;
-  City: string;
-  State: string;
-  Country: string;
+  City!: string;
+  State!: string;
+  Country!: string;
   'Postal Code': string;
   'Spaghetti Answer': string;
 }
@@ -20,7 +20,7 @@ export class AssignmentCSVModel
 })
 export class ExporterService {
 
-  downloadFile(data, filename = 'data') {
+  downloadFile(data: any, filename = 'data') {
     let csvData = this.ConvertToCSV(data, ['Nickname', 'Real Name', 'Event', 'Status', 'Address Line 1', 'Address Line 2', 'City', 'State', 'Country', 'Postal Code', 'Spaghetti Answer']);
     let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
     let dwldLink = document.createElement("a");
@@ -37,7 +37,7 @@ export class ExporterService {
     document.body.removeChild(dwldLink);
   }
 
-  ConvertToCSV(objArray, headerList) {
+  ConvertToCSV(objArray: string, headerList: string[]) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     let str = '';
     let row = 'S.No,';

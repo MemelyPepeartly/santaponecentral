@@ -1,0 +1,116 @@
+<mat-card class="mat-elevation-z5" [ngClass]="{'mainCard' : hasMargin }">
+  <mat-card-header>
+    <mat-card-title>Notepad</mat-card-title>
+    <mat-card-subtitle>Notes about this agent</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-toolbar *ngIf="notes.length == 0">
+      <mat-toolbar-row>No Available Notes</mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-selection-list #questionsSelectionList class="noteSelection mat-elevation-z3" [disabled]="showAll" [multiple]="false" *ngIf="notes.length > 0">
+      <mat-list-option class="noteListOption" *ngFor="let note of notes" [value]="note"
+        (click)="setSelectedNote(note)">{{note.noteSubject}}</mat-list-option>
+    </mat-selection-list>
+
+    <mat-card class="selectedNoteCard mat-elevation-z3" *ngIf="!showAll && notes.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          {{ selectedNote.noteSubject != undefined ? selectedNote.noteSubject : "Select a Note" }}
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="selectedNote.noteContents == undefined && !deletingNote">Select to display a note taken about the agent</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content *ngIf="selectedNote.noteContents == undefined && !deletingNote">
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-card-subtitle style="margin-top: 15px;">Note contents will display here</mat-card-subtitle>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+      <mat-card-content *ngIf="deletingNote">
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="spinnerDiv">
+          <app-small-loading-spin ></app-small-loading-spin>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+      <mat-card-content *ngIf="selectedNote.noteContents != undefined && !deletingNote">
+
+        <!-- Note shown here -->
+        <mat-divider [inset]="true"></mat-divider>
+
+        <div class="noteText" *ngIf="selectedNote.noteContents != undefined">{{ selectedNote.noteContents }}</div>
+        <mat-divider [inset]="true"></mat-divider>
+
+        <!-- Form group field for editing reponse -->
+        <ng-container *ngIf="showEditingTools">
+          <div class="editDiv" [formGroup]="noteFormGroup">
+            <ng-container *ngFor="let note of notes">
+              <mat-form-field *ngIf="note.noteID == selectedNote.noteID" class="inputForm">
+                <textarea matInput placeholder="Edit Note" formControlName="{{getFormControlNameFromNote(note)}}"></textarea>
+              </mat-form-field>
+            </ng-container>
+            <div class="error" *ngIf="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).errors && noteFormGroup.get(getFormControlNameFromNote(selectedNote)).touched">
+              <div *ngIf="noteFormGroup.get(getFormControlNameFromNote(selectedNote)).errors.maxlength">Note is too long. 2000 characters is the maximum</div>
+            </div>
+          </div>
+        </ng-container>
+
+        <mat-card-actions style="text-align: center;" *ngIf="showEditingTools">
+          <button mat-raised-button
+            [disabled]="puttingEditedNote || noteFormGroup.get(getFormControlNameFromNote(selectedNote)).invalid"
+            (click)="submitUpdatedNote()">Submit Edited Note</button>
+            <button mat-raised-button (click)="showEditingTools = !showEditingTools">Cancel</button>
+        </mat-card-actions>
+        <mat-card-actions style="text-align: center;" *ngIf="!showEditingTools">
+          <button mat-raised-button (click)="showEditingTools = !showEditingTools" *ngIf="!confirmDelete">Edit Note <mat-icon>edit</mat-icon></button>
+          <button mat-raised-button (click)="confirmDelete = true" *ngIf="!confirmDelete">Delete Note <mat-icon>delete</mat-icon></button>
+          <button mat-raised-button (click)="deleteNote()" *ngIf="confirmDelete" color="warn">Confirm Delete <mat-icon>delete_forever</mat-icon></button>
+          <button mat-raised-button (click)="confirmDelete = false" *ngIf="confirmDelete">Cancel</button>
+        </mat-card-actions>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Create a new note tool card -->
+    <mat-card class="newNoteCard mat-elevation-z3" *ngIf="createNewNoteOpen">
+      <mat-card-header>
+        <mat-card-title>Create a New Note</mat-card-title>
+        <mat-card-subtitle>Creates a handy note about this agent</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content *ngIf="postingNewNote">
+        <div class="spinnerDiv">
+          <app-small-loading-spin [spinnerType]="1"></app-small-loading-spin>
+        </div>
+      </mat-card-content>
+      <mat-card-content *ngIf="!postingNewNote">
+        <form [formGroup]="newNoteFormGroup">
+          <!-- Subject -->
+          <mat-form-field class="subjectFormField">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="noteSubject" placeholder="Note Subject">
+          </mat-form-field>
+          <div class="error" *ngIf="newNoteControls.noteSubject.errors && newNoteControls.noteSubject.touched">
+              <div *ngIf="newNoteControls.noteSubject.errors.required">Subject is required to submit a note</div>
+              <div *ngIf="newNoteControls.noteSubject.errors.maxlength">Note subject is too long! 100 characters is the maximum amount of characters.</div>
+          </div>
+
+          <!-- Content -->
+          <mat-form-field class="contentFormField">
+              <mat-label>Content</mat-label>
+              <textarea matInput formControlName="noteContents" placeholder="Write a note"></textarea>
+          </mat-form-field>
+          <div class="error" *ngIf="newNoteControls.noteContents.errors && newNoteControls.noteContents.touched">
+              <div *ngIf="newNoteControls.noteContents.errors.required">Content is required to submit a new note</div>
+              <div *ngIf="newNoteControls.noteContents.errors.maxlength">Note is too long! 2000 characters is the maximum amount of characters.</div>
+          </div>
+        </form>
+      </mat-card-content>
+      <mat-card-actions *ngIf="!postingNewNote">
+        <button mat-raised-button (click)="submitNewNote()" [disabled]="newNoteFormGroup.invalid">Submit</button>
+        <button mat-raised-button (click)="closeCreateNewNote()">Cancel</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </mat-card-content>
+  <mat-card-actions *ngIf="!createNewNoteOpen">
+    <button mat-raised-button (click)="createNewNoteOpen = !createNewNoteOpen">Create New Note <mat-icon>sticky_note_2</mat-icon></button>
+  </mat-card-actions>
+</mat-card>
