@@ -217,6 +217,7 @@ export class MissionBoardTableComponent implements OnInit {
         return false;
       }
     }
+    return null
   }
   public getThreadNumberFormControl(entry: BoardEntry)
   {
