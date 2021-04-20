@@ -1,7 +1,7 @@
 export class EventType {
-    eventTypeID!: string;
+    eventTypeID: string;
     eventDescription!: string;
-    isActive!: boolean;
-    immutable!: boolean;
-    removable!: boolean;
+    isActive: boolean;
+    immutable: boolean;
+    removable: boolean;
 }
