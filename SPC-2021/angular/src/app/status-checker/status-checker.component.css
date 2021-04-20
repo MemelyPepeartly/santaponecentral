@@ -1,0 +1,54 @@
+.emailFormContainer
+{
+  display: block;
+  width: 60%;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  background-color: white;
+  border-radius: 8px;
+}
+.emailFormDiv
+{
+  display: block;
+  width: 100%;
+}
+.emailFormField
+{
+  display: block;
+  width: 90%;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+}
+.reactiveMinWidth
+{
+  min-width: 550px;
+}
+.checkButton
+{
+  display: block;
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+}
+.small-box {
+  display: block;
+  height: auto;
+  width: 60%;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+.contentBox{
+  padding: 25px;
+  background-color:white;
+}

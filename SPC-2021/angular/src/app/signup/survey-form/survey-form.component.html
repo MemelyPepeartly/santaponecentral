@@ -1,0 +1,38 @@
+<h2 *ngIf="isMassMailerSurvey">Mass Mailer Questionnaire</h2>
+<mat-vertical-stepper>
+  <mat-step *ngFor="let question of formQuestionsFormatted" [stepControl]="surveyFormGroup">
+    <form [formGroup]="surveyFormGroup">
+      <ng-template matStepLabel>{{ question.questionText}}</ng-template>
+        <h2>{{ question.questionText }}</h2>
+        <h4 class="viewNote" *ngIf="question.senderCanView">Note: Your answer for this question will be shown to people who are assigned to send to you</h4>
+        <h4 class="viewNote" *ngIf="!question.senderCanView">Note: Your answer for this question will <u class="error">not</u> be shown to people who are assigned to send to you and will only be shared with admins</h4>
+        <!-- Form for text field questions -->
+        <ng-container *ngIf="!question.isSurveyOptionList">
+          <mat-form-field class="inputForm">
+            <textarea matInput placeholder="Answer" formControlName="{{question.surveyQuestionID}}" required></textarea>
+          </mat-form-field>
+          <div class="error" *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors && surveyFormGroup.get(question.surveyQuestionID).touched">
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.maxlength">Answer is too long. 4000 Characters is the maximum</div>
+          </div>
+        </ng-container>
+
+        <!-- Form for survey option lists (multiple choice) -->
+        <ng-container *ngIf="question.isSurveyOptionList">
+          <mat-radio-group formControlName="{{question.surveyQuestionID}}" required>
+            <mat-radio-button *ngFor="let option of question.surveyOptionList" [value]="option">
+              {{option.optionText}}
+            </mat-radio-button>
+          </mat-radio-group>
+          <div class="error" *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors && surveyFormGroup.get(question.surveyQuestionID).touched">
+            <div *ngIf="surveyFormGroup.get(question.surveyQuestionID).errors.required">Answer is required</div>
+          </div>
+        </ng-container>
+    </form>
+    <div class="actionButtonContainer">
+      <button mat-raised-button matStepperPrevious *ngIf="isFirstQuestion(question) == false">Back</button>
+      <mat-card-subtitle style="margin-top: 15px;" *ngIf="isLastQuestion(question) == true">Once you are done, ensure you have answered all the other survey questions, and the next button will allow you to continue to submit your answers below.</mat-card-subtitle>
+      <button mat-raised-button matStepperNext *ngIf="isLastQuestion(question) == false" [disabled]="surveyFormGroup.get(question.surveyQuestionID).invalid">Next</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

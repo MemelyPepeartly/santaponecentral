@@ -1,0 +1,63 @@
+<div id="overlay" *ngIf="showClientCard || showManualSignupCard" (click)="hideOpenWindow();" [@simpleFadeAnimation]="'in'">
+</div>
+<div class="overlay-container mat-elevation-z3" *ngIf="showManualSignupCard">
+  <app-manual-add
+    (clientPostedEvent)="showClientWindow($event)">
+  </app-manual-add>
+</div>
+<div class="overlay-container mat-elevation-z3" *ngIf="showClientCard">
+  <app-selected-anon
+    [loadingClient]="false"
+    [clientID]="currentClientID"
+    (setClickAwayLockEvent)="setClickawayLock($event)"
+    (actionTaken)="signups.setAction($event); approved.setAction($event); denied.setAction($event); completed.setAction($event)"
+    (deletedAnon)="hideOpenWindow(true)">
+  </app-selected-anon>
+</div>
+
+<mat-tab-group id="tabGroupContainer" class="mat-elevation-z3" mat-align-tabs="center" dynamicHeight>
+    <mat-tab label="Incoming Sign-Ups">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-incoming-signups #signups
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [allSurveys]="allSurveys"
+                [awaitingClients]="sortIncoming()"
+                (clickedClient)="showClientWindow($event)"
+                (manualSignUpClickedEvent)="showManualSignupWindow()"></app-incoming-signups>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Approved Agents">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-approved-anons #approved
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [allSurveys]="allSurveys"
+                [approvedClients]="sortApproved()"
+                (refreshClientObjectEvent)="softRefreshClientObjectInList($event)"
+                (clickedClient)="showClientWindow($event)"></app-approved-anons>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Denied Anons">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-denied-anons #denied
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [deniedClients]="sortDenied()"
+                (clickedClient)="showClientWindow($event)"></app-denied-anons>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Completed Agents">
+        <div class="contentDiv mat-elevation-z2">
+            <div class="small-box mat-elevation-z3">
+                <app-completed-anons #completed
+                [gatheringInfo]="gatheringAllClients || initializing"
+                [completedClients]="sortCompleted()"
+                (clickedClient)="showClientWindow($event)"></app-completed-anons>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

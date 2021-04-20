@@ -1,0 +1,16 @@
+<button mat-button [routerLink]="'/signup'" class="navButton" *ngIf="!inProduction">
+    <mat-label>Sign Up</mat-label>
+</button>
+<button mat-button [routerLink]="'/mission-boards'" class="navButton">
+  <mat-label>Mission Boards</mat-label>
+</button>
+<button mat-button [routerLink]="'/status-checker'" class="navButton">
+  <mat-label>Status Checker</mat-label>
+</button>
+<button mat-button (click)="auth.login()" *ngIf="!auth.loggedIn" class="navButton">
+    <mat-label>Login</mat-label>
+</button>
+<button mat-button (click)="auth.logout()" *ngIf="auth.loggedIn" class="navButton">
+    <mat-label>Logout</mat-label>
+</button>
+

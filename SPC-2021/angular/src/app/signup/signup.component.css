@@ -1,0 +1,12 @@
+.container {
+    display: block;
+    justify-content: center;
+    border-radius: 8px;
+    margin-top: 15px;
+    width: 80%;
+    min-width: 600px;
+    height: fit-content;
+    background-color:white;
+    opacity: 1.0;
+    overflow:auto;
+}

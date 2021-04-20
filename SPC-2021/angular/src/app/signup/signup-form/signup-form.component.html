@@ -1,0 +1,182 @@
+<div *ngIf="showFinished==false">
+    <div class="loaderDiv" *ngIf="isDoneLoading == false">
+        <app-loading-spin></app-loading-spin>
+    </div>
+    <div *ngIf="isDoneLoading == true">
+        <mat-vertical-stepper #stepper [linear]="true" validate>
+            <mat-step [stepControl]="clientInfoFormGroup">
+                <form [formGroup]="clientInfoFormGroup">
+                    <ng-template matStepLabel>Fill out your information</ng-template>
+                    <!-- First Name -->
+                    <mat-form-field>
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" placeholder="First Name">
+                    </mat-form-field>
+                    <div class="error" *ngIf="nameFormControls.firstName.errors && nameFormControls.firstName.touched">
+                        <div *ngIf="nameFormControls.firstName.errors.required">A first name is required</div>
+                        <div *ngIf="nameFormControls.firstName.errors.maxlength">First name is too long. 20 Characters is the maximum</div>
+                        <div *ngIf="nameFormControls.firstName.errors.pattern">First name must be a proper first name</div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <mat-form-field>
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName" placeholder="Last Name">
+                    </mat-form-field>
+                    <div class="error" *ngIf="nameFormControls.lastName.errors && nameFormControls.lastName.touched">
+                        <div *ngIf="nameFormControls.lastName.errors.required">A last name is required</div>
+                        <div *ngIf="nameFormControls.lastName.errors.maxlength">Last name is too long. 20 Characters is the maximum</div>
+                        <div *ngIf="nameFormControls.lastName.errors.pattern">Last name must be a proper last name</div>
+                    </div>
+
+                    <!-- Email -->
+                    <mat-form-field>
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" placeholder="email@domain.com">
+                    </mat-form-field>
+                    <div class="error" *ngIf="nameFormControls.email.errors && nameFormControls.email.touched">
+                        <div *ngIf="nameFormControls.email.errors.required">An email is required</div>
+                        <div *ngIf="nameFormControls.email.errors.maxlength">Email is too long. 50 Characters is the maximum</div>
+                        <div *ngIf="nameFormControls.email.errors.pattern">Email must be be all lowercase and a proper email@domain.xxx email</div>
+                    </div>
+
+                    <div>
+                        <button mat-raised-button matStepperNext [disabled]="clientInfoFormGroup.invalid">Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="clientAddressFormGroup" validate>
+                <form [formGroup]="clientAddressFormGroup">
+                    <ng-template matStepLabel>Shipping Address</ng-template>
+                    <!-- Address line 1 -->
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="addressLine1" placeholder="Street Address">
+                    </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.addressLine1.errors && addressFormControls.addressLine1.touched">
+                        <div *ngIf="addressFormControls.addressLine1.errors.required">An address line is required</div>
+                        <div *ngIf="addressFormControls.addressLine1.errors.maxlength">First address line is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- Address line 2 -->
+                    <mat-form-field class="addressFormField">
+                        <input matInput #secondLine formControlName="addressLine2"
+                            placeholder="Second Street Address (Optional)">
+                    </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.addressLine2.errors && addressFormControls.addressLine2.touched">
+                        <div *ngIf="addressFormControls.addressLine2.errors.maxlength">Second address line is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- City -->
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="city" placeholder="City">
+                    </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.city.errors && addressFormControls.city.touched">
+                        <div *ngIf="addressFormControls.city.errors.required">A city is required</div>
+                        <div *ngIf="addressFormControls.city.errors.maxlength">City field is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <!-- State -->
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="state" placeholder="State">
+                    </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.state.errors && addressFormControls.state.touched">
+                        <div *ngIf="addressFormControls.state.errors.required">A state is required</div>
+                        <div *ngIf="addressFormControls.state.errors.maxlength">State line is too long. 50 Characters is the maximum</div>
+                    </div>
+
+                    <mat-form-field class="addressFormField">
+                        <mat-select name="country" formControlName="country" placeholder="Select a Country">
+                            <mat-option *ngFor="let country of countries" [value]="country.CountryName">{{country.CountryName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Postal Code -->
+                    <mat-form-field class="addressFormField">
+                        <input matInput formControlName="postalCode" placeholder="Postal Code">
+                    </mat-form-field>
+                    <div class="error" *ngIf="addressFormControls.postalCode.errors && addressFormControls.postalCode.touched">
+                        <div *ngIf="addressFormControls.postalCode.errors.required">A postal code is required</div>
+                        <div *ngIf="addressFormControls.postalCode.errors.maxlength">Postal code is too long. 25 Characters is the maximum</div>
+                        <div *ngIf="addressFormControls.postalCode.errors.pattern">Postal code can only have letters and numbers</div>
+                    </div>
+                    <div>
+                        <button mat-raised-button matStepperPrevious>Back</button>
+                        <button mat-raised-button matStepperNext [disabled]="clientAddressFormGroup.invalid">Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step validate>
+                <ng-template matStepLabel>Event</ng-template>
+                <h3>What events are you participating in?</h3>
+                <mat-selection-list [(ngModel)]="selectedEvents">
+                    <mat-list-option *ngFor="let event of activeEvents" [value]="event">{{ event.eventDescription }}</mat-list-option>
+                </mat-selection-list>
+                <div>
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button matStepperNext [disabled]="selectedEvents?.length == 0">Next</button>
+                </div>
+                <br>
+            </mat-step>
+            <mat-step validate>
+                <ng-template matStepLabel>Questions</ng-template>
+                <ng-container *ngFor="let event of selectedEvents">
+                    <mat-card-title>{{event.eventDescription}}</mat-card-title>
+                    <ng-container *ngFor="let survey of surveys">
+                        <app-survey-form *ngIf="survey.eventTypeID == event.eventTypeID && survey.active == true || isMassMailSurvey(survey)"
+                        (validity)="setQuestionValidity($event)"
+                        [survey]="survey"></app-survey-form>
+                    </ng-container>
+                </ng-container>
+                <div class="finalDividerDiv">
+                  <mat-divider style="margin-left: auto;" [inset]="true"></mat-divider>
+                </div>
+                <div>
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button matStepperNext [disabled]="!allQuestionsAnswered">Next</button>
+                </div>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p *ngIf="!showSomethingWrong">Verify your information and change anything as necessary. When you
+                    are ready, click "Submit"</p>
+                <span class="error" *ngIf="showSomethingWrong">Double check you information, and make sure you did not use an email that is already in queue for approval or tied to an existing account</span>
+                <p class="error" *ngIf="showSomethingWrong">Once you have checked, try submitting again</p>
+                <app-loading-spin *ngIf="showSpinner==true"></app-loading-spin>
+                <div *ngIf="!showSpinner && !showFinished">
+                    <button mat-raised-button matStepperPrevious>Back</button>
+                    <button mat-raised-button type="submit" (click)="onSubmit()">Submit</button>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+</div>
+<div *ngIf="showSpinner==false && showFinished==true" id="backHomeBtn">
+  <div class="small-box mat-elevation-z8 contentBox">
+    <mat-toolbar>Signup Successful!</mat-toolbar>
+
+    <h2>So what now?</h2>
+    <p>
+      Just like in events past, SantaPone and the organizers will look over your application, and make sure everything is good to go!
+      If everything is as it should be, you will be approved for the event, and recieve 2 emails, one as a welcome, and one with a link to set
+      your password.
+    </p>
+    <h2>After I set my password?</h2>
+    <p>
+      After you set your password, you can log in with your email you signed up with, and the password you set to be able to view your profile.
+      Before you are given as an assignment to someone, you can change what your answers to the surveys were, and any address details in you need.
+    </p>
+    <h2>How will I know when I recieved an assignment?</h2>
+    <p>
+      Once an event organizer gives you an assignment, you will recieve an email notification letting you know that you have recieved new
+      assignments to keep you informed, which are viewable on your profile along with chat histories related to each assignment.
+    </p>
+    <h2>Contacting the event organizers?</h2>
+    <p>
+      Every profile, once accepted, has a "General Correspondence" chat that you can discuss any questions you might have in a way that is easy for both you,
+      and them.
+
+      If you have any other questions before you are accepted and have an account, however, feel free to reach out to <a href="mailto: mlpsantapone@gmail.com">mlpsantapone@gmail.com</a>!
+     </p>
+  </div>
+  <button mat-raised-button [routerLink]="'/home'" (click)="resetSubmitBools()">Take me home</button>
+</div>

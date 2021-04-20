@@ -1,0 +1,56 @@
+<ng-scrollbar class="scrollbar containerCard mat-elevation-z3" #scrollable
+  [disabled]="false">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Related Histories</mat-card-title>
+      <mat-card-subtitle>Related Histories for {{selectedAnonMeta.clientNickname}}</mat-card-subtitle>
+      <mat-card-subtitle>
+        <button mat-raised-button (click)="emitAgentControlSelected(selectedAnonMeta)">Open {{selectedAnonMeta.clientNickname}}'s Agent Control</button>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-selection-list class="historySelection mat-elevation-z3" [multiple]="false" *ngIf="clientHistories.length > 0">
+        <mat-list-option
+          (click)="setInfoContainerValues(getGeneralHistory())"
+          [matBadge]="getGeneralHistory().unreadCount"
+          [matBadgeHidden]="getGeneralHistory().unreadCount == 0"><span>General Intelligence</span></mat-list-option>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-toolbar>Assignment Chats</mat-toolbar>
+        <ng-container *ngFor="let history of clientHistories">
+          <mat-list-option class="historyListOption" *ngIf="history.relationXrefID != undefined"
+            [matBadge]="history.unreadCount"
+            [matBadgeHidden]="history.unreadCount == 0"
+            [value]="history"
+            (click)="setInfoContainerValues(history)">
+            <span>{{history.assignmentRecieverClient.clientNickname}}</span>
+            <mat-card-subtitle>{{history.eventType.eventDescription}}</mat-card-subtitle>
+          </mat-list-option>
+        </ng-container>
+      </mat-selection-list>
+
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="!showSelectedChat">
+        <mat-card-content>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-toolbar class="centeredToolbar">Select a chat</mat-toolbar>
+          <mat-card-subtitle class="infoSubtitle">Chats include all the chats between admins and {{selectedAnonMeta.clientNickname}}</mat-card-subtitle>
+
+          <mat-divider [inset]="true"></mat-divider>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Selected history chat -->
+      <mat-card class="chatCard mat-elevation-z3" *ngIf="showSelectedChat">
+        <mat-card-content>
+          <app-chat
+            (historyUpdatedEvent)="updateSpecificChat($event)"
+            (openAgentControlEvent)="emitAgentControlSelected($event)"
+            [showControlButton]="true"
+            [chatInfoContainer]="chatInfoContainer">
+          </app-chat>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</ng-scrollbar>
+

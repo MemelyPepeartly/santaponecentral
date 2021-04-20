@@ -1,0 +1,54 @@
+mat-form-field
+{
+    display: block;
+}
+button
+{
+    margin-left: 10px;
+}
+.mat-radio-button ~ .mat-radio-button
+{
+    margin-left: 16px;
+}
+#backHomeBtn
+{
+    padding: 10px;
+}
+.error
+{
+    color: #F44336;
+}
+.finalDividerDiv
+{
+  display: block;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.loaderDiv
+{
+    display: block;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+}
+.contentBox{
+  padding: 25px;
+  background-color:white;
+}
+.small-box {
+  display: block;
+  height: auto;
+  width: auto;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+}
+::ng-deep .mat-vertical-stepper-header {
+    pointer-events: none !important;
+}

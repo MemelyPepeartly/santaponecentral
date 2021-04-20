@@ -1,0 +1,75 @@
+<div id="overlay" *ngIf="showClientCard" (click)="hideClientWindow()">
+</div>
+
+<div class="container mat-elevation-z3 clientCard" *ngIf="showClientCard">
+  <div class="fixedDiv mat-elevation-z6">
+      <app-selected-anon
+      [loadingClient]="false"
+      [clientID]="selectedClientID"
+      (refreshSelectedClient)="true"
+      (actionTaken)="setRefreshListAction($event)"></app-selected-anon>
+  </div>
+</div>
+
+<div class="functionalCardContainer">
+  <mat-card class="apiCard mat-elevation-z5">
+    <mat-card-header>
+      <mat-card-title>Auto Assign</mat-card-title>
+      <mat-card-subtitle>Assigns any Mass Mail Recipients that havn't been assigned to mass mailers</mat-card-subtitle>
+      <mat-card-subtitle>Any pairing suggestions will be between anons who have been approved</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!-- Mailer Chip list-->
+        <mat-toolbar>All Mass Mailers</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailers().length != 0">
+                <mat-chip *ngFor="let client of sortMassMailers()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+            </mat-chip-list>
+            <span *ngIf="sortMassMailers().length == 0 && !gatheringAllClients">No mass mailers to display</span>
+        </div>
+
+        <mat-toolbar>All Mass Mail Recipients</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin [spinnerType]="2" *ngIf="gatheringAllClients"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!gatheringAllClients && sortMassMailRecipients().length != 0">
+                <mat-chip *ngFor="let client of sortMassMailRecipients()" (click)="selectClient(client)"><span class="chipText">{{client.clientNickname}}</span></mat-chip>
+            </mat-chip-list>
+            <span *ngIf="sortMassMailRecipients().length == 0 && !gatheringAllClients">No mass mail recipients to display</span>
+        </div>
+        <div class="spacingStyle">
+          <button mat-raised-button (click)="getAssignmentPairings()" [disabled]="gettingAssignmentPairings">Get auto-assignments</button>
+        </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="apiCard mat-elevation-z5" *ngIf="buttonClicked">
+    <mat-card-header>
+      <mat-card-title>Potential Autoassigns</mat-card-title>
+      <mat-card-subtitle>List of queued assignments to be approved</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="gettingAssignmentPairings">
+      <app-small-loading-spin [spinnerType]="2"></app-small-loading-spin>
+    </mat-card-content>
+    <mat-card-content style="text-align: center;" *ngIf="!gettingAssignmentPairings">
+      <div class="navigationButtonDiv">
+        <button class="switchButton" mat-raised-button (click)="previousMailer()" [disabled]="pairingIndex == 0"><mat-icon>navigate_before</mat-icon> Previous Mass-Mailer</button>
+        <button class="switchButton" mat-raised-button (click)="nextMailer()" [disabled]="pairingIndex == possiblePairings.length -1">Next Mass-Mailer<mat-icon>navigate_next</mat-icon></button>
+      </div>
+      <div class="pairingComponentDiv">
+        <app-agent-pairing-control
+          [possiblePairingsObject]="possiblePairings[pairingIndex]"
+          (completedPostEvent)="true"
+          (failedPostEvent)="true">
+        </app-agent-pairing-control>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

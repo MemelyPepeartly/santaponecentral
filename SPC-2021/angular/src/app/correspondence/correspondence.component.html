@@ -1,0 +1,132 @@
+<div id="overlay" *ngIf="showOverlay" (click)="hideWindow();">
+</div>
+
+<div class="overlay-container" *ngIf="showRelatedIntelligenceCard == true">
+  <app-related-intelligence
+    (historyUpdatedEvent)="updateSpecificChat($event)"
+    (messageSentEvent)="updateSpecificChat($event);"
+    (openAgentControlEvent)="openClientCard($event)"
+    [selectedAnonMeta]="selectedAnonMeta"
+    [clientHistories]="filterRelatedChats()"
+    [chatInfoContainer]="chatInfoContainer"
+    [subject]="subject"></app-related-intelligence>
+</div>
+
+<div class="overlay-container" *ngIf="showClientCard">
+  <app-selected-anon
+    (backClickedEvent)="backToRelatedIntelligence()"
+    (closeClickedEvent)="hideWindow()"
+    [showBackCloseButtons]="true"
+    [loadingClient]="loadingClient"
+    [clientID]="agentControlID"
+    (actionTaken)="updateChats(true)"
+    (setClickAwayLockEvent)="setClickawayLock($event)">
+  </app-selected-anon>
+</div>
+<div class="overlay-container" *ngIf="showChat">
+  <app-chat
+    (historyUpdatedEvent)="updateSpecificChat($event)"
+    (manualRefreshClickedEvent)="false"
+    (sendClickedEvent)="false"
+    (readAllClickedEvent)="false"
+    [chatInfoContainer]="chatInfoContainer"
+    [showChatLoading]="gettingAllChats || gettingSelectedHistory">
+  </app-chat>
+</div>
+
+<div id="info-div">
+  <mat-card class="list-card mat-elevation-z5">
+    <mat-card-header style="display: block; margin-bottom: 10px;">
+      <div>
+        <mat-card-title>Correspondence</mat-card-title>
+        <mat-card-subtitle>For keeping contact with anons organized and in line</mat-card-subtitle>
+      </div>
+      <button mat-raised-button class="refreshButton" (click)="manualRefresh()" [disabled]="gettingAllChats">Refresh Correspondence <mat-icon>refresh</mat-icon></button>
+    </mat-card-header>
+    <mat-card-content *ngIf="initializing">
+      <app-loading-spin></app-loading-spin>
+    </mat-card-content>
+    <mat-card-content *ngIf="!initializing">
+      <!-- Unread Histories -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>Unread</mat-card-title>
+          <mat-card-subtitle>Unread messages and requests from anons</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!gettingAllChats && (allChats|sortByUnreadPipe).length == 0">(No unread messages to display)</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats && (allChats|sortByUnreadPipe).length > 0"
+            [viewerClient]="subject"
+            [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
+            [histories]="allChats|sortByUnreadPipe"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- General Histories -->
+      <mat-card class="infoCard">
+        <mat-card-header>
+          <mat-card-title>General</mat-card-title>
+          <mat-card-subtitle>General correspondence histories are not attatched to specific assignments</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
+            [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
+            [histories]="allChats|sortByGeneralPipe"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+
+      <!-- Event Histories -->
+      <!--
+      <mat-card class="infoCard" *ngFor="let event of events">
+        <mat-card-header>
+          <mat-card-title>{{ event.eventDescription }} Chats</mat-card-title>
+          <mat-card-subtitle>List of all anon conversations for the {{ event.eventDescription }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
+            [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
+            [histories]="sortByEvent(event)"
+            (agentSelectedEvent)="populateSelectAnonCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+      -->
+
+      <!-- Status Histories -->
+      <mat-card class="infoCard" *ngFor="let assignmentStatus of assignmentStatuses">
+        <mat-card-header>
+          <mat-card-title>{{ assignmentStatus.assignmentStatusName }} Assignments</mat-card-title>
+          <mat-card-subtitle>List of all anon conversations that have the "{{ assignmentStatus.assignmentStatusName }}" status</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="scrollDiv scrollbar scrollbar-primary tableContentMaxHeight">
+          <app-small-loading-spin *ngIf="gettingAllChats"></app-small-loading-spin>
+          <app-chat-histories *ngIf="!gettingAllChats"
+            [viewerClient]="subject"
+            [disabled]="updateOnClickaway"
+            [isRefreshingChats]="gettingAllChats || gettingSelectedHistory || updateOnClickaway"
+            [histories]="allChats|sortByAssignmentStatus:assignmentStatus"
+            (agentSelectedEvent)="openRelatedIntelligenceCard($event.meta)"
+            (chatSelectedEvent)="openSelectedChat($event)"></app-chat-histories>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-card-content>
+  </mat-card>
+</div>

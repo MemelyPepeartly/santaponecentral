@@ -1,0 +1,26 @@
+<div class="spinnerDiv" *ngIf="gatheringAllEvents || gatheringInfoContainer">
+  <app-loading-spin [spinnerType]="1"></app-loading-spin>
+</div>
+
+<div style="margin-bottom: 15px;" *ngIf="!gatheringAllEvents && !gatheringInfoContainer">
+  <mat-card class="assignmentEventCard mat-elevation-z5" *ngFor="let event of events">
+    <mat-card-header>
+      <mat-card-title>{{ event.eventDescription }}</mat-card-title>
+      <mat-card-subtitle>Assignment information for the {{ event.eventDescription }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+      <div class="assignmentPanelsContainer">
+        <div class="assignmentPanelDiv">
+          <app-assignments-panel
+            [infoOnly]="true"
+            [agent]="client"
+            [senders]="getEventSenders(event)"
+            [assignments]="getEventAssignments(event)"></app-assignments-panel>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+

@@ -1,0 +1,51 @@
+<mat-card class="emailFormContainer reactiveMinWidth mat-elevation-z3">
+  <mat-card-header>
+    <mat-card-title>Approval Status Checker</mat-card-title>
+    <mat-card-subtitle>Use your email to check your current approval status</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="emailFormDiv">
+    <mat-form-field class="emailFormField mat-elevation-z3">
+
+      <mat-label>Enter your email</mat-label>
+      <input matInput type="text" [(ngModel)]="emailString">
+    </mat-form-field>
+    <button mat-raised-button class="checkButton mat-elevation-z3" (click)="getStatus()" [disabled]="emailString == '' || gettingStatus">Check</button>
+  </mat-card-content>
+</mat-card>
+
+<div class="contentBox small-box reactiveMinWidth mat-elevation-z8" *ngIf="retrievedStatus.statusDescription != undefined">
+  <mat-card>
+    <mat-card-content>
+      <ng-container *ngIf="retrievedStatus.statusDescription == 'Awaiting'">
+        <mat-card-title>Awaiting <mat-icon>access_time</mat-icon></mat-card-title>
+        <mat-card-subtitle>Your are currently in the the approval queue!</mat-card-subtitle>
+        <span>You are currently in the approval queue. No need to worry, your application is still in the works. You will recieve additional emails once this status has changed, so hold tight!</span>
+      </ng-container>
+
+
+      <ng-container *ngIf="retrievedStatus.statusDescription == 'Approved'">
+        <mat-card-title>Approved <mat-icon>check_circle</mat-icon></mat-card-title>
+        <mat-card-subtitle>You have been approved for the event!</mat-card-subtitle>
+        <span>All is good to go with your information, agent, and the organizers have approved you. If you havn't recieved your email to set your password or can't find it, email the organizers to get one resent to you!</span>
+      </ng-container>
+
+      <ng-container *ngIf="retrievedStatus.statusDescription == 'Completed'">
+        <mat-card-title>Completed <mat-icon>done_outline</mat-icon></mat-card-title>
+        <mat-card-subtitle>You have been marked as completed for the event!</mat-card-subtitle>
+        <span>You did good, agent! Your assignments were completed and you were marked as complete!</span>
+      </ng-container>
+
+      <ng-container *ngIf="retrievedStatus.statusDescription == 'Denied'">
+        <mat-card-title>Denied <mat-icon>cancel</mat-icon></mat-card-title>
+        <mat-card-subtitle>Unfortunately, you were denied...</mat-card-subtitle>
+        <span>You were denied to participate in the event. If you feel this is a mistake, or would like to make an appeal, reach out to the organizers through their email found on the FAQ page on the home screen.</span>
+      </ng-container>
+
+      <ng-container *ngIf="retrievedStatus.statusDescription == 'Not Found'">
+        <mat-card-title>Not Found <mat-icon>contact_support</mat-icon></mat-card-title>
+        <mat-card-subtitle>No record found of this email</mat-card-subtitle>
+        <span>If you feel this is a mistake, reach out to the organizers through their emails on the FAQ page on the home screen.</span>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+</div>
