@@ -4,7 +4,7 @@ import { Address } from '../../../classes/address';
 import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/mapper.service';
-import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';

@@ -4,7 +4,7 @@ import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
-import { StatusConstants } from '../shared/constants/StatusConstants.enum';
+import { StatusConstants } from '../shared/constants/statusConstants.enum';
 import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';
 import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';

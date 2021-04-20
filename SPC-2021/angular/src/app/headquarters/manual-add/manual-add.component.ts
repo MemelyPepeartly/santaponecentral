@@ -10,7 +10,7 @@ import { Survey } from 'src/classes/survey';
 import { Status } from 'src/classes/status';
 import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/responseTypes';
 import { Address } from 'src/classes/address';
-import { StatusConstants } from 'src/app/shared/constants/StatusConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Client } from 'src/classes/client';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 

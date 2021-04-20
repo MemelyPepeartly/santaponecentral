@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { BaseClient, Client } from 'src/classes/client';
-import { InputControlConstants } from 'src/app/shared/constants/InputControlConstants.enum';
+import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/mapper.service';
