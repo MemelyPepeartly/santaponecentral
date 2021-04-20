@@ -4,15 +4,13 @@ import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santa-api.service';
 import { GathererService } from '../services/gatherer.service';
-import { StatusConstants } from '../shared/constants/statusConstants.enum';
 import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';
 import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';
 import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
-import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
-import { PageEvent } from '@angular/material/paginator';
+import { StatusConstants } from '../shared/constants/statusConstants.enum';
 
 @Component({
   selector: 'app-headquarters',
