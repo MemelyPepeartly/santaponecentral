@@ -12,8 +12,6 @@ export class CountriesService {
 
   constructor() { }
 
-
-
   allCountries(){
     return countries.Countries;
   }
