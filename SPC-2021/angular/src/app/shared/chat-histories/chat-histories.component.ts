@@ -4,7 +4,7 @@ import { ProfileService } from 'src/app/services/profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
 import { BaseClient, Client } from 'src/classes/client';
-import { AssignmentStatusConstants } from '../constants/AssignmentstatusConstants.enum';
+import { AssignmentStatusConstants } from '../constants/assignmentstatusConstants.enum';
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 
 @Component({
