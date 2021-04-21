@@ -1,4 +1,4 @@
-export enum AssignmentStatusConstants {
+enum AssignmentStatusConstants {
   ASSIGNED = "Assigned",
   IN_PROGRESS = "In Progress",
   SHIPPING = "Shipping",

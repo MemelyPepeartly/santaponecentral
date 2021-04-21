@@ -1,4 +1,4 @@
-export enum StatusConstants {
+enum StatusConstants {
     APPROVED = "Approved",
     AWAITING = "Awaiting",
     DENIED = "Denied",
