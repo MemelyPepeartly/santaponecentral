@@ -6,7 +6,7 @@ ARG NODE_VERSION=15.14.0
 FROM node:${NODE_VERSION} as base
 WORKDIR /angular
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 ## stage - build
 FROM base as build
