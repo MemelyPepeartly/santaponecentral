@@ -1,6 +1,6 @@
 ## arguments
-ARG NGINX_VERSION=1.17
-ARG NODE_VERSION=15.14.0
+ARG NGINX_VERSION=latest
+ARG NODE_VERSION=latest
 
 ## stage - base
 FROM node:${NODE_VERSION} as base
