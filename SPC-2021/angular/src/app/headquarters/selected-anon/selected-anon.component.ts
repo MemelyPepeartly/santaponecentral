@@ -16,6 +16,7 @@ import { CountriesService } from 'src/app/services/countries.service';
 import { ClientMeta } from 'src/classes/message';
 import { MatSelectionList } from '@angular/material/list';
 
+
 @Component({
   selector: 'app-selected-anon',
   templateUrl: './selected-anon.component.html',

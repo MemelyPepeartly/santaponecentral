@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Client, HQClient, PossiblePairingChoices,  } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
-import { TagConstants } from '../../shared/constants/tagConstants.enum'
+import { TagConstants } from 'src/app/shared/constants/tagConstants.enum'
 import { GathererService } from 'src/app/services/gatherer.service';
 import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/mapper.service';

@@ -10,7 +10,7 @@ import { CompletedAnonsComponent } from './completed-anons/completed-anons.compo
 import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { Survey } from 'src/classes/survey';
-import { StatusConstants } from '../shared/constants/statusConstants.enum';
+import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 
 @Component({
   selector: 'app-headquarters',

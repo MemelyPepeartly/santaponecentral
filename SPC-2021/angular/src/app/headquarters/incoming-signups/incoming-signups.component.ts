@@ -1,13 +1,10 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
-import { Client, HQClient } from '../../../classes/client';
-import { Address } from '../../../classes/address';
+import { HQClient } from '../../../classes/client';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { EventType } from 'src/classes/eventType';
-import { Survey, SurveyResponse } from 'src/classes/survey';
+import { Survey } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
