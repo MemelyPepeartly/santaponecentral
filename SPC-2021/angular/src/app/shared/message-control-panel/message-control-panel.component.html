@@ -1,0 +1,17 @@
+<div class="controlPanel mat-elevation-z2">
+    <h2>Control Panel</h2>
+    <mat-card-subtitle>Due to some updates, these don't work at the moment</mat-card-subtitle>
+    <button mat-raised-button class="controlButton" matTooltip="Mark all as read" [disabled]="disabled"
+      (click)="emitReadAll()">
+      <mat-icon mat-icon-button>mark_chat_read</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Pinned messages (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>push_pin</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Convert Time Zone (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>access_time</mat-icon>
+    </button>
+    <button mat-raised-button class="controlButton" matTooltip="Color (Not implimented yet)" [disabled]="disabled">
+      <mat-icon mat-icon-button>color_lens</mat-icon>
+    </button>
+</div>

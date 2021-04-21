@@ -1,0 +1,20 @@
+.spinnerDiv
+{
+  display: block;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+}
+.santa
+{
+  content: url(../../../assets/images/spinners/LoadingShark.gif);
+}
+.card
+{
+  content: url(../../../assets/images/spinners/LoadingDerg.gif);
+}
+.duk
+{
+  content: url(../../../assets/images/spinners/LoadingDuk.gif);
+}

@@ -7,19 +7,19 @@ import { ClientMeta } from './message';
 
 export class Profile
 {
-    clientID!: string;
-    clientName!: string;
-    clientNickname!: string;
-    email!: string;
+    clientID: string;
+    clientName: string;
+    clientNickname: string;
+    email: string;
     address: Address = new Address;
     assignments: Array<ProfileAssignment> = [];
     responses: Array<SurveyResponse> = [];
-    editable!: boolean;
+    editable: boolean;
 }
 export class ProfileAssignment
 {
-    recipientClient!: ClientMeta;
-    relationXrefID?: string;
+    recipientClient: ClientMeta;
+    relationXrefID?: string = null;
     address: Address = new Address();
     assignmentStatus: AssignmentStatus = new AssignmentStatus();
     recipientEvent: EventType = new EventType();

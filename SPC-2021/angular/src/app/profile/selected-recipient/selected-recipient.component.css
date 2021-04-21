@@ -1,0 +1,69 @@
+mat-panel-description
+{
+    display: block;
+    text-align: right;
+}
+.scrollbar {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    overflow-y: scroll;
+    border-radius: 8px;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+width: 12px;
+background-color: #F5F5F5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+border-radius: 10px;
+-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+background-color: #4285F4;
+}
+.infoCard
+{
+    width: 30%;
+    min-width: 300px;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+#relationshipEventHeader
+{
+    display: block;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.responseListDiv
+{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.statusContainer
+{
+  display: block;
+  margin-bottom: 15px;
+  width: 100%;
+}
+.statusDiv
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+.addressBlock
+{
+  margin-top: 10px;
+}

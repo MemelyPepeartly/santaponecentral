@@ -1,0 +1,60 @@
+<div class="scrollbar scrollbar-primary">
+    <mat-toolbar>{{ selectedRecipient.recipientEvent.eventDescription }} Assignment</mat-toolbar>
+    <mat-card class="infoCard">
+        <mat-card-header>
+            <mat-card-title>Address</mat-card-title>
+            <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s mailing address</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-divider [inset]="true"></mat-divider>
+          <div class="addressBlock">
+              <p>{{ selectedRecipient.address.addressLineOne }}</p>
+              <p>{{ selectedRecipient.address.addressLineTwo }}</p>
+              <p>{{ selectedRecipient.address.city }}</p>
+              <p>{{ selectedRecipient.address.state }}</p>
+              <p>{{ selectedRecipient.address.postalCode }}</p>
+              <p>{{ selectedRecipient.address.country }}</p>
+          </div>
+          <mat-divider [inset]="true"></mat-divider>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="infoCard">
+        <mat-card-header>
+            <mat-card-title>Shipping name and information</mat-card-title>
+            <mat-card-subtitle>{{ selectedRecipient.recipientClient.clientNickname }}'s Name and Holiday ID</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-divider [inset]="true"></mat-divider>
+          <h2>Nickname</h2>
+          <p>{{selectedRecipient.recipientClient.clientNickname }}</p>
+
+          <mat-divider [inset]="true"></mat-divider>
+
+          <h2>Real Name</h2>
+          <p>{{selectedRecipient.recipientClient.clientName }}</p>
+          <mat-divider [inset]="true"></mat-divider>
+        </mat-card-content>
+    </mat-card>
+
+    <div class="statusContainer">
+      <div class="statusDiv">
+        <app-assignment-status-controller
+          (lockClickawayEvent)="setClickawayLock($event)"
+          (newStatusAssingmentStatusPutEvent)="setNewStatus($event)"
+          [assignment]="selectedRecipient"
+          [clientID]="profile.clientID">
+        </app-assignment-status-controller>
+      </div>
+    </div>
+
+    <mat-toolbar>Assignment Responses</mat-toolbar>
+
+    <div class="responseListDiv" *ngFor="let survey of surveys">
+      <app-response-list *ngIf="showSurvey(survey)"
+      [survey]="survey"
+      [responses]="selectedRecipient.responses"
+      [editable]="false"
+      [viewingAssignment]="true"></app-response-list>
+    </div>
+</div>

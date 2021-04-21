@@ -1,0 +1,81 @@
+.container
+{
+  display: block;
+  text-align: center;
+  min-width: 600px;
+  margin-bottom: 15px;
+}
+.subtleError
+{
+    color: #d07973;
+}
+.child{
+  display: inline-block;
+  width: 90%;
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+.small-box, .large-box {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+}
+.small-box {
+  text-align: center;
+  height: auto;
+  width: auto;
+}
+
+.large-box {
+  height: 300px;
+  width: 300px;
+}
+.contentBox{
+  padding: 25px;
+  background-color:white;
+}
+.whoIsDiv
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #F5F5F5;
+}
+.whoIsHeaderText
+{
+  display: block;
+  margin-bottom: 0px;
+}
+.supportButton
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.supportButtonImage
+{
+  display: inline-block;
+  width: 40px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.center
+{
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+#FAQList {
+  text-align: left;
+}
+#WhatIsItList {
+  text-align: left;
+}

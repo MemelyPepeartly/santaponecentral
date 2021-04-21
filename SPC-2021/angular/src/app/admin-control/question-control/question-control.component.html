@@ -1,0 +1,24 @@
+<!-- Add global question card-->
+<mat-card class="api-card mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>Add Question</mat-card-title>
+        <mat-card-subtitle>Add questions to the api</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <!--All Question list-->
+        <mat-toolbar>All currently available questions</mat-toolbar>
+
+        <div>
+            <app-small-loading-spin *ngIf="gatheringAllQuestions"></app-small-loading-spin>
+
+            <mat-chip-list *ngIf="!gatheringAllQuestions">
+                <mat-chip *ngFor="let question of allQuestions"><span class="questionText">{{question.questionText}}</span></mat-chip>
+            </mat-chip-list>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+
+    </mat-card-content>
+</mat-card>
+
+

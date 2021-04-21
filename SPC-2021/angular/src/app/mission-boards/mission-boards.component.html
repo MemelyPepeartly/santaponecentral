@@ -1,0 +1,33 @@
+<div id="info-div">
+  <mat-card class="list-card mat-elevation-z5">
+    <mat-card-header>
+      <mat-card-title>Important Intelligence</mat-card-title>
+      <mat-card-subtitle>Collection of important posts for agents to know about. All links lead to the board posts</mat-card-subtitle>
+      <mat-card-subtitle>These mission boards are updated by the event organizers and helpers only for informational purposes</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="gettingAllBoardEntries || gettingAllEntryTypes">
+      <app-loading-spin [spinnerType]="1"></app-loading-spin>
+    </mat-card-content>
+    <mat-card-content *ngIf="!gettingAllBoardEntries && !gettingAllEntryTypes">
+
+      <!-- Important Intelligence -->
+      <mat-card class="infoCard" *ngFor="let type of adminTypes()">
+        <mat-card-header>
+          <mat-card-title>{{ type.entryTypeName }}</mat-card-title>
+          <mat-card-subtitle>{{ type.entryTypeDescription }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <app-mission-board-table
+            (hardRefreshEvent)="hardRefreshEntryList($event)"
+            (softRefreshEvent)="softRefreshEntryList($event)"
+            [allPostNumbers]="allPostNumbers"
+            [boardEntries]="getAdminEntriesWithType(type)"
+            [entryType]="type"
+            [allowForm]="isAdmin || isHelper"></app-mission-board-table>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-card-content>
+  </mat-card>
+</div>
