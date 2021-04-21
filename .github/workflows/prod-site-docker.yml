@@ -14,7 +14,7 @@ env:
 
 jobs:
   build-and-push-prod-image:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     #Step 0
