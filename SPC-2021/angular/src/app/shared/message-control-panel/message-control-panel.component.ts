@@ -1,4 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
+
 
 @Component({
   selector: 'app-message-control-panel',

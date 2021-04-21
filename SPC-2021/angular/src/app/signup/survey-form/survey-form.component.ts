@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Question, SurveyQA, SurveyFormOption, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 
 @Component({
   selector: 'app-survey-form',

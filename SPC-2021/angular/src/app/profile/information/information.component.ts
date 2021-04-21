@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile } from 'src/classes/profile';
 import { ProfileService } from 'src/app/services/profile.service';
-import { ClientAddressResponse } from 'src/classes/responseTypes';
+import { EventType } from 'src/classes/eventType';
+import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/responseTypes';
 import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CountriesService } from 'src/app/services/countries.service';
+import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { MessageHistory } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 
