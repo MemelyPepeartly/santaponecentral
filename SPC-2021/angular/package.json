@@ -25,6 +25,7 @@
     "auth0": "^2.34.2",
     "ng-table-virtual-scroll": "^1.3.5",
     "ngx-scrollbar": "^7.5.4",
+    "npm": "^7.10.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
