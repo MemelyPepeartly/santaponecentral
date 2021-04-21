@@ -1,14 +1,11 @@
 import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
-import { Client, HQClient } from '../../../classes/client';
-import { Address } from '../../../classes/address';
+import { HQClient } from '../../../classes/client';
 import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
 import { MapService } from '../../services/mapper.service';
-import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { GathererService } from 'src/app/services/gatherer.service';
-import { Survey, SurveyResponse } from 'src/classes/survey';
+import { Survey } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-approved-anons',

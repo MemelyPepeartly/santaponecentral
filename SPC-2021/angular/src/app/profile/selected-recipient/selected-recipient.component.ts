@@ -7,7 +7,6 @@ import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
 import { MessageApiResponse } from 'src/classes/responseTypes';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
-import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentstatusConstants.enum';
 
 @Component({
   selector: 'app-selected-recipient',

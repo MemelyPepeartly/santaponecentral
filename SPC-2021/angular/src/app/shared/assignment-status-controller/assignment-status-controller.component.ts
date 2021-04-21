@@ -5,7 +5,6 @@ import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-ap
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileAssignment } from 'src/classes/profile';
 import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
-import { AssignmentStatusConstants } from '../constants/assignmentstatusConstants.enum';
 
 @Component({
   selector: 'app-assignment-status-controller',

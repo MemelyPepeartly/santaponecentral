@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { Client, HQClient } from '../../classes/client';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { HQClient } from '../../classes/client';
 import { MapService } from '../services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santa-api.service';
@@ -10,7 +10,6 @@ import { CompletedAnonsComponent } from './completed-anons/completed-anons.compo
 import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.component';
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { Survey } from 'src/classes/survey';
-import { StatusConstants } from '../shared/constants/statusConstants.enum';
 
 @Component({
   selector: 'app-headquarters',

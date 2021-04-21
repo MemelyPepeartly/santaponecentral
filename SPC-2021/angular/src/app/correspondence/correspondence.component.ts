@@ -8,8 +8,6 @@ import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/clie
 import { MapService } from '../services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
-import { OrganizerEmailConstants } from '../shared/constants/organizerEmailConstants.enum';
-import { EventConstants } from '../shared/constants/eventConstants.enum';
 import { ChatComponent } from '../shared/chat/chat.component';
 
 
