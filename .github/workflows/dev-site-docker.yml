@@ -18,11 +18,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     #Step 0
-    - name: Login to Docker Hub
+    - name: Docker Login
       uses: docker/login-action@v1.8.0
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+        # Log out from the Docker registry at the end of a job
+        logout: true
     #Step 1
     - name: Build the Docker image
       run: cd ${{ env.ANGULAR_PATH }} && docker build . --file .docker/Dockerfile.Dev --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:dev
