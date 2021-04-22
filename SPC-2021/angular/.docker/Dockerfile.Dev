@@ -1,0 +1,19 @@
+## arguments
+ARG NGINX_VERSION=latest
+ARG NODE_VERSION=14-alpine
+
+## stage - base
+FROM node:${NODE_VERSION} as base
+RUN npm install npm@7
+WORKDIR /angular
+COPY package*.json ./
+RUN npm install
+
+## stage - build
+FROM base as build
+COPY . ./
+RUN npm run build --configuration=dev
+## stage - deploy
+FROM nginx:${NGINX_VERSION} as deploy
+COPY .docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /angular/dist/spc /usr/share/nginx/html/
