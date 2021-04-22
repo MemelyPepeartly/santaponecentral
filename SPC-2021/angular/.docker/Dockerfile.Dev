@@ -12,7 +12,7 @@ RUN npm install
 ## stage - build
 FROM base as build
 COPY . ./
-RUN npm run build --configuration=dev
+RUN npx ng build --configuration=dev
 ## stage - deploy
 FROM nginx:${NGINX_VERSION} as deploy
 COPY .docker/nginx.conf /etc/nginx/conf.d/default.conf
