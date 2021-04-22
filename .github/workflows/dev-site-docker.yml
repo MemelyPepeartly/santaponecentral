@@ -22,7 +22,7 @@ jobs:
       run: docker login -u "${{ secrets.DH_USERNAME }}" -p "${{ secrets.DH_PASSWORD }}"
     #Step 1
     - name: Build the Docker image
-      run: cd ${{ env.ANGULAR_PATH }} && docker build . --file .docker/Dockerfile --tag ${{ secrets.DH_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:dev
+      run: cd ${{ env.ANGULAR_PATH }} && docker build . --file .docker/Dockerfile.Dev --tag ${{ secrets.DH_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:dev
     #Step 3
     - name: Push image to Docker Hub
       run: docker push ${{ secrets.DH_USERNAME }}/${{ env.ANGULAR_IMAGE_NAME }}:dev
