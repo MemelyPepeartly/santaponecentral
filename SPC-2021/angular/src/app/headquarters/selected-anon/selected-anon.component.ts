@@ -4,7 +4,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
 import { MapService, MapResponse } from 'src/app/services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
-import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentstatusConstants.enum';
+import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
 import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
