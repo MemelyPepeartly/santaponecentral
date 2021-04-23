@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,19 @@ namespace SharkTank.Api.Controllers
     [ApiController]
     public class SharkTankController : ControllerBase
     {
+        private readonly IRepository repository;
+        private readonly IAuthHelper authHelper;
+        //private readonly IMailbag mailbag;
+        private readonly IYuleLog yuleLogger;
+
+        public SharkTankController(IRepository _repository, IAuthHelper _authHelper,/* IMailbag _mailbag, */IYuleLog _yuleLogger)
+        {
+            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
+            //mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
+            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
+        }
+
         // POST: api/<SharkTankController>
         /// <summary>
         /// Endpoint gets the auth0UserInfoModel of all their Auth0 information

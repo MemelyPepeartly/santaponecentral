@@ -1,4 +1,5 @@
 ﻿using SharkTank.Logic.Objects.Base_Objects.Logging;
+using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,19 @@ namespace SharkTank.Logic.Interfaces
 {
     public interface IRepository
     {
+        #region Client
+        /// <summary>
+        /// Gets a basic client type by ID
+        /// </summary>
+        /// <returns></returns>
+        Task<BaseClient> GetBasicClientInformationByID(Guid clientID);
+        /// <summary>
+        /// Gets a basic client type by email
+        /// </summary>
+        /// <returns></returns>
+        Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail);
+        #endregion
+
         #region Category
         /// <summary>
         /// Gets a list of all the categories
