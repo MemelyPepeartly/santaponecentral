@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
+using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +30,129 @@ namespace SharkTank.Api.Controllers
             yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
-        // POST: api/<SharkTankController>
+        // POST: api/<SharkTankController>/AuthInfo
         /// <summary>
-        /// Endpoint gets the auth0UserInfoModel of all their Auth0 information
+        /// Endpoint gets the auth0UserInfoModel of all the requested Auth0 information
         /// </summary>
         /// <param name="requestInfo"></param>
         /// <returns></returns>
         [HttpPost("AuthInfo")]
-        public async Task<ActionResult<Auth0UserInfoModel>> AuthInfo([FromBody] object requestInfo)
+        public async Task<ActionResult<Auth0UserInfoModel>> AuthInfo([FromBody] Auth0InfoRequestModel requestInfo)
         {
+            List<Auth0RoleModel> requestingClientRoles = new List<Auth0RoleModel>();
+            // If all the requesting client information or all the requested client information is null
+            if((requestInfo.requestingClientID == null && String.IsNullOrEmpty(requestInfo.requestingClientEmail)) || (requestInfo.requestedClientID == null && String.IsNullOrEmpty(requestInfo.requestedClientEmail)))
+            {
+                return BadRequest("More information needed from either requesting client or requested client");
+            }
+            // If the requesting client has an ID
+            if(requestInfo.requestingClientID != null)
+            {
+                Auth0UserInfoModel requestingClient = await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID((Guid)requestInfo.requestingClientID)).email);
+                requestingClientRoles = await authHelper.getAllClientRolesByID(requestingClient.user_id);
+
+                // If the client requested has an ID
+                if (requestInfo.requestedClientID != null)
+                {
+                    // If the requesting client is an admin
+                    if (requestingClientRoles.Any(r => r.description == Auth0Constants.EVENT_ADMIN || r.description == Auth0Constants.SANTADEV))
+                    {
+                        return Ok(await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID((Guid)requestInfo.requestedClientID)).email));
+                    }
+                    // Else if the requesting client is a standard user or helper
+                    else if (requestingClientRoles.Any(r => r.description == Auth0Constants.PARTICIPANT || r.description == Auth0Constants.HELPER))
+                    {
+                        BaseClient wantedClient = await repository.GetBasicClientInformationByID((Guid)requestInfo.requestedClientID);
+                        // If the wanted client's email is the requesting client's email, return the information
+                        if (wantedClient.email == requestingClient.email)
+                        {
+                            return Ok(await authHelper.getAuthClientByEmail(wantedClient.email));
+                        }
+                        // Else, return unauthorized
+                        else
+                        {
+                            return Unauthorized($"{requestingClient.nickname} cannot access information for {requestInfo.requestedClientID}");
+                        }
+                    }
+                }
+                // Else if the requested client has an email
+                else if (!String.IsNullOrEmpty(requestInfo.requestedClientEmail))
+                {
+                    // If the requesting client is an admin
+                    if (requestingClientRoles.Any(r => r.description == Auth0Constants.EVENT_ADMIN || r.description == Auth0Constants.SANTADEV))
+                    {
+                        return Ok(await authHelper.getAuthClientByEmail(requestInfo.requestedClientEmail));
+                    }
+                    // Else if the requesting client is a standard user or helper
+                    else if (requestingClientRoles.Any(r => r.description == Auth0Constants.PARTICIPANT || r.description == Auth0Constants.HELPER))
+                    {
+                        // If the wanted client's email is the requesting client's email, return the information
+                        if (requestInfo.requestedClientEmail == requestingClient.email)
+                        {
+                            return Ok(await authHelper.getAuthClientByEmail(requestInfo.requestedClientEmail));
+                        }
+                        // Else, return unauthorized
+                        else
+                        {
+                            return Unauthorized($"{requestingClient.nickname} cannot access information for {requestInfo.requestedClientEmail}");
+                        }
+                    }
+                }
+            }
+            // Else if the requesting client has an email
+            else if (!String.IsNullOrEmpty(requestInfo.requestingClientEmail))
+            {
+                Auth0UserInfoModel requestingClient = await authHelper.getAuthClientByEmail(requestInfo.requestingClientEmail);
+                requestingClientRoles = await authHelper.getAllClientRolesByID(requestingClient.user_id);
+                
+                // If the client requested has an ID
+                if (requestInfo.requestedClientID != null)
+                {
+                    // If the requesting client is an admin
+                    if (requestingClientRoles.Any(r => r.description == Auth0Constants.EVENT_ADMIN || r.description == Auth0Constants.SANTADEV))
+                    {
+                        return Ok(await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID((Guid)requestInfo.requestedClientID)).email));
+                    }
+                    // Else if the requesting client is a standard user or helper
+                    else if(requestingClientRoles.Any(r => r.description == Auth0Constants.PARTICIPANT || r.description == Auth0Constants.HELPER))
+                    {
+                        BaseClient wantedClient = await repository.GetBasicClientInformationByID((Guid)requestInfo.requestedClientID);
+                        // If the wanted client's email is the requesting client's email, return the information
+                        if(wantedClient.email == requestingClient.email)
+                        {
+                            return Ok(await authHelper.getAuthClientByEmail(wantedClient.email));
+                        }
+                        // Else, return unauthorized
+                        else
+                        {
+                            return Unauthorized($"{requestingClient.nickname} cannot access information for {requestInfo.requestedClientID}");
+                        }
+                    }
+                }
+                // Else if the requested client has an email
+                else if (!String.IsNullOrEmpty(requestInfo.requestedClientEmail))
+                {
+                    // If the requesting client is an admin
+                    if (requestingClientRoles.Any(r => r.description == Auth0Constants.EVENT_ADMIN || r.description == Auth0Constants.SANTADEV))
+                    {
+                        return Ok(await authHelper.getAuthClientByEmail(requestInfo.requestedClientEmail));
+                    }
+                    // Else if the requesting client is a standard user or helper
+                    else if (requestingClientRoles.Any(r => r.description == Auth0Constants.PARTICIPANT || r.description == Auth0Constants.HELPER))
+                    {
+                        // If the wanted client's email is the requesting client's email, return the information
+                        if (requestInfo.requestedClientEmail == requestingClient.email)
+                        {
+                            return Ok(await authHelper.getAuthClientByEmail(requestInfo.requestedClientEmail));
+                        }
+                        // Else, return unauthorized
+                        else
+                        {
+                            return Unauthorized($"{requestingClient.nickname} cannot access information for {requestInfo.requestedClientEmail}");
+                        }
+                    }
+                }
+            }
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
