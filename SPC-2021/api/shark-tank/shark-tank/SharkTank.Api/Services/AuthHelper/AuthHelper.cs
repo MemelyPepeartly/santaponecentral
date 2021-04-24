@@ -20,7 +20,7 @@ namespace SharkTank.Api.Services.AuthHelper
         public AuthHelper(IConfiguration configRoot)
         {
             ConfigRoot = (IConfigurationRoot)configRoot;
-            endpoint = ConfigRoot["Auth0API:endpoint"];
+            endpoint = ConfigRoot["auth0Endpoint"];
         }
 
         #region User Info Model
@@ -187,6 +187,10 @@ namespace SharkTank.Api.Services.AuthHelper
             return role;
 
         }
+        public async Task<List<Auth0RoleModel>> getAllClientRolesByID(string authUserID)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Tickets
@@ -199,7 +203,7 @@ namespace SharkTank.Api.Services.AuthHelper
             roleRequest.AddJsonBody(new Auth0ChangePasswordModel()
             {
                 email = authClientEmail,
-                connection_id = ConfigRoot["Auth0API:ConnectionID"],
+                connection_id = ConfigRoot["auth0ConnectionID"],
                 mark_email_as_verified = true,
                 includeEmailInRedirect = true
             });
@@ -214,10 +218,10 @@ namespace SharkTank.Api.Services.AuthHelper
         #region Utility
         public async Task<Auth0TokenModel> getTokenModel()
         {
-            string authClientID = ConfigRoot["Auth0API:client_id"];
-            string authClientSecret = ConfigRoot["Auth0API:Auth0Client_secret"];
-            string authClientAudience = ConfigRoot["Auth0API:authServiceAudience"];
-            string tokenURIPath = ConfigRoot["Auth0API:tokenURIPath"];
+            string authClientID = ConfigRoot["auth0ClientID"];
+            string authClientSecret = ConfigRoot["auth0ClientSecret"];
+            string authClientAudience = ConfigRoot["auth0ServiceAudience"];
+            string tokenURIPath = ConfigRoot["auth0TokenURIPath"];
 
             RestClient tokenRestClient = new RestClient(tokenURIPath);
             RestRequest tokenRequest = new RestRequest(Method.POST);
