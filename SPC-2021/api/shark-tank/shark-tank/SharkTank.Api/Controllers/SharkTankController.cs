@@ -163,9 +163,10 @@ namespace SharkTank.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<bool>> PostNewAuthUser([FromBody] Auth0NewUserModel model)
+        public async Task<ActionResult<Auth0UserInfoModel>> PostNewAuthUser([FromBody] Auth0CreateNewUserRequestModel model)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            Auth0UserInfoModel newAuthClient =  await authHelper.createAuthClient(model.clientEmail, model.nickname);
+            return Ok(newAuthClient);
         }
 
         // POST api/<SharkTankController>/Validate
@@ -178,7 +179,7 @@ namespace SharkTank.Api.Controllers
         [HttpPost("Validate")]
         public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] object someObject)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return Ok(true);
         }
 
         // PUT api/<SharkTankController>/5/Email
@@ -191,7 +192,7 @@ namespace SharkTank.Api.Controllers
         [HttpPut("{clientID}/Email")]
         public async Task<ActionResult<Auth0UserInfoModel>> PutEmail(Guid clientID, [FromBody] object emailChangeObject)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // PUT api/<SharkTankController>/5/Name
@@ -204,7 +205,7 @@ namespace SharkTank.Api.Controllers
         [HttpPut("{clientID}/Name")]
         public async Task<ActionResult<Auth0UserInfoModel>> PutName(Guid clientID, [FromBody] object emailChangeObject)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // PUT api/<SharkTankController>/5/Password
@@ -216,19 +217,22 @@ namespace SharkTank.Api.Controllers
         [HttpPut("{clientID}/Password")]
         public async Task<ActionResult<Auth0UserInfoModel>> PutTicketRequest(Guid clientID)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            await authHelper.getPasswordChangeTicketByAuthClientEmail((await repository.GetBasicClientInformationByID((Guid)clientID)).email);
+            return Ok(new Auth0UserInfoModel());
         }
 
         // DELETE api/<SharkTankController>/5
         /// <summary>
-        /// Deletes a client's information on SPC and Auth0 by clientID. This will return true if both actions were successful
+        /// Deletes a client's information on Auth0 by clientID. This will return true if sucessful
         /// </summary>
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpDelete("{clientID}")]
         public async Task<ActionResult<bool>> DeleteUser(Guid clientID)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID(clientID)).email);
+            await authHelper.deleteAuthClient(authUser.user_id);
+            return Ok(true);
         }
     }
 }
