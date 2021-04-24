@@ -68,7 +68,7 @@ namespace SharkTank.Api
             services.AddSignalR();
 
             //Auth
-            string domain = $"https://{Configuration["Auth0API:domain"]}/";
+            string domain = $"https://{Configuration["auth0Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,7 +76,7 @@ namespace SharkTank.Api
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
+                options.Audience = Configuration["auth0StartupAudience"];
             });
 
             services.AddAuthorization(options =>

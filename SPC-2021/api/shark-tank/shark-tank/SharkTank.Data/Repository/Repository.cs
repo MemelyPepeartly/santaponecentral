@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YuleLog = SharkTank.Logic.Objects.Base_Objects.Logging.YuleLog;
 using Category = SharkTank.Logic.Objects.Base_Objects.Logging.Category;
+using SharkTank.Logic.Objects.Information_Objects;
 
 namespace SharkTank.Data.Repository
 {
@@ -19,6 +20,40 @@ namespace SharkTank.Data.Repository
         {
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
+
+        #region
+        public async Task<BaseClient> GetBasicClientInformationByID(Guid clientID)
+        {
+            BaseClient logicBaseClient = await santaContext.Clients
+                .Select(client => new BaseClient()
+                {
+                    clientID = client.ClientId,
+                    clientName = client.ClientName,
+                    nickname = client.Nickname,
+                    email = client.Email,
+                    isAdmin = client.IsAdmin,
+                    hasAccount = client.HasAccount,
+
+                }).AsNoTracking().FirstOrDefaultAsync(c => c.clientID == clientID);
+            return logicBaseClient;
+        }
+
+        public async Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail)
+        {
+            BaseClient logicBaseClient = await santaContext.Clients
+            .Select(client => new BaseClient()
+            {
+                clientID = client.ClientId,
+                clientName = client.ClientName,
+                nickname = client.Nickname,
+                email = client.Email,
+                isAdmin = client.IsAdmin,
+                hasAccount = client.HasAccount,
+
+            }).FirstOrDefaultAsync(c => c.email == clientEmail);
+            return logicBaseClient;
+        }
+        #endregion
 
         #region Category
         public async Task<List<Category>> GetAllCategories()

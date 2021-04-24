@@ -20,8 +20,23 @@ namespace SharkTank.Logic.Interfaces
         #endregion
 
         #region Roles
+        /// <summary>
+        /// Gets a list of all the roles available
+        /// </summary>
+        /// <returns></returns>
         Task<List<Auth0RoleModel>> getAllAuthRoles();
+        /// <summary>
+        /// Gets a role by its authRoleID
+        /// </summary>
+        /// <param name="authRoleID"></param>
+        /// <returns></returns>
         Task<Auth0RoleModel> getAuthRole(string authRoleID);
+        /// <summary>
+        /// Gets a list of all the roles a client has by authUserID
+        /// </summary>
+        /// <param name="authUserID"></param>
+        /// <returns></returns>
+        Task<List<Auth0RoleModel>> getAllClientRolesByID(string authUserID);
         #endregion
 
         #region Tickets
