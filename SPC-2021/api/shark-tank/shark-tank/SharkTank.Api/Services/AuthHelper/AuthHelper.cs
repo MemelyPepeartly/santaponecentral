@@ -189,7 +189,15 @@ namespace SharkTank.Api.Services.AuthHelper
         }
         public async Task<List<Auth0RoleModel>> getAllClientRolesByID(string authUserID)
         {
-            throw new NotImplementedException();
+            RestClient userRestClient = new RestClient(endpoint + "users/" + authUserID + "/roles");
+            RestRequest userRequest = new RestRequest(Method.DELETE);
+            Auth0TokenModel token = await getTokenModel();
+
+            userRequest.AddHeader("authorization", "Bearer " + token.access_token);
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            List<Auth0RoleModel> roles = JsonConvert.DeserializeObject<List<Auth0RoleModel>>(response.Content);
+
+            return roles;
         }
         #endregion
 
