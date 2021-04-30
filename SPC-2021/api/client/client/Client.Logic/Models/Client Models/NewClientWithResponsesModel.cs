@@ -1,10 +1,10 @@
-﻿using SharkTank.Logic.Survey_Response_Models;
+﻿using Client.Logic.Survey_Response_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SharkTank.Logic.Client_Models
+namespace Client.Logic.Client_Models
 {
     public class NewClientWithResponsesModel
     {
