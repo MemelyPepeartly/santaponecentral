@@ -24,9 +24,11 @@ namespace Santa.Api.Controllers
     {
 
         private readonly IRepository repository;
-        public ClientController(IRepository _repository)
+        private readonly ISharkTank sharkTank;
+        public ClientController(IRepository _repository, ISharkTank _sharkTank)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
+            sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
         /*
         private readonly IAuthHelper authHelper;
