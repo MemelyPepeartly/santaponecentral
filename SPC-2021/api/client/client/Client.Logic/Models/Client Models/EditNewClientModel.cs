@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Santa.Logic.Client_Models
+namespace Client.Logic.Client_Models
 {
     public class EditNewClientModel
     {

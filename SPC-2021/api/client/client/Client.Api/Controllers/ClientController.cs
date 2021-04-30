@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Client.Logic.Interfaces;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Information_Objects;
-using Client.Logic.Constants;
-using Santa.Api.Models;
-using Santa.Api.Models.Client_Models;
-using Santa.Api.Models.Survey_Response_Models;
+using Client.Logic.Client_Models;
 
 namespace Santa.Api.Controllers
 {
