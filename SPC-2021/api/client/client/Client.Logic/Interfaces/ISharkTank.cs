@@ -1,8 +1,5 @@
 ﻿using Client.Logic.Models.Auth0_Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Client.Logic.Objects.Information_Objects;
 using System.Threading.Tasks;
 
 namespace Client.Logic.Interfaces
@@ -16,5 +13,8 @@ namespace Client.Logic.Interfaces
         Task<object> PutName();
         Task<object> PutPasswordTicketRequest();
         Task<object> DeleteAuthUser();
+        Task<object> MakeNewSuccessLog(BaseClient requestingClient, string category);
+        Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category);
     }
 }
+s
