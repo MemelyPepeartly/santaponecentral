@@ -19,13 +19,13 @@ namespace SharkTank.Api.Controllers
             yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
         }
 
-        // POST: api/<YuleLogController>/ManualLog
+        // POST: api/<YuleLogController>/NewLog
         /// <summary>
         /// Posts a manual log with the given body
         /// </summary>
         /// <returns></returns>
-        [HttpPost("ManualLog")]
-        public async Task<ActionResult<bool>> Post()
+        [HttpPost("NewLog")]
+        public async Task<ActionResult<bool>> PostNewLog()
         {
             return StatusCode(StatusCodes.Status501NotImplemented, "We'll get there...");
         }
