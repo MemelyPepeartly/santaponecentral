@@ -24,6 +24,11 @@ namespace Client.Api.Services
             throw new NotImplementedException();
         }
 
+        public Task<object> MakeNewLog()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<object> PostNewAuthUser()
         {
             throw new NotImplementedException();
