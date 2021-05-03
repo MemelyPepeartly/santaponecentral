@@ -2,6 +2,7 @@
 using Client.Logic.Models.Auth0_Models;
 using Client.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -33,49 +34,121 @@ namespace Client.Api.Services
             return response;
         }
 
-        public async Task<object> DeleteAuthUser()
+        public async Task<object> DeleteAuthUser(Guid clientID)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/{clientID}");
+            RestRequest userRequest = new RestRequest(Method.DELETE);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return response;
         }
 
         public async Task<Auth0UserInfoModel> GetAuthInfo()
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient(endpoint + "SharkTank/AuthInfo");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
         }
 
-        public Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category)
+        public async Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/NewLog");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<object>(response.Content);
         }
 
-        public Task<object> MakeNewLog()
+        public async Task<object> MakeNewLog()
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/NewLog");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<object>(response.Content);
         }
 
-        public Task<object> MakeNewSuccessLog(BaseClient requestingClient, string category)
+        public async Task<object> MakeNewSuccessLog(BaseClient requestingClient, string category)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/NewLog");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<object>(response.Content);
         }
 
         public async Task<object> PostNewAuthUser()
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient(endpoint + "SharkTank");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
         }
 
-        public async Task<object> PutEmail()
+        public async Task<object> PutAuthEmail(Guid clientID)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/{clientID}/Email");
+            RestRequest userRequest = new RestRequest(Method.PUT);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
         }
 
-        public async Task<object> PutName()
+        public async Task<object> PutAuthName(Guid clientID)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/{clientID}/Name");
+            RestRequest userRequest = new RestRequest(Method.PUT);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<Auth0UserInfoModel>(response.Content);
         }
 
-        public async Task<object> PutPasswordTicketRequest()
+        public async Task<object> PutPasswordTicketRequest(Guid clientID)
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient($"{endpoint}SharkTank/{clientID}/Password");
+            RestRequest userRequest = new RestRequest(Method.PUT);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return JsonConvert.DeserializeObject<object>(response.Content);
         }
     }
 }

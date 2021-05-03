@@ -1,5 +1,6 @@
 ﻿using Client.Logic.Models.Auth0_Models;
 using Client.Logic.Objects.Information_Objects;
+using System;
 using System.Threading.Tasks;
 
 namespace Client.Logic.Interfaces
@@ -9,10 +10,10 @@ namespace Client.Logic.Interfaces
         Task<Auth0UserInfoModel> GetAuthInfo();
         Task<object> PostNewAuthUser();
         Task<object> CheckIfValidRequest();
-        Task<object> PutEmail();
-        Task<object> PutName();
-        Task<object> PutPasswordTicketRequest();
-        Task<object> DeleteAuthUser();
+        Task<object> PutAuthEmail(Guid clientID);
+        Task<object> PutAuthName(Guid clientID);
+        Task<object> PutPasswordTicketRequest(Guid clientID);
+        Task<object> DeleteAuthUser(Guid clientID);
         Task<object> MakeNewSuccessLog(BaseClient requestingClient, string category);
         Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category);
     }
