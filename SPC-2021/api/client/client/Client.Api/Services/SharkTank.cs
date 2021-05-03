@@ -1,5 +1,7 @@
 ﻿using Client.Logic.Interfaces;
 using Client.Logic.Models.Auth0_Models;
+using Microsoft.Extensions.Configuration;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,25 @@ namespace Client.Api.Services
 {
     public class SharkTank : ISharkTank
     {
+        private IConfigurationRoot ConfigRoot;
+        private string endpoint = String.Empty;
+
+        public SharkTank(IConfiguration configRoot)
+        {
+            ConfigRoot = (IConfigurationRoot)configRoot;
+            endpoint = ConfigRoot["sharkTankAPIEndpoint"];
+        }
         public async Task<object> CheckIfValidRequest()
         {
-            throw new NotImplementedException();
+            // Setup rest client
+            RestClient userRestClient = new RestClient(endpoint + "SharkTank/Validate");
+            RestRequest userRequest = new RestRequest(Method.POST);
+            // New request object for body
+            object request = new object();
+            userRequest.AddJsonBody(request);
+            // HTTP Request
+            IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
+            return response;
         }
 
         public async Task<object> DeleteAuthUser()
