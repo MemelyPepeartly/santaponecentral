@@ -9,6 +9,9 @@ using Client.Logic.Interfaces;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Information_Objects;
 using Client.Logic.Client_Models;
+using System.Linq;
+using System.Security.Claims;
+using Client.Logic.Constants;
 
 namespace Santa.Api.Controllers
 {
@@ -25,52 +28,6 @@ namespace Santa.Api.Controllers
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
-        /*
-        private readonly IAuthHelper authHelper;
-        private readonly IMailbag mailbag;
-        private readonly IYuleLog yuleLogger;
-        
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, IYuleLog _yuleLogger)
-        {
-            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
-            mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
-            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
-        }
-        */
-
-        // GET: api/Client
-        /// <summary>
-        /// Gets all clients
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Client.Logic.Objects.Client>>> GetAllClients()
-        {
-            /*
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
-            List<Client.Logic.Objects.Client> clients = await repository.GetAllClients();
-            if (clients == null)
-            {
-                return NoContent();
-            }
-
-            try
-            {
-                await yuleLogger.logGetAllClients(requestingClient);
-            }
-            catch(Exception)
-            {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return StatusCode(StatusCodes.Status424FailedDependency);
-            }
-            
-            return Ok(clients.OrderBy(c => c.nickname));
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
 
         // GET: api/Client/Truncated
         /// <summary>
@@ -81,22 +38,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<StrippedClient>>> GetAllClientsWithoutChats()
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 List<StrippedClient> clients = await repository.GetAllStrippedClientData();
-                await yuleLogger.logGetAllClients(requestingClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/Truncated/5
@@ -108,21 +63,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<StrippedClient>> GetTrucatedClientByID(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(logicStrippedClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/HQClient
@@ -134,22 +88,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 List<HQClient> clients = await repository.GetAllHeadquarterClients();
-                await yuleLogger.logGetAllClients(requestingClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/HQClient/5
@@ -161,22 +112,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(logicHQClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/5
@@ -189,23 +137,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                Client.Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/Email/email@domain.com
@@ -218,22 +163,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/Basic/5
@@ -246,23 +188,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/Basic/Email/email@domain.com
@@ -275,23 +213,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(string clientEmail)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/5/RelationshipContainer
@@ -318,6 +253,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Client.Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
+#warning Needs implimentation after survey service is ready
             /*
             return Ok(await repository.GetAllSurveyResponsesByClientID(clientID));
             */
@@ -329,6 +265,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
+#warning Needs implimentation after search service is ready
+
             /*
             return Ok((await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID)).OrderBy(aa => aa.clientMeta.clientNickname));
             */
