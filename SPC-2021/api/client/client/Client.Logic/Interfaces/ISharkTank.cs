@@ -17,4 +17,3 @@ namespace Client.Logic.Interfaces
         Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category);
     }
 }
-s

@@ -1,5 +1,6 @@
 ﻿using Client.Logic.Interfaces;
 using Client.Logic.Models.Auth0_Models;
+using Client.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
@@ -42,7 +43,17 @@ namespace Client.Api.Services
             throw new NotImplementedException();
         }
 
+        public Task<object> MakeNewFailiureLog(BaseClient requestingClient, string category)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<object> MakeNewLog()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<object> MakeNewSuccessLog(BaseClient requestingClient, string category)
         {
             throw new NotImplementedException();
         }
