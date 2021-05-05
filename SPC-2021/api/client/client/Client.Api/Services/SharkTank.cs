@@ -1,5 +1,6 @@
 ﻿using Client.Logic.Interfaces;
 using Client.Logic.Models.Auth0_Models;
+using Client.Logic.Models.Common_Models;
 using Client.Logic.Objects.Information_Objects;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -21,17 +22,16 @@ namespace Client.Api.Services
             ConfigRoot = (IConfigurationRoot)configRoot;
             endpoint = ConfigRoot["sharkTankAPIEndpoint"];
         }
-        public async Task<object> CheckIfValidRequest()
+        public async Task<SharkTankValidationResponseModel> CheckIfValidRequest(SharkTankValidationModel requestModel)
         {
             // Setup rest client
             RestClient userRestClient = new RestClient(endpoint + "SharkTank/Validate");
             RestRequest userRequest = new RestRequest(Method.POST);
             // New request object for body
-            object request = new object();
-            userRequest.AddJsonBody(request);
+            userRequest.AddJsonBody(requestModel);
             // HTTP Request
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            return response;
+            return JsonConvert.DeserializeObject<SharkTankValidationResponseModel>(response.Content);
         }
 
         public async Task<object> DeleteAuthUser(Guid clientID)

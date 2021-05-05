@@ -1,4 +1,5 @@
 ﻿using Client.Logic.Models.Auth0_Models;
+using Client.Logic.Models.Common_Models;
 using Client.Logic.Objects.Information_Objects;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace Client.Logic.Interfaces
     {
         Task<Auth0UserInfoModel> GetAuthInfo();
         Task<object> PostNewAuthUser();
-        Task<object> CheckIfValidRequest();
+        Task<SharkTankValidationResponseModel> CheckIfValidRequest(SharkTankValidationModel requestModel);
         Task<object> PutAuthEmail(Guid clientID);
         Task<object> PutAuthName(Guid clientID);
         Task<object> PutPasswordTicketRequest(Guid clientID);
