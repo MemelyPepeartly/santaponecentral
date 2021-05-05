@@ -12,6 +12,8 @@ using Client.Logic.Client_Models;
 using System.Linq;
 using System.Security.Claims;
 using Client.Logic.Constants;
+using Client.Logic.Models.Common_Models;
+using RestSharp;
 
 namespace Santa.Api.Controllers
 {
@@ -40,7 +42,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
             try
             {
                 List<StrippedClient> clients = await repository.GetAllStrippedClientData();
@@ -1101,5 +1103,16 @@ namespace Santa.Api.Controllers
             }
         }
         */
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, object requestedObject, Method httpMethod)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = requestorClient.clientID,
+                requestorRoles = roles,
+                requesetedObject = requestedObject,
+                httpMethod = httpMethod
+            };
+            return model;
+        }
     }
 }
