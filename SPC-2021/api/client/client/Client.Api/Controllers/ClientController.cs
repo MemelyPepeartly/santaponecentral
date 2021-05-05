@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Client.Logic.Constants;
 using Client.Logic.Models.Common_Models;
 using RestSharp;
+using Client.Logic.Survey_Response_Models;
 
 namespace Santa.Api.Controllers
 {
@@ -67,6 +68,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
@@ -91,7 +93,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
             try
             {
                 List<HQClient> clients = await repository.GetAllHeadquarterClients();
@@ -115,6 +117,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
@@ -141,6 +144,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
@@ -166,7 +170,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
                 Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
@@ -191,7 +195,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
@@ -217,6 +221,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
@@ -241,7 +246,11 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
-            return Ok(await repository.getClientInfoContainerByIDAsync(clientID));
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+
+            InfoContainer logicInfoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
+            return Ok(logicInfoContainer);
         }
 
 
@@ -373,7 +382,7 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            /*
+            
             bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
             BaseClient requestingClient = new BaseClient();
             if (loggingEnabled)
@@ -408,6 +417,8 @@ namespace Santa.Api.Controllers
             try
             {
                 await repository.CreateClient(newClient);
+#warning needs to offload this to the survey service
+                /*
                 foreach (ApiSurveyResponse response in clientResponseModel.responses)
                 {
                     await repository.CreateSurveyResponseAsync(new Response()
@@ -420,26 +431,32 @@ namespace Santa.Api.Controllers
                         responseText = response.responseText
                     });
                 }
+                */
                 await repository.SaveAsync();
-                Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
-                await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+                Client.Logic.Objects.Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
 
+#warning offload this mailbag functionality somewhere
+                //await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+#warning swap this logging over to SharkTank
+                /*
                 if(loggingEnabled)
                 {
                     await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
                 }
+                */
                 return Ok(createdClient);
             }
             catch(Exception)
             {
-                if(loggingEnabled)
+#warning swap this logging over to SharkTank
+                /*
+                if (loggingEnabled)
                 {
                     await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
                 }
+                */
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // POST: api/Client/5/Recipients
