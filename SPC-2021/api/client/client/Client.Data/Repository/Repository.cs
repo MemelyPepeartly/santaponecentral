@@ -468,6 +468,40 @@ namespace Client.Data.Repository
         }
         #endregion
 
+        #region Status
+        public async Task<List<Status>> GetAllClientStatus()
+        {
+            List<Logic.Objects.Status> logicStatusList = (await santaContext.ClientStatus.ToListAsync()).Select(Mapper.MapStatus).ToList();
+            return logicStatusList;
+        }
+        public async Task<Status> GetClientStatusByID(Guid clientStatusID)
+        {
+            Logic.Objects.Status logicStatus = Mapper.MapStatus(await santaContext.ClientStatus
+                .FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID));
+            return logicStatus;
+        }
+        public async Task CreateStatusAsync(Status newStatus)
+        {
+            Data.Entities.ClientStatus contextStatus = Mapper.MapStatus(newStatus);
+            await santaContext.ClientStatus.AddAsync(contextStatus);
+        }
+        public async Task UpdateStatusByIDAsync(Status changedLogicStatus)
+        {
+            ClientStatus targetStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == changedLogicStatus.statusID);
+            if (targetStatus == null)
+            {
+                throw new Exception("Client Status was not found. Update failed for status");
+            }
+            targetStatus.StatusDescription = changedLogicStatus.statusDescription;
+            santaContext.ClientStatus.Update(targetStatus);
+        }
+        public async Task DeleteStatusByIDAsync(Guid clientStatusID)
+        {
+            ClientStatus contextStatus = await santaContext.ClientStatus.FirstOrDefaultAsync(s => s.ClientStatusId == clientStatusID);
+            santaContext.ClientStatus.Remove(contextStatus);
+        }
+        #endregion
+
         #region Utility
         public async Task SaveAsync()
         {

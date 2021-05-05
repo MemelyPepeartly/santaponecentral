@@ -144,6 +144,14 @@ namespace Client.Logic.Interfaces
         Task<List<Guid>> getClientAssignmentXrefIDsByIDAsync(Guid clientID);
         #endregion
 
+        #region Status
+        Task CreateStatusAsync(Status newStatus);
+        Task<Status> GetClientStatusByID(Guid clientStatusID);
+        Task<List<Status>> GetAllClientStatus();
+        Task UpdateStatusByIDAsync(Status targetStatus);
+        Task DeleteStatusByIDAsync(Guid clientStatusID);
+        #endregion
+
         #region Utility
         /// <summary>
         /// Saves changes of any CRUD operations in the queue
