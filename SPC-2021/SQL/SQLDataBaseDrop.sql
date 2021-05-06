@@ -5,16 +5,19 @@ DROP TABLE app.SurveyQuestionXref;
 DROP TABLE app.SurveyQuestion;
 DROP TABLE app.Survey;
 DROP TABLE app.ChatMessage;
-DROP TABLE app.AssignmentStatus;
 DROP TABLE app.ClientRelationXref;
 DROP TABLE app.EventType;
+DROP TABLE app.Note;
 DROP TABLE app.ClientTagXref;
+DROP TABLE app.AssignmentStatus;
 DROP TABLE app.Client;
 DROP TABLE app.ClientStatus;
 DROP TABLE app.Tag;
 
 DROP TABLE app.BoardEntry;
 DROP TABLE app.EntryType;
+DROP TABLE app.YuleLog;
+DROP TABLE app.Category;
 
 DROP SCHEMA app;
 
