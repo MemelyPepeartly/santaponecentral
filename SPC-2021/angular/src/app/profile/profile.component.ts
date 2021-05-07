@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { ProfileService } from '../services/gathering services/profile-gathering.service';
-import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/request-types';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
 import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';

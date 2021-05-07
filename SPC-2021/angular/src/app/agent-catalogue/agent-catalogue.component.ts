@@ -6,7 +6,7 @@ import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
 import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';
-import { SearchQueryModelResponse } from 'src/classes/responseTypes';
+import { SearchQueryModelResponse } from 'src/classes/request-types';
 import { SantaApiGetService, SantaApiPostService } from '../services/santa-api.service';
 import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';

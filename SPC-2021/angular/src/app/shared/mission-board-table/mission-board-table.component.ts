@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MissionBoardAPIService } from 'src/app/services/santa-api.service';
-import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/responseTypes';
+import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/request-types';
 import { MissionBoardService } from 'src/app/services/gathering services/mission-board-gatherer.service';
 
 @Component({

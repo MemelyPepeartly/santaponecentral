@@ -6,7 +6,7 @@ import { MapService, MapResponse } from 'src/app/services/utility services/mappe
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/responseTypes';
+import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/request-types';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question, SurveyResponse, SurveyMeta } from 'src/classes/survey';

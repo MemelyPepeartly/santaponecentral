@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile } from 'src/classes/profile';
 import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
 import { EventType } from 'src/classes/eventType';
-import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/responseTypes';
+import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/request-types';
 import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';

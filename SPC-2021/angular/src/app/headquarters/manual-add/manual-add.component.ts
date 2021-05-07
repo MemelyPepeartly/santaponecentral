@@ -8,7 +8,7 @@ import { SurveyFormComponent } from 'src/app/signup/survey-form/survey-form.comp
 import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
 import { Status } from 'src/classes/status';
-import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/responseTypes';
+import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/request-types';
 import { Address } from 'src/classes/address';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Client } from 'src/classes/client';

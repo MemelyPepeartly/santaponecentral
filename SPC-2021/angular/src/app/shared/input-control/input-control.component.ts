@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse } from 'src/classes/request-types';
 import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';

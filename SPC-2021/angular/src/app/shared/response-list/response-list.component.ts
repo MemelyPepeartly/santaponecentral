@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Question, SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ChangeSurveyResponseModel, SurveyApiResponse } from 'src/classes/responseTypes';
+import { ChangeSurveyResponseModel, SurveyApiResponse } from 'src/classes/request-types';
 import { SantaApiPutService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { Client } from 'src/classes/client';
 import { Profile } from 'src/classes/profile';

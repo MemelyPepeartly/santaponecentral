@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
-import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../../classes/responseTypes'
+import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../../classes/request-types'
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';

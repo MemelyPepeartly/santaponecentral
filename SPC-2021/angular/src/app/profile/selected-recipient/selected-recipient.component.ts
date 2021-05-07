@@ -5,7 +5,7 @@ import { Survey, SurveyResponse } from 'src/classes/survey';
 import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse } from 'src/classes/request-types';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
 

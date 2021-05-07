@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatList, MatSelectionList } from '@angular/material/list';
 import { SantaApiPostService } from 'src/app/services/santa-api.service';
 import { Client, HQClient, PossiblePairingChoices } from 'src/classes/client';
-import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-agent-pairing-control',

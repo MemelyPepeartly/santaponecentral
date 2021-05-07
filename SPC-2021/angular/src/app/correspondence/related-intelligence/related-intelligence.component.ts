@@ -8,7 +8,7 @@ import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-pane
 import { InputControlComponent } from 'src/app/shared/input-control/input-control.component';
 import { BaseClient, Client } from 'src/classes/client';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/responseTypes';
+import { MessageApiResponse } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-related-intelligence',

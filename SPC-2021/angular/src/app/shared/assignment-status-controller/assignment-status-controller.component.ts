@@ -4,7 +4,7 @@ import { MapService } from 'src/app/services/utility services/mapper.service';
 import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileAssignment } from 'src/classes/profile';
-import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
+import { EditProfileAssignmentStatusResponse } from 'src/classes/request-types';
 import { AssignmentStatusConstants } from '../constants/assignmentStatusConstants.enum';
 
 @Component({

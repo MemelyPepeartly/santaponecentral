@@ -5,7 +5,7 @@ import { TagConstants } from 'src/app/shared/constants/tagConstants.enum'
 import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
-import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/request-types';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 
 @Component({

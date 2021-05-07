@@ -6,7 +6,7 @@ import { MapResponse, MapService } from 'src/app/services/utility services/mappe
 import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Client } from 'src/classes/client';
 import { ThrowStmt } from '@angular/compiler';
-import { SurveyQuestionXrefsResponseModel } from 'src/classes/responseTypes';
+import { SurveyQuestionXrefsResponseModel } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-survey-control',

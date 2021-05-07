@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, 
 import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
-import { MessageApiReadResponse } from 'src/classes/responseTypes';
+import { MessageApiReadResponse } from 'src/classes/request-types';
 import { SantaApiGetService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
