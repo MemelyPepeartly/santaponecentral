@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Status } from 'src/classes/status';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { SantaApiGetService } from '../services/santa-api.service';
 
 @Component({

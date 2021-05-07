@@ -4,11 +4,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Client, HQClient, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
-import { GathererService } from '../services/gatherer.service';
+import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { SearchQueryModelResponse } from 'src/classes/responseTypes';
 import { SantaApiGetService, SantaApiPostService } from '../services/santa-api.service';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Survey } from 'src/classes/survey';
 import { SummaryResolver } from '@angular/compiler';

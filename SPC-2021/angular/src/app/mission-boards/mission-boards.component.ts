@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MissionBoardAPIService } from '../services/santa-api.service';
 import { AuthService } from '../auth/auth.service';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
-import { MissionMapper } from '../services/mapper.service';
-import { MissionBoardService } from '../services/mission-board.service'
+import { MissionMapper } from '../services/utility services/mapper.service';
+import { MissionBoardService } from '../services/gathering services/mission-board-gatherer.service'
 
 @Component({
   selector: 'app-mission-boards',

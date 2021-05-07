@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from
 import { AllowedAssignmentMeta, AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
-import { MapService, MapResponse } from 'src/app/services/mapper.service';
+import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
@@ -11,8 +11,8 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { EventType } from 'src/classes/eventType';
 import { Survey, Question, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { CountriesService } from 'src/app/services/countries.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { ClientMeta } from 'src/classes/message';
 import { MatSelectionList } from '@angular/material/list';
 

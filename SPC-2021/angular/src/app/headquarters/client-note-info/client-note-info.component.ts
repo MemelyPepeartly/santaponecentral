@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MapService } from 'src/app/services/mapper.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { Client, HQClient } from 'src/classes/client';
 

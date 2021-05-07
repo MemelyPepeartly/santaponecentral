@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
-import { ProfileService } from 'src/app/services/profile.service';
+import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
 import { MessageApiResponse } from 'src/classes/responseTypes';

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Client, HQClient } from 'src/classes/client';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 

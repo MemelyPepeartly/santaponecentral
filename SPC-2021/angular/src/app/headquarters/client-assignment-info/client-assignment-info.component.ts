@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { MapService } from 'src/app/services/mapper.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { Client, HQClient, RelationshipMeta } from 'src/classes/client';
 import { EventType } from 'src/classes/eventType';

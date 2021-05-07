@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MapService } from 'src/app/services/mapper.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/responseTypes';

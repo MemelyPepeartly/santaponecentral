@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { Client, HQClient } from '../../classes/client';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SantaApiGetService } from '../services/santa-api.service';
-import { GathererService } from '../services/gatherer.service';
+import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';
 import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';

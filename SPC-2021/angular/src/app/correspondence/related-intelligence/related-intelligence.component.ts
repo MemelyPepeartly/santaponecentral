@@ -1,7 +1,7 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ChatService } from 'src/app/services/chat.service';
-import { MapService } from 'src/app/services/mapper.service';
+import { ChatService } from 'src/app/services/gathering services/chat-gathering.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ChatComponent } from 'src/app/shared/chat/chat.component';
 import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-panel.component';

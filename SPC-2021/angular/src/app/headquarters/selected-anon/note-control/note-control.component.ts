@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MapService } from 'src/app/services/mapper.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { SantaApiDeleteService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { Note } from 'src/classes/note';
 import { EditNoteResponse, NewNoteResponse } from 'src/classes/responseTypes';

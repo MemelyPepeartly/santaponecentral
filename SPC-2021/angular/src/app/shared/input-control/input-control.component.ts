@@ -6,7 +6,7 @@ import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SantaApiGetService } from 'src/app/services/santa-api.service';
-import { MapService } from 'src/app/services/mapper.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { EventType } from 'src/classes/eventType';
 
 

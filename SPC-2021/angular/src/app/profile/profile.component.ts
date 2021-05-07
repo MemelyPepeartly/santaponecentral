@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProfileApiService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
-import { ProfileService } from '../services/profile.service';
+import { ProfileService } from '../services/gathering services/profile-gathering.service';
 import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
 import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
-import { GathererService } from '../services/gatherer.service';
+import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { EventType } from 'src/classes/eventType';
 import { InputControlComponent } from '../shared/input-control/input-control.component';
 import { SurveyResponse, Survey } from 'src/classes/survey';

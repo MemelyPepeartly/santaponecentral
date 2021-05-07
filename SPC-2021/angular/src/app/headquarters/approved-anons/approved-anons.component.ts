@@ -2,8 +2,8 @@ import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { HQClient } from '../../../classes/client';
 import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
-import { MapService } from '../../services/mapper.service';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { MapService } from '../../services/utility services/mapper.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Survey } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 

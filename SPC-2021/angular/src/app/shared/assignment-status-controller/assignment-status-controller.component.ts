@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { MapService } from 'src/app/services/mapper.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileAssignment } from 'src/classes/profile';

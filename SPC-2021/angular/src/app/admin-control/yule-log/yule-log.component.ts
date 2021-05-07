@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { YuleLogService } from 'src/app/services/santa-api.service';
 import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 

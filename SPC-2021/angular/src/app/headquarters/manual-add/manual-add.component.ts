@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { MapService, MapResponse } from 'src/app/services/mapper.service';
-import { CountriesService } from 'src/app/services/countries.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
+import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SurveyFormComponent } from 'src/app/signup/survey-form/survey-form.component';
 import { EventType } from 'src/classes/eventType';

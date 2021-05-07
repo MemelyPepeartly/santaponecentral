@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
 import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ProfileService } from 'src/app/services/profile.service';
+import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
 import { MessageApiReadResponse } from 'src/classes/responseTypes';
 import { SantaApiGetService, SantaApiPutService } from 'src/app/services/santa-api.service';
-import { MapResponse, MapService } from 'src/app/services/mapper.service';
+import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { SmoothScroll, SMOOTH_SCROLL_OPTIONS } from 'ngx-scrollbar/smooth-scroll';

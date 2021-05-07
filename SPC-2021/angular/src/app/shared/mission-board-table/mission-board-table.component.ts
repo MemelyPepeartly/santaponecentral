@@ -3,7 +3,7 @@ import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MissionBoardAPIService } from 'src/app/services/santa-api.service';
 import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/responseTypes';
-import { MissionBoardService } from 'src/app/services/mission-board.service';
+import { MissionBoardService } from 'src/app/services/gathering services/mission-board-gatherer.service';
 
 @Component({
   selector: 'app-mission-board-table',

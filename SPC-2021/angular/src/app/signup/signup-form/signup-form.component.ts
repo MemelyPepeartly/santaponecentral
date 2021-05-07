@@ -5,14 +5,14 @@ import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../.
 import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
-import { MapService, MapResponse } from '../../services/mapper.service';
+import { MapService, MapResponse } from '../../services/utility services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
-import { CountriesService } from 'src/app/services/countries.service';
+import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { Address } from 'src/classes/address';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 
 
 @Component({

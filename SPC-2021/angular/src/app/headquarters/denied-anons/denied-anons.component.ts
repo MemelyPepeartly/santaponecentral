@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Client } from 'src/classes/client';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({

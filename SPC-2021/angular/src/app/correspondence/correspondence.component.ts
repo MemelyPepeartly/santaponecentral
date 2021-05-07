@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
-import { ChatService } from '../services/chat.service';
+import { ChatService } from '../services/gathering services/chat-gathering.service';
 import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
-import { GathererService } from '../services/gatherer.service';
+import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from 'src/app/shared/constants/organizerEmailConstants.enum';
