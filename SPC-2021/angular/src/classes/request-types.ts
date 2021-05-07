@@ -79,14 +79,14 @@ export class SurveySignupApiRequest {
 export class TagResponse {
     tagName: string;
 }
-export class ClientTagRelationshipResponse {
+export class DeleteClientTagRelationshipRequest {
     clientID: string;
     tagID: string;
 }
 export class ClientTagRelationshipsResponse {
     tags: Array<string> = [];
 }
-export class ClientSenderRecipientRelationshipReponse {
+export class DeleteClientSenderRecipientRelationshipRequest {
     clientID: string;
     clientEventTypeID: string;
 }
