@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusResponse } from 'src/classes/request-types';
+import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest } from 'src/classes/request-types';
 import { ClientRequest } from 'node:http';
 
 const endpoint = environment.clientServiceEndpoint;
@@ -108,7 +108,7 @@ export class ClientService
   {
     return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient)
   }
-  putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> 
+  putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusRequest): Observable<any> 
   {
     return this.http.put(endpoint + 'Client/' + clientID + '/Relationship/' + assignmentXrefID + "/AssignmentStatus", response)
   }

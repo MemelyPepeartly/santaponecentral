@@ -66,7 +66,7 @@ export class SurveyApiRequest {
 export class SurveyQuestionXrefsResponseModel {
   questions: Array<string> = [];
 }
-export class ChangeSurveyResponseModel {
+export class EditSurveyResponseRequest {
   responseText: string;
 }
 
@@ -147,7 +147,7 @@ export class NewAssignmentStatusResponse {
   assignmentStatusName: string;
   assignmentStatusDescription: string;
 }
-export class EditProfileAssignmentStatusResponse {
+export class EditProfileAssignmentStatusRequest {
   assignmentStatusID: string;
 }
 /* CATALOGUE */
