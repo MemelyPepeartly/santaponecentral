@@ -1,4 +1,4 @@
-export class ClientResponse {
+export class ClientRequest {
     clientStatusID: string;
     clientName: string;
     clientEmail: string;
@@ -10,7 +10,7 @@ export class ClientResponse {
     clientPostalCode: string;
     clientCountry: string;
 }
-export class ClientSignupResponse {
+export class ClientSignupRequest {
     clientStatusID: string;
     clientName: string;
     clientEmail: string;
@@ -23,7 +23,7 @@ export class ClientSignupResponse {
     clientCountry: string;
     isAdmin: boolean = false;
     hasAccount: boolean = false;
-    responses: Array<SurveySignupApiResponse> = []
+    responses: Array<SurveySignupApiRequest> = []
 }
 export class ClientAddressResponse {
     clientAddressLine1: string;
@@ -50,7 +50,7 @@ export class ClientIsAdminResponse {
     isAdmin: boolean;
 }
 
-export class ClientRelationshipsResponse {
+export class ClientRelationshipsRequest {
     eventTypeID: string;
     assignmentStatusID: string;
     assignments: Array<string> = []
@@ -70,7 +70,7 @@ export class ChangeSurveyResponseModel {
   responseText: string;
 }
 
-export class SurveySignupApiResponse {
+export class SurveySignupApiRequest {
     surveyID: string;
     surveyQuestionID: string;
     surveyOptionID?: string = null;
