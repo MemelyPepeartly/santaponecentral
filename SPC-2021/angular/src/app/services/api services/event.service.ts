@@ -17,4 +17,13 @@ const httpOptions = {
 export class EventService 
 {
   constructor(private http: HttpClient) { }
+
+  getAllEvents(): Observable<any> 
+  {
+    return this.http.get(endpoint + 'Event')
+  }
+  getEvent(id: string): Observable<any> 
+  {
+    return this.http.get(endpoint + 'Event/' + id)
+  }
 }
