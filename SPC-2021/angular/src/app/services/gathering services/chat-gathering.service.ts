@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService } from './santa-api.service';
-import { MapService } from './mapper.service';
+import { MapService } from '../utility services/mapper.service';
 import { MessageHistory } from 'src/classes/message';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService {
+export class ChatGatheringService {
 
   constructor(private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 

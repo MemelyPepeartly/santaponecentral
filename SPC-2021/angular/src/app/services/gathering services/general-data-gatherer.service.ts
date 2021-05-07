@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SantaApiGetService, YuleLogService } from './santa-api.service';
-import { MapService } from './mapper.service';
+import { MapService } from '../utility services/mapper.service';
 import { AssignmentStatus, Client, HQClient } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';
@@ -13,7 +13,7 @@ import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 @Injectable({
   providedIn: 'root'
 })
-export class GathererService {
+export class GeneralDataGathererService {
 
   constructor(private SantaApiGet: SantaApiGetService, private YuleLogService: YuleLogService, private ApiMapper: MapService) { }
 

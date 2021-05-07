@@ -5,7 +5,7 @@ import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RoleConstants } from 'src/app/shared/constants/roleConstants.enum';
-import { GathererService } from '../services/gatherer.service';
+import { GathererService } from '../services/gathering services/general-data-gatherer.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

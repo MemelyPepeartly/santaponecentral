@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { BehaviorSubject } from 'rxjs';
 import { MessageHistory } from 'src/classes/message';
-import { ProfileApiService, SantaApiGetService } from './santa-api.service';
-import { MapService } from './mapper.service';
+import { MapService } from '../utility services/mapper.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProfileService {
+export class ProfileGatheringService {
 
   constructor(private ProfileApiService: ProfileApiService, private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
 

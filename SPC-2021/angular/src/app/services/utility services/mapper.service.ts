@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer, BaseClient} from '../../classes/client';
-import { Status } from '../../classes/status';
-import { EventType } from '../../classes/eventType';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer, BaseClient} from '../../../classes/client';
+import { Status } from '../../../classes/status';
+import { EventType } from '../../../classes/eventType';
 import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
