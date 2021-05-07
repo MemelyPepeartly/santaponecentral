@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { ClientRelationshipsRequest, ClientSignupRequest } from 'src/classes/responseTypes';
+import { ClientRelationshipsRequest, ClientSignupRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusResponse } from 'src/classes/request-types';
 import { ClientRequest } from 'node:http';
 
 const endpoint = environment.clientServiceEndpoint;
@@ -88,6 +88,34 @@ export class ClientService
     return this.http.post<any>(endpoint + 'Client/Signup', signup)
   }
   /* PUT */
+  putClientAddress(id: string, updatedClient: EditClientAddressRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Address', updatedClient)
+  }
+  putClientEmail(id: string, updatedClient: EditClientEmailRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Email', updatedClient)
+  }
+  putClientNickname(id: string, updatedClient: EditClientNicknameRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Nickname', updatedClient)
+  }
+  putClientName(id: string, updatedClient: EditClientNameRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Name', updatedClient)
+  }
+  putClientIsAdmin(id: string, updatedClient: EditClientIsAdminRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Admin', updatedClient)
+  }
+  putAssignmentStatus(clientID: string, assignmentXrefID: string, response: EditProfileAssignmentStatusResponse): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + clientID + '/Relationship/' + assignmentXrefID + "/AssignmentStatus", response)
+  }
+  putClientStatus(id: string, updatedClient: EditClientStatusRequest): Observable<any> 
+  {
+    return this.http.put(endpoint + 'Client/' + id + '/Status', updatedClient)
+  }
 
   /* DELETE */
 }
