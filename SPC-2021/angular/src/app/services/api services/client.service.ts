@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
+import { ClientRelationshipsRequest, ClientSignupRequest } from 'src/classes/responseTypes';
+import { ClientRequest } from 'node:http';
 
 const endpoint = environment.clientServiceEndpoint;
 
@@ -20,6 +22,7 @@ export class ClientService
 {
   constructor(private http: HttpClient) { }
 
+  /* GET */
   getAllTruncatedClients(): Observable<Array<StrippedClient>> 
   {
     return this.http.get<Array<StrippedClient>>(endpoint + 'Client/Truncated')
@@ -64,7 +67,7 @@ export class ClientService
   {
     return this.http.get<Array<Status>>(endpoint + 'Status')
   }
-  getStatus(id): Observable<Status> 
+  getStatus(id: string): Observable<Status> 
   {
     return this.http.get<Status>(endpoint + 'Status/' + id)
   }
@@ -72,4 +75,19 @@ export class ClientService
   {
     return this.http.get<Status>(endpoint + 'Status/Check/' + email)
   }
+  /* POST */
+  postClient(client: ClientRequest): Observable<Client> 
+  {
+    return this.http.post<Client>(endpoint + 'Client', client)
+  }
+  postClientRecipients(id: string, relationships: ClientRelationshipsRequest): Observable<any> 
+  {
+    return this.http.post<any>(endpoint + 'Client/' + id + '/Recipients', relationships)
+  }
+  postClientSignup(signup: ClientSignupRequest): Observable<any> {
+    return this.http.post<any>(endpoint + 'Client/Signup', signup)
+  }
+  /* PUT */
+
+  /* DELETE */
 }
