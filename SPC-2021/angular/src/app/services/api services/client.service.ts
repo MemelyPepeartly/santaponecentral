@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { ClientRelationshipsRequest, ClientSignupRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusResponse } from 'src/classes/request-types';
+import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusResponse } from 'src/classes/request-types';
 import { ClientRequest } from 'node:http';
 
 const endpoint = environment.clientServiceEndpoint;
@@ -118,4 +118,16 @@ export class ClientService
   }
 
   /* DELETE */
+  deleteClient(id: string): Observable<any> 
+  {
+    return this.http.delete(endpoint + 'Client/' + id);
+  }
+  deleteClientRecipient(id: string, relationship: DeleteClientSenderRecipientRelationshipRequest): Observable<Client>
+  {
+    return this.http.delete<Client>(endpoint + 'Client/' + id + '/Recipient?assignmentClientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
+  }
+  deleteTagFromClient(clientTagRelationship: DeleteClientTagRelationshipRequest): Observable<Client> 
+  {
+    return this.http.delete<Client>(endpoint + 'Client/' + clientTagRelationship.clientID + '/Tag?tagID=' + clientTagRelationship.tagID);
+  }
 }
