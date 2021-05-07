@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-const endpoint = environment.apiUrl;
+const endpoint = environment.surveyServiceEndpoint;
 
 const httpOptions = {
   headers: new HttpHeaders({
