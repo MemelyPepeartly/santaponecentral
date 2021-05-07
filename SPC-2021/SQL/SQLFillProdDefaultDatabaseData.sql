@@ -1,25 +1,14 @@
-DECLARE @statusID1GUID UNIQUEIDENTIFIER;
-DECLARE @statusID2GUID UNIQUEIDENTIFIER;
-DECLARE @statusID3GUID UNIQUEIDENTIFIER;
-DECLARE @statusID4GUID UNIQUEIDENTIFIER;
+DECLARE @statusID1GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @statusID2GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @statusID3GUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @statusID4GUID UNIQUEIDENTIFIER = NEWID();
 
-DECLARE @client1IDGUID UNIQUEIDENTIFIER;
-DECLARE @client2IDGUID UNIQUEIDENTIFIER;
-DECLARE @client3IDGUID UNIQUEIDENTIFIER;
+DECLARE @client1IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @client2IDGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @client3IDGUID UNIQUEIDENTIFIER = NEWID();
 
-SET @statusID1GUID = NEWID();
-SET @statusID2GUID = NEWID();
-SET @statusID3GUID = NEWID();
-SET @statusID4GUID = NEWID();
-
-SET @client1IDGUID = NEWID();
-SET @client2IDGUID = NEWID();
-SET @client3IDGUID = NEWID();
-
-INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
-VALUES
-    (NEWID(),'Gift Exchange', 1),
-    (NEWID(),'Card Exchange', 1);
+DECLARE @giftExchangeEventGUID UNIQUEIDENTIFIER = NEWID();
+DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = NEWID();
 
 DECLARE @sharedSurveyQuestion1GUID UNIQUEIDENTIFIER = NEWID();
 DECLARE @sharedSurveyQuestion2GUID UNIQUEIDENTIFIER = NEWID();
@@ -39,6 +28,11 @@ DECLARE @cardExchangeSurveyQuestion2 UNIQUEIDENTIFIER = NEWID();
 DECLARE @cardExchangeSurveyQuestion3 UNIQUEIDENTIFIER = NEWID();
 DECLARE @cardExchangeSurveyQuestion4 UNIQUEIDENTIFIER = NEWID();
 DECLARE @cardExchangeSurveyQuestion5 UNIQUEIDENTIFIER = NEWID();
+
+INSERT INTO app.EventType (eventTypeID, eventDescription, isActive)
+VALUES
+    (@giftExchangeEventGUID,'Gift Exchange', 1),
+    (@cardExchangeEventGUID,'Card Exchange', 1);
 
 INSERT INTO app.SurveyQuestion (surveyQuestionID, questionText, senderCanView, isSurveyOptionList)
 VALUES
@@ -62,9 +56,6 @@ VALUES
     (@cardExchangeSurveyQuestion3,'Do you acknowledge your info will be shared with others assigned to send to you?', 0 ,1), -- Option
     (@cardExchangeSurveyQuestion4,'Are you willing to send cards internationally?', 0, 1), -- Option
     (@cardExchangeSurveyQuestion5,'Some generous anons like to send extra cards or small goodies to every single participant in the event (this is separate from the regular exchange). Do you consent to receiving such items? You do not have to send anything back.', 0, 1); -- Option
-    
-DECLARE @giftExchangeEventGUID UNIQUEIDENTIFIER = '82f3d537-274d-4c64-ac1f-01ce57e16e77';
-DECLARE @cardExchangeEventGUID UNIQUEIDENTIFIER = '284e1b27-caea-47f1-89e4-0111d2b19cd7';
 
 DECLARE @giftExchangeSurveyID UNIQUEIDENTIFIER = NEWID();
 DECLARE @cardExchangeSurveyID UNIQUEIDENTIFIER = NEWID();
@@ -162,11 +153,11 @@ VALUES
     (@statusID3GUID, 'Denied'),
     (@statusID4GUID, 'Completed');
     
-INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country, isAdmin)
+INSERT INTO app.Client (clientID, clientStatusID, clientName, nickname, email, addressLine1, addressLine2, city, [state], postalCode, country, isAdmin, hasAccount)
 VALUES
-    (@client1IDGUID, @statusID1GUID, 'Memely', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
-    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1),
-    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1);
+    (@client1IDGUID, @statusID1GUID, 'Memely', 'Santa Dev', 'santaponecentraldev@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1, 1),
+    (@client2IDGUID, @statusID2GUID, 'Santa Pone', 'Twilight Sparkle', 'mlpsantapone@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1, 0),
+    (@client3IDGUID, @statusID2GUID, 'Cardslut', 'Golen Heart', 'thecardslut@gmail.com', 'This', 'can', 'be', 'changed', '12457', 'Albania', 1, 0);
 
 DECLARE @tag1IDGUID UNIQUEIDENTIFIER = NEWID();
 DECLARE @tag2IDGUID UNIQUEIDENTIFIER = NEWID();
@@ -187,9 +178,11 @@ DECLARE @tag16IDGUID UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO app.Tag (tagID, tagName)
 VALUES
-    -- (@tag1IDGUID, 'Grinch'),
-    -- (@tag2IDGUID, 'Mass Mailer'),
-    -- (@tag3IDGUID, 'Mass Mail Recipient'),
+-- Constant
+    (@tag1IDGUID, 'Grinch'),
+    (@tag2IDGUID, 'Mass Mailer'),
+    (@tag3IDGUID, 'Mass Mail Recipient'),
+-- End Constant
     (@tag4IDGUID, 'Accepts Food'),
     (@tag5IDGUID, 'Canada Only'),
     (@tag6IDGUID, 'Declines Food'),

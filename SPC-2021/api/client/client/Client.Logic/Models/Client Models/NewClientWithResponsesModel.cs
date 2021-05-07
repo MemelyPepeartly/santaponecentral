@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Client.Logic.Survey_Response_Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Santa.Api.Models
+namespace Client.Logic.Client_Models
 {
-    public class EditNewClientModel
+    public class NewClientWithResponsesModel
     {
         public Guid clientStatusID { get; set; }
         public string clientName { get; set; }
@@ -15,5 +18,8 @@ namespace Santa.Api.Models
         public string clientState { get; set; }
         public string clientPostalCode { get; set; }
         public string clientCountry { get; set; }
+        public List<ApiSurveyResponse> responses { get; set; }
+        public bool isAdmin { get; set; }
+        public bool hasAccount { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Santa.Api.Models.Survey_Response_Models
+namespace Client.Logic.Survey_Response_Models
 {
     /// <summary>
     /// Modified version of the survey response model. Used in signups since clientID's are not created until a client is pushed to the DB

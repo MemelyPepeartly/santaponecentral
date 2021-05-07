@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Client.Logic.Interfaces;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Information_Objects;
+using Client.Logic.Client_Models;
+using System.Linq;
+using System.Security.Claims;
 using Client.Logic.Constants;
-using Santa.Api.Models;
-using Santa.Api.Models.Client_Models;
-using Santa.Api.Models.Survey_Response_Models;
+using Client.Logic.Models.Common_Models;
+using RestSharp;
+using Client.Logic.Survey_Response_Models;
+using Client.Logic.Models.Auth0_Models;
 
 namespace Santa.Api.Controllers
 {
@@ -24,55 +26,11 @@ namespace Santa.Api.Controllers
     {
 
         private readonly IRepository repository;
-        public ClientController(IRepository _repository)
+        private readonly ISharkTank sharkTank;
+        public ClientController(IRepository _repository, ISharkTank _sharkTank)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-        }
-        /*
-        private readonly IAuthHelper authHelper;
-        private readonly IMailbag mailbag;
-        private readonly IYuleLog yuleLogger;
-        
-        public ClientController(IRepository _repository, IAuthHelper _authHelper, IMailbag _mailbag, IYuleLog _yuleLogger)
-        {
-            repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
-            mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
-            yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
-        }
-        */
-
-        // GET: api/Client
-        /// <summary>
-        /// Gets all clients
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<Client.Logic.Objects.Client>>> GetAllClients()
-        {
-            /*
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
-            List<Client.Logic.Objects.Client> clients = await repository.GetAllClients();
-            if (clients == null)
-            {
-                return NoContent();
-            }
-
-            try
-            {
-                await yuleLogger.logGetAllClients(requestingClient);
-            }
-            catch(Exception)
-            {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return StatusCode(StatusCodes.Status424FailedDependency);
-            }
-            
-            return Ok(clients.OrderBy(c => c.nickname));
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
 
         // GET: api/Client/Truncated
@@ -84,22 +42,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<StrippedClient>>> GetAllClientsWithoutChats()
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
             try
             {
                 List<StrippedClient> clients = await repository.GetAllStrippedClientData();
-                await yuleLogger.logGetAllClients(requestingClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/Truncated/5
@@ -111,21 +67,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<StrippedClient>> GetTrucatedClientByID(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
                 StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(logicStrippedClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/HQClient
@@ -137,22 +93,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
             try
             {
                 List<HQClient> clients = await repository.GetAllHeadquarterClients();
-                await yuleLogger.logGetAllClients(requestingClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(clients.OrderBy(c => c.nickname));
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/HQClient/5
@@ -164,22 +117,20 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
                 HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return Ok(logicHQClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/5
@@ -192,23 +143,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
-                Client logicClient = await repository.GetClientByIDAsync(clientID);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                Client.Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/Email/email@domain.com
@@ -221,22 +170,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
                 Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Client/Basic/5
@@ -249,23 +195,19 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/Basic/Email/email@domain.com
@@ -278,23 +220,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(string clientEmail)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
 
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
-                await yuleLogger.logGetSpecificClient(requestingClient, logicClient);
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/Client/5/RelationshipContainer
@@ -307,7 +247,11 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
-            return Ok(await repository.getClientInfoContainerByIDAsync(clientID));
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+
+            InfoContainer logicInfoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
+            return Ok(logicInfoContainer);
         }
 
 
@@ -321,6 +265,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<Client.Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
+#warning Needs implimentation after survey service is ready
             /*
             return Ok(await repository.GetAllSurveyResponsesByClientID(clientID));
             */
@@ -332,6 +277,8 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
+#warning Needs implimentation after search service is ready
+
             /*
             return Ok((await repository.GetAllAllowedAssignmentsByID(clientID, eventTypeID)).OrderBy(aa => aa.clientMeta.clientNickname));
             */
@@ -436,7 +383,7 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            /*
+            
             bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
             BaseClient requestingClient = new BaseClient();
             if (loggingEnabled)
@@ -471,6 +418,8 @@ namespace Santa.Api.Controllers
             try
             {
                 await repository.CreateClient(newClient);
+#warning needs to offload this to the survey service
+                /*
                 foreach (ApiSurveyResponse response in clientResponseModel.responses)
                 {
                     await repository.CreateSurveyResponseAsync(new Response()
@@ -483,26 +432,32 @@ namespace Santa.Api.Controllers
                         responseText = response.responseText
                     });
                 }
+                */
                 await repository.SaveAsync();
-                Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
-                await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+                Client.Logic.Objects.Client createdClient = await repository.GetClientByIDAsync(newClient.clientID);
 
+#warning offload this mailbag functionality somewhere
+                //await mailbag.sendSignedUpAndAwaitingEmail(createdClient);
+#warning swap this logging over to SharkTank
+                /*
                 if(loggingEnabled)
                 {
                     await yuleLogger.logCreatedNewClient(requestingClient, createdClient);
                 }
+                */
                 return Ok(createdClient);
             }
             catch(Exception)
             {
-                if(loggingEnabled)
+#warning swap this logging over to SharkTank
+                /*
+                if (loggingEnabled)
                 {
                     await yuleLogger.logError(requestingClient, LoggingConstants.CREATED_NEW_CLIENT_CATEGORY);
                 }
+                */
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // POST: api/Client/5/Recipients
@@ -1038,21 +993,26 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.DELETE));
+
             BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
             InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
 
             try
             {
                 await repository.DeleteClientByIDAsync(clientID);
-                bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+#warning this bool needs to be offloaded to sharktank 
+                // bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+                bool accountExists = false;
 
                 if (accountExists)
                 {
-                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(baseLogicClient.email);
-                    await authHelper.deleteAuthClient(authUser.user_id);
+                    Auth0UserInfoModel authUser = await sharkTank.GetAuthInfo(baseLogicClient.email);
+                    await sharkTank.DeleteAuthUser(authUser.user_id);
                 }
+                /*
                 if (infoContainer.notes.Count > 0)
                 {
                     foreach (Logic.Objects.Base_Objects.Note note in infoContainer.notes)
@@ -1060,17 +1020,18 @@ namespace Santa.Api.Controllers
                         await repository.DeleteNoteByID(note.noteID);
                     }
                 }
+                */
                 await repository.SaveAsync();
-                await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
+#warning need to make overload for requesting and base logic client
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                //await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
                 return NoContent();
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
         // DELETE: api/Client/5/Recipient
         /// <summary>
@@ -1166,5 +1127,16 @@ namespace Santa.Api.Controllers
             }
         }
         */
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, object requestedObject, Method httpMethod)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = requestorClient.clientID,
+                requestorRoles = roles,
+                requesetedObject = requestedObject,
+                httpMethod = httpMethod
+            };
+            return model;
+        }
     }
 }

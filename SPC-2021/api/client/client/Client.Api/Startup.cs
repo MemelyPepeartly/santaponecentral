@@ -1,3 +1,4 @@
+using Client.Api.Services;
 using Client.Data.Entities;
 using Client.Data.Repository;
 using Client.Logic.Interfaces;
@@ -53,6 +54,7 @@ namespace Client.Api
 
             //Services
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ISharkTank, SharkTank>();
 
             //Swagger
             services.AddSwaggerGen(c =>

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Santa.Api.Models
+namespace Client.Logic.Client_Models
 {
-    public class EditClientAddressModel
+    public class EditNewClientModel
     {
+        public Guid clientStatusID { get; set; }
+        public string clientName { get; set; }
+        public string clientEmail { get; set; }
+        public string clientNickname { get; set; }
         public string clientAddressLine1 { get; set; }
         public string clientAddressLine2 { get; set; }
         public string clientCity { get; set; }

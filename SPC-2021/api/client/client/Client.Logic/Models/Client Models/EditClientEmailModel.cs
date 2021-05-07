@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Santa.Api.Models
+namespace Client.Logic.Client_Models
 {
     public class EditClientEmailModel
     {
