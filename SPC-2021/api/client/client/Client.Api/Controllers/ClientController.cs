@@ -15,6 +15,7 @@ using Client.Logic.Constants;
 using Client.Logic.Models.Common_Models;
 using RestSharp;
 using Client.Logic.Survey_Response_Models;
+using Client.Logic.Models.Auth0_Models;
 
 namespace Santa.Api.Controllers
 {
@@ -52,7 +53,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -78,7 +79,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -102,7 +103,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -127,7 +128,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -154,7 +155,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -179,7 +180,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -204,7 +205,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -231,7 +232,7 @@ namespace Santa.Api.Controllers
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailiureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -992,21 +993,26 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            /*
+            
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.DELETE));
+
             BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
             InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
 
             try
             {
                 await repository.DeleteClientByIDAsync(clientID);
-                bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+#warning this bool needs to be offloaded to sharktank 
+                // bool accountExists = await authHelper.accountExists(baseLogicClient.email);
+                bool accountExists = false;
 
                 if (accountExists)
                 {
-                    Models.Auth0_Response_Models.Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail(baseLogicClient.email);
-                    await authHelper.deleteAuthClient(authUser.user_id);
+                    Auth0UserInfoModel authUser = await sharkTank.GetAuthInfo(baseLogicClient.email);
+                    await sharkTank.DeleteAuthUser(authUser.user_id);
                 }
+                /*
                 if (infoContainer.notes.Count > 0)
                 {
                     foreach (Logic.Objects.Base_Objects.Note note in infoContainer.notes)
@@ -1014,17 +1020,18 @@ namespace Santa.Api.Controllers
                         await repository.DeleteNoteByID(note.noteID);
                     }
                 }
+                */
                 await repository.SaveAsync();
-                await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
+#warning need to make overload for requesting and base logic client
+                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                //await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
                 return NoContent();
             }
             catch(Exception)
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
         // DELETE: api/Client/5/Recipient
         /// <summary>
