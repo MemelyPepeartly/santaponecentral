@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest, ManualAddClientRequest } from 'src/classes/request-types';
+import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest, ManualAddClientRequest } from 'src/classes/request-types';
 
 const endpoint = environment.clientServiceEndpoint;
 
@@ -85,10 +85,6 @@ export class ClientService
   {
     return this.http.post<any>(endpoint + 'Client/' + id + '/Recipients', relationships)
   }
-  postTagsToClient(clientID: string, clientTagRelationships: AddClientTagRelationshipsRequest): Observable<Client> 
-  {
-    return this.http.post<Client>(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships)
-  }
   postClientSignup(signup: ClientSignupRequest): Observable<any> {
     return this.http.post<any>(endpoint + 'Client/Signup', signup)
   }
@@ -130,9 +126,5 @@ export class ClientService
   deleteClientRecipient(id: string, relationship: DeleteClientSenderRecipientRelationshipRequest): Observable<Client>
   {
     return this.http.delete<Client>(endpoint + 'Client/' + id + '/Recipient?assignmentClientID=' + relationship.clientID+'&eventID=' + relationship.clientEventTypeID);
-  }
-  deleteTagFromClient(clientTagRelationship: DeleteClientTagRelationshipRequest): Observable<Client> 
-  {
-    return this.http.delete<Client>(endpoint + 'Client/' + clientTagRelationship.clientID + '/Tag?tagID=' + clientTagRelationship.tagID);
   }
 }
