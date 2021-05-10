@@ -16,7 +16,7 @@ export class TagControlComponent implements OnInit {
   constructor(private TagService: TagService,
     private formBuilder: FormBuilder,
     public ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allTags: Array<Tag> = [];

@@ -17,7 +17,7 @@ export class SurveyControlComponent implements OnInit {
 
   constructor(private SurveyService: SurveyService,
     public ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allSurveys: Array<Survey> = []

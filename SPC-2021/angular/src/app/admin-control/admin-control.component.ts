@@ -17,7 +17,7 @@ export class AdminControlComponent implements OnInit
 {
 
   constructor(public auth: AuthService,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   public profile: any;

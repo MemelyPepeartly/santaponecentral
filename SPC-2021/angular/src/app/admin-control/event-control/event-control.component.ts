@@ -12,7 +12,7 @@ import { GeneralDataGathererService } from 'src/app/services/gathering services/
 export class EventControlComponent implements OnInit {
 
   constructor(private ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allEvents: Array<EventType> = []

@@ -56,7 +56,7 @@ export class AuthService {
   // Create a local property for login status
   loggedIn: boolean = null;
 
-  constructor(private router: Router, private gatherer: GeneralDataGathererService) {
+  constructor(private router: Router, public gatherer: GeneralDataGathererService) {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
     this.localAuthSetup();

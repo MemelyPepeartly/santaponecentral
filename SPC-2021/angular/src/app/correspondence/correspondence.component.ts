@@ -24,7 +24,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   constructor(public ClientService: ClientService,
     private Auth: AuthService,
     private ChatGatheringServiceService: ChatGatheringService,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     private mapper: MapService) { }
 
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;

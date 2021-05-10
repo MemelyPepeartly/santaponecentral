@@ -80,7 +80,7 @@ export class SearchQueryObjectContainer
 })
 export class AgentCatalogueComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService,
+  constructor(public gatherer: GeneralDataGathererService,
     private SearchService: SearchService,
     private ClientService: ClientService,
     private mapper: MapService) { }

@@ -9,7 +9,7 @@ import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 })
 export class YuleLogComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService) { }
+  constructor(public gatherer: GeneralDataGathererService) { }
 
   @Input() allCategories: Array<Category> = [];
   @Input() allYuleLogs: Array<YuleLog> = [];

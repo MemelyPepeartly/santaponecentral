@@ -12,7 +12,7 @@ import { Question } from 'src/classes/survey';
 export class QuestionControlComponent implements OnInit {
 
   constructor(public ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allQuestions: Array<Question> = [];

@@ -15,7 +15,7 @@ import { AssignmentStatusConstants } from '../constants/assignmentStatusConstant
 })
 export class AssignmentStatusControllerComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService,
+  constructor(public gatherer: GeneralDataGathererService,
     private ProfileService: ProfileService,
     private ClientService: ClientService,
     private mapper: MapService) { }

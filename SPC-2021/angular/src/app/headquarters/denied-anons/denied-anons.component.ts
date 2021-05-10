@@ -10,7 +10,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class DeniedAnonsComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService) { }
+  constructor(public gatherer: GeneralDataGathererService) { }
 
   @Input() deniedClients: Array<Client> = [];
   @Input() gatheringInfo: boolean;

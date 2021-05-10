@@ -12,7 +12,7 @@ import { EventType } from 'src/classes/eventType';
 })
 export class ClientAssignmentInfoComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService, public ClientService: ClientService, public mapper: MapService) { }
+  constructor(public gatherer: GeneralDataGathererService, public ClientService: ClientService, public mapper: MapService) { }
 
   @Input() client: HQClient = new HQClient();
 

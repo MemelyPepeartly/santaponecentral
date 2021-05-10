@@ -10,7 +10,7 @@ import { HQClient } from 'src/classes/client';
 })
 export class CompletedAnonsComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService) { }
+  constructor(public gatherer: GeneralDataGathererService) { }
 
   @Input() completedClients: Array<HQClient> = [];
   @Input() gatheringInfo: boolean;

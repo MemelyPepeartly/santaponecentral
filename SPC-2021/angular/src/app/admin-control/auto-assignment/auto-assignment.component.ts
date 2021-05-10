@@ -13,7 +13,7 @@ import { SearchService } from 'src/app/services/api services/search.service';
   styleUrls: ['./auto-assignment.component.css']
 })
 export class AutoAssignmentComponent implements OnInit {
-  constructor(private gatherer: GeneralDataGathererService,
+  constructor(public gatherer: GeneralDataGathererService,
     public SearchService: SearchService,
     public mapper: MapService) { }
 
