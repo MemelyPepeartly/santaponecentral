@@ -204,9 +204,7 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.allSurveys.subscribe((surveyArray: Array<Survey>) => {
       this.surveys = surveyArray;
     });
-    this.gatherer.allClients.subscribe((clientArray: Array<Client>) => {
-      this.allClients = clientArray;
-    });
+    
     /* ---- COMPONENT SPECIFIC GATHERS ---- */
     //Gathers all client tags
     await this.setClientTags();
