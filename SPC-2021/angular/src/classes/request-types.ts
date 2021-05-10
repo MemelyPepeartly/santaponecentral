@@ -55,7 +55,7 @@ export class ClientRelationshipsRequest {
     assignmentStatusID: string;
     assignments: Array<string> = []
 }
-export class SurveyApiRequest {
+export class AddSurveyResponseRequest {
     surveyID: string;
     clientID: string;
     surveyQuestionID: string;
@@ -83,7 +83,7 @@ export class DeleteClientTagRelationshipRequest {
     clientID: string;
     tagID: string;
 }
-export class ClientTagRelationshipsResponse {
+export class AddClientTagRelationshipsRequest {
     tags: Array<string> = [];
 }
 export class DeleteClientSenderRecipientRelationshipRequest {
