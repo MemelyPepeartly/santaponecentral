@@ -17,4 +17,17 @@ const httpOptions = {
 export class SharkTankService 
 {
   constructor(private http: HttpClient) { }
+
+  getAllCategories(): Observable<any> 
+  {
+    return this.http.get(endpoint + 'Category');
+  }
+  getAllLogs(): Observable<any> 
+  {
+    return this.http.get(endpoint + 'Log');
+  }
+  getAllLogsByCategoryID(id: string): Observable<any> 
+  {
+    return this.http.get(endpoint + 'Log/Category/' + id);
+  }
 }
