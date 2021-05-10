@@ -76,7 +76,7 @@ export class SurveySignupApiRequest {
     surveyOptionID?: string = null;
     responseText: string;
 }
-export class TagResponse {
+export class AddOrEditTagRequest {
     tagName: string;
 }
 export class DeleteClientTagRelationshipRequest {
