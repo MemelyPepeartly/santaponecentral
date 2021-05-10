@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatList, MatSelectionList } from '@angular/material/list';
-import { SantaApiPostService } from 'src/app/services/santa-api.service';
-import { Client, HQClient, PossiblePairingChoices } from 'src/classes/client';
-import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
+import { MatSelectionList } from '@angular/material/list';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { HQClient, PossiblePairingChoices } from 'src/classes/client';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-agent-pairing-control',
@@ -11,7 +11,7 @@ import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTy
 })
 export class AgentPairingControlComponent implements OnInit {
 
-  constructor(public SantaApiPost: SantaApiPostService,) { }
+  constructor(public ClientService: ClientService) { }
 
   @Input() possiblePairingsObject: PossiblePairingChoices = new PossiblePairingChoices();
 
@@ -45,7 +45,7 @@ export class AgentPairingControlComponent implements OnInit {
       pairings: pairingModel
     }
 
-    this.SantaApiPost.postSelectedAutoAssignments(responseModel).subscribe(async () => {
+    this.ClientService.postSelectedAutoAssignments(responseModel).subscribe(async () => {
       this.completedPostEvent.emit(true);
       // Set the potential assignments that were successfully posted equal to a list without the ones that were not posted
       // Small local update to avoid having to gather everything again

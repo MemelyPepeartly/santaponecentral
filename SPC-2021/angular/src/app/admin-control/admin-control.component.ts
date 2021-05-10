@@ -1,12 +1,10 @@
 import { Component, OnInit} from '@angular/core';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from '../services/santa-api.service';
 import { Tag } from 'src/classes/tag';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
-import { GathererService } from '../services/gatherer.service';
-import { TagControlComponent } from './tag-control/tag-control.component';
-import { Client, HQClient } from 'src/classes/client';
+import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
+import { HQClient } from 'src/classes/client';
 import { AuthService } from '../auth/auth.service';
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
@@ -19,11 +17,7 @@ export class AdminControlComponent implements OnInit
 {
 
   constructor(public auth: AuthService,
-    public SantaApiGet: SantaApiGetService,
-    public SantaApiPut: SantaApiPutService,
-    public SantaApiPost: SantaApiPostService,
-    public SantaApiDelete: SantaApiDeleteService,
-    public gatherer: GathererService,
+    private gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   public profile: any;

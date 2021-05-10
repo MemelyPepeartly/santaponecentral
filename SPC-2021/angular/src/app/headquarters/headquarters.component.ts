@@ -1,9 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { Client, HQClient } from '../../classes/client';
-import { MapService } from '../services/mapper.service';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { HQClient } from '../../classes/client';
+import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService } from '../services/santa-api.service';
-import { GathererService } from '../services/gatherer.service';
 import { ApprovedAnonsComponent } from './approved-anons/approved-anons.component';
 import { DeniedAnonsComponent } from './denied-anons/denied-anons.component';
 import { CompletedAnonsComponent } from './completed-anons/completed-anons.component';
@@ -11,6 +9,9 @@ import { IncomingSignupsComponent } from './incoming-signups/incoming-signups.co
 import { SelectedAnonComponent } from './selected-anon/selected-anon.component';
 import { Survey } from 'src/classes/survey';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
+import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
+import { ClientService } from '../services/api services/client.service';
+import { SurveyService } from '../services/api services/survey.service';
 
 @Component({
   selector: 'app-headquarters',
@@ -38,9 +39,10 @@ import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 export class HeadquartersComponent implements OnInit {
 
   constructor(
-    public SantaApiGet: SantaApiGetService,
+    public ClientService: ClientService,
+    public SurveyService: SurveyService,
     public mapper: MapService,
-    public gatherer: GathererService,
+    public gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) {}
 
 
@@ -147,7 +149,7 @@ export class HeadquartersComponent implements OnInit {
   {
     this.gatheringAllSurveys = true;
 
-    var res = await this.SantaApiGet.getAllSurveys().toPromise().catch(err => {
+    var res = await this.SurveyService.getAllSurveys().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering getting all the surveys in headquarters");
       console.log(err);
@@ -169,7 +171,7 @@ export class HeadquartersComponent implements OnInit {
 
     if(clientIndex != undefined)
     {
-      this.allClients[clientIndex] = this.mapper.mapHQClient(await this.SantaApiGet.getHQClientByID(client.clientID).toPromise());
+      this.allClients[clientIndex] = this.mapper.mapHQClient(await this.ClientService.getHQClientByID(client.clientID).toPromise());
     }
   }
   sortApproved()

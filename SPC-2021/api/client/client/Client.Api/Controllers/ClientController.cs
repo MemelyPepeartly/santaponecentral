@@ -32,7 +32,7 @@ namespace Santa.Api.Controllers
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
-
+        #region GET
         // GET: api/Client/Truncated
         /// <summary>
         /// Gets all clients using the truncated getter for performance
@@ -334,7 +334,9 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+        #endregion
 
+        #region POST
         // POST: api/Client
         /// <summary>
         /// Posts a new client. Binds the ApiClient model for input
@@ -372,6 +374,7 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+
         // POST: api/Client/Signup
         /// <summary>
         /// Posts a new client signup with their responses
@@ -675,7 +678,9 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+        #endregion
 
+        #region PUT
         // PUT: api/Client/5/Address
         /// <summary>
         /// Updates a client's address
@@ -701,6 +706,7 @@ namespace Santa.Api.Controllers
             Client.Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
             return Ok(updatedClient);
         }
+
         // PUT: api/Client/5/Email
         /// <summary>
         /// Updates a client's email and Auth0 email, then sends them an option to reset their password
@@ -761,6 +767,7 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+
         // PUT: api/Client/5/Nickname
         /// <summary>
         /// Update a client's nickname
@@ -837,6 +844,7 @@ namespace Santa.Api.Controllers
             Client.Logic.Objects.Client updatedClient = await repository.GetClientByIDAsync(targetClient.clientID);
             return Ok(updatedClient);
         }
+
         // PUT: api/Client/5/Status
         /// <summary>
         /// Updates the status of a certain client by their ID
@@ -983,6 +991,10 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+        #endregion
+
+        #region DELETE
+
         // DELETE: api/Client/5
         /// <summary>
         /// Deletes a client
@@ -1033,6 +1045,7 @@ namespace Santa.Api.Controllers
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
+
         // DELETE: api/Client/5/Recipient
         /// <summary>
         /// Delets an assignment from a client
@@ -1068,6 +1081,7 @@ namespace Santa.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+
         // DELETE: api/Client/5/Tag
         /// <summary>
         /// Deletes a tag from a client
@@ -1087,6 +1101,9 @@ namespace Santa.Api.Controllers
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
+        #endregion
+
+        #region UTILITY
         /*
         /// <summary>
         /// Method for approval steps
@@ -1138,5 +1155,6 @@ namespace Santa.Api.Controllers
             };
             return model;
         }
+        #endregion
     }
 }

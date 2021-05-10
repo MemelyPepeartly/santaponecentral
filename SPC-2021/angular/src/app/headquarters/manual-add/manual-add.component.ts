@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
-import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
-import { GathererService } from 'src/app/services/gatherer.service';
-import { MapService, MapResponse } from 'src/app/services/mapper.service';
-import { CountriesService } from 'src/app/services/countries.service';
+import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
+import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SurveyFormComponent } from 'src/app/signup/survey-form/survey-form.component';
 import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
 import { Status } from 'src/classes/status';
-import { ClientSignupResponse, SurveyApiResponse } from 'src/classes/responseTypes';
 import { Address } from 'src/classes/address';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { Client } from 'src/classes/client';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { AddSurveyResponseRequest, ClientSignupRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-manual-add',
@@ -21,9 +21,8 @@ import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 })
 export class ManualAddComponent implements OnInit {
 
-  constructor(public SantaGet: SantaApiGetService,
-    public SantaPost: SantaApiPostService,
-    public gatherer: GathererService,
+  constructor(public ClientService: ClientService,
+    public gatherer: GeneralDataGathererService,
     public mapper: MapService,
     public responseMapper: MapResponse,
     public countryService: CountriesService,
@@ -143,7 +142,7 @@ export class ManualAddComponent implements OnInit {
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
 
     // Construction of new client response
-    let newClient: ClientSignupResponse =
+    let newClient: ClientSignupRequest =
     {
       clientStatusID: awaitingStatusID.statusID,
       clientName: this.clientName,
@@ -164,7 +163,7 @@ export class ManualAddComponent implements OnInit {
 
     // Set client's answers
     forms.forEach((surveyForm: SurveyFormComponent) => {
-      let response = new SurveyApiResponse;
+      let response = new AddSurveyResponseRequest();
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
@@ -180,12 +179,12 @@ export class ManualAddComponent implements OnInit {
           response.responseText = control.value;
         }
         newClient.responses.push(response);
-        response = new SurveyApiResponse();
+        response = new AddSurveyResponseRequest();
       }
     });
 
     // Post client with answers
-    this.SantaPost.postClientSignup(newClient).subscribe(async (res) => {
+    this.ClientService.postClientSignup(newClient).subscribe(async (res) => {
       this.clientInfoFormGroup.reset();
       this.clientAddressFormGroup.reset();
       this.showSpinner = false;

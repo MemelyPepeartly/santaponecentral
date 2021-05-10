@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { BehaviorSubject } from 'rxjs';
 import { MessageHistory } from 'src/classes/message';
-import { ProfileApiService, SantaApiGetService } from './santa-api.service';
-import { MapService } from './mapper.service';
+import { MapService } from '../utility services/mapper.service';
+import { ProfileService } from '../api services/profile.service';
+import { MessageService } from '../api services/message.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProfileService {
-
-  constructor(private ProfileApiService: ProfileApiService, private SantaApiGet: SantaApiGetService, private ApiMapper: MapService) { }
+export class ProfileGatheringService {
+  
+  constructor(private ProfileApiService: ProfileService, private MessageService: MessageService, private ApiMapper: MapService) { }
 
   private _gettingClientID: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingClientID()
@@ -164,7 +165,7 @@ export class ProfileService {
     }
 
     let histories: Array<MessageHistory> = []
-    var data = await this.SantaApiGet.getAllMessageHistoriesByClientID(clientID).toPromise().catch((err) => {console.log(err); this._gettingHistories.next(false);});
+    var data = await this.MessageService.getAllMessageHistoriesByClientID(clientID).toPromise().catch((err) => {console.log(err); this._gettingHistories.next(false);});
     for(let i = 0; i < data.length; i++)
     {
       histories.push(this.ApiMapper.mapMessageHistory(data[i]))
@@ -198,7 +199,7 @@ export class ProfileService {
       this._gettingGeneralHistory.next(true);
     }
 
-    var data = await this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID ,subjectID, null).toPromise().catch((err) => {console.log(err); this._gettingGeneralHistory.next(false);});
+    var data = await this.MessageService.getClientMessageHistoryBySubjectIDAndXrefID(conversationClientID ,subjectID, null).toPromise().catch((err) => {console.log(err); this._gettingGeneralHistory.next(false);});
 
     this.updateGeneralHistory(this.ApiMapper.mapMessageHistory(data));
     this._gettingGeneralHistory.next(false);

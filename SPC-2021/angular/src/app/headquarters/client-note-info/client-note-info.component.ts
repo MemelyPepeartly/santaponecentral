@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MapService } from 'src/app/services/mapper.service';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
-import { Client, HQClient } from 'src/classes/client';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
+import { HQClient } from 'src/classes/client';
 
 @Component({
   selector: 'app-client-note-info',
@@ -10,7 +10,7 @@ import { Client, HQClient } from 'src/classes/client';
 })
 export class ClientNoteInfoComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService) { }
+  constructor(public ClientService: ClientService, public mapper: MapService) { }
 
   @Input() client: HQClient = new HQClient();
 
@@ -21,7 +21,7 @@ export class ClientNoteInfoComponent implements OnInit {
 
   async ngOnInit() {
     this.gatheringInfoContainer = true;
-    this.client.infoContainer = this.mapper.mapInfoContainer(await this.SantaApiGet.getInfoContainerByClientID(this.client.clientID).toPromise());
+    this.client.infoContainer = this.mapper.mapInfoContainer(await this.ClientService.getInfoContainerByClientID(this.client.clientID).toPromise());
     this.gatheringInfoContainer = false;
   }
   public emitRefreshAction()

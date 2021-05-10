@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Client, HQClient, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
-import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
-import { SearchQueryModelResponse } from 'src/classes/responseTypes';
-import { SantaApiGetService, SantaApiPostService } from '../services/santa-api.service';
-import { MapService } from '../services/mapper.service';
+import { SearchQueryModelResponse } from 'src/classes/request-types';
+import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Survey } from 'src/classes/survey';
-import { SummaryResolver } from '@angular/compiler';
+import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
+import { SearchService } from '../services/api services/search.service';
+import { ClientService } from '../services/api services/client.service';
 
 export class SearchQueryObjectContainer
 {
@@ -82,9 +80,10 @@ export class SearchQueryObjectContainer
 })
 export class AgentCatalogueComponent implements OnInit {
 
-  constructor(private gatherer: GathererService,
-    private santaApiPost: SantaApiPostService,
-    private santaApiGet: SantaApiGetService,
+  constructor(private gatherer: GeneralDataGathererService,
+    // SANTAHERE Replace with SearchService once we get there
+    private SearchService: any,
+    private ClientService: ClientService,
     private mapper: MapService) { }
 
   public allTags: Array<Tag> = [];
@@ -352,7 +351,7 @@ export class AgentCatalogueComponent implements OnInit {
       giftAssignments: this.searchQueryObjectHolder.gAssignments,
       isHardSearch: this.selectedSearchType == 'hard' ? true : false
     }
-    this.santaApiPost.searchClients(response).subscribe((res) => {
+    this.SearchService.searchClients(response).subscribe((res) => {
       res.forEach(client => {
         this.foundClients.push(this.mapper.mapStrippedClient(client));
       });
@@ -374,7 +373,7 @@ export class AgentCatalogueComponent implements OnInit {
 
     if(clientIndex != undefined)
     {
-      this.allHQClients[clientIndex] = this.mapper.mapHQClient(await this.santaApiGet.getHQClientByID(client.clientID).toPromise());
+      this.allHQClients[clientIndex] = this.mapper.mapHQClient(await this.ClientService.getHQClientByID(client.clientID).toPromise());
     }
   }
   public convertToHQClient(client: StrippedClient) : HQClient
@@ -386,7 +385,7 @@ export class AgentCatalogueComponent implements OnInit {
   public async showCardInfo(client: Client)
   {
     this.gettingClientProfile = true;
-    this.selectedClient = this.mapper.mapClient(await this.santaApiGet.getClientByClientID(client.clientID).toPromise());
+    this.selectedClient = this.mapper.mapClient(await this.ClientService.getClientByClientID(client.clientID).toPromise());
     this.showClientCard = true;
     this.gettingClientProfile = false;
   }

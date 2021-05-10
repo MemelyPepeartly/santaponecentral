@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
-import { ChatService } from '../services/chat.service';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
-import { GathererService } from '../services/gatherer.service';
 import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
-import { MapService } from '../services/mapper.service';
+import { MapService } from '../services/utility services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from 'src/app/shared/constants/organizerEmailConstants.enum';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
 import { ChatComponent } from '../shared/chat/chat.component';
+import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
+import { ChatGatheringService } from '../services/gathering services/chat-gathering.service';
+import { ClientService } from '../services/api services/client.service';
 
 
 
@@ -21,13 +21,11 @@ import { ChatComponent } from '../shared/chat/chat.component';
 })
 export class CorrespondenceComponent implements OnInit, OnDestroy {
 
-  constructor(public SantaApiGet: SantaApiGetService,
-    public Auth: AuthService,
-    public SantaApiPost: SantaApiPostService,
-    public SantaApiPut: SantaApiPutService,
-    public ChatService: ChatService,
-    public gatherer: GathererService,
-    public mapper: MapService) { }
+  constructor(public ClientService: ClientService,
+    private Auth: AuthService,
+    private ChatGatheringServiceService: ChatGatheringService,
+    private gatherer: GeneralDataGathererService,
+    private mapper: MapService) { }
 
   @ViewChild(SelectedAnonComponent) selectedAnonComponent: SelectedAnonComponent;
   @ViewChild(ChatComponent) chatComponent: ChatComponent;
@@ -72,7 +70,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     this.Auth.userProfile$.subscribe((data: any) => {
       this.profile = data
     });
-    this.subject = this.mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
+    this.subject = this.mapper.mapBaseClient(await this.ClientService.getBasicClientByEmail(this.profile.email).toPromise());
     this.adminSenderMeta =
     {
       clientID: this.subject.clientID,
@@ -95,16 +93,16 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
 
 
     // Boolean subscribes
-    this.ChatService.gettingAllChats.subscribe((status: boolean) => {
+    this.ChatGatheringServiceService.gettingAllChats.subscribe((status: boolean) => {
       this.gettingAllChats = status;
     });
-    this.ChatService.softGettingAllChats.subscribe((status: boolean) => {
+    this.ChatGatheringServiceService.softGettingAllChats.subscribe((status: boolean) => {
       this.softGettingAllChats = status;
     });
 
     /* -- Data subscribes -- */
     // All chats
-    this.ChatService.allChats.subscribe((historyArray: Array<MessageHistory>) => {
+    this.ChatGatheringServiceService.allChats.subscribe((historyArray: Array<MessageHistory>) => {
       // If the auth profile email is Santapone's
       if(this.profile.email == OrganizerEmailConstants.SANTAPONE)
       {
@@ -131,13 +129,13 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     });
     await this.gatherer.gatherAllEvents();
     await this.gatherer.gatherAllAssignmentStatuses();
-    await this.ChatService.gatherAllChats(this.subject.clientID, false);
+    await this.ChatGatheringServiceService.gatherAllChats(this.subject.clientID, false);
 
     this.initializing = false;
 
   }
   ngOnDestroy(): void {
-    this.ChatService.clearAllChats();
+    this.ChatGatheringServiceService.clearAllChats();
   }
   public async hideWindow()
   {
@@ -170,7 +168,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     // If the updater variable is true, refresh on clicking away
     if(this.updateOnClickaway)
     {
-      await this.ChatService.gatherAllChats(this.subject.clientID, true)
+      await this.ChatGatheringServiceService.gatherAllChats(this.subject.clientID, true)
       this.updateOnClickaway = false;
     }
 
@@ -182,7 +180,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   public async updateChats(isSoftUpdate: boolean = false)
   {
     this.updateOnClickaway = true;
-    await this.ChatService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
+    await this.ChatGatheringServiceService.gatherAllChats(this.subject.clientID ,isSoftUpdate);
   }
   public async updateSpecificChat(historyEvent: MessageHistory)
   {
@@ -217,7 +215,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
   }
   public async manualRefresh(isSoftUpdate: boolean = false)
   {
-    await this.ChatService.gatherAllChats(this.subject.clientID, isSoftUpdate);
+    await this.ChatGatheringServiceService.gatherAllChats(this.subject.clientID, isSoftUpdate);
   }
   public filterRelatedChats() : Array<MessageHistory>
   {

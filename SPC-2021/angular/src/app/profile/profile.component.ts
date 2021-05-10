@@ -1,18 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ProfileApiService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from '../services/santa-api.service';
-import { MapService } from '../services/mapper.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MapService } from '../services/utility services/mapper.service';
 import { AuthService } from '../auth/auth.service';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
-import { ProfileService } from '../services/profile.service';
-import { MessageApiResponse, MessageApiReadAllResponse } from 'src/classes/responseTypes';
-import { ContactPanelComponent } from '../shared/contact-panel/contact-panel.component';
-import { GathererService } from '../services/gatherer.service';
 import { EventType } from 'src/classes/eventType';
-import { InputControlComponent } from '../shared/input-control/input-control.component';
-import { SurveyResponse, Survey } from 'src/classes/survey';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Survey } from 'src/classes/survey';
 import { ChatComponent } from '../shared/chat/chat.component';
+import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
+import { ProfileService } from '../services/api services/profile.service';
+import { ProfileGatheringService } from '../services/gathering services/profile-gathering.service';
+import { MessageService } from '../services/api services/message.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,13 +18,10 @@ import { ChatComponent } from '../shared/chat/chat.component';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder,
-    public profileService: ProfileService,
-    public ProfileApiService: ProfileApiService,
-    public gatherer: GathererService,
-    public SantaApiGet: SantaApiGetService,
-    public SantaApiPost: SantaApiPostService,
-    public SantaApiPut: SantaApiPutService,
+  constructor(private ProfileGathererService: ProfileGatheringService, 
+    private ProfileService: ProfileService,
+    private MessageService: MessageService,
+    public gatherer: GeneralDataGathererService,
     public auth: AuthService,
     public ApiMapper: MapService) { }
 
@@ -64,39 +58,39 @@ export class ProfileComponent implements OnInit {
 
   public async ngOnInit() {
     // Boolean subscribes
-    this.profileService.gettingClientID.subscribe((status: boolean) => {
+    this.ProfileGathererService.gettingClientID.subscribe((status: boolean) => {
       this.gettingClientID = status;
     });
-    this.profileService.gettingProfile.subscribe((status: boolean) => {
+    this.ProfileGathererService.gettingProfile.subscribe((status: boolean) => {
       this.gettingProfile = status;
     });
-    this.profileService.gettingGeneralHistory.subscribe((status: boolean) => {
+    this.ProfileGathererService.gettingGeneralHistory.subscribe((status: boolean) => {
       this.gettingGeneralHistory = status;
     });
-    this.profileService.gettingUnloadedChatHistories.subscribe((status: boolean) => {
+    this.ProfileGathererService.gettingUnloadedChatHistories.subscribe((status: boolean) => {
       this.gettingAllHistories = status;
     });
-    this.profileService.gettingAssignments.subscribe((status: boolean) => {
+    this.ProfileGathererService.gettingAssignments.subscribe((status: boolean) => {
       this.gettingAssignments = status;
     });
 
     // ClientID subscribe
-    this.profileService.clientID.subscribe((id: string) => {
+    this.ProfileGathererService.clientID.subscribe((id: string) => {
       this.clientID = id;
     });
 
     // Profile subscribe
-    this.profileService.profile.subscribe((profile: Profile) => {
+    this.ProfileGathererService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
 
     // Profile Assignment subscribe
-    this.profileService.profileAssignments.subscribe((assignments: Array<ProfileAssignment>) => {
+    this.ProfileGathererService.profileAssignments.subscribe((assignments: Array<ProfileAssignment>) => {
       this.profile.assignments = assignments;
     });
 
     // Assignment status subscribe
-    this.profileService.profile.subscribe((profile: Profile) => {
+    this.ProfileGathererService.profile.subscribe((profile: Profile) => {
       this.profile = profile;
     });
 
@@ -106,12 +100,12 @@ export class ProfileComponent implements OnInit {
     });
 
     // Chat histories subscribe
-    this.profileService.unloadedChatHistories.subscribe((histories: Array<MessageHistory>) => {
+    this.ProfileGathererService.unloadedChatHistories.subscribe((histories: Array<MessageHistory>) => {
       this.histories = histories;
     });
 
     // General history subscribe
-    this.profileService.generalHistory.subscribe((generalHistory: MessageHistory) => {
+    this.ProfileGathererService.generalHistory.subscribe((generalHistory: MessageHistory) => {
       this.generalHistory = generalHistory;
     });
 
@@ -123,20 +117,20 @@ export class ProfileComponent implements OnInit {
 
 
     this.initializing =  true;
-    await this.profileService.getClientIDFromEmail(this.authProfile.email).catch(err => {console.log(err)});
-    await this.profileService.getProfileByID(this.clientID);
+    await this.ProfileGathererService.getClientIDFromEmail(this.authProfile.email).catch(err => {console.log(err)});
+    await this.ProfileGathererService.getProfileByID(this.clientID);
     await this.gatherer.gatherAllSurveys();
     await this.gatherer.gatherAllAssignmentStatuses();
 
     this.gettingAssignments = true;
-    this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
+    this.ProfileService.getProfileAssignments(this.clientID).subscribe(async (res) => {
       let assignmentArray: Array<ProfileAssignment> = [];
       for(let i = 0; i < res.length; i++)
       {
         assignmentArray.push(this.ApiMapper.mapProfileAssignment(res[i]))
       };
       this.profile.assignments = assignmentArray;
-      await this.profileService.getUnloadedHistories(this.clientID);
+      await this.ProfileGathererService.getUnloadedHistories(this.clientID);
       this.gettingAssignments = false;
     }, err => {
       console.group();
@@ -145,7 +139,7 @@ export class ProfileComponent implements OnInit {
       this.gettingAssignments = false;
     });
     this.gettingGeneralHistory = true;
-    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.clientID ,this.profile.clientID, null).subscribe((res) => {
+    this.MessageService.getClientMessageHistoryBySubjectIDAndXrefID(this.clientID ,this.profile.clientID, null).subscribe((res) => {
       this.generalHistory = this.ApiMapper.mapMessageHistory(res);
       this.gettingGeneralHistory = false;
     }, err => {
@@ -184,14 +178,14 @@ export class ProfileComponent implements OnInit {
     this.gettingAllHistories = !isSoftUpdate;
 
     // Gets all the profile assignments
-    this.ProfileApiService.getProfileAssignments(this.clientID).subscribe(async (res) => {
+    this.ProfileService.getProfileAssignments(this.clientID).subscribe(async (res) => {
       let assignmentArray: Array<ProfileAssignment> = [];
       for(let i = 0; i < res.length; i++)
       {
         assignmentArray.push(this.ApiMapper.mapProfileAssignment(res[i]))
       };
       this.profile.assignments = assignmentArray;
-      await this.profileService.getUnloadedHistories(this.clientID, true);
+      await this.ProfileGathererService.getUnloadedHistories(this.clientID, true);
       this.gettingAllHistories = false;
       this.refreshingHistories = false;
     }, err => {
@@ -201,6 +195,6 @@ export class ProfileComponent implements OnInit {
       this.gettingAssignments = false;
     });
 
-    await this.profileService.gatherGeneralHistory(this.clientID, this.profile.clientID, true);
+    await this.ProfileGathererService.gatherGeneralHistory(this.clientID, this.profile.clientID, true);
   }
 }

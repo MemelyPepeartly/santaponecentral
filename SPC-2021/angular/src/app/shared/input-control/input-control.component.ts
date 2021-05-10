@@ -1,13 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/responseTypes';
-import { BaseClient, Client } from 'src/classes/client';
+import { FormControl, Validators } from '@angular/forms';
+import { ChatInfoContainer } from 'src/classes/message';
+import { BaseClient } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
-import { MapService } from 'src/app/services/mapper.service';
-import { EventType } from 'src/classes/eventType';
+import { MapService } from 'src/app/services/utility services/mapper.service';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { AddMessageRequest } from 'src/classes/request-types';
 
 
 @Component({
@@ -17,9 +16,9 @@ import { EventType } from 'src/classes/eventType';
 })
 export class InputControlComponent implements OnInit {
 
-  constructor(public Auth: AuthService, public SantaApiGet: SantaApiGetService, public Mapper: MapService) { }
+  constructor(public Auth: AuthService, public ClientService: ClientService, public Mapper: MapService) { }
 
-  @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
+  @Output() sendClicked: EventEmitter<AddMessageRequest> = new EventEmitter<AddMessageRequest>();
   @Output() readAllAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() displayPinnedAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() timeZoneAction: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -43,14 +42,14 @@ export class InputControlComponent implements OnInit {
       this.isAdmin = admin;
       if(this.isAdmin)
       {
-        this.adminClient = this.Mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
+        this.adminClient = this.Mapper.mapBaseClient(await this.ClientService.getBasicClientByEmail(this.profile.email).toPromise());
       }
     });
   }
   public emitMessage(message: string)
   {
 
-    let newMessage: MessageApiResponse =
+    let newMessage: AddMessageRequest =
     {
       messageSenderClientID: this.chatInfoContainer.messageSenderID,
       messageRecieverClientID: this.chatInfoContainer.messageRecieverID,

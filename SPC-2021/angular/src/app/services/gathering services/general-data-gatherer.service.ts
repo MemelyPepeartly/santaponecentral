@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
-import { SantaApiGetService, YuleLogService } from './santa-api.service';
-import { MapService } from './mapper.service';
-import { AssignmentStatus, Client, HQClient } from 'src/classes/client';
+import { MapService } from '../utility services/mapper.service';
+import { AssignmentStatus, Client, HQClient, StrippedClient } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { Survey, Question } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Status } from 'src/classes/status';
 import { Message } from 'src/classes/message';
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
+import { ClientService } from '../api services/client.service';
+import { EventService } from '../api services/event.service';
+import { SurveyService } from '../api services/survey.service';
+import { SharkTankService } from '../api services/shark-tank.service';
+import { TagService } from '../api services/tag.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GathererService {
+export class GeneralDataGathererService {
 
-  constructor(private SantaApiGet: SantaApiGetService, private YuleLogService: YuleLogService, private ApiMapper: MapService) { }
+  constructor(private ClientService: ClientService,
+    private EventService: EventService,
+    private SurveyService: SurveyService,
+    private SharkTankService: SharkTankService,
+    private TagService: TagService,
+    private ApiMapper: MapService) { }
 
   public onSelectedClient: boolean = false;
 
@@ -93,7 +102,6 @@ export class GathererService {
   }
 
   /* BEHAVIOR SUBJECTS FOR DATA */
-  private _allClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([]);
   private _allTruncatedClients: BehaviorSubject<Array<Client>>= new BehaviorSubject([]);
   private _allHQClients: BehaviorSubject<Array<HQClient>>= new BehaviorSubject([]);
   private _allTags: BehaviorSubject<Array<Tag>> = new BehaviorSubject([]);
@@ -105,17 +113,6 @@ export class GathererService {
   private _allAssignmentStatuses: BehaviorSubject<Array<AssignmentStatus>> = new BehaviorSubject([]);
   private _allCategories: BehaviorSubject<Array<Category>> = new BehaviorSubject([]);
   private _allYuleLogs: BehaviorSubject<Array<YuleLog>> = new BehaviorSubject([]);
-
-
-
-  get allClients()
-  {
-    return this._allClients.asObservable();
-  }
-  private updateAllClient(clientArray: Array<Client>)
-  {
-    this._allClients.next(clientArray);
-  }
 
   get allTruncatedClients()
   {
@@ -217,27 +214,6 @@ export class GathererService {
   }
 
   /* GATHERING METHODS */
-  public async gatherAllClients()
-  {
-    this._gatheringAllClients.next(true);
-
-    let clientList: Array<Client> = []
-
-    var res = await this.SantaApiGet.getAllClients().toPromise().catch(err => {
-      console.group()
-      console.log("Something went wrong gathering all clients in the gatherer");
-      console.log(err);
-      console.groupEnd();
-    });
-
-
-    for(let i = 0; i < res.length; i++)
-    {
-      clientList.push(this.ApiMapper.mapClient(res[i]));
-    }
-    this.updateAllClient(clientList);
-    this._gatheringAllClients.next(false);
-  }
 
   public async gatherAllTruncatedClients()
   {
@@ -245,7 +221,7 @@ export class GathererService {
 
     let clientList: Array<Client> = []
 
-    var res = await this.SantaApiGet.getAllTruncatedClients().toPromise().catch(err => {
+    let res: any = await this.ClientService.getAllTruncatedClients().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all clients in the gatherer");
       console.log(err);
@@ -267,7 +243,7 @@ export class GathererService {
 
     let clientList: Array<HQClient> = []
 
-    var res = await this.SantaApiGet.getAllHQClients().toPromise().catch(err => {
+    let res: any = await this.ClientService.getAllHQClients().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all clients in the gatherer");
       console.log(err);
@@ -289,7 +265,7 @@ export class GathererService {
     this.updateAllTags([])
     let tagList: Array<Tag> = []
 
-    var res = await this.SantaApiGet.getAllTags().toPromise().catch(err => {
+    let res: any = await this.TagService.getAllTags().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all tags in the gatherer");
       console.log(err);
@@ -309,7 +285,7 @@ export class GathererService {
     this.updateAllSurveys([]);
     let surveyList: Array<Survey> = []
 
-    var res = await this.SantaApiGet.getAllSurveys().toPromise().catch(err => {
+    var res = await this.SurveyService.getAllSurveys().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all surveys in the gatherer");
       console.log(err);
@@ -329,7 +305,7 @@ export class GathererService {
     this.updateAllQuestions([]);
     let questionList: Array<Question> = []
 
-    var res = await this.SantaApiGet.getAllSurveyQuestions().toPromise().catch(err => {
+    var res = await this.SurveyService.getAllSurveyQuestions().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all questions in the gatherer");
       console.log(err);
@@ -349,7 +325,7 @@ export class GathererService {
     this.updateAllEvents([])
     let eventList: Array<EventType> = []
 
-    var res = await this.SantaApiGet.getAllEvents().toPromise().catch(err => {
+    var res = await this.EventService.getAllEvents().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all events in the gatherer");
       console.log(err);
@@ -369,7 +345,7 @@ export class GathererService {
     this.updateAllStatuses([])
     let statusList: Array<Status> = []
 
-    var res = await this.SantaApiGet.getAllStatuses().toPromise().catch(err => {
+    let res: any =  await this.ClientService.getAllStatuses().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all statuses in the gatherer");
       console.log(err);
@@ -383,33 +359,13 @@ export class GathererService {
     this.updateAllStatuses(statusList);
     this._gatheringAllStatuses.next(false);
   }
-  public async gatherAllMessages()
-  {
-    this._gatheringAllMessages.next(true);
-    this.updateAllMessages([])
-    let messageList: Array<Message> = []
-
-    var res = await this.SantaApiGet.getAllMessages().toPromise().catch(err => {
-      console.group()
-      console.log("Something went wrong gathering all messages in the gatherer");
-      console.log(err);
-      console.groupEnd();;
-    });
-
-    for(let i = 0; i < res.length; i++)
-    {
-      messageList.push(this.ApiMapper.mapMessage(res[i]));
-    }
-    this.updateAllMessages(messageList);
-    this._gatheringAllMessages.next(false);
-  }
   public async gatherAllAssignmentStatuses()
   {
     this._gatheringAllAssignmentsStatuses.next(true);
     this.updateAllAssignmentStatuses([])
     let assignmentStatusList: Array<AssignmentStatus> = []
 
-    var res = await this.SantaApiGet.getAllAssignmentStatuses().toPromise().catch(err => {
+    let res: any = await this.ClientService.getAllAssignmentStatuses().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all assignment statuses in the gatherer");
       console.log(err);
@@ -429,7 +385,7 @@ export class GathererService {
     this.updateAllCategories([])
     let categoryList: Array<Category> = []
 
-    var res = await this.YuleLogService.getAllCategories().toPromise().catch(err => {
+    let res: any = await this.SharkTankService.getAllCategories().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all categories in the gatherer");
       console.log(err);
@@ -449,7 +405,7 @@ export class GathererService {
     this.updateAllYuleLogs([])
     let yuleLogList: Array<YuleLog> = []
 
-    var res = await this.YuleLogService.getAllLogs().toPromise().catch(err => {
+    var res = await this.SharkTankService.getAllLogs().toPromise().catch(err => {
       console.group()
       console.log("Something went wrong gathering all logs in the gatherer");
       console.log(err);
@@ -467,7 +423,6 @@ export class GathererService {
   // Utility methods
   public async allGather()
   {
-    await this.gatherAllClients();
     await this.gatherAllEvents();
     await this.gatherAllQuestions();
     await this.gatherAllSurveys();
@@ -477,7 +432,6 @@ export class GathererService {
   }
   public clearAll()
   {
-    this.updateAllClient([]);
     this.updateAllEvents([]);
     this.updateAllQuestions([]);
     this.updateAllSurveys([]);

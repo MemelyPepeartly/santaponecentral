@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
-import { MissionBoardAPIService } from './santa-api.service';
-import { MissionMapper } from './mapper.service';
+import { MissionMapper } from '../utility services/mapper.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MissionBoardService {
+export class MissionBoardGathererService {
 
-constructor(private missionBoardAPIService: MissionBoardAPIService, private missionMapper: MissionMapper) { }
+  // SANTAHERE Replace with MissionBoardService when we get there
+  constructor(private missionBoardAPIService: any, private missionMapper: MissionMapper) { }
 
   /* STATUS BOOLEAN BEHAVIOR SUBJECTS */
   private _gettingAllBoardEntries: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

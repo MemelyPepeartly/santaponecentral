@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgForm, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Client } from '../../../classes/client';
-import { ClientResponse, SurveyApiResponse, ClientSignupResponse } from '../../../classes/responseTypes'
-import { SantaApiGetService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { EventType } from '../../../classes/eventType';
 import { Status } from '../../../classes/status';
-import { MapService, MapResponse } from '../../services/mapper.service';
+import { MapService, MapResponse } from '../../services/utility services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
-import { CountriesService } from 'src/app/services/countries.service';
+import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { Address } from 'src/classes/address';
-import { GathererService } from 'src/app/services/gatherer.service';
+import { AddSurveyResponseRequest, ClientSignupRequest } from 'src/classes/request-types';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 
 
 @Component({
@@ -22,9 +22,8 @@ import { GathererService } from 'src/app/services/gatherer.service';
 })
 export class SignupFormComponent implements OnInit {
 
-  constructor(public SantaGet: SantaApiGetService,
-    public SantaPost: SantaApiPostService,
-    public gatherer: GathererService,
+  constructor(public ClientService: ClientService,
+    public gatherer: GeneralDataGathererService,
     public mapper: MapService,
     public responseMapper: MapResponse,
     public countryService: CountriesService,
@@ -139,7 +138,7 @@ export class SignupFormComponent implements OnInit {
 
     var awaitingStatusID = this.statuses.find(status => status.statusDescription == StatusConstants.AWAITING);
     // Construction of new client response
-    let newClient: ClientSignupResponse =
+    let newClient: ClientSignupRequest =
     {
       clientStatusID: awaitingStatusID.statusID,
       clientName: this.clientName,
@@ -159,7 +158,7 @@ export class SignupFormComponent implements OnInit {
     var forms = this.surveyForms.toArray()
     // Set client's answers
     forms.forEach((surveyForm: SurveyFormComponent) => {
-      let response = new SurveyApiResponse;
+      let response = new AddSurveyResponseRequest;
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
@@ -175,12 +174,12 @@ export class SignupFormComponent implements OnInit {
           response.responseText = control.value;
         }
         newClient.responses.push(response);
-        response = new SurveyApiResponse();
+        response = new AddSurveyResponseRequest();
       }
     });
 
     // Post client with answers
-    this.SantaPost.postClientSignup(newClient).subscribe((res) => {
+    this.ClientService.postClientSignup(newClient).subscribe((res) => {
       this.clientInfoFormGroup.reset();
       this.clientAddressFormGroup.reset();
 

@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ProfileAssignment, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MapService } from 'src/app/services/mapper.service';
-import { ProfileService } from 'src/app/services/profile.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
-import { AssignmentCSVModel, ExporterService } from 'src/app/services/exporter.service';
+import { ProfileGatheringService } from 'src/app/services/gathering services/profile-gathering.service';
+import { AssignmentCSVModel, ExporterService } from 'src/app/services/utility services/exporter.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -17,9 +16,8 @@ import { AssignmentCSVModel, ExporterService } from 'src/app/services/exporter.s
 export class ControlPanelComponent implements OnInit {
 
   constructor(public ApiMapper: MapService,
-    public SantaApiGet: SantaApiGetService,
     public auth: AuthService,
-    public profileService: ProfileService,
+    public profileService: ProfileGatheringService,
     public exporter: ExporterService) { }
 
   @Input() gettingAllHistories: boolean;

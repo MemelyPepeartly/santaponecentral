@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MissionBoardAPIService } from '../services/santa-api.service';
 import { AuthService } from '../auth/auth.service';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
-import { MissionMapper } from '../services/mapper.service';
-import { MissionBoardService } from '../services/mission-board.service'
+import { MissionBoardGathererService } from '../services/gathering services/mission-board-gatherer.service';
 
 @Component({
   selector: 'app-mission-boards',
@@ -17,9 +15,9 @@ export class MissionBoardsComponent implements OnInit {
   // missionBoardService for centralized data calls
   // missionMapper for mapping to types
   constructor(public auth: AuthService,
-    public missionBoardAPIService: MissionBoardAPIService,
-    public missionBoardService: MissionBoardService,
-    public missionMapper: MissionMapper) { }
+    // SANTAHERE Replace with MissionBoardService when we get there
+    public MissionBoardService: any,
+    public MissionBoardGatheringService: MissionBoardGathererService) { }
 
   public profile: any;
   public isAdmin: boolean;
@@ -50,34 +48,34 @@ export class MissionBoardsComponent implements OnInit {
       this.isHelper = helper;
     });
 
-    this.missionBoardService.gettingAllBoardEntries.subscribe((status: boolean) => {
+    this.MissionBoardGatheringService.gettingAllBoardEntries.subscribe((status: boolean) => {
       this.gettingAllBoardEntries = status;
     });
-    this.missionBoardService.gettingAllEntryTypes.subscribe((status: boolean) => {
+    this.MissionBoardGatheringService.gettingAllEntryTypes.subscribe((status: boolean) => {
       this.gettingAllEntryTypes = status;
     });
-    this.missionBoardService.allBoardEntries.subscribe((boardEntryArray: Array<BoardEntry>) => {
+    this.MissionBoardGatheringService.allBoardEntries.subscribe((boardEntryArray: Array<BoardEntry>) => {
       this.allBoardEntries = boardEntryArray;
     });
-    this.missionBoardService.allEntryTypes.subscribe((entryTypeArray: Array<EntryType>) => {
+    this.MissionBoardGatheringService.allEntryTypes.subscribe((entryTypeArray: Array<EntryType>) => {
       this.allEntryTypes = entryTypeArray;
     });
 
-    await this.missionBoardService.gatherAllBoardEntries();
-    await this.missionBoardService.gatherAllEntryTypes();
+    await this.MissionBoardGatheringService.gatherAllBoardEntries();
+    await this.MissionBoardGatheringService.gatherAllEntryTypes();
   }
   public async hardRefreshEntryList(successfullyPosted: boolean)
   {
     if(successfullyPosted)
     {
-      await this.missionBoardService.gatherAllBoardEntries();
+      await this.MissionBoardGatheringService.gatherAllBoardEntries();
     }
   }
   public async softRefreshEntryList(successfullyPosted: boolean)
   {
     if(successfullyPosted)
     {
-      await this.missionBoardService.gatherAllBoardEntries(true);
+      await this.MissionBoardGatheringService.gatherAllBoardEntries(true);
     }
   }
   public adminTypes() : Array<EntryType>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MapService } from 'src/app/services/mapper.service';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { MapService } from 'src/app/services/utility services/mapper.service';
 import { HQClient, InfoContainer } from 'src/classes/client';
 import { Survey } from 'src/classes/survey';
 
@@ -11,7 +11,7 @@ import { Survey } from 'src/classes/survey';
 })
 export class ClientItemComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService) { }
+  constructor(public ClientService: ClientService, public mapper: MapService) { }
 
   @Input() client: HQClient = new HQClient();
   @Input() allSurveys: Array<Survey> = [];
@@ -47,7 +47,7 @@ export class ClientItemComponent implements OnInit {
     //If the info container isnt filled => Get the info container from the API
     if(this.infoContainer.agentID == undefined)
     {
-      this.infoContainer = this.mapper.mapInfoContainer(await this.SantaApiGet.getInfoContainerByClientID(this.client.clientID).toPromise())
+      this.infoContainer = this.mapper.mapInfoContainer(await this.ClientService.getInfoContainerByClientID(this.client.clientID).toPromise())
     }
     //Else, just show the info container contents. No second API call needed
   }

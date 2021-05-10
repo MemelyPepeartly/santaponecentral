@@ -1,13 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
 import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ProfileService } from 'src/app/services/profile.service';
-import { MessageApiReadResponse } from 'src/classes/responseTypes';
-import { SantaApiGetService, SantaApiPutService } from 'src/app/services/santa-api.service';
-import { MapResponse, MapService } from 'src/app/services/mapper.service';
+import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { SmoothScroll, SMOOTH_SCROLL_OPTIONS } from 'ngx-scrollbar/smooth-scroll';
+import { MessageService } from 'src/app/services/api services/message.service';
+import { EditMessageApiReadRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-contact-panel',
@@ -18,8 +16,7 @@ export class ContactPanelComponent implements OnInit{
 
   constructor(
     protected sanitizer: DomSanitizer,
-    public SantaApiGet: SantaApiGetService,
-    public SantaApiPut: SantaApiPutService,
+    private MessageService: MessageService,
     public responseMapper: MapResponse,
     public ApiMapper: MapService,
     public auth: AuthService) { }
@@ -63,7 +60,7 @@ export class ContactPanelComponent implements OnInit{
     this.refreshingStatusEvent.emit(true);
     this.loadingStatusEvent.emit(true);
 
-    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((historyRes) => {
+    this.MessageService.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((historyRes) => {
       this.messageHistory = this.ApiMapper.mapMessageHistory(historyRes);
       this.refreshingStatusEvent.emit(false);
       this.loadingStatusEvent.emit(false);
@@ -110,7 +107,7 @@ export class ContactPanelComponent implements OnInit{
     }
 
 
-    this.SantaApiGet.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((history) => {
+    this.MessageService.getClientMessageHistoryBySubjectIDAndXrefID(this.chatInfoContainer.conversationClientID, this.chatInfoContainer.messageSenderID, this.chatInfoContainer.relationshipXrefID).subscribe((history) => {
       this.messageHistory = this.ApiMapper.mapMessageHistory(history);
 
       this.historyUpdatedEvent.emit(this.messageHistory);
@@ -131,10 +128,10 @@ export class ContactPanelComponent implements OnInit{
   {
     this.markingRead = true;
 
-    let putMessage = new MessageApiReadResponse();
+    let putMessage = new EditMessageApiReadRequest();
 
     putMessage.isMessageRead = true;
-    let newMessage: Message = this.ApiMapper.mapMessage(await this.SantaApiPut.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);}));
+    let newMessage: Message = this.ApiMapper.mapMessage(await this.MessageService.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);}));
 
     this.markingRead = false;
 
