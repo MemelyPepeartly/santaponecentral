@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MessageService } from 'src/app/services/api services/message.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/request-types';

@@ -10,7 +10,7 @@ import { Survey, Question, SurveyQA } from 'src/classes/survey';
 import { SurveyFormComponent } from '../survey-form/survey-form.component';
 import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { Address } from 'src/classes/address';
-import { ClientSignupRequest, SurveyApiRequest } from 'src/classes/request-types';
+import { AddSurveyResponseRequest, ClientSignupRequest } from 'src/classes/request-types';
 import { ClientService } from 'src/app/services/api services/client.service';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 
@@ -158,7 +158,7 @@ export class SignupFormComponent implements OnInit {
     var forms = this.surveyForms.toArray()
     // Set client's answers
     forms.forEach((surveyForm: SurveyFormComponent) => {
-      let response = new SurveyApiRequest;
+      let response = new AddSurveyResponseRequest;
       for (const field in surveyForm.surveyFormGroup.controls) // 'field' is a string equal to question ID
       {
         var control = surveyForm.surveyFormGroup.get(field); // 'control' is a FormControl
@@ -174,7 +174,7 @@ export class SignupFormComponent implements OnInit {
           response.responseText = control.value;
         }
         newClient.responses.push(response);
-        response = new SurveyApiRequest();
+        response = new AddSurveyResponseRequest();
       }
     });
 

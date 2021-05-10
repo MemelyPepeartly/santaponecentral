@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest } from 'src/classes/request-types';
+import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest } from 'src/classes/request-types';
 import { ClientRequest } from 'node:http';
 
 const endpoint = environment.clientServiceEndpoint;
@@ -83,6 +83,10 @@ export class ClientService
   postClientRecipients(id: string, relationships: ClientRelationshipsRequest): Observable<any> 
   {
     return this.http.post<any>(endpoint + 'Client/' + id + '/Recipients', relationships)
+  }
+  postTagsToClient(clientID: string, clientTagRelationships: AddClientTagRelationshipsRequest): Observable<Client> 
+  {
+    return this.http.post<Client>(endpoint + 'Client/'+ clientID + "/Tags", clientTagRelationships)
   }
   postClientSignup(signup: ClientSignupRequest): Observable<any> {
     return this.http.post<any>(endpoint + 'Client/Signup', signup)

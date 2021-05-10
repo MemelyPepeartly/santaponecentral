@@ -3,7 +3,7 @@ import { Question, SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Client } from 'src/classes/client';
 import { Profile } from 'src/classes/profile';
-import { EditSurveyResponseRequest, SurveyApiRequest } from 'src/classes/request-types';
+import { EditSurveyResponseRequest, AddSurveyResponseRequest } from 'src/classes/request-types';
 import { SurveyService } from 'src/app/services/api services/survey.service';
 
 @Component({
@@ -103,7 +103,7 @@ export class ResponseListComponent implements OnInit {
     else
     {
       // Create a new response and post it
-      let newResponse: SurveyApiRequest =
+      let newResponse: AddSurveyResponseRequest =
       {
         surveyID: this.survey.surveyID,
         clientID: this.clientID,
