@@ -1,14 +1,7 @@
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ChatService } from 'src/app/services/gathering services/chat-gathering.service';
-import { MapService } from 'src/app/services/utility services/mapper.service';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ChatComponent } from 'src/app/shared/chat/chat.component';
-import { ContactPanelComponent } from 'src/app/shared/contact-panel/contact-panel.component';
-import { InputControlComponent } from 'src/app/shared/input-control/input-control.component';
-import { BaseClient, Client } from 'src/classes/client';
+import { BaseClient } from 'src/classes/client';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-related-intelligence',
@@ -17,11 +10,7 @@ import { MessageApiResponse } from 'src/classes/request-types';
 })
 export class RelatedIntelligenceComponent implements OnInit {
 
-  constructor(public SantaApiPost: SantaApiPostService,
-    public SantaApiPut: SantaApiPutService,
-    public SantaApiGet: SantaApiGetService,
-    public mapper: MapService,
-    public ChatService: ChatService) { }
+  constructor() { }
 
   @Input() clientHistories: Array<MessageHistory> = [];
   @Input() adminSenderMeta: ClientMeta = new ClientMeta();
