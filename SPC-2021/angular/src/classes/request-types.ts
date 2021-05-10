@@ -96,7 +96,7 @@ export class QuestionReadabilityResponse
     senderCanView: boolean;
 }
 // Response for making new messages
-export class MessageApiResponse {
+export class AddMessageRequest {
     messageSenderClientID?: string = null;
     messageRecieverClientID?: string = null;
     clientRelationXrefID?: string = null;
@@ -105,11 +105,11 @@ export class MessageApiResponse {
     fromAdmin: boolean;
 }
 //Response for marking messages as read
-export class MessageApiReadResponse {
+export class EditMessageApiReadRequest {
     isMessageRead: boolean;
 }
 //Response for marking a list of messages as read
-export class MessageApiReadAllResponse {
+export class EditMessageApiReadAllRequest {
     messages: Array<string> = [];
 }
 /* MISSION BOARD RESPONSE TYPES */
