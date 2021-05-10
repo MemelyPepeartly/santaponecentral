@@ -23,7 +23,7 @@ export class AdminControlComponent implements OnInit
     public SantaApiPut: SantaApiPutService,
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
-    public gatherer: GathererService,
+    private gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   public profile: any;

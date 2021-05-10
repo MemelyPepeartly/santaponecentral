@@ -1,12 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Client, HQClient, PossiblePairingChoices,  } from 'src/classes/client';
+import { HQClient, PossiblePairingChoices,  } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from 'src/app/shared/constants/tagConstants.enum'
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
-import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/request-types';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
+import { SearchService } from 'src/app/services/api services/search.service';
 
 @Component({
   selector: 'app-auto-assignment',
@@ -14,8 +13,9 @@ import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
   styleUrls: ['./auto-assignment.component.css']
 })
 export class AutoAssignmentComponent implements OnInit {
-  constructor(public gatherer: GathererService,
-    public SantaApiGet: SantaApiGetService,
+  constructor(private gatherer: GeneralDataGathererService,
+    // SANTAHERE replace with SearchService come the time
+    public SearchService: any,
     public mapper: MapService) { }
 
   @Input() allClients: Array<HQClient> = []
@@ -52,7 +52,7 @@ export class AutoAssignmentComponent implements OnInit {
     this.buttonClicked = true;
     this.gettingAssignmentPairings = true;
 
-    var response = await this.SantaApiGet.getAutoAssignmentPairings().toPromise();
+    var response = await this.SearchService.getAutoAssignmentPairings().toPromise();
     this.possiblePairings = [];
     response.forEach((pairing) => {
       this.possiblePairings.push(this.mapper.mapPossiblePairing(pairing));

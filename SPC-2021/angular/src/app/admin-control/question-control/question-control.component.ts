@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
 import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Client } from 'src/classes/client';
 import { Question } from 'src/classes/survey';
 
@@ -19,7 +19,7 @@ export class QuestionControlComponent implements OnInit {
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
     public ResponseMapper: MapResponse,
-    public gatherer: GathererService,
+    private gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allQuestions: Array<Question> = [];

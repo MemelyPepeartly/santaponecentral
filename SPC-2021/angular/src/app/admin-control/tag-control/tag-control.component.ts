@@ -4,7 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
 import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
 import { TagResponse } from 'src/classes/request-types';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { MatChip } from '@angular/material/chips';
 import { Client } from 'src/classes/client';
 
@@ -21,7 +21,7 @@ export class TagControlComponent implements OnInit {
     public SantaApiPost: SantaApiPostService,
     public SantaApiDelete: SantaApiDeleteService,
     public ResponseMapper: MapResponse,
-    public gatherer: GathererService,
+    private gatherer: GeneralDataGathererService,
     public ApiMapper: MapService) { }
 
   @Input() allTags: Array<Tag> = [];
