@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest, ManualAddClientRequest } from 'src/classes/request-types';
+import { AddSelectedAutoAssignmentsRequest, ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest, ManualAddClientRequest } from 'src/classes/request-types';
 
 const endpoint = environment.clientServiceEndpoint;
 
@@ -85,9 +85,15 @@ export class ClientService
   {
     return this.http.post<any>(endpoint + 'Client/' + id + '/Recipients', relationships)
   }
-  postClientSignup(signup: ClientSignupRequest): Observable<any> {
+  postClientSignup(signup: ClientSignupRequest): Observable<any> 
+  {
     return this.http.post<any>(endpoint + 'Client/Signup', signup)
   }
+  postSelectedAutoAssignments(assignmentPairingResponse: AddSelectedAutoAssignmentsRequest): Observable<any> 
+  {
+    return this.http.post(endpoint + 'Client/AutoAssignments', assignmentPairingResponse);
+  }
+
   /* PUT */
   putClientAddress(id: string, updatedClient: EditClientAddressRequest): Observable<any> 
   {

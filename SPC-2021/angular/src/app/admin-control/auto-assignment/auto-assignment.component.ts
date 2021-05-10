@@ -14,8 +14,7 @@ import { SearchService } from 'src/app/services/api services/search.service';
 })
 export class AutoAssignmentComponent implements OnInit {
   constructor(private gatherer: GeneralDataGathererService,
-    // SANTAHERE replace with SearchService come the time
-    public SearchService: any,
+    public SearchService: SearchService,
     public mapper: MapService) { }
 
   @Input() allClients: Array<HQClient> = []

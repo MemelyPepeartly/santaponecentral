@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
 import { AddOrEditTagRequest } from 'src/classes/request-types';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { TagService } from 'src/app/services/api services/tag.service';
 
 @Component({
   selector: 'app-tag-control',
@@ -12,8 +13,7 @@ import { GeneralDataGathererService } from 'src/app/services/gathering services/
 })
 export class TagControlComponent implements OnInit {
 
-  // SANTAHERE Replace with TagService come the time
-  constructor(private TagService: any,
+  constructor(private TagService: TagService,
     private formBuilder: FormBuilder,
     public ResponseMapper: MapResponse,
     private gatherer: GeneralDataGathererService,

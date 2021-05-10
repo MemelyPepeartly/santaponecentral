@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SurveySignupApiRequest, EditSurveyResponseRequest } from 'src/classes/request-types';
+import { SurveySignupApiRequest, EditSurveyResponseRequest, NewSurveyQuestionXrefsRequest } from 'src/classes/request-types';
 
 const endpoint = environment.surveyServiceEndpoint;
 
@@ -50,6 +50,10 @@ export class SurveyService
   postSurveyResponse(surveyResponse: SurveySignupApiRequest): Observable<any> 
   {
     return this.http.post(endpoint + 'SurveyResponse', surveyResponse);
+  }
+  postQuestionsToSurvey(surveyID: string, questions: NewSurveyQuestionXrefsRequest): Observable<any> 
+  {
+    return this.http.post(endpoint + 'Survey/' + surveyID + "/SurveyQuestion", questions);
   }
   /* PUT */
   putResponse(surveyResponseID: string, responseModel: EditSurveyResponseRequest): Observable<any> 

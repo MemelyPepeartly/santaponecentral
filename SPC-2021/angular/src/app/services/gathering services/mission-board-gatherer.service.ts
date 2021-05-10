@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
+import { MissionBoardService } from '../api services/mission-board.service';
 import { MissionMapper } from '../utility services/mapper.service';
 
 @Injectable({
@@ -8,8 +9,7 @@ import { MissionMapper } from '../utility services/mapper.service';
 })
 export class MissionBoardGathererService {
 
-  // SANTAHERE Replace with MissionBoardService when we get there
-  constructor(private missionBoardAPIService: any, private missionMapper: MissionMapper) { }
+  constructor(private MissionBoardService: MissionBoardService, private missionMapper: MissionMapper) { }
 
   /* STATUS BOOLEAN BEHAVIOR SUBJECTS */
   private _gettingAllBoardEntries: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -53,7 +53,7 @@ export class MissionBoardGathererService {
     }
     let boardEntryArray: Array<BoardEntry> = [];
 
-    var data = await this.missionBoardAPIService.getAllBoardEntries().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});
+    var data = await this.MissionBoardService.getAllBoardEntries().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});
 
     for(let i = 0; i < data.length; i++)
     {
@@ -71,7 +71,7 @@ export class MissionBoardGathererService {
     }
     let entryTypeArray: Array<EntryType> = [];
 
-    var data = await this.missionBoardAPIService.getAllEntryTypes().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});
+    var data = await this.MissionBoardService.getAllEntryTypes().toPromise().catch(err => {console.log(err); this._gettingAllBoardEntries.next(false);});
 
     for(let i = 0; i < data.length; i++)
     {

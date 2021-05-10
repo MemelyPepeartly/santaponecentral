@@ -63,7 +63,7 @@ export class AddSurveyResponseRequest {
     responseText: string;
 }
 // Used for posting multiple questions to a survey relationship to add questions to a survey
-export class SurveyQuestionXrefsResponseModel {
+export class NewSurveyQuestionXrefsRequest {
   questions: Array<string> = [];
 }
 export class EditSurveyResponseRequest {
@@ -169,7 +169,7 @@ export class Pairing {
   senderAgentID: string;
   assignmentClientID: string
 }
-export class SelectedAutoAssignmentsResponse
+export class AddSelectedAutoAssignmentsRequest
 {
   pairings: Array<Pairing> = [];
 }

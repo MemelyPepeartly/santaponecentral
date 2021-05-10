@@ -13,7 +13,6 @@ import { InputControlComponent } from '../input-control/input-control.component'
 })
 export class ChatComponent implements OnInit, OnChanges {
 
-  // SANTAHERE Replace with MessageService once we get here
   constructor(public mapper: MapService, private MessageService: MessageService) { }
 
   @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();

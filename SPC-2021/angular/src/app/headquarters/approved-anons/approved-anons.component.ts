@@ -13,7 +13,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public mapper: MapService, private gatherer: GeneralDataGathererService) { }
+  constructor(public mapper: MapService, public gatherer: GeneralDataGathererService) { }
 
   @Output() clickedClient: EventEmitter<HQClient> = new EventEmitter();
 
