@@ -113,37 +113,37 @@ export class EditMessageApiReadAllRequest {
     messages: Array<string> = [];
 }
 /* MISSION BOARD RESPONSE TYPES */
-export class NewBoardEntryResponse {
+export class NewBoardEntryRequest {
   entryTypeID: string;
   threadNumber: number;
   postNumber: number;
   postDescription: string;
 }
-export class EditBoardEntryPostNumberResponse {
+export class EditBoardEntryPostNumberRequest {
   postNumber: number;
 }
-export class EditBoardEntryThreadNumberResponse {
+export class EditBoardEntryThreadNumberRequest {
   threadNumber: number;
 }
-export class EditBoardEntryPostDescriptionResponse {
+export class EditBoardEntryPostDescriptionRequest {
   postDescription: string;
 }
-export class EditBoardEntryTypeResponse {
+export class EditBoardEntryTypeRequest {
   entryTypeID: string;
 }
-export class NewEntryTypeResponse {
+export class NewEntryTypeRequest {
   entryTypeName: string;
   entryTypeDescription: string;
   adminOnly: boolean;
 }
-export class EditEntryTypeName {
+export class EditEntryTypeNameRequest {
   entryTypeName: string;
 }
-export class EditEntryTypeDescription {
+export class EditEntryTypeDescriptionRequest {
   entryTypeDescription: string;
 }
 /* RESPONSE TYPES FOR ASSIGNMENT STATUSES */
-export class NewAssignmentStatusResponse {
+export class NewAssignmentStatusRequest {
   assignmentStatusName: string;
   assignmentStatusDescription: string;
 }
