@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
-import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
 import { MessageApiResponse } from 'src/classes/request-types';
-import { SantaApiPostService } from 'src/app/services/santa-api.service';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
+import { ProfileGatheringService } from 'src/app/services/gathering services/profile-gathering.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { MessageService } from 'src/app/services/api services/message.service';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -16,9 +15,9 @@ import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentSt
 })
 export class SelectedRecipientComponent implements OnInit {
 
-  constructor(public profileService: ProfileService,
-    public gatherer: GathererService,
-    public SantaApiPost: SantaApiPostService) { }
+  constructor(public gatherer: GeneralDataGathererService,
+    // SANTAHERE Replace with MessageService come the time
+    public MessageService: any) { }
 
   @Input() selectedRecipient: ProfileAssignment;
   @Input() surveys: Array<Survey>;
@@ -59,7 +58,7 @@ export class SelectedRecipientComponent implements OnInit {
         messageContent: this.profile.clientNickname + ' has set this assignment from "' + oldAssignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
         fromAdmin: false,
       };
-      await this.SantaApiPost.postMessage(newMessage).toPromise();
+      await this.MessageService.postMessage(newMessage).toPromise();
     }
   }
   public setClickawayLock(event)
