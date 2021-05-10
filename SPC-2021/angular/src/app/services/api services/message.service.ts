@@ -6,12 +6,6 @@ import { AddMessageRequest, EditMessageApiReadAllRequest, EditMessageApiReadRequ
 
 const endpoint = environment.profileServiceEndpoint;
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json'
-  })
-};
-
 @Injectable({
   providedIn: 'root'
 })

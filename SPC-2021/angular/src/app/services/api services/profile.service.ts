@@ -6,12 +6,6 @@ import { EditClientAddressRequest, EditProfileAssignmentStatusRequest } from 'sr
 
 const endpoint = environment.profileServiceEndpoint;
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json'
-  })
-};
-
 @Injectable({
   providedIn: 'root'
 })

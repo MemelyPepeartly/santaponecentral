@@ -6,12 +6,6 @@ import { SurveySignupApiRequest, EditSurveyResponseRequest } from 'src/classes/r
 
 const endpoint = environment.surveyServiceEndpoint;
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json'
-  })
-};
-
 @Injectable({
   providedIn: 'root'
 })
