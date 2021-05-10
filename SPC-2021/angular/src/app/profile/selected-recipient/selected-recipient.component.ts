@@ -2,11 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { AssignmentStatus } from 'src/classes/client';
-import { MessageApiResponse } from 'src/classes/request-types';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
-import { ProfileGatheringService } from 'src/app/services/gathering services/profile-gathering.service';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { MessageService } from 'src/app/services/api services/message.service';
+import { AddMessageRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -16,8 +15,7 @@ import { MessageService } from 'src/app/services/api services/message.service';
 export class SelectedRecipientComponent implements OnInit {
 
   constructor(public gatherer: GeneralDataGathererService,
-    // SANTAHERE Replace with MessageService come the time
-    public MessageService: any) { }
+    private MessageService: MessageService) { }
 
   @Input() selectedRecipient: ProfileAssignment;
   @Input() surveys: Array<Survey>;
@@ -49,7 +47,7 @@ export class SelectedRecipientComponent implements OnInit {
     this.actionTaken.emit(true);
     if(newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.SHIPPING || newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.COMPLETED)
     {
-      let newMessage: MessageApiResponse =
+      let newMessage: AddMessageRequest =
       {
         messageSenderClientID: this.profile.clientID,
         messageRecieverClientID: null,

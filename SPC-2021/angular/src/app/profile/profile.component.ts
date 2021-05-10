@@ -5,11 +5,11 @@ import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
 import { Survey } from 'src/classes/survey';
-import { FormBuilder } from '@angular/forms';
 import { ChatComponent } from '../shared/chat/chat.component';
 import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
 import { ProfileService } from '../services/api services/profile.service';
 import { ProfileGatheringService } from '../services/gathering services/profile-gathering.service';
+import { MessageService } from '../services/api services/message.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,8 +20,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(private ProfileGathererService: ProfileGatheringService, 
     private ProfileService: ProfileService,
-    // SANTAHERE Replace with MessageService once we get there
-    private MessageService: any,
+    private MessageService: MessageService,
     public gatherer: GeneralDataGathererService,
     public auth: AuthService,
     public ApiMapper: MapService) { }

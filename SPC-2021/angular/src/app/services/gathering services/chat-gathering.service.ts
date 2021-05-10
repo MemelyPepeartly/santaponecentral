@@ -9,8 +9,7 @@ import { MessageService } from '../api services/message.service';
 })
 export class ChatGatheringService {
 
-  // SANTAHERE Replace with MessageService come the time
-  constructor(private MessageService: any, private ApiMapper: MapService) { }
+  constructor(private MessageService: MessageService, private ApiMapper: MapService) { }
 
   private _gettingAllChats: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingAllChats()

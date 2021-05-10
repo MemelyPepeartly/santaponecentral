@@ -16,8 +16,7 @@ export class ContactPanelComponent implements OnInit{
 
   constructor(
     protected sanitizer: DomSanitizer,
-    // SANTAHERE Replace with MessageService here once we get that in
-    public MessageService: any,
+    private MessageService: MessageService,
     public responseMapper: MapResponse,
     public ApiMapper: MapService,
     public auth: AuthService) { }

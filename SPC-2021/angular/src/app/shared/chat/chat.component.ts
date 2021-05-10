@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { MessageService } from 'src/app/services/api services/message.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/request-types';
+import { AddMessageRequest } from 'src/classes/request-types';
 import { ContactPanelComponent } from '../contact-panel/contact-panel.component';
 import { InputControlComponent } from '../input-control/input-control.component';
 
@@ -13,7 +14,7 @@ import { InputControlComponent } from '../input-control/input-control.component'
 export class ChatComponent implements OnInit, OnChanges {
 
   // SANTAHERE Replace with MessageService once we get here
-  constructor(public mapper: MapService, private MessageService: any) { }
+  constructor(public mapper: MapService, private MessageService: MessageService) { }
 
   @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() inputDisabled: boolean;
@@ -24,7 +25,7 @@ export class ChatComponent implements OnInit, OnChanges {
 
   @Output() historyUpdatedEvent: EventEmitter<MessageHistory> = new EventEmitter<MessageHistory>();
   @Output() manualRefreshClickedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() sendClickedEvent: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
+  @Output() sendClickedEvent: EventEmitter<AddMessageRequest> = new EventEmitter<AddMessageRequest>();
   @Output() readAllClickedEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() openAgentControlEvent: EventEmitter<ClientMeta> = new EventEmitter<ClientMeta>();
 
@@ -47,7 +48,7 @@ export class ChatComponent implements OnInit, OnChanges {
   {
     this.manualRefreshClickedEvent.emit(event);
   }
-  emitSend(messageApiResponseEvent: MessageApiResponse)
+  emitSend(messageApiResponseEvent: AddMessageRequest)
   {
     this.sendClickedEvent.emit(messageApiResponseEvent);
     this.send(messageApiResponseEvent);
@@ -77,7 +78,7 @@ export class ChatComponent implements OnInit, OnChanges {
   {
     setTimeout(()=> this.showChatLoading = loadEvent ,0);
   }
-  send(messageApiResponseEvent: MessageApiResponse)
+  send(messageApiResponseEvent: AddMessageRequest)
   {
     this.showChatActionProgressBar = true;
     this.inputDisabled = true;

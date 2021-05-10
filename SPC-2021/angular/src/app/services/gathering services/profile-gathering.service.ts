@@ -10,9 +10,8 @@ import { MessageService } from '../api services/message.service';
   providedIn: 'root'
 })
 export class ProfileGatheringService {
-
-  // SANTAHERE Replace with MessageService when we get there
-  constructor(private ProfileApiService: ProfileService, private MessageService: any, private ApiMapper: MapService) { }
+  
+  constructor(private ProfileApiService: ProfileService, private MessageService: MessageService, private ApiMapper: MapService) { }
 
   private _gettingClientID: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   get gettingClientID()
