@@ -4,8 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseClient, Client, HQClient, InfoContainer, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
-import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest } from 'src/classes/request-types';
-import { ClientRequest } from 'node:http';
+import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, ClientSignupRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientIsAdminRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest, EditProfileAssignmentStatusRequest, ManualAddClientRequest } from 'src/classes/request-types';
 
 const endpoint = environment.clientServiceEndpoint;
 
@@ -78,7 +77,7 @@ export class ClientService
     return this.http.get<any>(endpoint + 'AssignmentStatus/' + assignmentStatusID);
   }
   /* POST */
-  postClient(client: ClientRequest): Observable<Client> 
+  postClient(client: ManualAddClientRequest): Observable<Client> 
   {
     return this.http.post<Client>(endpoint + 'Client', client)
   }

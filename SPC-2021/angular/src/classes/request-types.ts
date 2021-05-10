@@ -1,4 +1,4 @@
-export class ClientRequest {
+export class ManualAddClientRequest {
     clientStatusID: string;
     clientName: string;
     clientEmail: string;
@@ -151,7 +151,7 @@ export class EditProfileAssignmentStatusRequest {
   assignmentStatusID: string;
 }
 /* CATALOGUE */
-export class SearchQueryModelResponse {
+export class SearchQueryModelRequest {
   tags: Array<string> = [];
   statuses: Array<string> = [];
   events: Array<string> = [];
