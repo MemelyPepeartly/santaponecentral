@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AssignmentStatusControllerComponent } from 'src/app/shared/assignment-status-controller/assignment-status-controller.component';
-import { Client, RelationshipMeta } from 'src/classes/client';
+import { AssignmentStatus, Client, RelationshipMeta } from 'src/classes/client';
 import { ProfileAssignment } from 'src/classes/profile';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MapService } from 'src/app/services/utility services/mapper.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { SantaApiDeleteService, SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { Note } from 'src/classes/note';
-import { AddNoteRequest, EditNoteRequest } from 'src/classes/request-types';
-import { NoteService } from 'src/app/services/api services/note.service'
+import { EditNoteResponse, NewNoteResponse } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-note-control',
@@ -12,10 +12,12 @@ import { NoteService } from 'src/app/services/api services/note.service'
 })
 export class NoteControlComponent implements OnInit {
 
-  constructor(
-    private NoteService: NoteService,
-    private formBuilder: FormBuilder,
-    private mapper: MapService) { }
+  constructor(private formBuilder: FormBuilder,
+    public mapper: MapService,
+    public SantaApiGet: SantaApiGetService,
+    public SantaApiPut: SantaApiPutService,
+    public SantaApiPost: SantaApiPostService,
+    public SantaApiDelete: SantaApiDeleteService) { }
 
   @Input() clientID: string;
   @Input() notes: Array<Note> = [];
@@ -100,7 +102,7 @@ export class NoteControlComponent implements OnInit {
   {
     this.deletingNote = true;
 
-    this.NoteService.deleteNote(this.selectedNote.noteID).subscribe((res) => {
+    this.SantaApiDelete.deleteNote(this.selectedNote.noteID).subscribe((res) => {
       this.deletingNote = false;
       this.confirmDelete = false;
       this.showEditingTools = false;
@@ -123,12 +125,12 @@ export class NoteControlComponent implements OnInit {
     this.puttingEditedNote = true;
     this.clickawayLockedEvent.emit(true);
 
-    let response: EditNoteRequest =
+    let response: EditNoteResponse =
     {
       noteSubject: this.selectedNote.noteSubject,
       noteContents: this.noteFormGroup.get(this.getFormControlNameFromNote(this.selectedNote)).value
     };
-    this.NoteService.putNote(this.selectedNote.noteID, response).subscribe((res) => {
+    this.SantaApiPut.putNote(this.selectedNote.noteID, response).subscribe((res) => {
       this.puttingEditedNote = false;
       this.selectedNote = this.mapper.mapNote(res);
       this.clickawayLockedEvent.emit(false);
@@ -147,14 +149,14 @@ export class NoteControlComponent implements OnInit {
     this.postingNewNote = true;
     this.clickawayLockedEvent.emit(true);
 
-    let response: AddNoteRequest =
+    let response: NewNoteResponse =
     {
       clientID: this.clientID,
       noteSubject: this.newNoteSubject,
       noteContents: this.newNoteContents
     };
 
-    this.NoteService.postNewClientNote(response).subscribe((res) => {
+    this.SantaApiPost.postNewClientNote(response).subscribe((res) => {
       this.postingNewNote = false;
       this.addNewNoteToFormGroup(this.mapper.mapNote(res));
       this.newNoteFormGroup.reset();

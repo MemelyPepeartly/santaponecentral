@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Survey, Question } from 'src/classes/survey';
-import { FormBuilder} from '@angular/forms';
-import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { Validators, FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
+import { MapResponse, MapService } from 'src/app/services/mapper.service';
+import { GathererService } from 'src/app/services/gatherer.service';
 import { Client } from 'src/classes/client';
 import { ThrowStmt } from '@angular/compiler';
-import { SurveyQuestionXrefsResponseModel } from 'src/classes/request-types';
-import { SurveyService } from 'src/app/services/api services/survey.service';
+import { SurveyQuestionXrefsResponseModel } from 'src/classes/responseTypes';
 
 @Component({
   selector: 'app-survey-control',
@@ -15,9 +15,13 @@ import { SurveyService } from 'src/app/services/api services/survey.service';
 })
 export class SurveyControlComponent implements OnInit {
 
-  constructor(private SurveyService: SurveyService,
+  constructor(private formBuilder: FormBuilder,
+    public SantaApiGet: SantaApiGetService,
+    public SantaApiPut: SantaApiPutService,
+    public SantaApiPost: SantaApiPostService,
+    public SantaApiDelete: SantaApiDeleteService,
     public ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GathererService,
     public ApiMapper: MapService) { }
 
   @Input() allSurveys: Array<Survey> = []
@@ -49,7 +53,7 @@ export class SurveyControlComponent implements OnInit {
   {
     this.removingQuestion = true;
 
-    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SurveyService.deleteQuestionRelationFromSurvey(this.selectedSurvey.surveyID, question.questionID).toPromise());
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiDelete.deleteQuestionRelationFromSurvey(this.selectedSurvey.surveyID, question.questionID).toPromise());
     await this.gatherer.gatherAllQuestions();
     await this.gatherer.gatherAllSurveys();
 
@@ -73,7 +77,7 @@ export class SurveyControlComponent implements OnInit {
     this.selectedQuestions.forEach((question: Question) => {
       response.questions.push(question.questionID);
     })
-    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SurveyService.postQuestionsToSurvey(this.selectedSurvey.surveyID, response).toPromise());
+    this.selectedSurvey = this.ApiMapper.mapSurvey(await this.SantaApiPost.postQuestionsToSurvey(this.selectedSurvey.surveyID, response).toPromise());
     await this.gatherer.gatherAllSurveys();
 
     this.addingQuestions = false;

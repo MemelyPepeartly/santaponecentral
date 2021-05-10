@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
+import { ProfileService } from 'src/app/services/profile.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus } from 'src/classes/client';
+import { MessageApiResponse } from 'src/classes/responseTypes';
+import { SantaApiPostService } from 'src/app/services/santa-api.service';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { MessageService } from 'src/app/services/api services/message.service';
-import { AddMessageRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-selected-recipient',
@@ -14,8 +16,9 @@ import { AddMessageRequest } from 'src/classes/request-types';
 })
 export class SelectedRecipientComponent implements OnInit {
 
-  constructor(public gatherer: GeneralDataGathererService,
-    private MessageService: MessageService) { }
+  constructor(public profileService: ProfileService,
+    public gatherer: GathererService,
+    public SantaApiPost: SantaApiPostService) { }
 
   @Input() selectedRecipient: ProfileAssignment;
   @Input() surveys: Array<Survey>;
@@ -47,7 +50,7 @@ export class SelectedRecipientComponent implements OnInit {
     this.actionTaken.emit(true);
     if(newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.SHIPPING || newAssignmentStatusEvent.assignmentStatusName == AssignmentStatusConstants.COMPLETED)
     {
-      let newMessage: AddMessageRequest =
+      let newMessage: MessageApiResponse =
       {
         messageSenderClientID: this.profile.clientID,
         messageRecieverClientID: null,
@@ -56,7 +59,7 @@ export class SelectedRecipientComponent implements OnInit {
         messageContent: this.profile.clientNickname + ' has set this assignment from "' + oldAssignmentStatus.assignmentStatusName + '", to "' + newAssignmentStatusEvent.assignmentStatusName + '".',
         fromAdmin: false,
       };
-      await this.MessageService.postMessage(newMessage).toPromise();
+      await this.SantaApiPost.postMessage(newMessage).toPromise();
     }
   }
   public setClickawayLock(event)

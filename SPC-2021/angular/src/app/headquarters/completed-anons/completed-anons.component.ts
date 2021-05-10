@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { HQClient } from 'src/classes/client';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { Client, HQClient } from 'src/classes/client';
+import { Survey, SurveyResponse } from 'src/classes/survey';
 
 @Component({
   selector: 'app-completed-anons',
@@ -10,7 +11,7 @@ import { HQClient } from 'src/classes/client';
 })
 export class CompletedAnonsComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService) { }
+  constructor(public gatherer: GathererService) { }
 
   @Input() completedClients: Array<HQClient> = [];
   @Input() gatheringInfo: boolean;

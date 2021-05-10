@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { MissionBoardService } from 'src/app/services/api services/mission-board.service';
-import { EditBoardEntryPostDescriptionRequest, EditBoardEntryPostNumberRequest, EditBoardEntryThreadNumberRequest, NewBoardEntryRequest } from 'src/classes/request-types';
+import { MissionBoardAPIService } from 'src/app/services/santa-api.service';
+import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/responseTypes';
+import { MissionBoardService } from 'src/app/services/mission-board.service';
 
 @Component({
   selector: 'app-mission-board-table',
@@ -12,8 +13,7 @@ import { EditBoardEntryPostDescriptionRequest, EditBoardEntryPostNumberRequest, 
 export class MissionBoardTableComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-    // SANTAHERE Need to include new service here when we get to that point
-    private MissionBoardService: MissionBoardService) { }
+    private missionBoardAPIService: MissionBoardAPIService) { }
 
   @Input() boardEntries: Array<BoardEntry> = [];
   @Input() allPostNumbers: Array<number>= []
@@ -89,7 +89,7 @@ export class MissionBoardTableComponent implements OnInit {
     this.postingEntry = true;
     this.postSuccess = true;
 
-    let response: NewBoardEntryRequest = new NewBoardEntryRequest();
+    let response: NewBoardEntryResponse = new NewBoardEntryResponse();
 
     response.entryTypeID = this.entryType.entryTypeID;
 
@@ -97,7 +97,7 @@ export class MissionBoardTableComponent implements OnInit {
     response.postNumber = Number(this.boardEntryFormControls.postNumber.value);
     response.postDescription = this.boardEntryFormControls.postDescription.value;
 
-    await this.MissionBoardService.postNewBoardEntry(response).toPromise().catch((err) => {
+    await this.missionBoardAPIService.postNewBoardEntry(response).toPromise().catch((err) => {
       console.log("Something went wrong submitting the entry");
       console.log(err);
       this.postSuccess = false
@@ -112,7 +112,7 @@ export class MissionBoardTableComponent implements OnInit {
     this.deletingEntry = true;
     this.deleteSuccess = true;
 
-    await this.MissionBoardService.deleteBoardEntryByID(entry.boardEntryID).toPromise().catch((err) => {
+    await this.missionBoardAPIService.deleteBoardEntryByID(entry.boardEntryID).toPromise().catch((err) => {
       console.log("Something went wrong deleting the entry");
       console.log(err);
       this.deleteSuccess = false
@@ -138,10 +138,10 @@ export class MissionBoardTableComponent implements OnInit {
     // If thread number was changed
     if(entry.threadNumber != this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).value)
     {
-      let threadResponse: EditBoardEntryThreadNumberRequest = new EditBoardEntryThreadNumberRequest();
+      let threadResponse: EditBoardEntryThreadNumberResponse = new EditBoardEntryThreadNumberResponse();
       threadResponse.threadNumber = Number(this.editPostFormGroup.get(this.getThreadNumberFormGroupSignature(entry)).value);
 
-      await this.MissionBoardService.putBoardEntryThreadNumber(entry.boardEntryID, threadResponse).toPromise().catch((err) => {
+      await this.missionBoardAPIService.putBoardEntryThreadNumber(entry.boardEntryID, threadResponse).toPromise().catch((err) => {
         console.log("Something went wrong changing the thread number");
         console.log(err);
         threadSuccess = false
@@ -150,10 +150,10 @@ export class MissionBoardTableComponent implements OnInit {
     // If post number was changed
     if(entry.postNumber != this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).value)
     {
-      let postResponse: EditBoardEntryPostNumberRequest = new EditBoardEntryPostNumberRequest();
+      let postResponse: EditBoardEntryPostNumberResponse = new EditBoardEntryPostNumberResponse();
       postResponse.postNumber = Number(this.editPostFormGroup.get(this.getPostNumberFormGroupSignature(entry)).value);
 
-      await this.MissionBoardService.putBoardEntryPostNumber(entry.boardEntryID, postResponse).toPromise().catch((err) => {
+      await this.missionBoardAPIService.putBoardEntryPostNumber(entry.boardEntryID, postResponse).toPromise().catch((err) => {
         console.log("Something went wrong changing the post number");
         console.log(err);
         postSuccess = false
@@ -162,10 +162,10 @@ export class MissionBoardTableComponent implements OnInit {
     // If thread number was changed
     if(entry.postDescription != this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).value)
     {
-      let descriptionResponse: EditBoardEntryPostDescriptionRequest = new EditBoardEntryPostDescriptionRequest();
+      let descriptionResponse: EditBoardEntryPostDescriptionResponse = new EditBoardEntryPostDescriptionResponse();
       descriptionResponse.postDescription = this.editPostFormGroup.get(this.getDescriptionFormGroupSignature(entry)).value;
 
-      await this.MissionBoardService.putBoardEntryPostDescription(entry.boardEntryID, descriptionResponse).toPromise().catch((err) => {
+      await this.missionBoardAPIService.putBoardEntryPostDescription(entry.boardEntryID, descriptionResponse).toPromise().catch((err) => {
         console.log("Something went wrong changing the entry description");
         console.log(err);
         descriptionSuccess = false

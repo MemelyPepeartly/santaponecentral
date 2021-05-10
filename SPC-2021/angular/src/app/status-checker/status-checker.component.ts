@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Status } from 'src/classes/status';
-import { ClientService } from '../services/api services/client.service';
-import { MapService } from '../services/utility services/mapper.service';
+import { MapService } from '../services/mapper.service';
+import { SantaApiGetService } from '../services/santa-api.service';
 
 @Component({
   selector: 'app-status-checker',
@@ -10,7 +10,7 @@ import { MapService } from '../services/utility services/mapper.service';
 })
 export class StatusCheckerComponent implements OnInit {
 
-  constructor(public ClientService: ClientService, public mapper: MapService) { }
+  constructor(public SantaApiGet: SantaApiGetService, public mapper: MapService) { }
 
   public emailString: string = '';
 
@@ -23,7 +23,7 @@ export class StatusCheckerComponent implements OnInit {
   {
     this.gettingStatus = true;
 
-    this.ClientService.getClientStatusByEmail(this.emailString).subscribe(res => {
+    this.SantaApiGet.getClientStatusByEmail(this.emailString).subscribe(res => {
       this.retrievedStatus = this.mapper.mapStatus(res);
       this.gettingStatus = false;
     },err =>{

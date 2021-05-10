@@ -1,4 +1,4 @@
-export class ManualAddClientRequest {
+export class ClientResponse {
     clientStatusID: string;
     clientName: string;
     clientEmail: string;
@@ -10,7 +10,7 @@ export class ManualAddClientRequest {
     clientPostalCode: string;
     clientCountry: string;
 }
-export class ClientSignupRequest {
+export class ClientSignupResponse {
     clientStatusID: string;
     clientName: string;
     clientEmail: string;
@@ -23,9 +23,9 @@ export class ClientSignupRequest {
     clientCountry: string;
     isAdmin: boolean = false;
     hasAccount: boolean = false;
-    responses: Array<SurveySignupApiRequest> = []
+    responses: Array<SurveySignupApiResponse> = []
 }
-export class EditClientAddressRequest {
+export class ClientAddressResponse {
     clientAddressLine1: string;
     clientAddressLine2: string;
     clientCity: string;
@@ -33,29 +33,29 @@ export class EditClientAddressRequest {
     clientPostalCode: string;
     clientCountry: string;
 }
-export class EditClientEmailRequest {
+export class ClientEmailResponse {
     clientEmail: string;
 }
-export class EditClientNicknameRequest {
+export class ClientNicknameResponse {
     clientNickname: string;
 }
-export class EditClientNameRequest {
+export class ClientNameResponse {
     clientName: string;
 }
-export class EditClientStatusRequest {
+export class ClientStatusResponse {
     clientStatusID: string;
     wantsAccount: boolean;
 }
-export class EditClientIsAdminRequest {
+export class ClientIsAdminResponse {
     isAdmin: boolean;
 }
 
-export class ClientRelationshipsRequest {
+export class ClientRelationshipsResponse {
     eventTypeID: string;
     assignmentStatusID: string;
     assignments: Array<string> = []
 }
-export class AddSurveyResponseRequest {
+export class SurveyApiResponse {
     surveyID: string;
     clientID: string;
     surveyQuestionID: string;
@@ -66,27 +66,27 @@ export class AddSurveyResponseRequest {
 export class SurveyQuestionXrefsResponseModel {
   questions: Array<string> = [];
 }
-export class EditSurveyResponseRequest {
+export class ChangeSurveyResponseModel {
   responseText: string;
 }
 
-export class SurveySignupApiRequest {
+export class SurveySignupApiResponse {
     surveyID: string;
     surveyQuestionID: string;
     surveyOptionID?: string = null;
     responseText: string;
 }
-export class AddOrEditTagRequest {
+export class TagResponse {
     tagName: string;
 }
-export class DeleteClientTagRelationshipRequest {
+export class ClientTagRelationshipResponse {
     clientID: string;
     tagID: string;
 }
-export class AddClientTagRelationshipsRequest {
+export class ClientTagRelationshipsResponse {
     tags: Array<string> = [];
 }
-export class DeleteClientSenderRecipientRelationshipRequest {
+export class ClientSenderRecipientRelationshipReponse {
     clientID: string;
     clientEventTypeID: string;
 }
@@ -96,7 +96,7 @@ export class QuestionReadabilityResponse
     senderCanView: boolean;
 }
 // Response for making new messages
-export class AddMessageRequest {
+export class MessageApiResponse {
     messageSenderClientID?: string = null;
     messageRecieverClientID?: string = null;
     clientRelationXrefID?: string = null;
@@ -105,53 +105,53 @@ export class AddMessageRequest {
     fromAdmin: boolean;
 }
 //Response for marking messages as read
-export class EditMessageApiReadRequest {
+export class MessageApiReadResponse {
     isMessageRead: boolean;
 }
 //Response for marking a list of messages as read
-export class EditMessageApiReadAllRequest {
+export class MessageApiReadAllResponse {
     messages: Array<string> = [];
 }
 /* MISSION BOARD RESPONSE TYPES */
-export class NewBoardEntryRequest {
+export class NewBoardEntryResponse {
   entryTypeID: string;
   threadNumber: number;
   postNumber: number;
   postDescription: string;
 }
-export class EditBoardEntryPostNumberRequest {
+export class EditBoardEntryPostNumberResponse {
   postNumber: number;
 }
-export class EditBoardEntryThreadNumberRequest {
+export class EditBoardEntryThreadNumberResponse {
   threadNumber: number;
 }
-export class EditBoardEntryPostDescriptionRequest {
+export class EditBoardEntryPostDescriptionResponse {
   postDescription: string;
 }
-export class EditBoardEntryTypeRequest {
+export class EditBoardEntryTypeResponse {
   entryTypeID: string;
 }
-export class NewEntryTypeRequest {
+export class NewEntryTypeResponse {
   entryTypeName: string;
   entryTypeDescription: string;
   adminOnly: boolean;
 }
-export class EditEntryTypeNameRequest {
+export class EditEntryTypeName {
   entryTypeName: string;
 }
-export class EditEntryTypeDescriptionRequest {
+export class EditEntryTypeDescription {
   entryTypeDescription: string;
 }
 /* RESPONSE TYPES FOR ASSIGNMENT STATUSES */
-export class NewAssignmentStatusRequest {
+export class NewAssignmentStatusResponse {
   assignmentStatusName: string;
   assignmentStatusDescription: string;
 }
-export class EditProfileAssignmentStatusRequest {
+export class EditProfileAssignmentStatusResponse {
   assignmentStatusID: string;
 }
 /* CATALOGUE */
-export class SearchQueryModelRequest {
+export class SearchQueryModelResponse {
   tags: Array<string> = [];
   statuses: Array<string> = [];
   events: Array<string> = [];
@@ -175,13 +175,13 @@ export class SelectedAutoAssignmentsResponse
 }
 
 /* Note response models */
-export class AddNoteRequest
+export class NewNoteResponse
 {
   clientID: string;
   noteSubject: string;
   noteContents: string;
 }
-export class EditNoteRequest
+export class EditNoteResponse
 {
   noteSubject: string;
   noteContents: string;

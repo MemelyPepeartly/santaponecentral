@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ClientService } from 'src/app/services/api services/client.service';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { MapService } from 'src/app/services/utility services/mapper.service';
-import { HQClient, RelationshipMeta } from 'src/classes/client';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { SantaApiGetService } from 'src/app/services/santa-api.service';
+import { Client, HQClient, RelationshipMeta } from 'src/classes/client';
 import { EventType } from 'src/classes/eventType';
 
 @Component({
@@ -12,7 +12,7 @@ import { EventType } from 'src/classes/eventType';
 })
 export class ClientAssignmentInfoComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService, public ClientService: ClientService, public mapper: MapService) { }
+  constructor(public gatherer: GathererService, public SantaApiGet: SantaApiGetService, public mapper: MapService) { }
 
   @Input() client: HQClient = new HQClient();
 
@@ -31,7 +31,7 @@ export class ClientAssignmentInfoComponent implements OnInit {
     if(this.client.infoContainer.agentID == undefined)
     {
       this.gatheringInfoContainer = true;
-      this.client.infoContainer = this.mapper.mapInfoContainer(await this.ClientService.getInfoContainerByClientID(this.client.clientID).toPromise());
+      this.client.infoContainer = this.mapper.mapInfoContainer(await this.SantaApiGet.getInfoContainerByClientID(this.client.clientID).toPromise());
       this.gatheringInfoContainer = false;
     }
     await this.gatherer.gatherAllEvents();

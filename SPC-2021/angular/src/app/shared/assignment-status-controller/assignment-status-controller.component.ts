@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ClientService } from 'src/app/services/api services/client.service';
-import { ProfileService } from 'src/app/services/api services/profile.service';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { MapService } from 'src/app/services/utility services/mapper.service';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { AssignmentStatus, RelationshipMeta } from 'src/classes/client';
 import { ProfileAssignment } from 'src/classes/profile';
-import { EditProfileAssignmentStatusRequest } from 'src/classes/request-types';
+import { EditProfileAssignmentStatusResponse } from 'src/classes/responseTypes';
 import { AssignmentStatusConstants } from '../constants/assignmentStatusConstants.enum';
 
 @Component({
@@ -15,9 +14,9 @@ import { AssignmentStatusConstants } from '../constants/assignmentStatusConstant
 })
 export class AssignmentStatusControllerComponent implements OnInit {
 
-  constructor(private gatherer: GeneralDataGathererService,
-    private ProfileService: ProfileService,
-    private ClientService: ClientService,
+  constructor(private gatherer: GathererService,
+    private ProfileApiService: ProfileApiService,
+    private santaApiPut: SantaApiPutService,
     private mapper: MapService) { }
 
   @Input() assignment: ProfileAssignment;
@@ -57,14 +56,14 @@ export class AssignmentStatusControllerComponent implements OnInit {
     this.puttingAssignmentStatus = true;
     this.lockClickawayEvent.emit(this.puttingAssignmentStatus);
 
-    let responseModel: EditProfileAssignmentStatusRequest =
+    let responseModel: EditProfileAssignmentStatusResponse =
     {
       assignmentStatusID: this.selectedAssignmentStatus.assignmentStatusID
     };
 
     if(!this.isAdmin)
     {
-      this.ProfileService.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
+      this.ProfileApiService.putProfileAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
         let newAssignmentStatus: AssignmentStatus = this.mapper.mapAssignmentStatus(res);
         this.newStatusAssingmentStatusPutEvent.emit(newAssignmentStatus);
 
@@ -88,7 +87,7 @@ export class AssignmentStatusControllerComponent implements OnInit {
     }
     else
     {
-      this.ClientService.putAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
+      this.santaApiPut.putAssignmentStatus(this.clientID, this.assignment.relationXrefID, responseModel).subscribe((res) => {
         let newRelationshipMeta: RelationshipMeta = this.mapper.mapRelationshipMeta(res);
         this.newStatusRecipientMetaPutEvent.emit(newRelationshipMeta);
 

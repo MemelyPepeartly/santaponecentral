@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { HQClient } from '../../../classes/client';
+import { SantaApiGetService } from '../../services/santa-api.service';
 import { EventEmitter } from '@angular/core';
-import { MapService } from '../../services/utility services/mapper.service';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { MapService } from '../../services/mapper.service';
+import { GathererService } from 'src/app/services/gatherer.service';
 import { Survey } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
@@ -13,7 +14,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class ApprovedAnonsComponent implements OnInit {
 
-  constructor(public mapper: MapService, private gatherer: GeneralDataGathererService) { }
+  constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
 
   @Output() clickedClient: EventEmitter<HQClient> = new EventEmitter();
 

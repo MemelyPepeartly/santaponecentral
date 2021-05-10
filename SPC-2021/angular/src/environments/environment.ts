@@ -4,18 +4,11 @@
 
 export const environment = {
   production: false,
+  apiUrl: "https://dev-santaponecentral-api.azurewebsites.net/api/",
   auth0Domain: "",
   auth0Client_id: "",
   auth0Redirect_uri: `${window.location.origin}`,
-  auth0Audience: "",
-  // API ENDPOINTS
-  clientServiceEndpoint: "",
-  eventServiceEndpoint: "",
-  messageServiceEndpoint: "",
-  profileServiceEndpoint: "",
-  searchServiceEndpoint: "",
-  sharkTankServiceEndpoint: "",
-  surveyServiceEndpoint: ""
+  auth0Audience: ""
 };
 
 /*

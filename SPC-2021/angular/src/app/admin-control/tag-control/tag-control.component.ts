@@ -1,9 +1,12 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnChanges} from '@angular/core';
 import { Tag } from 'src/classes/tag';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
-import { AddOrEditTagRequest } from 'src/classes/request-types';
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
+import { MapService, MapResponse } from 'src/app/services/mapper.service';
+import { TagResponse } from 'src/classes/responseTypes';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { MatChip } from '@angular/material/chips';
+import { Client } from 'src/classes/client';
 
 @Component({
   selector: 'app-tag-control',
@@ -12,11 +15,13 @@ import { GeneralDataGathererService } from 'src/app/services/gathering services/
 })
 export class TagControlComponent implements OnInit {
 
-  // SANTAHERE Replace with TagService come the time
-  constructor(private TagService: any,
-    private formBuilder: FormBuilder,
+  constructor(private formBuilder: FormBuilder,
+    public SantaApiGet: SantaApiGetService,
+    public SantaApiPut: SantaApiPutService,
+    public SantaApiPost: SantaApiPostService,
+    public SantaApiDelete: SantaApiDeleteService,
     public ResponseMapper: MapResponse,
-    private gatherer: GeneralDataGathererService,
+    public gatherer: GathererService,
     public ApiMapper: MapService) { }
 
   @Input() allTags: Array<Tag> = [];
@@ -69,10 +74,10 @@ export class TagControlComponent implements OnInit {
   {
     this.postingNewTag = true;
 
-    let newTagResponse: AddOrEditTagRequest = new AddOrEditTagRequest();
+    let newTagResponse: TagResponse = new TagResponse();
     newTagResponse.tagName = this.newTag;
 
-    await this.TagService.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
+    await this.SantaApiPost.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
     await this.gatherer.gatherAllTags();
     this.addTagFormGroup.reset();
 
@@ -83,9 +88,9 @@ export class TagControlComponent implements OnInit {
     this.updatingTagName = true;
     let updatedTag: Tag = this.selectedTag
     updatedTag.tagName = this.editedTagName
-    let updatedTagResponse: AddOrEditTagRequest = this.ResponseMapper.mapTagResponse(updatedTag)
+    let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
 
-    await this.TagService.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
+    await this.SantaApiPut.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
     await this.gatherer.gatherAllTags();
     this.editTagFormGroup.reset();
 
@@ -95,7 +100,7 @@ export class TagControlComponent implements OnInit {
   {
     this.deletingTag = true;
 
-    await this.TagService.deleteTag(tag.tagID).toPromise().catch((err) => {console.log(err)});
+    await this.SantaApiDelete.deleteTag(tag.tagID).toPromise().catch((err) => {console.log(err)});
     await this.gatherer.gatherAllTags();
     this.selectedTag = undefined;
 

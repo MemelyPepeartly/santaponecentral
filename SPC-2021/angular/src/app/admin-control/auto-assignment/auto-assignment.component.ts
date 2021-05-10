@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { HQClient, PossiblePairingChoices,  } from 'src/classes/client';
+import { Client, HQClient, PossiblePairingChoices,  } from 'src/classes/client';
 import { Tag } from 'src/classes/tag';
 import { TagConstants } from 'src/app/shared/constants/tagConstants.enum'
-import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { MapService } from 'src/app/services/utility services/mapper.service';
+import { GathererService } from 'src/app/services/gatherer.service';
+import { SantaApiPostService, SantaApiGetService } from 'src/app/services/santa-api.service';
+import { MapService } from 'src/app/services/mapper.service';
+import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/responseTypes';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
-import { SearchService } from 'src/app/services/api services/search.service';
 
 @Component({
   selector: 'app-auto-assignment',
@@ -13,9 +14,8 @@ import { SearchService } from 'src/app/services/api services/search.service';
   styleUrls: ['./auto-assignment.component.css']
 })
 export class AutoAssignmentComponent implements OnInit {
-  constructor(private gatherer: GeneralDataGathererService,
-    // SANTAHERE replace with SearchService come the time
-    public SearchService: any,
+  constructor(public gatherer: GathererService,
+    public SantaApiGet: SantaApiGetService,
     public mapper: MapService) { }
 
   @Input() allClients: Array<HQClient> = []
@@ -52,7 +52,7 @@ export class AutoAssignmentComponent implements OnInit {
     this.buttonClicked = true;
     this.gettingAssignmentPairings = true;
 
-    var response = await this.SearchService.getAutoAssignmentPairings().toPromise();
+    var response = await this.SantaApiGet.getAutoAssignmentPairings().toPromise();
     this.possiblePairings = [];
     response.forEach((pairing) => {
       this.possiblePairings.push(this.mapper.mapPossiblePairing(pairing));

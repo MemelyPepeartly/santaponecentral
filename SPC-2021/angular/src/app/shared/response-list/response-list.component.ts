@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Question, SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ChangeSurveyResponseModel, SurveyApiResponse } from 'src/classes/responseTypes';
+import { SantaApiPutService, SantaApiPostService } from 'src/app/services/santa-api.service';
 import { Client } from 'src/classes/client';
 import { Profile } from 'src/classes/profile';
-import { EditSurveyResponseRequest, AddSurveyResponseRequest } from 'src/classes/request-types';
-import { SurveyService } from 'src/app/services/api services/survey.service';
 
 @Component({
   selector: 'app-response-list',
@@ -14,7 +14,8 @@ import { SurveyService } from 'src/app/services/api services/survey.service';
 export class ResponseListComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-    private SurveyService: SurveyService) { }
+    private SantaApiPut: SantaApiPutService,
+    private SantaApiPost: SantaApiPostService) { }
 
   @Input() survey: Survey = new Survey();
   @Input() clientID: string;
@@ -83,12 +84,12 @@ export class ResponseListComponent implements OnInit {
     if(this.getResponseFromSelectedQuestion().surveyResponseID != undefined)
     {
       // Get the response body, and put the response
-      let editedResponse: EditSurveyResponseRequest =
+      let editedResponse: ChangeSurveyResponseModel =
       {
         responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
-      this.SurveyService.putResponse(this.getResponseFromSelectedQuestion().surveyResponseID, editedResponse).subscribe((res) => {
+      this.SantaApiPut.putResponse(this.getResponseFromSelectedQuestion().surveyResponseID, editedResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
         this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;
@@ -103,7 +104,7 @@ export class ResponseListComponent implements OnInit {
     else
     {
       // Create a new response and post it
-      let newResponse: AddSurveyResponseRequest =
+      let newResponse: SurveyApiResponse =
       {
         surveyID: this.survey.surveyID,
         clientID: this.clientID,
@@ -111,7 +112,7 @@ export class ResponseListComponent implements OnInit {
         responseText: this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).value
       };
 
-      this.SurveyService.postSurveyResponse(newResponse).subscribe((res) => {
+      this.SantaApiPost.postSurveyResponse(newResponse).subscribe((res) => {
         this.submitClickedRefreshEvent.emit(true);
         this.surveyFormGroup.get(this.getFormControlNameFromQuestion(this.selectedQuestion)).reset();
         this.puttingResponse = false;

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer, BaseClient} from '../../../classes/client';
-import { Status } from '../../../classes/status';
-import { EventType } from '../../../classes/eventType';
+import { Client, AssignmentStatus, RelationshipMeta, AllowedAssignmentMeta, PossiblePairingChoices, StrippedClient, HQClient, InfoContainer, BaseClient} from '../../classes/client';
+import { Status } from '../../classes/status';
+import { EventType } from '../../classes/eventType';
+import { ClientEmailResponse, ClientNameResponse, ClientNicknameResponse, ClientAddressResponse, ClientStatusResponse, SurveyApiResponse as SurveyApiResponse, TagResponse, MessageApiResponse } from 'src/classes/responseTypes';
 import { Survey, Question, SurveyOption, SurveyQA, SurveyResponse, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
 import { Profile, ProfileAssignment as ProfileAssignment } from 'src/classes/profile';
@@ -10,7 +11,6 @@ import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
 import { Note } from 'src/classes/note'
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
-import { AddMessageRequest, AddSurveyResponseRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, AddOrEditTagRequest } from 'src/classes/request-types';
 
 @Injectable({
   providedIn: 'root'
@@ -493,9 +493,9 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : AddMessageRequest
+  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : MessageApiResponse
   {
-    let messageResponse: AddMessageRequest =
+    let messageResponse: MessageApiResponse =
     {
       messageSenderClientID: senderClientID,
       messageRecieverClientID: recieverClientID,
@@ -506,36 +506,36 @@ export class MapResponse
 
     return messageResponse;
   }
-  mapClientEmailResponse(client: Client) : EditClientEmailRequest
+  mapClientEmailResponse(client: Client) : ClientEmailResponse
   {
-    let clientEmailResponse: EditClientEmailRequest =
+    let clientEmailResponse: ClientEmailResponse =
     {
       clientEmail: client.email
     };
 
     return clientEmailResponse;
   }
-  mapClientNicknameResponse(client: Client) : EditClientNicknameRequest
+  mapClientNicknameResponse(client: Client) : ClientNicknameResponse
   {
-    let clientNicknameResponse: EditClientNicknameRequest =
+    let clientNicknameResponse: ClientNicknameResponse =
     {
       clientNickname: client.clientNickname
     };
 
     return clientNicknameResponse;
   }
-  mapClientNameResponse(client: Client) : EditClientNameRequest
+  mapClientNameResponse(client: Client) : ClientNameResponse
   {
-    let clientNameResponse: EditClientNameRequest =
+    let clientNameResponse: ClientNameResponse =
     {
       clientName: client.clientName
     };
 
     return clientNameResponse;
   }
-  mapClientAddressResponse(client: Client) : EditClientAddressRequest
+  mapClientAddressResponse(client: Client) : ClientAddressResponse
   {
-    let clientAddressResponse: EditClientAddressRequest =
+    let clientAddressResponse: ClientAddressResponse =
     {
       clientAddressLine1: client.address.addressLineOne,
       clientAddressLine2: client.address.addressLineTwo,
@@ -547,9 +547,9 @@ export class MapResponse
 
     return clientAddressResponse
   }
-  mapSurveyApiResponse(response: SurveyQA) : AddSurveyResponseRequest
+  mapSurveyApiResponse(response: SurveyQA) : SurveyApiResponse
   {
-    let surveyApiResponse: AddSurveyResponseRequest =
+    let surveyApiResponse: SurveyApiResponse =
     {
       surveyID: response.surveyID,
       clientID: response.clientID,
@@ -560,9 +560,9 @@ export class MapResponse
 
     return surveyApiResponse;
   }
-  mapTagResponse(tag: Tag) : AddOrEditTagRequest
+  mapTagResponse(tag: Tag) : TagResponse
   {
-    let tagResponse: AddOrEditTagRequest =
+    let tagResponse: TagResponse =
     {
       tagName: tag.tagName
     };

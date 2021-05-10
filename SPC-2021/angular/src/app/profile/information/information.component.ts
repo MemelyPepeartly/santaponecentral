@@ -1,14 +1,15 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Profile } from 'src/classes/profile';
+import { ProfileService } from 'src/app/services/profile.service';
+import { EventType } from 'src/classes/eventType';
+import { ChangeSurveyResponseModel, ClientAddressResponse } from 'src/classes/responseTypes';
+import { ProfileApiService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { SurveyResponse, Survey } from 'src/classes/survey';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CountriesService } from 'src/app/services/utility services/countries.service';
+import { CountriesService } from 'src/app/services/countries.service';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { MessageHistory } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ProfileGatheringService } from 'src/app/services/gathering services/profile-gathering.service';
-import { ProfileService } from 'src/app/services/api services/profile.service';
-import { EditClientAddressRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-information',
@@ -18,8 +19,9 @@ import { EditClientAddressRequest } from 'src/classes/request-types';
 export class InformationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-    public ProfileService: ProfileService,
-    public ProfileGatheringService: ProfileGatheringService,
+    public ProfileApiService: ProfileApiService,
+    public profileService: ProfileService,
+    public SantaApiPut: SantaApiPutService,
     public auth: AuthService,
     public countryService: CountriesService) { }
 
@@ -63,7 +65,7 @@ export class InformationComponent implements OnInit {
   {
     this.changingAddress = true;
 
-    let newAddressResponse: EditClientAddressRequest =
+    let newAddressResponse: ClientAddressResponse =
     {
       clientAddressLine1: this.addressFormControls.addressLine1.value,
       clientAddressLine2: this.addressFormControls.addressLine2.value,
@@ -73,8 +75,8 @@ export class InformationComponent implements OnInit {
       clientCountry: this.addressFormControls.country.value
     }
 
-    await this.ProfileService.putProfileAddress(this.profile.clientID, newAddressResponse).toPromise();
-    await this.ProfileGatheringService.getProfileByID(this.profile.clientID);
+    await this.ProfileApiService.putProfileAddress(this.profile.clientID, newAddressResponse).toPromise();
+    await this.profileService.getProfileByID(this.profile.clientID);
 
     this.clientAddressFormGroup.reset();
     this.showAddressChangeForm = false;
@@ -82,7 +84,7 @@ export class InformationComponent implements OnInit {
   }
   public async softRefreshProfile()
   {
-    await this.ProfileGatheringService.getProfileByID(this.profile.clientID);
+    await this.profileService.getProfileByID(this.profile.clientID);
   }
   public showSurvey(survey: Survey)
   {
