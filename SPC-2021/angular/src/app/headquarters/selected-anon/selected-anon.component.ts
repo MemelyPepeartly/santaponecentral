@@ -14,6 +14,7 @@ import { ClientService } from 'src/app/services/api services/client.service';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest } from 'src/classes/request-types';
 import { SharkTankService } from 'src/app/services/api services/shark-tank.service';
+import { TagService } from 'src/app/services/api services/tag.service';
 
 
 @Component({
@@ -43,8 +44,8 @@ import { SharkTankService } from 'src/app/services/api services/shark-tank.servi
 export class SelectedAnonComponent implements OnInit {
 
   constructor(private ClientService: ClientService,
-    // SANTAHERE Replace with SharkTankService once we get there
     private SharkTankService: SharkTankService,
+    private TagService: TagService,
     public ApiMapper: MapService,
     public gatherer: GeneralDataGathererService,
     public responseMapper: MapResponse,
@@ -509,7 +510,7 @@ export class SelectedAnonComponent implements OnInit {
     let relationship = new DeleteClientTagRelationshipRequest();
     relationship.clientID = this.client.clientID;
     relationship.tagID = tag.tagID;
-    var res = await this.ClientService.deleteTagFromClient(relationship).toPromise();
+    var res = await this.TagService.deleteTagFromClient(relationship).toPromise();
     this.client = this.ApiMapper.mapClient(res);
     this.actionTaken.emit(true);
 
@@ -544,7 +545,7 @@ export class SelectedAnonComponent implements OnInit {
     this.selectedTags.forEach((tag: Tag) => {
       clientTagRelationships.tags.push(tag.tagID)
     });
-    this.client = this.ApiMapper.mapClient(await this.ClientService.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.TagService.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
 
 
     await this.setClientTags();

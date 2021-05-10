@@ -2,7 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import { Tag } from 'src/classes/tag';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
-import { TagResponse } from 'src/classes/request-types';
+import { AddOrEditTagRequest } from 'src/classes/request-types';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 
 @Component({
@@ -69,7 +69,7 @@ export class TagControlComponent implements OnInit {
   {
     this.postingNewTag = true;
 
-    let newTagResponse: TagResponse = new TagResponse();
+    let newTagResponse: AddOrEditTagRequest = new AddOrEditTagRequest();
     newTagResponse.tagName = this.newTag;
 
     await this.TagService.postTag(newTagResponse).toPromise().catch((err) => {console.log(err)});
@@ -83,7 +83,7 @@ export class TagControlComponent implements OnInit {
     this.updatingTagName = true;
     let updatedTag: Tag = this.selectedTag
     updatedTag.tagName = this.editedTagName
-    let updatedTagResponse: TagResponse = this.ResponseMapper.mapTagResponse(updatedTag)
+    let updatedTagResponse: AddOrEditTagRequest = this.ResponseMapper.mapTagResponse(updatedTag)
 
     await this.TagService.putTagName(this.selectedTag.tagID, updatedTagResponse).toPromise();
     await this.gatherer.gatherAllTags();

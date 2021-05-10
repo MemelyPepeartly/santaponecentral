@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
-import { YuleLogService } from 'src/app/services/santa-api.service';
 import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 
 @Component({
@@ -10,7 +9,7 @@ import { Category, YuleLog } from '../../../classes/yuleLogTypes'
 })
 export class YuleLogComponent implements OnInit {
 
-  constructor(public YuleLogService: YuleLogService, private gatherer: GeneralDataGathererService) { }
+  constructor(private gatherer: GeneralDataGathererService) { }
 
   @Input() allCategories: Array<Category> = [];
   @Input() allYuleLogs: Array<YuleLog> = [];
