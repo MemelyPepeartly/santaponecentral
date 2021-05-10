@@ -16,4 +16,9 @@ export class SearchService
   searchClients(body: SearchQueryModelRequest): Observable<any> {
     return this.http.post(endpoint + 'Catalogue/SearchClients', body);
   }
+  getAutoAssignmentPairings(): Observable<any> 
+  {
+    // Returns a list of strings of added relationships
+    return this.http.get(endpoint + 'Client/AutoAssignmentPairs');
+  }
 }

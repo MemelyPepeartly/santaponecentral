@@ -5,7 +5,7 @@ import { MapResponse, MapService } from 'src/app/services/utility services/mappe
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Client } from 'src/classes/client';
 import { ThrowStmt } from '@angular/compiler';
-import { SurveyQuestionXrefsResponseModel } from 'src/classes/request-types';
+import { NewSurveyQuestionXrefsRequest } from 'src/classes/request-types';
 import { SurveyService } from 'src/app/services/api services/survey.service';
 
 @Component({
@@ -69,7 +69,7 @@ export class SurveyControlComponent implements OnInit {
   public async addQuestions()
   {
     this.addingQuestions = true;
-    let response: SurveyQuestionXrefsResponseModel = new SurveyQuestionXrefsResponseModel();
+    let response: NewSurveyQuestionXrefsRequest = new NewSurveyQuestionXrefsRequest();
     this.selectedQuestions.forEach((question: Question) => {
       response.questions.push(question.questionID);
     })

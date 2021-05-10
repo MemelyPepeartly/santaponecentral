@@ -3,13 +3,13 @@ import { Client, HQClient, StrippedClient } from 'src/classes/client';
 import { Status } from 'src/classes/status';
 import { Tag } from 'src/classes/tag';
 import { EventType } from 'src/classes/eventType';
-import { SearchQueryModelResponse } from 'src/classes/request-types';
 import { MapService } from '../services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Survey } from 'src/classes/survey';
 import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
 import { SearchService } from '../services/api services/search.service';
 import { ClientService } from '../services/api services/client.service';
+import { SearchQueryModelRequest } from 'src/classes/request-types';
 
 export class SearchQueryObjectContainer
 {
@@ -81,8 +81,7 @@ export class SearchQueryObjectContainer
 export class AgentCatalogueComponent implements OnInit {
 
   constructor(private gatherer: GeneralDataGathererService,
-    // SANTAHERE Replace with SearchService once we get there
-    private SearchService: any,
+    private SearchService: SearchService,
     private ClientService: ClientService,
     private mapper: MapService) { }
 
@@ -338,7 +337,7 @@ export class AgentCatalogueComponent implements OnInit {
   {
     this.searchingClients = true;
     this.foundClients = [];
-    let response: SearchQueryModelResponse =
+    let response: SearchQueryModelRequest =
     {
       tags: this.searchQueryObjectHolder.tagQueryIDs,
       statuses: this.searchQueryObjectHolder.statusesQueryIDs,

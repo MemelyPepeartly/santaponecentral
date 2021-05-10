@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatSelectionList } from '@angular/material/list';
 import { ClientService } from 'src/app/services/api services/client.service';
 import { HQClient, PossiblePairingChoices } from 'src/classes/client';
-import { Pairing, SelectedAutoAssignmentsResponse } from 'src/classes/request-types';
+import { Pairing, AddSelectedAutoAssignmentsRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-agent-pairing-control',
@@ -40,7 +40,7 @@ export class AgentPairingControlComponent implements OnInit {
         pairingModel.push(modelPair);
     });
 
-    let responseModel: SelectedAutoAssignmentsResponse =
+    let responseModel: AddSelectedAutoAssignmentsRequest =
     {
       pairings: pairingModel
     }

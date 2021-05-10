@@ -12,7 +12,6 @@ import { EditBoardEntryPostDescriptionRequest, EditBoardEntryPostNumberRequest, 
 export class MissionBoardTableComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-    // SANTAHERE Need to include new service here when we get to that point
     private MissionBoardService: MissionBoardService) { }
 
   @Input() boardEntries: Array<BoardEntry> = [];

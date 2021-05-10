@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { MissionBoardGathererService } from '../services/gathering services/mission-board-gatherer.service';
+import { MissionBoardService } from '../services/api services/mission-board.service';
 
 @Component({
   selector: 'app-mission-boards',
@@ -15,8 +16,7 @@ export class MissionBoardsComponent implements OnInit {
   // missionBoardService for centralized data calls
   // missionMapper for mapping to types
   constructor(public auth: AuthService,
-    // SANTAHERE Replace with MissionBoardService when we get there
-    public MissionBoardService: any,
+    public MissionBoardService: MissionBoardService,
     public MissionBoardGatheringService: MissionBoardGathererService) { }
 
   public profile: any;
