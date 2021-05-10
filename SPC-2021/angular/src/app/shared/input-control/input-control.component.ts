@@ -5,9 +5,9 @@ import { MessageApiResponse } from 'src/classes/request-types';
 import { BaseClient, Client } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { EventType } from 'src/classes/eventType';
+import { ClientService } from 'src/app/services/api services/client.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ import { EventType } from 'src/classes/eventType';
 })
 export class InputControlComponent implements OnInit {
 
-  constructor(public Auth: AuthService, public SantaApiGet: SantaApiGetService, public Mapper: MapService) { }
+  constructor(public Auth: AuthService, public ClientService: ClientService, public Mapper: MapService) { }
 
   @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
   @Output() readAllAction: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -43,7 +43,7 @@ export class InputControlComponent implements OnInit {
       this.isAdmin = admin;
       if(this.isAdmin)
       {
-        this.adminClient = this.Mapper.mapBaseClient(await this.SantaApiGet.getBasicClientByEmail(this.profile.email).toPromise());
+        this.adminClient = this.Mapper.mapBaseClient(await this.ClientService.getBasicClientByEmail(this.profile.email).toPromise());
       }
     });
   }

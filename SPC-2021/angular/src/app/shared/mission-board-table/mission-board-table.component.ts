@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { MissionBoardAPIService } from 'src/app/services/santa-api.service';
 import { NewBoardEntryResponse, EditBoardEntryThreadNumberResponse, EditBoardEntryPostNumberResponse, EditBoardEntryPostDescriptionResponse } from 'src/classes/request-types';
-import { MissionBoardService } from 'src/app/services/gathering services/mission-board-gatherer.service';
 
 @Component({
   selector: 'app-mission-board-table',
@@ -13,7 +11,8 @@ import { MissionBoardService } from 'src/app/services/gathering services/mission
 export class MissionBoardTableComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
-    private missionBoardAPIService: MissionBoardAPIService) { }
+    // SANTAHERE Need to include new service here when we get to that point
+    private missionBoardAPIService: any) { }
 
   @Input() boardEntries: Array<BoardEntry> = [];
   @Input() allPostNumbers: Array<number>= []

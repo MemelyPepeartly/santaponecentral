@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { MessageService } from 'src/app/services/api services/message.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
-import { SantaApiGetService, SantaApiPostService, SantaApiPutService } from 'src/app/services/santa-api.service';
 import { ChatInfoContainer, ClientMeta, MessageHistory } from 'src/classes/message';
 import { MessageApiResponse } from 'src/classes/request-types';
 import { ContactPanelComponent } from '../contact-panel/contact-panel.component';
@@ -13,10 +13,8 @@ import { InputControlComponent } from '../input-control/input-control.component'
 })
 export class ChatComponent implements OnInit, OnChanges {
 
-  constructor(public mapper: MapService,
-    public SantaApiGet: SantaApiGetService,
-    public SantaApiPut: SantaApiPutService,
-    public SantaApiPost: SantaApiPostService) { }
+  // SANTAHERE Replace with MessageService once we get here
+  constructor(public mapper: MapService, private MessageService: any) { }
 
   @Input() chatInfoContainer: ChatInfoContainer = new ChatInfoContainer();
   @Input() inputDisabled: boolean;
@@ -85,7 +83,7 @@ export class ChatComponent implements OnInit, OnChanges {
     this.showChatActionProgressBar = true;
     this.inputDisabled = true;
 
-    this.SantaApiPost.postMessage(messageApiResponseEvent).subscribe((res) => {
+    this.MessageService.postMessage(messageApiResponseEvent).subscribe((res) => {
       this.chatWindowComponent.manualRefreshChat(true);
       this.inputComponent.clearForm();
       this.inputDisabled = false;

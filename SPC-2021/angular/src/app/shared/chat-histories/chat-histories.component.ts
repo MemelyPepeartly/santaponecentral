@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
-import { ProfileService } from 'src/app/services/gathering services/profile-gathering.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventType } from 'src/classes/eventType';
 import { BaseClient, Client } from 'src/classes/client';
@@ -14,7 +13,7 @@ import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 })
 export class ChatHistoriesComponent implements OnInit, OnChanges {
 
-  constructor(private profileService: ProfileService, private auth: AuthService) { }
+  constructor(private auth: AuthService) { }
 
   @Input() onProfile: boolean = false;
   @Input() histories: Array<MessageHistory>
