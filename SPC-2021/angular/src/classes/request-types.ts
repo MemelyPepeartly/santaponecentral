@@ -175,13 +175,13 @@ export class SelectedAutoAssignmentsResponse
 }
 
 /* Note response models */
-export class NewNoteResponse
+export class AddNoteRequest
 {
   clientID: string;
   noteSubject: string;
   noteContents: string;
 }
-export class EditNoteResponse
+export class EditNoteRequest
 {
   noteSubject: string;
   noteContents: string;
