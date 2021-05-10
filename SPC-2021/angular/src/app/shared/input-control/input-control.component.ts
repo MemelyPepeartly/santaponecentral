@@ -1,13 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Message, ClientMeta, MessageHistory, ChatInfoContainer } from 'src/classes/message';
-import { MessageApiResponse } from 'src/classes/request-types';
-import { BaseClient, Client } from 'src/classes/client';
+import { FormControl, Validators } from '@angular/forms';
+import { ChatInfoContainer } from 'src/classes/message';
+import { BaseClient } from 'src/classes/client';
 import { InputControlConstants } from 'src/app/shared/constants/inputControlConstants.enum';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
-import { EventType } from 'src/classes/eventType';
 import { ClientService } from 'src/app/services/api services/client.service';
+import { AddMessageRequest } from 'src/classes/request-types';
 
 
 @Component({
@@ -19,7 +18,7 @@ export class InputControlComponent implements OnInit {
 
   constructor(public Auth: AuthService, public ClientService: ClientService, public Mapper: MapService) { }
 
-  @Output() sendClicked: EventEmitter<MessageApiResponse> = new EventEmitter<MessageApiResponse>();
+  @Output() sendClicked: EventEmitter<AddMessageRequest> = new EventEmitter<AddMessageRequest>();
   @Output() readAllAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() displayPinnedAction: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() timeZoneAction: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -50,7 +49,7 @@ export class InputControlComponent implements OnInit {
   public emitMessage(message: string)
   {
 
-    let newMessage: MessageApiResponse =
+    let newMessage: AddMessageRequest =
     {
       messageSenderClientID: this.chatInfoContainer.messageSenderID,
       messageRecieverClientID: this.chatInfoContainer.messageRecieverID,

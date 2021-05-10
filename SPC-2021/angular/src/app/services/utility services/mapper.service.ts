@@ -10,7 +10,7 @@ import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
 import { Note } from 'src/classes/note'
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
-import { AddSurveyResponseRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, MessageApiResponse, TagResponse } from 'src/classes/request-types';
+import { AddMessageRequest, AddSurveyResponseRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, TagResponse } from 'src/classes/request-types';
 
 @Injectable({
   providedIn: 'root'
@@ -493,9 +493,9 @@ export class MapService {
 })
 export class MapResponse
 {
-  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : MessageApiResponse
+  mapMessageResponse(senderClientID, recieverClientID, relationXrefID, messageContent, fromAdmin) : AddMessageRequest
   {
-    let messageResponse: MessageApiResponse =
+    let messageResponse: AddMessageRequest =
     {
       messageSenderClientID: senderClientID,
       messageRecieverClientID: recieverClientID,

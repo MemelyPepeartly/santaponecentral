@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
 import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MessageApiReadResponse } from 'src/classes/request-types';
 import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MessageService } from 'src/app/services/api services/message.service';
+import { EditMessageApiReadRequest } from 'src/classes/request-types';
 
 @Component({
   selector: 'app-contact-panel',
@@ -128,7 +128,7 @@ export class ContactPanelComponent implements OnInit{
   {
     this.markingRead = true;
 
-    let putMessage = new MessageApiReadResponse();
+    let putMessage = new EditMessageApiReadRequest();
 
     putMessage.isMessageRead = true;
     let newMessage: Message = this.ApiMapper.mapMessage(await this.MessageService.putMessageReadStatus(message.chatMessageID, putMessage).toPromise().catch((err) => {console.log(err);}));
