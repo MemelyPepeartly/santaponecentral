@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Client } from 'src/classes/client';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -10,7 +10,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class DeniedAnonsComponent implements OnInit {
 
-  constructor(public gatherer: GathererService) { }
+  constructor(private gatherer: GeneralDataGathererService) { }
 
   @Input() deniedClients: Array<Client> = [];
   @Input() gatheringInfo: boolean;

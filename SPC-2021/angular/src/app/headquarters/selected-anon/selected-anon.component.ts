@@ -1,20 +1,18 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked } from '@angular/core';
 import { AllowedAssignmentMeta, AssignmentStatus, Client, RelationshipMeta } from '../../../classes/client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SantaApiGetService, SantaApiPutService, SantaApiPostService, SantaApiDeleteService } from 'src/app/services/santa-api.service';
 import { MapService, MapResponse } from 'src/app/services/utility services/mapper.service';
 import { StatusConstants } from 'src/app/shared/constants/statusConstants.enum';
 import { AssignmentStatusConstants } from 'src/app/shared/constants/assignmentStatusConstants.enum';
 import { Status } from 'src/classes/status';
-import { ClientStatusResponse, ClientNicknameResponse, ClientTagRelationshipResponse, ClientAddressResponse, ClientNameResponse, ClientEmailResponse, ClientRelationshipsResponse, ClientTagRelationshipsResponse, ChangeSurveyResponseModel, ClientSenderRecipientRelationshipReponse} from 'src/classes/request-types';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EventType } from 'src/classes/eventType';
-import { Survey, Question, SurveyResponse, SurveyMeta } from 'src/classes/survey';
+import { Survey, Question, SurveyMeta } from 'src/classes/survey';
 import { Tag } from 'src/classes/tag';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { CountriesService } from 'src/app/services/utility services/countries.service';
-import { ClientMeta } from 'src/classes/message';
-import { MatSelectionList } from '@angular/material/list';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
+import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest } from 'src/classes/request-types';
 
 
 @Component({
@@ -43,12 +41,11 @@ import { MatSelectionList } from '@angular/material/list';
 
 export class SelectedAnonComponent implements OnInit {
 
-  constructor(public SantaApiGet: SantaApiGetService,
-    public SantaApiPut: SantaApiPutService,
-    public SantaApiPost: SantaApiPostService,
-    public SantaApiDelete: SantaApiDeleteService,
+  constructor(private ClientService: ClientService,
+    // SANTAHERE Replace with SharkTankService once we get there
+    private SharkTankService: any,
     public ApiMapper: MapService,
-    public gatherer: GathererService,
+    public gatherer: GeneralDataGathererService,
     public responseMapper: MapResponse,
     private formBuilder: FormBuilder,
     public countryService: CountriesService) { }
@@ -172,7 +169,7 @@ export class SelectedAnonComponent implements OnInit {
     this.gatherer.onSelectedClient = true;
 
     this.loadingClient = true;
-    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID != undefined ? this.client.clientID : this.clientID).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.getClientByClientID(this.client.clientID != undefined ? this.client.clientID : this.clientID).toPromise());
     this.loadingClient = false;
 
     /* FORM BUILDERS */
@@ -278,13 +275,13 @@ export class SelectedAnonComponent implements OnInit {
     this.showButtonSpinner = true;
     var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    let clientStatusResponse: ClientStatusResponse =
+    let clientStatusResponse: EditClientStatusRequest =
     {
       clientStatusID: approvedStatus.statusID,
       wantsAccount: wantsAccount
     };
 
-    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+    this.ClientService.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
       this.showApproveSuccess = true;
       this.actionTaken.emit(true);
@@ -302,10 +299,10 @@ export class SelectedAnonComponent implements OnInit {
     this.showButtonSpinner = true;
     var deniedStatus: Status = this.getStatusByConstant(StatusConstants.DENIED);
 
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    let clientStatusResponse: EditClientStatusRequest = new EditClientStatusRequest();
     clientStatusResponse.clientStatusID = deniedStatus.statusID
 
-    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+    this.ClientService.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
       this.showDeniedSuccess = true;
       this.actionTaken.emit(true);
@@ -323,11 +320,11 @@ export class SelectedAnonComponent implements OnInit {
     this.showButtonSpinner = true;
     var completedStatus: Status = this.getStatusByConstant(StatusConstants.COMPLETED);
 
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    let clientStatusResponse: EditClientStatusRequest = new EditClientStatusRequest();
     clientStatusResponse.clientStatusID = completedStatus.statusID
 
 
-    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+    this.ClientService.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
       this.showCompletedSuccess = true;
       this.actionTaken.emit(true);
@@ -345,10 +342,10 @@ export class SelectedAnonComponent implements OnInit {
     this.showButtonSpinner = true;
     var approvedStatus: Status = this.getStatusByConstant(StatusConstants.APPROVED);
 
-    let clientStatusResponse: ClientStatusResponse = new ClientStatusResponse();
+    let clientStatusResponse: EditClientStatusRequest = new EditClientStatusRequest();
     clientStatusResponse.clientStatusID = approvedStatus.statusID
 
-    this.SantaApiPut.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
+    this.ClientService.putClientStatus(this.client.clientID, clientStatusResponse).subscribe(() => {
       this.showButtonSpinner = false;
       this.showReenlistedSuccess = true;
       this.actionTaken.emit(true);
@@ -365,7 +362,7 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.deletingClient = true;
 
-    await this.SantaApiDelete.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+    await this.ClientService.deleteClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
 
     this.actionTaken.emit(true);
 
@@ -377,17 +374,18 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.sendingReset = true;
 
-    await this.SantaApiPost.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
+    await this.SharkTankService.postPasswordResetToClient(this.client.clientID).toPromise().catch((error) => {console.log(error)});
 
     this.showSentPasswordResetSuccess = true;
     this.sendingReset = false;
   }
+  // SANTAHERE This might be depreciated with the new client service stuff
   public createAnonAuth0Account()
   {
     this.creatingAuthAccount = true;
 
 
-    this.SantaApiPost.postClientNewAuth0Account(this.client.clientID).subscribe((res) => {
+    this.SharkTankService.postClientNewAuth0Account(this.client.clientID).subscribe((res) => {
       this.creatingAuthAccountSuccess = true;
       this.creatingAuthAccount = false;
       this.actionTaken.emit(true);
@@ -415,9 +413,9 @@ export class SelectedAnonComponent implements OnInit {
       var newNick: string = this.clientNicknameFormGroup.value.newNickname;
 
       putClient.clientNickname = newNick;
-      let clientNicknameResponse: ClientNicknameResponse = this.responseMapper.mapClientNicknameResponse(putClient);
+      let clientNicknameResponse: EditClientNicknameRequest = this.responseMapper.mapClientNicknameResponse(putClient);
 
-      await this.SantaApiPut.putClientNickname(putClient.clientID, clientNicknameResponse).toPromise();
+      await this.ClientService.putClientNickname(putClient.clientID, clientNicknameResponse).toPromise();
 
       this.actionTaken.emit(true);
       this.clientNicknameFormGroup.reset();
@@ -436,7 +434,7 @@ export class SelectedAnonComponent implements OnInit {
 
     var currentEvent = this.selectedRecipientEvent;
 
-    let assignments: ClientRelationshipsResponse =
+    let assignments: ClientRelationshipsRequest =
     {
       eventTypeID: this.selectedRecipientEvent.eventTypeID,
       assignmentStatusID: this.assignmentStatuses.find((status: AssignmentStatus) => {return status.assignmentStatusName == AssignmentStatusConstants.ASSIGNED}).assignmentStatusID,
@@ -447,7 +445,7 @@ export class SelectedAnonComponent implements OnInit {
       assignments.assignments.push(selectedRecipient.clientMeta.clientID);
     });
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
+    this.client = this.ApiMapper.mapClient(await this.ClientService.postClientRecipients(this.client.clientID, assignments).toPromise().catch(err => console.log(err)));
 
     await this.getAllowedRecipientsByEvent(currentEvent);
 
@@ -463,7 +461,7 @@ export class SelectedAnonComponent implements OnInit {
     this.recipientsAreLoaded = false;
     this.selectedRecipientEvent = eventType;
 
-    var response = await this.SantaApiGet.getAllowedAssignmentsByID(this.client.clientID, this.selectedRecipientEvent.eventTypeID).toPromise();
+    var response = await this.ClientService.getAllowedAssignmentsByID(this.client.clientID, this.selectedRecipientEvent.eventTypeID).toPromise();
     this.allowedAssignmentOptions = [];
     response.forEach((meta: any) => {
       this.allowedAssignmentOptions.push(this.ApiMapper.mapAllowedAssignmentMeta(meta))
@@ -476,7 +474,7 @@ export class SelectedAnonComponent implements OnInit {
     this.beingSwitched = true;
     this.addRecipientSuccess = false;
     this.recipientOpen = false;
-    let switchClient: Client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(anon.relationshipClient.clientID).toPromise());
+    let switchClient: Client = this.ApiMapper.mapClient(await this.ClientService.getClientByClientID(anon.relationshipClient.clientID).toPromise());
     this.client = switchClient;
 
     if(this.client.clientStatus.statusDescription == StatusConstants.APPROVED)
@@ -490,12 +488,12 @@ export class SelectedAnonComponent implements OnInit {
   public async removeRecipient(anon: RelationshipMeta)
   {
     this.beingRemoved = true;
-    let response: ClientSenderRecipientRelationshipReponse =
+    let response: DeleteClientSenderRecipientRelationshipRequest =
     {
       clientID: anon.relationshipClient.clientID,
       clientEventTypeID: anon.eventType.eventTypeID
     }
-    var res = await this.SantaApiDelete.deleteClientRecipient(this.client.clientID, response).toPromise();
+    var res = await this.ClientService.deleteClientRecipient(this.client.clientID, response).toPromise();
     this.client = this.ApiMapper.mapClient(res);
 
     this.actionTaken.emit(true);
@@ -509,10 +507,10 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.modyingTagRelationships = true;
 
-    let relationship = new ClientTagRelationshipResponse;
+    let relationship = new DeleteClientTagRelationshipRequest();
     relationship.clientID = this.client.clientID;
     relationship.tagID = tag.tagID;
-    var res = await this.SantaApiDelete.deleteTagFromClient(relationship).toPromise();
+    var res = await this.ClientService.deleteTagFromClient(relationship).toPromise();
     this.client = this.ApiMapper.mapClient(res);
     this.actionTaken.emit(true);
 
@@ -543,11 +541,11 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.modyingTagRelationships = true;
 
-    let clientTagRelationships: ClientTagRelationshipsResponse = new ClientTagRelationshipsResponse();
+    let clientTagRelationships: AddClientTagRelationshipsRequest = new AddClientTagRelationshipsRequest();
     this.selectedTags.forEach((tag: Tag) => {
       clientTagRelationships.tags.push(tag.tagID)
     });
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPost.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.postTagsToClient(this.client.clientID, clientTagRelationships).toPromise());
 
 
     await this.setClientTags();
@@ -569,7 +567,7 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.changingAddress = true;
 
-    let newAddressResponse: ClientAddressResponse =
+    let newAddressResponse: EditClientAddressRequest =
     {
       clientAddressLine1: this.addressFormControls.addressLine1.value,
       clientAddressLine2: this.addressFormControls.addressLine2.value,
@@ -579,7 +577,7 @@ export class SelectedAnonComponent implements OnInit {
       clientCountry: this.addressFormControls.country.value,
     }
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientAddress(this.client.clientID, newAddressResponse).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.putClientAddress(this.client.clientID, newAddressResponse).toPromise());
     this.clientAddressFormGroup.reset();
     this.showAddressChangeForm = false;
     this.actionTaken.emit(true);
@@ -590,11 +588,11 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.changingName = true;
 
-    let newNameResponse = new ClientNameResponse();
+    let newNameResponse = new EditClientNameRequest();
 
     newNameResponse.clientName = this.nameFormControls.firstName.value + " " + this.nameFormControls.lastName.value;
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientName(this.client.clientID, newNameResponse).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.putClientName(this.client.clientID, newNameResponse).toPromise());
     this.clientNameFormGroup.reset();
     this.showNameChangeForm = false;
     this.actionTaken.emit(true);
@@ -605,11 +603,11 @@ export class SelectedAnonComponent implements OnInit {
   {
     this.changingEmail = true;
 
-    let newEmailResponse = new ClientEmailResponse();
+    let newEmailResponse = new EditClientEmailRequest();
 
     newEmailResponse.clientEmail = this.emailFormControls.email.value;
 
-    this.client = this.ApiMapper.mapClient(await this.SantaApiPut.putClientEmail(this.client.clientID, newEmailResponse).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.putClientEmail(this.client.clientID, newEmailResponse).toPromise());
     this.clientNameFormGroup.reset();
     this.showEmailChangeForm = false;
     this.actionTaken.emit(true);
@@ -618,7 +616,7 @@ export class SelectedAnonComponent implements OnInit {
   }
   public async softRefreshClient(emitRefresh: boolean = false)
   {
-    this.client = this.ApiMapper.mapClient(await this.SantaApiGet.getClientByClientID(this.client.clientID).toPromise());
+    this.client = this.ApiMapper.mapClient(await this.ClientService.getClientByClientID(this.client.clientID).toPromise());
     if(emitRefresh)
     {
       this.actionTaken.emit(true);

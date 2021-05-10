@@ -1,11 +1,11 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { HQClient } from '../../../classes/client';
-import { SantaApiGetService } from 'src/app/services/santa-api.service';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { GathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { Survey } from 'src/classes/survey';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ClientService } from 'src/app/services/api services/client.service';
+import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 
 @Component({
   selector: 'app-incoming-signups',
@@ -32,7 +32,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class IncomingSignupsComponent implements OnInit {
 
-  constructor(public SantaApi: SantaApiGetService, public mapper: MapService, public gatherer: GathererService) { }
+  constructor(public mapper: MapService, public gatherer: GeneralDataGathererService) { }
 
   @Output() clickedClient: EventEmitter<HQClient> = new EventEmitter();
   @Output() manualSignUpClickedEvent: EventEmitter<any> = new EventEmitter();
