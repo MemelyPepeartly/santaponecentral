@@ -10,7 +10,7 @@ import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { Address } from 'src/classes/address';
 import { Note } from 'src/classes/note'
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
-import { AddMessageRequest, AddSurveyResponseRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, TagResponse } from 'src/classes/request-types';
+import { AddMessageRequest, AddSurveyResponseRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, AddOrEditTagRequest } from 'src/classes/request-types';
 
 @Injectable({
   providedIn: 'root'
@@ -560,9 +560,9 @@ export class MapResponse
 
     return surveyApiResponse;
   }
-  mapTagResponse(tag: Tag) : TagResponse
+  mapTagResponse(tag: Tag) : AddOrEditTagRequest
   {
-    let tagResponse: TagResponse =
+    let tagResponse: AddOrEditTagRequest =
     {
       tagName: tag.tagName
     };

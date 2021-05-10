@@ -12,6 +12,7 @@ import { ClientService } from '../api services/client.service';
 import { EventService } from '../api services/event.service';
 import { SurveyService } from '../api services/survey.service';
 import { SharkTankService } from '../api services/shark-tank.service';
+import { TagService } from '../api services/tag.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class GeneralDataGathererService {
     private EventService: EventService,
     private SurveyService: SurveyService,
     private SharkTankService: SharkTankService,
+    private TagService: TagService,
     private ApiMapper: MapService) { }
 
   public onSelectedClient: boolean = false;
