@@ -62,4 +62,9 @@ export class SurveyService
   {
     return this.http.put(endpoint + 'SurveyResponse/' + surveyResponseID + '/ResponseText', responseModel);
   }
+  /* DELETE */
+  deleteQuestionRelationFromSurvey(surveyId: string, surveyQuestionId: string): Observable<any> 
+  {
+    return this.http.delete(endpoint + 'Survey/' + surveyId + "/SurveyQuestion/" + surveyQuestionId);
+  }
 }
