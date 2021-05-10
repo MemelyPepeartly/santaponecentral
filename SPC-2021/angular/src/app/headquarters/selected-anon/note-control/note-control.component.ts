@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { Note } from 'src/classes/note';
-import { EditNoteResponse, NewNoteResponse } from 'src/classes/request-types';
+import { AddNoteRequest, EditNoteRequest } from 'src/classes/request-types';
+import { NoteService } from 'src/app/services/api services/note.service'
 
 @Component({
   selector: 'app-note-control',
@@ -12,8 +13,7 @@ import { EditNoteResponse, NewNoteResponse } from 'src/classes/request-types';
 export class NoteControlComponent implements OnInit {
 
   constructor(
-    // SANTAHERE Replace with NoteService 
-    private NoteService: any,
+    private NoteService: NoteService,
     private formBuilder: FormBuilder,
     private mapper: MapService) { }
 
@@ -123,7 +123,7 @@ export class NoteControlComponent implements OnInit {
     this.puttingEditedNote = true;
     this.clickawayLockedEvent.emit(true);
 
-    let response: EditNoteResponse =
+    let response: EditNoteRequest =
     {
       noteSubject: this.selectedNote.noteSubject,
       noteContents: this.noteFormGroup.get(this.getFormControlNameFromNote(this.selectedNote)).value
@@ -147,7 +147,7 @@ export class NoteControlComponent implements OnInit {
     this.postingNewNote = true;
     this.clickawayLockedEvent.emit(true);
 
-    let response: NewNoteResponse =
+    let response: AddNoteRequest =
     {
       clientID: this.clientID,
       noteSubject: this.newNoteSubject,

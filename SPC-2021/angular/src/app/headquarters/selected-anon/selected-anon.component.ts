@@ -13,6 +13,7 @@ import { CountriesService } from 'src/app/services/utility services/countries.se
 import { ClientService } from 'src/app/services/api services/client.service';
 import { GeneralDataGathererService } from 'src/app/services/gathering services/general-data-gatherer.service';
 import { AddClientTagRelationshipsRequest, ClientRelationshipsRequest, DeleteClientSenderRecipientRelationshipRequest, DeleteClientTagRelationshipRequest, EditClientAddressRequest, EditClientEmailRequest, EditClientNameRequest, EditClientNicknameRequest, EditClientStatusRequest } from 'src/classes/request-types';
+import { SharkTankService } from 'src/app/services/api services/shark-tank.service';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class SelectedAnonComponent implements OnInit {
 
   constructor(private ClientService: ClientService,
     // SANTAHERE Replace with SharkTankService once we get there
-    private SharkTankService: any,
+    private SharkTankService: SharkTankService,
     public ApiMapper: MapService,
     public gatherer: GeneralDataGathererService,
     public responseMapper: MapResponse,
