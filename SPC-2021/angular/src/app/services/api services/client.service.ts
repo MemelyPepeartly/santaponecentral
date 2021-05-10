@@ -75,6 +75,14 @@ export class ClientService
   {
     return this.http.get<Status>(endpoint + 'Status/Check/' + email)
   }
+  getAllAssignmentStatuses(): Observable<any> 
+  {
+    return this.http.get<any>(endpoint + 'AssignmentStatus');
+  }
+  getAssignmentStatusByID(assignmentStatusID: string): Observable<any> 
+  {
+    return this.http.get<any>(endpoint + 'AssignmentStatus/' + assignmentStatusID);
+  }
   /* POST */
   postClient(client: ClientRequest): Observable<Client> 
   {
