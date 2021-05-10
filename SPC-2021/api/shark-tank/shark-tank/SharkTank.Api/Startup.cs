@@ -39,7 +39,7 @@ namespace SharkTank.Api
                 options.AddPolicy("AllowAngular",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-santaponecentral.azurewebsites.net", "https://www.santaponecentral.net", "https://santaponecentral.azurewebsites.net")
+                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net", "https://santaponecentral.azurewebsites.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
