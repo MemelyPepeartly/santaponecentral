@@ -10,8 +10,8 @@ namespace Client.Logic.Models.Common_Models
 {
     public class SharkTankValidationModel
     {
-        public Guid? requestorClientID { get; set; }
-        public object? requesetedObject { get; set; }
+        public Guid requestorClientID { get; set; }
+        public string requesetedObject { get; set; }
         public List<Claim> requestorRoles { get; set; }
         public Method httpMethod { get; set; }
     }
