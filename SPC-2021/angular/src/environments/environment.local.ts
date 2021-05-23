@@ -9,13 +9,13 @@ export const environment = {
     auth0Redirect_uri: `${window.location.origin}`,
     auth0Audience: "https://dev-santaponecentral-api.azurewebsites.net/api/",
     // API ENDPOINTS
-    clientServiceEndpoint: "https://dev-spc-clientapi.azurewebsites.net/api/",
+    clientServiceEndpoint: "https://localhost:5001/api/",
     eventServiceEndpoint: "https://dev-spc-eventapi.azurewebsites.net/api/",
     messageServiceEndpoint: "https://dev-spc-messageapi.azurewebsites.net/api/",
     profileServiceEndpoint: "https://dev-spc-profileapi.azurewebsites.net/api/",
     searchServiceEndpoint: "https://dev-spc-searchapi.azurewebsites.net/api/",
-    sharkTankServiceEndpoint: "https://dev-spc-sharktankapi.azurewebsites.net/api/",
-    surveyServiceEndpoint: "https://dev-spc-surveyapi.azurewebsites.net/api/"
+    sharkTankServiceEndpoint: "https://localhost:7001/api/",
+    surveyServiceEndpoint: "https://localhost:6001/api/"
   };
 
   
