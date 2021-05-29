@@ -3,11 +3,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Profile.Api.Models.Profile_Models;
+using Profile.Logic.Constants;
 using Profile.Logic.Interfaces;
+using Profile.Logic.Models.Common_Models;
 using Profile.Logic.Objects;
+using Profile.Logic.Objects.Information_Objects;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Profile.Api.Controllers
@@ -19,11 +24,11 @@ namespace Profile.Api.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly IRepository repository;
-        //private readonly IYuleLog yuleLogger;
-        public ProfileController(IRepository _repository/*, IYuleLog _yuleLogger*/)
+        private readonly ISharkTank sharkTank;
+        public ProfileController(IRepository _repository, ISharkTank _sharktank)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            //yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
+            sharkTank = _sharktank ?? throw new ArgumentNullException(nameof(_sharktank));
         }
 
         // GET: api/Profile/email@domain.com/GetID
@@ -38,21 +43,22 @@ namespace Profile.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetClientIDForProfile(string email)
         {
-            /*
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            BaseClient logicBaseClient = await repository.GetBasicClientInformationByEmail(email);
-            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(email);
+            //BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
 
-            if (logicBaseClient.clientID == checkerClient.clientID)
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_PROFILE_CATEGORY, Method.GET));
+
+
+            //if (logicBaseClient.clientID == checkerClient.clientID)
+            if(sharkTankValidationModel.isValid)
             {
-                return Ok(logicBaseClient.clientID);
+                return Ok(requestingClient.clientID);
             }
             else
             {
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         // GET: api/Profile/Email/email@domain.com
@@ -67,36 +73,40 @@ namespace Profile.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<Logic.Objects.Profile>> GetProfileByEmailAsync(string email)
         {
-            /*
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            Profile logicProfile = await repository.GetProfileByEmailAsync(email);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            Logic.Objects.Profile logicProfile = new Logic.Objects.Profile();
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_PROFILE_CATEGORY, Method.GET));
 
-
+            logicProfile.sharkTankValidationResponse = sharkTankValidationModel;
             // Log the profile request
             try
             {
-                await yuleLogger.logGetProfile(checkerClient, logicProfile);
+                //if (logicProfile.clientID == checkerClient.clientID)
+                if(sharkTankValidationModel.isValid)
+                {
+                    logicProfile = await repository.GetProfileByEmailAsync(email);
+                    return Ok(logicProfile);
+                }
+                else
+                {
+                    if (!sharkTankValidationModel.isValid)
+                    {
+                        return Unauthorized(logicProfile);
+                    }
+                    else if (!sharkTankValidationModel.isRequestSuccess)
+                    {
+                        return UnprocessableEntity(logicProfile);
+                    }
+                }
             }
             // If it fails, log the error instead and stop the transaction
             catch (Exception)
             {
-                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
-                return StatusCode(StatusCodes.Status424FailedDependency);
+                await sharkTank.MakeNewFailureLog(requestingClient, SharkTankConstants.GET_PROFILE_CATEGORY);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            if (logicProfile.clientID == checkerClient.clientID)
-            {
-                return Ok(logicProfile);
-            }
-            else
-            {
-                await yuleLogger.logError(checkerClient, LoggingConstants.GET_PROFILE_CATEGORY);
-                return StatusCode(StatusCodes.Status401Unauthorized);
-            }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
+            return BadRequest(logicProfile);
         }
 
         // GET: api/Profile/5
@@ -307,5 +317,19 @@ namespace Profile.Api.Controllers
             */
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
+
+        #region UTILITY
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, string requestedObject, Method httpMethod)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = requestorClient.clientID,
+                requestorRoles = roles,
+                requesetedObject = requestedObject,
+                httpMethod = httpMethod
+            };
+            return model;
+        }
+        #endregion
     }
 }
