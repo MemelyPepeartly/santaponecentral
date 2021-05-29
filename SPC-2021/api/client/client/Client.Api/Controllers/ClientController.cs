@@ -17,6 +17,7 @@ using RestSharp;
 using Client.Logic.Survey_Response_Models;
 using Client.Logic.Models.Auth0_Models;
 using System.Net;
+using Client.Logic.Objects.Container_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -41,18 +42,21 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("Truncated")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<StrippedClient>>> GetAllClientsWithoutChats()
+        public async Task<ActionResult<StrippedClientContainer>> GetAllClientsWithoutChats()
         {
 
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_ALL_CLIENT_CATEGORY, Method.GET));
-            if(sharkTankValidationModel.isValid && sharkTankValidationModel.isRequestSuccess)
+
+            StrippedClientContainer clients = new StrippedClientContainer();
+            clients.sharkTankValidationResponse = sharkTankValidationModel;
+            if (sharkTankValidationModel.isValid && sharkTankValidationModel.isRequestSuccess)
             {
                 try
                 {
-                    List<StrippedClient> clients = await repository.GetAllStrippedClientData();
+                    clients.strippedClients = (await repository.GetAllStrippedClientData()).OrderBy(c => c.nickname).ToList();
                     await sharkTank.MakeNewSuccessLog(requestingClient, SharkTankConstants.GET_ALL_CLIENT_CATEGORY);
-                    return Ok(clients.OrderBy(c => c.nickname));
+                    return Ok(clients);
                 }
                 catch (Exception)
                 {
@@ -64,11 +68,11 @@ namespace Santa.Api.Controllers
             {
                 if(!sharkTankValidationModel.isValid)
                 {
-                    return Unauthorized(sharkTankValidationModel);
+                    return Unauthorized(clients);
                 }
                 else if(!sharkTankValidationModel.isRequestSuccess)
                 {
-                    return UnprocessableEntity(sharkTankValidationModel);
+                    return UnprocessableEntity(clients);
                 }
             }
             return NoContent();
