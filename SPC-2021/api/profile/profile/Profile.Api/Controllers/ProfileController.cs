@@ -78,14 +78,13 @@ namespace Profile.Api.Controllers
             BaseClient requestedClientInformation = await repository.GetBasicClientInformationByEmail(email);
 
             SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_PROFILE_CATEGORY, requestedClientInformation.clientID));
-
             Logic.Objects.Profile logicProfile = new Logic.Objects.Profile();
-            logicProfile.sharkTankValidationResponse = sharkTankValidationModel;
             try
             {
                 if(sharkTankValidationModel.isValid)
                 {
                     logicProfile = await repository.GetProfileByEmailAsync(email);
+                    logicProfile.sharkTankValidationResponse = sharkTankValidationModel;
                     return Ok(logicProfile);
                 }
                 else
