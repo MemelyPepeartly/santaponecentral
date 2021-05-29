@@ -11,8 +11,9 @@ namespace SharkTank.Logic.Models.Common_Models
     public class SharkTankValidationModel
     {
         public Guid requestorClientID { get; set; }
-        public string requesetedObject { get; set; }
         public List<Claim> requestorRoles { get; set; }
+        public string requestedObjectCategory { get; set; }
+        public Guid? requestedObjectID { get; set; }
         public Method httpMethod { get; set; }
     }
 }
