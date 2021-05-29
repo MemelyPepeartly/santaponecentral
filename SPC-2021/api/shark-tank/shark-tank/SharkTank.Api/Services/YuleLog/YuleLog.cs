@@ -92,9 +92,9 @@ namespace SharkTank.Api.Services.YuleLog
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY), requestingClient.nickname + " made a request to retrieve the client information for " + requestedClient.nickname));
             await saveLogs();
         }
-        public async Task logGetProfile(BaseClient requestingClient, Profile returnedProfile)
+        public async Task logGetProfile(BaseClient requestingClient, BaseClient requestedClientInfo)
         {
-            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(SharkTankConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile object for: " + returnedProfile.nickname));
+            await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(SharkTankConstants.GET_PROFILE_CATEGORY), requestingClient.nickname + " made a request to get a profile object for: " + requestedClientInfo.nickname));
             await saveLogs();
         }
         public async Task logGetAllHistories(BaseClient requestingClient)

@@ -84,7 +84,7 @@ namespace SharkTank.Logic.Interfaces
         /// <param name="requestingClient"></param>
         /// <param name="returnedProfile"></param>
         /// <returns></returns>
-        Task logGetProfile(BaseClient requestingClient, Profile returnedProfile);
+        Task logGetProfile(BaseClient requestingClient, BaseClient requestedClientInfo);
         /// <summary>
         /// Logs a request to gather all histories was made
         /// </summary>
