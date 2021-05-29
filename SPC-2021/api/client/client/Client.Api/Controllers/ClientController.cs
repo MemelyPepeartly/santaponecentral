@@ -46,7 +46,7 @@ namespace Santa.Api.Controllers
         {
 
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_ALL_CLIENT_CATEGORY, Method.GET));
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
 
             StrippedClientContainer clients = new StrippedClientContainer();
             clients.sharkTankValidationResponse = sharkTankValidationModel;
@@ -90,7 +90,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             try
             {
@@ -115,7 +115,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_ALL_CLIENT_CATEGORY, Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
             try
             {
                 List<HQClient> clients = await repository.GetAllHeadquarterClients();
@@ -139,7 +139,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             try
             {
@@ -166,7 +166,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             try
             {
@@ -192,10 +192,11 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
+
             try
             {
-                Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
                 await sharkTank.MakeNewSuccessLog(requestingClient, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
@@ -217,7 +218,8 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
+
             try
             {
                 BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
@@ -243,11 +245,11 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
 
             try
             {
-                BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
                 await sharkTank.MakeNewSuccessLog(requestingClient, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return Ok(logicClient);
             }
@@ -269,7 +271,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             InfoContainer logicInfoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
             return Ok(logicInfoContainer);
@@ -1028,7 +1030,7 @@ namespace Santa.Api.Controllers
         {
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.DELETE));
+            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.DELETE, SharkTankConstants.DELETED_CLIENT_CATEGORY, clientID));
 
             BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
             InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
@@ -1165,13 +1167,14 @@ namespace Santa.Api.Controllers
             }
         }
         */
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, string requestedObject, Method httpMethod)
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? requestedObjectID)
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
                 requestorClientID = requestorClient.clientID,
                 requestorRoles = roles,
-                requesetedObject = requestedObject,
+                requestedObjectCategory = requestedObjectCategory,
+                requestedObjectID = requestedObjectID != null ? requestedObjectID.Value : null,
                 httpMethod = httpMethod
             };
             return model;
