@@ -25,22 +25,12 @@ namespace SharkTank.Api.Controllers
         //private readonly IMailbag mailbag;
         private readonly IYuleLog yuleLogger;
 
-        // AuthPerms
-        private Dictionary<string, List<string>> permissions { get; set; }
-
         public SharkTankController(IRepository _repository, IAuthHelper _authHelper,/* IMailbag _mailbag, */IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             //mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
             yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
-
-            List<string> objects = new List<string> { "clients", "events", "statuses", "surveys", "responses", "tags", "profile", "messages", "histories", "boardEntries", "entryTypes", "assignmentStatuses", "logs", "categories" };
-            List<string> verbs = new List<string> { "create", "read", "update", "delete" };
-            foreach (string verb in verbs)
-            {
-                permissions.Add(verb, objects);
-            }
         }
 
         // POST: api/<SharkTankController>/AuthInfo
@@ -193,11 +183,14 @@ namespace SharkTank.Api.Controllers
         [SharkTankValidationFilter]
         public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] SharkTankValidationModel requestModel)
         {
-            SharkTankValidationResponseModel response = new SharkTankValidationResponseModel();
+            SharkTankValidationResponseModel response = new SharkTankValidationResponseModel()
+            {
+                isRequestSuccess = true
+            };
             // If the requested object is empty
             if(String.IsNullOrEmpty(requestModel.requestedObjectCategory))
             {
-                response.isRequestSuccess = true;
+                response.isRequestSuccess = false;
                 response.isValid = false;
                 response.errorMessages.Add(SharkTankErrorConstants.INVALID_REQUEST_ERROR);
                 return Ok(response);
