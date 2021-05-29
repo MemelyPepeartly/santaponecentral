@@ -12,7 +12,7 @@ export const environment = {
     clientServiceEndpoint: "https://localhost:5001/api/",
     eventServiceEndpoint: "https://dev-spc-eventapi.azurewebsites.net/api/",
     messageServiceEndpoint: "https://dev-spc-messageapi.azurewebsites.net/api/",
-    profileServiceEndpoint: "https://dev-spc-profileapi.azurewebsites.net/api/",
+    profileServiceEndpoint: "https://localhost:8001/api/",
     searchServiceEndpoint: "https://dev-spc-searchapi.azurewebsites.net/api/",
     sharkTankServiceEndpoint: "https://localhost:7001/api/",
     surveyServiceEndpoint: "https://localhost:6001/api/"
