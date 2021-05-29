@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
+using SharkTank.Logic.Models.Common_Models;
 using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,12 +24,22 @@ namespace SharkTank.Api.Controllers
         //private readonly IMailbag mailbag;
         private readonly IYuleLog yuleLogger;
 
+        // AuthPerms
+        private Dictionary<string, List<string>> permissions { get; set; }
+
         public SharkTankController(IRepository _repository, IAuthHelper _authHelper,/* IMailbag _mailbag, */IYuleLog _yuleLogger)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
             authHelper = _authHelper ?? throw new ArgumentNullException(nameof(_authHelper));
             //mailbag = _mailbag ?? throw new ArgumentNullException(nameof(_mailbag));
             yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
+
+            List<string> objects = new List<string> { "clients", "events", "statuses", "surveys", "responses", "tags", "profile", "messages", "histories", "boardEntries", "entryTypes", "assignmentStatuses", "logs", "categories" };
+            List<string> verbs = new List<string> { "create", "read", "update", "delete" };
+            foreach (string verb in verbs)
+            {
+                permissions.Add(verb, objects);
+            }
         }
 
         // POST: api/<SharkTankController>/AuthInfo
@@ -177,9 +189,54 @@ namespace SharkTank.Api.Controllers
         /// <param name="someObject"></param>
         /// <returns></returns>
         [HttpPost("Validate")]
-        public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] object someObject)
+        [SharkTankValidationFilter]
+        public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] SharkTankValidationModel requestModel)
         {
-            return Ok(true);
+            SharkTankValidationResponseModel response = new SharkTankValidationResponseModel();
+            // If the requested object is empty
+            if(String.IsNullOrEmpty(requestModel.requesetedObject))
+            {
+                response.isRequestSuccess = true;
+                response.isValid = false;
+                response.errorMessages.Add(SharkTankErrorConstants.INVALID_REQUEST_ERROR);
+                return Ok(response);
+            }
+
+            try
+            {
+                BaseClient requestingClient = await repository.GetBasicClientInformationByID(requestModel.requestorClientID);
+
+                // If the request is for getting all clients
+                if (requestModel.requesetedObject == SharkTankConstants.GET_ALL_CLIENT_CATEGORY)
+                {
+                    // Log that a request is made to get all clients
+                    await yuleLogger.logGetAllClients(requestingClient);
+
+                    // If the requesting client is an admin or has the proper permissions
+                    if (requestingClient.isAdmin || checkRoles(requestModel.requestorRoles, permissions["read"].FirstOrDefault(o => o == "client")))
+                    {
+                        // set to valid
+                        response.isValid = true;
+                    }
+                    else
+                    {
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_ALL_CLIENT_CATEGORY);
+                    }
+                }
+                return Ok(response);
+            }
+            catch(Exception e)
+            {
+                // Set request success to false and add errors
+                response.isRequestSuccess = false;
+                response.errorMessages.Add(SharkTankErrorConstants.FAILED_REQUEST_ERROR);
+                response.errorMessages.Add(e.Message);
+
+                return Ok(response);
+
+            }
+
         }
 
         // PUT api/<SharkTankController>/5/Email
@@ -233,6 +290,24 @@ namespace SharkTank.Api.Controllers
             Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID(clientID)).email);
             await authHelper.deleteAuthClient(authUser.user_id);
             return Ok(true);
+        }
+
+        private bool checkRoles(List<Claim> roles, string neededPermission)
+        {
+            bool isAllowed = false;
+
+            if(adminRequired)
+            {
+                foreach(Claim role in roles)
+                {
+                    if(role.Value == "read:client")
+                    {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+            }
+            return isAllowed;
         }
     }
 }
