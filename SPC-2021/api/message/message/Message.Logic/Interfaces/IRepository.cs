@@ -10,6 +10,19 @@ namespace Message.Logic.Interfaces
 {
     public interface IRepository
     {
+        #region Client
+        /// <summary>
+        /// Gets a basic client type by ID
+        /// </summary>
+        /// <returns></returns>
+        Task<BaseClient> GetBasicClientInformationByID(Guid clientID);
+        /// <summary>
+        /// Gets a basic client type by email
+        /// </summary>
+        /// <returns></returns>
+        Task<BaseClient> GetBasicClientInformationByEmail(string clientEmail);
+        #endregion
+
         #region Message
         Task CreateMessage(ChatMessage newMessage);
         Task<List<ChatMessage>> GetAllMessages();
