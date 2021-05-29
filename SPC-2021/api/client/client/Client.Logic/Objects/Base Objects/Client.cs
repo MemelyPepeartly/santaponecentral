@@ -1,4 +1,5 @@
-﻿using Client.Logic.Objects.Base_Objects;
+﻿using Client.Logic.Models.Common_Models;
+using Client.Logic.Objects.Base_Objects;
 using System;
 using System.Collections.Generic;
 
@@ -22,6 +23,8 @@ namespace Client.Logic.Objects
         /// Determines if they have an auth0 account. This is false if they are a manual signup by default
         /// </summary>
         public bool hasAccount { get; set; }
+
+        public SharkTankValidationResponseModel sharkTankValidationResponse { get; set; }
 
     }
 }
