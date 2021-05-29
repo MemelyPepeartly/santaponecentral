@@ -195,7 +195,7 @@ namespace SharkTank.Api.Controllers
         {
             SharkTankValidationResponseModel response = new SharkTankValidationResponseModel();
             // If the requested object is empty
-            if(String.IsNullOrEmpty(requestModel.requesetedObject))
+            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory))
             {
                 response.isRequestSuccess = true;
                 response.isValid = false;
@@ -208,7 +208,7 @@ namespace SharkTank.Api.Controllers
                 BaseClient requestingClient = await repository.GetBasicClientInformationByID(requestModel.requestorClientID);
 
                 // If the request is for getting all clients
-                if (requestModel.requesetedObject == SharkTankConstants.GET_ALL_CLIENT_CATEGORY)
+                if (requestModel.requestedObjectCategory == SharkTankConstants.GET_ALL_CLIENT_CATEGORY)
                 {
                     // Log that a request is made to get all clients
                     await yuleLogger.logGetAllClients(requestingClient);
@@ -223,6 +223,26 @@ namespace SharkTank.Api.Controllers
                     {
                         // log error (valid remains false)
                         await yuleLogger.logError(requestingClient, SharkTankConstants.GET_ALL_CLIENT_CATEGORY);
+                    }
+                }
+                // Else if the request is for getting a profile
+                else if(requestModel.requestedObjectCategory == SharkTankConstants.GET_PROFILE_CATEGORY)
+                {
+                    // Get the basic info the requested profile
+                    BaseClient requestedClientInfo = await repository.GetBasicClientInformationByID(requestModel.requestedObjectID.Value);
+                    // Log that a request is being made to get that profile
+                    await yuleLogger.logGetProfile(requestingClient, requestedClientInfo);
+
+                    // If the requesting client is accessing their own information, or the client is an admin
+                    if((requestingClient.clientID == requestedClientInfo.clientID || requestingClient.isAdmin) && checkRoles(requestModel.requestorRoles, "read", "profile"))
+                    {
+                        // set to valid
+                        response.isValid = true;
+                    }
+                    else
+                    {
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_PROFILE_CATEGORY);
                     }
                 }
                 return Ok(response);
