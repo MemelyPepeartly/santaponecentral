@@ -44,10 +44,10 @@ namespace Profile.Api.Controllers
         public async Task<ActionResult<Logic.Objects.Profile>> GetClientIDForProfile(string email)
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(email);
-            //BaseClient checkerClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient requestedClientInformation = await repository.GetBasicClientInformationByEmail(email);
 
-            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_PROFILE_CATEGORY, Method.GET));
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_PROFILE_CATEGORY, requestedClientInformation.clientID));
 
 
             //if (logicBaseClient.clientID == checkerClient.clientID)
@@ -75,14 +75,14 @@ namespace Profile.Api.Controllers
         {
             // Gets the claims from the URI and check against the client gotten based on auth claims token
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            Logic.Objects.Profile logicProfile = new Logic.Objects.Profile();
-            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), SharkTankConstants.GET_PROFILE_CATEGORY, Method.GET));
+            BaseClient requestedClientInformation = await repository.GetBasicClientInformationByEmail(email);
 
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_PROFILE_CATEGORY, requestedClientInformation.clientID));
+
+            Logic.Objects.Profile logicProfile = new Logic.Objects.Profile();
             logicProfile.sharkTankValidationResponse = sharkTankValidationModel;
-            // Log the profile request
             try
             {
-                //if (logicProfile.clientID == checkerClient.clientID)
                 if(sharkTankValidationModel.isValid)
                 {
                     logicProfile = await repository.GetProfileByEmailAsync(email);
@@ -319,13 +319,14 @@ namespace Profile.Api.Controllers
         }
 
         #region UTILITY
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, string requestedObject, Method httpMethod)
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? requestedObjectID)
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
                 requestorClientID = requestorClient.clientID,
                 requestorRoles = roles,
-                requesetedObject = requestedObject,
+                requestedObjectCategory = requestedObjectCategory,
+                requestedObjectID = requestedObjectID != null ? requestedObjectID.Value : null,
                 httpMethod = httpMethod
             };
             return model;
