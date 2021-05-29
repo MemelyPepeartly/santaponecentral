@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharkTank.Api.Filters;
 using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
@@ -213,7 +214,7 @@ namespace SharkTank.Api.Controllers
                     await yuleLogger.logGetAllClients(requestingClient);
 
                     // If the requesting client is an admin or has the proper permissions
-                    if (requestingClient.isAdmin || checkRoles(requestModel.requestorRoles, permissions["read"].FirstOrDefault(o => o == "client")))
+                    if (requestingClient.isAdmin || checkRoles(requestModel.requestorRoles, "read", "clients"))
                     {
                         // set to valid
                         response.isValid = true;
@@ -291,21 +292,21 @@ namespace SharkTank.Api.Controllers
             await authHelper.deleteAuthClient(authUser.user_id);
             return Ok(true);
         }
-
-        private bool checkRoles(List<Claim> roles, string neededPermission)
+        /// <summary>
+        /// Checks the role the client has and compares them to an input access verb (such as "read") and the object type for role access (such as "clients"). 
+        /// Will return true if the roles input has any roles that match the access verb and object type
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <param name="requiredAccessVerb"></param>
+        /// <param name="requiredObjectType"></param>
+        /// <returns></returns>
+        private bool checkRoles(List<Claim> roles, string requiredAccessVerb, string requiredObjectType)
         {
             bool isAllowed = false;
 
-            if(adminRequired)
+            if (roles.Any(r => r.Value == $"{requiredAccessVerb}:{requiredObjectType}"))
             {
-                foreach(Claim role in roles)
-                {
-                    if(role.Value == "read:client")
-                    {
-                        isAllowed = true;
-                        break;
-                    }
-                }
+                isAllowed = true;
             }
             return isAllowed;
         }
