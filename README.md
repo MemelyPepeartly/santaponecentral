@@ -1,6 +1,6 @@
 # santaponecentral
 
-<img src="https://github.com/SantaPoneCentralDev/santaponecentral/blob/48c71564fde41a92363bd6752e71209362a32879/.github/readme%20assets/balconyblitz.png" alt="drawing" width="400"/>
+<img src="https://github.com/SantaPoneCentralDev/santaponecentral/blob/48c71564fde41a92363bd6752e71209362a32879/.github/readme%20assets/balconyblitz.png" alt="drawing" width="700"/>
 
 [![Board Status](https://dev.azure.com/santapone/275cd44b-4a45-4978-92cf-c96f59c14bec/73ea5cf8-3ebb-4dba-8c57-95c3427ce42a/_apis/work/boardbadge/f2579203-5dc9-4a6c-8de6-57056d0bb37f)](https://dev.azure.com/santapone/275cd44b-4a45-4978-92cf-c96f59c14bec/_boards/board/t/73ea5cf8-3ebb-4dba-8c57-95c3427ce42a/Microsoft.RequirementCategory)
 
