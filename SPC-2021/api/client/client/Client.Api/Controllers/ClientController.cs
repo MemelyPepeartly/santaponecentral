@@ -218,6 +218,8 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+#warning needs to impliment this validation
+
             await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             try
@@ -246,6 +248,8 @@ namespace Santa.Api.Controllers
             
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
             BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
+#warning needs to impliment this validation
+
             await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
 
             try
@@ -271,6 +275,7 @@ namespace Santa.Api.Controllers
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+#warning needs to impliment this validation
             await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             InfoContainer logicInfoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
