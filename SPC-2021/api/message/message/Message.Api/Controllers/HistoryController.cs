@@ -1,13 +1,18 @@
-﻿using Message.Logic.Interfaces;
+﻿using Message.Logic.Constants;
+using Message.Logic.Interfaces;
+using Message.Logic.Models.Common_Models;
 using Message.Logic.Objects;
+using Message.Logic.Objects.Information_Objects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Message.Api.Controllers
@@ -20,11 +25,11 @@ namespace Message.Api.Controllers
 #warning All mailbag and YuleLog functionality will need to be updated from legacy to support microservice infrastructure
 
         private readonly IRepository repository;
-        //private readonly IYuleLog yuleLogger;
-        public HistoryController(IRepository _repository/*, IYuleLog _yuleLogger*/)
+        private readonly ISharkTank sharkTank;
+        public HistoryController(IRepository _repository, ISharkTank _sharkTank)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            //yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
+            sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
 
         // GET: api/History
@@ -76,34 +81,34 @@ namespace Message.Api.Controllers
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required] Guid subjectID)
         {
-            /*
             BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-
             BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
 
-            if (requestingClient.email == subjectClient.email)
-            {
-                try
-                {
-                    MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
-                    await yuleLogger.logGetSpecificHistory(requestingClient, logicHistory);
-                    return Ok(logicHistory);
-                }
-                catch (Exception)
-                {
-                    await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
-                    return StatusCode(StatusCodes.Status424FailedDependency);
-                }
+            MessageHistory logicHistory = new MessageHistory();
 
+            try
+            {
+                logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
+            }
+            catch
+            {
+                await sharkTank.MakeNewFailureLog(requestingClient, SharkTankConstants.GET_ALL_HISTORY_CATEGORY);
+                return StatusCode(StatusCodes.Status424FailedDependency);
+            }
+            
+
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY, logicHistory));
+
+            //if (requestingClient.email == subjectClient.email)
+            if(sharkTankValidationModel.isValid)
+            {
+                return Ok(logicHistory);
             }
             else
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY);
+                await sharkTank.MakeNewFailureLog(requestingClient, SharkTankConstants.GET_ALL_HISTORY_CATEGORY);
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/History/Client/5/General
@@ -182,5 +187,36 @@ namespace Message.Api.Controllers
             return StatusCode(StatusCodes.Status501NotImplemented);
 
         }
+
+        #region UTILITY
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? requestedObjectID)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = requestorClient.clientID,
+                requestorRoles = roles,
+                requestedObjectCategory = requestedObjectCategory,
+                requestedObjectID = requestedObjectID != null ? requestedObjectID.Value : null,
+                httpMethod = httpMethod
+            };
+            return model;
+        }
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, MessageHistory history)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = requestorClient.clientID,
+                requestorRoles = roles,
+                requestedObjectCategory = requestedObjectCategory,
+                requestedObjectID = null,
+                chatInfoContainer = new ChatInfoContainer()
+                {
+
+                },
+                httpMethod = httpMethod
+            };
+            return model;
+        }
+        #endregion
     }
 }
