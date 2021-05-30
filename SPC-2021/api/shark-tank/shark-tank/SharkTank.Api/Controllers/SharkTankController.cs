@@ -5,6 +5,7 @@ using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
 using SharkTank.Logic.Models.Common_Models;
+using SharkTank.Logic.Objects;
 using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
@@ -188,7 +189,7 @@ namespace SharkTank.Api.Controllers
                 isRequestSuccess = true
             };
             // If the requested object is empty
-            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory))
+            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) && requestModel.requestedMessageHistoryContainer == null)
             {
                 response.isRequestSuccess = false;
                 response.isValid = false;
@@ -237,6 +238,39 @@ namespace SharkTank.Api.Controllers
                         // log error (valid remains false)
                         await yuleLogger.logError(requestingClient, SharkTankConstants.GET_PROFILE_CATEGORY);
                     }
+                }
+                // Else if the request is for getting a message history
+                else if (requestModel.requestedObjectCategory == SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY)
+                {
+                    // Base client object for the subject client 
+                    BaseClient subjectClient = await repository.GetBasicClientInformationByID(requestModel.requestedMessageHistoryContainer.subjectClientID);
+                    // Get list of assignments the requestor has
+                    List<RelationshipMeta> requestingClientAssignments = await repository.getClientAssignmentsInfoByIDAsync(requestingClient.clientID);
+                    
+                    // If the requesting client has the correct roles and the requested history is for an assignment
+                    if(checkRoles(requestModel.requestorRoles, "read", "profile") && requestModel.requestedMessageHistoryContainer.assignmentXrefID != null)
+                    {
+                        // If the requesting client has any assignments that have the assignment xref ID requested for a history and the requestor has proper roles (Meaning they would be allowed to see that information)
+                        if (requestingClientAssignments.Any<RelationshipMeta>(rm => rm.clientRelationXrefID == requestModel.requestedMessageHistoryContainer.assignmentXrefID))
+                        {
+                            // Log that a request for a specific history was made by requesting client, who was the subject, and who the assignment was about
+                            await yuleLogger.logGetSpecificHistory(requestingClient, subjectClient, requestingClientAssignments.FirstOrDefault(am => am.clientRelationXrefID == requestModel.requestedMessageHistoryContainer.assignmentXrefID));
+                            // set to valid
+                            response.isValid = true;
+                        }
+                        else
+                        {
+                            // log error (valid remains false)
+                            await yuleLogger.logError(requestingClient, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY);
+                        }
+                    }
+
+
+                }
+                // Else if the request is for posting a new message
+                else if (requestModel.requestedObjectCategory == SharkTankConstants.CREATED_NEW_MESSAGE_CATEGORY)
+                {
+                    // Actions
                 }
                 return Ok(response);
             }
