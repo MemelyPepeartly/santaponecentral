@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Message.Logic.Objects.Information_Objects;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Message.Logic.Models.Common_Models
         public List<Claim> requestorRoles { get; set; }
         public string requestedObjectCategory { get; set; }
         public Guid? requestedObjectID { get; set; }
+        public ChatInfoContainer chatInfoContainer { get; set; }
         public Method httpMethod { get; set; }
     }
 }
