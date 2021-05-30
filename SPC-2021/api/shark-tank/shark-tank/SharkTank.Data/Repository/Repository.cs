@@ -21,7 +21,7 @@ namespace SharkTank.Data.Repository
             santaContext = _context ?? throw new ArgumentNullException(nameof(_context));
         }
 
-        #region
+        #region Client
         public async Task<BaseClient> GetBasicClientInformationByID(Guid clientID)
         {
             BaseClient logicBaseClient = await santaContext.Clients
@@ -94,6 +94,38 @@ namespace SharkTank.Data.Repository
                 .Select(Mapper.MapLog)
                 .ToList();
             return logicLogList;
+        }
+        #endregion
+
+        #region Informational Containers
+        public async Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID)
+        {
+            List<RelationshipMeta> listLogicRelationshipMeta = await santaContext.ClientRelationXrefs.Where(crxr => crxr.SenderClientId == clientID)
+                .Select(xref => new RelationshipMeta()
+                {
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = new List<Logic.Objects.Tag>(),
+                    removable = xref.ChatMessages.Count > 0
+                }).ToListAsync();
+            return listLogicRelationshipMeta;
+        }
+        public async Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID)
+        {
+            RelationshipMeta logicRelationshipMeta = await santaContext.ClientRelationXrefs
+                .Select(xref => new RelationshipMeta()
+                {
+                    clientRelationXrefID = xref.ClientRelationXrefId,
+                    relationshipClient = Mapper.MapClientMeta(xref.RecipientClient),
+                    eventType = Mapper.MapEvent(xref.EventType),
+                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+                    tags = new List<Logic.Objects.Tag>(),
+                    removable = xref.ChatMessages.Count > 0
+                })
+                .FirstOrDefaultAsync(crxr => crxr.clientRelationXrefID == xrefID);
+            return logicRelationshipMeta;
         }
         #endregion
 

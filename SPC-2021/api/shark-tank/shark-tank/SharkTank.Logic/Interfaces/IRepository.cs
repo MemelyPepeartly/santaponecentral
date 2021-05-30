@@ -1,4 +1,5 @@
-﻿using SharkTank.Logic.Objects.Base_Objects.Logging;
+﻿using SharkTank.Logic.Objects;
+using SharkTank.Logic.Objects.Base_Objects.Logging;
 using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,21 @@ namespace SharkTank.Logic.Interfaces
         /// <param name="categoryID"></param>
         /// <returns></returns>
         Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID);
+        #endregion
+
+        #region Informational Containers
+        /// <summary>
+        /// Gets a list of assignments for a client by their ID with additional information that a RelationshipMeta provides
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID);
+        /// <summary>
+        /// Gets a specific relationship for a client by xrefID
+        /// </summary>
+        /// <param name="xrefID"></param>
+        /// <returns></returns>
+        Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID);
         #endregion
 
         #region Utility
