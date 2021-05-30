@@ -243,7 +243,7 @@ namespace SharkTank.Api.Controllers
                 else if (requestModel.requestedObjectCategory == SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY)
                 {
                     // Base client object for the subject client 
-                    BaseClient subjectClient = await repository.GetBasicClientInformationByID(requestModel.requestedMessageHistoryContainer.subjectClientID);
+                    BaseClient subjectClient = await repository.GetBasicClientInformationByID((Guid)requestModel.requestedMessageHistoryContainer.subjectClientID);
                     // Get list of assignments the requestor has
                     List<RelationshipMeta> requestingClientAssignments = await repository.getClientAssignmentsInfoByIDAsync(requestingClient.clientID);
                     
@@ -264,7 +264,11 @@ namespace SharkTank.Api.Controllers
                             await yuleLogger.logError(requestingClient, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY);
                         }
                     }
-
+                    // Else, check if they were trying to get a general history
+                    else
+                    {
+                        // If the requesting client is the subject
+                    }
 
                 }
                 // Else if the request is for posting a new message

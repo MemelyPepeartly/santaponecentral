@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using YuleLog = SharkTank.Logic.Objects.Base_Objects.Logging.YuleLog;
 using Category = SharkTank.Logic.Objects.Base_Objects.Logging.Category;
 using SharkTank.Logic.Objects.Information_Objects;
+using SharkTank.Logic.Objects;
 
 namespace SharkTank.Data.Repository
 {

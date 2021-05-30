@@ -97,7 +97,7 @@ namespace SharkTank.Logic.Interfaces
         /// <param name="requestingClient"></param>
         /// <param name="requestedHistory"></param>
         /// <returns></returns>
-        Task logGetSpecificHistory(BaseClient requestingClient, MessageHistory requestedHistory);
+        Task logGetSpecificHistory(BaseClient requestingClient, BaseClient subjectClient, RelationshipMeta assignmentMeta);
 
         #endregion
 
