@@ -188,8 +188,8 @@ namespace SharkTank.Api.Controllers
             {
                 isRequestSuccess = true
             };
-            // If the requested object is empty
-            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) && requestModel.validationID == null)
+            // If the requested object is empty or the validation ID is null but isn't a request to get all clients (The request was for something that needed a validationID)
+            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) || (requestModel.validationID == null && requestModel.requestedObjectCategory != SharkTankConstants.GET_ALL_CLIENT_CATEGORY))
             {
                 response.isRequestSuccess = false;
                 response.isValid = false;
@@ -242,32 +242,22 @@ namespace SharkTank.Api.Controllers
                 // Else if the request is for getting a message history
                 else if (requestModel.requestedObjectCategory == SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY)
                 {
-                    // Base client object for the subject client 
-                    BaseClient subjectClient = await repository.GetBasicClientInformationByID((Guid)requestModel.requestedMessageHistoryContainer.subjectClientID);
-                    // Get list of assignments the requestor has
-                    List<RelationshipMeta> requestingClientAssignments = await repository.getClientAssignmentsInfoByIDAsync(requestingClient.clientID);
-                    
-                    // If the requesting client has the correct roles and the requested history is for an assignment
-                    if(checkRoles(requestModel.requestorRoles, "read", "profile") && requestModel.requestedMessageHistoryContainer.assignmentXrefID != null)
+                    // ID of the client the requestor is asking to see the history of
+                    BaseClient validationClient = await repository.GetBasicClientInformationByID((Guid)requestModel.validationID);
+
+                    await yuleLogger.logGetSpecificHistory(requestingClient, validationClient);
+
+                    // If the requesting client has the correct roles and the client requesting is the same as the client id for validation (meaning the requestor is requesting their own data)
+                    if (checkRoles(requestModel.requestorRoles, "read", "profile") && requestingClient.clientID == validationClient.clientID)
                     {
-                        // If the requesting client has any assignments that have the assignment xref ID requested for a history and the requestor has proper roles (Meaning they would be allowed to see that information)
-                        if (requestingClientAssignments.Any<RelationshipMeta>(rm => rm.clientRelationXrefID == requestModel.requestedMessageHistoryContainer.assignmentXrefID))
-                        {
-                            // Log that a request for a specific history was made by requesting client, who was the subject, and who the assignment was about
-                            await yuleLogger.logGetSpecificHistory(requestingClient, subjectClient, requestingClientAssignments.FirstOrDefault(am => am.clientRelationXrefID == requestModel.requestedMessageHistoryContainer.assignmentXrefID));
-                            // set to valid
-                            response.isValid = true;
-                        }
-                        else
-                        {
-                            // log error (valid remains false)
-                            await yuleLogger.logError(requestingClient, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY);
-                        }
+                        // set to valid
+                        response.isValid = true;
                     }
-                    // Else, check if they were trying to get a general history
+                    // The client was asking for information that was not theirs. Log the error
                     else
                     {
-                        // If the requesting client is the subject
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY);
                     }
 
                 }
