@@ -189,7 +189,7 @@ namespace SharkTank.Api.Controllers
                 isRequestSuccess = true
             };
             // If the requested object is empty
-            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) && requestModel.requestedMessageHistoryContainer == null)
+            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) && requestModel.validationID == null)
             {
                 response.isRequestSuccess = false;
                 response.isValid = false;
@@ -223,7 +223,7 @@ namespace SharkTank.Api.Controllers
                 else if(requestModel.requestedObjectCategory == SharkTankConstants.GET_PROFILE_CATEGORY)
                 {
                     // Get the basic info the requested profile
-                    BaseClient requestedClientInfo = await repository.GetBasicClientInformationByID(requestModel.requestedObjectID.Value);
+                    BaseClient requestedClientInfo = await repository.GetBasicClientInformationByID(requestModel.validationID.Value);
                     // Log that a request is being made to get that profile
                     await yuleLogger.logGetProfile(requestingClient, requestedClientInfo);
 
