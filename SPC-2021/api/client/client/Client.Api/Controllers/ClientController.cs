@@ -1172,14 +1172,14 @@ namespace Santa.Api.Controllers
             }
         }
         */
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? requestedObjectID)
+        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? validationID)
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
                 requestorClientID = requestorClient.clientID,
                 requestorRoles = roles,
                 requestedObjectCategory = requestedObjectCategory,
-                requestedObjectID = requestedObjectID != null ? requestedObjectID.Value : null,
+                validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod
             };
             return model;
