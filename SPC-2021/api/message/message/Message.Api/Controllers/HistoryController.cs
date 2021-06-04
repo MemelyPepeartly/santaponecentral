@@ -71,6 +71,12 @@ namespace Message.Api.Controllers
         }
 
         // GET: api/Client/5/EventHistory/5
+        /// <summary>
+        /// Gets a specific history for a client by event ID
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
         [HttpGet("Client/{clientID}/EventHistory/{eventTypeID}")]
         [Authorize(Policy = "read:profile")]
         public async Task<ActionResult<MessageHistory>> GetMessageHistoryByRequestorClientIDAndEventTypeID(Guid clientID, Guid eventTypeID)
