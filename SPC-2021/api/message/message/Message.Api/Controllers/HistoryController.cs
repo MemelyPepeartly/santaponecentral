@@ -1,13 +1,18 @@
-﻿using Message.Logic.Interfaces;
+﻿using Message.Logic.Constants;
+using Message.Logic.Interfaces;
+using Message.Logic.Models.Common_Models;
 using Message.Logic.Objects;
+using Message.Logic.Objects.Information_Objects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Message.Api.Controllers
@@ -20,11 +25,11 @@ namespace Message.Api.Controllers
 #warning All mailbag and YuleLog functionality will need to be updated from legacy to support microservice infrastructure
 
         private readonly IRepository repository;
-        //private readonly IYuleLog yuleLogger;
-        public HistoryController(IRepository _repository/*, IYuleLog _yuleLogger*/)
+        private readonly ISharkTank sharkTank;
+        public HistoryController(IRepository _repository, ISharkTank _sharkTank)
         {
             repository = _repository ?? throw new ArgumentNullException(nameof(_repository));
-            //yuleLogger = _yuleLogger ?? throw new ArgumentNullException(nameof(_yuleLogger));
+            sharkTank = _sharkTank ?? throw new ArgumentNullException(nameof(_sharkTank));
         }
 
         // GET: api/History
@@ -65,45 +70,38 @@ namespace Message.Api.Controllers
 
         }
 
-        // GET: api/History/Relationship/5
+        // GET: api/Client/5/EventHistory/5
         /// <summary>
-        /// Gets a specific history by XrefID with a subject to define who is the viewer
+        /// Gets a specific history for a client by event ID
         /// </summary>
-        /// <param name="subjectID"></param>
-        /// <param name="clientRelationXrefID"></param>
+        /// <param name="clientID"></param>
+        /// <param name="eventTypeID"></param>
         /// <returns></returns>
-        [HttpGet("Relationship/{clientRelationXrefID}")]
+        [HttpGet("Client/{clientID}/EventHistory/{eventTypeID}")]
         [Authorize(Policy = "read:profile")]
-        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required] Guid subjectID)
+        public async Task<ActionResult<MessageHistory>> GetMessageHistoryByRequestorClientIDAndEventTypeID(Guid clientID, Guid eventTypeID)
         {
-            /*
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+            BaseClient URIClient = await repository.GetBasicClientInformationByID(clientID);
 
-            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
-
-            if (requestingClient.email == subjectClient.email)
+            try
             {
-                try
+                MessageHistory logicHistory = new MessageHistory();
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY, URIClient.clientID));
+
+                if (validationModel.isValid)
                 {
-                    MessageHistory logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
-                    await yuleLogger.logGetSpecificHistory(requestingClient, logicHistory);
+                    logicHistory = await repository.GetSpecificHistoryByClientIDAndEventID(URIClient.clientID, eventTypeID);
                     return Ok(logicHistory);
                 }
-                catch (Exception)
+                else
                 {
-                    await yuleLogger.logError(requestingClient, LoggingConstants.GET_ALL_HISTORY_CATEGORY);
-                    return StatusCode(StatusCodes.Status424FailedDependency);
+                    return StatusCode(StatusCodes.Status401Unauthorized);
                 }
-
             }
-            else
+            catch
             {
-                await yuleLogger.logError(requestingClient, LoggingConstants.GET_SPECIFIC_HISTORY_CATEGORY);
-                return StatusCode(StatusCodes.Status401Unauthorized);
+                return StatusCode(StatusCodes.Status424FailedDependency);
             }
-            */
-            return StatusCode(StatusCodes.Status501NotImplemented);
-
         }
 
         // GET: api/History/Client/5/General
@@ -182,5 +180,20 @@ namespace Message.Api.Controllers
             return StatusCode(StatusCodes.Status501NotImplemented);
 
         }
+
+        #region UTILITY
+        private async Task<SharkTankValidationModel> makeSharkTankValidationModel(Method httpMethod, string requestedObjectCategory, Guid? validationID)
+        {
+            SharkTankValidationModel model = new SharkTankValidationModel()
+            {
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
+                requestedObjectCategory = requestedObjectCategory,
+                validationID = validationID != null ? validationID.Value : null,
+                httpMethod = httpMethod
+            };
+            return model;
+        }
+        #endregion
     }
 }

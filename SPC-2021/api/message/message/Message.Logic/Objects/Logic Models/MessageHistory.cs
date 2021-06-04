@@ -6,43 +6,27 @@ using System.Text;
 
 namespace Message.Logic.Objects
 {
+    /// <summary>
+    /// Container for information and messages for a given message history
+    /// </summary>
     public class MessageHistory
     {
-        public Guid? relationXrefID { get; set; }
+        /// <summary>
+        /// Event that the chat history is for
+        /// </summary>
         public Event eventType { get; set; }
         /// <summary>
-        /// Meta for the client that is involved with the conversation. This is primarily for the front ent to determine information about general histories
-        /// where no assingmentSender or reciever is present
+        /// List of all the messages for this particular event and agent. Contains all the message to and from admins, and to and from the target agent
         /// </summary>
-        public ClientChatMeta conversationClient { get; set; }
+        public List<ChatMessage> chatMessages { get; set; }
         /// <summary>
-        /// Status of the assignment this history relates to
+        /// Holder of the conversation. This is the agent that was assigned anons for the event
         /// </summary>
-        public AssignmentStatus assignmentStatus { get; set; }
+        public ClientChatMeta agent { get; set; }
         /// <summary>
-        /// Meta of the client that the conversation is about. This is the client that was assigned if the object has a relationXrefID
+        /// Boolean to determine if a history is a general history or not. Being a general history implies that no event type exists
         /// </summary>
-        public ClientChatMeta assignmentRecieverClient { get; set; }
-        /// <summary>
-        /// Meta of the client that is sending the gift if a relationship is present
-        /// </summary>
-        public ClientChatMeta assignmentSenderClient { get; set; }
-        /// <summary>
-        /// Subject client is the one who is requesting to see the messages. Will always be on the blue side
-        /// </summary>
-        public ClientChatMeta subjectClient { get; set; }
-        /// <summary>
-        /// List of the subject client's messages
-        /// </summary>
-        public List<ChatMessage> subjectMessages { get; set; }
-        /// <summary>
-        /// Reciever messages on the grey side. There is no client meta because more than one admin can be the people sending a message
-        /// </summary>
-        public List<ChatMessage> recieverMessages { get; set; }
-        /// <summary>
-        /// Count of all unread messages on the reciever messages
-        /// </summary>
-        public int unreadCount { get; set; }
+        public bool isGeneralHistory { get; set; }
 
     }
 }
