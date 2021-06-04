@@ -84,68 +84,7 @@ namespace Message.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.MessageHistory MapHistoryInformation(Entities.ClientRelationXref contextRelationshipXref, BaseClient logicSubjectClient, bool unloaded)
         {
-            List<ChatMessage> logicListRecieverMessages = new List<ChatMessage>();
-            List<ChatMessage> logicListSubjectMessages = new List<ChatMessage>();
-
-            if (!unloaded)
-            {
-                if (logicSubjectClient.isAdmin)
-                {
-                    logicListSubjectMessages = contextRelationshipXref.ChatMessages
-                        .Select(Mapper.MapMessage)
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => m.fromAdmin)
-                        .ToList();
-
-                    logicListRecieverMessages = contextRelationshipXref.ChatMessages
-                        .Select(Mapper.MapMessage)
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => !m.fromAdmin)
-                        .ToList();
-                }
-                else
-                {
-                    logicListSubjectMessages = contextRelationshipXref.ChatMessages
-                        .Select(Mapper.MapMessage)
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
-                        .ToList();
-
-                    logicListRecieverMessages = contextRelationshipXref.ChatMessages
-                        .Select(Mapper.MapMessage)
-                        .OrderBy(dt => dt.dateTimeSent)
-                        .Where(m => m.fromAdmin)
-                        .ToList();
-                }
-            }
-
-
-
-
-            MessageHistory logicHistory = new MessageHistory()
-            {
-                relationXrefID = contextRelationshipXref.ClientRelationXrefId,
-                eventType = MapEvent(contextRelationshipXref.EventType),
-                assignmentStatus = MapAssignmentStatus(contextRelationshipXref.AssignmentStatus),
-
-                subjectClient = MapClientChatMeta(logicSubjectClient),
-                conversationClient = MapClientChatMeta(contextRelationshipXref.SenderClient),
-                assignmentRecieverClient = MapClientChatMeta(contextRelationshipXref.RecipientClient),
-                assignmentSenderClient = MapClientChatMeta(contextRelationshipXref.SenderClient),
-
-                subjectMessages = unloaded ? new List<ChatMessage>() : logicListSubjectMessages,
-
-                recieverMessages = unloaded ? new List<ChatMessage>() : logicListRecieverMessages,
-
-                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
-            };
-
-            foreach (ChatMessage logicMessage in logicHistory.subjectMessages)
-            {
-                logicMessage.subjectMessage = true;
-            }
-
-            return logicHistory;
+            throw new NotImplementedException();
         }
         /// <summary>
         /// Maps history information for general chats, which do not have a relationshipXrefID, EventType, or AssignmentClient using a list of contextChatMessages relating to the client's general conversation
@@ -156,65 +95,7 @@ namespace Message.Data.Repository
         /// <returns></returns>
         public static MessageHistory MapHistoryInformation(Entities.Client contextConversationClient, List<Entities.ChatMessage> contextChatMessages, BaseClient logicSubjectClient)
         {
-            List<ChatMessage> logicListRecieverMessages = new List<ChatMessage>();
-            List<ChatMessage> logicListSubjectMessages = new List<ChatMessage>();
-
-            if (logicSubjectClient.isAdmin)
-            {
-                logicListSubjectMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
-
-                logicListRecieverMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin)
-                    .ToList();
-            }
-            else
-            {
-                logicListSubjectMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
-                    .ToList();
-
-                logicListRecieverMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
-            }
-
-            // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
-            MessageHistory logicHistory = new MessageHistory()
-            {
-                relationXrefID = null,
-                eventType = new Event(),
-                assignmentStatus = new Logic.Objects.AssignmentStatus(),
-
-                subjectClient = MapClientChatMeta(logicSubjectClient),
-                conversationClient = MapClientChatMeta(contextConversationClient),
-                assignmentRecieverClient = new ClientChatMeta(),
-                assignmentSenderClient = new ClientChatMeta(),
-
-                subjectMessages = logicListSubjectMessages,
-
-                recieverMessages = logicListRecieverMessages,
-
-                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
-            };
-
-            logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
-
-            foreach (ChatMessage logicMessage in logicHistory.subjectMessages)
-            {
-                logicMessage.subjectMessage = true;
-            }
-
-            return logicHistory;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -227,65 +108,7 @@ namespace Message.Data.Repository
         /// <returns></returns>
         public static Logic.Objects.MessageHistory MapHistoryInformation(Client logicConversationClient, List<Entities.ChatMessage> contextChatMessages, BaseClient logicSubjectClient)
         {
-            List<ChatMessage> logicListRecieverMessages = new List<ChatMessage>();
-            List<ChatMessage> logicListSubjectMessages = new List<ChatMessage>();
-
-            if (logicSubjectClient.isAdmin)
-            {
-                logicListSubjectMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
-
-                logicListRecieverMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin)
-                    .ToList();
-            }
-            else
-            {
-                logicListSubjectMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => !m.fromAdmin && m.senderClient.clientId == logicSubjectClient.clientID)
-                    .ToList();
-
-                logicListRecieverMessages = contextChatMessages
-                    .Select(Mapper.MapMessage)
-                    .OrderBy(dt => dt.dateTimeSent)
-                    .Where(m => m.fromAdmin)
-                    .ToList();
-            }
-
-            // General histories dont have a relationXrefID, EventType, or AssignmentClient because they are not tied to an assignment
-            MessageHistory logicHistory = new MessageHistory()
-            {
-                relationXrefID = null,
-                eventType = new Event(),
-                assignmentStatus = new Logic.Objects.AssignmentStatus(),
-
-                subjectClient = MapClientChatMeta(logicSubjectClient),
-                conversationClient = MapClientChatMeta(logicConversationClient),
-                assignmentRecieverClient = new ClientChatMeta(),
-                assignmentSenderClient = new ClientChatMeta(),
-
-                subjectMessages = logicListSubjectMessages,
-
-                recieverMessages = logicListRecieverMessages,
-
-                unreadCount = logicListRecieverMessages.Where(m => m.isMessageRead == false).ToList().Count()
-            };
-
-            logicHistory.unreadCount = logicHistory.recieverMessages.Where(m => m.isMessageRead == false).ToList().Count();
-
-            foreach (ChatMessage logicMessage in logicHistory.subjectMessages)
-            {
-                logicMessage.subjectMessage = true;
-            }
-
-            return logicHistory;
+            throw new NotImplementedException();
         }
         #endregion
 
