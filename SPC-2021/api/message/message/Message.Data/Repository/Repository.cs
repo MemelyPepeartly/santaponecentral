@@ -114,136 +114,92 @@ namespace Message.Data.Repository
         #region Message Histories
         public async Task<List<MessageHistory>> GetAllChatHistories(BaseClient subjectClient)
         {
+            throw new NotImplementedException();
+        //    List<Message.Data.Entities.Client> contextClients = await santaContext.Clients.Include(c => c.ClientStatus).Where(c => c.ClientStatus.StatusDescription != Constants.AWAITING_STATUS && c.ClientStatus.StatusDescription != Constants.DENIED_STATUS).ToListAsync();
+
+        //    /* Assignment history query */
+        //    /*
+        //     * Xref is not null
+        //     * Event type is the type of event attatched to the xref
+        //     * Assignment status is attached to xref
+        //     * Subject client is the meta passed in the method
+        //     * Conversation client is the sender client (The agent)
+        //     * Assignment sender is the sender client (The agent)
+        //     * Assignment reciever client is the reciever client (The actual assignment client)
+        //     * 
+        //     * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
+        //     * 
+        //    */
+        //    List<MessageHistory> listLogicAssignmentMessageHistory = await santaContext.ClientRelationXrefs
+        //        .Select(xref => new MessageHistory()
+        //        {
+        //            relationXrefID = xref.ClientRelationXrefId,
+        //            eventType = new Event()
+        //            {
+        //                eventTypeID = xref.EventType.EventTypeId,
+        //                eventDescription = xref.EventType.EventDescription,
+        //                active = xref.EventType.IsActive,
+        //                removable = xref.EventType.ClientRelationXrefs.Count == 0 && xref.EventType.Surveys.Count == 0,
+        //                immutable = xref.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT || xref.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT
+        //            },
+        //            assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
+
+        //            subjectClient = Mapper.MapClientChatMeta(subjectClient),
+        //            conversationClient = Mapper.MapClientChatMeta(xref.SenderClient),
+        //            assignmentRecieverClient = Mapper.MapClientChatMeta(xref.RecipientClient),
+        //            assignmentSenderClient = Mapper.MapClientChatMeta(xref.SenderClient),
+
+        //            subjectMessages = new List<ChatMessage>(),
+        //            recieverMessages = new List<ChatMessage>(),
+
+        //            unreadCount = xref.ChatMessages
+        //                .Where(m => !m.FromAdmin && m.IsMessageRead == false)
+        //                .Count()
+        //        }).ToListAsync();
+
+        //    /* General history query */
+        //    /*
+        //     * All clients where the status of the client is approved or completed (Awaiting and denied have no chat history)
+        //     * 
+        //     * Xref is null
+        //     * Event type does not exist
+        //     * Assignment status does not exist
+        //     * Subject client is the meta passed in the method
+        //     * Conversation client is the client object in the context
+        //     * Assingment sender/reciever clients do not exist
+        //     * 
+        //     * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
+        //    */
+        //    List<MessageHistory> logicGeneralChatHistories = await santaContext.Clients.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS || c.ClientStatus.StatusDescription == Constants.COMPLETED_STATUS)
+        //        .Select(client => new MessageHistory()
+        //        {
+        //            relationXrefID = null,
+        //            eventType = new Event(),
+        //            assignmentStatus = new AssignmentStatus(),
+
+        //            subjectClient = Mapper.MapClientChatMeta(subjectClient),
+        //            conversationClient = Mapper.MapClientChatMeta(client),
+        //            assignmentRecieverClient = new ClientChatMeta(),
+        //            assignmentSenderClient = new ClientChatMeta(),
+
+        //            subjectMessages = new List<ChatMessage>(),
+        //            recieverMessages = new List<ChatMessage>(),
+
+        //            unreadCount = client.ChatMessageMessageSenderClients
+        //            .Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin && m.IsMessageRead == false)
+        //            .Count()
+        //        }).ToListAsync();
+
+        //    List<MessageHistory> totalHistories = listLogicAssignmentMessageHistory.Concat(logicGeneralChatHistories).ToList();
 
 
-            List<Message.Data.Entities.Client> contextClients = await santaContext.Clients.Include(c => c.ClientStatus).Where(c => c.ClientStatus.StatusDescription != Constants.AWAITING_STATUS && c.ClientStatus.StatusDescription != Constants.DENIED_STATUS).ToListAsync();
+        //    return totalHistories.OrderByDescending(h => h.eventType.eventDescription).ThenBy(h => h.conversationClient.clientNickname).ToList();
+        }
 
-            /* Assignment history query */
+        public async Task<List<MessageHistory>> GetProfileChatHistories(Guid profileOwnerClientID)
+        {
+            throw new NotImplementedException();
             /*
-             * Xref is not null
-             * Event type is the type of event attatched to the xref
-             * Assignment status is attached to xref
-             * Subject client is the meta passed in the method
-             * Conversation client is the sender client (The agent)
-             * Assignment sender is the sender client (The agent)
-             * Assignment reciever client is the reciever client (The actual assignment client)
-             * 
-             * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
-             * 
-            */
-            List<MessageHistory> listLogicAssignmentMessageHistory = await santaContext.ClientRelationXrefs
-                .Select(xref => new MessageHistory()
-                {
-                    relationXrefID = xref.ClientRelationXrefId,
-                    eventType = new Event()
-                    {
-                        eventTypeID = xref.EventType.EventTypeId,
-                        eventDescription = xref.EventType.EventDescription,
-                        active = xref.EventType.IsActive,
-                        removable = xref.EventType.ClientRelationXrefs.Count == 0 && xref.EventType.Surveys.Count == 0,
-                        immutable = xref.EventType.EventDescription == Constants.CARD_EXCHANGE_EVENT || xref.EventType.EventDescription == Constants.GIFT_EXCHANGE_EVENT
-                    },
-                    assignmentStatus = Mapper.MapAssignmentStatus(xref.AssignmentStatus),
-
-                    subjectClient = Mapper.MapClientChatMeta(subjectClient),
-                    conversationClient = Mapper.MapClientChatMeta(xref.SenderClient),
-                    assignmentRecieverClient = Mapper.MapClientChatMeta(xref.RecipientClient),
-                    assignmentSenderClient = Mapper.MapClientChatMeta(xref.SenderClient),
-
-                    subjectMessages = new List<ChatMessage>(),
-                    recieverMessages = new List<ChatMessage>(),
-
-                    unreadCount = xref.ChatMessages
-                        .Where(m => !m.FromAdmin && m.IsMessageRead == false)
-                        .Count()
-                }).ToListAsync();
-
-            /* General history query */
-            /*
-             * All clients where the status of the client is approved or completed (Awaiting and denied have no chat history)
-             * 
-             * Xref is null
-             * Event type does not exist
-             * Assignment status does not exist
-             * Subject client is the meta passed in the method
-             * Conversation client is the client object in the context
-             * Assingment sender/reciever clients do not exist
-             * 
-             * Subject and reciever messages are new lists for loading times since histories are lazy loaded in the app
-            */
-            List<MessageHistory> logicGeneralChatHistories = await santaContext.Clients.Where(c => c.ClientStatus.StatusDescription == Constants.APPROVED_STATUS || c.ClientStatus.StatusDescription == Constants.COMPLETED_STATUS)
-                .Select(client => new MessageHistory()
-                {
-                    relationXrefID = null,
-                    eventType = new Event(),
-                    assignmentStatus = new AssignmentStatus(),
-
-                    subjectClient = Mapper.MapClientChatMeta(subjectClient),
-                    conversationClient = Mapper.MapClientChatMeta(client),
-                    assignmentRecieverClient = new ClientChatMeta(),
-                    assignmentSenderClient = new ClientChatMeta(),
-
-                    subjectMessages = new List<ChatMessage>(),
-                    recieverMessages = new List<ChatMessage>(),
-
-                    unreadCount = client.ChatMessageMessageSenderClients
-                    .Where(m => m.ClientRelationXrefId == null && !m.MessageSenderClient.IsAdmin && m.IsMessageRead == false)
-                    .Count()
-                }).ToListAsync();
-
-            List<MessageHistory> totalHistories = listLogicAssignmentMessageHistory.Concat(logicGeneralChatHistories).ToList();
-
-
-            return totalHistories.OrderByDescending(h => h.eventType.eventDescription).ThenBy(h => h.conversationClient.clientNickname).ToList();
-        }
-        public async Task<List<MessageHistory>> GetAllAssignmentChatsByClientID(BaseClient subjectClient)
-        {
-            List<MessageHistory> listLogicMessageHistory = new List<MessageHistory>();
-            List<Message.Data.Entities.ClientRelationXref> XrefList = await santaContext.ClientRelationXrefs.Where(x => x.SenderClientId == subjectClient.clientID).ToListAsync();
-
-
-            foreach (Message.Data.Entities.ClientRelationXref relationship in XrefList)
-            {
-                MessageHistory logicHistory = new MessageHistory();
-                logicHistory = await GetChatHistoryByXrefIDAndSubjectIDAsync(relationship.ClientRelationXrefId, subjectClient);
-                listLogicMessageHistory.Add(logicHistory);
-            }
-
-            return listLogicMessageHistory;
-        }
-        public async Task<MessageHistory> GetChatHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, BaseClient subjectClient)
-        {
-            MessageHistory logicHistory = new MessageHistory();
-            Message.Data.Entities.ClientRelationXref contextRelationship = await santaContext.ClientRelationXrefs
-                .Include(r => r.EventType)
-                .Include(r => r.SenderClient)
-                .Include(r => r.RecipientClient)
-                .Include(r => r.AssignmentStatus)
-                .Include(r => r.ChatMessages)
-                    .ThenInclude(cm => cm.MessageReceiverClient)
-                .Include(r => r.ChatMessages)
-                    .ThenInclude(cm => cm.MessageSenderClient)
-                .Where(x => x.ClientRelationXrefId == clientRelationXrefID)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            return Mapper.MapHistoryInformation(contextRelationship, subjectClient, false);
-        }
-        public async Task<MessageHistory> GetGeneralChatHistoryBySubjectIDAsync(Client conversationClient, BaseClient subjectClient)
-        {
-            MessageHistory logicHistory = new MessageHistory();
-            List<Message.Data.Entities.ChatMessage> contextListMessages = await santaContext.ChatMessages
-                .Where(m => m.ClientRelationXrefId == null && (m.MessageSenderClientId == conversationClient.clientID || m.MessageReceiverClientId == conversationClient.clientID))
-                .Include(s => s.MessageSenderClient)
-                .Include(r => r.MessageReceiverClient)
-                .AsNoTracking()
-                .OrderBy(dt => dt.DateTimeSent)
-                .ToListAsync();
-
-            return Mapper.MapHistoryInformation(conversationClient, contextListMessages, subjectClient);
-        }
-        public async Task<List<MessageHistory>> GetUnloadedProfileChatHistoriesAsync(Guid profileOwnerClientID)
-        {
             Client logicSubject = await GetStaticClientObjectByID(profileOwnerClientID);
             List<MessageHistory> listLogicMessageHistory = await santaContext.ClientRelationXrefs.Where(r => r.SenderClientId == profileOwnerClientID)
                 .Select(xref => new MessageHistory()
@@ -265,6 +221,11 @@ namespace Message.Data.Repository
 
 
             return listLogicMessageHistory;
+            */
+        }
+        public async Task<MessageHistory> GetSpecificHistoryByClientIDAndEventID(Guid conversationAgentID, Guid eventTypeID)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
