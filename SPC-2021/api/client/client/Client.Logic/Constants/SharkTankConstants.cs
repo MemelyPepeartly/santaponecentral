@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharkTank.Logic.Constants
+namespace Client.Logic.Constants
 {
-    public static class LoggingConstants
+    public static class SharkTankConstants
     {
         // Post Constants
         public const string CREATED_ASSIGNMENT_CATEGORY = "Assignments Given";

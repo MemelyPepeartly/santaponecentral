@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Profile.Api.Services;
 using Profile.Data.Entities;
 using Profile.Data.Repository;
 using Profile.Logic.Interfaces;
@@ -43,7 +44,7 @@ namespace Profile.Api
                 options.AddPolicy("AllowAngular",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net", "https://santaponecentral.azurewebsites.net")
+                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net" )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -52,6 +53,8 @@ namespace Profile.Api
 
             //Services
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ISharkTank, SharkTank>();
+
 
             //Swagger
             services.AddSwaggerGen(c =>

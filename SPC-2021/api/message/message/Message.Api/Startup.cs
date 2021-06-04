@@ -1,3 +1,4 @@
+using Message.Api.Services;
 using Message.Data.Entities;
 using Message.Data.Repository;
 using Message.Logic.Interfaces;
@@ -53,6 +54,8 @@ namespace Message.Api
 
             //Services
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ISharkTank, SharkTank>();
+
 
             //Swagger
             services.AddSwaggerGen(c =>

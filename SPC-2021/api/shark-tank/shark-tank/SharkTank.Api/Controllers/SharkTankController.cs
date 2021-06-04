@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharkTank.Api.Filters;
 using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
+using SharkTank.Logic.Models.Common_Models;
+using SharkTank.Logic.Objects;
 using SharkTank.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -177,9 +181,104 @@ namespace SharkTank.Api.Controllers
         /// <param name="someObject"></param>
         /// <returns></returns>
         [HttpPost("Validate")]
-        public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] object someObject)
+        [SharkTankValidationFilter]
+        public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] SharkTankValidationModel requestModel)
         {
-            return Ok(true);
+            SharkTankValidationResponseModel response = new SharkTankValidationResponseModel()
+            {
+                isRequestSuccess = true
+            };
+            // If the requested object is empty or the validation ID is null but isn't a request to get all clients (The request was for something that needed a validationID)
+            if(String.IsNullOrEmpty(requestModel.requestedObjectCategory) || (requestModel.validationID == null && requestModel.requestedObjectCategory != SharkTankConstants.GET_ALL_CLIENT_CATEGORY))
+            {
+                response.isRequestSuccess = false;
+                response.isValid = false;
+                response.errorMessages.Add(SharkTankErrorConstants.INVALID_REQUEST_ERROR);
+                return Ok(response);
+            }
+
+            try
+            {
+                BaseClient requestingClient = await repository.GetBasicClientInformationByID(requestModel.requestorClientID);
+
+                // If the request is for getting all clients
+                if (requestModel.requestedObjectCategory == SharkTankConstants.GET_ALL_CLIENT_CATEGORY)
+                {
+                    // Log that a request is made to get all clients
+                    await yuleLogger.logGetAllClients(requestingClient);
+
+                    // If the requesting client is an admin or has the proper permissions
+                    if (requestingClient.isAdmin || checkRoles(requestModel.requestorRoles, "read", "clients"))
+                    {
+                        // set to valid
+                        response.isValid = true;
+                    }
+                    else
+                    {
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_ALL_CLIENT_CATEGORY);
+                    }
+                }
+                // Else if the request is for getting a profile
+                else if(requestModel.requestedObjectCategory == SharkTankConstants.GET_PROFILE_CATEGORY)
+                {
+                    // Get the basic info the requested profile
+                    BaseClient requestedClientInfo = await repository.GetBasicClientInformationByID(requestModel.validationID.Value);
+                    // Log that a request is being made to get that profile
+                    await yuleLogger.logGetProfile(requestingClient, requestedClientInfo);
+
+                    // If the requesting client is accessing their own information, or the client is an admin
+                    if((requestingClient.clientID == requestedClientInfo.clientID || requestingClient.isAdmin) && checkRoles(requestModel.requestorRoles, "read", "profile"))
+                    {
+                        // set to valid
+                        response.isValid = true;
+                    }
+                    else
+                    {
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_PROFILE_CATEGORY);
+                    }
+                }
+                // Else if the request is for getting a message history
+                else if (requestModel.requestedObjectCategory == SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY)
+                {
+                    // ID of the client the requestor is asking to see the history of
+                    BaseClient validationClient = await repository.GetBasicClientInformationByID((Guid)requestModel.validationID);
+
+                    await yuleLogger.logGetSpecificHistory(requestingClient, validationClient);
+
+                    // If the requesting client has the correct roles and the client requesting is the same as the client id for validation (meaning the requestor is requesting their own data)
+                    if (checkRoles(requestModel.requestorRoles, "read", "profile") && requestingClient.clientID == validationClient.clientID)
+                    {
+                        // set to valid
+                        response.isValid = true;
+                    }
+                    // The client was asking for information that was not theirs. Log the error
+                    else
+                    {
+                        // log error (valid remains false)
+                        await yuleLogger.logError(requestingClient, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY);
+                    }
+
+                }
+                // Else if the request is for posting a new message
+                else if (requestModel.requestedObjectCategory == SharkTankConstants.CREATED_NEW_MESSAGE_CATEGORY)
+                {
+                    // Actions
+                }
+                return Ok(response);
+            }
+            catch(Exception e)
+            {
+                // Set request success to false and add errors
+                response.isRequestSuccess = false;
+                response.errorMessages.Add(SharkTankErrorConstants.FAILED_REQUEST_ERROR);
+                response.errorMessages.Add(e.Message);
+
+                return Ok(response);
+
+            }
+
         }
 
         // PUT api/<SharkTankController>/5/Email
@@ -233,6 +332,24 @@ namespace SharkTank.Api.Controllers
             Auth0UserInfoModel authUser = await authHelper.getAuthClientByEmail((await repository.GetBasicClientInformationByID(clientID)).email);
             await authHelper.deleteAuthClient(authUser.user_id);
             return Ok(true);
+        }
+        /// <summary>
+        /// Checks the role the client has and compares them to an input access verb (such as "read") and the object type for role access (such as "clients"). 
+        /// Will return true if the roles input has any roles that match the access verb and object type
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <param name="requiredAccessVerb"></param>
+        /// <param name="requiredObjectType"></param>
+        /// <returns></returns>
+        private bool checkRoles(List<Claim> roles, string requiredAccessVerb, string requiredObjectType)
+        {
+            bool isAllowed = false;
+
+            if (roles.Any(r => r.Value == $"{requiredAccessVerb}:{requiredObjectType}"))
+            {
+                isAllowed = true;
+            }
+            return isAllowed;
         }
     }
 }

@@ -16,6 +16,8 @@ using Client.Logic.Models.Common_Models;
 using RestSharp;
 using Client.Logic.Survey_Response_Models;
 using Client.Logic.Models.Auth0_Models;
+using System.Net;
+using Client.Logic.Objects.Container_Objects;
 
 namespace Santa.Api.Controllers
 {
@@ -40,22 +42,38 @@ namespace Santa.Api.Controllers
         /// <returns></returns>
         [HttpGet("Truncated")]
         [Authorize(Policy = "read:clients")]
-        public async Task<ActionResult<List<StrippedClient>>> GetAllClientsWithoutChats()
+        public async Task<ActionResult<StrippedClientContainer>> GetAllClientsWithoutChats()
         {
-            
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
-            try
+#warning Could likely be optimized?
+            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
+
+            StrippedClientContainer clients = new StrippedClientContainer();
+            clients.sharkTankValidationResponse = sharkTankValidationModel;
+            if (sharkTankValidationModel.isValid && sharkTankValidationModel.isRequestSuccess)
             {
-                List<StrippedClient> clients = await repository.GetAllStrippedClientData();
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return Ok(clients.OrderBy(c => c.nickname));
+                try
+                {
+                    clients.strippedClients = (await repository.GetAllStrippedClientData()).OrderBy(c => c.nickname).ToList();
+                    return Ok(clients);
+                }
+                catch (Exception)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
             }
-            catch (Exception)
+            else
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return StatusCode(StatusCodes.Status424FailedDependency);
+                if(!sharkTankValidationModel.isValid)
+                {
+                    return Unauthorized(clients);
+                }
+                else if(!sharkTankValidationModel.isRequestSuccess)
+                {
+                    return UnprocessableEntity(clients);
+                }
             }
+            return NoContent();
+
         }
 
         // GET: api/Client/Truncated/5
@@ -67,19 +85,22 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<StrippedClient>> GetTrucatedClientByID(Guid clientID)
         {
-            
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
-
             try
             {
-                StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return Ok(logicStrippedClient);
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
+                if(validationModel.isValid)
+                {
+                    StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
+                    return Ok(logicStrippedClient);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -93,17 +114,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "allClients", Method.GET));
             try
             {
-                List<HQClient> clients = await repository.GetAllHeadquarterClients();
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return Ok(clients.OrderBy(c => c.nickname));
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
+                if(validationModel.isValid)
+                {
+                    List<HQClient> clients = await repository.GetAllHeadquarterClients();
+                    return Ok(clients.OrderBy(c => c.nickname));
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -117,18 +142,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
-
             try
             {
-                HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
-                return Ok(logicHQClient);
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
+                if(validationModel.isValid)
+                {
+                    HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
+                    return Ok(logicHQClient);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_ALL_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -143,19 +171,21 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
-            
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
-
             try
             {
-                Client.Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
-                return Ok(logicClient);
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
+                if(validationModel.isValid)
+                {
+                    Client.Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
+                    return Ok(logicClient);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -170,17 +200,23 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
                 Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
-                return Ok(logicClient);
+
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
+                if(validationModel.isValid)
+                {
+                    return Ok(logicClient);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -195,17 +231,22 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
             try
             {
-                BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
-                return Ok(logicClient);
+#warning needs to impliment this validation
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
+                if(validationModel.isValid)
+                {
+                    BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
+                    return Ok(logicClient);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -220,19 +261,16 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(string clientEmail)
         {
-            
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
 
             try
             {
-                BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
+#warning needs to impliment this validation
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
                 return Ok(logicClient);
             }
             catch (Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.GET_SPECIFIC_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -247,8 +285,9 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.GET));
+            ;
+#warning needs to impliment this validation
+            await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
 
             InfoContainer logicInfoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
             return Ok(logicInfoContainer);
@@ -1005,9 +1044,7 @@ namespace Santa.Api.Controllers
         [Authorize(Policy = "delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
-            
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), "specificClient", Method.DELETE));
+            await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.DELETE, SharkTankConstants.DELETED_CLIENT_CATEGORY, clientID));
 
             BaseClient baseLogicClient = await repository.GetBasicClientInformationByID(clientID);
             InfoContainer infoContainer = await repository.getClientInfoContainerByIDAsync(clientID);
@@ -1034,14 +1071,10 @@ namespace Santa.Api.Controllers
                 }
                 */
                 await repository.SaveAsync();
-#warning need to make overload for requesting and base logic client
-                await sharkTank.MakeNewSuccessLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
-                //await yuleLogger.logDeletedClient(requestingClient, baseLogicClient);
                 return NoContent();
             }
             catch(Exception)
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, LoggingConstants.DELETED_CLIENT_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }
         }
@@ -1144,13 +1177,14 @@ namespace Santa.Api.Controllers
             }
         }
         */
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, object requestedObject, Method httpMethod)
+        private async Task<SharkTankValidationModel> makeSharkTankValidationModel(Method httpMethod, string requestedObjectCategory, Guid? validationID)
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
-                requestorClientID = requestorClient.clientID,
-                requestorRoles = roles,
-                requesetedObject = requestedObject,
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
+                requestedObjectCategory = requestedObjectCategory,
+                validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod
             };
             return model;
