@@ -58,21 +58,6 @@ namespace SharkTank.Logic.Interfaces
         Task<List<YuleLog>> GetLogsByCategoryID(Guid categoryID);
         #endregion
 
-        #region Informational Containers
-        /// <summary>
-        /// Gets a list of assignments for a client by their ID with additional information that a RelationshipMeta provides
-        /// </summary>
-        /// <param name="clientID"></param>
-        /// <returns></returns>
-        Task<List<RelationshipMeta>> getClientAssignmentsInfoByIDAsync(Guid clientID);
-        /// <summary>
-        /// Gets a specific relationship for a client by xrefID
-        /// </summary>
-        /// <param name="xrefID"></param>
-        /// <returns></returns>
-        Task<RelationshipMeta> getAssignmentRelationshipMetaByIDAsync(Guid xrefID);
-        #endregion
-
         #region Utility
         /// <summary>
         /// Saves changes of any CRUD operations in the queue
