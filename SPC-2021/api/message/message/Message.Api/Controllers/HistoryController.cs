@@ -70,44 +70,31 @@ namespace Message.Api.Controllers
 
         }
 
-        // GET: api/History/Relationship/5
-        /// <summary>
-        /// Gets a specific history by XrefID with a subject to define who is the viewer
-        /// </summary>
-        /// <param name="subjectID"></param>
-        /// <param name="clientRelationXrefID"></param>
-        /// <returns></returns>
-        [HttpGet("Relationship/{clientRelationXrefID}")]
+        // GET: api/Client/5/EventHistory/5
+        [HttpGet("Client/{clientID}/EventHistory/{eventTypeID}")]
         [Authorize(Policy = "read:profile")]
-        public async Task<ActionResult<MessageHistory>> GetClientMessageHistoryByXrefIDAndSubjectIDAsync(Guid clientRelationXrefID, [Required] Guid subjectID)
+        public async Task<ActionResult<MessageHistory>> GetMessageHistoryByRequestorClientIDAndEventTypeID(Guid clientID, Guid eventTypeID)
         {
-            BaseClient requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
-            BaseClient subjectClient = await repository.GetBasicClientInformationByID(subjectID);
-
-            MessageHistory logicHistory = new MessageHistory();
+            BaseClient URIClient = await repository.GetBasicClientInformationByID(clientID);
 
             try
             {
-                logicHistory = await repository.GetChatHistoryByXrefIDAndSubjectIDAsync(clientRelationXrefID, subjectClient);
+                MessageHistory logicHistory = new MessageHistory();
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY, URIClient.clientID));
+
+                if (validationModel.isValid)
+                {
+                    logicHistory = await repository.GetSpecificHistoryByClientIDAndEventID(URIClient.clientID, eventTypeID);
+                    return Ok(logicHistory);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
             }
             catch
             {
-                await sharkTank.MakeNewFailureLog(requestingClient, SharkTankConstants.GET_ALL_HISTORY_CATEGORY);
                 return StatusCode(StatusCodes.Status424FailedDependency);
-            }
-            
-
-            SharkTankValidationResponseModel sharkTankValidationModel = await sharkTank.CheckIfValidRequest(makeSharkTankValidationModel(requestingClient, User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(), Method.GET, SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY, logicHistory));
-
-            //if (requestingClient.email == subjectClient.email)
-            if(sharkTankValidationModel.isValid)
-            {
-                return Ok(logicHistory);
-            }
-            else
-            {
-                await sharkTank.MakeNewFailureLog(requestingClient, SharkTankConstants.GET_ALL_HISTORY_CATEGORY);
-                return StatusCode(StatusCodes.Status401Unauthorized);
             }
         }
 
@@ -189,30 +176,14 @@ namespace Message.Api.Controllers
         }
 
         #region UTILITY
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, Guid? requestedObjectID)
+        private async Task<SharkTankValidationModel> makeSharkTankValidationModel(Method httpMethod, string requestedObjectCategory, Guid? validationID)
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
-                requestorClientID = requestorClient.clientID,
-                requestorRoles = roles,
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
                 requestedObjectCategory = requestedObjectCategory,
-                requestedObjectID = requestedObjectID != null ? requestedObjectID.Value : null,
-                httpMethod = httpMethod
-            };
-            return model;
-        }
-        private SharkTankValidationModel makeSharkTankValidationModel(BaseClient requestorClient, List<Claim> roles, Method httpMethod, string requestedObjectCategory, MessageHistory history)
-        {
-            SharkTankValidationModel model = new SharkTankValidationModel()
-            {
-                requestorClientID = requestorClient.clientID,
-                requestorRoles = roles,
-                requestedObjectCategory = requestedObjectCategory,
-                requestedObjectID = null,
-                chatInfoContainer = new ChatInfoContainer()
-                {
-
-                },
+                validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod
             };
             return model;
