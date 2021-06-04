@@ -1,5 +1,5 @@
-﻿using Message.Api.Models.Message_Models;
-using Message.Logic.Interfaces;
+﻿using Message.Logic.Interfaces;
+using Message.Logic.Models.Message_Models;
 using Message.Logic.Objects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
