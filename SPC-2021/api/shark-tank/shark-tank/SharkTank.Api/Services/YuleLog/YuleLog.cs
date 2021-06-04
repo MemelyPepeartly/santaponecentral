@@ -102,11 +102,9 @@ namespace SharkTank.Api.Services.YuleLog
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(SharkTankConstants.GET_ALL_HISTORY_CATEGORY), requestingClient.nickname + " made a request to retrieve a list of all chat histories"));
             await saveLogs();
         }
-        public async Task logGetSpecificHistory(BaseClient requestingClient, BaseClient subjectClient, RelationshipMeta? assignmentMeta)
+        public async Task logGetSpecificHistory(BaseClient requestingClient, BaseClient validationClient)
         {
-#warning Might be incorrect
-            string logMessage = assignmentMeta != null ? $"{requestingClient.nickname} requested to get a message history between {subjectClient.nickname} and the admins about an assignment involving {assignmentMeta.relationshipClient.clientNickname}" : 
-                $"{requestingClient.nickname} requested to get a general message history between {subjectClient.nickname} and the admins";
+            string logMessage = $"{requestingClient.nickname} requested to get a message history between {validationClient.nickname} and the admins";
             await repository.CreateNewLogEntry(makeLogTemplateObject(await getCategoryByName(SharkTankConstants.GET_SPECIFIC_HISTORY_CATEGORY), logMessage));
             await saveLogs();
         }

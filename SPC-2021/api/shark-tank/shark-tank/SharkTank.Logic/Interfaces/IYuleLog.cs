@@ -92,12 +92,12 @@ namespace SharkTank.Logic.Interfaces
         /// <returns></returns>
         Task logGetAllHistories(BaseClient requestingClient);
         /// <summary>
-        /// Logs a request for a specific history was made
+        /// Logs a request for a specific history was made. Requesting client is the client asking, validationClient is the client the requestor is asking to get the chat of
         /// </summary>
         /// <param name="requestingClient"></param>
-        /// <param name="requestedHistory"></param>
+        /// <param name="validationClient"></param>
         /// <returns></returns>
-        Task logGetSpecificHistory(BaseClient requestingClient, BaseClient subjectClient, RelationshipMeta assignmentMeta);
+        Task logGetSpecificHistory(BaseClient requestingClient, BaseClient validationClient);
 
         #endregion
 
