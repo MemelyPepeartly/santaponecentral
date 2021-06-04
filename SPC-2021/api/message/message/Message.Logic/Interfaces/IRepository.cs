@@ -43,6 +43,12 @@ namespace Message.Logic.Interfaces
         /// <param name="profileOwnerClientID"></param>
         /// <returns></returns>
         Task<List<MessageHistory>> GetProfileChatHistories(Guid profileOwnerClientID);
+        /// <summary>
+        /// Returns a specific chat history by the agent who holds the conversation, and the event it is for
+        /// </summary>
+        /// <param name="conversationAgentID"></param>
+        /// <param name="eventTypeID"></param>
+        /// <returns></returns>
         Task<MessageHistory> GetSpecificHistoryByClientIDAndEventID(Guid conversationAgentID, Guid eventTypeID);
         #endregion
 
