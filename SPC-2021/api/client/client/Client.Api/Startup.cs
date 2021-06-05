@@ -1,22 +1,16 @@
-using Client.Api.Services;
-using Client.Data.Entities;
-using Client.Data.Repository;
-using Client.Logic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
+using Client.Data.Entities;
+using Client.Data.Repository;
+using Client.Logic.Interfaces;
 using System.Linq;
-using System.Threading.Tasks;
+using Client.Api.Services;
 
 namespace Client.Api
 {
@@ -25,7 +19,6 @@ namespace Client.Api
         private const string version = "v2";
         private const string ConnectionStringName = "ClientDb";
         readonly string origins = "services";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,7 +32,6 @@ namespace Client.Api
             //DB Connection
             services.AddDbContext<SantaPoneCentralDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringName)));
-
 
             //Cors
             services.AddCors(options =>
@@ -56,7 +48,6 @@ namespace Client.Api
             //Services
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ISharkTank, SharkTank>();
-
             //Swagger
             services.AddSwaggerGen(c =>
             {
