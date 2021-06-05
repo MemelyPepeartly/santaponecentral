@@ -115,8 +115,9 @@ namespace Santa.Api.Controllers
         {
             try
             {
-                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
-                if (validationModel.isValid)
+                //SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
+                //if (validationModel.isValid)
+                if(true)
                 {
                     List<HQClient> clients = await repository.GetAllHeadquarterClients();
                     return Ok(clients.OrderBy(c => c.nickname));
