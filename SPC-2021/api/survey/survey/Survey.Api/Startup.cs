@@ -107,8 +107,6 @@ namespace Survey.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseCors(origins);
-
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -121,6 +119,8 @@ namespace Survey.Api
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors(origins);
 
             // Ensures DB is created against container
             IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();

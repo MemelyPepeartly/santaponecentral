@@ -1,3 +1,7 @@
+using Client.Api.Services;
+using Client.Data.Entities;
+using Client.Data.Repository;
+using Client.Logic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,11 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Client.Data.Entities;
-using Client.Data.Repository;
-using Client.Logic.Interfaces;
 using System.Linq;
-using Client.Api.Services;
 
 namespace Client.Api
 {
@@ -40,8 +40,10 @@ namespace Client.Api
                                   builder =>
                                   {
                                       builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
-                                                          "http://www.domai.n");
-                                      builder.AllowAnyHeader();
+                                                          "http://www.domai.n")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
                                   });
             });
 
@@ -108,8 +110,6 @@ namespace Client.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseCors(origins);
-
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -122,6 +122,8 @@ namespace Client.Api
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors(origins);
 
             // Ensures DB is created against container
             IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();

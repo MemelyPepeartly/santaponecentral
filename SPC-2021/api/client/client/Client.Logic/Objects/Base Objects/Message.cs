@@ -1,7 +1,5 @@
 ﻿using Client.Logic.Objects.Information_Objects;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Client.Logic.Objects
 {

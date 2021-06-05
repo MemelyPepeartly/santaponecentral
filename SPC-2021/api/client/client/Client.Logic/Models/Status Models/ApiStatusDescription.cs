@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Client.Logic.Models.Status_Models
+﻿namespace Client.Logic.Models.Status_Models
 {
     public class ApiStatusDescription
     {

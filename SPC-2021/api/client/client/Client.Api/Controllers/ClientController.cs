@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Client.Logic.Client_Models;
+using Client.Logic.Constants;
+using Client.Logic.Interfaces;
+using Client.Logic.Models.Auth0_Models;
+using Client.Logic.Models.Common_Models;
+using Client.Logic.Objects;
+using Client.Logic.Objects.Container_Objects;
+using Client.Logic.Objects.Information_Objects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Client.Logic.Interfaces;
-using Client.Logic.Objects;
-using Client.Logic.Objects.Information_Objects;
-using Client.Logic.Client_Models;
+using RestSharp;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Client.Logic.Constants;
-using Client.Logic.Models.Common_Models;
-using RestSharp;
-using Client.Logic.Survey_Response_Models;
-using Client.Logic.Models.Auth0_Models;
-using System.Net;
-using Client.Logic.Objects.Container_Objects;
+using System.Threading.Tasks;
 
 namespace Santa.Api.Controllers
 {
@@ -63,11 +61,11 @@ namespace Santa.Api.Controllers
             }
             else
             {
-                if(!sharkTankValidationModel.isValid)
+                if (!sharkTankValidationModel.isValid)
                 {
                     return Unauthorized(clients);
                 }
-                else if(!sharkTankValidationModel.isRequestSuccess)
+                else if (!sharkTankValidationModel.isRequestSuccess)
                 {
                     return UnprocessableEntity(clients);
                 }
@@ -88,7 +86,7 @@ namespace Santa.Api.Controllers
             try
             {
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     StrippedClient logicStrippedClient = await repository.GetStrippedClientDataByID(clientID);
                     return Ok(logicStrippedClient);
@@ -117,7 +115,7 @@ namespace Santa.Api.Controllers
             try
             {
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     List<HQClient> clients = await repository.GetAllHeadquarterClients();
                     return Ok(clients.OrderBy(c => c.nickname));
@@ -145,7 +143,7 @@ namespace Santa.Api.Controllers
             try
             {
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     HQClient logicHQClient = await repository.GetHeadquarterClientByID(clientID);
                     return Ok(logicHQClient);
@@ -174,7 +172,7 @@ namespace Santa.Api.Controllers
             try
             {
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     Client.Logic.Objects.Client logicClient = await repository.GetClientByIDAsync(clientID);
                     return Ok(logicClient);
@@ -205,7 +203,7 @@ namespace Santa.Api.Controllers
                 Client.Logic.Objects.Client logicClient = await repository.GetClientByEmailAsync(clientEmail);
 
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, logicClient.clientID));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     return Ok(logicClient);
                 }
@@ -235,7 +233,7 @@ namespace Santa.Api.Controllers
             {
 #warning needs to impliment this validation
                 SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_SPECIFIC_CLIENT_CATEGORY, clientID));
-                if(validationModel.isValid)
+                if (validationModel.isValid)
                 {
                     BaseClient logicClient = await repository.GetBasicClientInformationByID(clientID);
                     return Ok(logicClient);
@@ -425,7 +423,7 @@ namespace Santa.Api.Controllers
         //No authentication. New users with no account can post a client to the DB through the use of the sign up form
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostSignupAsync([FromBody] NewClientWithResponsesModel clientResponseModel)
         {
-            
+
             bool loggingEnabled = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) == null ? false : true;
             BaseClient requestingClient = new BaseClient();
             if (loggingEnabled)
@@ -433,7 +431,7 @@ namespace Santa.Api.Controllers
                 requestingClient = await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
                 loggingEnabled = true;
             }
-            
+
 
             Client.Logic.Objects.Client newClient = new Client.Logic.Objects.Client()
             {
@@ -489,7 +487,7 @@ namespace Santa.Api.Controllers
                 */
                 return Ok(createdClient);
             }
-            catch(Exception)
+            catch (Exception)
             {
 #warning swap this logging over to SharkTank
                 /*
@@ -1073,7 +1071,7 @@ namespace Santa.Api.Controllers
                 await repository.SaveAsync();
                 return NoContent();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status424FailedDependency);
             }

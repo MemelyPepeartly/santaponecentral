@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Client.Logic.Survey_Response_Models
+﻿namespace Client.Logic.Survey_Response_Models
 {
     public class ApiSurveyReponseText
     {

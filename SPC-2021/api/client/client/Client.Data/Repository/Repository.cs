@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Client.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Client.Data.Entities;
+using Client.Logic.Constants;
 using Client.Logic.Interfaces;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Information_Objects;
-using Client.Logic.Constants;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Client.Data.Repository
 {

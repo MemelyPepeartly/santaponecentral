@@ -2,7 +2,6 @@
 using Client.Logic.Objects.Information_Objects;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Client.Logic.Interfaces

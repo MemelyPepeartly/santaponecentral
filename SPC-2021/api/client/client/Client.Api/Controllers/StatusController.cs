@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Client.Logic.Interfaces;
+﻿using Client.Logic.Interfaces;
 using Client.Logic.Models.Status_Models;
 using Client.Logic.Objects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Santa.Api.Controllers
 {
@@ -61,7 +58,7 @@ namespace Santa.Api.Controllers
             {
                 return Ok((await repository.GetClientByEmailAsync(email)).clientStatus);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Ok(new Status()
                 {
@@ -89,13 +86,13 @@ namespace Santa.Api.Controllers
                     await repository.SaveAsync();
                     return Ok(newStatus);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     throw e.InnerException;
                 }
-                
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e.InnerException;
             }

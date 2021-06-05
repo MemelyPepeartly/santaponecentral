@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Client.Data.Entities;
+﻿using Client.Data.Entities;
 using Client.Logic.Constants;
 using Client.Logic.Objects;
-using Client.Logic.Objects.Base_Objects.Logging;
 using Client.Logic.Objects.Information_Objects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Client.Data.Repository
 {
@@ -397,7 +393,7 @@ namespace Client.Data.Repository
         /// <param name="contextSurvey"></param>
         /// <returns></returns>
         public static Logic.Objects.Survey MapSurvey(Entities.Survey contextSurvey)
-      {
+        {
             Logic.Objects.Survey logicSurvey = new Logic.Objects.Survey()
             {
                 surveyID = contextSurvey.SurveyId,
@@ -465,7 +461,7 @@ namespace Client.Data.Repository
         /// <returns></returns>
         public static Data.Entities.SurveyQuestion MapQuestion(Logic.Objects.Question newQuestion)
         {
-            
+
             Entities.SurveyQuestion contextQuestion = new SurveyQuestion()
             {
                 SurveyQuestionId = newQuestion.questionID,
