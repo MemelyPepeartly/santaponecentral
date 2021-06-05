@@ -38,8 +38,8 @@ namespace Survey.Api
                 options.AddPolicy(name: origins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://example.com",
-                                                          "http://www.contoso.com");
+                                      builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
+                                                          "http://www.domai.n");
                                   });
             });
 
