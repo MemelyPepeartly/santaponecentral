@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Profile.Api.Models.Profile_Models
+﻿namespace Profile.Api.Models.Profile_Models
 {
     public class EditClientAddressModel
     {

@@ -1,11 +1,7 @@
 ﻿using Profile.Data.Entities;
 using Profile.Logic.Constants;
 using Profile.Logic.Objects;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Profile.Data.Repository
 {

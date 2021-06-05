@@ -50,7 +50,7 @@ namespace Profile.Api.Controllers
 
 
             //if (logicBaseClient.clientID == checkerClient.clientID)
-            if(sharkTankValidationModel.isValid)
+            if (sharkTankValidationModel.isValid)
             {
                 return Ok(requestedClientInformation.clientID);
             }
@@ -80,10 +80,10 @@ namespace Profile.Api.Controllers
             logicProfile.sharkTankValidationResponse = sharkTankValidationModel;
             try
             {
-                if(sharkTankValidationModel.isValid)
+                if (sharkTankValidationModel.isValid)
                 {
                     logicProfile = await repository.GetProfileByEmailAsync(email);
-                    
+
                     return Ok(logicProfile);
                 }
                 else

@@ -1,22 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Profile.Api.Services;
 using Profile.Data.Entities;
 using Profile.Data.Repository;
 using Profile.Logic.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Profile.Api
 {
@@ -24,6 +18,8 @@ namespace Profile.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "ProfileDb";
+        readonly string origins = "services";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -41,14 +37,15 @@ namespace Profile.Api
             //Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net" )
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
+                options.AddPolicy(name: origins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
+                                                          "http://localhost:4200")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
+                                  });
             });
 
             //Services
@@ -119,7 +116,7 @@ namespace Profile.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseCors("AllowAngular");
+            app.UseCors(origins);
 
             //Swagger
             app.UseSwagger();

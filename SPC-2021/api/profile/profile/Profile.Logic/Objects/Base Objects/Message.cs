@@ -1,7 +1,5 @@
 ﻿using Profile.Logic.Objects.Information_Objects;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Profile.Logic.Objects
 {

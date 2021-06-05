@@ -39,8 +39,10 @@ namespace Survey.Api
                                   builder =>
                                   {
                                       builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
-                                                          "http://www.domai.n");
-                                      builder.AllowAnyHeader();
+                                                          "http://localhost:4200")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
                                   });
             });
 

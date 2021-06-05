@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Profile.Logic.Objects
+﻿namespace Profile.Logic.Objects
 {
     public class Address
     {
