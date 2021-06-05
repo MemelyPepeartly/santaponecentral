@@ -22,7 +22,7 @@ const appRoutes: Routes = [
   },
   { path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'mission-boards',
@@ -39,22 +39,22 @@ const appRoutes: Routes = [
   {
     path: 'headquarters',
     component: HeadquartersComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'correspondence',
     component: CorrespondenceComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'admin-control',
     component: AdminControlComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'agent-catalogue',
     component: AgentCatalogueComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'not-found',
