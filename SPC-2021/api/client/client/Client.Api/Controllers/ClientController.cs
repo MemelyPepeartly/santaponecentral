@@ -109,7 +109,8 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("HQClient")]
-        [Authorize(Policy = "read:clients")]
+        //[Authorize(Policy = "read:clients")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             try

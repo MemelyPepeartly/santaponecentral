@@ -40,7 +40,7 @@ namespace Client.Api
                                   builder =>
                                   {
                                       builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
-                                                          "http://www.domai.n")
+                                                          "http://localhost:4200")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader()
                                             .AllowCredentials();
@@ -110,6 +110,8 @@ namespace Client.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
+            app.UseCors(origins);
+
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -123,7 +125,7 @@ namespace Client.Api
                 endpoints.MapControllers();
             });
 
-            app.UseCors(origins);
+            
 
             // Ensures DB is created against container
             IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
