@@ -40,6 +40,7 @@ namespace Survey.Api
                                   {
                                       builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
                                                           "http://www.domai.n");
+                                      builder.AllowAnyHeader();
                                   });
             });
 

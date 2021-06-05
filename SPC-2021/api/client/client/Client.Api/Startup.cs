@@ -24,6 +24,8 @@ namespace Client.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "ClientDb";
+        readonly string origins = "services";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,20 +44,13 @@ namespace Client.Api
             //Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200",
-                        "https://localhost:4200",
-                        "http://localhost:4200/",
-                        "https://localhost:4200/",
-                        "https://dev-spc-2021.azurewebsites.net",
-                        "https://www.santaponecentral.net",
-                        "https://santaponecentral.azurewebsites.net")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
+                options.AddPolicy(name: origins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
+                                                          "http://www.domai.n");
+                                      builder.AllowAnyHeader();
+                                  });
             });
 
             //Services
@@ -122,7 +117,7 @@ namespace Client.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseCors("AllowAngular");
+            app.UseCors(origins);
 
             //Swagger
             app.UseSwagger();
