@@ -3,7 +3,7 @@ import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/clas
 import { EventType } from 'src/classes/eventType';
 import { AssignmentStatus, BaseClient, Client, HQClient } from 'src/classes/client';
 import { MapService } from '../services/utility services/mapper.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { SelectedAnonComponent } from '../headquarters/selected-anon/selected-anon.component';
 import { OrganizerEmailConstants } from 'src/app/shared/constants/organizerEmailConstants.enum';
 import { EventConstants } from 'src/app/shared/constants/eventConstants.enum';
@@ -67,7 +67,7 @@ export class CorrespondenceComponent implements OnInit, OnDestroy {
     this.initializing = true;
 
     /* Sets the subject viewer of the messages as a meta */
-    this.Auth.userProfile$.subscribe((data: any) => {
+    this.Auth.user$.subscribe((data: any) => {
       this.profile = data
     });
     this.subject = this.mapper.mapBaseClient(await this.ClientService.getBasicClientByEmail(this.profile.email).toPromise());
