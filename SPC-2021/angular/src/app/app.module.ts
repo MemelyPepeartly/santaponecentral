@@ -63,6 +63,8 @@ import { SignupComponent } from './signup/signup.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
+import { AuthModule } from '@auth0/auth0-angular';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -131,7 +133,11 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
     RouterModule,
     HttpClientModule,
     NgScrollbarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthModule.forRoot({
+      domain: 'memelydev.auth0.com',
+      clientId: 'KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L'
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

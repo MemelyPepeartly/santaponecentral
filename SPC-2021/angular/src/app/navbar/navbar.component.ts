@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -14,14 +14,18 @@ export class NavbarComponent implements OnInit {
 
   profile: any;
 
-  isAdmin: boolean = false;
+  isAdmin: boolean = true;
 
   ngOnInit() {
-    this.auth.userProfile$.subscribe(data => {
+    this.auth.isAuthenticated$
+    
+    this.auth.user$.subscribe(data => {
       this.profile = data;
     });
+    /*
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
+    */
   }
 }
