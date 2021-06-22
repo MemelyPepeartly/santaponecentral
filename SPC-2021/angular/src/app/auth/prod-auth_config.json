@@ -1,0 +1,8 @@
+{
+  "domain": "santaponecentral.us.auth0.com",
+  "clientId": "U1PyIC5MkHe4fy8Rf9V0vDUQRlnbA8NS",
+  "audience": "https://santaponecentral-api.azurewebsites.net/",
+  "apiUri": "http://localhost:3001",
+  "appUri": "http://localhost:4200",
+  "errorPath": "/error"
+}

@@ -1,0 +1,8 @@
+{
+  "domain": "memelydev.auth0.com",
+  "clientId": "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
+  "audience": "https://dev-santaponecentral-api.azurewebsites.net/api/",
+  "apiUri": "http://localhost:3001",
+  "appUri": "http://localhost:4200",
+  "errorPath": "/error"
+}

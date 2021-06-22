@@ -1,13 +1,26 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+import * as config from '../app/auth/dev-auth_config.json';
+
+const { domain, clientId, audience, apiUri, errorPath } = config as {
+  domain: string;
+  clientId: string;
+  audience?: string;
+  apiUri: string;
+  errorPath: string;
+};
 
 export const environment = {
   production: false,
-  auth0Domain: "memelydev.auth0.com",
-  auth0Client_id: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
-  auth0Redirect_uri: `${window.location.origin}`,
-  auth0Audience: "https://dev-santaponecentral-api.azurewebsites.net/api/",
+  auth: {
+    domain,
+    clientId,
+    ...(audience && audience !== "https://dev-santaponecentral-api.azurewebsites.net/api/" ? { audience } : null),
+    redirectUri: window.location.origin,
+    errorPath,
+  },
+  httpInterceptor: {
+    allowedList: [`${apiUri}/*`],
+  },
+
   // API ENDPOINTS
   clientServiceEndpoint: "https://dev-spc-clientapi.azurewebsites.net/api/",
   eventServiceEndpoint: "https://dev-spc-eventapi.azurewebsites.net/api/",
