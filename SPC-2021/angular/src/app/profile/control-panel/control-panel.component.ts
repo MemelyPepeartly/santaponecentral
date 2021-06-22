@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ProfileAssignment, Profile } from 'src/classes/profile';
 import { MessageHistory, ClientMeta } from 'src/classes/message';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { MapService } from 'src/app/services/utility services/mapper.service';
 import { Survey, SurveyResponse } from 'src/classes/survey';
 import { SelectedRecipientComponent } from '../selected-recipient/selected-recipient.component';
@@ -50,10 +50,12 @@ export class ControlPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializing = true;
+    /* SANTAHERE Fix this come the time
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
       this.initializing = false;
     });
+    */
   }
   // Event is from the chat histories component, and contains {meta: ClientMeta, event: EventType}
   public showRecipientCard(eventInformation)

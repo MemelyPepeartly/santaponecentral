@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { CountriesService } from 'src/app/services/utility services/countries.service';
 import { SurveyConstants } from 'src/app/shared/constants/surveyConstants.enum';
 import { MessageHistory } from 'src/classes/message';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { ProfileGatheringService } from 'src/app/services/gathering services/profile-gathering.service';
 import { ProfileService } from 'src/app/services/api services/profile.service';
 import { EditClientAddressRequest } from 'src/classes/request-types';
@@ -55,9 +55,11 @@ export class InformationComponent implements OnInit {
       country: ['', Validators.required]
     });
 
+    /* SANTAHERE fix this come the time
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
+    */
   }
   public async submitNewAddress()
   {
