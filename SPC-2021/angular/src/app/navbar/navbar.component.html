@@ -4,8 +4,10 @@
   <button mat-button [routerLink]="'/home'" class="button">
       <mat-label>Home</mat-label>
   </button>
-  <app-adminnav *ngIf="auth.isAuthenticated$ && isAdmin"></app-adminnav>
-  <app-usernav *ngIf="auth.isAuthenticated$ && !isAdmin"></app-usernav>
-  <app-defaultnav *ngIf="!auth.isAuthenticated$ || true"></app-defaultnav>
+  <ng-container *ngIf="auth.user$ | async as user">
+    <app-adminnav *ngIf="navType == 'admin'"></app-adminnav>
+    <app-usernav *ngIf="navType == 'user'"></app-usernav>
+  </ng-container>
+  <app-defaultnav *ngIf="navType == 'default'"></app-defaultnav>
 
 </div>
