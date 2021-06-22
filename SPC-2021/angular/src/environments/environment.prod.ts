@@ -1,9 +1,25 @@
+import * as config from '../app/auth/prod-auth_config.json';
+
+const { domain, clientId, audience, apiUri, errorPath } = config as {
+  domain: string;
+  clientId: string;
+  audience?: string;
+  apiUri: string;
+  errorPath: string;
+};
+
 export const environment = {
-  production: true,
-  auth0Domain: "santaponecentral.us.auth0.com",
-  auth0Client_id: "U1PyIC5MkHe4fy8Rf9V0vDUQRlnbA8NS",
-  auth0Redirect_uri: `${window.location.origin}`,
-  auth0Audience: "https://santaponecentral-api.azurewebsites.net/",
+  production: false,
+  auth: {
+    domain,
+    clientId,
+    ...(audience && audience !== "https://santaponecentral-api.azurewebsites.net/" ? { audience } : null),
+    redirectUri: window.location.origin,
+    errorPath,
+  },
+  httpInterceptor: {
+    allowedList: [`${apiUri}/*`],
+  },
   // API ENDPOINTS
   clientServiceEndpoint: "",
   eventServiceEndpoint: "",
