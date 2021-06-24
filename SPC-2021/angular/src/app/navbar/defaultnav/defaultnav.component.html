@@ -7,10 +7,10 @@
 <button mat-button [routerLink]="'/status-checker'" class="navButton">
   <mat-label>Status Checker</mat-label>
 </button>
-<button mat-button (click)="auth.loginWithRedirect()" *ngIf="!auth.isAuthenticated$ || true" class="navButton">
+<button mat-button (click)="auth.loginWithRedirect()" *ngIf="!loggedIn" class="navButton">
     <mat-label>Login</mat-label>
 </button>
-<button mat-button (click)="auth.logout()" *ngIf="auth.isAuthenticated$" class="navButton">
+<button mat-button (click)="auth.logout()" *ngIf="loggedIn" class="navButton">
     <mat-label>Logout</mat-label>
 </button>
 
