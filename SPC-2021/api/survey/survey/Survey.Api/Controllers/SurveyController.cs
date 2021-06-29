@@ -14,7 +14,6 @@ namespace Survey.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SurveyController : ControllerBase
     {
 
@@ -30,7 +29,8 @@ namespace Survey.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult<List<Logic.Objects.Survey>>> GetAllSurveys()
         {
             try
@@ -50,7 +50,8 @@ namespace Survey.Api.Controllers
         /// <param name="surveyID"></param>
         /// <returns></returns>
         [HttpGet("{surveyID}")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult<Logic.Objects.Survey>> GetSurveyByIDAsync(Guid surveyID)
         {
             try

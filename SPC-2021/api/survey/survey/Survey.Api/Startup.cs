@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Survey.Api.Authorization;
 using Survey.Data.Entities;
 using Survey.Data.Repository;
 using Survey.Logic.Interfaces;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Survey.Api
 {
@@ -46,9 +50,6 @@ namespace Survey.Api
                                   });
             });
 
-            //Services
-            services.AddScoped<IRepository, Repository>();
-
             //Swagger
             services.AddSwaggerGen(c =>
             {
@@ -64,15 +65,18 @@ namespace Survey.Api
 
             //Auth
             string domain = $"https://{Configuration["Auth0API:domain"]}/";
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
-            });
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = domain;
+                    options.Audience = Configuration["Auth0API:startupAudience"];
+                    // If the access token does not have a `sub` claim, `User.Identity.Name` will be `null`. Map it to a different claim by setting the NameClaimType below.
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
 
             services.AddAuthorization(options =>
             {
@@ -84,7 +88,7 @@ namespace Survey.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
@@ -93,6 +97,10 @@ namespace Survey.Api
 
             services.AddControllers();
             services.AddHttpClient();
+
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
