@@ -15,8 +15,12 @@ export class DefaultnavComponent implements OnInit {
   constructor(public auth: AuthService ) { }
 
   public inProduction: boolean;
+  public loggedIn: boolean = false;
   ngOnInit() {
     this.inProduction = environment.production;
+    this.auth.isAuthenticated$.subscribe(status => {
+      this.loggedIn = status;
+    });
   }
 }
 
