@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Survey.Api.Authorization;
 using Survey.Data.Entities;
 using Survey.Data.Repository;
 using Survey.Logic.Interfaces;
@@ -46,9 +48,6 @@ namespace Survey.Api
                                   });
             });
 
-            //Services
-            services.AddScoped<IRepository, Repository>();
-
             //Swagger
             services.AddSwaggerGen(c =>
             {
@@ -84,7 +83,7 @@ namespace Survey.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
@@ -93,6 +92,10 @@ namespace Survey.Api
 
             services.AddControllers();
             services.AddHttpClient();
+
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
