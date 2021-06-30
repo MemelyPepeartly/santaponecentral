@@ -21,7 +21,7 @@ namespace Survey.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "SurveyDb";
-        readonly string origins = "services";
+        readonly string origins = "AllowSpecificOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,7 +42,7 @@ namespace Survey.Api
                 options.AddPolicy(name: origins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
+                                      builder.WithOrigins("https://www.santaponecentral.net",
                                                           "http://localhost:4200")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader()
@@ -93,8 +93,6 @@ namespace Survey.Api
 
             });
 
-            services.AddMvc();
-
             services.AddControllers();
             services.AddHttpClient();
 
@@ -110,10 +108,17 @@ namespace Survey.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
             app.UseHttpsRedirection();
             app.UseRouting();
 
             //Auth
+            app.UseCors(origins);
+
             app.UseAuthorization();
             app.UseAuthentication();
 
@@ -130,7 +135,7 @@ namespace Survey.Api
                 endpoints.MapControllers();
             });
 
-            app.UseCors(origins);
+            
 
             // Ensures DB is created against container
             IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
