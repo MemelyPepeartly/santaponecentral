@@ -15,6 +15,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+
 const appRoutes: Routes = [
   {
     path: 'home',
@@ -77,7 +79,8 @@ const appRoutes: Routes = [
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: InterceptorService,
+      //useClass: InterceptorService,
+      useClass: AuthHttpInterceptor,
       multi: true
     }
   ]
