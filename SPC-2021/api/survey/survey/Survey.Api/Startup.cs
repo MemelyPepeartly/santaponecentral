@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Survey.Api.Authorization;
@@ -65,18 +66,19 @@ namespace Survey.Api
 
             //Auth
             string domain = $"https://{Configuration["Auth0API:domain"]}/";
-            services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = Configuration["Auth0API:startupAudience"];
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.Authority = domain;
-                    options.Audience = Configuration["Auth0API:startupAudience"];
-                    // If the access token does not have a `sub` claim, `User.Identity.Name` will be `null`. Map it to a different claim by setting the NameClaimType below.
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = ClaimTypes.NameIdentifier
-                    };
-                });
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+            });
 
             services.AddAuthorization(options =>
             {
@@ -96,7 +98,7 @@ namespace Survey.Api
             services.AddControllers();
             services.AddHttpClient();
 
-            //Services
+            //Other services
             services.AddScoped<IRepository, Repository>();
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
