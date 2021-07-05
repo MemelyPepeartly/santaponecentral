@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
     if(environment.production == false)
     {
       this.showMetadata = true;
-      this.auth.userProfile$.subscribe(res => {
+      this.auth.user$.subscribe(res => {
         this.authprofile = res;
       });
     }

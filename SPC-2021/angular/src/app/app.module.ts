@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -63,6 +63,10 @@ import { SignupComponent } from './signup/signup.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import { ApiTestComponent } from './api-test/api-test.component';
+import { environment as env } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -120,6 +124,7 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
     ClientItemComponent,
     RelatedIntelligenceComponent,
     ChatComponent,
+    ApiTestComponent,
   ],
   imports: [
     BrowserModule,
@@ -131,9 +136,25 @@ import { StatusCheckerComponent } from './status-checker/status-checker.componen
     RouterModule,
     HttpClientModule,
     NgScrollbarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthModule.forRoot({
+      ...env.auth,
+      httpInterceptor: {
+        ...env.httpInterceptor,
+      },
+    }),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true,
+    },
+    {
+      provide: Window,
+      useValue: window,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

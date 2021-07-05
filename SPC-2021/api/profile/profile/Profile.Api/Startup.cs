@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Profile.Api.Services;
 using Profile.Data.Entities;
 using Profile.Data.Repository;
 using Profile.Logic.Interfaces;
+using Survey.Api.Authorization;
 using System.Linq;
 
 namespace Profile.Api
@@ -18,7 +20,8 @@ namespace Profile.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "ProfileDb";
-        readonly string origins = "services";
+        readonly string origins = "AllowSpecificOrigin";
+
 
         public Startup(IConfiguration configuration)
         {
@@ -40,18 +43,13 @@ namespace Profile.Api
                 options.AddPolicy(name: origins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://dev-spc-2021.azurewebsites.net",
+                                      builder.WithOrigins("https://www.santaponecentral.net",
                                                           "http://localhost:4200")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader()
                                             .AllowCredentials();
                                   });
             });
-
-            //Services
-            services.AddScoped<IRepository, Repository>();
-            services.AddScoped<ISharkTank, SharkTank>();
-
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -66,19 +64,17 @@ namespace Profile.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //SignalR
-            services.AddSignalR();
-
-            //Auth
-            string domain = $"https://{Configuration["Auth0API:domain"]}/";
+            // Auth0
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
@@ -91,15 +87,19 @@ namespace Profile.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
 
-            services.AddMvc();
-
             services.AddControllers();
             services.AddHttpClient();
+
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ISharkTank, SharkTank>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,26 +109,30 @@ namespace Profile.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
             app.UseHttpsRedirection();
+
             app.UseRouting();
-
-            //Auth
-            app.UseAuthorization();
-            app.UseAuthentication();
-
             app.UseCors(origins);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            //Endpoints
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
-            });
-
-            //Endpoints
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
             });
 
             // Ensures DB is created against container

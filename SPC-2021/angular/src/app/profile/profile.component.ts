@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MapService } from '../services/utility services/mapper.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { Profile, ProfileAssignment } from 'src/classes/profile';
 import { MessageHistory, ClientMeta, Message, ChatInfoContainer } from 'src/classes/message';
 import { EventType } from 'src/classes/eventType';
@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
     });
 
     // Auth profile
-    this.auth.userProfile$.subscribe(data => {
+    this.auth.user$.subscribe(data => {
       this.authProfile = data;
     });
 

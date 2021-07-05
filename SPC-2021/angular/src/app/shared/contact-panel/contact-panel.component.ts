@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SecurityContext } from '@angular/core';
 import { Message, MessageHistory, ClientMeta, ChatInfoContainer } from 'src/classes/message';
-import { AuthService } from 'src/app/auth/auth.service';
 import { MapResponse, MapService } from 'src/app/services/utility services/mapper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MessageService } from 'src/app/services/api services/message.service';
 import { EditMessageApiReadRequest } from 'src/classes/request-types';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-contact-panel',

@@ -5,7 +5,6 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 import { AdminControlComponent } from './admin-control/admin-control.component';
 import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
-import { InterceptorService } from './auth/interceptor.service';
 import { CorrespondenceComponent } from './correspondence/correspondence.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';
@@ -14,6 +13,8 @@ import { MissionBoardsComponent } from './mission-boards/mission-boards.componen
 import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
+
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
 
 const appRoutes: Routes = [
   {
@@ -74,12 +75,6 @@ const appRoutes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: InterceptorService,
-      multi: true
-    }
-  ]
+  providers: []
 })
 export class AppRoutingModule { }

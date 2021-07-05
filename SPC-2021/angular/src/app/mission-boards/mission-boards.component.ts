@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { BoardEntry, EntryType } from 'src/classes/missionBoards';
 import { MissionBoardGathererService } from '../services/gathering services/mission-board-gatherer.service';
 import { MissionBoardService } from '../services/api services/mission-board.service';
@@ -38,15 +38,17 @@ export class MissionBoardsComponent implements OnInit {
   public gettingAllEntryTypes: boolean = false;
 
   async ngOnInit() {
-    this.auth.userProfile$.subscribe(data => {
+    this.auth.user$.subscribe(data => {
       this.profile = data;
     });
+    /* SANTAHERE Fix this come the time
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
     this.auth.isHelper.subscribe((helper: boolean) => {
       this.isHelper = helper;
     });
+    */
 
     this.MissionBoardGatheringService.gettingAllBoardEntries.subscribe((status: boolean) => {
       this.gettingAllBoardEntries = status;

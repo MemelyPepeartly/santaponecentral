@@ -1,4 +1,7 @@
 <div class="container">
+  <div class="child">
+    <app-api-test></app-api-test>
+  </div>
   <div class="child mat-elevation-z8">
     <div class="contentBox small-box mat-elevation-z8" *ngIf="showMetadata">
       <mat-card>
@@ -492,6 +495,8 @@
     </mat-tab-group>
   </div>
 </div>
+
+
 
  <span *ngIf="showMetadata">{{ authprofile | json}}</span>
 

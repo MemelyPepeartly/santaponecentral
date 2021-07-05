@@ -17,6 +17,8 @@ namespace Search.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "SearchDb";
+        readonly string origins = "AllowSpecificOrigin";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -101,26 +103,30 @@ namespace Search.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
             app.UseHttpsRedirection();
+
             app.UseRouting();
+            app.UseCors(origins);
 
-            //Auth
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseCors("AllowAngular");
+            //Endpoints
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
-            });
-
-            //Endpoints
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
             });
 
             // Ensures DB is created against container

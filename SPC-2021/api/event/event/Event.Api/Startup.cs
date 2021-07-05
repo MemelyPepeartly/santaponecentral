@@ -12,6 +12,8 @@ using System.Linq;
 using Event.Data.Entities;
 using Event.Logic.Interfaces;
 using Event.Data.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Survey.Api.Authorization;
 
 namespace Event.Api
 {
@@ -19,6 +21,7 @@ namespace Event.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "EventDb";
+        readonly string origins = "AllowSpecificOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,18 +39,16 @@ namespace Event.Api
             //Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net", "https://santaponecentral.azurewebsites.net")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
+                options.AddPolicy(name: origins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://www.santaponecentral.net",
+                                                          "http://localhost:4200")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
+                                  });
             });
-
-            //Services
-            services.AddScoped<IRepository, Repository>();
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -62,16 +63,17 @@ namespace Event.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //Auth
-            string domain = $"https://{Configuration["Auth0API:domain"]}/";
+            // Auth0
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
@@ -84,14 +86,17 @@ namespace Event.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
 
-            services.AddMvc();
             services.AddControllers();
             services.AddHttpClient();
+
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,26 +106,32 @@ namespace Event.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
-            app.UseRouting();
-
-            //Auth
-            app.UseAuthorization();
-            app.UseAuthentication();
-
-            app.UseCors("AllowAngular");
-
-            //Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            else
             {
-                c.SwaggerEndpoint("/swagger/"+ version + "/swagger.json", "SantaPone Central " + version.ToUpper());
-            });
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+            app.UseCors(origins);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+
 
             //Endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            //Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
             });
 
             // Ensures DB is created against container

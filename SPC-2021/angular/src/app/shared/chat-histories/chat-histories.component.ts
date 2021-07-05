@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { MessageHistory, ClientMeta, Message } from 'src/classes/message';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { EventType } from 'src/classes/eventType';
 import { BaseClient, Client } from 'src/classes/client';
 import { AssignmentStatusConstants } from '../constants/assignmentStatusConstants.enum';
@@ -31,9 +31,11 @@ export class ChatHistoriesComponent implements OnInit, OnChanges {
 
 
   public ngOnInit(): void {
+    /* SANTAHERE Fix this come the time
     this.auth.isAdmin.subscribe((admin: boolean) => {
       this.isAdmin = admin;
     });
+    */
     this.dataSource = new TableVirtualScrollDataSource(this.histories);
   }
   public ngOnChanges(changes: SimpleChanges): void {

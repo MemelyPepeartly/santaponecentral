@@ -5,7 +5,7 @@ import { Question, Survey } from 'src/classes/survey';
 import { EventType } from 'src/classes/eventType';
 import { GeneralDataGathererService } from '../services/gathering services/general-data-gatherer.service';
 import { HQClient } from 'src/classes/client';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 import { Category, YuleLog } from 'src/classes/yuleLogTypes';
 
 @Component({
@@ -63,11 +63,13 @@ export class AdminControlComponent implements OnInit
     });
 
     // Auth
-    this.auth.userProfile$.subscribe(data => {
+    this.auth.user$.subscribe(data => {
       this.profile = data;
     });
+    /* SANTAHERE Fix this come the time
     this.auth.isDev.subscribe((status: boolean) => {
       this.isDev = status;
     });
+    */
   }
 }
