@@ -20,7 +20,8 @@ namespace Client.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "ClientDb";
-        readonly string origins = "services";
+        readonly string origins = "AllowSpecificOrigin";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -115,10 +116,9 @@ namespace Client.Api
 
             app.UseRouting();
             app.UseCors(origins);
-            // global cors policy
+
             app.UseAuthentication();
             app.UseAuthorization();
-
 
 
             //Endpoints
