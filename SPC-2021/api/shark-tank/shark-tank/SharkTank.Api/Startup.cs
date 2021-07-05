@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using SharkTank.Api.Services.YuleLog;
 using SharkTank.Data.Entities;
 using SharkTank.Data.Repository;
 using SharkTank.Logic.Interfaces;
+using Survey.Api.Authorization;
 using System.Linq;
 
 namespace SharkTank.Api
@@ -19,6 +21,8 @@ namespace SharkTank.Api
     {
         private const string version = "v2";
         private const string ConnectionStringName = "SharkTankDb";
+        readonly string origins = "AllowSpecificOrigin";
+
         private IConfigurationRoot ConfigRoot;
 
         public Startup(IConfiguration configuration, IConfiguration configRoot)
@@ -39,27 +43,22 @@ namespace SharkTank.Api
             //Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200", "https://dev-spc-2021.azurewebsites.net", "https://www.santaponecentral.net",
-                        $"https://{ConfigRoot["originPrefix"]}-clientapi.azurewebsites.net", 
-                        $"https://{ConfigRoot["originPrefix"]}-eventapi.azurewebsites.net", 
-                        $"https://{ConfigRoot["originPrefix"]}-messageapi.azurewebsites.net", 
-                        $"https://{ConfigRoot["originPrefix"]}-profileapi.azurewebsites.net", 
-                        $"https://{ConfigRoot["originPrefix"]}-searchapi.azurewebsites.net",
-                        $"https://{ConfigRoot["originPrefix"]}-sharktankapi.azurewebsites.net",
-                        $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
+                options.AddPolicy(name: origins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-clientapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-eventapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-messageapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-profileapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-searchapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-sharktankapi.azurewebsites.net",
+                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
+                                  });
             });
-
-            //Services
-            services.AddScoped<IRepository, Repository>();
-            services.AddScoped<IAuthHelper, AuthHelper>();
-            services.AddScoped<IYuleLog, Services.YuleLog.YuleLog>();
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -74,16 +73,17 @@ namespace SharkTank.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //Auth
-            string domain = $"https://{Configuration["auth0Domain"]}/";
+            // Auth0
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["auth0StartupAudience"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
@@ -96,15 +96,20 @@ namespace SharkTank.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
 
-            services.AddMvc();
-
             services.AddControllers();
             services.AddHttpClient();
+
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAuthHelper, AuthHelper>();
+            services.AddScoped<IYuleLog, Services.YuleLog.YuleLog>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,26 +119,30 @@ namespace SharkTank.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
             app.UseHttpsRedirection();
+
             app.UseRouting();
+            app.UseCors(origins);
 
-            //Auth
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseCors("AllowAngular");
+            //Endpoints
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             //Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
-            });
-
-            //Endpoints
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
             });
 
             // Ensures DB is created against container
