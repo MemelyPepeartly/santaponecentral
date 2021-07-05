@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -63,7 +63,7 @@ import { SignupComponent } from './signup/signup.component';
 import { SurveyFormComponent } from './signup/survey-form/survey-form.component';
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
-import { AuthModule } from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 
 @NgModule({
   declarations: [
@@ -135,11 +135,33 @@ import { AuthModule } from '@auth0/auth0-angular';
     NgScrollbarModule,
     BrowserAnimationsModule,
     AuthModule.forRoot({
+      // The domain and clientId were configured in the previous chapter
       domain: 'memelydev.auth0.com',
-      clientId: 'KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L'
+      clientId: 'KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L',
+
+      // Request this audience at user authentication time
+      audience: 'https://memelydev.auth0.com/api/v2/',
+
+      httpInterceptor: {
+        allowedList: [
+          {
+            uri: "*"
+          }
+        ]
+      },
     }),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true,
+    },
+    {
+      provide: Window,
+      useValue: window,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

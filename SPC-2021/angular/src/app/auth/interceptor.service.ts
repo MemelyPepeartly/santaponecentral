@@ -21,7 +21,9 @@ export class InterceptorService implements HttpInterceptor {
     {
       return this.auth.idTokenClaims$.pipe(
         mergeMap(token => {
+          console.log("---Token info---");
           console.log(token);
+          
           const tokenReq = req.clone({
             setHeaders: { Authorization: `Bearer ${token.__raw}` }
           });
