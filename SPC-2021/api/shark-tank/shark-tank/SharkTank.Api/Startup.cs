@@ -46,7 +46,7 @@ namespace SharkTank.Api
                 options.AddPolicy(name: origins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net"
+                                      builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-clientapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-eventapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-messageapi.azurewebsites.net",
