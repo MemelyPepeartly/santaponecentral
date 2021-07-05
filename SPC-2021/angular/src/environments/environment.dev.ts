@@ -11,14 +11,21 @@ const { domain, clientId, audience, apiUri, errorPath } = config as {
 export const environment = {
   production: false,
   auth: {
-    domain,
-    clientId,
-    ...(audience && audience !== "https://dev-santaponecentral-api.azurewebsites.net/api/" ? { audience } : null),
+    domain: "memelydev.auth0.com",
+    clientId: "KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L",
+    audience: "https://dev-santaponecentral-api.azurewebsites.net/api/",
     redirectUri: window.location.origin,
-    errorPath,
+    errorPath: "/error",
   },
   httpInterceptor: {
-    allowedList: [`${apiUri}/*`],
+    allowedList: [
+      `https://dev-spc-clientapi.azurewebsites.net/*`,
+      `https://dev-spc-eventapi.azurewebsites.net/*`,
+      `https://dev-spc-messageapi.azurewebsites.net/*`,
+      `https://dev-spc-profileapi.azurewebsites.net/*`,
+      `https://dev-spc-searchapi.azurewebsites.net/*`,  
+      `https://dev-spc-sharktankapi.azurewebsites.net/*`, 
+      `https://dev-spc-surveyapi.azurewebsites.net/*`],
   },
 
   // API ENDPOINTS
