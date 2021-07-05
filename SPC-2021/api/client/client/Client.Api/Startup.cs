@@ -42,8 +42,7 @@ namespace Client.Api
                 options.AddPolicy(name: origins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://www.santaponecentral.net",
-                                                          "http://localhost:4200")
+                                      builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader()
                                             .AllowCredentials();
