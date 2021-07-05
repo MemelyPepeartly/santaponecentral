@@ -5,7 +5,6 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 import { AdminControlComponent } from './admin-control/admin-control.component';
 import { AgentCatalogueComponent } from './agent-catalogue/agent-catalogue.component';
-import { InterceptorService } from './auth/interceptor.service';
 import { CorrespondenceComponent } from './correspondence/correspondence.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { HeadquartersComponent } from './headquarters/headquarters.component';

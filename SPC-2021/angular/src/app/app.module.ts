@@ -64,6 +64,8 @@ import { SurveyFormComponent } from './signup/survey-form/survey-form.component'
 import { StatusCheckerComponent } from './status-checker/status-checker.component';
 
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import { ApiTestComponent } from './api-test/api-test.component';
+import { environment as env } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -122,6 +124,7 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
     ClientItemComponent,
     RelatedIntelligenceComponent,
     ChatComponent,
+    ApiTestComponent,
   ],
   imports: [
     BrowserModule,
@@ -135,19 +138,9 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
     NgScrollbarModule,
     BrowserAnimationsModule,
     AuthModule.forRoot({
-      // The domain and clientId were configured in the previous chapter
-      domain: 'memelydev.auth0.com',
-      clientId: 'KvZyPvtRblUBt2clTAmJx84RT4mwmZ3L',
-
-      // Request this audience at user authentication time
-      audience: 'https://memelydev.auth0.com/api/v2/',
-
+      ...env.auth,
       httpInterceptor: {
-        allowedList: [
-          {
-            uri: "*"
-          }
-        ]
+        ...env.httpInterceptor,
       },
     }),
   ],
@@ -160,7 +153,7 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
     {
       provide: Window,
       useValue: window,
-    },
+    }
   ],
   bootstrap: [AppComponent]
 })
