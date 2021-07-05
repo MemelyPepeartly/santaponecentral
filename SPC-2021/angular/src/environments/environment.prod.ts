@@ -1,31 +1,50 @@
-import * as config from '../app/auth/prod-auth_config.json';
-
-const { domain, clientId, audience, apiUri, errorPath } = config as {
-  domain: string;
-  clientId: string;
-  audience?: string;
-  apiUri: string;
-  errorPath: string;
-};
-
 export const environment = {
-  production: false,
+  production: true,
   auth: {
-    domain,
-    clientId,
-    ...(audience && audience !== "https://santaponecentral-api.azurewebsites.net/" ? { audience } : null),
+    domain: "santaponecentral.us.auth0.com",
+    clientId: "U1PyIC5MkHe4fy8Rf9V0vDUQRlnbA8NS",
+    audience: "https://santaponecentral-api.azurewebsites.net/",
     redirectUri: window.location.origin,
-    errorPath,
+    errorPath: "/error",
   },
   httpInterceptor: {
-    allowedList: [`${apiUri}/*`],
+    allowedList: [
+      {
+        uri: "https://prod-spc-clientapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-eventapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-messageapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-profileapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-searchapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-sharktankapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://prod-spc-surveyapi.azurewebsites.net/*",
+        allowAnonymous: true
+      }
+    ],
   },
   // API ENDPOINTS
-  clientServiceEndpoint: "",
-  eventServiceEndpoint: "",
-  messageServiceEndpoint: "",
-  profileServiceEndpoint: "",
-  searchServiceEndpoint: "",
-  sharkTankServiceEndpoint: "",
-  surveyServiceEndpoint: ""
+  clientServiceEndpoint: "https://prod-spc-clientapi.azurewebsites.net/api/",
+  eventServiceEndpoint: "https://prod-spc-eventapi.azurewebsites.net/api/",
+  messageServiceEndpoint: "https://prod-spc-messageapi.azurewebsites.net/api/",
+  profileServiceEndpoint: "https://prod-spc-profileapi.azurewebsites.net/api/",
+  searchServiceEndpoint: "https://prod-spc-searchapi.azurewebsites.net/api/",
+  sharkTankServiceEndpoint: "https://prod-spc-sharktankapi.azurewebsites.net/api/",
+  surveyServiceEndpoint: "https://prod-spc-surveyapi.azurewebsites.net/api/"
 };

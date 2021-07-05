@@ -1,13 +1,3 @@
-import * as config from '../app/auth/dev-auth_config.json';
-
-const { domain, clientId, audience, apiUri, errorPath } = config as {
-  domain: string;
-  clientId: string;
-  audience?: string;
-  apiUri: string;
-  errorPath: string;
-};
-
 export const environment = {
   production: false,
   auth: {
@@ -19,13 +9,35 @@ export const environment = {
   },
   httpInterceptor: {
     allowedList: [
-      `https://dev-spc-clientapi.azurewebsites.net/*`,
-      `https://dev-spc-eventapi.azurewebsites.net/*`,
-      `https://dev-spc-messageapi.azurewebsites.net/*`,
-      `https://dev-spc-profileapi.azurewebsites.net/*`,
-      `https://dev-spc-searchapi.azurewebsites.net/*`,  
-      `https://dev-spc-sharktankapi.azurewebsites.net/*`, 
-      `https://dev-spc-surveyapi.azurewebsites.net/*`],
+      {
+        uri: "https://dev-spc-clientapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-eventapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-messageapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-profileapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-searchapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-sharktankapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-surveyapi.azurewebsites.net/*",
+        allowAnonymous: true
+      }
+    ]
   },
 
   // API ENDPOINTS

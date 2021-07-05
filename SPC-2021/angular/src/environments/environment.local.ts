@@ -1,13 +1,3 @@
-import * as config from '../app/auth/dev-auth_config.json';
-
-const { domain, clientId, audience, apiUri, errorPath } = config as {
-  domain: string;
-  clientId: string;
-  audience?: string;
-  apiUri: string;
-  errorPath: string;
-};
-
 export const environment = {
   production: false,
   auth: {
@@ -18,7 +8,36 @@ export const environment = {
     errorPath: "/error",
   },
   httpInterceptor: {
-    allowedList: [`http://localhost:3010/*`, `https://localhost:6001/*`],
+    allowedList: [
+      {
+        uri: "https://dev-spc-clientapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-eventapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-messageapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-profileapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-searchapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-sharktankapi.azurewebsites.net/*",
+        allowAnonymous: true
+      },
+      {
+        uri: "https://dev-spc-surveyapi.azurewebsites.net/*",
+        allowAnonymous: true
+      }
+    ],
   },
     // // API ENDPOINTS
     // clientServiceEndpoint: "https://localhost:5001/api/",
@@ -27,7 +46,7 @@ export const environment = {
     // profileServiceEndpoint: "https://localhost:8001/api/",
     // searchServiceEndpoint: "https://dev-spc-searchapi.azurewebsites.net/api/",
     // sharkTankServiceEndpoint: "https://localhost:7001/api/",
-    surveyServiceEndpoint: "https://localhost:6001/api/",
+    // surveyServiceEndpoint: "https://localhost:6001/api/",
 
     // API ENDPOINTS
     clientServiceEndpoint: "https://dev-spc-clientapi.azurewebsites.net/api/",
@@ -36,7 +55,7 @@ export const environment = {
     profileServiceEndpoint: "https://dev-spc-profileapi.azurewebsites.net/api/",
     searchServiceEndpoint: "https://dev-spc-searchapi.azurewebsites.net/api/",
     sharkTankServiceEndpoint: "https://dev-spc-sharktankapi.azurewebsites.net/api/",
-    //surveyServiceEndpoint: "https://dev-spc-surveyapi.azurewebsites.net/api/"
+    surveyServiceEndpoint: "https://dev-spc-surveyapi.azurewebsites.net/api/"
   };
 
   
