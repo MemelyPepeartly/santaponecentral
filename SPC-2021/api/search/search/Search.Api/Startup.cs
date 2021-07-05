@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Search.Data.Entities;
 using Search.Data.Repository;
 using Search.Logic.Interfaces;
+using Survey.Api.Authorization;
 using System.Linq;
 
 namespace Search.Api
@@ -37,18 +39,15 @@ namespace Search.Api
             //Cors
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
+                options.AddPolicy(name: origins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net")
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader()
+                                            .AllowCredentials();
+                                  });
             });
-
-            //Services
-            services.AddScoped<IRepository, Repository>();
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -63,16 +62,17 @@ namespace Search.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //Auth
-            string domain = $"https://{Configuration["Auth0API:domain"]}/";
+            // Auth0
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
@@ -85,15 +85,18 @@ namespace Search.Api
                 var permissions = objects.SelectMany(o => verbs.Select(v => $"{v}:{o}"));
                 foreach (string permission in permissions)
                 {
-                    options.AddPolicy(permission, policy => policy.RequireClaim("permissions", permission));
+                    options.AddPolicy(permission, policy => policy.Requirements.Add(new HasScopeRequirement(permission, domain)));
                 }
 
             });
 
-            services.AddMvc();
-
             services.AddControllers();
             services.AddHttpClient();
+            
+            //Services
+            services.AddScoped<IRepository, Repository>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,6 +118,8 @@ namespace Search.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
 
             //Endpoints
             app.UseEndpoints(endpoints =>

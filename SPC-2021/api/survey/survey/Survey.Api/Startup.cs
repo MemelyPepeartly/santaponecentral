@@ -115,7 +115,7 @@ namespace Survey.Api
 
             app.UseRouting();
             app.UseCors(origins);
-            // global cors policy
+
             app.UseAuthentication();
             app.UseAuthorization();
 
