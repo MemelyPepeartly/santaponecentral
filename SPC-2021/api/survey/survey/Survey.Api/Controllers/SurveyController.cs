@@ -29,7 +29,7 @@ namespace Survey.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize("read:surveys")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Logic.Objects.Survey>>> GetAllSurveys()
         {
             try
