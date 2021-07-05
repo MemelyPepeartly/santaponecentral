@@ -64,20 +64,17 @@ namespace Survey.Api
                 c.OrderActionsBy((apiDesc) => $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
             });
 
-            //Auth
-            string domain = $"https://{Configuration["Auth0API:domain"]}/";
+            // Auth0
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
-                options.Audience = Configuration["Auth0API:startupAudience"];
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = ClaimTypes.NameIdentifier
-                };
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
@@ -114,22 +111,16 @@ namespace Survey.Api
             {
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
+
             app.UseRouting();
-
-            //Auth
             app.UseCors(origins);
-
-            app.UseAuthorization();
+            // global cors policy
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            //Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
-            });
+            
 
             //Endpoints
             app.UseEndpoints(endpoints =>
@@ -137,7 +128,12 @@ namespace Survey.Api
                 endpoints.MapControllers();
             });
 
-            
+            //Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/" + version + "/swagger.json", "SantaPone Central " + version.ToUpper());
+            });
 
             // Ensures DB is created against container
             IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
