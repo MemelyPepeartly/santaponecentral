@@ -53,7 +53,9 @@ namespace SharkTank.Api
                                                             $"https://{ConfigRoot["originPrefix"]}-profileapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-searchapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-sharktankapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net")
+                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net",
+
+                                                            "https://localhost:5001")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader()
                                             .AllowCredentials();
@@ -124,6 +126,7 @@ namespace SharkTank.Api
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -131,6 +134,7 @@ namespace SharkTank.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             //Endpoints
             app.UseEndpoints(endpoints =>
