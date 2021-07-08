@@ -21,7 +21,6 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClientController : ControllerBase
     {
 
@@ -109,15 +108,13 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("HQClient")]
-        //[Authorize(Policy = "read:clients")]
-        [AllowAnonymous]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             try
             {
-                //SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
-                //if (validationModel.isValid)
-                if(true)
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
+                if (validationModel.isValid)
                 {
                     List<HQClient> clients = await repository.GetAllHeadquarterClients();
                     return Ok(clients.OrderBy(c => c.nickname));
@@ -127,9 +124,9 @@ namespace Santa.Api.Controllers
                     return StatusCode(StatusCodes.Status401Unauthorized);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status424FailedDependency);
+                return Ok(e);
             }
         }
 
@@ -139,7 +136,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("HQClient/{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
             try
@@ -168,7 +165,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
@@ -1181,8 +1178,8 @@ namespace Santa.Api.Controllers
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
-                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
-                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == "https://example.com/email").Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == "permissions").ToList(),
                 requestedObjectCategory = requestedObjectCategory,
                 validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod
