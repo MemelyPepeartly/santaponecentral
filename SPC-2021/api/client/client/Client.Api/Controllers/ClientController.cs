@@ -6,7 +6,6 @@ using Client.Logic.Models.Common_Models;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Container_Objects;
 using Client.Logic.Objects.Information_Objects;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

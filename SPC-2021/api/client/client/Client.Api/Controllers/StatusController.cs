@@ -1,7 +1,6 @@
 ﻿using Client.Logic.Interfaces;
 using Client.Logic.Models.Status_Models;
 using Client.Logic.Objects;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Client.Api.Services
