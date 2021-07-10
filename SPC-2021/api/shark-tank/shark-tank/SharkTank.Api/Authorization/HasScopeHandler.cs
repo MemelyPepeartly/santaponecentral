@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using SharkTank.Logic.Models.Common_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Survey.Api.Authorization
+namespace SharkTank.Api.Authorization
 {
     public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
     {

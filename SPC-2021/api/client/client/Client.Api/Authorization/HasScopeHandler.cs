@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Client.Logic.Models.Common_Models;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Survey.Api.Authorization
+namespace Client.Api.Authorization
 {
     public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
     {
