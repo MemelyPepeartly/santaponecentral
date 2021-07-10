@@ -1,3 +1,4 @@
+using Client.Api.Authorization;
 using Client.Api.Services;
 using Client.Data.Entities;
 using Client.Data.Repository;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Survey.Api.Authorization;
 using System;
 using System.Linq;
 
@@ -90,10 +90,10 @@ namespace Client.Api
                 }
 
             });
-
+            
             services.AddControllers();
             services.AddHttpClient();
-
+            
             //Services
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ISharkTank, SharkTank>();

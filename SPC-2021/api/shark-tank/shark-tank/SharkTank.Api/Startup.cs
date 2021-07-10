@@ -7,12 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using SharkTank.Api.Authorization;
 using SharkTank.Api.Services.AuthHelper;
-using SharkTank.Api.Services.YuleLog;
 using SharkTank.Data.Entities;
 using SharkTank.Data.Repository;
 using SharkTank.Logic.Interfaces;
-using Survey.Api.Authorization;
 using System.Linq;
 
 namespace SharkTank.Api
@@ -53,12 +52,9 @@ namespace SharkTank.Api
                                                             $"https://{ConfigRoot["originPrefix"]}-profileapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-searchapi.azurewebsites.net",
                                                             $"https://{ConfigRoot["originPrefix"]}-sharktankapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net",
-
-                                                            "https://localhost:5001")
+                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net")
                                             .AllowAnyMethod()
-                                            .AllowAnyHeader()
-                                            .AllowCredentials();
+                                            .AllowAnyHeader();
                                   });
             });
 

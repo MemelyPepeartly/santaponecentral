@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Client.Api.Services
@@ -30,7 +32,14 @@ namespace Client.Api.Services
             userRequest.AddJsonBody(requestModel);
             // HTTP Request
             IRestResponse response = await userRestClient.ExecuteAsync(userRequest);
-            return JsonConvert.DeserializeObject<SharkTankValidationResponseModel>(response.Content);
+            if(response.IsSuccessful)
+            {
+                return JsonConvert.DeserializeObject<SharkTankValidationResponseModel>(response.Content);
+            }
+            else
+            {
+                throw response.ErrorException;
+            }
         }
 
         public async Task<object> DeleteAuthUser(string authClientID)
