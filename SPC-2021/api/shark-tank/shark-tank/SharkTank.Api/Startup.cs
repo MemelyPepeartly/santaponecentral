@@ -22,12 +22,9 @@ namespace SharkTank.Api
         private const string ConnectionStringName = "SharkTankDb";
         readonly string origins = "AllowSpecificOrigin";
 
-        private IConfigurationRoot ConfigRoot;
-
-        public Startup(IConfiguration configuration, IConfiguration configRoot)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            ConfigRoot = (IConfigurationRoot)configRoot;
         }
 
         public IConfiguration Configuration { get; }
@@ -46,13 +43,13 @@ namespace SharkTank.Api
                                   builder =>
                                   {
                                       builder.WithOrigins("http://localhost:4200", "https://www.santaponecentral.net", "https://dev-spc-2021.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-clientapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-eventapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-messageapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-profileapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-searchapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-sharktankapi.azurewebsites.net",
-                                                            $"https://{ConfigRoot["originPrefix"]}-surveyapi.azurewebsites.net")
+                                                            $"https://{Configuration["originPrefix"]}-spc-clientapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-eventapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-messageapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-profileapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-searchapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-sharktankapi.azurewebsites.net",
+                                                            $"https://{Configuration["originPrefix"]}-spc-surveyapi.azurewebsites.net")
                                             .AllowAnyMethod()
                                             .AllowAnyHeader();
                                   });
