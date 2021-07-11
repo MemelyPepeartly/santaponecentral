@@ -6,7 +6,6 @@ using Client.Logic.Models.Common_Models;
 using Client.Logic.Objects;
 using Client.Logic.Objects.Container_Objects;
 using Client.Logic.Objects.Information_Objects;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +20,6 @@ namespace Santa.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClientController : ControllerBase
     {
 
@@ -39,7 +37,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Truncated")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<StrippedClientContainer>> GetAllClientsWithoutChats()
         {
 #warning Could likely be optimized?
@@ -80,7 +78,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Truncated/{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<StrippedClient>> GetTrucatedClientByID(Guid clientID)
         {
             try
@@ -109,15 +107,13 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("HQClient")]
-        //[Authorize(Policy = "read:clients")]
-        [AllowAnonymous]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<HQClient>>> GetAllHQClients()
         {
             try
             {
-                //SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
-                //if (validationModel.isValid)
-                if(true)
+                SharkTankValidationResponseModel validationModel = await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.GET, SharkTankConstants.GET_ALL_CLIENT_CATEGORY, null));
+                if (validationModel.isValid)
                 {
                     List<HQClient> clients = await repository.GetAllHeadquarterClients();
                     return Ok(clients.OrderBy(c => c.nickname));
@@ -127,9 +123,9 @@ namespace Santa.Api.Controllers
                     return StatusCode(StatusCodes.Status401Unauthorized);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status424FailedDependency);
+                return Ok(e);
             }
         }
 
@@ -139,7 +135,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("HQClient/{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<HQClient>> GetHQClientByID(Guid clientID)
         {
             try
@@ -168,7 +164,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByIDAsync(Guid clientID)
         {
             try
@@ -197,7 +193,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientEmail"></param>
         /// <returns></returns>
         [HttpGet("Email/{clientEmail}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> GetClientByEmailAsync(string clientEmail)
         {
             try
@@ -228,7 +224,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientEmail"></param>
         /// <returns></returns>
         [HttpGet("Basic/{clientID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(Guid clientID)
         {
             try
@@ -258,7 +254,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientEmail"></param>
         /// <returns></returns>
         [HttpGet("Basic/Email/{clientEmail}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<BaseClient>> GetBasicClientByEmailAsync(string clientEmail)
         {
             BaseClient logicClient = await repository.GetBasicClientInformationByEmail(clientEmail);
@@ -282,7 +278,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}/InfoContainer")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<InfoContainer>>> GetAllInfoContainerForClientByID(Guid clientID)
         {
             ;
@@ -301,7 +297,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpGet("{clientID}/Response")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<Client.Logic.Objects.Client>>> GetClientResponsesByIDAsync(Guid clientID)
         {
 #warning Needs implimentation after survey service is ready
@@ -313,7 +309,7 @@ namespace Santa.Api.Controllers
 
         // GET: api/Client/5/AllowedAssignment/5
         [HttpGet("{clientID}/AllowedAssignment/{eventTypeID}")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<AllowedAssignmentMeta>>> GetAllAllowedAssignmentsForClientByEventID(Guid clientID, Guid eventTypeID)
         {
 #warning Needs implimentation after search service is ready
@@ -331,7 +327,7 @@ namespace Santa.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("AutoAssignmentPairs")]
-        [Authorize(Policy = "read:clients")]
+        [Authorize("read:clients")]
         public async Task<ActionResult<List<PossiblePairingChoices>>> GetAutoAssignmentsToMassMailerPairs()
         {
             /*
@@ -383,7 +379,7 @@ namespace Santa.Api.Controllers
         /// <param name="client"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Policy = "create:clients")]
+        [Authorize("create:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostClientAsync([FromBody] EditNewClientModel client)
         {
             /*
@@ -510,7 +506,7 @@ namespace Santa.Api.Controllers
         /// <param name="assignmentsModel"></param>
         /// <returns></returns>
         [HttpPost("{clientID}/Recipients")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostRecipient(Guid clientID, [FromBody] AddClientRelationshipsModel assignmentsModel)
         {
             /*
@@ -553,7 +549,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("AutoAssignments")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult> PostSelectedAutoAssignments([FromBody] NewAutoAssignmentsModel model)
         {
             /*
@@ -623,7 +619,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpPost("{clientID}/CreateAccount")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostNewAuth0AccountForClientByID(Guid clientID)
         {
             /*
@@ -659,7 +655,7 @@ namespace Santa.Api.Controllers
         /// <param name="tagsModel"></param>
         /// <returns></returns>
         [HttpPost("{clientID}/Tags")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PostClientTagRelationships(Guid clientID, [FromBody] AddClientTagListResponseModel tagsModel)
         {
             /*
@@ -704,7 +700,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpPost("{clientID}/Password")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> sendResetPasswordInformation(Guid clientID)
         {
             /*
@@ -728,7 +724,7 @@ namespace Santa.Api.Controllers
         /// <param name="address"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Address")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutAddress(Guid clientID, [FromBody] EditClientAddressModel address)
         {
             Client.Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
@@ -754,7 +750,7 @@ namespace Santa.Api.Controllers
         /// <param name="email"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Email")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutEmail(Guid clientID, [FromBody] EditClientEmailModel email)
         {
             /*
@@ -815,7 +811,7 @@ namespace Santa.Api.Controllers
         /// <param name="nickname"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Nickname")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutNickname(Guid clientID, [FromBody] EditClientNicknameModel nickname)
         {
             /*
@@ -852,7 +848,7 @@ namespace Santa.Api.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Name")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutName(Guid clientID, [FromBody] EditClientNameModel name)
         {
             Client.Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
@@ -872,7 +868,7 @@ namespace Santa.Api.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Admin")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutIsAdmin(Guid clientID, [FromBody] EditClientIsAdminModel model)
         {
             Client.Logic.Objects.Client targetClient = await repository.GetClientByIDAsync(clientID);
@@ -892,7 +888,7 @@ namespace Santa.Api.Controllers
         /// <param name="status"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Status", Name = "PutStatus")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> PutStatus(Guid clientID, [FromBody] EditClientStatusModel status)
         {
             /*
@@ -998,7 +994,7 @@ namespace Santa.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{clientID}/Relationship/{assignmentRelationshipID}/AssignmentStatus")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<RelationshipMeta>> UpdateRelationshipStatusByID(Guid clientID, Guid assignmentRelationshipID, [FromBody] EditClientAssignmentStatusModel model)
         {
             /*
@@ -1041,7 +1037,7 @@ namespace Santa.Api.Controllers
         /// <param name="clientID"></param>
         /// <returns></returns>
         [HttpDelete("{clientID}")]
-        [Authorize(Policy = "delete:clients")]
+        [Authorize("delete:clients")]
         public async Task<ActionResult> Delete(Guid clientID)
         {
             await sharkTank.CheckIfValidRequest(await makeSharkTankValidationModel(Method.DELETE, SharkTankConstants.DELETED_CLIENT_CATEGORY, clientID));
@@ -1088,7 +1084,7 @@ namespace Santa.Api.Controllers
         /// <param name="eventID"></param>
         /// <returns></returns>
         [HttpDelete("{clientID}/Recipient")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> DeleteRecipientXref(Guid clientID, Guid assignmentClientID, Guid eventID)
         {
             /*
@@ -1123,7 +1119,7 @@ namespace Santa.Api.Controllers
         /// <param name="tagID"></param>
         /// <returns></returns>
         [HttpDelete("{clientID}/Tag")]
-        [Authorize(Policy = "update:clients")]
+        [Authorize("update:clients")]
         public async Task<ActionResult<Client.Logic.Objects.Client>> DeleteClientTag(Guid clientID, Guid tagID)
         {
             /*
@@ -1181,8 +1177,12 @@ namespace Santa.Api.Controllers
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
-                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
-                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == "https://example.com/email").Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == "permissions").Select(claim => new PermissionClaim()
+                {
+                    Type = claim.Type,
+                    Value = claim.Value
+                }).ToList(),
                 requestedObjectCategory = requestedObjectCategory,
                 validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod

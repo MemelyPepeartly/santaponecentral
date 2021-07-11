@@ -12,7 +12,6 @@ namespace Event.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EventController : Controller
     {
 
@@ -62,9 +61,7 @@ namespace Event.Api.Controllers
 
         // POST: api/Event
         [HttpPost]
-#warning Need to uncomment this come the time for auth testing
-        //[Authorize(Policy = "create:events")]
-        [AllowAnonymous]
+        [Authorize("create:events")]
         public async Task<ActionResult<Logic.Objects.Event>> Post([FromBody] ApiEvent newEvent)
         {
             try
@@ -94,9 +91,7 @@ namespace Event.Api.Controllers
 
         // PUT: api/Event/5
         [HttpPut("{eventID}/Description")]
-#warning Need to uncomment this come the time for auth testing
-        //[Authorize(Policy = "update:events")]
-        [AllowAnonymous]
+        [Authorize("update:events")]
         public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody] ApiEventDescription description)
         {
             try
@@ -122,7 +117,7 @@ namespace Event.Api.Controllers
         }
         // PUT: api/Event/5
         [HttpPut("{eventID}/Active")]
-        [Authorize(Policy = "update:events")]
+        [Authorize("update:events")]
         public async Task<ActionResult<Logic.Objects.Event>> PutDescription(Guid eventID, [FromBody] ApiEventActive active)
         {
             try
@@ -149,7 +144,7 @@ namespace Event.Api.Controllers
 
         // DELETE: api/Event/5
         [HttpDelete("{eventID}")]
-        [Authorize(Policy = "delete:events")]
+        [Authorize("delete:events")]
         public async Task<ActionResult> Delete(Guid eventID)
         {
             try

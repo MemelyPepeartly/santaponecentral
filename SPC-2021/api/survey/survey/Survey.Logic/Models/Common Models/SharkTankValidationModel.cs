@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Message.Logic.Models.Common_Models
+namespace Survey.Logic.Models.Common_Models
 {
     public class SharkTankValidationModel
     {

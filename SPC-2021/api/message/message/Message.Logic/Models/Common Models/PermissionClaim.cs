@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Survey.Api.Authorization
+namespace Message.Logic.Models.Common_Models
 {
     public class PermissionClaim
     {

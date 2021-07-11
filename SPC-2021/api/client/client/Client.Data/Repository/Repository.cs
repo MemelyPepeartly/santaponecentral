@@ -266,8 +266,12 @@ namespace Client.Data.Repository
                     clientName = client.ClientName,
                     isAdmin = client.IsAdmin,
                     hasAccount = client.HasAccount,
-                    clientStatus = Mapper.MapStatus(client.ClientStatus),
-                    answeredSurveys = client.SurveyResponses.Select(r => r.Survey.SurveyId).Distinct().ToList(),
+                    clientStatus = new Status()
+                    {
+                        statusID = client.ClientStatus.ClientStatusId,
+                        statusDescription = client.ClientStatus.StatusDescription
+                    },
+                    answeredSurveys = client.SurveyResponses.Distinct().Select(sr => sr.SurveyId).ToList(),
                     assignments = client.ClientRelationXrefSenderClients.Count(),
                     senders = client.ClientRelationXrefRecipientClients.Count(),
                     notes = client.Notes.Count(),
@@ -275,9 +279,8 @@ namespace Client.Data.Repository
                     {
                         tagID = tagXref.TagId,
                         tagName = tagXref.Tag.TagName,
-                    }).ToList(),
-
-                }).AsNoTracking().ToListAsync();
+                    }).ToList()
+                }).ToListAsync();
             return clientList;
         }
         public async Task<HQClient> GetHeadquarterClientByID(Guid clientID)

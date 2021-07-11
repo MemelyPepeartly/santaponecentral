@@ -1,10 +1,6 @@
 ﻿using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharkTank.Logic.Models.Common_Models
 {
@@ -17,7 +13,7 @@ namespace SharkTank.Logic.Models.Common_Models
         /// <summary>
         /// Roles the requestor has
         /// </summary>
-        public List<Claim> requestorRoles { get; set; }
+        public List<PermissionClaim> requestorRoles { get; set; }
         /// <summary>
         /// Object category for logging and sharkTank purposes
         /// </summary>

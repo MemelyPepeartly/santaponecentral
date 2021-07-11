@@ -14,7 +14,7 @@ namespace Client.Logic.Models.Common_Models
         /// <summary>
         /// Roles the requestor has
         /// </summary>
-        public List<Claim> requestorRoles { get; set; }
+        public List<PermissionClaim> requestorRoles { get; set; }
         /// <summary>
         /// Object category for logging and sharkTank purposes
         /// </summary>

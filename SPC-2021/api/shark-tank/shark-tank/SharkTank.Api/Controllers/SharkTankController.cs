@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharkTank.Api.Filters;
 using SharkTank.Logic.Constants;
 using SharkTank.Logic.Interfaces;
 using SharkTank.Logic.Models.Auth0_Response_Models;
@@ -178,10 +178,9 @@ namespace SharkTank.Api.Controllers
         /// Endpoint validates if a request is allowed to be made by a user. Body includes the requesting client, and some identifying
         /// data they are wanting to request access to
         /// </summary>
-        /// <param name="someObject"></param>
+        /// <param name="requestModel"></param>
         /// <returns></returns>
         [HttpPost("Validate")]
-        [SharkTankValidationFilter]
         public async Task<ActionResult<bool>> CheckIfValidRequest([FromBody] SharkTankValidationModel requestModel)
         {
             SharkTankValidationResponseModel response = new SharkTankValidationResponseModel()
@@ -341,7 +340,7 @@ namespace SharkTank.Api.Controllers
         /// <param name="requiredAccessVerb"></param>
         /// <param name="requiredObjectType"></param>
         /// <returns></returns>
-        private bool checkRoles(List<Claim> roles, string requiredAccessVerb, string requiredObjectType)
+        private bool checkRoles(List<PermissionClaim> roles, string requiredAccessVerb, string requiredObjectType)
         {
             bool isAllowed = false;
 
