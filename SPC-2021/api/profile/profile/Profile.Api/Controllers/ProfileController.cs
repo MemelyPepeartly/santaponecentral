@@ -320,8 +320,12 @@ namespace Profile.Api.Controllers
         {
             SharkTankValidationModel model = new SharkTankValidationModel()
             {
-                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value)).clientID,
-                requestorRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList(),
+                requestorClientID = (await repository.GetBasicClientInformationByEmail(User.Claims.FirstOrDefault(c => c.Type == "https://example.com/email").Value)).clientID,
+                requestorRoles = User.Claims.Where(c => c.Type == "permissions").Select(claim => new PermissionClaim()
+                {
+                    Type = claim.Type,
+                    Value = claim.Value
+                }).ToList(),
                 requestedObjectCategory = requestedObjectCategory,
                 validationID = validationID != null ? validationID.Value : null,
                 httpMethod = httpMethod
