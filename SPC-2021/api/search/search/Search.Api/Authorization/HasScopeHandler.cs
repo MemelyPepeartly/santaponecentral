@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Search.Logic.Models.Common_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
