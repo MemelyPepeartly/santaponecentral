@@ -120,7 +120,7 @@ namespace Santa.Api.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized);
+                    return Ok(new{ thing = "Got to the else"});
                 }
             }
             catch (Exception e)
