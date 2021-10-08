@@ -141,6 +141,7 @@ namespace Client.Api
             using IServiceScope serviceScope = serviceScopeFactory.CreateScope();
             SantaPoneCentralDatabaseContext dbContext = serviceScope.ServiceProvider.GetService<SantaPoneCentralDatabaseContext>();
             dbContext.Database.EnsureCreated();
+            //Testing pipes
         }
     }
 }
